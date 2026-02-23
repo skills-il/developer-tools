@@ -1,0 +1,7 @@
+idf-date-converter:
+  - changed-files:
+    - any-glob-to-any-file: 'idf-date-converter/**'
+
+israeli-id-validator:
+  - changed-files:
+    - any-glob-to-any-file: 'israeli-id-validator/**'
