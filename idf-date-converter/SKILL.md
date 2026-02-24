@@ -1,20 +1,38 @@
 ---
 name: idf-date-converter
 description: >-
-  Convert between Hebrew (Jewish) calendar and Gregorian dates, look up
-  Israeli holidays, format dual dates for Israeli documents, and calculate
-  Israeli business days. Use when user asks about Hebrew dates, "luach ivri",
-  Jewish calendar, Israeli holidays, "chagim", Shabbat times, or needs
-  dual-date formatting for Israeli forms. Do NOT use for Islamic Hijri
-  calendar or non-Israeli holiday calendars.
+  Convert between Hebrew (Jewish) calendar and Gregorian dates, look up Israeli
+  holidays, format dual dates for Israeli documents, and calculate Israeli
+  business days. Use when user asks about Hebrew dates, "luach ivri", Jewish
+  calendar, Israeli holidays, "chagim", Shabbat times, or needs dual-date
+  formatting for Israeli forms. Do NOT use for Islamic Hijri calendar or
+  non-Israeli holiday calendars.
 license: MIT
-allowed-tools: "Bash(python:*) Bash(pip:*)"
-compatibility: "Python with hebcal or pyluach library recommended. Works without network."
+allowed-tools: 'Bash(python:*) Bash(pip:*)'
+compatibility: Python with hebcal or pyluach library recommended. Works without network.
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
-  tags: [calendar, hebrew-date, holidays, shabbat, conversion, israel]
+  tags:
+    - calendar
+    - hebrew-date
+    - holidays
+    - shabbat
+    - conversion
+    - israel
+  display_name:
+    he: ממיר תאריכים עברי-לועזי
+    en: Idf Date Converter
+  display_description:
+    he: המרה בין תאריכים עבריים ולועזיים בפורמטים שונים
+    en: >-
+      Convert between Hebrew (Jewish) calendar and Gregorian dates, look up
+      Israeli holidays, format dual dates for Israeli documents, and calculate
+      Israeli business days. Use when user asks about Hebrew dates, "luach
+      ivri", Jewish calendar, Israeli holidays, "chagim", Shabbat times, or
+      needs dual-date formatting for Israeli forms. Do NOT use for Islamic Hijri
+      calendar or non-Israeli holiday calendars.
 ---
 
 # IDF Date Converter
