@@ -9,13 +9,35 @@ description: >-
   Docker registry configuration, and security scanning patterns. Do NOT use for
   general Docker or CI/CD questions unrelated to JFrog.
 license: MIT
-allowed-tools: "Bash(curl:*) Bash(jf:*) Bash(docker:*) Bash(python:*)"
-compatibility: "Requires network access to JFrog instance (SaaS or self-hosted). JFrog CLI (jf) recommended."
+allowed-tools: 'Bash(curl:*) Bash(jf:*) Bash(docker:*) Bash(python:*)'
+compatibility: >-
+  Requires network access to JFrog instance (SaaS or self-hosted). JFrog CLI
+  (jf) recommended.
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
-  tags: [jfrog, artifactory, xray, devops, docker, security, artifacts]
+  tags:
+    - jfrog
+    - artifactory
+    - xray
+    - devops
+    - docker
+    - security
+    - artifacts
+  display_name:
+    he: JFrog DevOps
+    en: Jfrog Devops
+  display_description:
+    he: ניהול חבילות ב-Artifactory וסריקות אבטחה ב-Xray
+    en: >-
+      Manage JFrog Artifactory repositories, artifacts, Docker registry, build
+      info, and Xray security scanning for DevOps workflows. Use when user asks
+      about JFrog, Artifactory, Xray, artifact management, "deploy artifact",
+      Docker registry with Artifactory, build promotion, vulnerability scanning
+      with Xray, or DevOps artifact pipeline. Covers REST API operations, JFrog
+      CLI usage, Docker registry configuration, and security scanning patterns.
+      Do NOT use for general Docker or CI/CD questions unrelated to JFrog.
 ---
 
 # JFrog DevOps
