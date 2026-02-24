@@ -221,6 +221,11 @@ Result: Set up Taranis field boundaries, configure scan schedule (weekly during 
 User says: "Build a dashboard tracking water usage against our Water Authority quota"
 Result: Connect flow meters via GrowSphere API, aggregate daily/weekly/monthly usage, compare against quota allocation, generate compliance reports, alert at 80% and 95% thresholds.
 
+## Bundled Resources
+
+### References
+- `references/agritech-ecosystem.md` — Directory of Israeli agritech platforms and APIs (CropX, Netafim GrowSphere, Taranis) with endpoint details, plus a company directory covering irrigation, crop monitoring, pollination, and biological sectors. Includes standard data formats (GeoJSON, GeoTIFF, CSV/JSON), agricultural zone rainfall and water source data, and Volcani Institute crop coefficients (Kc) for Israeli conditions. Consult when selecting platforms, configuring API integrations, or looking up crop-specific irrigation parameters.
+
 ## Troubleshooting
 
 ### Error: "Sensor readings seem inaccurate"

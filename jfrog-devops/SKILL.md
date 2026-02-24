@@ -253,6 +253,15 @@ Result: Create Xray security policy blocking critical CVEs, create watch on prod
 User says: "Clean up old artifacts to free Artifactory storage"
 Result: Use AQL to find artifacts not downloaded in 90+ days, identify snapshot artifacts older than 30 days, create cleanup script with dry-run mode, schedule regular cleanup.
 
+## Bundled Resources
+
+### Scripts
+- `scripts/artifactory_client.py` — Full-featured JFrog Artifactory REST API client supporting health checks, repository listing/creation, artifact upload/download/delete, AQL search, property management, build info retrieval, and build promotion. Authenticates via access token (CLI arg or JFROG_ACCESS_TOKEN env var). Run: `python scripts/artifactory_client.py --help`
+- `scripts/xray_client.py` — JFrog Xray REST API client for vulnerability scanning, security policy and watch management, violation search, and vulnerability report generation. Use to scan artifacts for CVEs, create security gates that block critical vulnerabilities, and generate compliance reports. Run: `python scripts/xray_client.py --help`
+
+### References
+- `references/api-reference.md` — Quick reference for Artifactory and Xray REST API endpoints organized by category (system, repositories, artifacts, search, properties, build info, scanning, policies, violations), JFrog CLI command cheatsheet, AQL query patterns, repository type explanations, and standard repository layout conventions. Consult when constructing API calls, writing AQL queries, or setting up repository structures.
+
 ## Troubleshooting
 
 ### Error: "401 Unauthorized" on API calls

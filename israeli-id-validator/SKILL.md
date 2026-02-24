@@ -93,6 +93,14 @@ Result: Provide equivalent algorithm in JavaScript.
 User says: "I need 10 valid test company numbers"
 Result: Generate 10 valid IDs with 51- prefix for testing.
 
+## Bundled Resources
+
+### Scripts
+- `scripts/validate_id.py` — Validates, identifies, formats, and generates Israeli ID numbers (Teudat Zehut, company, amuta, partnership). Supports verbose mode showing step-by-step check digit calculation, batch test ID generation with prefix control, and type identification from any ID number. Run: `python scripts/validate_id.py --help`
+
+### References
+- `references/id-formats.md` — Specification of all Israeli ID number formats including Teudat Zehut, company (51-prefix), amuta (58-prefix), partnership (55-prefix), and cooperative society (57-prefix) with issuing authorities, format patterns, the Luhn-variant check digit algorithm with a worked example, and common validation errors. Consult when implementing validation logic or debugging check digit failures.
+
 ## Troubleshooting
 
 ### Error: "ID appears valid but isn't recognized"

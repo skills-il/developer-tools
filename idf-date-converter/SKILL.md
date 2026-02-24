@@ -110,6 +110,14 @@ Result: "Pesach begins evening of April 1, 2026 (15 Nisan 5786). First seder: Ap
 User says: "How many business days between March 1 and March 31, 2026?"
 Result: Count excluding Shabbatot, noting if any holidays fall in the range (Purim on March 17).
 
+## Bundled Resources
+
+### Scripts
+- `scripts/convert_date.py` — Converts between Hebrew and Gregorian calendars, formats dual dates for Israeli documents, lists Israeli holidays for any year, and counts Israeli business days between date ranges (excluding Shabbatot and holidays). Requires `pyluach` library. Run: `python scripts/convert_date.py --help`
+
+### References
+- `references/hebrew-calendar-reference.md` — Complete Hebrew calendar reference covering month names and variable lengths, the 19-year Metonic leap year cycle, gematria (Hebrew numeral) conversion table with special cases, Israeli holiday calendar with work-off days versus partial-closure days, and recommended Python libraries (pyluach, hebcal). Consult when handling leap year edge cases, formatting Hebrew numerals, or determining which holidays affect business day calculations.
+
 ## Troubleshooting
 
 ### Error: "Incorrect Hebrew date"

@@ -204,6 +204,15 @@ Actions:
 3. Provide poster image URL (first frame transformation)
 Result: Video URL with optimized delivery and poster image.
 
+## Bundled Resources
+
+### Scripts
+- `scripts/upload_asset.py` — Cloudinary asset management client supporting image/video upload with folder and tag organization, URL-based transformation generation, responsive image set creation with srcset and HTML output, asset listing, and asset deletion. Reads credentials from CLOUDINARY_URL or individual env vars. Run: `python scripts/upload_asset.py --help`
+
+### References
+- `references/optimization-guide.md` — Cloudinary performance optimization guide covering f_auto/q_auto automatic optimization, responsive image breakpoints with HTML srcset patterns, DPR handling for retina displays, lazy loading strategies including blur-up LQIP placeholders, and upload-time eager transformations. Consult when building high-performance image delivery pipelines or optimizing page load times.
+- `references/transformation-cheatsheet.md` — Complete Cloudinary URL transformation parameter reference including resize/crop modes, gravity positioning, quality/format options, visual effects, overlay/text parameters, responsive helpers, common recipes (thumbnail, hero, avatar, product, social share, watermark), video transformations, rate limits by plan tier, and environment setup. Consult when constructing transformation URLs or looking up specific parameter syntax.
+
 ## Troubleshooting
 
 ### Error: "401 Unauthorized"

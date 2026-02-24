@@ -301,6 +301,13 @@ Actions:
 5. Provide standard vesting terms
 Result: Complete Option 102 setup plan with trustee comparison.
 
+## Bundled Resources
+
+### References
+- `references/iia-programs-guide.md` — Detailed guide to Israel Innovation Authority grant programs including R&D Fund, Tnufa (early stage), incubator programs, BIRD (US-Israel binational), and Horizon Europe tracks. Covers funding percentages, maximum amounts, repayment terms, eligibility requirements, application process, and approval rates. Consult when helping users select the right IIA program or prepare grant applications.
+- `references/investment-term-sheets.md` — Israeli investment agreement templates including SAFE and convertible note structures with Israeli-specific clauses (IIA notification, Section 102 interaction, Israeli securities law exemptions, anti-money laundering). Consult when drafting or reviewing early-stage investment terms under Israeli law.
+- `references/option-102-reference.md` — Complete reference for Section 102 of the Israeli Income Tax Ordinance covering all three tracks (Capital Gains Trustee, Income Trustee, Non-Trustee), holding periods, tax rates, employer deduction rules, ITA-approved trustees, filing procedures, and common pitfalls. Consult when setting up an ESOP or advising on employee equity compensation tax implications.
+
 ## Troubleshooting
 
 ### Issue: "IIA rejected our application"
