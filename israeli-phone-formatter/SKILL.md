@@ -8,13 +8,31 @@ description: >-
   landline (02-09), VoIP (072-077), toll-free (1-800), and star-service numbers.
   Do NOT use for non-Israeli phone systems or general telecom questions.
 license: MIT
-allowed-tools: "Bash(python:*)"
-compatibility: "No network required. Works with Claude Code, Claude.ai, Cursor."
+allowed-tools: 'Bash(python:*)'
+compatibility: 'No network required. Works with Claude Code, Claude.ai, Cursor.'
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
-  tags: [phone, validation, formatting, telecom, israel]
+  tags:
+    - phone
+    - validation
+    - formatting
+    - telecom
+    - israel
+  display_name:
+    he: מפרמט טלפונים ישראלי
+    en: Israeli Phone Formatter
+  display_description:
+    he: אימות ועיצוב מספרי טלפון ישראליים בכל הפורמטים
+    en: >-
+      Validate, format, and convert Israeli phone numbers between local and
+      international (+972) formats. Use when user asks to validate Israeli phone
+      number, format phone for SMS, convert to +972, check phone prefix, or
+      implement Israeli phone input validation in code. Handles mobile
+      (050-058), landline (02-09), VoIP (072-077), toll-free (1-800), and
+      star-service numbers. Do NOT use for non-Israeli phone systems or general
+      telecom questions.
 ---
 
 # Israeli Phone Formatter
