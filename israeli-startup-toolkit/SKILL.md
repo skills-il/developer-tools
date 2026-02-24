@@ -2,22 +2,45 @@
 name: israeli-startup-toolkit
 description: >-
   Guide Israeli startup operations including company formation, Innovation
-  Authority grants, investment agreements, R&D tax benefits, and employee
-  stock options (Option 102). Use when user asks about starting a company in
-  Israel, IIA grants, "Innovation Authority", SAFE agreements (Israeli),
-  convertible notes, Option 102, employee stock options in Israel, R&D tax
-  benefits, preferred enterprise, or Israeli startup legal/financial setup.
-  Do NOT use for non-Israeli company formation or international tax advice.
-  Always recommend consulting with Israeli lawyer and accountant for binding
-  decisions.
+  Authority grants, investment agreements, R&D tax benefits, and employee stock
+  options (Option 102). Use when user asks about starting a company in Israel,
+  IIA grants, "Innovation Authority", SAFE agreements (Israeli), convertible
+  notes, Option 102, employee stock options in Israel, R&D tax benefits,
+  preferred enterprise, or Israeli startup legal/financial setup. Do NOT use for
+  non-Israeli company formation or international tax advice. Always recommend
+  consulting with Israeli lawyer and accountant for binding decisions.
 license: MIT
-allowed-tools: "Bash(python:*) WebFetch"
-compatibility: "No API keys required. Network access helpful for IIA portal reference. Always consult licensed Israeli professionals for legal/tax decisions."
+allowed-tools: 'Bash(python:*) WebFetch'
+compatibility: >-
+  No API keys required. Network access helpful for IIA portal reference. Always
+  consult licensed Israeli professionals for legal/tax decisions.
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
-  tags: [startup, company-formation, grants, investment, tax, option-102, israel]
+  tags:
+    - startup
+    - company-formation
+    - grants
+    - investment
+    - tax
+    - option-102
+    - israel
+  display_name:
+    he: ערכת כלים לסטארטאפ
+    en: Israeli Startup Toolkit
+  display_description:
+    he: 'הקמת חברה, מענקי רשות החדשנות, הסדרי 102 ועוד'
+    en: >-
+      Guide Israeli startup operations including company formation, Innovation
+      Authority grants, investment agreements, R&D tax benefits, and employee
+      stock options (Option 102). Use when user asks about starting a company in
+      Israel, IIA grants, "Innovation Authority", SAFE agreements (Israeli),
+      convertible notes, Option 102, employee stock options in Israel, R&D tax
+      benefits, preferred enterprise, or Israeli startup legal/financial setup.
+      Do NOT use for non-Israeli company formation or international tax advice.
+      Always recommend consulting with Israeli lawyer and accountant for binding
+      decisions.
 ---
 
 # Israeli Startup Toolkit
