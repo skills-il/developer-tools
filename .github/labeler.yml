@@ -1,7 +1,27 @@
+cloudinary-assets:
+  - changed-files:
+    - any-glob-to-any-file: 'cloudinary-assets/**'
+
 idf-date-converter:
   - changed-files:
     - any-glob-to-any-file: 'idf-date-converter/**'
 
+israeli-agritech-advisor:
+  - changed-files:
+    - any-glob-to-any-file: 'israeli-agritech-advisor/**'
+
 israeli-id-validator:
   - changed-files:
     - any-glob-to-any-file: 'israeli-id-validator/**'
+
+israeli-phone-formatter:
+  - changed-files:
+    - any-glob-to-any-file: 'israeli-phone-formatter/**'
+
+israeli-startup-toolkit:
+  - changed-files:
+    - any-glob-to-any-file: 'israeli-startup-toolkit/**'
+
+jfrog-devops:
+  - changed-files:
+    - any-glob-to-any-file: 'jfrog-devops/**'
