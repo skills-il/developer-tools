@@ -1,22 +1,48 @@
 ---
 name: israeli-agritech-advisor
 description: >-
-  Guide developers in integrating Israeli agritech tools and precision agriculture
-  platforms including CropX (soil monitoring), Netafim GrowSphere (IoT irrigation),
-  Taranis (crop intelligence), and 750+ Israeli agritech companies. Use when user
-  asks about agritech APIs, precision agriculture, smart irrigation, "hashkaya
-  cham", crop monitoring, pest detection, Israeli agriculture tech, or needs to
-  build farm management software. Covers irrigation optimization, pest detection,
-  climate data integration, and Israeli agricultural context. Do NOT use for
-  general gardening advice or non-agricultural IoT projects.
+  Guide developers in integrating Israeli agritech tools and precision
+  agriculture platforms including CropX (soil monitoring), Netafim GrowSphere
+  (IoT irrigation), Taranis (crop intelligence), and 750+ Israeli agritech
+  companies. Use when user asks about agritech APIs, precision agriculture,
+  smart irrigation, "hashkaya cham", crop monitoring, pest detection, Israeli
+  agriculture tech, or needs to build farm management software. Covers
+  irrigation optimization, pest detection, climate data integration, and Israeli
+  agricultural context. Do NOT use for general gardening advice or
+  non-agricultural IoT projects.
 license: MIT
-allowed-tools: "Bash(python:*) Bash(pip:*) Bash(curl:*)"
-compatibility: "Network required for API calls. Python recommended for data processing. Works with Claude Code, Claude.ai."
+allowed-tools: 'Bash(python:*) Bash(pip:*) Bash(curl:*)'
+compatibility: >-
+  Network required for API calls. Python recommended for data processing. Works
+  with Claude Code, Claude.ai.
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
-  tags: [agritech, agriculture, irrigation, cropx, netafim, taranis, iot, israel]
+  tags:
+    - agritech
+    - agriculture
+    - irrigation
+    - cropx
+    - netafim
+    - taranis
+    - iot
+    - israel
+  display_name:
+    he: יועץ אגריטק ישראלי
+    en: Israeli Agritech Advisor
+  display_description:
+    he: 'שילוב כלי אגריטק ישראליים — CropX, נטפים, Taranis'
+    en: >-
+      Guide developers in integrating Israeli agritech tools and precision
+      agriculture platforms including CropX (soil monitoring), Netafim
+      GrowSphere (IoT irrigation), Taranis (crop intelligence), and 750+ Israeli
+      agritech companies. Use when user asks about agritech APIs, precision
+      agriculture, smart irrigation, "hashkaya cham", crop monitoring, pest
+      detection, Israeli agriculture tech, or needs to build farm management
+      software. Covers irrigation optimization, pest detection, climate data
+      integration, and Israeli agricultural context. Do NOT use for general
+      gardening advice or non-agricultural IoT projects.
 ---
 
 # Israeli Agritech Advisor
