@@ -3,19 +3,42 @@ name: cloudinary-assets
 description: >-
   Manage media assets through Cloudinary's REST API -- upload, transform,
   optimize, and deliver images and videos. Use when user asks about image
-  upload, media optimization, image transformations, responsive images,
-  video management, CDN delivery, or mentions Cloudinary specifically.
-  Covers Upload API, Admin API, URL-based transformations, and delivery
-  optimization. Israeli-founded platform (Tel Aviv, 2012). Do NOT use for
-  non-Cloudinary media hosting or local image processing without cloud upload.
+  upload, media optimization, image transformations, responsive images, video
+  management, CDN delivery, or mentions Cloudinary specifically. Covers Upload
+  API, Admin API, URL-based transformations, and delivery optimization.
+  Israeli-founded platform (Tel Aviv, 2012). Do NOT use for non-Cloudinary media
+  hosting or local image processing without cloud upload.
 license: MIT
-allowed-tools: "Bash(python:*) Bash(curl:*) WebFetch"
-compatibility: "Requires Cloudinary account (free tier available). Needs CLOUDINARY_URL or API key/secret/cloud name environment variables."
+allowed-tools: 'Bash(python:*) Bash(curl:*) WebFetch'
+compatibility: >-
+  Requires Cloudinary account (free tier available). Needs CLOUDINARY_URL or API
+  key/secret/cloud name environment variables.
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
-  tags: [cloudinary, media, images, video, cdn, optimization, israel]
+  tags:
+    - cloudinary
+    - media
+    - images
+    - video
+    - cdn
+    - optimization
+    - israel
+  display_name:
+    he: ניהול מדיה ב-Cloudinary
+    en: Cloudinary Assets
+  display_description:
+    he: 'ניהול תמונות, וידאו וקבצי מדיה דרך Cloudinary API'
+    en: >-
+      Manage media assets through Cloudinary's REST API -- upload, transform,
+      optimize, and deliver images and videos. Use when user asks about image
+      upload, media optimization, image transformations, responsive images,
+      video management, CDN delivery, or mentions Cloudinary specifically.
+      Covers Upload API, Admin API, URL-based transformations, and delivery
+      optimization. Israeli-founded platform (Tel Aviv, 2012). Do NOT use for
+      non-Cloudinary media hosting or local image processing without cloud
+      upload.
 ---
 
 # Cloudinary Assets
