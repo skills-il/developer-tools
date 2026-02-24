@@ -4,17 +4,34 @@ description: >-
   Validate and format Israeli identification numbers including Teudat Zehut
   (personal ID), company numbers, amuta (non-profit) numbers, and partnership
   numbers. Use when user asks to validate Israeli ID, "teudat zehut", "mispar
-  zehut", company number validation, or needs to implement Israeli ID
-  validation in code. Includes check digit algorithm and test ID generation.
-  Do NOT use for non-Israeli identification systems.
+  zehut", company number validation, or needs to implement Israeli ID validation
+  in code. Includes check digit algorithm and test ID generation. Do NOT use for
+  non-Israeli identification systems.
 license: MIT
-allowed-tools: "Bash(python:*)"
-compatibility: "No network required. Works with Claude Code, Claude.ai, Cursor."
+allowed-tools: 'Bash(python:*)'
+compatibility: 'No network required. Works with Claude Code, Claude.ai, Cursor.'
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
-  tags: [validation, id, teudat-zehut, developer, israel]
+  tags:
+    - validation
+    - id
+    - teudat-zehut
+    - developer
+    - israel
+  display_name:
+    he: מאמת תעודת זהות
+    en: Israeli Id Validator
+  display_description:
+    he: 'אימות מספרי תעודת זהות, ח"פ ומספרי רישום חברות'
+    en: >-
+      Validate and format Israeli identification numbers including Teudat Zehut
+      (personal ID), company numbers, amuta (non-profit) numbers, and
+      partnership numbers. Use when user asks to validate Israeli ID, "teudat
+      zehut", "mispar zehut", company number validation, or needs to implement
+      Israeli ID validation in code. Includes check digit algorithm and test ID
+      generation. Do NOT use for non-Israeli identification systems.
 ---
 
 # Israeli ID Validator
