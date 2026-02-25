@@ -104,7 +104,7 @@ def calculate_founder_allocation(founders, vesting_months=48, cliff_months=12):
 
 | Program | Stage | Funding | Max Amount | Repayment |
 |---------|-------|---------|------------|-----------|
-| Tnufa | Pre-seed | Up to 85% | 800K NIS | Royalties 3-5% |
+| Tnufa | Pre-seed | Up to 80% | 200K NIS (of 250K budget) | Royalties 3-5% |
 | R&D Fund | Seed-Growth | Up to 50% | Per budget | Royalties 3-5% |
 | Incubator | Early stage | Up to 85% | Per program | Royalties |
 | BIRD (US-Israel) | Any | Up to 50% | $1M | Royalties |
@@ -302,6 +302,9 @@ Actions:
 Result: Complete Option 102 setup plan with trustee comparison.
 
 ## Bundled Resources
+
+### Scripts
+- `scripts/startup_checklist.py` — Generates a step-by-step Israeli startup registration checklist based on entity type (Ltd, sole proprietor, partnership), validates IIA grant eligibility, calculates Option 102 tax implications, and estimates R&D tax benefits under the Encouragement of Capital Investment Law. Run: `python scripts/startup_checklist.py --help`
 
 ### References
 - `references/iia-programs-guide.md` — Detailed guide to Israel Innovation Authority grant programs including R&D Fund, Tnufa (early stage), incubator programs, BIRD (US-Israel binational), and Horizon Europe tracks. Covers funding percentages, maximum amounts, repayment terms, eligibility requirements, application process, and approval rates. Consult when helping users select the right IIA program or prepare grant applications.

@@ -223,6 +223,9 @@ Result: Connect flow meters via GrowSphere API, aggregate daily/weekly/monthly u
 
 ## Bundled Resources
 
+### Scripts
+- `scripts/agritech_advisor.py` — Connects to Israeli agritech APIs (CropX, Netafim GrowSphere, Taranis) for soil monitoring, smart irrigation scheduling, and crop health analysis. Calculates irrigation needs based on climate zone, crop type, and evapotranspiration coefficients. Run: `python scripts/agritech_advisor.py --help`
+
 ### References
 - `references/agritech-ecosystem.md` — Directory of Israeli agritech platforms and APIs (CropX, Netafim GrowSphere, Taranis) with endpoint details, plus a company directory covering irrigation, crop monitoring, pollination, and biological sectors. Includes standard data formats (GeoJSON, GeoTIFF, CSV/JSON), agricultural zone rainfall and water source data, and Volcani Institute crop coefficients (Kc) for Israeli conditions. Consult when selecting platforms, configuring API integrations, or looking up crop-specific irrigation parameters.
 
