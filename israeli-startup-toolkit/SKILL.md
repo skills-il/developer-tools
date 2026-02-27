@@ -19,13 +19,22 @@ metadata:
   version: 1.0.0
   category: developer-tools
   tags:
-    - startup
-    - company-formation
-    - grants
-    - investment
-    - tax
-    - option-102
-    - israel
+    he:
+      - סטארטאפ
+      - הקמת-חברה
+      - מענקים
+      - השקעות
+      - מיסים
+      - אופציה-102
+      - ישראל
+    en:
+      - startup
+      - company-formation
+      - grants
+      - investment
+      - tax
+      - option-102
+      - israel
   display_name:
     he: ערכת כלים לסטארטאפ
     en: Israeli Startup Toolkit
