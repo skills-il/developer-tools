@@ -18,12 +18,20 @@ metadata:
   version: 1.0.0
   category: developer-tools
   tags:
-    - shipping
-    - logistics
-    - ecommerce
-    - delivery
-    - israel-post
-    - israel
+    he:
+      - משלוחים
+      - לוגיסטיקה
+      - מסחר-אלקטרוני
+      - משלוח
+      - דואר-ישראל
+      - ישראל
+    en:
+      - shipping
+      - logistics
+      - ecommerce
+      - delivery
+      - israel-post
+      - israel
   display_name:
     he: מנהל משלוחים ישראלי
     en: Israeli Shipping Manager
