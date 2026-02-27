@@ -20,14 +20,24 @@ metadata:
   version: 1.0.0
   category: developer-tools
   tags:
-    - agritech
-    - agriculture
-    - irrigation
-    - cropx
-    - netafim
-    - taranis
-    - iot
-    - israel
+    he:
+      - אגריטק
+      - חקלאות
+      - השקיה
+      - CropX
+      - נטפים
+      - טרניס
+      - IoT
+      - ישראל
+    en:
+      - agritech
+      - agriculture
+      - irrigation
+      - cropx
+      - netafim
+      - taranis
+      - iot
+      - israel
   display_name:
     he: יועץ אגריטק ישראלי
     en: Israeli Agritech Advisor
