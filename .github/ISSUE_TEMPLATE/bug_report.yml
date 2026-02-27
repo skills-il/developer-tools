@@ -10,6 +10,8 @@ body:
       options:
         - idf-date-converter
         - israeli-id-validator
+        - israeli-marketplace-seller
+        - israeli-shipping-manager
         - Other
     validations:
       required: true
@@ -23,6 +25,7 @@ body:
         - GitHub Copilot
         - Windsurf
         - OpenCode
+        - OpenClaw
         - Codex
         - Other
     validations:

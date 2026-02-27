@@ -22,6 +22,14 @@ israeli-startup-toolkit:
   - changed-files:
     - any-glob-to-any-file: 'israeli-startup-toolkit/**'
 
+israeli-marketplace-seller:
+  - changed-files:
+    - any-glob-to-any-file: 'israeli-marketplace-seller/**'
+
+israeli-shipping-manager:
+  - changed-files:
+    - any-glob-to-any-file: 'israeli-shipping-manager/**'
+
 jfrog-devops:
   - changed-files:
     - any-glob-to-any-file: 'jfrog-devops/**'
