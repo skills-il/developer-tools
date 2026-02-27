@@ -51,6 +51,7 @@ metadata:
     - windsurf
     - opencode
     - codex
+    - openclaw
 ---
 
 # Skills-IL Skill Creator
@@ -154,8 +155,18 @@ metadata:
     he: "<Hebrew description>"
     en: >-
       <English description -- mirrors the main description field>
+  supported_agents:
+    - claude-code
+    - cursor
+    - github-copilot
+    - windsurf
+    - opencode
+    - codex
+    - openclaw
 ---
 ```
+
+**Supported agents:** By default, include all agents listed above. If the skill relies on agent-specific features (e.g., MCP tools only available in Claude Code), remove agents that cannot support it and document why in the `compatibility` field.
 
 **Description rules (CRITICAL):**
 - Must follow pattern: `[What it does] + [When to use it] + [Key capabilities] + [Do NOT use for X]`
@@ -265,6 +276,7 @@ After validation passes, review against the quality checklist:
 - [ ] Hebrew companion exists and is consistent
 - [ ] References are linked with "Consult when..." guidance
 - [ ] No security issues (secrets, injection vectors)
+- [ ] `supported_agents` list is accurate (all compatible agents included)
 
 ## Examples
 
