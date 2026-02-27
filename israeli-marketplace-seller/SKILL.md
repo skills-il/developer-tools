@@ -19,12 +19,20 @@ metadata:
   version: 1.0.0
   category: developer-tools
   tags:
-    - marketplace
-    - ecommerce
-    - zap
-    - selling
-    - price-comparison
-    - israel
+    he:
+      - שוק
+      - מסחר-אלקטרוני
+      - זאפ
+      - מכירה
+      - השוואת-מחירים
+      - ישראל
+    en:
+      - marketplace
+      - ecommerce
+      - zap
+      - selling
+      - price-comparison
+      - israel
   display_name:
     he: מוכר בשווקים מקוונים ישראליים
     en: Israeli Marketplace Seller
