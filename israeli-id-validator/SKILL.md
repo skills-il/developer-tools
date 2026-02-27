@@ -15,11 +15,18 @@ metadata:
   version: 1.0.0
   category: developer-tools
   tags:
-    - validation
-    - id
-    - teudat-zehut
-    - developer
-    - israel
+    he:
+      - אימות
+      - תעודת-זהות
+      - תעודת-זהות
+      - מפתחים
+      - ישראל
+    en:
+      - validation
+      - id
+      - teudat-zehut
+      - developer
+      - israel
   display_name:
     he: מאמת תעודת זהות
     en: Israeli Id Validator
