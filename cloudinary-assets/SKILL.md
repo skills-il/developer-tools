@@ -39,6 +39,14 @@ metadata:
       optimization. Israeli-founded platform (Tel Aviv, 2012). Do NOT use for
       non-Cloudinary media hosting or local image processing without cloud
       upload.
+  supported_agents:
+    - claude-code
+    - cursor
+    - github-copilot
+    - windsurf
+    - opencode
+    - codex
+    - openclaw
 ---
 
 # Cloudinary Assets
