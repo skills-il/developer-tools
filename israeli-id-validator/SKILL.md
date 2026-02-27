@@ -32,6 +32,14 @@ metadata:
       zehut", "mispar zehut", company number validation, or needs to implement
       Israeli ID validation in code. Includes check digit algorithm and test ID
       generation. Do NOT use for non-Israeli identification systems.
+  supported_agents:
+    - claude-code
+    - cursor
+    - github-copilot
+    - windsurf
+    - opencode
+    - codex
+    - openclaw
 ---
 
 # Israeli ID Validator
