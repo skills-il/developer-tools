@@ -33,6 +33,14 @@ metadata:
       (050-058), landline (02-09), VoIP (072-077), toll-free (1-800), and
       star-service numbers. Do NOT use for non-Israeli phone systems or general
       telecom questions.
+  supported_agents:
+    - claude-code
+    - cursor
+    - github-copilot
+    - windsurf
+    - opencode
+    - codex
+    - openclaw
 ---
 
 # Israeli Phone Formatter
