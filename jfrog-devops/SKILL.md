@@ -38,6 +38,14 @@ metadata:
       with Xray, or DevOps artifact pipeline. Covers REST API operations, JFrog
       CLI usage, Docker registry configuration, and security scanning patterns.
       Do NOT use for general Docker or CI/CD questions unrelated to JFrog.
+  supported_agents:
+    - claude-code
+    - cursor
+    - github-copilot
+    - windsurf
+    - opencode
+    - codex
+    - openclaw
 ---
 
 # JFrog DevOps
