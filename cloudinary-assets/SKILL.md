@@ -256,3 +256,4 @@ Solution: Compress before upload, or upgrade Cloudinary plan. Use eager transfor
 ### Error: "Resource not found"
 Cause: Invalid public_id or asset was deleted
 Solution: Verify public_id with Admin API list. Check folder paths are included in public_id.
+
