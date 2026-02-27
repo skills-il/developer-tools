@@ -162,11 +162,11 @@ metadata:
     - windsurf
     - opencode
     - codex
-    - openclaw
+    # - openclaw          # Only add if skill is verified as OpenClaw-compatible
 ---
 ```
 
-**Supported agents:** By default, include all agents listed above. If the skill relies on agent-specific features (e.g., MCP tools only available in Claude Code), remove agents that cannot support it and document why in the `compatibility` field.
+**Supported agents:** Include all standard agents by default. Only add `openclaw` if the skill has been explicitly verified as OpenClaw-compatible -- do NOT add it by default. If the skill relies on agent-specific features (e.g., MCP tools only available in Claude Code), remove agents that cannot support it and document why in the `compatibility` field.
 
 **Description rules (CRITICAL):**
 - Must follow pattern: `[What it does] + [When to use it] + [Key capabilities] + [Do NOT use for X]`
