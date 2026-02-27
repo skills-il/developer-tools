@@ -43,6 +43,14 @@ metadata:
       software. Covers irrigation optimization, pest detection, climate data
       integration, and Israeli agricultural context. Do NOT use for general
       gardening advice or non-agricultural IoT projects.
+  supported_agents:
+    - claude-code
+    - cursor
+    - github-copilot
+    - windsurf
+    - opencode
+    - codex
+    - openclaw
 ---
 
 # Israeli Agritech Advisor
