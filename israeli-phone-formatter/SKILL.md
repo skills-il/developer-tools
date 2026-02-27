@@ -15,11 +15,18 @@ metadata:
   version: 1.0.0
   category: developer-tools
   tags:
-    - phone
-    - validation
-    - formatting
-    - telecom
-    - israel
+    he:
+      - טלפון
+      - אימות
+      - עיצוב
+      - טלקום
+      - ישראל
+    en:
+      - phone
+      - validation
+      - formatting
+      - telecom
+      - israel
   display_name:
     he: מפרמט טלפונים ישראלי
     en: Israeli Phone Formatter
