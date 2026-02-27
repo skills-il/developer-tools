@@ -41,6 +41,14 @@ metadata:
       Do NOT use for non-Israeli company formation or international tax advice.
       Always recommend consulting with Israeli lawyer and accountant for binding
       decisions.
+  supported_agents:
+    - claude-code
+    - cursor
+    - github-copilot
+    - windsurf
+    - opencode
+    - codex
+    - openclaw
 ---
 
 # Israeli Startup Toolkit
