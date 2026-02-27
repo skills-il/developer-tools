@@ -33,6 +33,14 @@ metadata:
       ivri", Jewish calendar, Israeli holidays, "chagim", Shabbat times, or
       needs dual-date formatting for Israeli forms. Do NOT use for Islamic Hijri
       calendar or non-Israeli holiday calendars.
+  supported_agents:
+    - claude-code
+    - cursor
+    - github-copilot
+    - windsurf
+    - opencode
+    - codex
+    - openclaw
 ---
 
 # IDF Date Converter
