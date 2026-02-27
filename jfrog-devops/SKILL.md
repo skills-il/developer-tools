@@ -18,13 +18,22 @@ metadata:
   version: 1.0.0
   category: developer-tools
   tags:
-    - jfrog
-    - artifactory
-    - xray
-    - devops
-    - docker
-    - security
-    - artifacts
+    he:
+      - JFrog
+      - Artifactory
+      - Xray
+      - DevOps
+      - Docker
+      - אבטחה
+      - חפצים-דיגיטליים
+    en:
+      - jfrog
+      - artifactory
+      - xray
+      - devops
+      - docker
+      - security
+      - artifacts
   display_name:
     he: JFrog DevOps
     en: Jfrog Devops
