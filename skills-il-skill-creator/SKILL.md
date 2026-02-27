@@ -166,7 +166,15 @@ metadata:
 ---
 ```
 
-**Supported agents:** Include all standard agents by default. Only add `openclaw` if the skill has been explicitly verified as OpenClaw-compatible -- do NOT add it by default. If the skill relies on agent-specific features (e.g., MCP tools only available in Claude Code), remove agents that cannot support it and document why in the `compatibility` field.
+**Supported agents:** Include all standard agents (claude-code through codex) by default. If the skill relies on agent-specific features (e.g., MCP tools only available in Claude Code), remove agents that cannot support it and document why in the `compatibility` field.
+
+**OpenClaw compatibility (MUST ASK):** Before finalizing the frontmatter, ask the user:
+
+> "Is this skill compatible with OpenClaw? OpenClaw is an open-source AI coding agent. Only mark as compatible if the skill does not depend on Claude-specific features (e.g., Claude MCP tools, Anthropic-specific APIs). Should I add `openclaw` to supported_agents?"
+
+- If the user confirms **yes**: uncomment `openclaw` in the `supported_agents` list
+- If the user says **no** or is unsure: leave it commented out
+- Do NOT assume compatibility -- always ask explicitly
 
 **Description rules (CRITICAL):**
 - Must follow pattern: `[What it does] + [When to use it] + [Key capabilities] + [Do NOT use for X]`
