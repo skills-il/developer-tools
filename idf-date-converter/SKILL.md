@@ -15,12 +15,20 @@ metadata:
   version: 1.0.0
   category: developer-tools
   tags:
-    - calendar
-    - hebrew-date
-    - holidays
-    - shabbat
-    - conversion
-    - israel
+    he:
+      - לוח-שנה
+      - תאריך-עברי
+      - חגים
+      - שבת
+      - המרה
+      - ישראל
+    en:
+      - calendar
+      - hebrew-date
+      - holidays
+      - shabbat
+      - conversion
+      - israel
   display_name:
     he: ממיר תאריכים עברי-לועזי
     en: Idf Date Converter
