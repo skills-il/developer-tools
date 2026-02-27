@@ -44,6 +44,14 @@ metadata:
       "scaffold a skill for skills-il", "write a SKILL.md", "contribute a skill",
       "new skill template", or "liztor skill chadash". Do NOT use for editing
       existing skills or creating skills for non-skills-il platforms.
+  supported_agents:
+    - claude-code
+    - cursor
+    - github-copilot
+    - windsurf
+    - opencode
+    - codex
+    - openclaw
 ---
 
 # Skills-IL Skill Creator
