@@ -18,13 +18,22 @@ metadata:
   version: 1.0.0
   category: developer-tools
   tags:
-    - cloudinary
-    - media
-    - images
-    - video
-    - cdn
-    - optimization
-    - israel
+    he:
+      - Cloudinary
+      - מדיה
+      - תמונות
+      - וידאו
+      - CDN
+      - אופטימיזציה
+      - ישראל
+    en:
+      - cloudinary
+      - media
+      - images
+      - video
+      - cdn
+      - optimization
+      - israel
   display_name:
     he: ניהול מדיה ב-Cloudinary
     en: Cloudinary Assets
