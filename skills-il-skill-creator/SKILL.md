@@ -21,12 +21,20 @@ metadata:
   version: 1.0.0
   category: developer-tools
   tags:
-    - skill-creator
-    - scaffolding
-    - template
-    - developer
-    - workflow
-    - israel
+    he:
+      - יוצר-סקילים
+      - פיגומים
+      - תבנית
+      - מפתחים
+      - תהליך-עבודה
+      - ישראל
+    en:
+      - skill-creator
+      - scaffolding
+      - template
+      - developer
+      - workflow
+      - israel
   display_name:
     he: יוצר סקילים skills-il
     en: Skills-IL Skill Creator
@@ -145,9 +153,14 @@ metadata:
   version: 1.0.0
   category: <category-repo>
   tags:
-    - <tag1>
-    - <tag2>
-    - israel
+    he:
+      - <תגית1>
+      - <תגית2>
+      - ישראל
+    en:
+      - <tag1>
+      - <tag2>
+      - israel
   display_name:
     he: "<Hebrew display name>"
     en: <English Display Name>
@@ -175,6 +188,15 @@ metadata:
 - If the user confirms **yes**: uncomment `openclaw` in the `supported_agents` list
 - If the user says **no** or is unsure: leave it commented out
 - Do NOT assume compatibility -- always ask explicitly
+
+**Bilingual tags (MUST ASK):** After defining the English tags, ask the user:
+
+> "Please provide Hebrew translations for each tag. Tags must have matching `he` and `en` arrays (same length). For example, if your English tags are `[invoicing, tax, israel]`, the Hebrew tags should be `[חשבוניות, מיסים, ישראל]`. What are the Hebrew equivalents for your tags?"
+
+- Both `he` and `en` arrays are **required** -- no tag may be left untranslated
+- Arrays must be the **same length** (each English tag has exactly one Hebrew counterpart)
+- No empty strings allowed in either array
+- Technical terms that have no Hebrew equivalent can stay in English in both arrays (e.g., `API`, `MCP`)
 
 **Description rules (CRITICAL):**
 - Must follow pattern: `[What it does] + [When to use it] + [Key capabilities] + [Do NOT use for X]`
@@ -285,6 +307,7 @@ After validation passes, review against the quality checklist:
 - [ ] References are linked with "Consult when..." guidance
 - [ ] No security issues (secrets, injection vectors)
 - [ ] `supported_agents` list is accurate (all compatible agents included)
+- [ ] `metadata.tags` has both `he` and `en` arrays of equal length with no empty strings
 
 ## Examples
 
