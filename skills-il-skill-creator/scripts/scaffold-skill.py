@@ -27,6 +27,10 @@ VALID_CATEGORIES = [
     "localization",
     "developer-tools",
     "communication",
+    "food-and-dining",
+    "legal-tech",
+    "education",
+    "health-services",
 ]
 
 KEBAB_CASE_PATTERN = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
@@ -47,8 +51,12 @@ metadata:
   version: 1.0.0
   category: {category}
   tags:
-    - TODO
-    - israel
+    he:
+      - TODO
+      - ישראל
+    en:
+      - TODO
+      - israel
   display_name:
     he: "TODO: Hebrew display name"
     en: TODO English Display Name
@@ -56,6 +64,13 @@ metadata:
     he: "TODO: Hebrew description"
     en: >-
       TODO: English description (mirrors the main description field)
+  supported_agents:
+    - claude-code
+    - cursor
+    - github-copilot
+    - windsurf
+    - opencode
+    - codex
 ---
 
 # TODO: Skill Display Name

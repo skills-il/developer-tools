@@ -29,9 +29,14 @@ metadata:
   category: <category-repo-name>
   mcp-server: <server-name>          # Only if skill uses MCP
   tags:
-    - <domain-tag>
-    - <function-tag>
-    - israel
+    he:
+      - <domain-tag-he>
+      - <function-tag-he>
+      - ישראל
+    en:
+      - <domain-tag>
+      - <function-tag>
+      - israel
   display_name:
     he: "<Hebrew name>"
     en: <English Name>
@@ -39,7 +44,20 @@ metadata:
     he: "<Hebrew description>"
     en: >-
       <English description>
+  supported_agents:
+    - claude-code
+    - cursor
+    - github-copilot
+    - windsurf
+    - opencode
+    - codex
 ```
+
+**Tags rules:**
+- Both `he` and `en` arrays are required
+- Arrays must be the same length (each English tag has exactly one Hebrew counterpart)
+- No empty strings allowed in either array
+- Technical terms with no Hebrew equivalent can stay in English in both arrays (e.g., `API`, `MCP`)
 
 ## Description Formula
 
@@ -152,6 +170,7 @@ Description must contain at least one of:
 
 ### Before Submission
 - [ ] 2-3 concrete use cases identified
+- [ ] Creator name and email collected
 - [ ] Folder named in kebab-case
 - [ ] SKILL.md file exists (exact spelling)
 - [ ] YAML frontmatter has `---` delimiters
@@ -166,6 +185,8 @@ Description must contain at least one of:
 - [ ] No hardcoded secrets
 - [ ] SKILL_HE.md exists with consistent structure
 - [ ] Bilingual `display_name` and `display_description` in metadata
+- [ ] `metadata.tags` has both `he` and `en` arrays of equal length with no empty strings
+- [ ] `supported_agents` list is accurate
 
 ### After Submission
 - [ ] validate-skill.sh passes
@@ -188,14 +209,18 @@ Description must contain at least one of:
 
 ## Category Repos
 
-| Repo | Skills Count | Focus |
-|------|-------------|-------|
-| tax-and-finance | 9 | Invoicing, payroll, VAT, payments, pensions |
-| government-services | 12 | data.gov.il, Bituach Leumi, transit, elections |
-| security-compliance | 3 | Privacy law, cybersecurity, legal research |
-| localization | 5 | RTL, Hebrew NLP, OCR, Shabbat scheduling |
-| developer-tools | 7+ | ID validation, dates, phones, DevOps |
-| communication | 4 | SMS, WhatsApp, Monday.com, job market |
+| Repo | Focus |
+|------|-------|
+| tax-and-finance | Invoicing, payroll, VAT, payments, pensions |
+| government-services | data.gov.il, Bituach Leumi, transit, elections |
+| security-compliance | Privacy law, cybersecurity, legal research |
+| localization | RTL, Hebrew NLP, OCR, Shabbat scheduling |
+| developer-tools | ID validation, dates, phones, DevOps |
+| communication | SMS, WhatsApp, Monday.com, job market |
+| food-and-dining | Restaurants, recipes, kashrut, delivery |
+| legal-tech | Contracts, legal research, compliance |
+| education | Learning platforms, tutoring, academic tools |
+| health-services | HMOs, pharmacy, medical records, appointments |
 
 ## Progressive Disclosure Levels
 
