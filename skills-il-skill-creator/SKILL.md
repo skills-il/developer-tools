@@ -18,7 +18,7 @@ compatibility: >-
   conventions. Works with Claude Code, Claude.ai, Cursor.
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.1.0
   category: developer-tools
   tags:
     he:
@@ -84,10 +84,36 @@ Ask the user which category repo this skill belongs to:
 | Localization | localization | RTL, Hebrew NLP, OCR, Shabbat scheduling |
 | Dev Tools | developer-tools | ID validation, date conversion, phone formatting |
 | Communication | communication | SMS, WhatsApp, Monday.com, job market |
+| Food & Dining | food-and-dining | Restaurants, recipes, kashrut, delivery |
+| Legal Tech | legal-tech | Contracts, legal research, compliance |
+| Education | education | Learning platforms, tutoring, academic tools |
+| Health Services | health-services | HMOs, pharmacy, medical records, appointments |
 
 If the skill doesn't fit any category, discuss with the user whether it belongs in an existing category or warrants a new repo.
 
-### Step 2: Define Use Cases
+### Step 2: Collect Creator Information (MUST ASK)
+
+Before proceeding, you MUST ask the user for their creator details. These are required for submitting the skill to the Skills IL directory.
+
+Ask the user:
+
+> "What is your name? This will be displayed as the skill creator on the Skills IL directory. Your GitHub username is fine too."
+
+Wait for the user's response and store their answer as `creator_name`.
+
+Then ask:
+
+> "What is your email address? This is required so we can notify you when your skill is published, featured, or if we need to contact you about updates. It will not be displayed publicly."
+
+Wait for the user's response and store their answer as `creator_email`.
+
+**Rules:**
+- `creator_name` is required. Default to the GitHub username if the user prefers not to provide their full name.
+- `creator_email` is **required** and must be a valid email address. Do NOT proceed without it.
+- Store both values -- they will be used in the `metadata.author` field and when submitting to the directory.
+- If the user declines to provide an email, explain that it is mandatory for the submission process and they will not receive notifications about their skill without it.
+
+### Step 3: Define Use Cases
 
 CRITICAL: Before writing any code, identify 2-3 concrete use cases.
 
@@ -110,7 +136,7 @@ Result: Invoice validated with pass/fail report
 
 Ask the user to describe their skill idea, then help them extract 2-3 use cases from it. Include Hebrew transliterations for all domain terms (e.g., "payroll" = "tlush maskoret", "invoice" = "hashbonit").
 
-### Step 3: Scaffold the Folder
+### Step 4: Scaffold the Folder
 
 Run the scaffolding script to create the skill folder structure:
 
@@ -133,9 +159,9 @@ Verify the output:
 - Name does not contain "claude" or "anthropic"
 - No README.md inside the folder
 
-### Step 4: Write the YAML Frontmatter
+### Step 5: Write the YAML Frontmatter
 
-Generate the frontmatter following this exact structure:
+Generate the frontmatter following this exact structure. Use the `creator_name` collected in Step 2 for the `author` field:
 
 ```yaml
 ---
@@ -149,13 +175,13 @@ allowed-tools: '<tools if needed>'
 compatibility: >-
   [Network/system requirements]. Works with Claude Code, Claude.ai, Cursor.
 metadata:
-  author: skills-il
+  author: <creator_name from Step 2>
   version: 1.0.0
   category: <category-repo>
   tags:
     he:
-      - <תגית1>
-      - <תגית2>
+      - <tag1-he>
+      - <tag2-he>
       - ישראל
     en:
       - <tag1>
@@ -191,7 +217,7 @@ metadata:
 
 **Bilingual tags (MUST ASK):** After defining the English tags, ask the user:
 
-> "Please provide Hebrew translations for each tag. Tags must have matching `he` and `en` arrays (same length). For example, if your English tags are `[invoicing, tax, israel]`, the Hebrew tags should be `[חשבוניות, מיסים, ישראל]`. What are the Hebrew equivalents for your tags?"
+> "Please provide Hebrew translations for each tag. Tags must have matching `he` and `en` arrays (same length). For example, if your English tags are `[invoicing, tax, israel]`, the Hebrew tags should be `[invoices, taxes, israel]`. What are the Hebrew equivalents for your tags?"
 
 - Both `he` and `en` arrays are **required** -- no tag may be left untranslated
 - Arrays must be the **same length** (each English tag has exactly one Hebrew counterpart)
@@ -213,7 +239,7 @@ metadata:
 - Multiple CLI tools: `'Bash(python:*) Bash(curl:*) WebFetch'`
 - pip installs: `'Bash(python:*) Bash(pip:*)'`
 
-### Step 5: Write the Instructions Body
+### Step 6: Write the Instructions Body
 
 Write the SKILL.md body using this structure:
 
@@ -266,7 +292,7 @@ Solution: <Fix>
 - `references/` = detailed specs, full API docs, edge cases (loaded on demand)
 - `scripts/` = executable helpers (run when needed)
 
-### Step 6: Create the Hebrew Companion (SKILL_HE.md)
+### Step 7: Create the Hebrew Companion (SKILL_HE.md)
 
 Create SKILL_HE.md with the same structure but in Hebrew:
 - Translate the body instructions to Hebrew
@@ -276,7 +302,7 @@ Create SKILL_HE.md with the same structure but in Hebrew:
 
 The Hebrew file uses the same frontmatter as SKILL.md (frontmatter stays in English).
 
-### Step 7: Validate and Prepare for PR
+### Step 8: Validate and Prepare for Submission
 
 Run the validation script:
 
@@ -308,6 +334,9 @@ After validation passes, review against the quality checklist:
 - [ ] No security issues (secrets, injection vectors)
 - [ ] `supported_agents` list is accurate (all compatible agents included)
 - [ ] `metadata.tags` has both `he` and `en` arrays of equal length with no empty strings
+- [ ] `creator_name` and `creator_email` collected from user (Step 2)
+
+**Submission reminder:** When the skill is ready, remind the user to submit it at https://agentskills.co.il/en/submit (or the Hebrew version at /he/submit). The submission form requires the **creator name** and **creator email** collected in Step 2. These fields are pre-filled from the GitHub repo owner but can be edited. The email is mandatory for receiving notifications about the skill.
 
 ## Examples
 
@@ -317,14 +346,15 @@ User says: "I want to create a skill for querying Israeli court decisions"
 
 Actions:
 1. Category: government-services
-2. Use cases: search by case number, search by judge name, search by topic (Hebrew legal terms)
-3. Scaffold: `python scripts/scaffold-skill.py --name israeli-court-decisions --category government-services`
-4. Frontmatter: name=israeli-court-decisions, triggers include "psakei din", "beit mishpat", "nevo"
-5. Instructions: Steps for search types, result parsing, citation format
-6. Hebrew: SKILL_HE.md with native legal terminology
-7. Validate: `./scripts/validate-skill.sh israeli-court-decisions/SKILL.md`
+2. Creator info: Ask for name and email
+3. Use cases: search by case number, search by judge name, search by topic (Hebrew legal terms)
+4. Scaffold: `python scripts/scaffold-skill.py --name israeli-court-decisions --category government-services`
+5. Frontmatter: name=israeli-court-decisions, author=creator_name, triggers include "psakei din", "beit mishpat", "nevo"
+6. Instructions: Steps for search types, result parsing, citation format
+7. Hebrew: SKILL_HE.md with native legal terminology
+8. Validate: `./scripts/validate-skill.sh israeli-court-decisions/SKILL.md`
 
-Result: Complete skill ready for PR to government-services repo.
+Result: Complete skill ready for submission to the Skills IL directory.
 
 ### Example 2: Create a Developer Tool Skill
 
@@ -332,12 +362,13 @@ User says: "I need a skill that helps format Israeli addresses"
 
 Actions:
 1. Category: developer-tools (or government-services for address lookup APIs)
-2. Use cases: format for postal mail, validate mikud, normalize city names
-3. Scaffold: `python scripts/scaffold-skill.py --name israeli-address-formatter --category developer-tools`
-4. Frontmatter: triggers include "format ktovet", "mikud", "address normalization"
-5. Instructions: Format rules, mikud lookup, bilingual city names
-6. Hebrew: SKILL_HE.md
-7. Validate: passes all checks
+2. Creator info: Ask for name and email
+3. Use cases: format for postal mail, validate mikud, normalize city names
+4. Scaffold: `python scripts/scaffold-skill.py --name israeli-address-formatter --category developer-tools`
+5. Frontmatter: triggers include "format ktovet", "mikud", "address normalization"
+6. Instructions: Format rules, mikud lookup, bilingual city names
+7. Hebrew: SKILL_HE.md
+8. Validate: passes all checks
 
 Result: Address formatting skill with validation and postal format support.
 
@@ -347,12 +378,13 @@ User says: "I want to create a skill that uses the israeli-bank-mcp server"
 
 Actions:
 1. Category: tax-and-finance
-2. Use cases: categorize transactions, detect recurring charges, monthly summary
-3. Scaffold: `python scripts/scaffold-skill.py --name israeli-bank-analyzer --category tax-and-finance`
-4. Frontmatter: add `mcp-server: israeli-bank-mcp` to metadata, triggers include "nituch tenuot bank"
-5. Instructions: MCP tool calls for fetching transactions, categorization logic, summary generation
-6. Hebrew: SKILL_HE.md with banking terminology
-7. Validate: passes all checks
+2. Creator info: Ask for name and email
+3. Use cases: categorize transactions, detect recurring charges, monthly summary
+4. Scaffold: `python scripts/scaffold-skill.py --name israeli-bank-analyzer --category tax-and-finance`
+5. Frontmatter: add `mcp-server: israeli-bank-mcp` to metadata, triggers include "nituch tenuot bank"
+6. Instructions: MCP tool calls for fetching transactions, categorization logic, summary generation
+7. Hebrew: SKILL_HE.md with banking terminology
+8. Validate: passes all checks
 
 Result: MCP-enhanced skill that adds workflow intelligence on top of bank data access.
 
