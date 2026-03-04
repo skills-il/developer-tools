@@ -8,10 +8,16 @@ body:
     attributes:
       label: Which skill?
       options:
+        - cloudinary-assets
         - idf-date-converter
+        - israeli-agritech-advisor
         - israeli-id-validator
         - israeli-marketplace-seller
+        - israeli-phone-formatter
         - israeli-shipping-manager
+        - israeli-startup-toolkit
+        - jfrog-devops
+        - skills-il-skill-creator
         - Other
     validations:
       required: true

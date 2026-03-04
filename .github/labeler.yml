@@ -14,22 +14,26 @@ israeli-id-validator:
   - changed-files:
     - any-glob-to-any-file: 'israeli-id-validator/**'
 
-israeli-phone-formatter:
-  - changed-files:
-    - any-glob-to-any-file: 'israeli-phone-formatter/**'
-
-israeli-startup-toolkit:
-  - changed-files:
-    - any-glob-to-any-file: 'israeli-startup-toolkit/**'
-
 israeli-marketplace-seller:
   - changed-files:
     - any-glob-to-any-file: 'israeli-marketplace-seller/**'
+
+israeli-phone-formatter:
+  - changed-files:
+    - any-glob-to-any-file: 'israeli-phone-formatter/**'
 
 israeli-shipping-manager:
   - changed-files:
     - any-glob-to-any-file: 'israeli-shipping-manager/**'
 
+israeli-startup-toolkit:
+  - changed-files:
+    - any-glob-to-any-file: 'israeli-startup-toolkit/**'
+
 jfrog-devops:
   - changed-files:
     - any-glob-to-any-file: 'jfrog-devops/**'
+
+skills-il-skill-creator:
+  - changed-files:
+    - any-glob-to-any-file: 'skills-il-skill-creator/**'
