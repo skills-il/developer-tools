@@ -89,3 +89,41 @@ Use separate runs for Hebrew and English text. Numbers render LTR automatically 
 Investor pitch deck structure: Cover, Problem, Solution, Market Size (TAM/SAM/SOM), Business Model, Traction, Team, Competition, Financials, Ask.
 
 Formatting: NIS currency symbol, DD/MM/YYYY dates, comma thousands separators.
+
+## Examples
+
+### Example 1: Create a Hebrew Sales Pitch Deck
+User says: "Build a 10-slide pitch deck in Hebrew for investors"
+Actions:
+1. Set up RTL PowerPoint with Heebo/David fonts
+2. Create slides: cover, problem, solution, market, product, traction, team, financials, ask, contact
+3. Use NIS currency formatting, Israeli market data
+4. Apply right-to-left bullet points and text alignment
+Result: Professional Hebrew pitch deck with Israeli context
+
+### Example 2: Generate Hebrew Training Presentation
+User says: "Create a training presentation in Hebrew for new employees"
+Actions:
+1. Create RTL presentation with company branding placeholder
+2. Structure: welcome, company overview, team structure, policies, tools, Q&A
+3. Add speaker notes in Hebrew for each slide
+4. Include agenda slide with Hebrew section headers
+Result: Hebrew onboarding presentation with speaker notes
+
+## Bundled Resources
+
+### Scripts
+- `scripts/pptx_rtl_fixer.py` -- Validates and fixes RTL alignment in PowerPoint files. Run: `python scripts/pptx_rtl_fixer.py --help`
+
+### References
+- `references/israeli-business-slides.md` -- Israeli business presentation conventions including common slide structures, Hebrew typography for slides, and cultural norms. Consult when building business or investor presentations for Israeli audiences.
+
+## Troubleshooting
+
+### Error: "Bullet points appear on the wrong side"
+Cause: PowerPoint defaults to LTR bullet alignment
+Solution: Set paragraph alignment to RIGHT and enable RTL paragraph direction. For `python-pptx`, set `paragraph.alignment = PP_ALIGN.RIGHT`.
+
+### Error: "Charts display Hebrew labels incorrectly"
+Cause: Chart text frames default to LTR
+Solution: After creating chart data, iterate over all chart text frames and set their paragraph direction to RTL. Hebrew axis labels may need manual font assignment.
