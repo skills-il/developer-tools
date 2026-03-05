@@ -49,6 +49,7 @@ metadata:
     - opencode
     - codex
     - openclaw
+    - antigravity
 ---
 
 # IDF Date Converter

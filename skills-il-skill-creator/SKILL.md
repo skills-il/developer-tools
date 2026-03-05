@@ -224,6 +224,7 @@ metadata:
     - windsurf
     - opencode
     - codex
+    - antigravity
     # - openclaw          # Only add if skill is verified as OpenClaw-compatible
 ---
 ```

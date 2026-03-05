@@ -55,6 +55,7 @@ metadata:
     - windsurf
     - opencode
     - codex
+    - antigravity
 ---
 
 # Cloudinary Assets

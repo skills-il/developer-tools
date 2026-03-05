@@ -47,6 +47,7 @@ metadata:
     - opencode
     - codex
     - openclaw
+    - antigravity
 ---
 
 # Israeli ID Validator
