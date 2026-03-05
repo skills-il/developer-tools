@@ -18,7 +18,7 @@ compatibility: >-
   conventions. Works with Claude Code, Claude.ai, Cursor.
 metadata:
   author: skills-il
-  version: 1.1.0
+  version: 1.2.0
   category: developer-tools
   tags:
     he:
@@ -86,6 +86,7 @@ Ask the user which category repo this skill belongs to:
 | Communication | communication | SMS, WhatsApp, Monday.com, job market |
 | Food & Dining | food-and-dining | Restaurants, recipes, kashrut, delivery |
 | Legal Tech | legal-tech | Contracts, legal research, compliance |
+| Marketing & Growth | marketing-growth | SEO, social media, ads, email campaigns, ASO |
 | Education | education | Learning platforms, tutoring, academic tools |
 | Health Services | health-services | HMOs, pharmacy, medical records, appointments |
 
@@ -136,7 +137,29 @@ Result: Invoice validated with pass/fail report
 
 Ask the user to describe their skill idea, then help them extract 2-3 use cases from it. Include Hebrew transliterations for all domain terms (e.g., "payroll" = "tlush maskoret", "invoice" = "hashbonit").
 
-### Step 4: Scaffold the Folder
+### Step 4: Fact-Check Domain Information
+
+Before writing any content, verify the key facts your skill will reference. This is especially important for skills dealing with Israeli laws, regulations, government services, financial rules, or healthcare policies, as these change frequently.
+
+**What to verify:**
+- Legal thresholds and limits (e.g., small claims court limit, tax brackets, age limits)
+- Government processes and forms (e.g., filing procedures, required documents)
+- Institutional names and contact details (e.g., phone numbers, websites, addresses)
+- Pricing and fees (e.g., copayments, filing fees, service costs)
+- Recent law changes that may have taken effect this year
+
+**How to verify:**
+- Search official Israeli government sources (gov.il, Knesset, Bituach Leumi)
+- Check current-year dates in your searches (laws and thresholds change annually)
+- Cross-reference at least 2 sources for critical facts like monetary limits or legal requirements
+- Note the verification date so the skill can be updated when facts change
+
+**What to record:**
+For each key fact, note: the fact, the source, and the date verified. Include these as inline references in your SKILL.md instructions (e.g., "NIS 38,900 as of January 2025").
+
+Do NOT skip this step. A skill with outdated or incorrect facts (wrong tax rate, expired law, wrong phone number) is worse than no skill at all.
+
+### Step 5: Scaffold the Folder
 
 Run the scaffolding script to create the skill folder structure:
 
@@ -159,7 +182,7 @@ Verify the output:
 - Name does not contain "claude" or "anthropic"
 - No README.md inside the folder
 
-### Step 5: Write the YAML Frontmatter
+### Step 6: Write the YAML Frontmatter
 
 Generate the frontmatter following this exact structure. Use the `creator_name` collected in Step 2 for the `author` field:
 
@@ -239,7 +262,7 @@ metadata:
 - Multiple CLI tools: `'Bash(python:*) Bash(curl:*) WebFetch'`
 - pip installs: `'Bash(python:*) Bash(pip:*)'`
 
-### Step 6: Write the Instructions Body
+### Step 7: Write the Instructions Body
 
 Write the SKILL.md body using this structure:
 
@@ -292,7 +315,53 @@ Solution: <Fix>
 - `references/` = detailed specs, full API docs, edge cases (loaded on demand)
 - `scripts/` = executable helpers (run when needed)
 
-### Step 7: Create the Hebrew Companion (SKILL_HE.md)
+### Step 8: Create References and Scripts
+
+Every skill should include reference files and helper scripts. These are not optional extras; they make the difference between a thin skill and a production-quality one.
+
+**References (`references/` directory):**
+
+Create 2-3 reference files that contain detailed information too long for SKILL.md. Common patterns:
+
+| Pattern | Example | When to use |
+|---------|---------|-------------|
+| Directory/listing | `hospital-directory.md`, `crisis-hotlines-directory.md` | Skill covers a domain with many institutions, services, or contacts |
+| Detailed guide | `fair-rental-law-summary.md`, `ivf-process-detailed.md` | A process or law needs more detail than fits in instructions |
+| Glossary | `hebrew-rental-glossary.md` | Skill uses domain-specific Hebrew terminology (50+ terms) |
+| Checklist | `contract-checklist.md`, `evidence-guide.md` | Users need a step-by-step verification or preparation list |
+| Comparison table | `universities-comparison.md`, `city-rental-guide.md` | Users need to compare options across multiple dimensions |
+| Template | `demand-letter-template.md` | Users need a starting point for a document or form |
+
+Each reference file should:
+- Be under 3,000 words
+- Use markdown with clear headers and tables
+- Include Hebrew terms in parentheses
+- Be linked from SKILL.md with "Consult when..." guidance
+
+**Scripts (`scripts/` directory):**
+
+Create 1-2 Python helper scripts for calculations or data lookups. Common patterns:
+
+| Pattern | Example | When to use |
+|---------|---------|-------------|
+| Calculator | `sekher-calculator.py`, `filing-fee-calculator.py` | Skill involves formulas, tax calculations, or fee estimation |
+| Coverage checker | `fertility-coverage-checker.py` | Skill involves eligibility rules based on multiple criteria |
+| Cost estimator | `therapy-cost-estimator.py`, `rental-budget-calculator.py` | Users need to compare costs across options |
+| Index/adjustment | `rent-index-calculator.py` | Skill involves CPI-linked values or time-based adjustments |
+
+Each script should:
+- Use `#!/usr/bin/env python3` shebang
+- Include argparse with `--help`
+- Have a clear docstring explaining usage
+- Use stdlib only (no external dependencies)
+- Include input validation with clear error messages
+- Print results in clean, formatted output
+
+**Update SKILL.md:** Add a `## Bundled Resources` section (before `## Troubleshooting`) listing all references and scripts with "Consult when..." guidance.
+
+**Update SKILL_HE.md:** Add a matching `## משאבים מצורפים` section with Hebrew descriptions.
+
+### Step 9: Create the Hebrew Companion (SKILL_HE.md)
 
 Create SKILL_HE.md with the same structure but in Hebrew:
 - Translate the body instructions to Hebrew
@@ -302,7 +371,7 @@ Create SKILL_HE.md with the same structure but in Hebrew:
 
 The Hebrew file uses the same frontmatter as SKILL.md (frontmatter stays in English).
 
-### Step 8: Validate and Prepare for Submission
+### Step 10: Validate and Prepare for Submission
 
 Run the validation script:
 
@@ -325,18 +394,49 @@ The script checks 9 rules:
 | 9 | No hardcoded secrets | Remove API keys, tokens |
 
 After validation passes, review against the quality checklist:
+- [ ] Domain facts verified against official sources (Step 4)
 - [ ] Description includes WHAT and WHEN
 - [ ] Instructions are specific and actionable
 - [ ] Examples cover 2+ real scenarios
 - [ ] Troubleshooting covers likely errors
-- [ ] Hebrew companion exists and is consistent
-- [ ] References are linked with "Consult when..." guidance
+- [ ] Hebrew companion exists and section structure matches SKILL.md 1:1
+- [ ] At least 2 reference files in `references/` with "Consult when..." guidance
+- [ ] At least 1 helper script in `scripts/` with argparse and `--help`
 - [ ] No security issues (secrets, injection vectors)
 - [ ] `supported_agents` list is accurate (all compatible agents included)
 - [ ] `metadata.tags` has both `he` and `en` arrays of equal length with no empty strings
 - [ ] `creator_name` and `creator_email` collected from user (Step 2)
 
-**Submission reminder:** When the skill is ready, remind the user to submit it at https://agentskills.co.il/en/submit (or the Hebrew version at /he/submit). The submission form requires the **creator name** and **creator email** collected in Step 2. These fields are pre-filled from the GitHub repo owner but can be edited. The email is mandatory for receiving notifications about the skill.
+### Step 11: Submit or Deploy
+
+After validation passes, the next step depends on your role:
+
+**For community contributors (most users):**
+
+Submit your skill through the website at https://agentskills.co.il/en/submit (Hebrew: /he/submit).
+
+1. Choose submission type: "Existing Repository" (if you pushed your skill to a GitHub repo) or "Proposal" (if you want the skills-il team to create the repo)
+2. Fill in the form with: your GitHub repo URL, creator name, and creator email (from Step 2)
+3. The skills-il team will review your submission, run security analysis, and publish it if it passes
+
+**For skills-il org admins:**
+
+Deploy directly to the category repo and database:
+
+1. Clone the category repo: `gh repo clone skills-il/<category-repo>`
+2. Copy your skill folder into the repo
+3. Commit and push to master:
+   ```bash
+   git add <skill-name>/
+   git commit -m "feat: add <skill-name> skill"
+   git push origin master
+   ```
+4. Wait for the Security Scan CI to pass (check with `gh run list --repo skills-il/<category-repo> --limit 1`)
+5. Insert into Supabase using the sync pipeline or direct SQL insert
+6. Verify the skill appears on the live site (ISR cache refreshes within ~5 minutes)
+
+The `github_url` in the database must point to the skill folder, not the repo root:
+`https://github.com/skills-il/<category-repo>/tree/master/<skill-name>`
 
 ## Examples
 
@@ -348,13 +448,16 @@ Actions:
 1. Category: government-services
 2. Creator info: Ask for name and email
 3. Use cases: search by case number, search by judge name, search by topic (Hebrew legal terms)
-4. Scaffold: `python scripts/scaffold-skill.py --name israeli-court-decisions --category government-services`
-5. Frontmatter: name=israeli-court-decisions, author=creator_name, triggers include "psakei din", "beit mishpat", "nevo"
-6. Instructions: Steps for search types, result parsing, citation format
-7. Hebrew: SKILL_HE.md with native legal terminology
-8. Validate: `./scripts/validate-skill.sh israeli-court-decisions/SKILL.md`
+4. Fact-check: Verify court system structure, Nevo access methods, citation formats via official sources
+5. Scaffold: `python scripts/scaffold-skill.py --name israeli-court-decisions --category government-services`
+6. Frontmatter: name=israeli-court-decisions, author=creator_name, triggers include "psakei din", "beit mishpat", "nevo"
+7. Instructions: Steps for search types, result parsing, citation format
+8. References: `references/court-hierarchy.md` (court levels), `references/citation-format.md` (Israeli legal citation rules)
+9. Hebrew: SKILL_HE.md with native legal terminology
+10. Validate: `./scripts/validate-skill.sh israeli-court-decisions/SKILL.md`
+11. Submit via https://agentskills.co.il/en/submit
 
-Result: Complete skill ready for submission to the Skills IL directory.
+Result: Complete skill ready for the Skills IL directory.
 
 ### Example 2: Create a Developer Tool Skill
 
@@ -364,11 +467,14 @@ Actions:
 1. Category: developer-tools (or government-services for address lookup APIs)
 2. Creator info: Ask for name and email
 3. Use cases: format for postal mail, validate mikud, normalize city names
-4. Scaffold: `python scripts/scaffold-skill.py --name israeli-address-formatter --category developer-tools`
-5. Frontmatter: triggers include "format ktovet", "mikud", "address normalization"
-6. Instructions: Format rules, mikud lookup, bilingual city names
-7. Hebrew: SKILL_HE.md
-8. Validate: passes all checks
+4. Fact-check: Verify mikud format rules, Israel Post API availability, city name mappings
+5. Scaffold: `python scripts/scaffold-skill.py --name israeli-address-formatter --category developer-tools`
+6. Frontmatter: triggers include "format ktovet", "mikud", "address normalization"
+7. Instructions: Format rules, mikud lookup, bilingual city names
+8. References: `references/mikud-format.md`; Scripts: `scripts/mikud-validator.py`
+9. Hebrew: SKILL_HE.md
+10. Validate: passes all checks
+11. Submit via https://agentskills.co.il/en/submit
 
 Result: Address formatting skill with validation and postal format support.
 
@@ -380,11 +486,14 @@ Actions:
 1. Category: tax-and-finance
 2. Creator info: Ask for name and email
 3. Use cases: categorize transactions, detect recurring charges, monthly summary
-4. Scaffold: `python scripts/scaffold-skill.py --name israeli-bank-analyzer --category tax-and-finance`
-5. Frontmatter: add `mcp-server: israeli-bank-mcp` to metadata, triggers include "nituch tenuot bank"
-6. Instructions: MCP tool calls for fetching transactions, categorization logic, summary generation
-7. Hebrew: SKILL_HE.md with banking terminology
-8. Validate: passes all checks
+4. Fact-check: Verify Israeli bank API patterns, transaction category standards
+5. Scaffold: `python scripts/scaffold-skill.py --name israeli-bank-analyzer --category tax-and-finance`
+6. Frontmatter: add `mcp-server: israeli-bank-mcp` to metadata, triggers include "nituch tenuot bank"
+7. Instructions: MCP tool calls for fetching transactions, categorization logic, summary generation
+8. References: `references/bank-api-reference.md`; Scripts: `scripts/transaction-categorizer.py`
+9. Hebrew: SKILL_HE.md with banking terminology
+10. Validate: passes all checks
+11. Submit via https://agentskills.co.il/en/submit
 
 Result: MCP-enhanced skill that adds workflow intelligence on top of bank data access.
 
