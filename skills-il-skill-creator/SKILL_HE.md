@@ -405,36 +405,15 @@ Solution: <פתרון>
 - [ ] `metadata.tags` עם מערכי `he` ו-`en` באורך שווה ללא מחרוזות ריקות
 - [ ] `creator_name` ו-`creator_email` נאספו מהמשתמש (שלב 2)
 
-### שלב 11: הגשה או פריסה
+### שלב 11: הגשת הסקיל
 
-לאחר שהאימות עובר, השלב הבא תלוי בתפקידך:
-
-**לתורמים מהקהילה (רוב המשתמשים):**
-
-הגש את הסקיל דרך האתר בכתובת https://agentskills.co.il/he/submit (אנגלית: /en/submit).
+לאחר שהאימות עובר, הגש את הסקיל דרך האתר בכתובת https://agentskills.co.il/he/submit (אנגלית: /en/submit).
 
 1. בחר סוג הגשה: "ריפוזיטורי קיים" (אם דחפת את הסקיל לריפו GitHub) או "הצעה" (אם אתה רוצה שצוות skills-il ייצור את הריפו)
 2. מלא את הטופס עם: כתובת ריפו GitHub, שם יוצר ואימייל (משלב 2)
 3. צוות skills-il יבדוק את ההגשה, יריץ ניתוח אבטחה ויפרסם אם עובר
 
-**למנהלי ארגון skills-il:**
-
-פרוס ישירות לריפו הקטגוריה ולמסד הנתונים:
-
-1. שכפל את ריפו הקטגוריה: `gh repo clone skills-il/<category-repo>`
-2. העתק את תיקיית הסקיל לתוך הריפו
-3. בצע commit ודחוף ל-master:
-   ```bash
-   git add <skill-name>/
-   git commit -m "feat: add <skill-name> skill"
-   git push origin master
-   ```
-4. חכה שבדיקת האבטחה CI תעבור (בדוק עם `gh run list --repo skills-il/<category-repo> --limit 1`)
-5. הכנס ל-Supabase דרך צינור הסנכרון או SQL ישיר
-6. ודא שהסקיל מופיע באתר (מטמון ISR מתרענן תוך ~5 דקות)
-
-ה-`github_url` במסד הנתונים חייב להצביע לתיקיית הסקיל, לא לשורש הריפו:
-`https://github.com/skills-il/<category-repo>/tree/master/<skill-name>`
+**הערה:** אם אתה מנהל ארגון skills-il, השתמש בסקיל `skills-il-admin-creator` במקום -- הוא מטפל בפריסה, אימות CI, סנכרון מסד נתונים ויצירת תוכן מועשר מקצה לקצה.
 
 ## דוגמאות
 

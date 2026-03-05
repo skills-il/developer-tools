@@ -407,36 +407,15 @@ After validation passes, review against the quality checklist:
 - [ ] `metadata.tags` has both `he` and `en` arrays of equal length with no empty strings
 - [ ] `creator_name` and `creator_email` collected from user (Step 2)
 
-### Step 11: Submit or Deploy
+### Step 11: Submit Your Skill
 
-After validation passes, the next step depends on your role:
-
-**For community contributors (most users):**
-
-Submit your skill through the website at https://agentskills.co.il/en/submit (Hebrew: /he/submit).
+After validation passes, submit your skill through the website at https://agentskills.co.il/en/submit (Hebrew: /he/submit).
 
 1. Choose submission type: "Existing Repository" (if you pushed your skill to a GitHub repo) or "Proposal" (if you want the skills-il team to create the repo)
 2. Fill in the form with: your GitHub repo URL, creator name, and creator email (from Step 2)
 3. The skills-il team will review your submission, run security analysis, and publish it if it passes
 
-**For skills-il org admins:**
-
-Deploy directly to the category repo and database:
-
-1. Clone the category repo: `gh repo clone skills-il/<category-repo>`
-2. Copy your skill folder into the repo
-3. Commit and push to master:
-   ```bash
-   git add <skill-name>/
-   git commit -m "feat: add <skill-name> skill"
-   git push origin master
-   ```
-4. Wait for the Security Scan CI to pass (check with `gh run list --repo skills-il/<category-repo> --limit 1`)
-5. Insert into Supabase using the sync pipeline or direct SQL insert
-6. Verify the skill appears on the live site (ISR cache refreshes within ~5 minutes)
-
-The `github_url` in the database must point to the skill folder, not the repo root:
-`https://github.com/skills-il/<category-repo>/tree/master/<skill-name>`
+**Note:** If you are a skills-il org admin, use the `skills-il-admin-creator` skill instead -- it handles deployment, CI verification, database sync, and enriched content generation end-to-end.
 
 ## Examples
 
