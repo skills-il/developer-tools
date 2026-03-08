@@ -407,13 +407,11 @@ Solution: <פתרון>
 
 ### שלב 11: הגשת הסקיל
 
-לאחר שהאימות עובר, הגש את הסקיל דרך האתר בכתובת https://agentskills.co.il/he/submit (אנגלית: /en/submit).
+לאחר שהאימות עובר, הגש את הסקיל דרך [דף ההגשה באתר](https://agentskills.co.il/he/submit).
 
 1. בחר סוג הגשה: "ריפוזיטורי קיים" (אם דחפת את הסקיל לריפו GitHub) או "הצעה" (אם אתה רוצה שצוות skills-il ייצור את הריפו)
 2. מלא את הטופס עם: כתובת ריפו GitHub, שם יוצר ואימייל (משלב 2)
 3. צוות skills-il יבדוק את ההגשה, יריץ ניתוח אבטחה ויפרסם אם עובר
-
-**הערה:** אם אתה מנהל ארגון skills-il, השתמש בסקיל `skills-il-admin-creator` במקום -- הוא מטפל בפריסה, אימות CI, סנכרון מסד נתונים ויצירת תוכן מועשר מקצה לקצה.
 
 ## דוגמאות
 
@@ -432,7 +430,7 @@ Solution: <פתרון>
 8. מסמכי עזר: `references/court-hierarchy.md`; סקריפטים: `scripts/case-lookup.py`
 9. עברית: SKILL_HE.md עם מינוח משפטי
 10. אימות: `./scripts/validate-skill.sh israeli-court-decisions/SKILL.md`
-11. הגשה דרך https://agentskills.co.il/he/submit
+11. הגשה דרך [דף ההגשה](https://agentskills.co.il/he/submit)
 
 תוצאה: סקיל מוכן לספריית Skills IL.
 
@@ -451,7 +449,7 @@ Solution: <פתרון>
 8. מסמכי עזר: `references/mikud-format.md`; סקריפטים: `scripts/mikud-validator.py`
 9. עברית: SKILL_HE.md
 10. אימות: עובר את כל הבדיקות
-11. הגשה דרך https://agentskills.co.il/he/submit
+11. הגשה דרך [דף ההגשה](https://agentskills.co.il/he/submit)
 
 תוצאה: סקיל פורמט כתובות עם אימות ותמיכה בדואר.
 
@@ -470,7 +468,7 @@ Solution: <פתרון>
 8. מסמכי עזר: `references/bank-api-reference.md`; סקריפטים: `scripts/transaction-categorizer.py`
 9. עברית: SKILL_HE.md עם מינוח בנקאי
 10. אימות: עובר את כל הבדיקות
-11. הגשה דרך https://agentskills.co.il/he/submit
+11. הגשה דרך [דף ההגשה](https://agentskills.co.il/he/submit)
 
 תוצאה: סקיל מועשר MCP שמוסיף אינטליגנציה על גבי גישה לנתוני בנק.
 
