@@ -224,7 +224,6 @@ metadata:
     - windsurf
     - opencode
     - codex
-    - antigravity
     # - openclaw          # Only add if skill is verified as OpenClaw-compatible
 ---
 ```
@@ -405,18 +404,17 @@ After validation passes, review against the quality checklist:
 - [ ] At least 1 helper script in `scripts/` with argparse and `--help`
 - [ ] No security issues (secrets, injection vectors)
 - [ ] `supported_agents` list is accurate (all compatible agents included)
+- [ ] `metadata.version` is set (e.g., 1.0.0)
 - [ ] `metadata.tags` has both `he` and `en` arrays of equal length with no empty strings
 - [ ] `creator_name` and `creator_email` collected from user (Step 2)
 
 ### Step 11: Submit Your Skill
 
-After validation passes, submit your skill through the website at https://agentskills.co.il/en/submit (Hebrew: /he/submit).
+After validation passes, submit your skill through the [submission page](https://agentskills.co.il/en/submit).
 
 1. Choose submission type: "Existing Repository" (if you pushed your skill to a GitHub repo) or "Proposal" (if you want the skills-il team to create the repo)
 2. Fill in the form with: your GitHub repo URL, creator name, and creator email (from Step 2)
 3. The skills-il team will review your submission, run security analysis, and publish it if it passes
-
-**Note:** If you are a skills-il org admin, use the `skills-il-admin-creator` skill instead -- it handles deployment, CI verification, database sync, and enriched content generation end-to-end.
 
 ## Examples
 
@@ -435,7 +433,7 @@ Actions:
 8. References: `references/court-hierarchy.md` (court levels), `references/citation-format.md` (Israeli legal citation rules)
 9. Hebrew: SKILL_HE.md with native legal terminology
 10. Validate: `./scripts/validate-skill.sh israeli-court-decisions/SKILL.md`
-11. Submit via https://agentskills.co.il/en/submit
+11. Submit via the [submission page](https://agentskills.co.il/en/submit)
 
 Result: Complete skill ready for the Skills IL directory.
 
@@ -454,7 +452,7 @@ Actions:
 8. References: `references/mikud-format.md`; Scripts: `scripts/mikud-validator.py`
 9. Hebrew: SKILL_HE.md
 10. Validate: passes all checks
-11. Submit via https://agentskills.co.il/en/submit
+11. Submit via the [submission page](https://agentskills.co.il/en/submit)
 
 Result: Address formatting skill with validation and postal format support.
 
@@ -473,7 +471,7 @@ Actions:
 8. References: `references/bank-api-reference.md`; Scripts: `scripts/transaction-categorizer.py`
 9. Hebrew: SKILL_HE.md with banking terminology
 10. Validate: passes all checks
-11. Submit via https://agentskills.co.il/en/submit
+11. Submit via the [submission page](https://agentskills.co.il/en/submit)
 
 Result: MCP-enhanced skill that adds workflow intelligence on top of bank data access.
 
