@@ -1,46 +1,56 @@
 ---
 name: israeli-product-price-comparator
 description: >-
-  Compare product prices across major Israeli retailers and e-commerce platforms including Zap.co.il,
-  KSP, iDigital, Ivory, Bug, and more. Use when the user wants to find the best price for electronics,
-  appliances, computers, or consumer goods in Israel, needs to compare local vs. import pricing,
-  or wants guidance on price tracking tools and Israeli consumer protection rights.
-  Do NOT use for comparing grocery or food prices, real estate, or financial products.
+  Compare product prices across major Israeli retailers and e-commerce platforms including
+  Zap.co.il, KSP, iDigital, Ivory, Bug, and more. Use when the user wants to find
+  the best price for electronics, appliances, computers, or consumer goods in Israel,
+  needs to compare local vs. import pricing, or wants guidance on price tracking tools
+  and Israeli consumer protection rights. Do NOT use for comparing grocery or food
+  prices, real estate, or financial products.
 license: MIT
-allowed-tools: "Bash(node:*) Bash(python:*) WebFetch"
+allowed-tools: Bash(node:*) Bash(python:*) WebFetch
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
   tags:
     he:
-      - השוואת מחירים
-      - זאפ
-      - קניות
-      - מוצרים
-      - חנויות
-      - אלקטרוניקה
+    - השוואת מחירים
+    - זאפ
+    - קניות
+    - מוצרים
+    - חנויות
+    - אלקטרוניקה
     en:
-      - price-comparison
-      - zap
-      - shopping
-      - products
-      - stores
-      - electronics
+    - price-comparison
+    - zap
+    - shopping
+    - products
+    - stores
+    - electronics
   display_name:
-    he: "השוואת מחירי מוצרים בישראל"
-    en: "Israeli Product Price Comparator"
+    he: השוואת מחירי מוצרים בישראל
+    en: Israeli Product Price Comparator
   display_description:
-    he: "השוואת מחירי מוצרים ברשתות ואתרי מסחר מובילים בישראל כולל זאפ, KSP, iDigital, Ivory ועוד"
-    en: "Compare product prices across major Israeli retailers and e-commerce sites including Zap, KSP, iDigital, Ivory, and more"
+    he: >-
+      השוואת מחירי מוצרים ברשתות ואתרי מסחר מובילים בישראל כולל זאפ, KSP, iDigital,
+      Ivory ועוד
+    en: >-
+      Compare product prices across major Israeli retailers and e-commerce platforms
+      including Zap.co.il, KSP, iDigital, Ivory, Bug, and more. Use when the user
+      wants to find the best price for electronics, appliances, computers, or consumer
+      goods in Israel, needs to compare local vs. import pricing, or wants guidance
+      on price tracking tools and Israeli consumer protection rights. Do NOT use for
+      comparing grocery or food prices, real estate, or financial products.
   supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+  - claude-code
+  - cursor
+  - github-copilot
+  - windsurf
+  - opencode
+  - codex
 ---
+
 
 # Israeli Product Price Comparator
 
