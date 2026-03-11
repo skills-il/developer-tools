@@ -1,50 +1,53 @@
 ---
 name: israeli-spreadsheets
 description: >-
-  Generate Excel spreadsheets with Israeli tax calculations, VAT, NIS
-  formatting, and Hebrew-labeled financial templates. Use when user asks
-  about Israeli tax spreadsheets, NIS-formatted Excel files, VAT calculations,
-  salary slip templates, arnona estimators, or Israeli accounting worksheets.
-  Covers 2025 tax brackets, Bituach Leumi rates, and openpyxl RTL configuration.
+  Generate Excel spreadsheets with Israeli tax calculations, VAT, NIS formatting,
+  and Hebrew-labeled financial templates. Use when user asks about Israeli tax spreadsheets,
+  NIS-formatted Excel files, VAT calculations, salary slip templates, arnona estimators,
+  or Israeli accounting worksheets. Covers 2025 tax brackets, Bituach Leumi rates,
+  and openpyxl RTL configuration.
 license: MIT
 compatibility: >-
-  Requires openpyxl for Excel generation. Works with Claude Code, Cursor,
-  GitHub Copilot, Windsurf, OpenCode, Codex.
+  Requires openpyxl for Excel generation. Works with Claude Code, Cursor, GitHub Copilot,
+  Windsurf, OpenCode, Codex.
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
   tags:
     he:
-      - אקסל
-      - מס
-      - מע"מ
-      - שקלים
-      - חשבונאות
+    - אקסל
+    - מס
+    - מע"מ
+    - שקלים
+    - חשבונאות
     en:
-      - excel
-      - tax
-      - vat
-      - shekel
-      - accounting
+    - excel
+    - tax
+    - vat
+    - shekel
+    - accounting
   display_name:
-    he: "גיליונות ישראליים"
-    en: "Israeli Spreadsheets"
+    he: גיליונות ישראליים
+    en: Israeli Spreadsheets
   display_description:
-    he: >-
-      יצירת גיליונות Excel עם חישובי מס, מע"מ ועיצוב פיננסי ישראלי
+    he: יצירת גיליונות Excel עם חישובי מס, מע"מ ועיצוב פיננסי ישראלי
     en: >-
-      Generate Excel spreadsheets with Israeli tax calculations, VAT, NIS
-      formatting, and Hebrew-labeled financial templates
+      Generate Excel spreadsheets with Israeli tax calculations, VAT, NIS formatting,
+      and Hebrew-labeled financial templates. Use when user asks about Israeli tax
+      spreadsheets, NIS-formatted Excel files, VAT calculations, salary slip templates,
+      arnona estimators, or Israeli accounting worksheets. Covers 2025 tax brackets,
+      Bituach Leumi rates, and openpyxl RTL configuration.
   supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
-    - antigravity
+  - claude-code
+  - cursor
+  - github-copilot
+  - windsurf
+  - opencode
+  - codex
+  - antigravity
 ---
+
 
 # Israeli Spreadsheets
 
