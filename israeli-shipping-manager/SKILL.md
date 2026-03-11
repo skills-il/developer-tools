@@ -1,51 +1,59 @@
 ---
 name: israeli-shipping-manager
 description: >-
-  Manage shipping operations across Israeli carriers — Israel Post, Cheetah,
-  HFD, Baldar, Mahir Li, and BOX pickup points. Use when user asks about
-  "shipping Israel", "Israel Post API", "Cheetah delivery", "meshloach",
-  "shipping label", "package tracking Israel", "BOX pickup", "HFD", "Baldar",
-  or "tawit mishloach". Covers carrier selection, Israeli address formatting,
-  label generation, cross-carrier tracking, and customer delivery notifications.
-  Do NOT use for international shipping outside Israel or customs/import.
+  Manage shipping operations across Israeli carriers — Israel Post, Cheetah, HFD,
+  Baldar, Mahir Li, and BOX pickup points. Use when user asks about "shipping Israel",
+  "Israel Post API", "Cheetah delivery", "meshloach", "shipping label", "package tracking
+  Israel", "BOX pickup", "HFD", "Baldar", or "tawit mishloach". Covers carrier selection,
+  Israeli address formatting, label generation, cross-carrier tracking, and customer
+  delivery notifications. Do NOT use for international shipping outside Israel or
+  customs/import.
 license: MIT
-allowed-tools: "Bash(python:*) WebFetch"
+allowed-tools: Bash(python:*) WebFetch
 compatibility: >-
-  Works with Claude Code, OpenClaw, Cursor. OpenClaw recommended for automated
-  tracking updates and customer WhatsApp/SMS notifications.
+  Works with Claude Code, OpenClaw, Cursor. OpenClaw recommended for automated tracking
+  updates and customer WhatsApp/SMS notifications.
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
   tags:
     he:
-      - משלוחים
-      - לוגיסטיקה
-      - מסחר-אלקטרוני
-      - משלוח
-      - דואר-ישראל
-      - ישראל
+    - משלוחים
+    - לוגיסטיקה
+    - מסחר-אלקטרוני
+    - משלוח
+    - דואר-ישראל
+    - ישראל
     en:
-      - shipping
-      - logistics
-      - ecommerce
-      - delivery
-      - israel-post
-      - israel
+    - shipping
+    - logistics
+    - ecommerce
+    - delivery
+    - israel-post
+    - israel
   display_name:
     he: מנהל משלוחים ישראלי
     en: Israeli Shipping Manager
   display_description:
-    he: ניהול משלוחים ומעקב חבילות מול שלדנים ישראליים — דואר ישראל, צ'יטה, HFD, בלדר, מהיר לי ונקודות BOX
+    he: >-
+      ניהול משלוחים ומעקב חבילות מול שלדנים ישראליים — דואר ישראל, צ'יטה, HFD, בלדר,
+      מהיר לי ונקודות BOX
     en: >-
-      Manage shipping operations across Israeli carriers — Israel Post, Cheetah,
-      HFD, Baldar, Mahir Li, and BOX pickup points.
+      Manage shipping operations across Israeli carriers — Israel Post, Cheetah, HFD,
+      Baldar, Mahir Li, and BOX pickup points. Use when user asks about "shipping
+      Israel", "Israel Post API", "Cheetah delivery", "meshloach", "shipping label",
+      "package tracking Israel", "BOX pickup", "HFD", "Baldar", or "tawit mishloach".
+      Covers carrier selection, Israeli address formatting, label generation, cross-carrier
+      tracking, and customer delivery notifications. Do NOT use for international
+      shipping outside Israel or customs/import.
   openclaw:
     requires:
       bins: []
       env: []
-    emoji: "📦"
+    emoji: 📦
 ---
+
 
 # Israeli Shipping Manager
 
