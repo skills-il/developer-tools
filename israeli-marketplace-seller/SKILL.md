@@ -1,52 +1,59 @@
 ---
 name: israeli-marketplace-seller
 description: >-
-  Manage online selling across Israeli marketplaces — Zap, KSP, Facebook
-  Marketplace, and Instagram Shopping. Use when user asks about "sell on Zap",
-  "Facebook Marketplace Israel", "Instagram Shopping Israel", "online selling
-  Israel", "price comparison KSP", "product listing Hebrew", or "מכירה
-  אונליין". Covers product listing creation, competitor price monitoring,
-  inventory sync, review management, and sales analytics across Israeli
-  marketplaces. Do NOT use for international marketplaces (Amazon, eBay) or
-  physical store operations.
+  Manage online selling across Israeli marketplaces — Zap, KSP, Facebook Marketplace,
+  and Instagram Shopping. Use when user asks about "sell on Zap", "Facebook Marketplace
+  Israel", "Instagram Shopping Israel", "online selling Israel", "price comparison
+  KSP", "product listing Hebrew", or "מכירה אונליין". Covers product listing creation,
+  competitor price monitoring, inventory sync, review management, and sales analytics
+  across Israeli marketplaces. Do NOT use for international marketplaces (Amazon,
+  eBay) or physical store operations.
 license: MIT
-allowed-tools: "Bash(python:*) WebFetch"
+allowed-tools: Bash(python:*) WebFetch
 compatibility: >-
-  Works with Claude Code, OpenClaw, Cursor. OpenClaw recommended for scheduled
-  price monitoring and multi-platform inventory sync.
+  Works with Claude Code, OpenClaw, Cursor. OpenClaw recommended for scheduled price
+  monitoring and multi-platform inventory sync.
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
   tags:
     he:
-      - שוק
-      - מסחר-אלקטרוני
-      - זאפ
-      - מכירה
-      - השוואת-מחירים
-      - ישראל
+    - שוק
+    - מסחר-אלקטרוני
+    - זאפ
+    - מכירה
+    - השוואת-מחירים
+    - ישראל
     en:
-      - marketplace
-      - ecommerce
-      - zap
-      - selling
-      - price-comparison
-      - israel
+    - marketplace
+    - ecommerce
+    - zap
+    - selling
+    - price-comparison
+    - israel
   display_name:
     he: מוכר בשווקים מקוונים ישראליים
     en: Israeli Marketplace Seller
   display_description:
-    he: ניהול מכירות אונליין בשווקים ישראליים — זאפ, KSP, פייסבוק מרקטפלייס ואינסטגרם שופינג
+    he: >-
+      ניהול מכירות אונליין בשווקים ישראליים — זאפ, KSP, פייסבוק מרקטפלייס ואינסטגרם
+      שופינג
     en: >-
-      Manage online selling across Israeli marketplaces — Zap, KSP, Facebook
-      Marketplace, and Instagram Shopping.
+      Manage online selling across Israeli marketplaces — Zap, KSP, Facebook Marketplace,
+      and Instagram Shopping. Use when user asks about "sell on Zap", "Facebook Marketplace
+      Israel", "Instagram Shopping Israel", "online selling Israel", "price comparison
+      KSP", "product listing Hebrew", or "מכירה אונליין". Covers product listing creation,
+      competitor price monitoring, inventory sync, review management, and sales analytics
+      across Israeli marketplaces. Do NOT use for international marketplaces (Amazon,
+      eBay) or physical store operations.
   openclaw:
     requires:
       bins: []
       env: []
-    emoji: "🛒"
+    emoji: 🛒
 ---
+
 
 # Israeli Marketplace Seller
 
