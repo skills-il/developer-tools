@@ -2,46 +2,55 @@
 name: israeli-cloud-cost-comparator
 description: >-
   Compare cloud hosting costs for Israeli startups and developers across AWS (il-central-1),
-  Azure, GCP (me-west1), and Israeli providers like Kamatera and HostIL. Use when the user
-  needs to evaluate cloud pricing with Israel-specific considerations including data residency
-  requirements, latency from Tel Aviv, NIS billing options, startup credit programs, and
-  FinOps cost optimization strategies. Do NOT use for comparing on-premise hosting, colocation
-  services, or non-cloud SaaS pricing.
+  Azure, GCP (me-west1), and Israeli providers like Kamatera and HostIL. Use when
+  the user needs to evaluate cloud pricing with Israel-specific considerations including
+  data residency requirements, latency from Tel Aviv, NIS billing options, startup
+  credit programs, and FinOps cost optimization strategies. Do NOT use for comparing
+  on-premise hosting, colocation services, or non-cloud SaaS pricing.
 license: MIT
-allowed-tools: "Bash(node:*) Bash(python:*) WebFetch"
+allowed-tools: Bash(node:*) Bash(python:*) WebFetch
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
   tags:
     he:
-      - ענן
-      - אחסון
-      - שרתים
-      - עלויות
-      - השוואת מחירים
-      - סטארטאפ
+    - ענן
+    - אחסון
+    - שרתים
+    - עלויות
+    - השוואת מחירים
+    - סטארטאפ
     en:
-      - cloud
-      - hosting
-      - servers
-      - costs
-      - price-comparison
-      - startup
+    - cloud
+    - hosting
+    - servers
+    - costs
+    - price-comparison
+    - startup
   display_name:
-    he: "השוואת עלויות ענן בישראל"
-    en: "Israeli Cloud Cost Comparator"
+    he: השוואת עלויות ענן בישראל
+    en: Israeli Cloud Cost Comparator
   display_description:
-    he: "השוואת עלויות אחסון ענן לסטארטאפים ומפתחים ישראליים כולל AWS ישראל, Azure, GCP וספקים מקומיים"
-    en: "Compare cloud hosting costs for Israeli startups and developers across AWS Israel, Azure, GCP, and local providers"
+    he: >-
+      השוואת עלויות אחסון ענן לסטארטאפים ומפתחים ישראליים כולל AWS ישראל, Azure, GCP
+      וספקים מקומיים
+    en: >-
+      Compare cloud hosting costs for Israeli startups and developers across AWS (il-central-1),
+      Azure, GCP (me-west1), and Israeli providers like Kamatera and HostIL. Use when
+      the user needs to evaluate cloud pricing with Israel-specific considerations
+      including data residency requirements, latency from Tel Aviv, NIS billing options,
+      startup credit programs, and FinOps cost optimization strategies. Do NOT use
+      for comparing on-premise hosting, colocation services, or non-cloud SaaS pricing.
   supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+  - claude-code
+  - cursor
+  - github-copilot
+  - windsurf
+  - opencode
+  - codex
 ---
+
 
 # Israeli Cloud Cost Comparator
 
