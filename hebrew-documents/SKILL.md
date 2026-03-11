@@ -1,51 +1,53 @@
 ---
 name: hebrew-documents
 description: >-
-  Generate RTL Hebrew Word documents with correct bidirectional text, Hebrew
-  typography, and Israeli document formatting standards. Use when user asks
-  about creating Hebrew Word documents, RTL document formatting, Israeli
-  government forms, formal Hebrew letters, or teudat zehut templates.
-  Covers python-docx RTL configuration, Hebrew fonts, Israeli address and
-  date formats, and government form conventions.
+  Generate RTL Hebrew Word documents with correct bidirectional text, Hebrew typography,
+  and Israeli document formatting standards. Use when user asks about creating Hebrew
+  Word documents, RTL document formatting, Israeli government forms, formal Hebrew
+  letters, or teudat zehut templates. Covers python-docx RTL configuration, Hebrew
+  fonts, Israeli address and date formats, and government form conventions.
 license: MIT
 compatibility: >-
-  Requires python-docx for document generation. Works with Claude Code,
-  Cursor, GitHub Copilot, Windsurf, OpenCode, Codex.
+  Requires python-docx for document generation. Works with Claude Code, Cursor, GitHub
+  Copilot, Windsurf, OpenCode, Codex.
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
   tags:
     he:
-      - מסמך
-      - עברית
-      - RTL
-      - Word
-      - טפסים
+    - מסמך
+    - עברית
+    - RTL
+    - Word
+    - טפסים
     en:
-      - document
-      - hebrew
-      - rtl
-      - word
-      - forms
+    - document
+    - hebrew
+    - rtl
+    - word
+    - forms
   display_name:
-    he: "מסמכים בעברית"
-    en: "Hebrew Documents"
+    he: מסמכים בעברית
+    en: Hebrew Documents
   display_description:
-    he: >-
-      יצירת מסמכי Word בעברית עם תמיכה ב-RTL, טפסים ישראליים ותבניות מקצועיות
+    he: יצירת מסמכי Word בעברית עם תמיכה ב-RTL, טפסים ישראליים ותבניות מקצועיות
     en: >-
-      Generate RTL Hebrew Word documents with correct bidirectional text,
-      Hebrew typography, and Israeli document formatting standards
+      Generate RTL Hebrew Word documents with correct bidirectional text, Hebrew typography,
+      and Israeli document formatting standards. Use when user asks about creating
+      Hebrew Word documents, RTL document formatting, Israeli government forms, formal
+      Hebrew letters, or teudat zehut templates. Covers python-docx RTL configuration,
+      Hebrew fonts, Israeli address and date formats, and government form conventions.
   supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
-    - antigravity
+  - claude-code
+  - cursor
+  - github-copilot
+  - windsurf
+  - opencode
+  - codex
+  - antigravity
 ---
+
 
 # Hebrew Documents
 
