@@ -1,51 +1,54 @@
 ---
 name: hebrew-presentations
 description: >-
-  Generate RTL Hebrew PowerPoint presentations with correct bidirectional text,
-  Hebrew fonts, and Israeli business formatting conventions. Use when user asks
-  about creating Hebrew PowerPoint slides, RTL presentations, Israeli pitch
-  decks, startup investor presentations, or Hebrew slide formatting.
-  Covers python-pptx RTL configuration, Hebrew font selection, bidirectional
-  text handling, and Israeli business conventions.
+  Generate RTL Hebrew PowerPoint presentations with correct bidirectional text, Hebrew
+  fonts, and Israeli business formatting conventions. Use when user asks about creating
+  Hebrew PowerPoint slides, RTL presentations, Israeli pitch decks, startup investor
+  presentations, or Hebrew slide formatting. Covers python-pptx RTL configuration,
+  Hebrew font selection, bidirectional text handling, and Israeli business conventions.
 license: MIT
 compatibility: >-
-  Requires python-pptx for presentation generation. Works with Claude Code,
-  Cursor, GitHub Copilot, Windsurf, OpenCode, Codex.
+  Requires python-pptx for presentation generation. Works with Claude Code, Cursor,
+  GitHub Copilot, Windsurf, OpenCode, Codex.
 metadata:
   author: skills-il
   version: 1.0.0
   category: developer-tools
   tags:
     he:
-      - מצגת
-      - עברית
-      - RTL
-      - PowerPoint
-      - עסקים
+    - מצגת
+    - עברית
+    - RTL
+    - PowerPoint
+    - עסקים
     en:
-      - presentation
-      - hebrew
-      - rtl
-      - powerpoint
-      - business
+    - presentation
+    - hebrew
+    - rtl
+    - powerpoint
+    - business
   display_name:
-    he: "מצגות בעברית"
-    en: "Hebrew Presentations"
+    he: מצגות בעברית
+    en: Hebrew Presentations
   display_description:
-    he: >-
-      יצירת מצגות PowerPoint בעברית עם תמיכה מלאה ב-RTL וגופנים עבריים
+    he: יצירת מצגות PowerPoint בעברית עם תמיכה מלאה ב-RTL וגופנים עבריים
     en: >-
-      Generate RTL Hebrew PowerPoint presentations with correct bidirectional
-      text, Hebrew fonts, and Israeli business formatting conventions
+      Generate RTL Hebrew PowerPoint presentations with correct bidirectional text,
+      Hebrew fonts, and Israeli business formatting conventions. Use when user asks
+      about creating Hebrew PowerPoint slides, RTL presentations, Israeli pitch decks,
+      startup investor presentations, or Hebrew slide formatting. Covers python-pptx
+      RTL configuration, Hebrew font selection, bidirectional text handling, and Israeli
+      business conventions.
   supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
-    - antigravity
+  - claude-code
+  - cursor
+  - github-copilot
+  - windsurf
+  - opencode
+  - codex
+  - antigravity
 ---
+
 
 # Hebrew Presentations
 
