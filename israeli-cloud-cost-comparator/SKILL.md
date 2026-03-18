@@ -11,7 +11,7 @@ license: MIT
 allowed-tools: Bash(node:*) Bash(python:*) WebFetch
 metadata:
   author: skills-il
-  version: 1.0.1
+  version: 1.1.0
   category: developer-tools
   tags:
     he:
@@ -66,6 +66,7 @@ Gather the following information before comparing costs:
 4. **Budget**: Monthly budget in NIS or USD, preference for pay-as-you-go vs. committed use
 5. **Technical stack**: Language/framework, database type, containerized or serverless preference
 6. **Growth trajectory**: Startup (scaling fast), SMB (steady), or enterprise (predictable)
+7. **Existing credits and promotions**: Ask explicitly whether the user has any active credits, free tier, promotional offers, or discount programs with ANY cloud provider. This includes: free trial credits (e.g., AWS $200, GCP $300, Azure $200), startup program credits (AWS Activate, GCP for Startups, Microsoft Founders Hub), educational credits (GitHub Student Pack), event/hackathon credits, VC/accelerator partner credits, or any other promotional balance. Existing credits can dramatically shift the cost comparison and must be factored into the recommendation.
 
 ### Step 2: Compare AWS Israel Region (il-central-1)
 
@@ -198,35 +199,51 @@ Israeli data protection considerations:
 - **Standard compliance** (SaaS, e-commerce): Any provider with Israeli region
 - **Low compliance** (personal projects, internal tools): Consider eu-west-1 or Kamatera for cost savings
 
-### Step 7: Factor in Startup Credits and Programs
+### Step 7: Factor in Credits, Free Tiers, and Promotions
 
-Available startup credit programs for Israeli companies:
+Credits and promotions can change the cost comparison entirely. A provider that is 20% more expensive on list price may be the cheapest option for 6-12 months if the user has credits there. Always check what the user already has before recommending.
 
-**AWS Activate:**
-- Up to $100,000 in AWS credits for startups
-- Available through IIA (Innovation Authority) partnership and approved accelerators
-- Additional credits through AWS Israeli startup team
-- Apply at `https://aws.amazon.com/activate/`
+#### 7a. Free Tier and Trial Credits (Available to Everyone)
 
-**Google Cloud for Startups:**
-- Up to $100,000 in GCP credits (year 1) + $20,000 (year 2)
-- Active program in Israel through Google for Startups Campus Tel Aviv
-- Additional technical support and training
-- Apply at `https://cloud.google.com/startup`
+Every major cloud provider offers free credits or trial periods for new accounts:
 
-**Microsoft for Startups (Founders Hub):**
-- Up to $150,000 in Azure credits
-- Free access to GitHub Enterprise, Visual Studio Enterprise, Microsoft 365
-- Strong presence in Israel through Microsoft Ventures
-- Apply at `https://www.microsoft.com/en-us/startups`
+| Provider | Trial Credits | Trial Duration | Always-Free Tier |
+|----------|--------------|----------------|------------------|
+| AWS | Up to $200 promotional credits | 12 months (free tier services) | 30+ services with monthly limits (Lambda 1M requests, DynamoDB 25GB, etc.) |
+| GCP | $300 | 90 days | 30+ services with monthly limits (Cloud Run 2M requests, Firestore 1GB, etc.) |
+| Azure | $200 | 30 days | 65+ always-free services + 25 services free for 12 months |
 
-**Israel Innovation Authority (IIA) grants:**
-- Government grants covering 20-50% of R&D expenses (including cloud costs)
-- Applicable to companies with Israeli R&D centers
-- Cloud costs are eligible as part of approved R&D budget
-- Apply at `https://innovationisrael.org.il`
+**Key differences:**
+- AWS promotional credits ($100-$200) are available to new accounts and may cover 6 months of light usage
+- GCP's $300 trial is the most generous initial credit but expires after 90 days
+- Azure's $200 expires fastest (30 days) but has the largest always-free catalog
+
+#### 7b. Startup Credit Programs (For Registered Companies)
+
+| Program | Credits | Duration | How to Apply |
+|---------|---------|----------|--------------|
+| AWS Activate | Up to $100,000 | 1-2 years | Through IIA, approved accelerators, or AWS Israeli startup team. `https://aws.amazon.com/activate/` |
+| Google Cloud for Startups | Up to $100,000 (year 1) + $20,000 (year 2) | 2 years | Through Google for Startups Campus Tel Aviv. `https://cloud.google.com/startup` |
+| Microsoft Founders Hub | Up to $150,000 | 1-2 years | Through Microsoft Ventures Israel. `https://www.microsoft.com/en-us/startups` |
+| Israel Innovation Authority (IIA) | 20-50% of R&D expenses (including cloud) | Per approved project | `https://innovationisrael.org.il` |
 
 **Recommendation**: Early-stage startups should apply to all three hyperscaler programs simultaneously. Combined credits can reach $350,000+, allowing 1-2 years of nearly free cloud hosting while evaluating which provider fits best.
+
+#### 7c. Other Credit Sources
+
+- **Educational programs**: GitHub Student Developer Pack includes credits from AWS, GCP, Azure, and DigitalOcean
+- **Hackathon and event credits**: AWS, GCP, and Azure frequently distribute $500-$2,000 credits at developer events and hackathons in Israel (Check Meetup.com and Eventbrite for Israeli tech events)
+- **VC/accelerator partner credits**: Many Israeli accelerators (8200 EISP, MassChallenge Israel, Techstars) include cloud credits as part of their programs
+- **Partner programs**: Technology partnership agreements with AWS, GCP, or Azure may include credit allocations
+
+#### 7d. Using Existing Credits in the Comparison
+
+If the user reports existing credits on any provider, adjust the comparison:
+
+1. **Calculate the credit runway**: How many months will the credits last at the estimated usage level?
+2. **Compare across providers**: Even if Provider A gave the user credits, check if Provider B or C have similar or better offers the user may not know about
+3. **Show both views**: Present costs "with current credits" AND "after credits expire" so the user can plan ahead
+4. **Warn about lock-in**: Credits that expire may push a user toward a provider that costs more long-term. Flag this risk.
 
 ### Step 8: Perform Latency Benchmarking
 
@@ -276,11 +293,12 @@ Build a comprehensive cost comparison including:
 Structure the final recommendation:
 
 1. **Summary table**: Side-by-side cost comparison for the user's specific requirements
-2. **Primary recommendation**: Best provider for the user's use case with justification
-3. **Alternative recommendation**: Second-best option explaining tradeoffs
-4. **Cost optimization tips**: Specific actions to reduce costs (reserved instances, spot usage, right-sizing)
-5. **Migration considerations**: If the user is already on a provider, estimate migration effort and any lock-in concerns
-6. **Next steps**: Links to free tier / trial offers for hands-on evaluation
+2. **Credit-adjusted comparison**: If the user has credits on any provider, show a separate row or table with effective monthly cost after credits. Also proactively mention comparable promotions on other providers the user may not be aware of.
+3. **Primary recommendation**: Best provider for the user's use case with justification. If credits heavily favor one provider short-term, state this clearly but also recommend the best long-term choice after credits expire.
+4. **Alternative recommendation**: Second-best option explaining tradeoffs
+5. **Cost optimization tips**: Specific actions to reduce costs (reserved instances, spot usage, right-sizing)
+6. **Migration considerations**: If the user is already on a provider, estimate migration effort and any lock-in concerns
+7. **Next steps**: Links to free tier / trial offers for hands-on evaluation
 
 ## Examples
 
@@ -325,6 +343,7 @@ Result: Recommend GCP me-west1 with preemptible T4 instance for inference (appro
 
 ## Gotchas
 
+- **Credits blind spot**: When a user mentions having credits or promotions on one provider, agents tend to immediately recommend that provider without checking if other providers offer similar or better deals. Always compare credit programs across ALL providers before recommending. A user with $100 AWS credits may not know that GCP offers $300 in trial credits or that Azure Founders Hub offers $150,000 for startups.
 - AWS Israel region (il-central-1) pricing differs from eu-west-1 and other regions. Agents may use global pricing that does not reflect the Israeli region premium.
 - Israeli cloud costs should be calculated in NIS including 18% VAT for B2C, but excluding VAT for B2B with valid tax invoice. Agents may forget to add VAT for consumer-facing comparisons.
 - Google Cloud Platform (GCP) does not have a dedicated Israel region. Agents may recommend GCP Israel-region deployments that do not exist.
