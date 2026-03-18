@@ -15,7 +15,7 @@ compatibility: >-
   (jf) recommended.
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -300,6 +300,13 @@ Result: Use AQL to find artifacts not downloaded in 90+ days, identify snapshot 
 
 ### References
 - `references/api-reference.md` — Quick reference for Artifactory and Xray REST API endpoints organized by category (system, repositories, artifacts, search, properties, build info, scanning, policies, violations), JFrog CLI command cheatsheet, AQL query patterns, repository type explanations, and standard repository layout conventions. Consult when constructing API calls, writing AQL queries, or setting up repository structures.
+
+## Gotchas
+
+- JFrog Artifactory SaaS instances for Israeli companies may be hosted in the AWS Israel region (il-central-1) or EU regions. Agents should verify the instance region for data residency compliance.
+- JFrog CLI authentication tokens for Israeli enterprise deployments often require SSO integration with Azure AD or Okta configured for Israeli tenants. Agents may generate basic auth configurations that don't work.
+- Israeli software development teams deploy on Sunday-Thursday cycles. CI/CD pipelines configured for Monday-Friday may miss the first day of work or run unnecessarily on Friday.
+- JFrog Xray security scanning may flag dependencies that are compliant with Israeli regulations but flagged by US export controls. Israeli teams should review Xray alerts with local compliance context.
 
 ## Troubleshooting
 

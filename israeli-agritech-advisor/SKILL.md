@@ -17,7 +17,7 @@ compatibility: >-
   with Claude Code, Claude.ai.
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -269,6 +269,14 @@ Result: Connect flow meters via GrowSphere API, aggregate daily/weekly/monthly u
 
 ### References
 - `references/agritech-ecosystem.md` — Directory of Israeli agritech platforms and APIs (CropX, Netafim GrowSphere, Taranis) with endpoint details, plus a company directory covering irrigation, crop monitoring, pollination, and biological sectors. Includes standard data formats (GeoJSON, GeoTIFF, CSV/JSON), agricultural zone rainfall and water source data, and Volcani Institute crop coefficients (Kc) for Israeli conditions. Consult when selecting platforms, configuring API integrations, or looking up crop-specific irrigation parameters.
+
+## Gotchas
+
+- Israeli agricultural seasons differ from Northern European/US patterns due to the Mediterranean climate. Agents may recommend planting schedules based on temperate-zone assumptions.
+- Water allocation in Israeli agriculture is regulated by Mekorot (the national water company). Agents may not account for water quota restrictions when recommending irrigation plans.
+- Israeli organic certification ("Mekori") follows different standards than USDA Organic or EU Organic. Agents may cite incorrect certification requirements.
+- Agricultural technology subsidies from the Israeli Ministry of Agriculture change annually. Agents may reference outdated subsidy programs or amounts.
+- Shmita (sabbatical year) laws affect religious agricultural operations in Israel every 7 years. Agents may not be aware of this religious agricultural cycle and its implications.
 
 ## Troubleshooting
 

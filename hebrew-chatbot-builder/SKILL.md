@@ -15,7 +15,7 @@ allowed-tools: 'Bash(python:*), Bash(psql:*)'
 compatibility: 'No special requirements. Works with Claude Code, Cursor, Windsurf.'
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -912,3 +912,11 @@ And reference documents in `references/`:
 
 - `hebrew-chatbot-phrases.md`: Comprehensive Hebrew conversational phrases for bots, organized by category with transliterations
 - `whatsapp-business-api-guide.md`: Step-by-step WhatsApp Business API setup guide for Israeli businesses
+
+## Gotchas
+
+- Hebrew chatbot responses must be RTL-aligned. Agents may generate HTML/CSS without dir="rtl" attributes, causing Hebrew text to align left and appear unnatural.
+- Hebrew has gendered verb conjugations. A chatbot addressing a user should either use gender-neutral forms or ask for the user's preferred gender. Agents may default to masculine Hebrew forms.
+- Common Hebrew greetings change by time of day: "בוקר טוב" (morning), "צהריים טובים" (noon), "ערב טוב" (evening). Agents may use a single greeting regardless of time.
+- Hebrew word tokenization differs from English. Prefixed prepositions (ב-, ל-, מ-) are attached to the following word. Agents may split tokens incorrectly, breaking intent detection.
+- Israeli users expect informal chatbot communication ("דוגרי"). Overly formal Hebrew sounds robotic and unnatural. Agents may generate formal Hebrew that alienates Israeli users.

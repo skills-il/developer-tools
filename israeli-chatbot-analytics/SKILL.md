@@ -17,7 +17,7 @@ allowed-tools: 'Bash(python:*), Bash(pip:*)'
 compatibility: 'Requires Python 3.10+. Works with Claude Code, Cursor, Windsurf.'
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -1389,6 +1389,13 @@ Result: A formatted Hebrew report with week-over-week comparisons, trend indicat
 ### References
 - `references/chatbot-metrics-glossary.md` -- Glossary of chatbot analytics metrics with Hebrew translations and industry benchmarks. Consult when defining KPIs or explaining metrics to Hebrew-speaking stakeholders.
 - `references/hebrew-sentiment-guide.md` -- Guide to Hebrew sentiment analysis challenges including negation, sarcasm, slang, and mixed-language handling. Consult when building or tuning Hebrew sentiment models.
+
+## Gotchas
+
+- Hebrew sentiment analysis requires Israeli-specific training data. Standard English sentiment models misclassify Hebrew sarcasm (very common in Israeli communication) as neutral or positive.
+- Israeli chatbot usage peaks on Sunday mornings (start of work week), not Monday. Weekly analytics reports should anchor to Sunday-Thursday.
+- Hebrew text analytics must handle prefixed particles (ב-, ל-, כ-, מ-) that change word boundaries. Standard tokenizers trained on English split Hebrew words incorrectly.
+- Israeli users frequently code-switch between Hebrew and English within a single chatbot conversation. Analytics tools must handle bilingual sessions, not treat them as two separate languages.
 
 ## Troubleshooting
 

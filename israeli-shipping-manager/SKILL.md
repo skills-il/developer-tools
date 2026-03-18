@@ -15,7 +15,7 @@ compatibility: >-
   updates and customer WhatsApp/SMS notifications.
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -173,6 +173,14 @@ Result: Comparison table showing Israel Post at 45 NIS (5 days), HFD at 55 NIS (
 
 ### Scripts
 - `scripts/format_address.py` — Validates and formats Israeli shipping addresses per carrier requirements. Checks mikud (ZIP) validity, normalizes Hebrew text, and handles special address types (kibbutz, military, industrial zone). Run: `python scripts/format_address.py --help`
+
+## Gotchas
+
+- Israel Post delivery zones differ from geographic regions. Shipping time estimates should use Israel Post zone mappings, not straight-line distance calculations.
+- Israeli addresses do not use ZIP codes in the US format. Israeli postal codes (mikud) are 7 digits. Agents may validate against 5-digit US ZIP code patterns.
+- Friday deliveries in Israel end by early afternoon (before Shabbat). Same-day delivery services do not operate Friday afternoon through Saturday evening.
+- Israeli settlement addresses in the West Bank require special shipping handling and may not be supported by all carriers. Agents should verify carrier coverage for these areas.
+- COD (cash on delivery) is still common in Israeli e-commerce, unlike in many Western markets. Agents may not include this payment option when setting up shipping flows.
 
 ## Troubleshooting
 

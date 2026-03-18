@@ -16,7 +16,7 @@ compatibility: >-
   consult licensed Israeli professionals for legal/tax decisions.
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -347,6 +347,14 @@ Result: Complete Option 102 setup plan with trustee comparison.
 - `references/iia-programs-guide.md` — Detailed guide to Israel Innovation Authority grant programs including R&D Fund, Tnufa (early stage), incubator programs, BIRD (US-Israel binational), and Horizon Europe tracks. Covers funding percentages, maximum amounts, repayment terms, eligibility requirements, application process, and approval rates. Consult when helping users select the right IIA program or prepare grant applications.
 - `references/investment-term-sheets.md` — Israeli investment agreement templates including SAFE and convertible note structures with Israeli-specific clauses (IIA notification, Section 102 interaction, Israeli securities law exemptions, anti-money laundering). Consult when drafting or reviewing early-stage investment terms under Israeli law.
 - `references/option-102-reference.md` — Complete reference for Section 102 of the Israeli Income Tax Ordinance covering all three tracks (Capital Gains Trustee, Income Trustee, Non-Trustee), holding periods, tax rates, employer deduction rules, ITA-approved trustees, filing procedures, and common pitfalls. Consult when setting up an ESOP or advising on employee equity compensation tax implications.
+
+## Gotchas
+
+- Israeli startups register as "Chevra Baam" (Ltd) at the Registrar of Companies (Rasham HaChevarot), not at the Secretary of State as in the US. Agents may describe US incorporation processes.
+- Israeli innovation grants from the Israel Innovation Authority (formerly OCS) come with IP conditions: the IP must remain in Israel, and commercialization rights require IIA approval to transfer abroad.
+- Israeli tech startups typically use Section 102 stock option plans for employee equity, not US-style ISOs or NSOs. The tax treatment is fundamentally different.
+- Israeli tax year runs January-December (like the US), but corporate tax filing deadlines differ. The standard corporate tax rate is 23%. Agents may cite US tax rates or deadlines.
+- Israeli startups doing business in the US typically incorporate a Delaware LLC/C-Corp as a parent while keeping the Israeli entity as a subsidiary. Agents may suggest the reverse structure.
 
 ## Troubleshooting
 

@@ -15,7 +15,7 @@ compatibility: >-
   key/secret/cloud name environment variables.
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -252,6 +252,13 @@ Result: Video URL with optimized delivery and poster image.
 ### References
 - `references/optimization-guide.md` — Cloudinary performance optimization guide covering f_auto/q_auto automatic optimization, responsive image breakpoints with HTML srcset patterns, DPR handling for retina displays, lazy loading strategies including blur-up LQIP placeholders, and upload-time eager transformations. Consult when building high-performance image delivery pipelines or optimizing page load times.
 - `references/transformation-cheatsheet.md` — Complete Cloudinary URL transformation parameter reference including resize/crop modes, gravity positioning, quality/format options, visual effects, overlay/text parameters, responsive helpers, common recipes (thumbnail, hero, avatar, product, social share, watermark), video transformations, rate limits by plan tier, and environment setup. Consult when constructing transformation URLs or looking up specific parameter syntax.
+
+## Gotchas
+
+- Hebrew text overlays in Cloudinary require explicit RTL direction. Without setting text direction, Hebrew text renders left-to-right and appears as gibberish.
+- Cloudinary's auto-crop face detection may perform differently on photos with Israeli ID-style proportions. Test with actual Israeli document photos, not stock images.
+- Israeli e-commerce product images often need both Hebrew and English text overlays. Cloudinary's text overlay stacking renders Hebrew layers RTL but positions them using LTR coordinates.
+- Cloudinary CDN nodes in Israel (if available) should be preferred for Israeli audiences. Agents may not configure the CDN distribution to prioritize the closest edge location.
 
 ## Troubleshooting
 

@@ -12,7 +12,7 @@ compatibility: >-
   Windsurf, OpenCode, Codex.
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -112,6 +112,13 @@ Result: VAT-compliant Hebrew invoice spreadsheet template
 
 ### References
 - `references/israeli-tax-rates.md` -- Current Israeli tax brackets, Bituach Leumi rates, VAT rate, pension requirements, and common financial constants. Consult when building any financial calculations for Israeli context.
+
+## Gotchas
+
+- Hebrew text in spreadsheets requires RTL cell alignment. Default LTR alignment causes Hebrew to display incorrectly, with punctuation and numbers appearing on the wrong side.
+- Israeli date format in spreadsheets is DD/MM/YYYY, not MM/DD/YYYY. Excel and Google Sheets may auto-parse "01/03/2026" as January 3rd (US) instead of March 1st (Israeli). Always set locale to Hebrew (Israel).
+- NIS currency formatting should use the ש"ח symbol after the number (1,000 ש"ח), not the ₪ symbol before it. Agents may apply US-style currency formatting.
+- Israeli tax calculations in spreadsheets must account for VAT at 18%. Agents may hardcode older VAT rates (17%) from pre-2025 training data.
 
 ## Troubleshooting
 

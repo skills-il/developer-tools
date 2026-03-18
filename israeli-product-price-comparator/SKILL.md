@@ -11,7 +11,7 @@ license: MIT
 allowed-tools: Bash(node:*) Bash(python:*) WebFetch
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -210,6 +210,13 @@ Actions:
 4. Compare warranty terms: Amazon (international warranty, no local service) vs. local retailer (full local warranty)
 
 Result: Present side-by-side comparison showing Amazon price with customs estimate vs. best local price. Factor in warranty value (Sony Israel service center vs. international warranty process). Recommend local purchase if the price difference is less than 150-200 NIS given the warranty advantage.
+
+## Gotchas
+
+- All Israeli consumer prices must include 18% VAT by law. Agents may scrape or compare prices excluding VAT, producing incorrect comparisons.
+- Israeli price comparison sites (Zap, Pricez) list prices in NIS. Agents may convert to USD for comparison, which introduces exchange rate fluctuations that mislead users.
+- Product prices in Israel vary significantly between retail chains. The Prices Law (2014) requires large food chains to publish prices publicly, but not all categories are covered.
+- Israeli product barcodes (EAN-13 starting with 729) may not be found in international product databases. Agents should use Israeli sources like Shufersal or Rami Levy APIs.
 
 ## Troubleshooting
 

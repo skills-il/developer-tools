@@ -12,7 +12,7 @@ allowed-tools: 'Bash(python:*) Bash(pip:*)'
 compatibility: Python with hebcal or pyluach library recommended. Works without network.
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -152,6 +152,13 @@ Result: Count excluding Shabbatot, noting if any holidays fall in the range (Pur
 
 ### References
 - `references/hebrew-calendar-reference.md` — Complete Hebrew calendar reference covering month names and variable lengths, the 19-year Metonic leap year cycle, gematria (Hebrew numeral) conversion table with special cases, Israeli holiday calendar with work-off days versus partial-closure days, and recommended Python libraries (pyluach, hebcal). Consult when handling leap year edge cases, formatting Hebrew numerals, or determining which holidays affect business day calculations.
+
+## Gotchas
+
+- Hebrew calendar dates have variable month lengths (29 or 30 days) and leap years add an entire month (Adar II). Agents may assume fixed month lengths or Gregorian leap year rules.
+- Israeli official documents use Hebrew dates (e.g., "כ"ה באדר תשפ"ו") while business documents use Gregorian DD/MM/YYYY. Agents may not know which format to use for which context.
+- Jewish holidays move relative to the Gregorian calendar each year. Agents with static training data may cite incorrect dates for Rosh Hashana, Pesach, etc. in the current year.
+- The Hebrew year starts in Tishrei (September/October), not January. Agents may miscalculate Hebrew year boundaries when converting dates near the Gregorian new year.
 
 ## Troubleshooting
 

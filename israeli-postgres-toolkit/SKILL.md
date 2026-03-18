@@ -14,7 +14,7 @@ allowed-tools: 'Bash(python:*), Bash(psql:*)'
 compatibility: 'No special requirements. Works with Claude Code, Cursor, Windsurf.'
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -495,3 +495,10 @@ And reference documents in `references/`:
 
 - `hebrew-collation-guide.md`: Detailed ICU collation reference for Hebrew text in PostgreSQL
 - `supabase-israel-patterns.md`: Supabase-specific patterns and configurations for Israeli apps
+
+## Gotchas
+
+- Hebrew text in PostgreSQL requires UTF-8 encoding. Databases created with SQL_ASCII or LATIN1 encoding will corrupt Hebrew characters. Always verify encoding with SHOW server_encoding.
+- Hebrew collation in PostgreSQL (he_IL.UTF-8) sorts differently than English. Agents may apply default collation that sorts Hebrew text incorrectly in ORDER BY queries.
+- Full-text search with Hebrew requires a Hebrew text search configuration (not "english" or "simple"). Agents may use default FTS configs that strip Hebrew stopwords incorrectly or fail to stem.
+- Israeli date columns should store dates as DATE or TIMESTAMPTZ (with timezone Asia/Jerusalem), not as TEXT in DD/MM/YYYY format. Agents may create text columns for dates, breaking comparisons and sorting.

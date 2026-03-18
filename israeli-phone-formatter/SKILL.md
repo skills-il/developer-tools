@@ -12,7 +12,7 @@ allowed-tools: 'Bash(python:*)'
 compatibility: 'No network required. Works with Claude Code, Claude.ai, Cursor.'
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -136,6 +136,14 @@ Result: Summary table with validation status per number
 
 ### References
 - `references/prefix-allocation.md` -- Complete Israeli phone prefix allocation table per Ministry of Communications, including carrier assignments for mobile prefixes (050-058), area codes for landlines, VoIP ranges, and special service numbers. Consult when implementing validation or identifying carriers.
+
+## Gotchas
+
+- Israeli mobile numbers are 10 digits (05X-XXXXXXX) while landlines are 9 digits (0X-XXXXXXX). Agents may apply a single validation length for all Israeli numbers.
+- When converting to international format (+972), the leading zero must be dropped: 052-1234567 becomes +972521234567, not +97205212345676. Agents frequently include the extra zero.
+- Israeli special numbers (police 100, ambulance 101, fire 102) are short codes that should not be formatted with country codes or area codes.
+- Virtual numbers (076 prefix) and VoIP numbers (077 prefix) are valid Israeli numbers but have different routing. Agents may reject them as invalid because they don't start with 05x.
+- Israeli area codes changed historically (02 for Jerusalem, 03 for Tel Aviv, 04 for Haifa, 08 for south, 09 for Sharon). Agents may use outdated area code mappings.
 
 ## Troubleshooting
 

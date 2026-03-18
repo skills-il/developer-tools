@@ -11,7 +11,7 @@ license: MIT
 allowed-tools: Bash(node:*) Bash(python:*) WebFetch
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -322,6 +322,14 @@ Actions:
 5. Evaluate alternatives: Kamatera GPU instances, or Lambda Labs / RunPod for inference-only
 
 Result: Recommend GCP me-west1 with preemptible T4 instance for inference (approximately $0.11/hour vs. $0.35/hour on-demand) plus Cloud SQL micro instance for PostgreSQL. If GPU is not available in me-west1, use europe-west1 (Belgium) for GPU workloads and me-west1 for the database. Estimated cost: 200-400 NIS/month. For even lower cost, suggest running inference on CPU with quantized models if latency tolerance allows.
+
+## Gotchas
+
+- AWS Israel region (il-central-1) pricing differs from eu-west-1 and other regions. Agents may use global pricing that does not reflect the Israeli region premium.
+- Israeli cloud costs should be calculated in NIS including 18% VAT for B2C, but excluding VAT for B2B with valid tax invoice. Agents may forget to add VAT for consumer-facing comparisons.
+- Google Cloud Platform (GCP) does not have a dedicated Israel region. Agents may recommend GCP Israel-region deployments that do not exist.
+- Israeli data residency requirements for government contracts may mandate hosting within Israel. Agents may recommend cheaper international regions that violate these requirements.
+- Shabbat and holiday periods can affect spot instance pricing and availability in the Israel region differently than other regions due to reduced local demand.
 
 ## Troubleshooting
 

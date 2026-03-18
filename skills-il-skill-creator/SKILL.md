@@ -18,7 +18,7 @@ compatibility: >-
   conventions. Works with Claude Code, Claude.ai, Cursor.
 metadata:
   author: skills-il
-  version: 1.2.0
+  version: 1.2.1
   category: developer-tools
   tags:
     he:
@@ -293,6 +293,13 @@ Result: ...
 ### References
 - `references/<name>.md` -- <What it contains>. Consult when <specific situation>.
 
+## Gotchas
+
+- SKILL.md frontmatter uses YAML with specific nested structure (metadata.tags.he/en arrays). Agents may flatten the tags into a single array instead of using the bilingual he/en structure.
+- Hebrew content in SKILL_HE.md must never appear inside code blocks (```) because code blocks do not support RTL rendering. Use plain text or bullet lists for Hebrew content.
+- The skill description field has a dual purpose: it serves as both the YAML frontmatter description and the trigger text for agent matching. Agents may write a generic description that fails to trigger on relevant user queries.
+- Skills must validate with the skills-il schema (name, description, license, metadata with version/category/tags). Agents may omit required fields like supported_agents or display_name.
+
 ## Troubleshooting
 
 ### Error: "<Error name>"
@@ -482,6 +489,13 @@ Result: MCP-enhanced skill that adds workflow intelligence on top of bank data a
 
 ### References
 - `references/skill-spec.md` -- Complete skills-il SKILL.md specification including all frontmatter fields (required and optional), description-writing formula with good/bad examples, the 5 skill patterns from Anthropic's guide, quality checklist, and validation rules. Consult when writing frontmatter or instructions and you need detailed guidance beyond the steps above.
+
+## Gotchas
+
+- SKILL.md frontmatter uses YAML with specific nested structure (metadata.tags.he/en arrays). Agents may flatten the tags into a single array instead of using the bilingual he/en structure.
+- Hebrew content in SKILL_HE.md must never appear inside code blocks (```) because code blocks do not support RTL rendering. Use plain text or bullet lists for Hebrew content.
+- The skill description field has a dual purpose: it serves as both the YAML frontmatter description and the trigger text for agent matching. Agents may write a generic description that fails to trigger on relevant user queries.
+- Skills must validate with the skills-il schema (name, description, license, metadata with version/category/tags). Agents may omit required fields like supported_agents or display_name.
 
 ## Troubleshooting
 

@@ -20,7 +20,7 @@ compatibility: >-
   Cursor, Windsurf.
 metadata:
   author: skills-il
-  version: 1.0.0
+  version: 1.0.1
   category: developer-tools
   tags:
     he:
@@ -807,6 +807,14 @@ Result: Voice bot that correctly transcribes mixed Hebrew-English speech common 
 ### References
 - `references/hebrew-stt-models.md` -- Comparison table of Hebrew speech-to-text models (Whisper, Google Cloud STT, Azure Speech) with accuracy benchmarks, latency, pricing, and recommendations by use case. Consult when choosing an STT provider.
 - `references/ivr-design-patterns.md` -- Common IVR flow patterns for Israeli businesses including restaurant, clinic, customer service, and government office templates. Consult when designing IVR menu structures.
+
+## Gotchas
+
+- Hebrew speech-to-text engines struggle with Israeli slang ("yalla", "sababa", "balagan") and loan words from Arabic, Russian, and Amharic. Agents may not account for multilingual input in Hebrew voice bots.
+- Israeli phone IVR systems must offer Hebrew as the default language, with English as secondary. Agents may build voice bots with English as the default, frustrating Hebrew-speaking callers.
+- Hebrew Text-to-Speech (TTS) requires correct nikud (vowel diacritics) placement for proper pronunciation. Without nikud, ambiguous words like "דבר" may be read as "davar" (thing) or "daber" (speak).
+- Israeli phone numbers have varying IVR input lengths: landlines are 9 digits (0X-XXXXXXX), mobile are 10 digits (05X-XXXXXXX). Voice bots must accept both formats.
+- Background noise levels in typical Israeli environments (cafes, open offices, public transit) are higher than global averages. Voice bot confidence thresholds should be set lower to avoid excessive re-prompts.
 
 ## Troubleshooting
 
