@@ -108,15 +108,7 @@ Cross-reference Zap results with direct retailer websites, as some retailers off
 - **Super-Pharm** (`https://www.super-pharm.co.il`): Israel's largest pharmacy chain. "1+1" and "1+50%" deals are common.
 - **Be** (`https://www.be.co.il`): Pharmacy and beauty products. Competitor to Super-Pharm with frequent promotions.
 
-### Step 4: Use WiseBuy for Alternative Comparisons
-
-WiseBuy (`https://www.wisebuy.co.il`) is part of the Zap Group and covers additional product categories not fully covered by Zap's main comparison engine. Use WiseBuy when comparing:
-- Fashion and clothing
-- Baby products
-- Sports equipment
-- Office supplies
-
-### Step 5: Evaluate Import vs. Local Purchase
+### Step 4: Evaluate Import vs. Local Purchase
 
 For products that may be cheaper abroad, compare:
 
@@ -133,7 +125,7 @@ For products that may be cheaper abroad, compare:
 - Buy internationally if the price difference exceeds 30% and warranty is not critical
 - For products priced under 75 USD internationally, always check AliExpress (no customs duty)
 
-### Step 6: Leverage Price Tracking and Coupon Tools
+### Step 5: Leverage Price Tracking and Coupon Tools
 
 **Price tracking:**
 - **"Sham Ze Zol Yoter"** (Where Is It Cheaper) Chrome extension: Automatically shows price comparisons while browsing retailer sites
@@ -151,7 +143,7 @@ For products that may be cheaper abroad, compare:
 - **End of financial year (December)**: Retailers clear inventory
 - **Model changeover periods**: Old model electronics drop 20-30% when new models launch (typically September for phones, January for TVs)
 
-### Step 7: Apply Israeli Consumer Protection Rules
+### Step 6: Apply Israeli Consumer Protection Rules
 
 Inform the user of their rights under Israeli consumer protection law:
 
@@ -161,7 +153,7 @@ Inform the user of their rights under Israeli consumer protection law:
 4. **Price display**: All prices must be displayed including VAT. If a retailer shows a price without VAT, the displayed price is the legally binding one.
 5. **Credit card payments**: Consumers have the right to pay in installments (tashlumim). Retailers with annual revenue over a certain threshold must offer at least 3 interest-free payments for purchases over 500 NIS.
 
-### Step 8: Present the Comparison Results
+### Step 7: Present the Comparison Results
 
 Structure the comparison output as follows:
 

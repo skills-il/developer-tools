@@ -90,7 +90,7 @@ Israeli apps connect to Zapier through three mechanisms. Choose based on what th
 
 | App | Connection Method | Auth Type | Notes |
 |-----|-------------------|-----------|-------|
-| Green Invoice | Zapier native integration | API key | Full trigger/action support. Generate API key from Green Invoice dashboard under Settings > API. |
+| Green Invoice | Webhooks by Zapier | API key + Webhook | No native Zapier app exists in the Zapier directory. Connect via webhooks: use Green Invoice's webhook notifications as triggers and their REST API via Webhooks by Zapier for actions. Generate API key from Green Invoice dashboard under Settings > API. |
 | Cardcom | Webhooks by Zapier | Webhook URL | Cardcom sends POST to Zapier catch hook on payment events. Configure in Cardcom terminal settings > Notifications. |
 | Tranzila | Webhooks by Zapier | Webhook URL | Similar to Cardcom. Set notification URL in Tranzila merchant panel. |
 | Monday.com | Zapier native integration | OAuth | Full support. Monday.com is a global app with strong Israeli adoption. |
@@ -102,7 +102,7 @@ Israeli apps connect to Zapier through three mechanisms. Choose based on what th
 1. Log in to Green Invoice dashboard
 2. Navigate to Settings > API Integration (hagdarot > integratziat API)
 3. Generate a new API key
-4. In Zapier, search for "Green Invoice" and paste the API key when prompted
+4. In Zapier, use "Webhooks by Zapier" to connect via Green Invoice's REST API with the API key in the Authorization header
 
 **Webhook-based connection setup (Cardcom, Tranzila):**
 1. In Zapier, create a new Zap with "Webhooks by Zapier" as the trigger

@@ -143,7 +143,7 @@ import requests
 
 def send_template_message(phone_number: str, template_data: dict):
     """שליחת הודעת תבנית בוואטסאפ בעברית."""
-    url = f"https://graph.facebook.com/v18.0/{PHONE_NUMBER_ID}/messages"
+    url = f"https://graph.facebook.com/v21.0/{PHONE_NUMBER_ID}/messages"
 
     payload = {
         "messaging_product": "whatsapp",

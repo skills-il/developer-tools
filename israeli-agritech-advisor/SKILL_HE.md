@@ -57,11 +57,15 @@ class CropXClient:
 ```
 
 **Netafim GrowSphere -- שילוב בקרת השקיה:**
+
+> **הערה:** כתובת ה-API של GrowSphere להלן היא להמחשה בלבד. GrowSphere היא אפליקציית צרכנים ונטפים לא מפרסמת API ציבורי מתועד. פנו לנטפים ישירות לקבלת גישת API/שותפות.
+
 ```python
 class GrowSphereClient:
-    """Client for Netafim GrowSphere irrigation platform."""
+    """Client for Netafim GrowSphere irrigation platform.
+    NOTE: No documented public API exists. Contact Netafim for access."""
 
-    BASE_URL = "https://api.growsphere.netafim.com/v1"
+    BASE_URL = "https://api.growsphere.netafim.com/v1"  # לא מאומת, להמחשה בלבד
 
     def __init__(self, api_key):
         self.headers = {"X-API-Key": api_key, "Content-Type": "application/json"}

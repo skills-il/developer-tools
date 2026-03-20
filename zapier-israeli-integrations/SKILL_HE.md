@@ -90,7 +90,7 @@ metadata:
 
 | אפליקציה | שיטת חיבור | סוג אימות | הערות |
 |----------|-----------|----------|-------|
-| חשבונית ירוקה (Green Invoice) | אינטגרציה מובנית ב-Zapier | מפתח API | תמיכה מלאה בטריגרים ופעולות. יש ליצור מפתח API מהגדרות > אינטגרציית API בדשבורד. |
+| חשבונית ירוקה (Green Invoice) | Webhooks by Zapier | מפתח API + Webhook | אין אפליקציה מובנית של Green Invoice בספריית Zapier. יש להתחבר דרך webhooks: שימוש בהתראות webhook של חשבונית ירוקה כטריגרים וב-REST API שלהם דרך Webhooks by Zapier לפעולות. יש ליצור מפתח API מהגדרות > אינטגרציית API בדשבורד. |
 | קארדקום (Cardcom) | Webhooks by Zapier | כתובת Webhook | קארדקום שולח POST ל-Zapier על אירועי תשלום. הגדרה בהגדרות מסוף > התראות. |
 | טרנזילה (Tranzila) | Webhooks by Zapier | כתובת Webhook | דומה לקארדקום. הגדרת כתובת התראה בפאנל הסוחר. |
 | Monday.com | אינטגרציה מובנית ב-Zapier | OAuth | תמיכה מלאה. אפליקציה גלובלית עם אימוץ חזק בישראל. |
@@ -102,7 +102,7 @@ metadata:
 1. התחבר לדשבורד של חשבונית ירוקה
 2. נווט להגדרות > אינטגרציית API
 3. צור מפתח API חדש
-4. ב-Zapier, חפש "Green Invoice" והדבק את מפתח ה-API כשתתבקש
+4. ב-Zapier, השתמש ב-"Webhooks by Zapier" כדי להתחבר דרך REST API של חשבונית ירוקה עם מפתח ה-API בכותרת Authorization
 
 **הגדרת חיבור מבוסס Webhook (קארדקום, טרנזילה):**
 1. ב-Zapier, צור Zap חדש עם "Webhooks by Zapier" כטריגר

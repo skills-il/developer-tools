@@ -177,8 +177,8 @@ def synthesize_hebrew_polly(text: str, output_path: str) -> None:
     response = polly.synthesize_speech(
         Text=text,
         OutputFormat="mp3",
-        VoiceId="Abigail",   # קול נשי עברי
-        Engine="neural",
+        VoiceId="Avri",   # קול גברי עברי סטנדרטי (אין קול neural בעברית)
+        Engine="standard",  # מנוע סטנדרטי (neural לא זמין לעברית)
         LanguageCode="he-IL",
     )
 
@@ -505,7 +505,7 @@ python scripts/hebrew-stt-demo.py --help
 
 ### בעיה: "קול ה-TTS נשמע רובוטי בעברית"
 סיבה: שימוש בקולות Standard ולא Neural/Wavenet.
-פתרון: לעבור לקולות neural: Google Wavenet (he-IL-Wavenet-A/B), Azure Neural (he-IL-HilaNeural), או Amazon Polly Neural (Abigail). קולות neural יקרים יותר אבל טבעיים בהרבה.
+פתרון: לעבור לקולות neural: Google Wavenet (he-IL-Wavenet-A/B) או Azure Neural (he-IL-HilaNeural). Amazon Polly Hebrew מציע רק קול סטנדרטי (Avri, גברי) ללא אפשרות neural. קולות neural יקרים יותר אבל טבעיים בהרבה.
 
 ### בעיה: "תפריט IVR עושה timeout לפני שהמתקשר מגיב"
 סיבה: timeout קצר מדי, במיוחד למתקשרים מבוגרים או פרומפטים ארוכים בעברית.

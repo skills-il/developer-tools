@@ -281,8 +281,8 @@ def synthesize_hebrew_polly(text: str, output_path: str) -> None:
     response = polly.synthesize_speech(
         Text=text,
         OutputFormat="mp3",
-        VoiceId="Abigail",  # Hebrew female neural voice
-        Engine="neural",     # Neural engine for higher quality
+        VoiceId="Avri",  # Hebrew male standard voice (no neural Hebrew voice exists)
+        Engine="standard",   # Standard engine (neural not available for Hebrew)
         LanguageCode="he-IL",
     )
 
@@ -824,7 +824,7 @@ Solution: Explicitly set the language to "he-IL" (Google/Azure) or `language="he
 
 ### Error: "TTS voice sounds robotic for Hebrew"
 Cause: Using Standard-tier voices instead of Neural/Wavenet voices.
-Solution: Switch to neural voices: Google Wavenet (he-IL-Wavenet-A/B), Azure Neural (he-IL-HilaNeural), or Amazon Polly Neural (Abigail). Neural voices are more expensive but significantly more natural.
+Solution: Switch to neural voices: Google Wavenet (he-IL-Wavenet-A/B) or Azure Neural (he-IL-HilaNeural). Amazon Polly Hebrew only offers a standard voice (Avri, male) with no neural option. Neural voices are more expensive but significantly more natural.
 
 ### Error: "IVR menu times out before caller responds"
 Cause: Timeout too short, especially for elderly callers or long Hebrew prompts.

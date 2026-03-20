@@ -2,7 +2,7 @@
 name: israeli-cloud-cost-comparator
 description: >-
   Compare cloud hosting costs for Israeli startups and developers across AWS (il-central-1),
-  Azure, GCP (me-west1), and Israeli providers like Kamatera and HostIL. Use when
+  Azure, GCP (me-west1), and Israeli providers like Kamatera. Use when
   the user needs to evaluate cloud pricing with Israel-specific considerations including
   data residency requirements, latency from Tel Aviv, NIS billing options, startup
   credit programs, and FinOps cost optimization strategies. Do NOT use for comparing
@@ -37,7 +37,7 @@ metadata:
       וספקים מקומיים
     en: >-
       Compare cloud hosting costs for Israeli startups and developers across AWS (il-central-1),
-      Azure, GCP (me-west1), and Israeli providers like Kamatera and HostIL. Use when
+      Azure, GCP (me-west1), and Israeli providers like Kamatera. Use when
       the user needs to evaluate cloud pricing with Israel-specific considerations
       including data residency requirements, latency from Tel Aviv, NIS billing options,
       startup credit programs, and FinOps cost optimization strategies. Do NOT use
@@ -66,7 +66,7 @@ Gather the following information before comparing costs:
 4. **Budget**: Monthly budget in NIS or USD, preference for pay-as-you-go vs. committed use
 5. **Technical stack**: Language/framework, database type, containerized or serverless preference
 6. **Growth trajectory**: Startup (scaling fast), SMB (steady), or enterprise (predictable)
-7. **Existing credits and promotions**: Ask explicitly whether the user has any active credits, free tier, promotional offers, or discount programs with ANY cloud provider. This includes: free trial credits (e.g., AWS $200, GCP $300, Azure $200), startup program credits (AWS Activate, GCP for Startups, Microsoft Founders Hub), educational credits (GitHub Student Pack), event/hackathon credits, VC/accelerator partner credits, or any other promotional balance. Existing credits can dramatically shift the cost comparison and must be factored into the recommendation.
+7. **Existing credits and promotions**: Ask explicitly whether the user has any active credits, free tier, promotional offers, or discount programs with ANY cloud provider. This includes: free tier benefits (e.g., AWS Free Tier with service-based limits, GCP $300 trial, Azure $200 trial), startup program credits (AWS Activate, GCP for Startups, Microsoft Founders Hub), educational credits (GitHub Student Pack), event/hackathon credits, VC/accelerator partner credits, or any other promotional balance. Existing credits can dramatically shift the cost comparison and must be factored into the recommendation.
 
 ### Step 2: Compare AWS Israel Region (il-central-1)
 
@@ -160,19 +160,7 @@ For specific use cases, Israeli cloud providers may offer advantages:
 - Good for: Small projects, development environments, Israeli-market applications
 - Limitations: Smaller service catalog than hyperscalers, no managed Kubernetes
 
-**HostIL (`https://www.hostil.co.il`):**
-- Israeli hosting provider with local data centers
-- Shared hosting from 15 NIS/month, VPS from 50 NIS/month
-- Hebrew support, NIS billing, Israeli invoice
-- Good for: WordPress sites, small web applications, email hosting
-- Limitations: Limited scalability, no serverless offerings
-
-**CloudON (`https://www.cloudon.co.il`):**
-- Israeli managed cloud services provider
-- Specializes in managing AWS/Azure/GCP environments for Israeli businesses
-- Provides FinOps consulting and cost optimization
-- Good for: Mid-size companies wanting managed infrastructure with local support
-- Not a direct cloud provider; adds management layer on top of hyperscalers
+**Note:** HostIL (`hostil.co.il`) is an Israeli hosting provider that has been referenced in some directories, but its current operational status could not be independently verified. Check the website directly before relying on it.
 
 ### Step 6: Compare Data Residency and Compliance
 
@@ -192,7 +180,7 @@ Israeli data protection considerations:
 | GCP me-west1 | Yes (Tel Aviv) | Google retains control | ISO 27001, SOC 2, PCI DSS |
 | Azure Israel Central | Yes (Israel) | Microsoft retains control | ISO 27001, SOC 2, PCI DSS, IL Gov |
 | Kamatera | Yes (Petah Tikva, Haifa) | Israeli company | ISO 27001 |
-| HostIL | Yes (Israel) | Israeli company | Basic |
+| HostIL (verify availability) | Yes (Israel) | Israeli company | Basic |
 
 **Recommendation by compliance level:**
 - **High compliance** (finance, healthcare, government): Azure Israel Central or AWS il-central-1 with BAA/HIPAA-equivalent agreements
@@ -209,12 +197,12 @@ Every major cloud provider offers free credits or trial periods for new accounts
 
 | Provider | Trial Credits | Trial Duration | Always-Free Tier |
 |----------|--------------|----------------|------------------|
-| AWS | Up to $200 promotional credits | 12 months (free tier services) | 30+ services with monthly limits (Lambda 1M requests, DynamoDB 25GB, etc.) |
+| AWS | AWS Free Tier (service-based limits) | 12 months (free tier services) | 30+ services with monthly limits (Lambda 1M requests, DynamoDB 25GB, etc.) |
 | GCP | $300 | 90 days | 30+ services with monthly limits (Cloud Run 2M requests, Firestore 1GB, etc.) |
 | Azure | $200 | 30 days | 65+ always-free services + 25 services free for 12 months |
 
 **Key differences:**
-- AWS promotional credits ($100-$200) are available to new accounts and may cover 6 months of light usage
+- AWS Free Tier provides service-based limits (not a lump-sum credit) for 12 months, which may cover light usage
 - GCP's $300 trial is the most generous initial credit but expires after 90 days
 - Azure's $200 expires fastest (30 days) but has the largest always-free catalog
 
@@ -385,7 +373,7 @@ Cause: Major hyperscalers (AWS, GCP) bill in USD. Currency fluctuation adds budg
 
 Solution:
 1. Azure offers some NIS billing options for Israeli enterprise agreements. Contact Microsoft Israel sales.
-2. Kamatera and HostIL bill natively in NIS
+2. Kamatera bills natively in NIS
 3. For USD-billed providers, use these strategies:
    - Set budgets with a 10% currency buffer
    - Purchase reserved instances during favorable exchange rates
