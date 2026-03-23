@@ -1,54 +1,9 @@
 ---
 name: hebrew-chatbot-builder
-description: >-
-  Build conversational AI chatbots with native Hebrew support, including
-  WhatsApp Business API integration, Telegram bot scaffolding, web chat
-  widgets, Hebrew NLP patterns, and RTL chat UI components. Use when user
-  asks to "build a Hebrew chatbot", "integrate WhatsApp bot in Hebrew",
-  "binui bot b'ivrit", or design conversation flows for Hebrew speakers.
-  Covers intent detection for Hebrew morphology, entity extraction for
-  Israeli data (NIS amounts, phone numbers, dates), and gender-aware
-  responses. Do NOT use for non-Hebrew chatbots or general NLP pipelines
-  without a Hebrew component.
+description: Build conversational AI chatbots with native Hebrew support, including WhatsApp Business API integration, Telegram bot scaffolding, web chat widgets, Hebrew NLP patterns, and RTL chat UI components. Use when user asks to "build a Hebrew chatbot", "integrate WhatsApp bot in Hebrew", "binui bot b'ivrit", or design conversation flows for Hebrew speakers. Covers intent detection for Hebrew morphology, entity extraction for Israeli data (NIS amounts, phone numbers, dates), and gender-aware responses. Do NOT use for non-Hebrew chatbots or general NLP pipelines without a Hebrew component.
 license: MIT
-allowed-tools: 'Bash(python:*), Bash(psql:*)'
-compatibility: 'No special requirements. Works with Claude Code, Cursor, Windsurf.'
-metadata:
-  author: skills-il
-  version: 1.0.1
-  category: developer-tools
-  tags:
-    he:
-      - צ'אטבוט
-      - עברית
-      - וואטסאפ
-      - טלגרם
-      - ישראל
-    en:
-      - chatbot
-      - hebrew
-      - whatsapp
-      - telegram
-      - israel
-  display_name:
-    he: "בונה צ'אטבוט בעברית"
-    en: Hebrew Chatbot Builder
-  display_description:
-    he: >-
-      בניית צ'אטבוטים של AI עם תמיכה מקורית בעברית, כולל אינטגרציה עם
-      WhatsApp Business API, בניית בוט לטלגרם, ווידג'ט צ'אט לאתרים, תבניות
-      NLP בעברית, ורכיבי ממשק צ'אט RTL.
-    en: >-
-      Build conversational AI chatbots with native Hebrew support, including
-      WhatsApp Business API integration, Telegram bot scaffolding, web chat
-      widgets, Hebrew NLP patterns, and RTL chat UI components.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+allowed-tools: Bash(python:*), Bash(psql:*)
+compatibility: No special requirements. Works with Claude Code, Cursor, Windsurf.
 ---
 
 # Hebrew Chatbot Builder

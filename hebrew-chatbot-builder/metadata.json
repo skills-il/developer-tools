@@ -1,0 +1,37 @@
+{
+  "author": "skills-il",
+  "version": "1.0.1",
+  "category": "developer-tools",
+  "tags": {
+    "he": [
+      "צ'אטבוט",
+      "עברית",
+      "וואטסאפ",
+      "טלגרם",
+      "ישראל"
+    ],
+    "en": [
+      "chatbot",
+      "hebrew",
+      "whatsapp",
+      "telegram",
+      "israel"
+    ]
+  },
+  "display_name": {
+    "he": "בונה צ'אטבוט בעברית",
+    "en": "Hebrew Chatbot Builder"
+  },
+  "display_description": {
+    "he": "בניית צ'אטבוטים של AI עם תמיכה מקורית בעברית, כולל אינטגרציה עם WhatsApp Business API, בניית בוט לטלגרם, ווידג'ט צ'אט לאתרים, תבניות NLP בעברית, ורכיבי ממשק צ'אט RTL.",
+    "en": "Build conversational AI chatbots with native Hebrew support, including WhatsApp Business API integration, Telegram bot scaffolding, web chat widgets, Hebrew NLP patterns, and RTL chat UI components."
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex"
+  ]
+}

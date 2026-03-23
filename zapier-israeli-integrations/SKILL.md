@@ -1,65 +1,9 @@
 ---
 name: zapier-israeli-integrations
-description: >-
-  Build Zapier Zaps that connect Israeli business apps (Green Invoice, Cardcom,
-  Tranzila, Monday.com) with global services for billing, payment, and workflow
-  automation. Use when user asks to "create a Zap for Israeli invoicing",
-  "automate Green Invoice receipts", "connect Cardcom to my CRM",
-  "lehavir heshbonit automatit", "otomatzia le-asakim", or set up Hebrew
-  WhatsApp notifications from payment events. Handles Hebrew text in Zap steps,
-  ILS currency formatting, bimonthly VAT period logic, and webhook-based
-  triggers from Israeli payment processors. Do NOT use for n8n workflows
-  (use n8n-hebrew-workflows), Make.com scenarios (use make-com-israeli-automations),
-  or custom code automation without Zapier.
+description: Build Zapier Zaps that connect Israeli business apps (Green Invoice, Cardcom, Tranzila, Monday.com) with global services for billing, payment, and workflow automation. Use when user asks to "create a Zap for Israeli invoicing", "automate Green Invoice receipts", "connect Cardcom to my CRM", "lehavir heshbonit automatit", "otomatzia le-asakim", or set up Hebrew WhatsApp notifications from payment events. Handles Hebrew text in Zap steps, ILS currency formatting, bimonthly VAT period logic, and webhook-based triggers from Israeli payment processors. Do NOT use for n8n workflows (use n8n-hebrew-workflows), Make.com scenarios (use make-com-israeli-automations), or custom code automation without Zapier.
 license: MIT
-allowed-tools: 'Bash(curl:*) Bash(node:*) Bash(python:*)'
-compatibility: >-
-  Requires Zapier account (free tier supports 5 single-step Zaps). Multi-step
-  Zaps require paid plan. Webhook triggers require Zapier Premium or Webhooks
-  by Zapier integration. No local dependencies.
-metadata:
-  author: skills-il
-  version: 1.0.0
-  category: developer-tools
-  tags:
-    he:
-      - Zapier
-      - אוטומציה
-      - חיבורים
-      - תהליכי-עבודה
-      - ישראל
-    en:
-      - zapier
-      - automation
-      - integrations
-      - workflows
-      - israel
-  display_name:
-    he: חיבורי Zapier לישראל
-    en: Zapier Israeli Integrations
-  display_description:
-    he: >-
-      בניית Zaps שמחברים אפליקציות עסקיות ישראליות (חשבונית ירוקה, קארדקום,
-      טרנזילה) עם שירותים גלובליים לחיוב, תשלום ואוטומציית תהליכי עבודה.
-      כולל טיפול בעברית בשלבי Zap, פורמט מטבע שקלי, ולוגיקת תקופות מע"מ דו-חודשיות.
-    en: >-
-      Build Zapier Zaps that connect Israeli business apps (Green Invoice, Cardcom,
-      Tranzila, Monday.com) with global services for billing, payment, and workflow
-      automation. Use when user asks to "create a Zap for Israeli invoicing",
-      "automate Green Invoice receipts", "connect Cardcom to my CRM",
-      "lehavir heshbonit automatit", or set up Hebrew WhatsApp notifications from
-      payment events. Handles Hebrew text in Zap steps, ILS currency formatting,
-      bimonthly VAT period logic, and webhook-based triggers from Israeli payment
-      processors. Do NOT use for n8n workflows (use n8n-hebrew-workflows),
-      Make.com scenarios (use make-com-israeli-automations), or custom code
-      automation without Zapier.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+allowed-tools: Bash(curl:*) Bash(node:*) Bash(python:*)
+compatibility: Requires Zapier account (free tier supports 5 single-step Zaps). Multi-step Zaps require paid plan. Webhook triggers require Zapier Premium or Webhooks by Zapier integration. No local dependencies.
 ---
 
 # Zapier Israeli Integrations

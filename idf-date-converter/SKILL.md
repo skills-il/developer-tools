@@ -1,55 +1,9 @@
 ---
 name: idf-date-converter
-description: >-
-  Convert between Hebrew (Jewish) calendar and Gregorian dates, look up Israeli
-  holidays, format dual dates for Israeli documents, and calculate Israeli
-  business days. Use when user asks about Hebrew dates, "luach ivri", Jewish
-  calendar, Israeli holidays, "chagim", Shabbat times, or needs dual-date
-  formatting for Israeli forms. Do NOT use for Islamic Hijri calendar or
-  non-Israeli holiday calendars.
+description: Convert between Hebrew (Jewish) calendar and Gregorian dates, look up Israeli holidays, format dual dates for Israeli documents, and calculate Israeli business days. Use when user asks about Hebrew dates, "luach ivri", Jewish calendar, Israeli holidays, "chagim", Shabbat times, or needs dual-date formatting for Israeli forms. Do NOT use for Islamic Hijri calendar or non-Israeli holiday calendars.
 license: MIT
-allowed-tools: 'Bash(python:*) Bash(pip:*)'
+allowed-tools: Bash(python:*) Bash(pip:*)
 compatibility: Python with hebcal or pyluach library recommended. Works without network.
-metadata:
-  author: skills-il
-  version: 1.0.1
-  category: developer-tools
-  tags:
-    he:
-      - לוח-שנה
-      - תאריך-עברי
-      - חגים
-      - שבת
-      - המרה
-      - ישראל
-    en:
-      - calendar
-      - hebrew-date
-      - holidays
-      - shabbat
-      - conversion
-      - israel
-  display_name:
-    he: ממיר תאריכים עברי-לועזי
-    en: Idf Date Converter
-  display_description:
-    he: המרה בין תאריכים עבריים ולועזיים בפורמטים שונים
-    en: >-
-      Convert between Hebrew (Jewish) calendar and Gregorian dates, look up
-      Israeli holidays, format dual dates for Israeli documents, and calculate
-      Israeli business days. Use when user asks about Hebrew dates, "luach
-      ivri", Jewish calendar, Israeli holidays, "chagim", Shabbat times, or
-      needs dual-date formatting for Israeli forms. Do NOT use for Islamic Hijri
-      calendar or non-Israeli holiday calendars.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
-    - openclaw
-    - antigravity
 ---
 
 # IDF Date Converter

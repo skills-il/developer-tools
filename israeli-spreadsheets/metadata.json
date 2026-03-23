@@ -1,0 +1,38 @@
+{
+  "author": "skills-il",
+  "version": "1.0.1",
+  "category": "developer-tools",
+  "tags": {
+    "he": [
+      "אקסל",
+      "מס",
+      "מע\"מ",
+      "שקלים",
+      "חשבונאות"
+    ],
+    "en": [
+      "excel",
+      "tax",
+      "vat",
+      "shekel",
+      "accounting"
+    ]
+  },
+  "display_name": {
+    "he": "גיליונות ישראליים",
+    "en": "Israeli Spreadsheets"
+  },
+  "display_description": {
+    "he": "יצירת גיליונות Excel עם חישובי מס, מע\"מ ועיצוב פיננסי ישראלי",
+    "en": "Generate Excel spreadsheets with Israeli tax calculations, VAT, NIS formatting, and Hebrew-labeled financial templates. Use when user asks about Israeli tax spreadsheets, NIS-formatted Excel files, VAT calculations, salary slip templates, arnona estimators, or Israeli accounting worksheets. Covers 2025 tax brackets, Bituach Leumi rates, and openpyxl RTL configuration."
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "antigravity"
+  ]
+}

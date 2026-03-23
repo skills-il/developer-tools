@@ -1,53 +1,9 @@
 ---
 name: israeli-postgres-toolkit
-description: >-
-  Best practices for PostgreSQL in Israeli apps, covering Supabase patterns,
-  Hebrew text indexing with ICU collation, shekel/NIS currency handling,
-  Israeli date formats, and Asia/Jerusalem timezone gotchas. Use when user
-  asks to "set up Hebrew full-text search", "handle NIS currency in Postgres",
-  "tipul b'ivrit b'database", or configure Israeli-specific database patterns.
-  Includes performance tuning, RLS policies for multi-tenant Israeli SaaS,
-  and common Israeli data type validations. Do NOT use for general PostgreSQL
-  administration unrelated to Israeli requirements, or for non-PostgreSQL databases.
+description: Best practices for PostgreSQL in Israeli apps, covering Supabase patterns, Hebrew text indexing with ICU collation, shekel/NIS currency handling, Israeli date formats, and Asia/Jerusalem timezone gotchas. Use when user asks to "set up Hebrew full-text search", "handle NIS currency in Postgres", "tipul b'ivrit b'database", or configure Israeli-specific database patterns. Includes performance tuning, RLS policies for multi-tenant Israeli SaaS, and common Israeli data type validations. Do NOT use for general PostgreSQL administration unrelated to Israeli requirements, or for non-PostgreSQL databases.
 license: MIT
-allowed-tools: 'Bash(python:*), Bash(psql:*)'
-compatibility: 'No special requirements. Works with Claude Code, Cursor, Windsurf.'
-metadata:
-  author: skills-il
-  version: 1.0.1
-  category: developer-tools
-  tags:
-    he:
-      - פוסטגרס
-      - בסיס-נתונים
-      - עברית
-      - סופאבייס
-      - ישראל
-    en:
-      - postgres
-      - database
-      - hebrew
-      - supabase
-      - israel
-  display_name:
-    he: "ערכת כלים לפוסטגרס ישראלי"
-    en: Israeli Postgres Toolkit
-  display_description:
-    he: >-
-      שיטות עבודה מומלצות לפוסטגרס באפליקציות ישראליות, כולל תבניות Supabase,
-      אינדוקס טקסט בעברית עם ICU collation, טיפול במטבע שקל, פורמטים ישראליים
-      לתאריכים, ומלכודות אזור זמן Asia/Jerusalem.
-    en: >-
-      Best practices for PostgreSQL in Israeli apps, covering Supabase patterns,
-      Hebrew text indexing with ICU collation, shekel/NIS currency handling,
-      Israeli date formats, and Asia/Jerusalem timezone gotchas.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+allowed-tools: Bash(python:*), Bash(psql:*)
+compatibility: No special requirements. Works with Claude Code, Cursor, Windsurf.
 ---
 
 # Israeli Postgres Toolkit

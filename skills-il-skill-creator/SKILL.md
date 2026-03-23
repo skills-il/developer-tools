@@ -1,65 +1,9 @@
 ---
 name: skills-il-skill-creator
-description: >-
-  Interactive workflow for creating new skills for the skills-il organization --
-  guides through category selection, use case definition, folder scaffolding,
-  YAML frontmatter generation with bilingual metadata, instruction writing, Hebrew
-  companion creation, and validation. Use when user asks to "create a new skill",
-  "scaffold a skill for skills-il", "write a SKILL.md", "contribute a skill",
-  "new skill template", or "liztor skill chadash". Enforces skills-il conventions:
-  kebab-case naming, Hebrew transliterations, bilingual display_name/display_description,
-  progressive disclosure, and validate-skill.sh compliance. Do NOT use for editing
-  existing skills, creating skills for non-skills-il platforms, or generic markdown
-  file creation.
+description: Interactive workflow for creating new skills for the skills-il organization -- guides through category selection, use case definition, folder scaffolding, YAML frontmatter generation with bilingual metadata, instruction writing, Hebrew companion creation, and validation. Use when user asks to "create a new skill", "scaffold a skill for skills-il", "write a SKILL.md", "contribute a skill", "new skill template", or "liztor skill chadash". Enforces skills-il conventions: kebab-case naming, Hebrew transliterations, bilingual display_name/display_description, progressive disclosure, and validate-skill.sh compliance. Do NOT use for editing existing skills, creating skills for non-skills-il platforms, or generic markdown file creation.
 license: MIT
-allowed-tools: 'Bash(python:*) Bash(./scripts/*) WebFetch'
-compatibility: >-
-  No network required for scaffolding. WebFetch optional for pulling latest
-  conventions. Works with Claude Code, Claude.ai, Cursor.
-metadata:
-  author: skills-il
-  version: 1.2.1
-  category: developer-tools
-  tags:
-    he:
-      - יוצר-סקילים
-      - פיגומים
-      - תבנית
-      - מפתחים
-      - תהליך-עבודה
-      - ישראל
-    en:
-      - skill-creator
-      - scaffolding
-      - template
-      - developer
-      - workflow
-      - israel
-  display_name:
-    he: יוצר סקילים skills-il
-    en: Skills-IL Skill Creator
-  display_description:
-    he: >-
-      תהליך אינטראקטיבי ליצירת סקילים חדשים לארגון skills-il -- הנחיה לבחירת
-      קטגוריה, הגדרת מקרי שימוש, יצירת תיקייה, כתיבת frontmatter דו-לשוני,
-      הוראות, קובץ עברי נלווה ואימות. השתמש כשמשתמש מבקש "ליצור skill חדש",
-      "תבנית skill", "לתרום skill" או "scaffold skill".
-    en: >-
-      Interactive workflow for creating new skills for the skills-il organization --
-      guides through category selection, use case definition, folder scaffolding,
-      YAML frontmatter generation with bilingual metadata, instruction writing, Hebrew
-      companion creation, and validation. Use when user asks to "create a new skill",
-      "scaffold a skill for skills-il", "write a SKILL.md", "contribute a skill",
-      "new skill template", or "liztor skill chadash". Do NOT use for editing
-      existing skills or creating skills for non-skills-il platforms.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
-    - openclaw
+allowed-tools: Bash(python:*) Bash(./scripts/*) WebFetch
+compatibility: No network required for scaffolding. WebFetch optional for pulling latest conventions. Works with Claude Code, Claude.ai, Cursor.
 ---
 
 # Skills-IL Skill Creator

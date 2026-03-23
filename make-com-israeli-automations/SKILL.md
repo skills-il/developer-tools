@@ -1,64 +1,9 @@
 ---
 name: make-com-israeli-automations
-description: >-
-  Build and configure Make.com (formerly Integromat) scenarios for Israeli business
-  processes, including Green Invoice sync, Monday.com board automation, Priority ERP
-  data exports, and WhatsApp Business Hebrew messaging. Use when user asks to "create
-  a Make.com scenario", "build an automation for Israeli billing", "automate Green
-  Invoice", "otomatzia shel Make", "tizmun scenario", or "connect Israeli apps in
-  Make.com". Covers Israeli app module configuration, Hebrew data transformations,
-  ILS currency handling, router patterns for bimonthly VAT and quarterly advance
-  payments, Shabbat-aware scheduling, and webhook receivers for Israeli payment
-  gateways (Cardcom, Tranzila, Grow). Do NOT use for n8n workflows (use
-  n8n-hebrew-workflows), Zapier Zaps (use zapier-israeli-integrations), or custom
-  code automation without Make.com.
+description: Build and configure Make.com (formerly Integromat) scenarios for Israeli business processes, including Green Invoice sync, Monday.com board automation, Priority ERP data exports, and WhatsApp Business Hebrew messaging. Use when user asks to "create a Make.com scenario", "build an automation for Israeli billing", "automate Green Invoice", "otomatzia shel Make", "tizmun scenario", or "connect Israeli apps in Make.com". Covers Israeli app module configuration, Hebrew data transformations, ILS currency handling, router patterns for bimonthly VAT and quarterly advance payments, Shabbat-aware scheduling, and webhook receivers for Israeli payment gateways (Cardcom, Tranzila, Grow). Do NOT use for n8n workflows (use n8n-hebrew-workflows), Zapier Zaps (use zapier-israeli-integrations), or custom code automation without Make.com.
 license: MIT
-allowed-tools: 'Bash(curl:*) Bash(node:*) Bash(python:*)'
-compatibility: >-
-  Requires Make.com account (free tier available). Some modules require paid plans.
-  Green Invoice API requires a developer account. Priority ERP requires on-prem or
-  cloud API access. WhatsApp Cloud API requires Meta Business verification.
-metadata:
-  author: skills-il
-  version: 1.0.0
-  category: developer-tools
-  tags:
-    he:
-      - Make.com
-      - Integromat
-      - אוטומציה
-      - תהליכי-עבודה
-      - ישראל
-      - חשבונית-ירוקה
-    en:
-      - make-com
-      - integromat
-      - automation
-      - workflows
-      - israel
-      - green-invoice
-  display_name:
-    he: אוטומציות Make.com לישראל
-    en: Make.com Israeli Automations
-  display_description:
-    he: >-
-      בנייה והגדרה של תרחישי Make.com לתהליכים עסקיים ישראליים, כולל סנכרון
-      חשבונית ירוקה, אוטומציה של Monday.com, ייצוא נתוני Priority ERP, והודעות
-      WhatsApp Business בעברית. מכסה מודולים ישראליים, טיפול בנתונים בעברית,
-      תזמון מודע שבת, ו-webhook לשערי תשלום ישראליים.
-    en: >-
-      Build and configure Make.com scenarios for Israeli business processes,
-      including Green Invoice sync, Monday.com board automation, Priority ERP
-      data exports, and WhatsApp Business Hebrew messaging. Covers Israeli app
-      modules, Hebrew data transformations, ILS currency handling, Shabbat-aware
-      scheduling, and webhook receivers for Israeli payment gateways.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+allowed-tools: Bash(curl:*) Bash(node:*) Bash(python:*)
+compatibility: Requires Make.com account (free tier available). Some modules require paid plans. Green Invoice API requires a developer account. Priority ERP requires on-prem or cloud API access. WhatsApp Cloud API requires Meta Business verification.
 ---
 
 # Make.com Israeli Automations

@@ -1,66 +1,9 @@
 ---
 name: n8n-hebrew-workflows
-description: >-
-  Build and optimize n8n automation workflows with Israeli API integrations
-  including Green Invoice, israeli-bank-scrapers, data.gov.il, and Israeli SMS
-  gateways. Use when user asks to "create n8n workflow for Israeli business",
-  "connect Green Invoice to n8n", "automate hashbonit", "tazrim avoda b'ivrit",
-  "set up Shabbat-aware cron", or integrate Israeli payment gateways (Cardcom,
-  Tranzila, Grow/Meshulam) into n8n flows. Covers Hebrew data handling in
-  Function nodes, NIS currency formatting, Shabbat/holiday-aware scheduling via
-  Hebcal API, and self-hosting on Israeli cloud with data residency compliance.
-  Do NOT use for general n8n tutorials without Israeli context (use n8n official
-  docs), standalone invoice management (use green-invoice-il), or Hebrew NLP
-  tasks (use hebrew-nlp-toolkit).
+description: Build and optimize n8n automation workflows with Israeli API integrations including Green Invoice, israeli-bank-scrapers, data.gov.il, and Israeli SMS gateways. Use when user asks to "create n8n workflow for Israeli business", "connect Green Invoice to n8n", "automate hashbonit", "tazrim avoda b'ivrit", "set up Shabbat-aware cron", or integrate Israeli payment gateways (Cardcom, Tranzila, Grow/Meshulam) into n8n flows. Covers Hebrew data handling in Function nodes, NIS currency formatting, Shabbat/holiday-aware scheduling via Hebcal API, and self-hosting on Israeli cloud with data residency compliance. Do NOT use for general n8n tutorials without Israeli context (use n8n official docs), standalone invoice management (use green-invoice-il), or Hebrew NLP tasks (use hebrew-nlp-toolkit).
 license: MIT
-allowed-tools: 'Bash(n8n:*) Bash(curl:*) Bash(node:*) Bash(npx:*) Bash(docker:*)'
-compatibility: >-
-  Requires n8n instance (self-hosted or n8n Cloud). Node.js 18+ for custom
-  nodes. Docker recommended for self-hosting. Works with Claude Code, Cursor,
-  GitHub Copilot, Windsurf, OpenCode, Codex.
-metadata:
-  author: skills-il
-  version: 1.0.0
-  category: developer-tools
-  tags:
-    he:
-      - n8n
-      - אוטומציה
-      - תהליכי-עבודה
-      - ישראל
-      - Green-Invoice
-      - תשלומים
-      - שבת
-      - API
-    en:
-      - n8n
-      - automation
-      - workflows
-      - israel
-      - green-invoice
-      - payments
-      - shabbat
-      - api
-  display_name:
-    he: תהליכי עבודה n8n בעברית
-    en: n8n Hebrew Workflows
-  display_description:
-    he: >-
-      בנייה ואופטימיזציה של תהליכי n8n עם חיבורים ל-API ישראליים כולל
-      Green Invoice, בנקים, data.gov.il, שערי SMS ותשלומים. כולל טיפול בעברית,
-      תזמון מותאם שבת וחגים, ואירוח עצמי בענן ישראלי.
-    en: >-
-      Build and optimize n8n automation workflows with Israeli API integrations
-      including Green Invoice, israeli-bank-scrapers, data.gov.il, and Israeli
-      SMS gateways. Covers Hebrew data handling, Shabbat-aware scheduling, Israeli
-      payment gateway webhooks, and self-hosting on Israeli cloud infrastructure.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+allowed-tools: Bash(n8n:*) Bash(curl:*) Bash(node:*) Bash(npx:*) Bash(docker:*)
+compatibility: Requires n8n instance (self-hosted or n8n Cloud). Node.js 18+ for custom nodes. Docker recommended for self-hosting. Works with Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex.
 ---
 
 # n8n Hebrew Workflows

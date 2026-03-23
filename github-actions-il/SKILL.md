@@ -1,64 +1,9 @@
 ---
 name: github-actions-il
-description: >-
-  CI/CD workflow templates tailored for Israeli development teams, including
-  Shabbat/holiday-aware deployment schedules ("shabbat deploy freeze", "hakpaaat
-  prisa"), Hebrew Slack/Teams notifications, Israeli compliance checks (IS-5568
-  accessibility, Privacy Protection Authority), Monday.com issue sync, and
-  reusable composite actions for Israeli startup stacks. Use when user asks to
-  "set up CI/CD for Israeli team", "add Shabbat deploy freeze", "configure Hebrew
-  notifications in GitHub Actions", "hakpaat prisa beshabbat", "add IS-5568
-  check to pipeline", "Israeli compliance CI", or "create workflow for Vercel
-  fra1". Supports Israeli work week (Sunday-Thursday) scheduling and Hebrew
-  locale awareness. Do NOT use for JFrog Artifactory pipelines (use
-  jfrog-devops), general GitHub repository management, non-CI/CD GitHub Actions,
-  or Jenkins/CircleCI/GitLab CI configurations.
+description: CI/CD workflow templates tailored for Israeli development teams, including Shabbat/holiday-aware deployment schedules ("shabbat deploy freeze", "hakpaaat prisa"), Hebrew Slack/Teams notifications, Israeli compliance checks (IS-5568 accessibility, Privacy Protection Authority), Monday.com issue sync, and reusable composite actions for Israeli startup stacks. Use when user asks to "set up CI/CD for Israeli team", "add Shabbat deploy freeze", "configure Hebrew notifications in GitHub Actions", "hakpaat prisa beshabbat", "add IS-5568 check to pipeline", "Israeli compliance CI", or "create workflow for Vercel fra1". Supports Israeli work week (Sunday-Thursday) scheduling and Hebrew locale awareness. Do NOT use for JFrog Artifactory pipelines (use jfrog-devops), general GitHub repository management, non-CI/CD GitHub Actions, or Jenkins/CircleCI/GitLab CI configurations.
 license: MIT
-allowed-tools: 'Bash(gh:*) Bash(git:*) Bash(curl:*) Bash(node:*) Bash(act:*)'
-compatibility: >-
-  Requires GitHub repository with Actions enabled. GitHub CLI (gh) recommended
-  for workflow management. act CLI optional for local workflow testing. Works
-  with any GitHub-hosted or self-hosted runner.
-metadata:
-  author: skills-il
-  version: 1.0.0
-  category: developer-tools
-  tags:
-    he:
-      - GitHub-Actions
-      - CI/CD
-      - אוטומציה
-      - DevOps
-      - פריסה
-      - ישראל
-    en:
-      - github-actions
-      - ci-cd
-      - automation
-      - devops
-      - deployment
-      - israel
-  display_name:
-    he: GitHub Actions לצוותים ישראליים
-    en: GitHub Actions for Israeli Teams
-  display_description:
-    he: >-
-      תבניות CI/CD מותאמות לצוותים ישראליים: הקפאת פריסה בשבת וחגים, התראות
-      Slack בעברית, בדיקות תאימות ישראליות (IS-5568, פרטיות), סנכרון Monday.com,
-      ותבניות workflow לסטארטאפים ישראליים.
-    en: >-
-      CI/CD workflow templates tailored for Israeli development teams, including
-      Shabbat/holiday-aware deployment schedules, Hebrew Slack/Teams
-      notifications, Israeli compliance checks (IS-5568 accessibility, Privacy
-      Protection Authority), Monday.com issue sync, and reusable composite
-      actions for Israeli startup stacks.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+allowed-tools: Bash(gh:*) Bash(git:*) Bash(curl:*) Bash(node:*) Bash(act:*)
+compatibility: Requires GitHub repository with Actions enabled. GitHub CLI (gh) recommended for workflow management. act CLI optional for local workflow testing. Works with any GitHub-hosted or self-hosted runner.
 ---
 
 # GitHub Actions for Israeli Teams

@@ -1,66 +1,9 @@
 ---
 name: hebrew-voice-bot-builder
-description: >-
-  Build Hebrew voice bots and IVR (Interactive Voice Response) systems with
-  speech-to-text, text-to-speech, and telephony integration for Israeli
-  businesses. Use when user asks to "build a Hebrew voice bot", "create an IVR
-  in Hebrew", "Hebrew speech-to-text", "binui bot koli b'ivrit", "maarechet
-  maane koli", "zihui dibur b'ivrit", or "Twilio Israel". Covers OpenAI
-  Whisper Hebrew, Google Cloud STT/TTS he-IL, Azure Speech Services, Amazon
-  Polly Hebrew, IVR menu design for Sunday-Thursday business hours, voicemail
-  transcription, Hebrew accent handling, and +972 phone integration via Twilio
-  and Vonage. Do NOT use for text-based chatbots (use hebrew-chatbot-builder),
-  Hebrew NLP without voice (use hebrew-nlp-toolkit), or SMS messaging (use
-  israeli-sms-gateway).
+description: Build Hebrew voice bots and IVR (Interactive Voice Response) systems with speech-to-text, text-to-speech, and telephony integration for Israeli businesses. Use when user asks to "build a Hebrew voice bot", "create an IVR in Hebrew", "Hebrew speech-to-text", "binui bot koli b'ivrit", "maarechet maane koli", "zihui dibur b'ivrit", or "Twilio Israel". Covers OpenAI Whisper Hebrew, Google Cloud STT/TTS he-IL, Azure Speech Services, Amazon Polly Hebrew, IVR menu design for Sunday-Thursday business hours, voicemail transcription, Hebrew accent handling, and +972 phone integration via Twilio and Vonage. Do NOT use for text-based chatbots (use hebrew-chatbot-builder), Hebrew NLP without voice (use hebrew-nlp-toolkit), or SMS messaging (use israeli-sms-gateway).
 license: MIT
-allowed-tools: 'Bash(python:*)'
-compatibility: >-
-  Requires API keys for speech services (OpenAI, Google Cloud, Azure, or AWS).
-  Requires Twilio or Vonage account for telephony. Works with Claude Code,
-  Cursor, Windsurf.
-metadata:
-  author: skills-il
-  version: 1.0.1
-  category: developer-tools
-  tags:
-    he:
-      - בוט-קולי
-      - מענה-קולי
-      - זיהוי-דיבור
-      - סינתזת-דיבור
-      - טלפוניה
-      - ישראל
-    en:
-      - voice-bot
-      - ivr
-      - speech-to-text
-      - text-to-speech
-      - telephony
-      - israel
-  display_name:
-    he: "בונה בוטים קוליים בעברית"
-    en: Hebrew Voice Bot Builder
-  display_description:
-    he: >-
-      בניית בוטים קוליים ומערכות מענה קולי (IVR) בעברית. מכסה זיהוי דיבור
-      (Whisper, Google, Azure), סינתזת דיבור (Google TTS, Amazon Polly, Azure),
-      עיצוב תפריטי IVR לעסקים ישראליים, תמלול הודעות קוליות, טיפול
-      במבטאים שונים, ואינטגרציה טלפונית עם מספרי +972.
-    en: >-
-      Build Hebrew voice bots and IVR systems with speech-to-text,
-      text-to-speech, and telephony integration for Israeli businesses. Covers
-      OpenAI Whisper Hebrew, Google Cloud STT/TTS, Azure Speech, Amazon Polly,
-      IVR menu design for Sunday-Thursday hours, voicemail transcription,
-      accent handling, and +972 phone integration. Do NOT use for text-based
-      chatbots (use hebrew-chatbot-builder) or Hebrew NLP without voice
-      (use hebrew-nlp-toolkit).
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+allowed-tools: Bash(python:*)
+compatibility: Requires API keys for speech services (OpenAI, Google Cloud, Azure, or AWS). Requires Twilio or Vonage account for telephony. Works with Claude Code, Cursor, Windsurf.
 ---
 
 # Hebrew Voice Bot Builder

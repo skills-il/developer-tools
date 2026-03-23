@@ -1,58 +1,9 @@
 ---
 name: israeli-chatbot-analytics
-description: >-
-  Analyze and optimize Hebrew chatbot performance with conversation flow
-  analytics, Hebrew sentiment analysis, drop-off detection, user satisfaction
-  scoring, A/B testing for response variants, and reporting dashboards. Use
-  when user asks to "analyze chatbot performance", "measure chatbot satisfaction",
-  "track Hebrew bot metrics", "analitika shel tsatbot" (Hebrew transliteration),
-  or needs help with conversation analytics, intent accuracy tracking, or chatbot
-  reporting. Supports Dialogflow, Rasa, and custom bot platforms. Do NOT use for
-  building chatbots (use hebrew-chatbot-builder), Hebrew NLP model training
-  (use hebrew-nlp-toolkit), customer support workflow setup (use
-  israeli-customer-support-automator), or voice bot development (use
-  hebrew-voice-bot-builder).
+description: Analyze and optimize Hebrew chatbot performance with conversation flow analytics, Hebrew sentiment analysis, drop-off detection, user satisfaction scoring, A/B testing for response variants, and reporting dashboards. Use when user asks to "analyze chatbot performance", "measure chatbot satisfaction", "track Hebrew bot metrics", "analitika shel tsatbot" (Hebrew transliteration), or needs help with conversation analytics, intent accuracy tracking, or chatbot reporting. Supports Dialogflow, Rasa, and custom bot platforms. Do NOT use for building chatbots (use hebrew-chatbot-builder), Hebrew NLP model training (use hebrew-nlp-toolkit), customer support workflow setup (use israeli-customer-support-automator), or voice bot development (use hebrew-voice-bot-builder).
 license: MIT
-allowed-tools: 'Bash(python:*), Bash(pip:*)'
-compatibility: 'Requires Python 3.10+. Works with Claude Code, Cursor, Windsurf.'
-metadata:
-  author: skills-il
-  version: 1.0.1
-  category: developer-tools
-  tags:
-    he:
-      - אנליטיקת-צאטבוט
-      - ניתוח-רגשות
-      - אנליטיקת-שיחות
-      - ביצועים
-      - דשבורדים
-      - ישראל
-    en:
-      - chatbot-analytics
-      - sentiment-analysis
-      - conversation-analytics
-      - performance
-      - dashboards
-      - israel
-  display_name:
-    he: "אנליטיקת צ'אטבוטים ישראלית"
-    en: Israeli Chatbot Analytics
-  display_description:
-    he: >-
-      ניתוח ואופטימיזציה של ביצועי צ'אטבוטים בעברית, כולל אנליטיקת זרימת שיחה,
-      ניתוח רגשות בעברית, זיהוי נקודות נטישה, מדידת שביעות רצון, בדיקות A/B
-      לווריאציות תגובה, ודשבורדים לדיווח.
-    en: >-
-      Analyze and optimize Hebrew chatbot performance with conversation flow
-      analytics, Hebrew sentiment analysis, drop-off detection, user satisfaction
-      scoring, A/B testing for response variants, and reporting dashboards.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+allowed-tools: Bash(python:*), Bash(pip:*)
+compatibility: Requires Python 3.10+. Works with Claude Code, Cursor, Windsurf.
 ---
 
 # Israeli Chatbot Analytics
