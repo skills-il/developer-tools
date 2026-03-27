@@ -2,67 +2,70 @@
 
 Ready-to-use Zap configurations for common Israeli business workflows. Each template includes the trigger, action chain, field mappings, and notes on customization.
 
-## Template 1: Cardcom Payment to Green Invoice Receipt
+All Israeli payment processors (Cardcom, Tranzila, Grow, Morning) send amounts in decimal shekels. No unit conversion is needed.
 
-**Use case:** Auto-generate a receipt (kabala) in Green Invoice when a customer pays through Cardcom.
+## Template 1: Cardcom Payment to Morning Receipt
+
+**Use case:** Auto-generate a receipt (kabala) in Morning (formerly Green Invoice) when a customer pays through Cardcom.
 
 **Zap steps:**
 
 | Step | App | Event | Configuration |
 |------|-----|-------|---------------|
-| 1. Trigger | Webhooks by Zapier | Catch Hook | Copy webhook URL to Cardcom terminal > Notifications |
-| 2. Format | Formatter by Zapier | Math > Divide | Input: `Amount`, Operation: Divide, Value: `100` |
+| 1. Trigger | Webhooks by Zapier | Catch Hook | Copy webhook URL to Cardcom terminal IndicatorUrl |
+| 2. Filter | Filter by Zapier | Only Continue If | `DealResponse` = 0 (successful payment) |
 | 3. Format | Formatter by Zapier | Date/Time > Format | Input: current date, To Format: `DD/MM/YYYY` |
-| 4. Action | Green Invoice | Create Document | Type: Receipt, fields mapped below |
+| 4. Action | Webhooks by Zapier | Custom Request | POST to Morning API: Create Document type 400 (Receipt) |
 | 5. Action | Gmail | Send Email | Send receipt link to customer |
 
-**Green Invoice field mapping (Step 4):**
+**Morning API field mapping (Step 4):**
 
-| Green Invoice Field | Source | Notes |
-|---------------------|--------|-------|
-| Document Type | Static: `Receipt` | Use "Receipt" for post-payment documents |
-| Client Name | Step 1: `CustomerName` | Hebrew names pass through as-is |
-| Client Email | Step 1: `Email` | |
-| Item Description | Static or Step 1: `CustomFields` | e.g., "תשלום עבור שירות" |
-| Item Price | Step 2: output (divided amount) | This is the ILS amount |
-| Item Quantity | Static: `1` | |
-| VAT Type | Static: `0` (before VAT) or `1` (included) | Ask user preference |
-| Currency | Static: `ILS` | |
-| Date | Step 3: formatted date | DD/MM/YYYY |
+| Morning API Field | Source | Notes |
+|-------------------|--------|-------|
+| `type` | Static: `400` | Receipt (kabala) |
+| `client.name` | Step 1: `CardOwnerName` | Hebrew names pass through as-is |
+| `client.emails` | Step 1: `CardOwnerEmail` | Array: `[CardOwnerEmail]` |
+| `items[].description` | Static or custom | e.g., "תשלום עבור שירות" |
+| `items[].unitPrice` | Step 1: `Amount` | Already in decimal ILS (e.g., 150.50). Use as-is. |
+| `items[].quantity` | Static: `1` | |
+| `vatType` | Static: `0` (before VAT) or `1` (included) | Ask user preference |
+| `currency` | Static: `ILS` | |
 
 **Customization options:**
-- Add a Filter after Step 1 to only process successful payments (`ResponseCode` = `0`)
+- For amounts > 10,000 ILS, verify the Morning API response includes an Invoice Reform allocation number (required since January 2026)
 - Add a Slack notification step for payments above a threshold
 - For installment payments (tashlumim), include `NumOfPayments` in the description
+- Use Zapier Tables instead of Gmail for logging (simpler, no external auth needed)
 
 ---
 
-## Template 2: Green Invoice to Google Sheets Bookkeeping Log
+## Template 2: Morning to Zapier Tables Bookkeeping Log
 
-**Use case:** Automatically log every new Green Invoice document to a Google Sheets spreadsheet for bookkeeping.
+**Use case:** Automatically log every new Morning document to a Zapier Table for bookkeeping. (Alternative: use Google Sheets if the accountant needs direct spreadsheet access.)
 
 **Zap steps:**
 
 | Step | App | Event | Configuration |
 |------|-----|-------|---------------|
-| 1. Trigger | Green Invoice | New Document Created | Triggers on any new document |
-| 2. Filter | Filter by Zapier | Only Continue If | Document type is Invoice, Receipt, or Invoice-Receipt |
+| 1. Trigger | Webhooks by Zapier | Catch Hook | Configure Morning webhook to fire on new document creation |
+| 2. Filter | Filter by Zapier | Only Continue If | Document type is 305 (Invoice), 320 (Invoice-Receipt), or 400 (Receipt) |
 | 3. Format | Formatter by Zapier | Numbers > Format Number | Format amount with 2 decimal places |
-| 4. Action | Google Sheets | Create Spreadsheet Row | Map fields to columns |
+| 4. Action | Zapier Tables | Create Record | Map fields to columns |
 
-**Google Sheets columns and mapping (Step 4):**
+**Zapier Tables columns and mapping (Step 4):**
 
 | Column | Source | Notes |
 |--------|--------|-------|
-| A: Date | Step 1: `date` | Reformat to DD/MM/YYYY if needed |
-| B: Document Number | Step 1: `number` | e.g., "1001" |
-| C: Document Type | Step 1: `type` | Invoice / Receipt / Invoice-Receipt |
-| D: Client Name | Step 1: `client.name` | |
-| E: Amount Before VAT | Step 1: `amount` (calculated) | Total minus VAT |
-| F: VAT Amount | Step 1: `vat` | |
-| G: Total Amount | Step 1: `total` | |
-| H: Payment Status | Step 1: `status` | Paid / Unpaid / Partially Paid |
-| I: VAT Period | Step 1: derive from date | e.g., "Jan-Feb 2026" |
+| Date | Step 1: `date` | Reformat to DD/MM/YYYY if needed |
+| Document Number | Step 1: `number` | e.g., "1001" |
+| Document Type | Step 1: `type` | Map code: 305=Invoice, 320=Invoice-Receipt, 400=Receipt |
+| Client Name | Step 1: `client.name` | |
+| Amount Before VAT | Step 1: `amount` (calculated) | Total minus VAT |
+| VAT Amount | Step 1: `vat` | |
+| Total Amount | Step 1: `total` | |
+| Payment Status | Step 1: `status` | Paid / Unpaid / Partially Paid |
+| VAT Period | Step 1: derive from date | e.g., "Jan-Feb 2026" |
+| Allocation Number | Step 1: `allocationNumber` | Required for invoices > 10,000 NIS since Jan 2026 |
 
 **VAT period derivation:**
 Use Formatter > Date/Time to extract the month number, then use a Lookup Table:
@@ -75,51 +78,29 @@ Use Formatter > Date/Time to extract the month number, then use a Lookup Table:
 
 ---
 
-## Template 3: E-Commerce Order to Invoice + WhatsApp Confirmation
+## Template 3: E-Commerce Order to Invoice + Email Confirmation
 
-**Use case:** When an order comes in from Shopify or WooCommerce, create a Green Invoice document and send a WhatsApp confirmation in Hebrew.
+**Use case:** When an order comes in from Shopify or WooCommerce, create a Morning document and send an email confirmation in Hebrew.
 
 **Zap steps:**
 
 | Step | App | Event | Configuration |
 |------|-----|-------|---------------|
 | 1. Trigger | Shopify | New Order | Or WooCommerce > New Order |
-| 2. Format | Formatter by Zapier | Text > Trim Whitespace | Clean customer name (Hebrew input) |
-| 3. Format | Formatter by Zapier | Phone > Format | Convert to +972 format |
-| 4. Action | Green Invoice | Create Document | Type: Invoice-Receipt |
-| 5. Action | Twilio | Send WhatsApp Message | Hebrew confirmation |
-| 6. Action | Monday.com | Create Item | Track order in board |
+| 2. Format | Code by Zapier | Run JavaScript | Clean Hebrew text and format phone number |
+| 3. Action | Webhooks by Zapier | Custom Request | POST to Morning API: Create Document type 320 (Invoice-Receipt) |
+| 4. Action | Gmail | Send Email | Hebrew RTL confirmation email |
+| 5. Action | Monday.com | Create Item | Track order in board |
 
-**Phone formatting (Step 3):**
-Israeli mobile: remove leading `0`, prepend `+972`
-- Input: `0541234567`
-- Formatter: Text > Replace (find: `^0`, replace: `+972`)
-- Output: `+972541234567`
+**Phone formatting and Hebrew text cleaning (Step 2):**
 
-If Formatter regex is not available, use a Code by Zapier step:
 ```javascript
 const phone = inputData.phone.replace(/^0/, '+972');
-output = [{phone: phone}];
+const name = inputData.name.replace(/[\u200F\u200E\u200B\u200C\u200D\uFEFF]/g, '').trim();
+output = [{phone: phone, name: name}];
 ```
 
-**WhatsApp message template (Step 5):**
-
-| Field | Value |
-|-------|-------|
-| To | Step 3 output (formatted phone) |
-| Body | See Hebrew template below |
-
-Hebrew message:
-```
-שלום {{customer_name}},
-
-ההזמנה שלך מספר {{order_number}} התקבלה בהצלחה.
-
-סה"כ: {{total}} ש"ח
-סטטוס: בטיפול
-
-תודה שקנית אצלנו!
-```
+**Note on WhatsApp:** Zapier's native WhatsApp integration cannot send messages to customers. If WhatsApp confirmation is needed, use Twilio WhatsApp Business API with a Meta-approved Hebrew template. This requires separate Meta Business verification and template approval (24-48 hours).
 
 ---
 
@@ -132,9 +113,9 @@ Hebrew message:
 | Step | App | Event | Configuration |
 |------|-----|-------|---------------|
 | 1. Trigger | Schedule by Zapier | Every Month | Day: 1st of month |
-| 2. Action | Green Invoice | Find Documents | Filter: unpaid invoices from last 60 days |
+| 2. Action | Webhooks by Zapier | Custom Request | GET Morning API: Find unpaid documents from last 60 days |
 | 3. Filter | Filter by Zapier | Only Continue If | Step 2 returns results |
-| 4. Format | Formatter by Zapier | Numbers | Sum up outstanding amounts |
+| 4. Action | Code by Zapier | Run JavaScript | Sum outstanding amounts |
 | 5. Action | Gmail | Send Email | Summary to self or accountant |
 
 **Email template (Step 5):**
@@ -153,23 +134,30 @@ Subject: "סיכום חשבוניות פתוחות - {{current_month}} {{current
 
 ---
 
-## Template 5: Form Submission to CRM + Hebrew WhatsApp
+## Template 5: Form Submission to CRM + Email Follow-up
 
-**Use case:** Capture leads from a Hebrew form and automatically add to CRM and send WhatsApp greeting.
+**Use case:** Capture leads from a Hebrew form and automatically add to CRM with email follow-up.
 
 **Zap steps:**
 
 | Step | App | Event | Configuration |
 |------|-----|-------|---------------|
 | 1. Trigger | Typeform | New Response | Or Google Forms, Elementor, Wix Forms |
-| 2. Format | Formatter by Zapier | Text > Trim Whitespace | Clean Hebrew text fields |
-| 3. Format | Formatter by Zapier | Phone > Format | Convert to +972 |
-| 4. Action | Monday.com | Create Item | Add lead to "Leads" board |
-| 5. Action | Twilio | Send WhatsApp Message | Hebrew welcome message |
-| 6. Action | Schedule by Zapier | Delay | Wait 3 days |
-| 7. Action | Gmail | Send Email | Follow-up email |
+| 2. Format | Code by Zapier | Run JavaScript | Clean Hebrew text and format phone |
+| 3. Action | Monday.com | Create Item | Add lead to "Leads" board |
+| 4. Action | Gmail | Send Email | Hebrew RTL welcome email |
+| 5. Action | Schedule by Zapier | Delay | Wait 3 days |
+| 6. Action | Gmail | Send Email | Follow-up email |
 
-**Monday.com board setup (Step 4):**
+**Hebrew text cleaning (Step 2):**
+
+```javascript
+const phone = inputData.phone.replace(/^0/, '+972');
+const name = inputData.name.replace(/[\u200F\u200E\u200B\u200C\u200D\uFEFF]/g, '').trim();
+output = [{phone: phone, name: name}];
+```
+
+**Monday.com board setup (Step 3):**
 
 | Column | Type | Mapping |
 |--------|------|---------|
@@ -179,6 +167,8 @@ Subject: "סיכום חשבוניות פתוחות - {{current_month}} {{current
 | Email | Email | From form |
 | Source | Text | Form name/platform |
 | Date | Date | Submission date |
+
+**Note:** For WhatsApp greeting, use Twilio WhatsApp Business API with a Meta-approved template. Zapier's native WhatsApp cannot send to customers.
 
 ---
 
@@ -193,7 +183,7 @@ Subject: "סיכום חשבוניות פתוחות - {{current_month}} {{current
 | 1. Trigger | Gmail | New Email | Match subject or body containing "קבלה", "חשבונית", "receipt" |
 | 2. Format | Formatter by Zapier | Text > Extract Pattern | Extract amount using regex |
 | 3. Action | Code by Zapier | Run JavaScript | Categorize by sender |
-| 4. Action | Google Sheets | Create Spreadsheet Row | Log to expenses sheet |
+| 4. Action | Zapier Tables | Create Record | Log to expenses table |
 
 **Categorization logic (Step 3):**
 
@@ -224,7 +214,7 @@ for (const [cat, keywords] of Object.entries(categories)) {
 output = [{category: category}];
 ```
 
-**Google Sheets columns (Step 4):**
+**Zapier Tables columns (Step 4):**
 
 | Column | Source |
 |--------|--------|
@@ -233,7 +223,7 @@ output = [{category: category}];
 | Subject | Email subject |
 | Amount | Step 2 extracted amount |
 | Category | Step 3 category output |
-| Tax Deductible | Formula based on category (in sheet) |
+| Tax Deductible | Dropdown based on category |
 | VAT Period | Derived from date |
 | Notes | (empty, for manual annotation) |
 
@@ -247,13 +237,13 @@ output = [{category: category}];
 
 | Step | App | Event | Configuration |
 |------|-----|-------|---------------|
-| 1. Trigger | Schedule by Zapier | Every Month | Day: 1st |
-| 2. Filter | Filter by Zapier | Only Continue If | Month is odd (1, 3, 5, 7, 9, 11) |
-| 3. Action | Green Invoice | Find Documents | Date range: previous 2 months |
-| 4. Action | Code by Zapier | Run JavaScript | Calculate totals |
-| 5. Action | Gmail | Send Email | Summary to accountant |
+| 1. Trigger | Schedule by Zapier | Specific months | March, May, July, September, November, January on the 10th |
+| 2. Action | Webhooks by Zapier | Custom Request | GET Morning API: Find documents for previous 2 months |
+| 3. Action | Code by Zapier | Run JavaScript | Calculate totals |
+| 4. Action | Gmail | Send Email | Summary to accountant |
+| 5. Action | Zapier Tables | Create Record | Archive period summary |
 
-**Calculation logic (Step 4):**
+**Calculation logic (Step 3):**
 
 ```javascript
 const docs = JSON.parse(inputData.documents);
@@ -263,12 +253,12 @@ let invoiceCount = 0;
 let receiptCount = 0;
 
 for (const doc of docs) {
-  if (doc.type === 'invoice' || doc.type === 'invoice_receipt') {
+  if (doc.type === 305 || doc.type === 320) {
     totalRevenue += doc.amount;
     totalVAT += doc.vat;
     invoiceCount++;
   }
-  if (doc.type === 'receipt') {
+  if (doc.type === 400) {
     receiptCount++;
   }
 }
@@ -282,7 +272,7 @@ output = [{
 }];
 ```
 
-**Accountant email template (Step 5):**
+**Accountant email template (Step 4):**
 
 Subject: "סיכום תקופת מע"מ {{period}} {{year}}"
 
@@ -297,6 +287,7 @@ Subject: "סיכום תקופת מע"מ {{period}} {{year}}"
     <tr><td>סה"כ מע"מ</td><td>{{totalVAT}} ש"ח</td></tr>
     <tr><td>סה"כ כולל מע"מ</td><td>{{totalWithVAT}} ש"ח</td></tr>
   </table>
+  <p><em>תזכורת: מועד הדיווח - 15 לחודש (19 בדיווח מקוון)</em></p>
   <p><em>דוח זה נוצר אוטומטית. נא לאמת מול הנתונים במערכת.</em></p>
 </div>
 ```
@@ -305,31 +296,36 @@ Subject: "סיכום תקופת מע"מ {{period}} {{year}}"
 
 ## Template 8: Multi-Channel Payment Consolidation
 
-**Use case:** Consolidate payments from multiple Israeli processors (Cardcom, Tranzila, Green Invoice direct) into a single tracking sheet.
+**Use case:** Consolidate payments from multiple Israeli processors (Cardcom, Tranzila, Grow, Morning direct) into a single Zapier Table.
 
-**Implementation:** Create 3 separate Zaps, all writing to the same Google Sheet.
+**Implementation:** Create 4 separate Zaps, all writing to the same Zapier Table. All processors send amounts in decimal shekels.
 
 **Zap A: Cardcom payments**
-1. Trigger: Webhooks by Zapier > Catch Hook (Cardcom webhook)
-2. Format: Divide amount by 100 (agorot to ILS)
-3. Action: Google Sheets > Create Row
+1. Trigger: Webhooks by Zapier > Catch Hook (Cardcom IndicatorUrl GET callback)
+2. Filter: `DealResponse` = 0
+3. Action: Zapier Tables > Create Record
 
 **Zap B: Tranzila payments**
 1. Trigger: Webhooks by Zapier > Catch Hook (Tranzila webhook)
-2. Action: Google Sheets > Create Row (amount already in ILS)
+2. Action: Zapier Tables > Create Record
 
-**Zap C: Green Invoice payments**
-1. Trigger: Green Invoice > Document Status Changed (status = "paid")
-2. Action: Google Sheets > Create Row
+**Zap C: Grow by Meshulam payments**
+1. Trigger: Webhooks by Zapier > Catch Hook (Grow JSON webhook)
+2. Action: Zapier Tables > Create Record
 
-**Shared Google Sheets columns:**
+**Zap D: Morning direct payments**
+1. Trigger: Morning webhook (document status = "paid")
+2. Action: Zapier Tables > Create Record
 
-| Column | Cardcom Source | Tranzila Source | Green Invoice Source |
-|--------|---------------|-----------------|----------------------|
-| Date | Webhook timestamp | Webhook timestamp | Document date |
-| Source | Static: "Cardcom" | Static: "Tranzila" | Static: "Green Invoice" |
-| Amount (ILS) | `Amount` / 100 | `sum` | `total` |
-| Customer | `CustomerName` | `contact` | `client.name` |
-| Reference | `Transaction` | `index` | Document number |
-| Installments | `NumOfPayments` | `npay` | (N/A) |
-| Status | (always "Completed") | (always "Completed") | Document status |
+**Shared Zapier Tables columns:**
+
+| Column | Cardcom Source | Tranzila Source | Grow Source | Morning Source |
+|--------|---------------|-----------------|-------------|----------------|
+| Date | Webhook timestamp | Webhook timestamp | Webhook timestamp | Document date |
+| Source | Static: "Cardcom" | Static: "Tranzila" | Static: "Grow" | Static: "Morning" |
+| Amount (ILS) | `Amount` | `sum` | `amount` | `total` |
+| Customer | `CardOwnerName` | `contact` | `customer_name` | `client.name` |
+| Reference | `InternalDealNumber` | `index` | `transaction_id` | Document number |
+| Payment Method | Static: "Credit Card" | Static: "Credit Card" | `payment_method` | N/A |
+| Installments | `NumOfPayments` | `npay` | N/A | N/A |
+| Status | (always "Completed") | (always "Completed") | (always "Completed") | Document status |
