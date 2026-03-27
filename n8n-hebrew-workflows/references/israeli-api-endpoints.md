@@ -2,9 +2,11 @@
 
 Quick reference for configuring HTTP Request nodes when connecting to Israeli services.
 
-## Green Invoice API
+## Morning (formerly Green Invoice) API
 
 Base URL: `https://api.greeninvoice.co.il/api/v1`
+
+Note: The company rebranded from "Green Invoice" to "Morning" (חשבונית ירוקה). The API domain remains `api.greeninvoice.co.il`.
 
 ### Authentication
 
@@ -12,7 +14,9 @@ Base URL: `https://api.greeninvoice.co.il/api/v1`
 |------|--------|----------|------|
 | Get token | POST | `/account/token` | `{ "id": "<api_key>", "secret": "<api_secret>" }` |
 
-Token TTL: ~30 minutes. Refresh proactively before expiry.
+Authentication is API key + secret -> JWT. This is NOT OAuth2.
+
+Token TTL: 60 minutes. Refresh proactively before expiry.
 
 ### Document Endpoints
 
@@ -28,14 +32,15 @@ Token TTL: ~30 minutes. Refresh proactively before expiry.
 
 | Code | Type (Hebrew) | Type (English) |
 |------|--------------|----------------|
-| 10 | קבלה | Receipt |
-| 20 | חשבונית מס | Tax Invoice |
-| 100 | חשבונית מס / קבלה | Tax Invoice / Receipt |
-| 300 | הצעת מחיר | Price Quote |
-| 305 | הזמנה | Order |
-| 320 | חשבונית עסקה | Transaction Invoice |
-| 400 | קבלה על תרומה | Donation Receipt |
-| 405 | חשבונית זיכוי | Credit Invoice |
+| 10 | הצעת מחיר | Price Quote |
+| 305 | חשבונית מס | Tax Invoice |
+| 320 | חשבונית מס / קבלה | Tax Invoice / Receipt |
+| 330 | חשבונית זיכוי | Credit Note / Refund |
+| 400 | קבלה | Receipt |
+
+### Israel Invoice Reform 2026
+
+Starting January 2026, tax invoices (type 305, 320) over 10,000 NIS require an allocation number (mispar haktza'a) from the Israel Tax Authority. When creating documents via API, check Morning's documentation for the allocation workflow applicable to API-created documents.
 
 ### Client Endpoints
 
@@ -58,13 +63,15 @@ Token TTL: ~30 minutes. Refresh proactively before expiry.
 |-------|------|-------------|
 | `id` | string | Document UUID |
 | `number` | integer | Document number (sequential) |
-| `amount` | number | Amount before VAT |
-| `vat` | number | VAT amount |
-| `totalAmount` | number | Amount including VAT |
+| `amount` | number | Amount before VAT (in decimal shekels, NOT agorot) |
+| `vat` | number | VAT amount (in decimal shekels) |
+| `totalAmount` | number | Amount including VAT (in decimal shekels) |
 | `status` | integer | 0=draft, 10=open, 20=closed, 30=canceled |
 | `createdAt` | string | ISO 8601 timestamp |
 | `client.name` | string | Client name (may be Hebrew) |
 | `client.taxId` | string | Israeli tax ID (osek morshe/patur number) |
+
+**Amounts are in decimal shekels.** `amount: 50` means 50.00 NIS. Do not multiply or divide by 100.
 
 ---
 
@@ -85,21 +92,17 @@ Base URL: `https://data.gov.il/api/3`
 
 | Dataset | Resource ID | Content | Update Frequency |
 |---------|-------------|---------|-----------------|
-| Companies Registry (rasham hachavarot) | 8f714b7f-c35c-4b40-a0e0-55b6ac4ae2d2 | All registered Israeli companies | Weekly |
 | Non-Profit Registry (amutot) | be5b7935-3922-45d4-9638-08871b17ec95 | Registered non-profits | Weekly |
 | Licensed Businesses | varies by municipality | Licensed businesses per city | Monthly |
 | Election Results | varies by election | Voting results by ballot box | After elections |
 
+Note: The Companies Registry resource ID may change. Verify the current resource ID via the data.gov.il portal before using.
+
 ### Query Examples
 
-Search companies by name:
+Search non-profits by name:
 ```
-GET https://data.gov.il/api/3/action/datastore_search?resource_id=8f714b7f-c35c-4b40-a0e0-55b6ac4ae2d2&q=אלביט
-```
-
-SQL query with filters:
-```
-GET https://data.gov.il/api/3/action/datastore_search_sql?sql=SELECT * FROM "8f714b7f-c35c-4b40-a0e0-55b6ac4ae2d2" WHERE "שם חברה" LIKE '%טכנולוגי%' LIMIT 10
+GET https://data.gov.il/api/3/action/datastore_search?resource_id=be5b7935-3922-45d4-9638-08871b17ec95&q=עמותה
 ```
 
 ### Response Format
@@ -111,45 +114,46 @@ GET https://data.gov.il/api/3/action/datastore_search_sql?sql=SELECT * FROM "8f7
     "records": [...],
     "total": 12345,
     "fields": [
-      { "id": "שם חברה", "type": "text" },
-      { "id": "מספר חברה", "type": "numeric" }
+      { "id": "field_name", "type": "text" }
     ]
   }
 }
 ```
 
-Note: Field names are in Hebrew. Normalize to English keys in a Function node for downstream compatibility.
+Note: Field names are in Hebrew. Normalize to English keys in a Code node for downstream compatibility.
 
 ---
 
 ## Israeli SMS Gateways
 
-### 019 SMS (InfruSMS)
+### 019 Telzar
 
-Base URL: `https://www.019sms.co.il/api`
+Base URL: `https://019sms.co.il/api`
 
 | Endpoint | Method | Description | Auth |
 |----------|--------|-------------|------|
-| `/api` | POST | Send single SMS | API key + secret in body |
+| `/api` | POST | Send single SMS | Bearer token in header |
 | `/api/bulk` | POST | Send bulk SMS | Same |
-| `/api/status` | GET | Check message status | API key + message ID |
+| `/api/status` | GET | Check message status | Bearer token + message ID |
 
-Send SMS body:
-```json
+Send SMS request:
+```
+Headers:
+  Content-Type: application/json
+  Authorization: Bearer <token>
+Body:
 {
-  "user": "<username>",
-  "password": "<password>",
   "from": "MyBusiness",
   "to": "972501234567",
   "message": "הודעה בעברית"
 }
 ```
 
-### Inforu (SMSGlobal IL)
+### InforUMobile
 
-Base URL: `https://api.inforu.co.il/SendMessageXml.ashx`
+Base URL: `https://api.inforu.co.il`
 
-Inforu uses XML-based API (legacy) and newer JSON API:
+InforUMobile has a legacy XML API and newer JSON API:
 
 JSON API endpoint: `https://api.inforu.co.il/api/v2/SMS/SendSms`
 
@@ -194,7 +198,7 @@ Documentation: `https://kb.cardcom.co.il/`
 |----------|--------|-------------|
 | `https://secure.cardcom.solutions/Interface/ChargeToken.aspx` | POST | Charge a stored token |
 | `https://secure.cardcom.solutions/Interface/CreateInvoice.aspx` | POST | Create invoice after charge |
-| Callback URL (configured in merchant dashboard) | POST | Payment result notification |
+| Callback URL (configured via API v11 or merchant dashboard) | POST | Payment result notification |
 
 Callback fields:
 
@@ -214,7 +218,8 @@ Documentation: `https://docs.tranzila.com/`
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `https://secure5.tranzila.com/cgi-bin/tranzila71dl.cgi` | GET/POST | Process payment |
+| `https://secure5.tranzila.com/cgi-bin/tranzila71dl.cgi` | GET/POST | Process payment (legacy) |
+| Tranzila API v2 (iframe/hosted fields) | POST | Process payment (modern, PCI-compliant) |
 | Callback URL (configured in terminal settings) | GET | Payment result via query params |
 
 Callback query parameters:
@@ -224,12 +229,14 @@ Callback query parameters:
 | Response | string | "000" = approved |
 | index | string | Transaction index |
 | sum | string | Amount (decimal) |
-| currency | string | "1"=ILS, "2"=USD, "3"=EUR |
-|Rone | string | Installment count |
+| currency | string | "1"=ILS, "2"=USD, "3"=GBP, "7"=EUR |
+| Rone | string | Installment count |
 | ConfirmationCode | string | Shva confirmation code |
 | ccno | string | Masked card number |
 
-### Grow (Meshulam)
+Tranzila API v2 also supports Bit payments. For new integrations, prefer v2 over the legacy CGI pattern.
+
+### Grow by Meshulam
 
 Documentation: `https://grow.link/developers`
 
@@ -237,20 +244,31 @@ Documentation: `https://grow.link/developers`
 |----------|--------|-------------|
 | `/api/v1/payments/create` | POST | Create payment page |
 | `/api/v1/payments/{id}` | GET | Get payment status |
-| Webhook URL (configured in dashboard) | POST | Payment result JSON |
+| `/api/v1/payments/approve` | POST | Approve transaction (required after webhook) |
+| Webhook URL (configured in dashboard) | POST | Payment result |
 
-Webhook JSON body:
+**Important:** Grow API requests use `multipart/form-data`, not JSON.
+
+Webhook payload fields:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| transaction_id | string | Unique transaction ID |
-| status | string | "success", "failed", "pending" |
-| amount | number | Amount in ILS |
-| currency | string | "ILS" |
-| payments_number | integer | Installment count |
-| customer.name | string | Customer name (may be Hebrew) |
-| customer.email | string | Customer email |
-| customer.phone | string | Customer phone |
+| webhookKey | string | Webhook verification key |
+| transactionCode | string | Unique transaction code |
+| transactionType | string | Type of transaction |
+| asmachta | string | Transaction reference number |
+| paymentSum | string | Amount charged |
+| paymentDate | string | Date of payment |
+| fullName | string | Customer name (may be Hebrew) |
+| payerPhone | string | Customer phone |
+| payerEmail | string | Customer email |
+| cardSuffix | string | Last 4 digits of card |
+| cardBrand | string | Card brand (Visa, Mastercard, etc.) |
+| paymentsNum | string | Installment count |
+
+**After receiving a webhook, you must call `approveTransaction` to finalize the payment.**
+
+Grow also supports Bit payments when enabled in the merchant dashboard.
 
 ---
 
@@ -272,37 +290,38 @@ Base URL: `https://www.hebcal.com`
 
 ### Israeli City Geoname IDs
 
-| City | Geoname ID |
-|------|-----------|
-| Jerusalem (yerushalayim) | 281184 |
-| Tel Aviv (tel aviv-yafo) | 293397 |
-| Haifa (haifa) | 294801 |
-| Beer Sheva (be'er sheva) | 295530 |
-| Rishon LeZion | 293703 |
-| Petah Tikva | 293918 |
-| Ashdod | 295629 |
-| Netanya | 294098 |
-| Bnei Brak | 295514 |
-| Holon | 294751 |
-| Ramat Gan | 293768 |
-| Herzliya | 294778 |
+| City | Geoname ID | Candle Lighting |
+|------|-----------|-----------------|
+| Jerusalem (yerushalayim) | 281184 | 40 min before sunset |
+| Tel Aviv (tel aviv-yafo) | 293397 | 18 min before sunset |
+| Haifa (haifa) | 294801 | 30 min before sunset |
+| Zikhron Ya'akov | 293067 | 30 min before sunset |
+| Beer Sheva (be'er sheva) | 295530 | 18 min before sunset |
+| Rishon LeZion | 293703 | 18 min before sunset |
+| Petah Tikva | 293918 | 18 min before sunset |
+| Ashdod | 295629 | 18 min before sunset |
+| Netanya | 294098 | 18 min before sunset |
+| Bnei Brak | 295514 | 18 min before sunset |
+| Holon | 294751 | 18 min before sunset |
+| Ramat Gan | 293768 | 18 min before sunset |
+| Herzliya | 294778 | 18 min before sunset |
 
 ### Shabbat Response Format
 
 ```json
 {
   "title": "Shabbat Times for Tel Aviv-Yafo",
-  "date": "2025-01-17",
+  "date": "2026-01-16",
   "items": [
     {
       "title": "Candle lighting: 4:38pm",
-      "date": "2025-01-17T16:38:00+02:00",
+      "date": "2026-01-16T16:38:00+02:00",
       "category": "candles",
       "memo": "Parashat Beshalach"
     },
     {
       "title": "Havdalah (50 min): 5:42pm",
-      "date": "2025-01-18T17:42:00+02:00",
+      "date": "2026-01-17T17:42:00+02:00",
       "category": "havdalah"
     }
   ]

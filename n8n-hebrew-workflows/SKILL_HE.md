@@ -1,22 +1,12 @@
 ---
 name: n8n-hebrew-workflows
 description: >-
-  Build and optimize n8n automation workflows with Israeli API integrations
-  including Green Invoice, israeli-bank-scrapers, data.gov.il, and Israeli SMS
-  gateways. Use when user asks to "create n8n workflow for Israeli business",
-  "connect Green Invoice to n8n", "automate hashbonit", "tazrim avoda b'ivrit",
-  "set up Shabbat-aware cron", or integrate Israeli payment gateways (Cardcom,
-  Tranzila, Grow/Meshulam) into n8n flows. Covers Hebrew data handling in
-  Function nodes, NIS currency formatting, Shabbat/holiday-aware scheduling via
-  Hebcal API, and self-hosting on Israeli cloud with data residency compliance.
-  Do NOT use for general n8n tutorials without Israeli context (use n8n official
-  docs), standalone invoice management (use green-invoice-il), or Hebrew NLP
-  tasks (use hebrew-nlp-toolkit).
+  Build and optimize n8n 2.0 automation workflows with Israeli API integrations
+  including Morning (formerly Green Invoice), israeli-bank-scrapers, data.gov.il,
+  Israeli SMS gateways, and payment processors (Cardcom, Tranzila, Grow by Meshulam).
+  Covers n8n 2.0 breaking changes, AI Agent nodes, MCP integration, Israel Invoice
+  Reform 2026, Hebrew data handling in Code nodes, and Shabbat-aware scheduling.
 license: MIT
-metadata:
-  author: skills-il
-  version: 1.0.0
-  category: developer-tools
 ---
 
 # תהליכי עבודה n8n בעברית
@@ -29,24 +19,27 @@ metadata:
 
 | צורך עסקי | תבנית n8n | צמתים עיקריים | API ישראלי |
 |-----------|-----------|---------------|------------|
-| התאמת חשבוניות | Cron -> HTTP -> Compare -> Update | Cron, HTTP Request, IF, Function | Green Invoice API |
-| סיווג תנועות בנק | Cron -> Code -> Spreadsheet | Cron, Execute Command, Google Sheets | israeli-bank-scrapers |
-| סנכרון נתוני ממשלה | Cron -> HTTP -> Transform -> DB | Cron, HTTP Request, Function, Postgres | data.gov.il CKAN API |
-| הודעות SMS | Trigger -> Function -> HTTP | Webhook, Function, HTTP Request | 019 SMS / Inforu API |
-| טיפול ב-webhooks של תשלומים | Webhook -> Validate -> Process | Webhook, IF, Function, HTTP Request | Cardcom / Tranzila / Grow |
-| תזמון מותאם חגים | Cron -> HTTP -> IF -> Execute | Cron, HTTP Request, IF, Function | Hebcal API |
+| התאמת חשבוניות | Schedule Trigger -> HTTP -> Compare -> Update | Schedule Trigger, HTTP Request, IF, Code | Morning (חשבונית ירוקה) API |
+| סיווג תנועות בנק | Schedule Trigger -> Code -> Spreadsheet | Schedule Trigger, Code, Google Sheets | israeli-bank-scrapers |
+| סנכרון נתוני ממשלה | Schedule Trigger -> HTTP -> Transform -> DB | Schedule Trigger, HTTP Request, Code, Postgres | data.gov.il CKAN API |
+| הודעות SMS | Trigger -> Code -> HTTP | Webhook, Code, HTTP Request | 019 Telzar / InforUMobile API |
+| טיפול ב-webhooks של תשלומים | Webhook -> Validate -> Process | Webhook, IF, Code, HTTP Request | Cardcom / Tranzila / Grow by Meshulam |
+| תזמון מותאם חגים | Schedule Trigger -> HTTP -> IF -> Execute | Schedule Trigger, HTTP Request, IF, Code | Hebcal API |
 | תהליך אישור רב-שלבי | Webhook -> Wait -> IF -> Notify | Webhook, Wait, IF, HTTP Request | Slack + שער SMS |
+| סיווג חכם עם AI | Schedule Trigger -> Code -> AI Agent -> DB | Schedule Trigger, Code, AI Agent, Postgres | israeli-bank-scrapers + LLM |
+| ציות לרפורמת חשבוניות | Webhook -> Code -> HTTP -> HTTP | Webhook, Code, HTTP Request | Morning API + מספרי הקצאה |
 
 **איך בוחרים:**
-- אם התהליך רץ לפי לוח זמנים, מתחילים עם Cron trigger ובודקים אם צריך השהיה בשבת/חגים (שלב 4)
+- אם התהליך רץ לפי לוח זמנים, מתחילים עם Schedule Trigger ובודקים אם צריך השהיה בשבת/חגים (שלב 4)
 - אם התהליך מגיב לאירועים חיצוניים (אישור תשלום, הגשת טופס), מתחילים עם Webhook trigger
-- אם התהליך מעבד טקסט בעברית, מוסיפים Function node בתחילת הצינור לטיפול בקידוד ו-RTL (שלב 3)
+- אם התהליך מעבד טקסט בעברית, מוסיפים Code node בתחילת הצינור לטיפול בקידוד ו-RTL (שלב 3)
+- אם התהליך צריך סיווג או סיכום חכם, משתמשים ב-AI Agent node (שלב 7)
 
 ### שלב 2: חיבור API ישראליים ב-n8n
 
-#### Green Invoice API
+#### Morning (חשבונית ירוקה) API
 
-Green Invoice משתמש ב-OAuth2 עם API key ו-secret. הגדרת HTTP Request node:
+Morning (לשעבר חשבונית ירוקה, Green Invoice) משתמש ב-API key + secret לקבלת JWT token. זה לא OAuth2. הגדרת HTTP Request node:
 
 ```
 Method: POST
@@ -60,13 +53,17 @@ Body:
 }
 ```
 
-שמירת ה-JWT token מהתגובה והעברתו לבקשות הבאות:
+התגובה מכילה JWT token שתקף ל-60 דקות. שומרים אותו ומעבירים לבקשות הבאות:
 
 ```
 Authorization: Bearer {{$json.token}}
 ```
 
-נקודות קצה נפוצות של Green Invoice:
+**רפורמת החשבוניות 2026:** החל מינואר 2026, חשבוניות מס מעל 10,000 ש"ח דורשות מספר הקצאה מרשות המסים. אחרי יצירת מסמך דרך ה-API של Morning, צריך לקרוא לנקודת הקצה של רשות המסים לקבלת מספר הקצאה עבור חשבוניות מזכות. ה-API של Morning מטפל בזה אוטומטית למסמכים שנוצרים דרך הממשק, אבל מסמכים שנוצרים דרך API עשויים לדרוש בקשת הקצאה מפורשת. בדקו בתיעוד ה-API של Morning לתהליך העדכני.
+
+**סכומים בשקלים עשרוניים (לא באגורות).** כשיוצרים מסמכים, `price: 50` זה 50 ש"ח, לא 50 אגורות. אין צורך להכפיל או לחלק ב-100.
+
+נקודות קצה נפוצות של Morning API:
 
 | נקודת קצה | Method | שימוש |
 |-----------|--------|-------|
@@ -76,17 +73,58 @@ Authorization: Bearer {{$json.token}}
 | `/api/v1/payments` | GET | שליפת רשומות תשלום להתאמה |
 | `/api/v1/businesses/me` | GET | מידע על העסק הנוכחי |
 
+קודי סוגי מסמכים לשדה `type`:
+
+| קוד | סוג מסמך |
+|-----|----------|
+| 10 | הצעת מחיר |
+| 305 | חשבונית מס |
+| 320 | חשבונית מס / קבלה |
+| 330 | חשבונית זיכוי / זיכוי |
+| 400 | קבלה |
+
 למידע מפורט יש לעיין ב-`references/israeli-api-endpoints.md`.
 
-#### israeli-bank-scrapers דרך Execute Command
+#### israeli-bank-scrapers דרך Code Node
 
-ל-n8n אין node מובנה לבנקים ישראליים. משתמשים ב-Execute Command node להרצת `israeli-bank-scrapers`:
+ל-n8n אין node מובנה לבנקים ישראליים. משתמשים ב-Code node להרצת `israeli-bank-scrapers` בצורה פרוגרמטית. החבילה היא ספריית Node.js (לא כלי CLI), לכן חייבים להשתמש ב-`createScraper()`:
 
-```bash
-npx israeli-bank-scrapers --company $BANK_NAME --id $USER_ID --password $PASSWORD --output json
+**חשוב:** דורש Node.js >= 22.12.0 בסביבת n8n.
+
+```javascript
+// ב-Code node (ב-n8n 2.0: רץ ב-task runner מבודד)
+const { createScraper, CompanyTypes } = require('israeli-bank-scrapers');
+
+const scraper = createScraper({
+  companyId: CompanyTypes.hapoalim,
+  startDate: new Date('2026-01-01'),
+  combineInstallments: false,
+  showBrowser: false
+});
+
+const credentials = {
+  username: $env.BANK_USER,
+  // פרטי התחברות נשמרים במשתני סביבה של n8n
+  userPassword: $env.BANK_PASS
+};
+const result = await scraper.scrape(credentials);
+
+if (result.success) {
+  return result.accounts.flatMap(account =>
+    account.txns.map(txn => ({ json: txn }))
+  );
+} else {
+  throw new Error(`Scraping failed: ${result.errorType} - ${result.errorMessage}`);
+}
 ```
 
-בנקים נתמכים: הפועלים, לאומי, דיסקונט, מזרחי, אוצר החייל, בינלאומי, מסד, יהב, ביחד משכנתאות, oneZero, בהצדעה.
+סורקים נתמכים: הפועלים, לאומי, דיסקונט, מזרחי, אוצר החייל, בינלאומי, מסד, יהב, ביחד משכנתאות, oneZero, בהצדעה, ויזה כאל, מקס (לשעבר לאומי קארד), ישראכרט, אמקס, מרכנתיל.
+
+**חסימת Cloudflare (2026):** מתחילת 2026, Cloudflare חוסם דפדפנים headless באתרי אמקס וישראכרט. הפורק המתוחזק `@sergienko4/israeli-bank-scrapers` משתמש ב-Camoufox כפתרון עוקף. אם נתקלים בכשלונות סריקה מתמשכים עם ספקים אלה:
+
+```bash
+npm install @sergienko4/israeli-bank-scrapers
+```
 
 **אבטחה:** פרטי התחברות נשמרים ב-credential store של n8n, לא בתוך ה-workflow JSON. משתמשים במשתני סביבה לערכים רגישים.
 
@@ -103,45 +141,69 @@ Parameters:
   offset: 0
 ```
 
-ה-API מחזיר שמות שדות בעברית. מומלץ להשתמש ב-Function node לנרמול המפתחות לאנגלית לפני עיבוד המשך.
+מזהי משאבים שימושיים:
+
+| מסד נתונים | Resource ID | תוכן |
+|-----------|-------------|------|
+| רשם העמותות | be5b7935-3922-45d4-9638-08871b17ec95 | עמותות רשומות |
+| סטטיסטיקת יבוא/יצוא | משתנה | נתוני מסחר לפי קוד HS |
+
+ה-API מחזיר שמות שדות בעברית. משתמשים ב-Code node לנרמול המפתחות לאנגלית לפני עיבוד המשך.
 
 #### שערי SMS ישראליים
 
 | שער | סוג API | אימות | מתאים ל |
 |-----|---------|-------|---------|
-| 019 SMS | REST | API key + secret | שיווק המוני, הודעות עסקיות |
-| Inforu | REST | Username + token | OTP, הודעות עסקיות, WhatsApp |
+| 019 Telzar | REST | Bearer token | שיווק המוני, הודעות עסקיות |
+| InforUMobile | REST | Bearer token | OTP, הודעות עסקיות, WhatsApp |
 | Nexmo/Vonage IL | REST | API key + secret | בינלאומי + מקומי |
 
-פורמט מספרי טלפון ישראליים: תמיד שולחים בפורמט בינלאומי `972XXXXXXXXX` (מורידים את ה-0 הפותח). Function node לפני ה-SMS node מטפל בזה:
+דוגמת 019 Telzar SMS ב-HTTP Request node:
+
+```
+Method: POST
+URL: https://019sms.co.il/api
+Headers:
+  Content-Type: application/json
+  Authorization: Bearer {{$env.SMS_019_TOKEN}}
+Body:
+{
+  "from": "MyBusiness",
+  "to": "{{$json.phone}}",
+  "message": "{{$json.text}}"
+}
+```
+
+פורמט מספרי טלפון ישראליים: תמיד שולחים בפורמט בינלאומי `972XXXXXXXXX` (מורידים את ה-0 הפותח). Code node לפני ה-SMS node מטפל בזה:
 
 ```javascript
 const phone = $input.first().json.phone;
-const formatted = phone.startsWith('0')
-  ? '972' + phone.slice(1)
-  : phone.startsWith('+972')
-    ? phone.slice(1)
-    : phone;
-return [{ json: { ...items[0].json, phone: formatted } }];
+const cleaned = phone.replace(/[-\s]/g, '');
+const formatted = cleaned.startsWith('0')
+  ? '972' + cleaned.slice(1)
+  : cleaned.startsWith('+972')
+    ? cleaned.slice(1)
+    : cleaned;
+return [{ json: { ...$input.first().json, phone: formatted } }];
 ```
 
 ### שלב 3: טיפול בנתונים בעברית ב-n8n
 
-#### טקסט RTL ב-Function Nodes
+#### טקסט RTL ב-Code Nodes
 
-n8n מעבד מחרוזות כ-UTF-8, אז עברית עובדת באופן טבעי. הבעיות מופיעות בממשקים: תגובות API, ייצוא CSV, תבניות מייל.
+ב-n8n צמתי Code מעבדים מחרוזות כ-UTF-8, אז עברית עובדת באופן טבעי. הבעיות מופיעות בממשקים: תגובות API, ייצוא CSV, תבניות מייל.
 
 | בעיה | איפה קורה | פתרון |
 |------|-----------|-------|
 | עברית הפוכה ב-CSV | ייצוא Spreadsheet File node | הגדרת encoding ל-UTF-8-BOM |
 | ניקוד שבור | פרסור תגובת HTTP Request | הגדרת encoding ל-UTF-8 מפורשות |
 | ערבוב RTL/LTR במיילים | Send Email node | עטיפת טקסט עברי ב-`<div dir="rtl">` |
-| מפתחות JSON בעברית | תגובות data.gov.il | נרמול מפתחות ב-Function node |
+| מפתחות JSON בעברית | תגובות data.gov.il | נרמול מפתחות ב-Code node |
 | עברית קטועה | בדיקות אורך מחרוזת | שימוש ב-`Array.from(str).length` במקום `.length` |
 
 #### פורמט מטבע שקלים
 
-Function node לעיצוב סכומים בשקלים:
+Code node לעיצוב סכומים בשקלים:
 
 ```javascript
 function formatNIS(amount) {
@@ -156,13 +218,7 @@ function formatNIS(amount) {
 // פלט: 12,345.60 ₪
 ```
 
-בתהליכים פיננסיים, עובדים תמיד באגורות (מספרים שלמים) וממירים לשקלים רק בתצוגה:
-
-```javascript
-const amountInAgorot = Math.round(shekelAmount * 100);
-const totalAgorot = amountInAgorot + taxAgorot;
-const displayAmount = formatNIS(totalAgorot / 100);
-```
+**לגבי Morning API:** סכומים ב-API הם בשקלים עשרוניים (לא אגורות). `price: 50` זה 50.00 ש"ח. אין צורך להמיר אגורות לשקלים כשעובדים עם Morning API.
 
 #### פרסור תאריכים ישראליים
 
@@ -183,11 +239,11 @@ const hebrewMonths = {
 };
 ```
 
-### שלב 4: תזמון Cron מותאם שבת
+### שלב 4: תזמון מותאם שבת
 
-תהליכים עסקיים בישראל לא צריכים לרוץ בשבת (כניסת שבת ביום שישי עד מוצאי שבת) ובחגים. ל-n8n אין תמיכה מובנית בזה, אז בונים צומת בדיקה בתחילת כל תהליך מתוזמן.
+תהליכים עסקיים בישראל לא צריכים לרוץ בשבת (כניסת שבת ביום שישי עד מוצאי שבת) ובחגים. ל-Schedule Trigger node של n8n אין תמיכה מובנית בזה, אז בונים צומת בדיקה בתחילת כל תהליך מתוזמן.
 
-**ארכיטקטורה:** Cron Trigger -> HTTP Request (Hebcal) -> IF (שבת?) -> המשך או עצירה
+**ארכיטקטורה:** Schedule Trigger -> HTTP Request (Hebcal) -> IF (שבת?) -> המשך או עצירה
 
 קריאה ל-Hebcal API ב-HTTP Request node:
 
@@ -197,14 +253,16 @@ GET https://www.hebcal.com/shabbat?cfg=json&geonameid=293397&M=on
 
 `geonameid=293397` זה תל אביב. ערים נפוצות נוספות:
 
-| עיר | Geoname ID |
-|-----|-----------|
-| ירושלים | 281184 |
-| תל אביב | 293397 |
-| חיפה | 294801 |
-| באר שבע | 295530 |
+| עיר | Geoname ID | הדלקת נרות |
+|-----|-----------|------------|
+| ירושלים | 281184 | 40 דקות לפני השקיעה |
+| תל אביב | 293397 | 18 דקות לפני השקיעה |
+| חיפה | 294801 | 30 דקות לפני השקיעה |
+| זיכרון יעקב | 293067 | 30 דקות לפני השקיעה |
+| באר שבע | 295530 | 18 דקות לפני השקיעה |
+| כל שאר הערים | משתנה | 18 דקות לפני השקיעה |
 
-Function node לבדיקה אם הזמן הנוכחי נופל בתוך שבת:
+Code node לבדיקה אם הזמן הנוכחי נופל בתוך שבת:
 
 ```javascript
 const now = new Date();
@@ -257,25 +315,119 @@ Cardcom שולח POST עם נתונים בפורמט form-encoded:
 | `CardOwnerID` | תעודת זהות הלקוח | 9 ספרות |
 | `NumOfPayments` | מספר תשלומים | 1-36 |
 
+Code node לוולידציה אחרי ה-Webhook:
+
+```javascript
+const data = $input.first().json;
+
+if (data.ReturnValue !== '0') {
+  return [{
+    json: {
+      success: false,
+      error: data.DealResponse,
+      cardcomId: data.InternalDealNumber
+    }
+  }];
+}
+
+return [{
+  json: {
+    success: true,
+    transactionId: data.InternalDealNumber,
+    amount: parseFloat(data.Sum),
+    installments: parseInt(data.NumOfPayments),
+    customerId: data.CardOwnerID
+  }
+}];
+```
+
+**Cardcom API v11:** לאינטגרציות חדשות, מגדירים את ה-webhook URL דרך Cardcom API v11 במקום לוח הבקרה הישן.
+
 #### Tranzila
 
-Tranzila משתמש בתבנית callback שונה עם פרמטרי GET:
+Tranzila משתמש בתבנית callback עם פרמטרי GET:
 
 | שדה | תיאור | ערכים |
 |-----|-------|-------|
 | `Response` | קוד סטטוס | `000` = אושר, `001`-`999` = שגיאות |
 | `index` | אינדקס עסקה | מספרי |
 | `sum` | סכום שחויב | עשרוני (שקלים אם `currency=1`) |
-| `currency` | קוד מטבע | `1` = ILS, `2` = USD, `3` = EUR |
+| `currency` | קוד מטבע | `1` = ILS, `2` = USD, `3` = GBP, `7` = EUR |
 | `Rone` | תשלומים | מספר |
 
-#### Grow (משולם)
+**Tranzila API v2:** Tranzila מציעה אינטגרציה מודרנית מבוססת iframe ושדות מתארחים לציות PCI. ה-v2 API תומך גם בתשלומי ביט (ראו בהמשך). לאינטגרציות חדשות, עדיף להשתמש ב-v2 API.
 
-Grow שולח JSON POST ל-webhook. כולל פרטי עסקה, סכום במטבע ישראלי ופרטי לקוח.
+#### Grow by Meshulam
+
+Grow by Meshulam שולח התראות webhook כבקשות POST. **חשוב:** ה-API של Grow משתמש ב-`multipart/form-data` לבקשות (לא JSON). אחרי קבלת webhook, חובה לקרוא ל-`approveTransaction` כדי לסיים את העסקה.
+
+שדות ב-webhook payload:
+
+| שדה | תיאור |
+|-----|-------|
+| `webhookKey` | מפתח אימות webhook |
+| `transactionCode` | קוד עסקה ייחודי |
+| `transactionType` | סוג העסקה |
+| `asmachta` | מספר אסמכתא |
+| `paymentSum` | סכום שחויב |
+| `paymentDate` | תאריך התשלום |
+| `fullName` | שם מלא של הלקוח |
+| `payerPhone` | טלפון הלקוח |
+| `payerEmail` | אימייל הלקוח |
+| `cardSuffix` | 4 ספרות אחרונות של הכרטיס |
+| `cardBrand` | מותג הכרטיס (Visa, Mastercard וכו') |
+| `paymentsNum` | מספר תשלומים |
+
+Code node לעיבוד webhook של Grow ואישור:
+
+```javascript
+const data = $input.first().json;
+
+const payment = {
+  transactionCode: data.transactionCode,
+  asmachta: data.asmachta,
+  amount: parseFloat(data.paymentSum),
+  customerName: data.fullName,
+  customerPhone: data.payerPhone,
+  customerEmail: data.payerEmail,
+  installments: parseInt(data.paymentsNum) || 1
+};
+
+// חובה לקרוא ל-approveTransaction אחרי קבלת ה-webhook
+// זה נעשה ב-HTTP Request node הבא עם multipart/form-data
+return [{ json: payment }];
+```
 
 **רשימת IP לבנה:** Cardcom ו-Tranzila דורשים שה-IP של שרת ה-webhook יהיה ברשימה המורשית בלוח הבקרה שלהם. באירוח עצמי יש להשתמש ב-IP קבוע או reverse proxy עם כתובת יציאה קבועה.
 
+#### תשלומי ביט
+
+ביט הוא אמצעי התשלום הנייד הפופולרי ביותר בישראל. תשלומי ביט זמינים דרך Tranzila (API v2) ו-Grow by Meshulam, לא כ-API עצמאי.
+
+ביט דרך Tranzila v2: יוצרים דף תשלום עם `bit: true` בבקשה. הלקוח סורק QR או מופנה לביט. ה-webhook callback משתמש באותם שדות כמו עסקאות כרטיס אשראי.
+
+ביט דרך Grow by Meshulam: מפעילים ביט בלוח הבקרה של Grow. עסקאות ביט מופיעות באותו תהליך webhook כמו עסקאות כרטיס, עם ערך `transactionType` שונה.
+
 ### שלב 6: שיקולי אירוח עצמי
+
+#### שינויים משמעותיים ב-n8n 2.0 (דצמבר 2025)
+
+n8n 2.0 הביא שינויים משמעותיים שמשפיעים על תהליכים ישראליים:
+
+| שינוי | השפעה | פעולה נדרשת |
+|-------|-------|------------|
+| Execute Command node מושבת כברירת מחדל | תהליכי סריקת בנקים שמשתמשים ב-Execute Command ישברו | מעבר ל-Code node (שלב 2), או הפעלה מחדש דרך משתנה סביבה |
+| מודל שמירה/פרסום | תהליכים חייבים להתפרסם מפורשות כדי לפעול | פרסום תהליכים אחרי ייבוא או יצירה |
+| בידוד task runner ל-Code nodes | Code nodes רצים ב-sandbox מבודד | וידוא שכל החבילות הנדרשות זמינות בסביבת ה-task runner |
+| הסרת תמיכה ב-MySQL/MariaDB | לא ניתן להשתמש ב-MySQL/MariaDB כ-DB backend | מעבר ל-PostgreSQL (מומלץ) או SQLite |
+| הקשחת אבטחה | הגדרות מחמירות יותר לצמתי קהילה | בדיקת הגדרות אבטחה אם משתמשים בצמתי קהילה |
+
+להפעלה מחדש של Execute Command אם באמת צריך:
+```
+N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+```
+
+הגישה המומלצת היא להעביר תהליכי Execute Command ל-Code nodes.
 
 #### אפשרויות ענן ישראליות
 
@@ -285,14 +437,13 @@ Grow שולח JSON POST ל-webhook. כולל פרטי עסקה, סכום במט�
 | Azure (Israel Central) | ישראל | Docker מלא | אזור israelcentral |
 | Google Cloud (me-west1) | ישראל (תל אביב) | Docker מלא | הושק 2022 |
 | Kamatera | ישראל (פתח תקווה) | VPS עם Docker | חברה ישראלית, חיוב בשקלים |
-| CloudSpace IL | ישראל | VPS עם Docker | חברה ישראלית, תמיכה מקומית |
+| ActiveCloud / HQserv / MedOne | ישראל | VPS עם Docker | חברות ישראליות, תמיכה מקומית בעברית |
 
-**ציות לרגולציית מיקום נתונים:** תקנות הרשות להגנת הפרטיות דורשות שנתונים אישיים של אזרחי ישראל יישמרו בתחומי שיפוט מאושרים. לתהליכים שמעבדים מידע אישי (תעודות זהות, פרטי בנק, מידע רפואי), יש לבחור ספק עם מרכז נתונים בישראל.
+**ציות לרגולציית מיקום נתונים:** הרשות להגנת הפרטיות (PPA) לא דורשת שכל המידע יישאר בישראל. היא מגבילה העברת מידע אישי למדינות ללא הגנה מספקת, או דורשת אמצעי הגנה נוספים (כמו סעיפים חוזיים). לתהליכים שמעבדים מידע אישי (תעודות זהות, פרטי בנק, מידע רפואי), יש לבחור ספק עם מרכז נתונים בישראל או לוודא שמדינת היעד ברשימה המאושרת של הרשות.
 
 #### Docker Compose לאירוח עצמי
 
 ```yaml
-version: '3.8'
 services:
   n8n:
     image: n8nio/n8n:latest
@@ -300,6 +451,10 @@ services:
     ports:
       - "5678:5678"
     environment:
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://${N8N_HOST}/
       - GENERIC_TIMEZONE=Asia/Jerusalem
       - TZ=Asia/Jerusalem
     volumes:
@@ -309,40 +464,93 @@ volumes:
   n8n_data:
 ```
 
-**קריטי:** חובה להגדיר `GENERIC_TIMEZONE=Asia/Jerusalem` ו-`TZ=Asia/Jerusalem`. בלי זה, כל ה-Cron triggers רצים לפי UTC, וחישובי שבת יהיו מוזזים ב-2-3 שעות (ישראל ב-UTC+2 בחורף, UTC+3 בקיץ, עם מעבר לשעון קיץ בתאריכים שונים מארה"ב ואירופה).
+**הערות:**
+- n8n 1.0 ומעלה משתמש בניהול משתמשים מובנה (אימייל + סיסמה). משתני הסביבה הישנים `N8N_BASIC_AUTH_*` הוסרו. בהפעלה ראשונה, n8n מבקש ליצור חשבון בעלים.
+- `version: '3.8'` לא מופיע כי הוא מיושן ב-Docker Compose V2.
+- **קריטי:** חובה להגדיר `GENERIC_TIMEZONE=Asia/Jerusalem` ו-`TZ=Asia/Jerusalem`. בלי זה, כל ה-Schedule Trigger nodes רצים לפי UTC, וחישובי שבת יהיו מוזזים ב-2-3 שעות (ישראל ב-UTC+2 בחורף, UTC+3 בקיץ). שעון קיץ בישראל מתחיל ביום שישי שלפני יום ראשון האחרון של מרץ ומסתיים ביום ראשון האחרון של אוקטובר.
+
+### שלב 7: צמתי AI Agent של n8n לתהליכים ישראליים
+
+n8n 2.0 כולל למעלה מ-70 צמתי AI כולל Tools Agent, Conversational Agent, ואינטגרציות LLM. אלה חזקים במיוחד לאוטומציות עסקיות ישראליות.
+
+**דוגמה: סיווג אוטומטי של תנועות בנק עם AI**
+
+ארכיטקטורה: Schedule Trigger -> Code (סריקת בנק) -> AI Agent (סיווג) -> Google Sheets
+
+```javascript
+// Code node: הכנת תנועות לסיווג AI
+const transactions = $input.all().map(item => ({
+  json: {
+    date: item.json.date,
+    description: item.json.description,
+    amount: item.json.chargedAmount,
+    prompt: `סווג את תנועת הבנק הישראלית הזו למטרות הנהלת חשבונות.
+תנועה: "${item.json.description}" על סך ${item.json.chargedAmount} ש"ח בתאריך ${item.json.date}.
+קטגוריות: הכנסות, שכר, ספקים, מע"מ, ביטוח לאומי, שכירות, הוצאות משרד, אחר.
+השב עם שם הקטגוריה בלבד.`
+  }
+}));
+return transactions;
+```
+
+מחברים את הפלט של ה-Code node ל-AI Agent node (Tools Agent) שמוגדר עם ה-LLM המועדף. הסוכן מסווג כל תנועה לפי התיאור העברי וקטגוריות ההוצאות הישראליות המוכרות.
+
+**אינטגרציית MCP ב-n8n:** n8n תומך בשרתי Model Context Protocol (MCP). ניתן לחבר שרת MCP של `israeli-bank-scrapers` לצומת AI Agent ב-n8n, מה שמאפשר לסוכן לשלוף נתוני בנק לפי דרישה כחלק מתהליך שיחתי.
+
+### שלב 8: מתי להשתמש ב-n8n לעומת חלופות
+
+| קריטריון | n8n | Make.com | Zapier |
+|----------|-----|----------|--------|
+| אירוח עצמי (מיקום נתונים) | כן (Docker, כל ענן) | לא (SaaS בלבד) | לא (SaaS בלבד) |
+| צמתי API ישראליים | אין מובנים, HTTP/Code | קצת מהקהילה | מעט מאוד |
+| מגבלת תהליכים | ללא הגבלה (אירוח עצמי) | לפי תוכנית | לפי תוכנית |
+| הרצת קוד | Code nodes מלאים (JS/Python) | JS מוגבל | מוגבל |
+| צמתי AI Agent | 70+ צמתי AI, תמיכה ב-MCP | יכולות AI | יכולות AI |
+| מחיר (אירוח עצמי) | חינם (קוד פתוח) | לא רלוונטי | לא רלוונטי |
+| ממשק בעברית | לא (אנגלית בלבד) | חלקי | לא |
+| מתאים ל | מפתחים שצריכים שליטה מלאה, מיקום נתונים, אוטומציות ללא הגבלה | משתמשים לא טכניים שרוצים בונה ויזואלי | אינטגרציות פשוטות, משתמשים לא טכניים |
+
+בחרו n8n כש: צריכים אירוח עצמי למיקום נתוני ישראל, אוטומציות ללא הגבלה, גישה מלאה לקוד לטיפול ב-API ישראליים (קידוד עברית, פורמט טלפונים, חישובי מע"מ), או יכולות AI Agent עם הקשר ישראלי.
 
 ## מלכודות נפוצות
 
-- **סוכנים משתמשים ב-UTC כברירת מחדל ב-cron.** ישראל ב-`Asia/Jerusalem` (UTC+2/+3), ומעבר לשעון קיץ בישראל קורה בתאריכים שונים מארה"ב ואירופה. תמיד להגדיר `GENERIC_TIMEZONE` ולוודא אחרי כל מעבר שעון.
-- **סוכנים מפרמטים תאריכים כ-MM/DD/YYYY.** בישראל הפורמט הוא DD/MM/YYYY. כל Function node שמפרסר תאריכים חייב לטפל בזה מפורשות. Green Invoice מחזיר ISO 8601, אבל מערכות ממשלה מחזירות DD/MM/YYYY כמחרוזות.
+- **סוכנים משתמשים ב-UTC כברירת מחדל ל-schedule triggers.** ישראל ב-`Asia/Jerusalem` (UTC+2/+3), ומעבר לשעון קיץ בישראל קורה בתאריכים שונים מארה"ב ואירופה (שעון קיץ מתחיל ביום שישי שלפני יום ראשון האחרון של מרץ, ומסתיים ביום ראשון האחרון של אוקטובר). תמיד להגדיר `GENERIC_TIMEZONE` ולוודא אחרי כל מעבר שעון.
+- **סוכנים מפרמטים תאריכים כ-MM/DD/YYYY.** בישראל הפורמט הוא DD/MM/YYYY. כל Code node שמפרסר תאריכים חייב לטפל בזה מפורשות. Morning API מחזיר ISO 8601, אבל מערכות ממשלה מחזירות DD/MM/YYYY כמחרוזות.
 - **סוכנים שולחים מספרי טלפון ישראליים עם אפס פותח.** שערי SMS דורשים פורמט בינלאומי (`972XXXXXXXXX`). מספר כמו `050-1234567` חייב להפוך ל-`972501234567`.
-- **סוכנים מניחים שמע"מ כלול בסכומים.** חשבוניות ישראליות מציגות בדרך כלל סכומים לפני מע"מ. Green Invoice API מחזיר גם `amount` (לפני מע"מ) וגם `totalAmount` (כולל מע"מ). תמיד לבדוק איזה שדה נדרש. שיעור מע"מ נוכחי: 18% (נכון לינואר 2025).
-- **סוכנים מתעלמים מכך שזמני שבת משתנים לפי עיר.** הדלקת נרות בירושלים 40 דקות לפני השקיעה, בעוד בתל אביב 20-30 דקות. זמן קבוע אחד לכל ישראל יגרום לתהליכים לרוץ בשבת בחלק מהערים.
+- **סוכנים מניחים שמע"מ כלול בסכומים.** חשבוניות ישראליות מציגות בדרך כלל סכומים לפני מע"מ. Morning API מחזיר גם `amount` (לפני מע"מ) וגם `totalAmount` (כולל מע"מ). תמיד לבדוק איזה שדה נדרש. שיעור מע"מ נוכחי: 18% (נכון ל-2026).
+- **סוכנים מתעלמים מכך שזמני שבת משתנים לפי עיר.** הדלקת נרות בירושלים 40 דקות לפני השקיעה, בחיפה וזיכרון יעקב 30 דקות, ובתל אביב וכל שאר הערים 18 דקות. זמן קבוע אחד לכל ישראל יגרום לתהליכים לרוץ בשבת בחלק מהערים.
+- **Execute Command node מושבת כברירת מחדל ב-n8n 2.0.** תהליכים שהשתמשו ב-Execute Command להרצת סקריפטים (למשל לסריקת בנקים) ייכשלו בשקט אחרי שדרוג ל-n8n 2.0. יש לעבור ל-Code nodes או להפעיל מחדש Execute Command בהגדרות.
+- **סכומים ב-Morning API הם בשקלים, לא באגורות.** ה-API משתמש בשקלים עשרוניים (`price: 50` = 50 ש"ח). אין להכפיל ב-100 או לבצע המרות אגורות. זה שונה מכמה שערי תשלום שמשתמשים באגורות.
+- **רפורמת החשבוניות 2026 משפיעה על אוטומציות.** חשבוניות מס מעל 10,000 ש"ח שנוצרו דרך API דורשות כעת מספרי הקצאה מרשות המסים. תהליכים שמייצרים חשבוניות אוטומטית חייבים לטפל בשלב ההקצאה, אחרת החשבונית לא תקפה לניכוי מס.
 
 ## משאבים מצורפים
 
 ### מסמכי עזר
-- `references/israeli-api-endpoints.md` -- טבלת עזר מלאה של נקודות קצה API ישראליות לתהליכי n8n, כולל Green Invoice, data.gov.il, שערי SMS, שערי תשלום ו-Hebcal. יש לעיין בו בעת הגדרת HTTP Request nodes לשירותים ישראליים.
+- `references/israeli-api-endpoints.md` -- טבלת עזר מלאה של נקודות קצה API ישראליות לתהליכי n8n, כולל Morning (חשבונית ירוקה), data.gov.il, שערי SMS, שערי תשלום ו-Hebcal. יש לעיין בו בעת הגדרת HTTP Request nodes לשירותים ישראליים.
 - `references/shabbat-cron-patterns.md` -- תבניות תזמון מוכנות מראש מותאמות שבת ל-n8n כולל הגדרות שבועיות, חודשיות ומותאמות חגים עם אינטגרציית Hebcal API. יש לעיין בו בעת הגדרת כל תהליך מתוזמן שצריך לכבד שבת וחגים.
 
 ## פתרון בעיות
 
-### שגיאה: "Green Invoice API מחזיר 401 Unauthorized"
-סיבה: ה-JWT token פג תוקף. לטוקנים של Green Invoice יש TTL קצר (כ-30 דקות).
-פתרון: הוספת שלב רענון טוקן בתחילת כל הרצת תהליך. שמירת הטוקן ב-static data של n8n (`$getWorkflowStaticData('global')`) עם חותמת זמן, ורענון אם עבר יותר מ-25 דקות.
+### שגיאה: "Morning API מחזיר 401 Unauthorized"
+סיבה: ה-JWT token פג תוקף. לטוקנים של Morning יש TTL של 60 דקות.
+פתרון: הוספת שלב רענון טוקן בתחילת כל הרצת תהליך. שמירת הטוקן ב-static data של n8n (`$getWorkflowStaticData('global')`) עם חותמת זמן, ורענון אם עבר יותר מ-55 דקות.
 
 ### שגיאה: "טקסט עברי מופיע משובש בייצוא CSV"
 סיבה: ה-CSV חסר BOM (Byte Order Mark) של UTF-8, אז Excel מפרש אותו כ-ANSI.
-פתרון: ב-Function node שמכין נתוני CSV, מוסיפים BOM בתחילה: `'\uFEFF' + csvContent`. לחלופין, מגדירים את אפשרות ה-encoding של Spreadsheet File node ל-UTF-8-BOM.
+פתרון: ב-Code node שמכין נתוני CSV, מוסיפים BOM בתחילה: `'\uFEFF' + csvContent`. לחלופין, מגדירים את אפשרות ה-encoding של Spreadsheet File node ל-UTF-8-BOM.
 
 ### שגיאה: "Webhook לא מקבל callbacks מ-Cardcom"
 סיבה: Cardcom דורש שה-callback URL יהיה נגיש מהאינטרנט עם תעודת SSL תקינה. n8n באירוח עצמי מאחורי firewall לא יקבל callbacks.
 פתרון: שימוש ב-reverse proxy (nginx, Caddy) עם SSL של Let's Encrypt. וידוא שמשתנה הסביבה `WEBHOOK_URL` תואם ל-URL הציבורי. הוספת ה-IP של n8n לרשימה המורשית בלוח הבקרה של Cardcom.
 
-### שגיאה: "Cron רץ בשבת למרות בדיקת Hebcal"
+### שגיאה: "Schedule Trigger רץ בשבת למרות בדיקת Hebcal"
 סיבה: אזור הזמן של שרת n8n מוגדר ל-UTC במקום Asia/Jerusalem, כך שהשוואת זמני שבת מוסטת ב-2-3 שעות.
-פתרון: וידוא `GENERIC_TIMEZONE=Asia/Jerusalem` במשתני הסביבה של n8n. הפעלה מחדש של n8n אחרי שינוי הגדרות אזור זמן. בדיקה על ידי הדפסת `new Date().toString()` ב-Function node.
+פתרון: וידוא `GENERIC_TIMEZONE=Asia/Jerusalem` במשתני הסביבה של n8n. הפעלה מחדש של n8n אחרי שינוי הגדרות אזור זמן. בדיקה על ידי הדפסת `new Date().toString()` ב-Code node.
 
-### שגיאה: "israeli-bank-scrapers נתקע ב-Execute Command node"
-סיבה: גרידת בנקים כוללת אוטומציה של דפדפן headless שלוקחת 30-60 שניות. ה-timeout בברירת המחדל של Execute Command קצר מדי.
-פתרון: הגדלת ה-timeout בהגדרות Execute Command node (להגדיר 120000ms). וידוא ש-Docker container של n8n מקצה מספיק זיכרון (לפחות 1GB) ל-Chromium.
+### שגיאה: "israeli-bank-scrapers נכשל ב-Code node"
+סיבה: ב-n8n 2.0, Code nodes רצים ב-task runner מבודד. חבילת `israeli-bank-scrapers` והתלויות שלה (Puppeteer/Playwright) עשויות לא להיות זמינות ב-sandbox.
+פתרון: התקנת `israeli-bank-scrapers` כחבילת npm שנגישה ל-task runner של n8n. וידוא שה-Docker container של n8n מקצה מספיק זיכרון (לפחות 1GB) ל-Chromium.
+
+### שגיאה: "Cloudflare חוסם סורק בנקים עבור אמקס/ישראכרט"
+סיבה: מתחילת 2026, Cloudflare חוסם דפדפנים headless באתרים פיננסיים ישראליים מסוימים.
+פתרון: מעבר לפורק המתוחזק `@sergienko4/israeli-bank-scrapers` שמשתמש ב-Camoufox לעקיפת חסימת Cloudflare. התקנה: `npm install @sergienko4/israeli-bank-scrapers`.

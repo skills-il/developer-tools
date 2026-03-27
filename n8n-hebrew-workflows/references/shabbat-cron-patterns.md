@@ -1,21 +1,21 @@
-# Shabbat-Aware Cron Scheduling Patterns for n8n
+# Shabbat-Aware Scheduling Patterns for n8n
 
 Pre-built patterns for n8n workflows that need to respect Shabbat and Jewish holidays.
 
 ## Core Concept
 
-n8n's built-in Cron node has no concept of Shabbat or Jewish holidays. The solution is a two-node pattern at the start of every scheduled workflow:
+n8n's built-in Schedule Trigger node has no concept of Shabbat or Jewish holidays. The solution is a two-node pattern at the start of every scheduled workflow:
 
-1. **Cron Trigger** fires on schedule
-2. **Shabbat Gate** (HTTP Request + Function) checks if it is currently Shabbat or a holiday, and stops the workflow if so
+1. **Schedule Trigger** fires on schedule
+2. **Shabbat Gate** (HTTP Request + Code) checks if it is currently Shabbat or a holiday, and stops the workflow if so
 
-This pattern is appended to the beginning of every cron-triggered workflow. It adds ~500ms latency per check (one API call to Hebcal).
+This pattern is appended to the beginning of every schedule-triggered workflow. It adds ~500ms latency per check (one API call to Hebcal).
 
 ## Pattern 1: Weekly Business Workflow (Sunday-Thursday)
 
 For workflows that should run during Israeli business days only.
 
-**Cron expression:** `0 9 * * 0-4` (9:00 AM, Sunday through Thursday)
+**Schedule Trigger cron expression:** `0 9 * * 0-4` (9:00 AM, Sunday through Thursday)
 
 This handles the simple case. Israeli business week is Sunday (0) through Thursday (4). Friday and Saturday are excluded by the cron itself, so no Shabbat check is needed for the standard work week.
 
@@ -25,9 +25,9 @@ This handles the simple case. Israeli business week is Sunday (0) through Thursd
 
 For workflows that run every day but must pause during Shabbat.
 
-**Cron expression:** `0 */3 * * *` (every 3 hours)
+**Schedule Trigger cron expression:** `0 */3 * * *` (every 3 hours)
 
-**Shabbat Gate Function Node:**
+**Shabbat Gate Code Node:**
 
 ```javascript
 // Runs after HTTP Request to Hebcal shabbat endpoint
@@ -69,7 +69,7 @@ Query Parameters:
 
 For workflows that must also pause on Jewish holidays (Yom Tov).
 
-**Extended Function Node (replaces the basic Shabbat gate):**
+**Extended Code Node (replaces the basic Shabbat gate):**
 
 ```javascript
 const now = new Date();
@@ -118,11 +118,11 @@ Query Parameters:
 
 **Workflow structure:**
 ```
-Cron -> [Shabbat Check HTTP] -> [Holiday Check HTTP] -> [Gate Function] -> rest of workflow
-         (parallel)             (parallel)
+Schedule Trigger -> [Shabbat Check HTTP] -> [Holiday Check HTTP] -> [Gate Code] -> rest of workflow
+                    (parallel)              (parallel)
 ```
 
-Optimization: Run both HTTP requests in parallel using n8n's split/merge pattern, then feed both results into the Gate Function.
+Optimization: Run both HTTP requests in parallel using n8n's split/merge pattern, then feed both results into the Gate Code node.
 
 ## Pattern 4: Friday Early Cutoff
 
@@ -153,7 +153,7 @@ Use case: E-commerce order processing that should not start new fulfillment work
 
 For workflows that should run as soon as Shabbat ends (e.g., send queued notifications after havdalah).
 
-**Cron expression:** `*/15 17-20 * * 6` (every 15 minutes, 5-8 PM on Saturday)
+**Schedule Trigger cron expression:** `*/15 17-20 * * 6` (every 15 minutes, 5-8 PM on Saturday)
 
 ```javascript
 const now = new Date();
@@ -213,7 +213,7 @@ return []; // Not time to run
 
 ## Caching Shabbat Data
 
-To avoid calling Hebcal on every cron tick, cache the weekly Shabbat times:
+To avoid calling Hebcal on every schedule trigger tick, cache the weekly Shabbat times:
 
 ```javascript
 const staticData = $getWorkflowStaticData('global');
@@ -259,8 +259,8 @@ Note: Israeli holidays follow Israel schedule (not diaspora), so Sukkot and Pesa
 
 2. **Forgetting Erev holidays.** Some holidays start at sundown the day before (like Shabbat). If your workflow runs Friday afternoon, it needs to check both Shabbat and any holiday that starts Friday night.
 
-3. **Not handling DST transitions.** Israel switches to summer time (IDT, UTC+3) on the last Friday before April 2, and back to winter time (IST, UTC+2) on the last Sunday of October. A cron job at "9 AM" will fire at a different UTC time after the transition. Ensure `GENERIC_TIMEZONE=Asia/Jerusalem` is set so n8n handles this automatically.
+3. **Not handling DST transitions.** Israel switches to summer time (IDT, UTC+3) on the Friday before the last Sunday of March, and back to winter time (IST, UTC+2) on the last Sunday of October. A schedule trigger at "9 AM" will fire at a different UTC time after the transition. Ensure `GENERIC_TIMEZONE=Asia/Jerusalem` is set so n8n handles this automatically.
 
-4. **Hardcoding a single city.** If your business serves customers across Israel, candle lighting times can differ by 10+ minutes between cities. Jerusalem is especially different due to the tradition of lighting 40 minutes before sunset. Choose the earliest candle lighting time among your relevant cities for the safest cutoff.
+4. **Hardcoding a single city.** If your business serves customers across Israel, candle lighting times can differ by 10+ minutes between cities. Jerusalem is especially different due to the tradition of lighting 40 minutes before sunset (vs 18 minutes in most cities, 30 minutes in Haifa and Zikhron Ya'akov). Choose the earliest candle lighting time among your relevant cities for the safest cutoff.
 
 5. **Ignoring Chol HaMoed.** The intermediate days of Sukkot and Pesach (Chol HaMoed) are not full Yom Tov, but many Israeli businesses operate on reduced hours. If your workflow involves customer-facing operations, consider pausing or reducing frequency during Chol HaMoed as well.
