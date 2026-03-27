@@ -1,17 +1,17 @@
 # Israeli Service Modules and HTTP Configurations for Make.com
 
-Reference guide for connecting Israeli services in Make.com scenarios. Covers native modules, HTTP module configurations, authentication patterns, and payload examples.
+Reference guide for connecting Israeli services in Make.com scenarios. Covers community and native modules, HTTP module configurations, authentication patterns, and payload examples.
 
-## Green Invoice (Hashbonit Yeruqa)
+## Morning (formerly Green Invoice / Hashbonit Yeruqa)
 
-### Native Module
+### Community Module (by Callbox)
 
-Green Invoice has a built-in Make.com module. Search "Green Invoice" in the module palette.
+Morning has a **community-built** Make.com module. Search "Morning" in the module palette. Listed as "Morning by Callbox". Requires **Best subscription tier or higher**. Make.com states: "Make does not maintain or support this integration."
 
 **Connection Setup:**
-1. Go to Green Invoice dashboard: Settings > API Integration
+1. Go to Morning dashboard: Settings > API Integration
 2. Generate API Key and Secret
-3. In Make.com, create a new Green Invoice connection with these credentials
+3. In Make.com, create a new Morning connection with these credentials
 4. Select environment: Production or Sandbox
 
 **Sandbox vs Production:**
@@ -22,32 +22,35 @@ Green Invoice has a built-in Make.com module. Search "Green Invoice" in the modu
 | Documents | Test only, not legally valid | Real tax documents |
 | Rate limits | More lenient | Standard |
 
-### Available Triggers
+Note: The API domain remains `greeninvoice.co.il` despite the Morning rebrand.
 
-| Trigger | Description | Recommended Interval |
-|---|---|---|
-| Watch Documents | New or updated documents | 15 minutes |
-| Watch Payments | New payment records | 15 minutes |
-| Watch Clients | New client records | 1 hour |
-
-### Available Actions
+### Available Actions (NO triggers/watches)
 
 | Action | Description | Key Parameters |
 |---|---|---|
-| Create Document | Create invoice, receipt, quote | `type`, `client`, `income`, `currency`, `lang` |
-| Create Client | Add a new client record | `name`, `emails`, `taxId`, `address` |
-| Get Document | Retrieve document by ID | `id` |
+| Add Client | Create a new client record | `name`, `emails`, `taxId`, `address` |
+| Add Document | Create invoice, receipt, quote | `type`, `client`, `income`, `currency`, `lang` |
+| Add Expense | Record an expense | `supplier`, `amount`, `date`, `category` |
+| Get All Clients | List all client records | Pagination params |
+| Get All Documents | List all documents | Pagination params |
+| Search Clients | Query clients by criteria | Name, tax ID, etc. |
 | Search Documents | Query documents by criteria | `type`, `fromDate`, `toDate`, `status` |
+| Search Expenses | Query expenses by criteria | Date range, category, etc. |
+| Update Client | Modify existing client | Client ID + fields |
+| Delete Client | Remove a client record | Client ID |
+| Make an API Call | Raw API request | Any Morning API endpoint |
 
 ### Document Type Codes
 
 | Code | Type (English) | Type (Hebrew) |
 |---|---|---|
+| 10 | Price Quote | הצעת מחיר |
+| 100 | Order | הזמנה |
 | 300 | Invoice + Receipt | חשבונית מס / קבלה |
-| 305 | Credit Note | חשבונית זיכוי |
-| 320 | Tax Invoice | חשבונית מס |
-| 330 | Receipt | קבלה |
-| 400 | Quote | הצעת מחיר |
+| 305 | Tax Invoice | חשבונית מס |
+| 320 | Tax Invoice / Receipt | חשבונית מס / קבלה |
+| 330 | Credit Note / Refund | הודעת זיכוי |
+| 400 | Receipt | קבלה |
 | 405 | Purchase Order | הזמנת רכש |
 | 500 | Delivery Note | תעודת משלוח |
 
@@ -55,7 +58,7 @@ Green Invoice has a built-in Make.com module. Search "Green Invoice" in the modu
 
 ```json
 {
-  "type": 320,
+  "type": 305,
   "lang": "he",
   "currency": "ILS",
   "client": {
@@ -75,7 +78,19 @@ Green Invoice has a built-in Make.com module. Search "Green Invoice" in the modu
 }
 ```
 
-Note: `price` in the API is in whole shekels (not agorot) when creating documents. However, `amount` in webhook responses and search results is in agorot. This inconsistency is a common source of bugs.
+**Important:** `price` in the API is in **decimal shekels** (e.g., `15000` = 15,000 shekels). NOT agorot. Do NOT multiply by 100.
+
+### Israel Invoice Reform 2026
+
+Since January 2026, invoices exceeding 10,000 NIS require a Tax Authority allocation number (mispar hiktzava). Include the `allocationNumber` field for qualifying documents:
+
+```json
+{
+  "type": 305,
+  "allocationNumber": "ALLOCATION_NUMBER_FROM_TAX_AUTHORITY",
+  "income": [...]
+}
+```
 
 ### VAT Type Values
 
@@ -85,11 +100,30 @@ Note: `price` in the API is in whole shekels (not agorot) when creating document
 | 1 | VAT included in price | B2C, retail pricing |
 | 2 | VAT excluded (added on top) | B2B, wholesale pricing |
 
+## iCount
+
+### Native Module
+
+iCount has a **native (first-party) Make.com module**. Search "iCount" in the module palette.
+
+**Available actions:**
+- Expenses: Create, update, manage expense records
+- Leads: Create and manage leads
+- Tasks: Create and manage tasks
+- Events: Create and manage calendar events
+- Inventory: Manage inventory items
+- Clients: Create and manage client records
+- Documents: Create invoices, receipts, quotes
+
+iCount is a strong alternative to Morning for Israeli accounting automation, especially if you want a natively supported Make.com module without the Best plan requirement.
+
 ## Monday.com
 
 ### Native Module
 
 Monday.com has a built-in Make.com module.
+
+**Important:** Monday.com API v1 is maintained only until May 1, 2026. The Make.com native module uses v2 by default. Do NOT create new scenarios with v1.
 
 **Connection Setup:**
 1. In Monday.com: Avatar > Developers > My Access Tokens
@@ -124,11 +158,15 @@ Common column types and their Make.com value formats:
 | Sales CRM | Lead/deal pipeline | Deal Value, Stage, Contact, Close Date |
 | Invoice Tracker | AP/AR management | Amount, Due Date, Status, Client Name |
 
-## Priority ERP (via HTTP Module)
+## Priority ERP
 
-Priority does not have a native Make.com module. All interactions use the HTTP module with OData API.
+### Community Module
 
-### Connection Setup
+Priority has a **community-built Make.com module**. Search "Priority" in the module palette. This is simpler than the HTTP approach for common operations.
+
+### HTTP Module (Full Control)
+
+For full OData API access, use the HTTP module.
 
 **HTTP Module Configuration:**
 
@@ -136,10 +174,15 @@ Priority does not have a native Make.com module. All interactions use the HTTP m
 |---|---|
 | URL | `https://{domain}/odata/Priority/tabula.ini/{company}/{entity}` |
 | Method | GET (read), POST (create), PATCH (update) |
-| Auth | Basic (Priority username:password) |
+| Auth | Basic Auth, PAT (Personal Access Token), or OAuth2 |
 | Headers | `Content-Type: application/json`, `Accept: application/json` |
 
 Replace `{domain}` with your Priority instance domain, `{company}` with the company name in Priority (usually "demo" for testing), and `{entity}` with the OData entity name.
+
+Priority supports three authentication methods:
+- **Basic Auth:** Username and password
+- **Personal Access Token (PAT):** Token-based, more secure
+- **OAuth2:** Full OAuth2 flow for enterprise integrations
 
 ### Common Entities
 
@@ -181,23 +224,37 @@ Note: Hebrew values in OData filters must be URL-encoded. Make.com's HTTP module
 - Pagination: use `$skip` and `$top` (default page size is 20)
 - Some on-prem installations require VPN or IP whitelisting
 
-## WhatsApp Cloud API (via HTTP Module)
+## WhatsApp Business Cloud
 
-### Connection Setup
+### Native Module (Recommended)
 
-1. Create a Meta Business account and verify your business
-2. Set up WhatsApp Business API in the Meta Developer Console
-3. Get a permanent system user access token
-4. Note your Phone Number ID
+Make.com has a **native first-party WhatsApp Business Cloud module**. Use this instead of the HTTP approach.
+
+**Available triggers:**
+- Watch Events: Incoming messages, status updates, read receipts
+
+**Available actions:**
+- Send a Message: Text, image, document, location messages
+- Send a Template Message: Pre-approved templates (required for outbound initiation)
+
+**Connection Setup:**
+1. Connect your Meta Business account in Make.com
+2. Select your WhatsApp Business phone number
+
+### HTTP Module (Advanced)
+
+For advanced use cases not covered by the native module:
 
 **HTTP Module Configuration:**
 
 | Setting | Value |
 |---|---|
-| URL | `https://graph.facebook.com/v21.0/{phone-number-id}/messages` |
+| URL | `https://graph.facebook.com/{api-version}/{phone-number-id}/messages` |
 | Method | POST |
 | Auth | Bearer Token (your permanent access token) |
 | Headers | `Content-Type: application/json` |
+
+Use the latest API version from Meta's changelog rather than hardcoding a version number.
 
 ### Message Types
 
@@ -258,7 +315,7 @@ Make.com expression to format: `replace(replace(phone; "+"; ""); "-"; "")` then 
 |---|---|
 | URL | `https://019sms.co.il/api` |
 | Method | POST |
-| Auth | API key in `Authorization` header |
+| Auth | Bearer token: `Authorization: Bearer YOUR_TOKEN` |
 | Content-Type | `application/json` |
 
 ```json
@@ -282,11 +339,11 @@ Make.com expression to format: `replace(replace(phone; "+"; ""); "-"; "")` then 
 
 | Setting | Value |
 |---|---|
-| URL | `https://api.inforu.co.il/SendMessageXml.ashx` |
+| URL | `http://api.inforu.co.il/SendMessage.asmx` |
 | Method | POST |
 | Content-Type | `application/xml` |
 
-Note: InforUMobile uses XML format, not JSON. Set the Make.com HTTP module body type to "Raw" and build the XML string.
+Note: InforUMobile uses an ASMX web service with XML format, not JSON. Set the Make.com HTTP module body type to "Raw" and build the XML string. The endpoint is `.asmx` (not `.ashx`).
 
 ### SMS4Free
 
@@ -295,6 +352,8 @@ Note: InforUMobile uses XML format, not JSON. Set the Make.com HTTP module body 
 | URL | `https://www.sms4free.co.il/ApiSMS/SendSMS` |
 | Method | POST |
 | Content-Type | `application/json` |
+
+SMS4Free requires three credentials: `key`, `user`, and `pass`:
 
 ```json
 {
@@ -312,7 +371,7 @@ Note: InforUMobile uses XML format, not JSON. Set the Make.com HTTP module body 
 ### Cardcom
 
 **Webhook URL Setup:**
-In the Cardcom dashboard, go to Settings > Notification URL > set your Make.com Custom Webhook URL.
+In the Cardcom dashboard, go to Settings > Notification URL > set your Make.com Custom Webhook URL. Cardcom API v11 supports modern webhook configuration.
 
 **Callback Fields (POST body, form-encoded):**
 
@@ -345,10 +404,12 @@ In the Cardcom dashboard, go to Settings > Notification URL > set your Make.com 
 | `myid` | String | Teudat Zehut |
 | `fpay` | String | First payment amount |
 | `spay` | String | Subsequent payment amount |
-| `npay` | String | Number of payments |
+| `npay` | String | Number of **additional** payments. Total installments = npay + 1. |
 | `ConfirmationCode` | String | Bank confirmation code |
 | `index` | String | Tranzila transaction index |
 | `TranzilaTK` | String | Token for recurring charges |
+
+**Tranzila API v2** introduces iframe-based hosted payment fields for PCI compliance and supports Bit payments.
 
 **Tranzila Response Codes (common):**
 
@@ -362,16 +423,19 @@ In the Cardcom dashboard, go to Settings > Notification URL > set your Make.com 
 | `006` | ID mismatch |
 | `033` | Card expired |
 
-### Grow (by Leumi)
+### Grow (by Meshulam)
+
+Grow is an independent fintech company by Meshulam (NOT affiliated with Bank Leumi).
 
 **Webhook Payload (JSON POST):**
 
-Grow sends a JSON payload with a signature header for verification.
+Grow sends a JSON payload. Verify authenticity by checking the `webhookKey` field in the JSON body (not a header).
 
-**Signature Verification:**
-1. Read the raw POST body
-2. Compute HMAC-SHA256 using your shared secret
-3. Compare with the `X-Grow-Signature` header value
+**Webhook Verification:**
+1. Parse the JSON body
+2. Compare the `webhookKey` value against your configured key in Grow dashboard
+
+**Important:** Grow's API uses **multipart/form-data** for outbound requests, not JSON. Configure your HTTP module accordingly when making API calls to Grow.
 
 | Field | Type | Description |
 |---|---|---|
@@ -384,16 +448,32 @@ Grow sends a JSON payload with a signature header for verification.
 | `payment.customer.phone` | String | Customer phone |
 | `payment.installments` | Number | Number of installments |
 | `payment.status` | String | `completed`, `failed`, `refunded` |
+| `webhookKey` | String | Key for webhook verification |
+
+### Bit (by Bank HaPoalim)
+
+Bit is Israel's dominant P2P payment platform with a business API.
+
+**Bit Business API:** Register for API access through the Bit Business program. Configure webhook URL in the Bit Business dashboard to receive payment notifications.
+
+### PayMe (by Isracard)
+
+Payment processing with installment support. Configure webhook URL in PayMe dashboard to receive payment status notifications.
+
+### PayBox
+
+Digital payment solution with webhook notifications for completed transactions.
 
 ## Rate Limits and Best Practices
 
 | Service | Rate Limit | Recommended Polling Interval |
 |---|---|---|
-| Green Invoice API | 100 req/min | 15 minutes |
+| Morning (Green Invoice) API | 100 req/min | 15 minutes |
+| iCount API | Check iCount docs | 15 minutes |
 | Monday.com API | 10,000 complexity/min | 5 minutes |
 | Priority OData | Varies by installation | 15 minutes |
 | WhatsApp Cloud API | 250 messages/sec (business) | N/A (event-driven) |
 | Cardcom | No documented limit | N/A (webhook) |
 | Tranzila | No documented limit | N/A (webhook) |
 
-For all scheduled scenarios, prefer longer intervals (15+ minutes) during non-business hours to conserve Make.com operations.
+For all scheduled scenarios, prefer longer intervals (15+ minutes) during non-business hours to conserve Make.com credits.

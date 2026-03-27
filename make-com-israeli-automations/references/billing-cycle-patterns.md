@@ -1,6 +1,6 @@
 # Israeli Billing Cycle Automation Patterns
 
-Detailed Make.com router configurations and filter expressions for automating Israeli billing cycles. Covers bimonthly VAT, quarterly advance payments, annual reporting, and payroll schedules.
+Detailed Make.com router configurations for automating Israeli billing cycles. Covers bimonthly VAT, bimonthly advance payments (mikdamot), annual reporting, and payroll schedules.
 
 ## Bimonthly VAT Reporting (Doch Du-Hodshi)
 
@@ -60,8 +60,8 @@ After filtering transactions by period, route into two sub-branches:
 
 | Branch | Document Types | Purpose |
 |---|---|---|
-| Income (Output VAT) | 320 (Tax Invoice), 300 (Invoice+Receipt) | VAT collected from customers |
-| Expenses (Input VAT) | 305 (Credit Note), purchase receipts | VAT paid to suppliers |
+| Income (Output VAT) | 305 (Tax Invoice), 320 (Tax Invoice/Receipt) | VAT collected from customers |
+| Credits (Reductions) | 330 (Credit Note/Refund) | Reduces VAT for this period |
 
 **Aggregation formula:**
 
@@ -91,36 +91,40 @@ Not all transactions carry VAT. Filter by `vatType` before aggregating:
 
 **Mixed transactions:** Some businesses have both VAT-liable and exempt activities. Use a secondary router to split these before aggregation.
 
-**Credit notes:** Credit notes (type 305) reduce the VAT for the period they are issued in, not the period of the original invoice.
+**Credit notes:** Credit notes (type 330) reduce the VAT for the period they are issued in, not the period of the original invoice.
 
-## Quarterly Advance Tax Payments (Mikdamot)
+## Bimonthly Advance Tax Payments (Mikdamot)
 
-Self-employed individuals (atzma'im) and some companies pay quarterly advance tax (mikdamot mas) based on projected annual income.
+Self-employed individuals (atzma'im) and some companies pay bimonthly advance tax (mikdamot mas) based on projected annual income. Mikdamot follow the same bimonthly periods as VAT reporting.
 
-### Quarterly Calendar
+### Bimonthly Calendar
 
-| Quarter | Months | Payment Due | Make.com Trigger Date |
+| Period | Months | Payment Due | Make.com Trigger Date |
 |---|---|---|---|
-| Q1 | January - March | April 15 | April 1 |
-| Q2 | April - June | July 15 | July 1 |
-| Q3 | July - September | October 15 | October 1 |
-| Q4 | October - December | January 15 | January 1 |
+| 1 | January - February | March 15-19 | March 1 |
+| 2 | March - April | May 15-19 | May 1 |
+| 3 | May - June | July 15-19 | July 1 |
+| 4 | July - August | September 15-19 | September 1 |
+| 5 | September - October | November 15-19 | November 1 |
+| 6 | November - December | January 15-19 | January 1 |
 
 ### Router Configuration
 
-**Quarter detection formula:**
+**Period detection formula:**
+
+Use the same formula as VAT period detection:
 
 ```
-ceil(formatDate(now; "M") / 3)
+ceil(formatDate(now; "M") / 2)
 ```
 
-Returns 1-4 for the current quarter.
+Returns 1-6 for the current bimonthly period.
 
-**Filter expression for quarterly transactions:**
+**Filter expression for bimonthly transactions:**
 
 ```
-formatDate(item.date; "M") >= ((quarter - 1) * 3 + 1)
-AND formatDate(item.date; "M") <= (quarter * 3)
+formatDate(item.date; "M") >= ((period - 1) * 2 + 1)
+AND formatDate(item.date; "M") <= (period * 2)
 AND formatDate(item.date; "YYYY") = formatDate(now; "YYYY")
 ```
 
@@ -128,11 +132,11 @@ AND formatDate(item.date; "YYYY") = formatDate(now; "YYYY")
 
 The advance payment is typically a percentage of revenue set by the Tax Authority:
 
-1. Fetch total revenue for the quarter
+1. Fetch total revenue for the bimonthly period
 2. Apply the advance percentage (set individually by the Tax Authority, commonly 5-15% for new businesses)
-3. Subtract any tax deducted at source (nikui mas bamakor) during the quarter
+3. Subtract any tax deducted at source (nikui mas bamakor) during the period
 
-The formula: `Advance payment = (Quarter revenue * advance rate) - Tax withheld`
+The formula: `Advance payment = (Period revenue * advance rate) - Tax withheld`
 
 Store the advance rate in a Make.com Data Store or Set Variable module, since it varies per business and is updated annually.
 
@@ -153,12 +157,12 @@ Store the advance rate in a Make.com Data Store or Set Variable module, since it
 Build a scenario that runs on January 1 and produces a full-year summary:
 
 1. **Trigger:** Scheduled for January 1
-2. **Green Invoice Search:** Fetch all documents for the previous year (`fromDate: YYYY-01-01`, `toDate: YYYY-12-31`)
+2. **Morning Search:** Fetch all documents for the previous year (`fromDate: YYYY-01-01`, `toDate: YYYY-12-31`)
 3. **Iterator:** Process each document
 4. **Router (4 branches):**
-   - Branch 1: Tax Invoices (type 320) -> sum for total revenue
-   - Branch 2: Credit Notes (type 305) -> sum for deductions
-   - Branch 3: Receipts (type 330) -> sum for payments received
+   - Branch 1: Tax Invoices (type 305) -> sum for total revenue
+   - Branch 2: Credit Notes (type 330) -> sum for deductions
+   - Branch 3: Receipts (type 400) -> sum for payments received
    - Branch 4: Expenses -> sum for deductible expenses
 5. **Array Aggregators:** One per branch
 6. **Output:** Google Sheets row or email with annual summary
@@ -233,7 +237,9 @@ OR
 
 ### Israeli Holiday Handling
 
-Use the Hebcal API to check for holidays:
+**Recommended:** Use the Hebcal community module on Make.com (`apps.make.com/hebcal-ryuwr8`). No API key required. It handles Shabbat and holiday detection natively.
+
+**Alternative (HTTP module):** Use the Hebcal REST API:
 
 ```
 https://www.hebcal.com/hebcal?v=1&cfg=json&year=now&month=now&maj=on&geo=pos&latitude=32.0853&longitude=34.7818
@@ -271,8 +277,8 @@ Create a Make.com Data Store to track which billing periods have been processed:
 
 | Field | Type | Purpose |
 |---|---|---|
-| `period_type` | Text | `vat_bimonthly`, `tax_quarterly`, `annual` |
-| `period_key` | Text | e.g., `2026-P1`, `2026-Q2`, `2026` |
+| `period_type` | Text | `vat_bimonthly`, `advance_bimonthly`, `annual` |
+| `period_key` | Text | e.g., `2026-P1`, `2026-P2`, `2026` |
 | `status` | Text | `pending`, `processing`, `completed`, `filed` |
 | `total_income` | Number | Aggregated income for the period |
 | `total_expenses` | Number | Aggregated expenses for the period |

@@ -1,23 +1,27 @@
 {
   "author": "skills-il",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "category": "developer-tools",
   "tags": {
     "he": [
       "Make.com",
-      "Integromat",
       "אוטומציה",
       "תהליכי-עבודה",
       "ישראל",
-      "חשבונית-ירוקה"
+      "Morning",
+      "חשבונית-ירוקה",
+      "iCount",
+      "AI-agents"
     ],
     "en": [
       "make-com",
-      "integromat",
       "automation",
       "workflows",
       "israel",
-      "green-invoice"
+      "morning",
+      "green-invoice",
+      "icount",
+      "ai-agents"
     ]
   },
   "display_name": {
@@ -25,8 +29,8 @@
     "en": "Make.com Israeli Automations"
   },
   "display_description": {
-    "he": "בנייה והגדרה של תרחישי Make.com לתהליכים עסקיים ישראליים, כולל סנכרון חשבונית ירוקה, אוטומציה של Monday.com, ייצוא נתוני Priority ERP, והודעות WhatsApp Business בעברית. מכסה מודולים ישראליים, טיפול בנתונים בעברית, תזמון מודע שבת, ו-webhook לשערי תשלום ישראליים.",
-    "en": "Build and configure Make.com scenarios for Israeli business processes, including Green Invoice sync, Monday.com board automation, Priority ERP data exports, and WhatsApp Business Hebrew messaging. Covers Israeli app modules, Hebrew data transformations, ILS currency handling, Shabbat-aware scheduling, and webhook receivers for Israeli payment gateways."
+    "he": "בנייה והגדרה של תרחישי Make.com לתהליכים עסקיים ישראליים, כולל סנכרון Morning (חשבונית ירוקה), iCount, Monday.com, Priority ERP, שערי תשלום (Cardcom, Tranzila, Grow, Bit) ו-WhatsApp Business. מכסה AI Agents של Make.com, רפורמת חשבוניות 2026, מודולים קהילתיים ישראליים, טיפול בנתונים בעברית, Data Store לתקופות מע\"מ, ותזמון מודע שבת. לא מיועד ל-n8n (השתמשו ב-n8n-hebrew-workflows) או Zapier (השתמשו ב-zapier-israeli-integrations).",
+    "en": "Build and configure Make.com scenarios for Israeli business processes, including Morning (formerly Green Invoice) sync, iCount accounting, Monday.com board automation, Priority ERP data exports, WhatsApp Business messaging, and payment gateways (Cardcom, Tranzila, Grow, Bit). Covers Make.com AI Agents, Israel 2026 Invoice Reform, community modules for Israeli apps, Hebrew data transformations, Data Store for VAT period tracking, and Shabbat-aware scheduling. Do NOT use for n8n workflows (use n8n-hebrew-workflows) or Zapier Zaps (use zapier-israeli-integrations)."
   },
   "supported_agents": [
     "claude-code",
