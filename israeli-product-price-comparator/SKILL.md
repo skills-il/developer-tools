@@ -3,6 +3,7 @@ name: israeli-product-price-comparator
 description: Compare product prices across major Israeli retailers and e-commerce platforms including Zap.co.il, KSP, iDigital, Ivory, Bug, and more. Use when the user wants to find the best price for electronics, appliances, computers, or consumer goods in Israel, needs to compare local vs. import pricing, or wants guidance on price tracking tools and Israeli consumer protection rights. Do NOT use for comparing grocery or food prices, real estate, or financial products.
 license: MIT
 allowed-tools: Bash(node:*) Bash(python:*) WebFetch
+version: 1.0.1
 ---
 
 
@@ -26,7 +27,7 @@ Ask clarifying questions if the product is ambiguous. Get the exact model number
 
 Zap.co.il is Israel's dominant price comparison engine with over 2 million monthly visitors and thousands of partnered retailers.
 
-1. **Search by product name or model number** at `https://www.zap.co.il/search.aspx?keyword=PRODUCT_NAME`
+1. **Search by product name or model number** at the Zap website
 2. **Review the comparison table** which shows:
    - Store name and rating (1-5 stars based on user reviews)
    - Current price in NIS
@@ -37,30 +38,30 @@ Zap.co.il is Israel's dominant price comparison engine with over 2 million month
 5. **Note Zap's "lowest price" badge** which indicates the cheapest current offer
 
 Key Zap categories with dedicated comparison engines:
-- **Cellphones**: `https://www.zap.co.il/models.aspx?sog=c-cellphone`
-- **Laptops**: `https://www.zap.co.il/models.aspx?sog=c-notebook`
-- **TVs**: `https://www.zap.co.il/models.aspx?sog=c-tv`
-- **Air Conditioners**: `https://www.zap.co.il/models.aspx?sog=c-airconditioning`
+- **Cellphones**: Available through Zap's cellphone section
+- **Laptops**: Available through Zap's laptop section
+- **TVs**: Available through Zap's TV section
+- **Air Conditioners**: Available through Zap's air conditioning section
 
 ### Step 3: Check Major Retailer Direct Prices
 
 Cross-reference Zap results with direct retailer websites, as some retailers offer exclusive online-only prices not listed on Zap:
 
 **Electronics Specialists:**
-- **KSP** (`https://ksp.co.il`): Israel's largest electronics retailer. Offers a price-match guarantee, matching any lower price from an authorized retailer. Check their "Daily Deals" section. KSP also has physical stores for pickup.
+- **KSP**: Israel's largest electronics retailer. Offers a price-match guarantee, matching any lower price from an authorized retailer. Check their "Daily Deals" section. KSP also has physical stores for pickup.
 - **iDigital** (`https://www.idigital.co.il`): Apple Premium Reseller. Best for Apple products, often has bundle deals with AppleCare. Also carries Samsung, Bose, and other premium brands.
 - **Ivory** (`https://www.ivory.co.il`): Wide electronics selection. Known for competitive pricing on computers and peripherals. Check their "Clearance" section for discounts.
-- **Bug** (`https://www.bug.co.il`): Strong in computer components and peripherals. Good for custom PC builds. Has a used/refurbished section.
+- **Bug**: Strong in computer components and peripherals. Good for custom PC builds. Has a used/refurbished section.
 
 **Home & Appliances:**
 - **Home Center** (`https://www.homecenter.co.il`): Large home improvement retailer. Good for appliances, tools, and home equipment.
-- **Machsanei Hashmal** (`https://www.mahsane.co.il`): Electrical appliance warehouse. Often competitive on large appliances.
-- **IKEA Israel** (`https://www.ikea.co.il`): Furniture and home goods with Israeli-specific pricing.
+- **Machsanei Hashmal**: Electrical appliance warehouse. Often competitive on large appliances.
+- **IKEA Israel**: Furniture and home goods with Israeli-specific pricing.
 - **ACE** (`https://www.ace.co.il`): Hardware and home improvement. Check for seasonal sales.
 
 **Pharmacy & Health:**
-- **Super-Pharm** (`https://www.super-pharm.co.il`): Israel's largest pharmacy chain. "1+1" and "1+50%" deals are common.
-- **Be** (`https://www.be.co.il`): Pharmacy and beauty products. Competitor to Super-Pharm with frequent promotions.
+- **Super-Pharm** (`https://shop.super-pharm.co.il/`): Israel's largest pharmacy chain. "1+1" and "1+50%" deals are common.
+- **Be**: Pharmacy and beauty products. Competitor to Super-Pharm with frequent promotions.
 
 ### Step 4: Evaluate Import vs. Local Purchase
 
@@ -68,9 +69,9 @@ For products that may be cheaper abroad, compare:
 
 1. **AliExpress / Amazon Global**: Check the product price including shipping to Israel
 2. **Customs duty calculation**: Products above 75 USD (approximately 275 NIS) are subject to customs duty:
-   - Standard rate: 12% customs + 17% VAT (applied on product + shipping + customs)
+   - Standard rate: 12% customs + 18% VAT (applied on product + shipping + customs)
    - Electronics: Often reduced or zero customs duty, but VAT still applies
-   - The effective additional cost is approximately 17-30% of the declared value
+   - The effective additional cost is approximately 18-30% of the declared value
 3. **Warranty considerations**: Products bought internationally typically have no local warranty. Israeli retailers are required by law to provide warranty (minimum 1 year for electronics).
 4. **Delivery time**: Local purchase is 1-5 days. International shipping is 2-6 weeks.
 
@@ -84,7 +85,7 @@ For products that may be cheaper abroad, compare:
 **Price tracking:**
 - **"Sham Ze Zol Yoter"** (Where Is It Cheaper) Chrome extension: Automatically shows price comparisons while browsing retailer sites
 - **Zap price alerts**: Set up email notifications when a product drops below a target price
-- **Last Price** (`https://www.lastprice.co.il`): Alternative price comparison site with its own retailer network
+- **Last Price**: Alternative price comparison site with its own retailer network
 
 **Coupon aggregators:**
 - **TopCash** (`https://www.topcash.co.il`): Israeli cashback platform offering 1-10% back from partnered retailers
@@ -191,7 +192,7 @@ Solution:
 Cause: Customs rates vary by product category, and the declared value may be assessed differently by Israeli customs authorities.
 
 Solution:
-1. Use the Israeli Customs Authority calculator at `https://www.customs.mof.gov.il` for official rates
-2. For electronics, the customs duty is typically 0% but VAT (17%) still applies on the total value (product + shipping + insurance)
+1. Use the Israeli Customs Authority calculator for official rates
+2. For electronics, the customs duty is typically 0% but VAT (18%) still applies on the total value (product + shipping + insurance)
 3. Note that customs authorities may reassess the declared value upward if they believe it is understated
 4. For high-value purchases (over 1,000 USD), consider using a customs broker or a shipping service that handles customs clearance
