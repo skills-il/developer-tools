@@ -1,3 +1,12 @@
+---
+name: israeli-id-validator
+description: Validate and format Israeli identification numbers including Teudat Zehut (personal ID), company numbers, amuta (non-profit) numbers, and partnership numbers. Use when user asks to validate Israeli ID, "teudat zehut", "mispar zehut", company number validation, or needs to implement Israeli ID validation in code. Includes check digit algorithm and test ID generation. Do NOT use for non-Israeli identification systems.
+license: MIT
+allowed-tools: Bash(python:*)
+compatibility: No network required. Works with Claude Code, Claude.ai, Cursor.
+version: 1.0.1
+---
+
 # מאמת תעודת זהות ישראלית
 
 ## הוראות
@@ -24,7 +33,10 @@ def validate_israeli_id(id_number: str) -> bool:
 
     total = 0
     for i, digit in enumerate(id_str):
-        val = int(digit) * ((i % 2) + 1)  # Multiply by 1 or 2 alternately
+        # Position counting from left: odd positions (0,2,4,6,8) multiply by 1
+        # Even positions (1,3,5,7) multiply by 2
+        weight = 1 if i % 2 == 0 else 2
+        val = int(digit) * weight
         if val > 9:
             val = val // 10 + val % 10     # Sum digits if > 9
         total += val
@@ -50,7 +62,8 @@ def generate_test_id(prefix: str = "") -> str:
     # Calculate check digit
     total = 0
     for i, digit in enumerate(base):
-        val = int(digit) * ((i % 2) + 1)
+        weight = 1 if i % 2 == 0 else 2
+        val = int(digit) * weight
         if val > 9:
             val = val // 10 + val % 10
         total += val
