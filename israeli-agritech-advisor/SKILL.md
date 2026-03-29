@@ -4,6 +4,7 @@ description: Guide developers in integrating Israeli agritech tools and precisio
 license: MIT
 allowed-tools: Bash(python:*) Bash(pip:*) Bash(curl:*)
 compatibility: Network required for API calls. Python recommended for data processing. Works with Claude Code, Claude.ai.
+version: 1.0.1
 ---
 
 # Israeli Agritech Advisor
@@ -29,7 +30,7 @@ import requests
 class CropXClient:
     """Client for CropX soil monitoring API."""
 
-    BASE_URL = "https://api.cropx.com/v2"
+    BASE_URL = "https://cropx.com/api/v2"
 
     def __init__(self, client_id, client_secret):
         self.token = self._authenticate(client_id, client_secret)
@@ -73,7 +74,7 @@ class GrowSphereClient:
     """Client for Netafim GrowSphere irrigation platform.
     NOTE: No documented public API exists. Contact Netafim for access."""
 
-    BASE_URL = "https://api.growsphere.netafim.com/v1"  # Unverified, illustrative only
+    BASE_URL = "https://growsphere.netafim.com/api/v1"  # Unverified, illustrative only
 
     def __init__(self, api_key):
         self.headers = {"X-API-Key": api_key, "Content-Type": "application/json"}
@@ -103,7 +104,7 @@ class GrowSphereClient:
 class TaranisClient:
     """Client for Taranis crop intelligence platform."""
 
-    BASE_URL = "https://api.taranis.com/v1"
+    BASE_URL = "https://app.taranis.com/api/v1"
 
     def __init__(self, api_key):
         self.headers = {"Authorization": f"Bearer {api_key}"}
@@ -229,7 +230,7 @@ Result: Connect flow meters via GrowSphere API, aggregate daily/weekly/monthly u
 
 ### Error: "Sensor readings seem inaccurate"
 Cause: Soil sensor calibration issue or installation depth mismatch
-Solution: CropX sensors need soil-specific calibration. Verify installation depth matches crop root zone. Israeli soils vary dramatically -- coastal sand vs. Negev loess vs. basalt in Golan.
+Solution: CropX sensors need soil-specific calibration. Verify installation depth matches crop root zone. Israeli soils vary dramatically, coastal sand vs. Negev loess vs. basalt in Golan.
 
 ### Error: "Irrigation recommendation overwatering"
 Cause: ET0 calculation using wrong climate zone or outdated Kc values
