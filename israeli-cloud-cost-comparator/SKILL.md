@@ -2,6 +2,7 @@
 name: israeli-cloud-cost-comparator
 description: Compare cloud hosting costs for Israeli startups and developers across AWS (il-central-1), Azure, GCP (me-west1), and Israeli providers like Kamatera. Use when the user needs to evaluate cloud pricing with Israel-specific considerations including data residency requirements, latency from Tel Aviv, NIS billing options, startup credit programs, and FinOps cost optimization strategies. Do NOT use for comparing on-premise hosting, colocation services, or non-cloud SaaS pricing.
 license: MIT
+version: 1.0.1
 allowed-tools: Bash(node:*) Bash(python:*) WebFetch
 ---
 
@@ -54,7 +55,7 @@ AWS launched the Israel (Tel Aviv) region `il-central-1` in 2023. Key details:
 
 ### Step 3: Compare Google Cloud Platform (me-west1)
 
-GCP's `me-west1` region is located in Tel Aviv, launched in 2022.
+GCP's `me-west1` region is located in Tel Aviv, launched in 2023.
 
 **Available services in me-west1:**
 - Compute Engine, Cloud Storage, Cloud SQL
@@ -74,7 +75,7 @@ GCP's `me-west1` region is located in Tel Aviv, launched in 2022.
 - Firebase hosting with me-west1 backend provides low-latency full-stack hosting
 - GCP for Startups program is active in Israel (see Step 7)
 
-**Pricing URL:** `https://cloud.google.com/compute/vm-instance-pricing` (filter by region: me-west1)
+**Pricing URL:** `https://cloud.google.com/products/compute/pricing` (filter by region: me-west1)
 
 ### Step 4: Compare Microsoft Azure
 
@@ -164,10 +165,10 @@ Every major cloud provider offers free credits or trial periods for new accounts
 
 | Program | Credits | Duration | How to Apply |
 |---------|---------|----------|--------------|
-| AWS Activate | Up to $100,000 | 1-2 years | Through IIA, approved accelerators, or AWS Israeli startup team. `https://aws.amazon.com/activate/` |
+| AWS Activate | Up to $100,000 | 1-2 years | Through approved accelerators, or AWS Israeli startup team. `https://aws.amazon.com/startups` |
 | Google Cloud for Startups | Up to $100,000 (year 1) + $20,000 (year 2) | 2 years | Through Google for Startups Campus Tel Aviv. `https://cloud.google.com/startup` |
 | Microsoft Founders Hub | Up to $150,000 | 1-2 years | Through Microsoft Ventures Israel. `https://www.microsoft.com/en-us/startups` |
-| Israel Innovation Authority (IIA) | 20-50% of R&D expenses (including cloud) | Per approved project | `https://innovationisrael.org.il` |
+| Israel Innovation Authority (IIA) | 20-50% of R&D expenses (including cloud) | Per approved project | Contact the Israel Innovation Authority directly |
 
 **Recommendation**: Early-stage startups should apply to all three hyperscaler programs simultaneously. Combined credits can reach $350,000+, allowing 1-2 years of nearly free cloud hosting while evaluating which provider fits best.
 
@@ -288,7 +289,6 @@ Result: Recommend GCP me-west1 with preemptible T4 instance for inference (appro
 - **Credits blind spot**: When a user mentions having credits or promotions on one provider, agents tend to immediately recommend that provider without checking if other providers offer similar or better deals. Always compare credit programs across ALL providers before recommending. A user with $100 AWS credits may not know that GCP offers $300 in trial credits or that Azure Founders Hub offers $150,000 for startups.
 - AWS Israel region (il-central-1) pricing differs from eu-west-1 and other regions. Agents may use global pricing that does not reflect the Israeli region premium.
 - Israeli cloud costs should be calculated in NIS including 18% VAT for B2C, but excluding VAT for B2B with valid tax invoice. Agents may forget to add VAT for consumer-facing comparisons.
-- Google Cloud Platform (GCP) does not have a dedicated Israel region. Agents may recommend GCP Israel-region deployments that do not exist.
 - Israeli data residency requirements for government contracts may mandate hosting within Israel. Agents may recommend cheaper international regions that violate these requirements.
 - Shabbat and holiday periods can affect spot instance pricing and availability in the Israel region differently than other regions due to reduced local demand.
 
