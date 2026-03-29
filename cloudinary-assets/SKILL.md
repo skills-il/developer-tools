@@ -4,6 +4,7 @@ description: Manage media assets through Cloudinary's REST API -- upload, transf
 license: MIT
 allowed-tools: Bash(python:*) Bash(curl:*) WebFetch
 compatibility: Requires Cloudinary account (free tier available). Needs CLOUDINARY_URL or API key/secret/cloud name environment variables.
+version: 1.0.1
 ---
 
 # Cloudinary Assets
@@ -35,7 +36,7 @@ def get_cloudinary_config():
 ```
 
 If not configured, guide the user:
-1. Sign up at https://cloudinary.com (free tier: 25 credits/month)
+1. Sign up at https://cloudinary.com (free tier: 25 credits per month)
 2. Find credentials in Dashboard, then Programmable Media, then API Keys
 3. Set CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
 
@@ -71,6 +72,7 @@ def upload_image(file_path, cloud_name, api_key, api_secret,
         f"{params_to_sign}{api_secret}".encode()
     ).hexdigest()
 
+    # Note: This URL requires valid credentials and file upload
     url = f"https://api.cloudinary.com/v1_1/{cloud_name}/image/upload"
     data = {"api_key": api_key, "timestamp": timestamp, "signature": signature}
     if folder:
@@ -106,7 +108,7 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 **Apply automatic optimization:**
 ```
 # Add f_auto (format) and q_auto (quality) to any URL
-https://res.cloudinary.com/{cloud}/image/upload/f_auto,q_auto/{public_id}
+https://res.cloudinary.com/{cloud_name}/image/upload/f_auto,q_auto/{public_id}
 ```
 
 **Generate responsive breakpoints:**
@@ -128,7 +130,7 @@ def get_responsive_urls(cloud_name, public_id, widths=None):
 **HTML responsive image tag:**
 ```html
 <img
-  src="https://res.cloudinary.com/{cloud}/image/upload/w_800,q_auto,f_auto/{id}"
+  src="https://res.cloudinary.com/{cloud_name}/image/upload/w_800,q_auto,f_auto/{public_id}"
   srcset="{generated_srcset}"
   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
   alt="Description"
@@ -142,6 +144,7 @@ def get_responsive_urls(cloud_name, public_id, widths=None):
 ```python
 def list_assets(cloud_name, api_key, api_secret, resource_type="image", max_results=30):
     """List assets in Cloudinary media library."""
+    # Note: This URL requires authentication
     url = f"https://api.cloudinary.com/v1_1/{cloud_name}/resources/{resource_type}"
     response = requests.get(url, params={"max_results": max_results},
                             auth=(api_key, api_secret))
@@ -157,6 +160,7 @@ def delete_asset(public_id, cloud_name, api_key, api_secret):
         f"public_id={public_id}&timestamp={timestamp}{api_secret}".encode()
     ).hexdigest()
 
+    # Note: This URL requires valid credentials and signature
     url = f"https://api.cloudinary.com/v1_1/{cloud_name}/image/destroy"
     response = requests.post(url, data={
         "public_id": public_id, "api_key": api_key,
@@ -204,9 +208,8 @@ Result: Video URL with optimized delivery and poster image.
 ## Gotchas
 
 - Hebrew text overlays in Cloudinary require explicit RTL direction. Without setting text direction, Hebrew text renders left-to-right and appears as gibberish.
-- Cloudinary's auto-crop face detection may perform differently on photos with Israeli ID-style proportions. Test with actual Israeli document photos, not stock images.
-- Israeli e-commerce product images often need both Hebrew and English text overlays. Cloudinary's text overlay stacking renders Hebrew layers RTL but positions them using LTR coordinates.
-- Cloudinary CDN nodes in Israel (if available) should be preferred for Israeli audiences. Agents may not configure the CDN distribution to prioritize the closest edge location.
+- Free tier includes 25 credits per month with usage calculated based on transformations, storage, and bandwidth consumption.
+- Upload and Admin API endpoints require proper authentication. Example URLs in documentation may return 401/404 errors when accessed without valid credentials.
 
 ## Troubleshooting
 
@@ -221,4 +224,3 @@ Solution: Compress before upload, or upgrade Cloudinary plan. Use eager transfor
 ### Error: "Resource not found"
 Cause: Invalid public_id or asset was deleted
 Solution: Verify public_id with Admin API list. Check folder paths are included in public_id.
-

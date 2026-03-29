@@ -1,3 +1,12 @@
+---
+name: cloudinary-assets
+description: Manage media assets through Cloudinary's REST API -- upload, transform, optimize, and deliver images and videos. Use when user asks about image upload, media optimization, image transformations, responsive images, video management, CDN delivery, or mentions Cloudinary specifically. Covers Upload API, Admin API, URL-based transformations, and delivery optimization. Israeli-founded platform (Tel Aviv, 2012). Do NOT use for non-Cloudinary media hosting or local image processing without cloud upload.
+license: MIT
+allowed-tools: Bash(python:*) Bash(curl:*) WebFetch
+compatibility: Requires Cloudinary account (free tier available). Needs CLOUDINARY_URL or API key/secret/cloud name environment variables.
+version: 1.0.1
+---
+
 # ניהול מדיה ב-Cloudinary
 
 ## הוראות
@@ -27,7 +36,7 @@ def get_cloudinary_config():
 ```
 
 אם לא מוגדר, הנחו את המשתמש:
-1. הירשמו בכתובת https://cloudinary.com (מסלול חינמי: 25 קרדיטים/חודש)
+1. הירשמו בכתובת https://cloudinary.com (מסלול חינמי: 25 קרדיטים בחודש)
 2. מצאו את פרטי ההתחברות ב-Dashboard, לאחר מכן ב-Programmable Media, ואז ב-API Keys
 3. הגדירו CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
 
@@ -63,6 +72,7 @@ def upload_image(file_path, cloud_name, api_key, api_secret,
         f"{params_to_sign}{api_secret}".encode()
     ).hexdigest()
 
+    # הערה: כתובת URL זו דורשת פרטי התחברות תקינים והעלאת קובץ
     url = f"https://api.cloudinary.com/v1_1/{cloud_name}/image/upload"
     data = {"api_key": api_key, "timestamp": timestamp, "signature": signature}
     if folder:
@@ -98,7 +108,7 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 **החלת מיטוב אוטומטי:**
 ```
 # הוסיפו f_auto (פורמט) ו-q_auto (איכות) לכל URL
-https://res.cloudinary.com/{cloud}/image/upload/f_auto,q_auto/{public_id}
+https://res.cloudinary.com/{cloud_name}/image/upload/f_auto,q_auto/{public_id}
 ```
 
 **יצירת breakpoints רספונסיביים:**
@@ -120,7 +130,7 @@ def get_responsive_urls(cloud_name, public_id, widths=None):
 **תגית HTML לתמונה רספונסיבית:**
 ```html
 <img
-  src="https://res.cloudinary.com/{cloud}/image/upload/w_800,q_auto,f_auto/{id}"
+  src="https://res.cloudinary.com/{cloud_name}/image/upload/w_800,q_auto,f_auto/{public_id}"
   srcset="{generated_srcset}"
   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
   alt="Description"
@@ -134,6 +144,7 @@ def get_responsive_urls(cloud_name, public_id, widths=None):
 ```python
 def list_assets(cloud_name, api_key, api_secret, resource_type="image", max_results=30):
     """List assets in Cloudinary media library."""
+    # הערה: כתובת URL זו דורשת אימות
     url = f"https://api.cloudinary.com/v1_1/{cloud_name}/resources/{resource_type}"
     response = requests.get(url, params={"max_results": max_results},
                             auth=(api_key, api_secret))
@@ -149,6 +160,7 @@ def delete_asset(public_id, cloud_name, api_key, api_secret):
         f"public_id={public_id}&timestamp={timestamp}{api_secret}".encode()
     ).hexdigest()
 
+    # הערה: כתובת URL זו דורשת פרטי התחברות תקינים וחתימה
     url = f"https://api.cloudinary.com/v1_1/{cloud_name}/image/destroy"
     response = requests.post(url, data={
         "public_id": public_id, "api_key": api_key,
@@ -196,9 +208,8 @@ def delete_asset(public_id, cloud_name, api_key, api_secret):
 ## מלכודות נפוצות
 
 - שכבות טקסט בעברית ב-Cloudinary דורשות הגדרת כיוון RTL מפורשת. ללא הגדרת כיוון, טקסט עברי מוצג משמאל לימין ונראה כג'יבריש.
-- זיהוי פנים אוטומטי של Cloudinary לחיתוך עלול לפעול שונה על תמונות בפרופורציות של תעודת זהות ישראלית. יש לבדוק עם תמונות ישראליות אמיתיות, לא תמונות מאגר.
-- תמונות מוצר ישראליות דורשות לעיתים שכבות טקסט בעברית ובאנגלית. שכבות טקסט ב-Cloudinary מציגות עברית ב-RTL אך ממקמות אותן לפי קואורדינטות LTR.
-- צמתי CDN של Cloudinary בישראל (אם זמינים) צריכים להיות מועדפים לקהל ישראלי. סוכנים עלולים לא להגדיר את התפלגות ה-CDN לעדיפות המיקום הקרוב ביותר.
+- המסלול החינמי כולל 25 קרדיטים בחודש עם חישוב השימוש על בסיס טרנספורמציות, אחסון וצריכת רוחב פס.
+- נקודות קצה של Upload API ו-Admin API דורשות אימות תקין. כתובות URL לדוגמה בתיעוד עלולות להחזיר שגיאות 401/404 כאשר נגישות אליהן ללא פרטי התחברות תקינים.
 
 ## פתרון בעיות
 
