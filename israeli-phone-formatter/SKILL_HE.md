@@ -1,3 +1,12 @@
+---
+name: israeli-phone-formatter
+description: Validate, format, and convert Israeli phone numbers between local and international (+972) formats. Use when user asks to validate Israeli phone number, format phone for SMS, convert to +972, check phone prefix, or implement Israeli phone input validation in code. Handles mobile (050-058), landline (02-09), VoIP (072-077), toll-free (1-800), and star-service numbers. Do NOT use for non-Israeli phone systems or general telecom questions.
+license: MIT
+allowed-tools: Bash(python:*)
+compatibility: No network required. Works with Claude Code, Claude.ai, Cursor.
+version: 1.0.1
+---
+
 # מפרמט טלפונים ישראלי
 
 ## הוראות
@@ -6,7 +15,7 @@
 
 | סוג | קידומות | סה"כ ספרות | דוגמה (מקומי) |
 |-----|---------|-----------|---------------|
-| נייד | 050-058 | 10 | 052-1234567 |
+| נייד | 050, 051, 052, 053, 054, 055, 056, 058 | 10 | 052-1234567 |
 | קווי | 02-04, 08-09 | 9 | 02-6251111 |
 | VoIP | 072-077 | 10 | 077-1234567 |
 | חינם | 1-800 | 10 | 1-800-123456 |
@@ -91,6 +100,7 @@
 - מספרי חירום ישראליים (משטרה 100, מד"א 101, כיבוי 102) הם קודים קצרים שאין לעצב עם קידומת מדינה או אזור.
 - מספרים וירטואליים (קידומת 076) ומספרי VoIP (קידומת 077) הם מספרים ישראליים תקינים אך עם ניתוב שונה. סוכנים עלולים לדחות אותם כלא תקינים כי הם לא מתחילים ב-05x.
 - קידומות אזוריות ישראליות השתנו היסטורית (02 לירושלים, 03 לתל אביב, 04 לחיפה, 08 לדרום, 09 לשרון). סוכנים עלולים להשתמש במיפויי קידומות מיושנים.
+- קידומות ניידים מוקצות הן: 050, 051, 052, 053, 054, 055, 056, 058.
 
 ## פתרון בעיות
 

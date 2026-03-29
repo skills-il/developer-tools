@@ -4,6 +4,7 @@ description: Validate, format, and convert Israeli phone numbers between local a
 license: MIT
 allowed-tools: Bash(python:*)
 compatibility: No network required. Works with Claude Code, Claude.ai, Cursor.
+version: 1.0.1
 ---
 
 # Israeli Phone Formatter
@@ -14,7 +15,7 @@ compatibility: No network required. Works with Claude Code, Claude.ai, Cursor.
 
 | Type | Prefixes | Total Digits | Example (local) |
 |------|----------|-------------|-----------------|
-| Mobile | 050-058 | 10 | 052-1234567 |
+| Mobile | 050, 051, 052, 053, 054, 055, 056, 058 | 10 | 052-1234567 |
 | Landline | 02-04, 08-09 | 9 | 02-6251111 |
 | VoIP | 072-077 | 10 | 077-1234567 |
 | Toll-free | 1-800 | 10 | 1-800-123456 |
@@ -99,6 +100,7 @@ Result: Summary table with validation status per number
 - Israeli special numbers (police 100, ambulance 101, fire 102) are short codes that should not be formatted with country codes or area codes.
 - Virtual numbers (076 prefix) and VoIP numbers (077 prefix) are valid Israeli numbers but have different routing. Agents may reject them as invalid because they don't start with 05x.
 - Israeli area codes changed historically (02 for Jerusalem, 03 for Tel Aviv, 04 for Haifa, 08 for south, 09 for Sharon). Agents may use outdated area code mappings.
+- Mobile prefixes claim that allocated mobile prefixes are 050, 051, 052, 053, 054, 055, 056, 058.
 
 ## Troubleshooting
 
