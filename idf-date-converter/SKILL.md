@@ -4,6 +4,7 @@ description: Convert between Hebrew (Jewish) calendar and Gregorian dates, look 
 license: MIT
 allowed-tools: Bash(python:*) Bash(pip:*)
 compatibility: Python with hebcal or pyluach library recommended. Works without network.
+version: 1.0.1
 ---
 
 # IDF Date Converter
@@ -73,17 +74,17 @@ def is_israeli_business_day(greg_date):
 ### Israeli Holidays (Fixed Hebrew Dates)
 | Holiday | Hebrew Date | 2026 Gregorian (approx) |
 |---------|------------|------------------------|
-| Rosh Hashana | 1-2 Tishrei | Sep 12-13 |
-| Yom Kippur | 10 Tishrei | Sep 21 |
-| Sukkot | 15-21 Tishrei | Sep 26 - Oct 2 |
-| Simchat Torah | 22 Tishrei | Oct 3 |
-| Chanukah | 25 Kislev - 2 Tevet | Dec 5-12 |
-| Purim | 14 Adar | Mar 17 |
-| Pesach | 15-21 Nisan | Apr 2-8 |
-| Yom HaShoah | 27 Nisan | Apr 14 |
-| Yom HaZikaron | 4 Iyar | Apr 21 |
-| Yom HaAtzmaut | 5 Iyar | Apr 22 |
-| Shavuot | 6 Sivan | May 22 |
+| Rosh Hashana | 1-2 Tishrei | Sep 14-15 |
+| Yom Kippur | 10 Tishrei | Sep 23 |
+| Sukkot | 15-21 Tishrei | Sep 28 - Oct 4 |
+| Simchat Torah | 22 Tishrei | Oct 5 |
+| Chanukah | 25 Kislev - 2 Tevet | Dec 25 - Jan 1 |
+| Purim | 14 Adar | Mar 5 |
+| Pesach | 15-21 Nisan | Apr 1-7 |
+| Yom HaShoah | 27 Nisan | Apr 13 |
+| Yom HaZikaron | 4 Iyar | Apr 20 |
+| Yom HaAtzmaut | 5 Iyar | Apr 21 |
+| Shavuot | 6 Sivan | May 21 |
 
 ## Examples
 
@@ -93,11 +94,11 @@ Result: "24 February 2026 = 26 Adar I 5786"
 
 ### Example 2: Holiday Lookup
 User says: "When is Pesach 2026?"
-Result: "Pesach begins evening of April 1, 2026 (15 Nisan 5786). First seder: April 1. Last day: April 8."
+Result: "Pesach begins evening of March 31, 2026 (15 Nisan 5786). First seder: April 1. Last day: April 7."
 
 ### Example 3: Business Days
 User says: "How many business days between March 1 and March 31, 2026?"
-Result: Count excluding Shabbatot, noting if any holidays fall in the range (Purim on March 17).
+Result: Count excluding Shabbatot, noting if any holidays fall in the range (Purim on March 5).
 
 ## Bundled Resources
 
