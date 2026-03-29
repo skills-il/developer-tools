@@ -4,6 +4,7 @@ description: CI/CD workflow templates tailored for Israeli development teams, in
 license: MIT
 allowed-tools: Bash(gh:*) Bash(git:*) Bash(curl:*) Bash(node:*) Bash(act:*)
 compatibility: Requires GitHub repository with Actions enabled. GitHub CLI (gh) recommended for workflow management. act CLI optional for local workflow testing. Works with any GitHub-hosted or self-hosted runner.
+version: 1.0.1
 ---
 
 # GitHub Actions for Israeli Teams
@@ -69,7 +70,7 @@ runs:
         else
           # Check holidays
           MONTH=$(date +%Y-%m)
-          HOLIDAYS=$(curl -s "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&year=$(date +%Y)&month=$(date +%-m)&geo=geoname&geonameid=281184")
+          HOLIDAYS=$(curl -s "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&maj=on")
           HOLIDAY_TODAY=$(echo "$HOLIDAYS" | jq -r ".items[] | select(.date | startswith(\"$(date +%Y-%m-%d)\")) | .title" | head -1)
 
           if [[ -n "$HOLIDAY_TODAY" ]]; then
@@ -254,7 +255,7 @@ Hebrew text in webhook payloads requires explicit RTL handling. Slack and Teams 
       STATUS_LABEL="${{ job.status == 'success' && 'Deployed' || 'Failed' }}"
 
       curl -s -X POST "https://api.monday.com/v2" \
-        -H "Authorization: $MONDAY_TOKEN" \
+        -H "Authorization: Bearer $MONDAY_TOKEN" \
         -H "Content-Type: application/json" \
         -d "{\"query\": \"mutation { change_simple_column_value(item_id: $ITEM_ID, board_id: ${{ vars.MONDAY_BOARD_ID }}, column_id: \\\"status\\\", value: \\\"$STATUS_LABEL\\\") { id } }\"}"
     fi
