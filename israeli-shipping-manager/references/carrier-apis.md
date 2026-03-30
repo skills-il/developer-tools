@@ -1,137 +1,192 @@
-# Israeli Carrier API Reference
+# Israeli Carrier Integration Reference
 
-## Israel Post (דואר ישראל) — EMS API
+Israeli shipping carriers generally do not offer publicly documented REST APIs. Integration is done through platform-specific plugins (Shopify, WooCommerce, Magento), private B2B agreements, third-party aggregators, or delivery management software. This reference documents the verified integration methods for each carrier.
 
-- **Base URL:** `https://www.israelpost.co.il/ems/api/v1`
-- **Auth:** API key via header `X-API-Key`
-- **Registration:** Apply at Israel Post business portal (requires business license)
-- **Rate limit:** 60 requests/minute
+## Israel Post (דואר ישראל)
 
-### Endpoints
-- `POST /shipment` — Create shipment, returns tracking number
-- `GET /shipment/{tracking_number}` — Get tracking status
-- `POST /rate` — Calculate shipping rate by weight, dimensions, destination
-- `GET /mikud/{code}` — Validate mikud (ZIP) code
-- `GET /branches` — List post office branches and locker locations
+- **Website:** israelpost.co.il
+- **Business Portal:** mybusiness.israelpost.co.il (business customers only)
+- **No public REST API.** API access is restricted to business customers who send items through Israel Post. There is no publicly documented API for general developers.
+
+### Verified Integration Points
+
+**Tracking (unofficial, web scraping):**
+- Endpoint: `POST https://mypost.israelpost.co.il/umbraco/Surface/ItemTrace/GetItemTrace`
+- Auth: Requires CSRF token (`__RequestVerificationToken`) extracted from the tracking page, plus session cookies
+- Parameters: `itemCode` (tracking number), `lcid` (locale)
+- Built on Umbraco CMS
+
+**Rate calculation (public, no auth):**
+- Endpoint: `GET https://www.israelpost.co.il/npostcalc.nsf/CalcPrice?openagent&...`
+- Built on Lotus Notes/Domino
+- Parameters appended as query string (weight, dimensions, destination)
+
+**Domestic shipping (via Datalogics third-party):**
+- Endpoint: `POST https://connect.datalogics.co.il/rest/w_create_shipping`
+- Store lookup: `GET https://connect.datalogics.co.il/rest/w_get_shipping_stores`
+- Auth: Token passed in JSON body (`"token": "YOUR_TOKEN"`)
+- Documentation: israel-post.datalogics.co.il
+
+**Mikud (ZIP) search:**
+- Web interface: `mypost.israelpost.co.il/zipcodesearch`
+- No public API. Third-party Python library `mikud` scrapes this page.
+
+### Open-Source Libraries
+- `bennymeg/IsraelPostalServiceAPI` (TypeScript) -- rate calculation
+- `LandRover/postil-status` (Node.js) -- tracking
+- `Stajor/israel-post` (PHP) -- tracking
 
 ### Notes
-- Tracking numbers: 13-character format (e.g., `RR123456789IL`)
+- Tracking numbers: 13-character UPU S10 format (e.g., `RR123456789IL`)
+- Prefixes: `RR` = registered parcel, `EE` = EMS express, `CP` = parcel
 - Supports registered mail, parcels, and EMS express
-- Mikud validation endpoint useful for address verification
+- Bot protection (ShieldSquare/PerimeterX) on the main website may block automated requests
 
-## Cheetah / Zrizi (צ'יטה)
+## Cheetah (צ'יטה)
 
-- **Base URL:** `https://api.cheetah.co.il/v2`
-- **Auth:** OAuth2 Bearer token (client credentials flow)
-- **Registration:** Requires signed shipping contract with Cheetah sales
-- **Rate limit:** 120 requests/minute
+- **Website:** chitadelivery.co.il
+- **Group site:** cheetah-group.net
+- **No public REST API.** Integration is done through platform-specific plugins and private B2B contracts.
 
-### Endpoints
-- `POST /deliveries` — Create delivery order
-- `GET /deliveries/{id}/track` — Get delivery status
-- `POST /deliveries/rate` — Get rate quote
-- `POST /webhooks` — Register status change webhook
-- `GET /coverage` — Check delivery coverage area
+### Verified Integration Methods
 
-### Notes
-- Webhook support for real-time status updates (preferred over polling)
-- Same-day delivery available in Gush Dan area only
-- Requires pickup scheduling for sender location
+**Shopify:** "Cheetah DeliverIt" app by BOA Ideas on Shopify App Store. Handles order sync, label generation, and tracking.
 
-## HFD (H.F.D.)
+**Other platforms:** Contact Cheetah sales directly via chitadelivery.co.il or WhatsApp (0559577119).
 
-- **Base URL:** `https://api.hfd.co.il/api/v1`
-- **Auth:** API key + merchant ID via headers
-- **Registration:** Sign up at HFD business portal
-- **Rate limit:** 100 requests/minute
-
-### Endpoints
-- `POST /shipments` — Create shipment with label
-- `GET /shipments/{barcode}/status` — Get tracking status
-- `POST /shipments/rate` — Calculate rate
-- `GET /pickup-points` — List HFD pickup point locations
-- `GET /shipments/{barcode}/label` — Download shipping label (PDF)
+**Internal system:** Cheetah uses a "RUN" delivery management system at chita-il.com. Business customers access this for order entry and tracking, but it is not a public API.
 
 ### Notes
-- Returns PDF label ready for printing
-- Pickup points searchable by city or coordinates
-- Supports bulk shipment creation (up to 100 per request)
+- Full name: Cheetah Deliveries Ltd., headquartered in Petah Tikva
+- 9 branches nationwide (Kiryat Ata to Eilat), same-day delivery is not limited to Gush Dan
+- Same-day delivery service with express deliveries often completed within 4 hours
+- B2B focus: contact sales for business account setup
 
-## Baldar (בלדר)
+## HFD (Hameritz & Flash)
 
-- **Integration:** Limited API — browser automation recommended
-- **Portal:** `https://www.baldar.co.il/business`
-- **Auth:** Username/password login (session-based)
+- **Website:** hfd.co.il
+- **No publicly documented REST API.** HFD mentions having an "API tool" for e-commerce integration on their website, but technical documentation is not public. Contact HFD directly for API access.
 
-### Browser Automation Flow
-1. Navigate to Baldar business portal
-2. Login with credentials
-3. Fill shipment form: sender, recipient, parcel details
-4. Submit and capture tracking number from confirmation page
-5. Track via portal search page
+### Verified Integration Methods
+
+**Shopify:** "HFD DeliverIt" app on Shopify App Store. Automatic order sync, label generation, tracking.
+
+**WooCommerce:** "HFD ePost Integration" plugin on WordPress.org.
+
+**Other platforms:** Integrations available for Magento, Konimbo, and Wix. Contact HFD for details.
 
 ### Notes
-- No public REST API; use CDP/Playwright for automation
-- Best for low-volume express/document deliveries
-- Tracking available by phone or portal only
+- Founded 1995, one of the largest B2C e-commerce delivery companies in Israel
+- ~1,000 pickup points and lockers nationwide
+- Pickup points searchable on hfd.co.il/en/pick-up-points/
+- Tracking: hfd.co.il with barcode number
+- Third-party tracking via AfterShip, WeShip
+
+## Baldar (בלדר) -- Delivery Management Software
+
+**Important:** Baldar is NOT a shipping carrier. It is delivery management software (SaaS) used by Israeli courier companies.
+
+- **Website:** baldar.co.il
+- **Used by:** Tapuz Delivery, Hafoz, Isgav, Mach1, and other Israeli couriers
+
+### How It Works
+Baldar provides white-label CRM portals for courier companies. Each carrier hosts their own Baldar instance:
+- `crm.tapuzdelivery.co.il/baldar/Login.aspx`
+- `portal.hafoz.co.il/baldar/Login.aspx`
+- `baldar.isgav.co.il/Baldar/Login.aspx`
+- `manui.mach1.co.il/Baldar/Login.aspx`
+
+### Integration
+- **nopCommerce plugin** available for sending orders to the Baldar courier system
+- Business customers get username/password to the ordering portal of their chosen carrier
+- ASP.NET WebForms-based CRM with session authentication
+- No public REST API
+
+### Notes
+- If a user says "I use Baldar," they mean one of the courier companies that licenses Baldar software. Ask which carrier specifically.
+- The Baldar software handles: order entry, route management, SMS notifications, driver apps, invoicing
 
 ## Mahir Li (מהיר לי)
 
-- **Base URL:** `https://api.mahirli.co.il/v1`
-- **Auth:** API key via `Authorization: Bearer {key}`
-- **Registration:** Apply at Mahir Li merchant portal
-- **Rate limit:** 80 requests/minute
+- **Website:** mahirli.com
+- **No public API.** Mahir Li uses LionWheel as their delivery management platform. Integration is via LionWheel's system.
 
-### Endpoints
-- `POST /orders` — Create shipping order
-- `GET /orders/{id}/tracking` — Get tracking information
-- `POST /orders/calculate` — Calculate shipping cost
-- `GET /points` — List pickup point locations
+### Verified Integration Methods
+
+**LionWheel platform:** Mahir Li operates on LionWheel (lionwheel.com), which has its own REST API documented at `github.com/lionwheel/api`. Integrations go through LionWheel, not Mahir Li directly.
+
+**Direct:** Contact Mahir Li via mahirli.com for business account setup. Minimum 10 deliveries per day.
 
 ### Notes
-- Budget-friendly option for standard e-commerce
-- Pickup points in shopping centers and convenience stores
-- Bulk order upload via CSV supported
+- Same-day courier service: delivery within 9 hours from pickup
+- Coverage: Beer Sheva to Nahariya (not nationwide for all services)
+- Founded by two partners from Gush Katif, operates from Petah Tikva
+- B2B focused: requires minimum volume
 
-## BOX (בוקס) — Locker API
+## Locker and Pickup Point Services
 
-- **Base URL:** `https://api.box-il.co.il/api/v2`
-- **Auth:** API key + merchant secret (HMAC signed requests)
-- **Registration:** Partner program at BOX business site
-- **Rate limit:** 100 requests/minute
+Israel has several locker and self-service pickup networks. There is no single "BOX" carrier. The main services:
 
-### Endpoints
-- `POST /parcels` — Create parcel for locker delivery
-- `GET /parcels/{id}/status` — Get parcel status
-- `GET /lockers` — List all BOX locker locations with availability
-- `GET /lockers/nearby?lat={lat}&lon={lon}` — Find nearest lockers
-- `GET /parcels/{id}/pickup-code` — Get pickup code for customer
+### BOX2GO (Israel Post + Paz/Yellow Box)
+- Israel Post's locker service using Yellow Box lockers at Paz gas stations
+- ~120 locations nationwide
+- Integrated with Israel Post shipping
+- Pickup code sent via SMS
 
-### Notes
-- Locker availability changes in real-time; check before creating parcel
-- Pickup code sent automatically to customer phone on deposit
-- Parcels held for 3 days before return to sender
-- Maximum parcel size: 60x40x40 cm
+### Shlager (שלאגר) by Orian
+- Smart locker network for receiving and returning online purchases
+- Mobile stations in residential areas
+- Website: orian.com
+
+### Done (דאן)
+- Locker-based delivery service
+- Website: done.co.il
+- Cost: ~30 NIS per package, max 5 kg
+- Delivery in 3 working days
+
+### SafeLocker
+- Lockers at malls and shopping centers
+- Website: safelocker.co.il
+
+### HFD Pickup Points
+- ~1,000 pickup point locations
+- Searchable at hfd.co.il
+
+## Third-Party Aggregators
+
+For unified multi-carrier integration, consider these aggregator APIs:
+
+| Aggregator | Coverage | Notes |
+|-----------|----------|-------|
+| AfterShip | Tracking only | Supports Israel Post, HFD, and many others |
+| TrackingMore | Tracking only | Israel Post tracking API with webhooks and SDKs |
+| ClickPost | Full integration | 150+ carriers including Israeli carriers |
+| WeShip (weship.com) | Full integration | Multi-carrier Israeli shipping platform |
+| LionWheel | Full integration | Used by Mahir Li and other Israeli couriers |
+
+These aggregators provide the unified REST API experience that individual Israeli carriers lack.
 
 ## Common Status Codes (Normalized)
 
-All carriers map to these unified statuses:
+When building a unified tracking system across carriers, normalize to these statuses:
 
-| Unified Status | Israel Post | Cheetah | HFD | Mahir Li | BOX |
-|----------------|-------------|---------|-----|----------|-----|
-| `pending` | Registered | Created | New | Created | Created |
-| `picked_up` | Accepted | Picked up | Collected | Picked up | Received |
-| `in_transit` | In transit | On the way | In delivery | In transit | In transit |
-| `out_for_delivery` | Out for delivery | Delivering | Last mile | Delivering | At locker |
-| `delivered` | Delivered | Delivered | Delivered | Delivered | Picked up |
-| `failed_delivery` | Failed attempt | Failed | Undelivered | Failed | Expired |
-| `returned` | Returned to sender | Returned | Returned | Returned | Returned |
+| Unified Status | Description |
+|----------------|-------------|
+| `pending` | Shipment created, not yet picked up |
+| `picked_up` | Carrier has collected the parcel |
+| `in_transit` | Parcel moving between facilities |
+| `out_for_delivery` | On the delivery vehicle / at locker |
+| `delivered` | Successfully delivered or picked up by customer |
+| `failed_delivery` | Delivery attempt failed |
+| `returned` | Returned to sender |
 
-## Rate Calculation — Common Fields
+Map each carrier's native statuses to this set. Status names vary by carrier and must be mapped individually based on the tracking data format you receive from each integration method.
 
-All rate endpoints accept these fields:
-- `weight_kg` (float) — Parcel weight in kilograms
-- `length_cm`, `width_cm`, `height_cm` (int) — Parcel dimensions
-- `origin_mikud` (string) — Sender ZIP code (7 digits)
-- `destination_mikud` (string) — Recipient ZIP code (7 digits)
-- `service_type` (string) — "standard", "express", "registered"
+## Rate Calculation
+
+There is no unified rate API across Israeli carriers. Options:
+
+1. **Israel Post rate calculator** (public, no auth): Use the Lotus Notes endpoint or the `bennymeg/IsraelPostalServiceAPI` TypeScript library
+2. **Carrier-specific quotes:** Contact each carrier for rate agreements (usually volume-based)
+3. **Aggregator APIs:** WeShip and ClickPost offer multi-carrier rate comparison
+4. **Manual rate tables:** Request current rate cards from carrier sales teams

@@ -1,22 +1,22 @@
 {
   "author": "skills-il",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "category": "developer-tools",
   "tags": {
     "he": [
       "משלוחים",
       "לוגיסטיקה",
       "מסחר-אלקטרוני",
-      "משלוח",
       "דואר-ישראל",
+      "מעקב-חבילות",
       "ישראל"
     ],
     "en": [
       "shipping",
       "logistics",
       "ecommerce",
-      "delivery",
       "israel-post",
+      "package-tracking",
       "israel"
     ]
   },
@@ -25,9 +25,19 @@
     "en": "Israeli Shipping Manager"
   },
   "display_description": {
-    "he": "ניהול משלוחים ומעקב חבילות מול שלדנים ישראליים — דואר ישראל, צ'יטה, HFD, בלדר, מהיר לי ונקודות BOX",
-    "en": "Manage shipping operations across Israeli carriers — Israel Post, Cheetah, HFD, Baldar, Mahir Li, and BOX pickup points. Use when user asks about \"shipping Israel\", \"Israel Post API\", \"Cheetah delivery\", \"meshloach\", \"shipping label\", \"package tracking Israel\", \"BOX pickup\", \"HFD\", \"Baldar\", or \"tawit mishloach\". Covers carrier selection, Israeli address formatting, label generation, cross-carrier tracking, and customer delivery notifications. Do NOT use for international shipping outside Israel or customs/import."
+    "he": "ניהול משלוחים ומעקב חבילות מול חברות שילוח ישראליות (דואר ישראל, צ'יטה, HFD, מהיר לי) ושירותי לוקרים (BOX2GO, שלאגר, Done). הסקיל מכסה בחירת חברת שילוח, עיצוב כתובות ישראליות, הפקת תוויות, מעקב חוצה-חברות והתראות ללקוחות. אל תשתמשו בסקיל הזה למשלוחים בינלאומיים מחוץ לישראל או לנושאי מכס ויבוא.",
+    "en": "Manage shipping operations across Israeli carriers, including Israel Post, Cheetah, HFD, and Mahir Li, plus locker pickup services (BOX2GO, Shlager, Done). Use when user asks about \"shipping Israel\", \"Israel Post tracking\", \"Cheetah delivery\", \"meshloach\", \"shipping label\", \"package tracking Israel\", \"HFD\", \"locker pickup Israel\", or \"tawit mishloach\". Covers carrier selection, Israeli address formatting, label generation, cross-carrier tracking, and customer delivery notifications. Do NOT use for international shipping outside Israel or customs/import."
   },
+  "supported_agents": [
+    "claude-code",
+    "openclaw",
+    "cursor",
+    "windsurf",
+    "cline",
+    "aider",
+    "continue",
+    "copilot"
+  ],
   "openclaw": {
     "requires": {
       "bins": [],
