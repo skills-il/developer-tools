@@ -3,7 +3,6 @@ name: israeli-product-price-comparator
 description: Compare product prices across major Israeli retailers and e-commerce platforms including Zap.co.il, KSP, iDigital, Ivory, Bug, and more. Use when the user wants to find the best price for electronics, appliances, computers, or consumer goods in Israel, needs to compare local vs. import pricing, or wants guidance on price tracking tools and Israeli consumer protection rights. Do NOT use for comparing grocery or food prices, real estate, or financial products.
 license: MIT
 allowed-tools: Bash(node:*) Bash(python:*) WebFetch
-version: 1.0.1
 ---
 
 
@@ -60,15 +59,15 @@ Cross-reference Zap results with direct retailer websites, as some retailers off
 - **ACE** (`https://www.ace.co.il`): Hardware and home improvement. Check for seasonal sales.
 
 **Pharmacy & Health:**
-- **Super-Pharm** (`https://shop.super-pharm.co.il/`): Israel's largest pharmacy chain. "1+1" and "1+50%" deals are common.
-- **Be**: Pharmacy and beauty products. Competitor to Super-Pharm with frequent promotions.
+- **Super-Pharm** (`https://shop.super-pharm.co.il`): Israel's largest pharmacy chain. "1+1" and "1+50%" deals are common.
+- **Be** (`https://www.bestore.co.il`): Pharmacy and beauty products, owned by Shufersal. Frequent promotions competing with Super-Pharm.
 
 ### Step 4: Evaluate Import vs. Local Purchase
 
 For products that may be cheaper abroad, compare:
 
 1. **AliExpress / Amazon Global**: Check the product price including shipping to Israel
-2. **Customs duty calculation**: Products above 75 USD (approximately 275 NIS) are subject to customs duty:
+2. **Customs duty calculation**: Products above 150 USD (approximately 550 NIS) are subject to customs duty and VAT (threshold doubled from $75 in January 2026):
    - Standard rate: 12% customs + 18% VAT (applied on product + shipping + customs)
    - Electronics: Often reduced or zero customs duty, but VAT still applies
    - The effective additional cost is approximately 18-30% of the declared value
@@ -78,18 +77,18 @@ For products that may be cheaper abroad, compare:
 **Recommendation framework**:
 - Buy locally if the price difference is less than 20% (warranty + delivery time value)
 - Buy internationally if the price difference exceeds 30% and warranty is not critical
-- For products priced under 75 USD internationally, always check AliExpress (no customs duty)
+- For products priced under 150 USD internationally, always check AliExpress (no customs duty or VAT)
 
 ### Step 5: Leverage Price Tracking and Coupon Tools
 
 **Price tracking:**
-- **"Sham Ze Zol Yoter"** (Where Is It Cheaper) Chrome extension: Automatically shows price comparisons while browsing retailer sites
+- **"Sham Ze Zol Yoter"** (There It's Cheaper) Chrome extension: Automatically shows price comparisons while browsing retailer sites
 - **Zap price alerts**: Set up email notifications when a product drops below a target price
 - **Last Price**: Alternative price comparison site with its own retailer network
 
 **Coupon aggregators:**
-- **TopCash** (`https://www.topcash.co.il`): Israeli cashback platform offering 1-10% back from partnered retailers
-- **Coupon.co.il**: Aggregates discount codes for Israeli online stores
+- **TopCash** (`https://www.topcash.co.il`): Cashback platform (via American Express) offering 1-10% back from partnered retailers
+- **Cashback.co.il** (`https://www.cashback.co.il`): Israel's largest independent cashback platform with 250,000+ users and 500+ partnered stores
 - **Check retailer newsletters**: KSP, Ivory, and iDigital send weekly promotions to subscribers
 
 **Best times to buy:**
@@ -102,7 +101,7 @@ For products that may be cheaper abroad, compare:
 
 Inform the user of their rights under Israeli consumer protection law:
 
-1. **Online purchases**: 14-day return policy from delivery date, no questions asked. The retailer must provide a full refund minus shipping costs (Consumer Protection Law, Section 14C).
+1. **Online purchases**: 14-day return policy from delivery date (Consumer Protection Law, Section 14C). The retailer may charge a cancellation fee of 5% of the purchase price or 100 NIS, whichever is lower. Exceptions apply for depreciable goods, opened software, and customized products.
 2. **Physical store purchases**: 7-day return policy for products over 50 NIS, if the product is unused and in original packaging.
 3. **Warranty rights**: Minimum 1-year warranty on electronics. The retailer (not just the manufacturer) is responsible for warranty service.
 4. **Price display**: All prices must be displayed including VAT. If a retailer shows a price without VAT, the displayed price is the legally binding one.
@@ -128,7 +127,7 @@ Actions:
 1. Search Zap.co.il for "Samsung Galaxy S24 Ultra" to get the price comparison across retailers
 2. Check KSP directly for any exclusive bundles or price-match offers
 3. Check iDigital for any trade-in promotions
-4. Compare with Amazon.com price + estimated customs (product over 75 USD threshold)
+4. Compare with Amazon.com price + estimated customs (product over 150 USD threshold)
 5. Check if TopCash offers cashback on any of the retailers
 
 Result: Present a table with prices from Zap (aggregated), KSP, iDigital, Ivory, and Amazon (with customs estimate). Recommend the retailer offering the best combination of price, warranty, and delivery. Note the 14-day online return policy.
@@ -151,7 +150,7 @@ Result: Recommend 2-3 models at different price points. Include total cost of ow
 User says: "Should I buy Sony WH-1000XM5 headphones from Amazon or locally?"
 
 Actions:
-1. Check current price on Amazon.com and calculate landed cost (product + shipping + customs if over 75 USD)
+1. Check current price on Amazon.com and calculate landed cost (product + shipping + customs if over 150 USD)
 2. Search Zap.co.il for current Israeli prices
 3. Check KSP price-match policy applicability
 4. Compare warranty terms: Amazon (international warranty, no local service) vs. local retailer (full local warranty)
@@ -162,8 +161,8 @@ Result: Present side-by-side comparison showing Amazon price with customs estima
 
 - All Israeli consumer prices must include 18% VAT by law. Agents may scrape or compare prices excluding VAT, producing incorrect comparisons.
 - Israeli price comparison sites (Zap, Pricez) list prices in NIS. Agents may convert to USD for comparison, which introduces exchange rate fluctuations that mislead users.
-- Product prices in Israel vary significantly between retail chains. The Prices Law (2014) requires large food chains to publish prices publicly, but not all categories are covered.
-- Israeli product barcodes (EAN-13 starting with 729) may not be found in international product databases. Agents should use Israeli sources like Shufersal or Rami Levy APIs.
+- The personal import duty-free threshold was doubled from $75 to $150 in January 2026. Agents using older training data may still reference the $75 limit, producing incorrect import cost estimates.
+- Zap.co.il prices are cached and may lag behind actual retailer prices by hours or days. Agents must verify the final price on the retailer's own website before presenting a recommendation.
 
 ## Troubleshooting
 
