@@ -1,0 +1,21 @@
+{
+  "display_name": {
+    "he": "בניית בוט טלגרם",
+    "en": "Telegram Bot Builder"
+  },
+  "display_description": {
+    "he": "בנו בוטים לטלגרם עם grammY, Telegraf או python-telegram-bot. מכסה Bot API v9.5, webhooks מול polling, מקלדות אינליין, פקודות, middleware, תשלומים, Mini Apps, וטיפול בהודעות בעברית עם RTL. השתמשו כשבונים בוט טלגרם, מגדירים webhooks, מטפלים בהודעות בעברית בתוך בוט, או משלבים תשלומים דרך טלגרם. אל תשתמשו לבוטים של וואטסאפ (השתמשו ב-israeli-whatsapp-business), בוטים קוליים (השתמשו ב-hebrew-voice-bot-builder), או עיצוב צ'אטבוטים כללי (השתמשו ב-hebrew-chatbot-builder).",
+    "en": "Build Telegram bots with grammY, Telegraf, or python-telegram-bot. Covers Bot API v9.5 webhooks vs polling, inline keyboards, commands, middleware patterns, payments API, Mini Apps, and Hebrew message handling with RTL support. Use when building a Telegram bot, setting up webhooks, handling Hebrew messages in a bot, or integrating Telegram payments. Do NOT use for WhatsApp bots (use israeli-whatsapp-business), voice bots (use hebrew-voice-bot-builder), or general chatbot design patterns (use hebrew-chatbot-builder)."
+  },
+  "tags": {
+    "he": ["טלגרם", "בוט", "צ'אטבוט", "grammY", "webhooks", "מקלדת אינליין", "תשלומים", "ישראל"],
+    "en": ["telegram", "bot", "chatbot", "grammy", "telegraf", "webhooks", "inline-keyboard", "payments", "israel"]
+  },
+  "author": "skills-il",
+  "version": "1.0.0",
+  "category": "developer-tools",
+  "supported_agents": ["claude-code", "openclaw", "cursor", "windsurf", "opencode", "codex"],
+  "openclaw": {
+    "display_name": "Telegram Bot Builder"
+  }
+}
