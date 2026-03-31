@@ -8,7 +8,7 @@
     "en": "Build Telegram bots with grammY, Telegraf, or python-telegram-bot. Covers Bot API v9.5 webhooks vs polling, inline keyboards, commands, middleware patterns, payments API, Mini Apps, and Hebrew message handling with RTL support. Use when building a Telegram bot, setting up webhooks, handling Hebrew messages in a bot, or integrating Telegram payments. Do NOT use for WhatsApp bots (use israeli-whatsapp-business), voice bots (use hebrew-voice-bot-builder), or general chatbot design patterns (use hebrew-chatbot-builder)."
   },
   "tags": {
-    "he": ["טלגרם", "בוט", "צ'אטבוט", "grammY", "webhooks", "מקלדת אינליין", "תשלומים", "ישראל"],
+    "he": ["טלגרם", "בוט", "צ'אטבוט", "grammY", "Telegraf", "webhooks", "מקלדת אינליין", "תשלומים", "ישראל"],
     "en": ["telegram", "bot", "chatbot", "grammy", "telegraf", "webhooks", "inline-keyboard", "payments", "israel"]
   },
   "author": "skills-il",
