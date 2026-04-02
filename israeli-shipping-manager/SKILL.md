@@ -161,6 +161,16 @@ Result: Israel Post is the most accessible option with public rate calculation. 
 ### Scripts
 - `scripts/format_address.py` -- Validates and formats Israeli shipping addresses per carrier requirements. Checks mikud (ZIP) validity, normalizes Hebrew text, and handles special address types (kibbutz, military, industrial zone). Run: `python scripts/format_address.py --help`
 
+## Recommended MCP Servers
+
+For live package tracking, pair this skill with the Israel Post MCP:
+
+| MCP Server | What it provides | Install |
+|------------|-----------------|---------|
+| **israel-post** | Track packages through Israel Post by tracking number. Returns full delivery history with dates, status actions, branch names, and cities. Supports registered mail (RR), EMS (EE), parcels (CP), and international shipments. No API key required. | [Install israel-post](https://agentskills.co.il/en/mcp/israel-post) |
+
+**IMPORTANT:** Without the `israel-post` MCP installed, this skill CANNOT look up live package tracking status. If a user asks "where is my package?" and the MCP is not available, direct them to check on the carrier's official website. NEVER fabricate package status, pickup location, or delivery information.
+
 ## Gotchas
 
 - **NEVER fabricate package tracking results.** You cannot access any carrier's tracking system. If a user provides a tracking number and asks "where is my package," do NOT invent a status, pickup location, branch name, address, or opening hours. Agents that fabricate tracking data provide dangerously wrong information (e.g., telling a user their package is at a specific store when it was already delivered to a different city). Always direct the user to the carrier's official tracking page.
