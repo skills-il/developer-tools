@@ -161,15 +161,15 @@ Result: Israel Post is the most accessible option with public rate calculation. 
 ### Scripts
 - `scripts/format_address.py` -- Validates and formats Israeli shipping addresses per carrier requirements. Checks mikud (ZIP) validity, normalizes Hebrew text, and handles special address types (kibbutz, military, industrial zone). Run: `python scripts/format_address.py --help`
 
-## Recommended MCP Servers
+## Related Skills
 
-For live package tracking, pair this skill with the Israel Post MCP:
+For live Israel Post package tracking, use the **israel-post-tracking** skill:
 
-| MCP Server | What it provides | Install |
-|------------|-----------------|---------|
-| **israel-post** | Track packages through Israel Post by tracking number. Returns full delivery history with dates, status actions, branch names, and cities. Supports registered mail (RR), EMS (EE), parcels (CP), and international shipments. No API key required. | [Install israel-post](https://agentskills.co.il/en/mcp/israel-post) |
+| Skill | What it does | Link |
+|-------|-------------|------|
+| **Israel Post Tracking** | Track packages via Israel Post using Puppeteer with headless Chrome. One-shot status lookup or ongoing monitoring with WhatsApp notifications on status changes. Requires Google Chrome installed. | [View skill](https://agentskills.co.il/en/skills/government-services/israel-post-tracking) |
 
-**IMPORTANT:** Without the `israel-post` MCP installed, this skill CANNOT look up live package tracking status. If a user asks "where is my package?" and the MCP is not available, direct them to check on the carrier's official website. NEVER fabricate package status, pickup location, or delivery information.
+This shipping-manager skill is a **developer integration guide** for building shipping workflows. It does NOT track packages. If a user asks "where is my package?", either use the `israel-post-tracking` skill (if installed) or direct them to the carrier's official website. NEVER fabricate package status, pickup location, or delivery information.
 
 ## Gotchas
 
