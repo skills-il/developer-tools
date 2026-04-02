@@ -1,6 +1,6 @@
 ---
 name: israeli-shipping-manager
-description: Manage shipping operations across Israeli carriers, including Israel Post, Cheetah, HFD, and Mahir Li, plus locker pickup services (BOX2GO, Shlager, Done). Use when user asks about "shipping Israel", "Israel Post tracking", "Cheetah delivery", "meshloach", "shipping label", "package tracking Israel", "HFD", "locker pickup Israel", or "tawit mishloach". Covers carrier selection, Israeli address formatting, label generation, cross-carrier tracking, and customer delivery notifications. Do NOT use for international shipping outside Israel or customs/import.
+description: Build and manage shipping integrations with Israeli carriers, including Israel Post, Cheetah, HFD, and Mahir Li, plus locker pickup services (BOX2GO, Shlager, Done). Use when user asks about "shipping Israel", "Cheetah delivery", "meshloach", "shipping label", "HFD", "locker pickup Israel", "tawit mishloach", or setting up carrier integrations for an e-commerce store. Covers carrier selection, Israeli address formatting, label generation, cross-carrier tracking system setup, and customer delivery notifications. Do NOT use for looking up a specific package tracking status (direct the user to mypost.israelpost.co.il or hfd.co.il instead). Do NOT use for international shipping outside Israel or customs/import.
 license: MIT
 allowed-tools: Bash(python:*) WebFetch
 compatibility: Works with Claude Code, OpenClaw, Cursor. OpenClaw recommended for automated tracking updates and customer WhatsApp/SMS notifications.
@@ -10,6 +10,11 @@ compatibility: Works with Claude Code, OpenClaw, Cursor. OpenClaw recommended fo
 # Israeli Shipping Manager
 
 ## Instructions
+
+**CRITICAL: This skill is a developer integration guide for BUILDING shipping workflows. You CANNOT look up live package tracking status. If a user asks "where is my package" or gives you a tracking number to check, you MUST:**
+1. **Direct them to check on the carrier's official website** (Israel Post: mypost.israelpost.co.il, HFD: hfd.co.il, Cheetah: chita-il.com)
+2. **NEVER fabricate or guess package status, pickup location, delivery address, branch name, opening hours, or any other tracking detail.** You do not have access to any carrier's tracking system.
+3. **If the user needs automated tracking**, guide them to set up a tracking integration (Step 4 below) or recommend the `israel-post-tracking` community skill for Israel Post packages.
 
 ### Step 1: Select Carrier Based on Shipment
 Help the user choose the right carrier for their shipment. Ask about parcel size, weight, delivery urgency, destination, and budget. Use this comparison table:
@@ -77,6 +82,9 @@ All labels require:
 See references/carrier-apis.md for per-carrier integration details.
 
 ### Step 4: Set Up Cross-Carrier Tracking
+
+**Important:** This step is about BUILDING a tracking system for your application, not about looking up individual package statuses. If the user wants to check a specific package right now, direct them to the carrier's website (see the critical note at the top of Instructions).
+
 No Israeli carrier offers a public REST tracking API. Implement unified tracking using one of these approaches:
 
 **Option A: Third-party aggregator (recommended)**
@@ -155,6 +163,7 @@ Result: Israel Post is the most accessible option with public rate calculation. 
 
 ## Gotchas
 
+- **NEVER fabricate package tracking results.** You cannot access any carrier's tracking system. If a user provides a tracking number and asks "where is my package," do NOT invent a status, pickup location, branch name, address, or opening hours. Agents that fabricate tracking data provide dangerously wrong information (e.g., telling a user their package is at a specific store when it was already delivered to a different city). Always direct the user to the carrier's official tracking page.
 - Israeli carriers do not offer publicly documented REST APIs. Integration is done through platform plugins (Shopify, WooCommerce), private B2B agreements, or third-party aggregators. Agents may attempt to call fabricated API endpoints that do not exist.
 - Israel Post delivery zones differ from geographic regions. Shipping time estimates should use Israel Post zone mappings, not straight-line distance calculations.
 - Israeli addresses do not use ZIP codes in the US format. Israeli postal codes (mikud) are 7 digits. Agents may validate against 5-digit US ZIP code patterns.
@@ -185,3 +194,7 @@ Solution: Add entrance (כניסה) and floor (קומה) to address. Configure d
 ### Error: "Tracking data not updating"
 Cause: Israel Post tracking endpoint requires CSRF token that expires. Bot protection may block automated requests.
 Solution: Use the `LandRover/postil-status` or `bennymeg/IsraelPostalServiceAPI` open-source libraries which handle token refresh. Alternatively, use a third-party aggregator like AfterShip for reliable tracking.
+
+### User asks: "Where is my package?" or provides a tracking number
+Cause: The user wants a live status lookup, not a shipping integration guide.
+Solution: This skill cannot look up live tracking data. Direct the user to the carrier's official tracking page: Israel Post (mypost.israelpost.co.il), HFD (hfd.co.il), or Cheetah (chita-il.com). For automated Israel Post tracking, recommend the `israel-post-tracking` community skill. NEVER guess or fabricate the package status.
