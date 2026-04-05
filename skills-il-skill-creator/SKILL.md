@@ -124,7 +124,8 @@ Verify the output:
 - Folder name is kebab-case
 - No spaces, underscores, or capitals
 - Name does not contain "claude" or "anthropic"
-- No README.md inside the folder
+- No README.md inside the skill folder (skill folders must not contain README.md)
+- The **repo-level README.md** (at the root of the category repo) must be written in **English**. This is required because the repo is public on GitHub and the README serves as the entry point for international developers and AI agents. Hebrew content belongs in SKILL_HE.md files inside skill folders, not in the repo README.
 
 ### Step 6: Write the YAML Frontmatter
 
@@ -358,6 +359,7 @@ After validation passes, review against the quality checklist:
 - [ ] `metadata.version` is set (e.g., 1.0.0)
 - [ ] `metadata.tags` has both `he` and `en` arrays of equal length with no empty strings
 - [ ] `creator_name` and `creator_email` collected from user (Step 2)
+- [ ] Repo-level README.md is written in English (not Hebrew)
 
 ### Step 11: Submit Your Skill
 
