@@ -313,6 +313,34 @@ Each script should:
 
 **Update SKILL_HE.md:** Add a matching `## משאבים מצורפים` section with Hebrew descriptions.
 
+### Step 8.5: Add Reference Links Section
+
+Every skill MUST include a `## Reference Links` section (after `## Recommended MCP Servers` or `## Bundled Resources`, before `## Troubleshooting`) with a table of official source URLs used to verify the skill's domain-specific facts.
+
+**Format:**
+```markdown
+## Reference Links
+
+Official sources for verifying and updating the information in this skill:
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Israeli Tax Authority | https://www.gov.il/he/departments/israel_tax_authority | Tax rates, forms, circulars |
+| Kolzchut | https://www.kolzchut.org.il | Rights, entitlements, eligibility |
+```
+
+**Guidelines:**
+- Include 3-6 authoritative links (government sites, official API docs, legal databases)
+- Each link should have a "What to Check" column explaining what to verify there
+- Prefer `.gov.il`, `.org.il`, and institutional sources over blogs
+- Include at least one English-language source when available
+- The Hebrew companion must have a matching `## קישורי עזר` section
+
+**Why this matters:**
+- Users can independently verify claims
+- The fact-check pipeline uses these URLs for automated validation
+- It builds trust by showing the skill's information is grounded in official sources
+
 ### Step 9: Create the Hebrew Companion (SKILL_HE.md)
 
 Create SKILL_HE.md with the same structure but in Hebrew:
@@ -351,7 +379,8 @@ After validation passes, review against the quality checklist:
 - [ ] Instructions are specific and actionable
 - [ ] Examples cover 2+ real scenarios
 - [ ] Troubleshooting covers likely errors
-- [ ] Hebrew companion exists and section structure matches SKILL.md 1:1
+- [ ] Reference Links section with 3-6 verified official source URLs
+- [ ] Hebrew companion exists and section structure matches SKILL.md 1:1 (including `## קישורי עזר`)
 - [ ] At least 2 reference files in `references/` with "Consult when..." guidance
 - [ ] At least 1 helper script in `scripts/` with argparse and `--help`
 - [ ] No security issues (secrets, injection vectors)
