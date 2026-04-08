@@ -125,14 +125,14 @@ Buttons: [URL: "מעקב משלוח" -> https://tracking.example.com/{{1}}]
 
 ### Sending Messages
 
-**Base URL:** `https://graph.facebook.com/v18.0/{PHONE_NUMBER_ID}/messages`
+**Base URL:** `https://graph.facebook.com/v23.0/{PHONE_NUMBER_ID}/messages`
 
 **Authentication:** Bearer token in Authorization header
 
 ### Send Text Message
 
 ```bash
-curl -X POST "https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages" \
+curl -X POST "https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -146,7 +146,7 @@ curl -X POST "https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages" \
 ### Send Template Message
 
 ```bash
-curl -X POST "https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages" \
+curl -X POST "https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -172,7 +172,7 @@ curl -X POST "https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages" \
 ### Send Interactive Buttons
 
 ```bash
-curl -X POST "https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages" \
+curl -X POST "https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -196,7 +196,7 @@ curl -X POST "https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages" \
 ### Send Interactive List
 
 ```bash
-curl -X POST "https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages" \
+curl -X POST "https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{

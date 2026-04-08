@@ -3,52 +3,18 @@ name: hebrew-chatbot-builder
 description: >-
   Build conversational AI chatbots with native Hebrew support, including
   WhatsApp Business API integration, Telegram bot scaffolding, web chat
-  widgets, Hebrew NLP patterns, and RTL chat UI components. Use when user
-  asks to "build a Hebrew chatbot", "integrate WhatsApp bot in Hebrew",
-  "binui bot b'ivrit", or design conversation flows for Hebrew speakers.
-  Covers intent detection for Hebrew morphology, entity extraction for
-  Israeli data (NIS amounts, phone numbers, dates), and gender-aware
-  responses. Do NOT use for non-Hebrew chatbots or general NLP pipelines
-  without a Hebrew component.
+  widgets, Hebrew NLP patterns, and RTL chat UI components. Prevents common
+  Hebrew chatbot mistakes like broken RTL alignment, incorrect gender
+  inflections, and poor tokenization of prefixed prepositions that break
+  intent detection. Use when user asks to "build a Hebrew chatbot",
+  "integrate WhatsApp bot in Hebrew", "binui bot b'ivrit", or design
+  conversation flows for Hebrew speakers. Covers intent detection for
+  Hebrew morphology, entity extraction for Israeli data (NIS amounts,
+  phone numbers, dates), and gender-aware responses. Do NOT use for
+  non-Hebrew chatbots or general NLP pipelines without a Hebrew component.
 license: MIT
 allowed-tools: 'Bash(python:*), Bash(psql:*)'
 compatibility: 'No special requirements. Works with Claude Code, Cursor, Windsurf.'
-metadata:
-  author: skills-il
-  version: 1.0.0
-  category: developer-tools
-  tags:
-    he:
-      - צ'אטבוט
-      - עברית
-      - וואטסאפ
-      - טלגרם
-      - ישראל
-    en:
-      - chatbot
-      - hebrew
-      - whatsapp
-      - telegram
-      - israel
-  display_name:
-    he: "בונה צ'אטבוט בעברית"
-    en: Hebrew Chatbot Builder
-  display_description:
-    he: >-
-      בניית צ'אטבוטים של AI עם תמיכה מקורית בעברית, כולל אינטגרציה עם
-      WhatsApp Business API, בניית בוט לטלגרם, ווידג'ט צ'אט לאתרים, תבניות
-      NLP בעברית, ורכיבי ממשק צ'אט RTL.
-    en: >-
-      Build conversational AI chatbots with native Hebrew support, including
-      WhatsApp Business API integration, Telegram bot scaffolding, web chat
-      widgets, Hebrew NLP patterns, and RTL chat UI components.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
 ---
 
 # בונה צ'אטבוט בעברית
@@ -143,7 +109,7 @@ import requests
 
 def send_template_message(phone_number: str, template_data: dict):
     """שליחת הודעת תבנית בוואטסאפ בעברית."""
-    url = f"https://graph.facebook.com/v21.0/{PHONE_NUMBER_ID}/messages"
+    url = f"https://graph.facebook.com/v23.0/{PHONE_NUMBER_ID}/messages"
 
     payload = {
         "messaging_product": "whatsapp",
@@ -619,3 +585,13 @@ async def handoff_to_human(user_id: str, context: dict):
 - ברכות נפוצות בעברית משתנות לפי שעת היום: "בוקר טוב" (בוקר), "צהריים טובים" (צהריים), "ערב טוב" (ערב). סוכנים עלולים להשתמש בברכה אחידה ללא התחשבות בשעה.
 - טוקניזציה של מילים בעברית שונה מאנגלית. אותיות שימוש (ב-, ל-, מ-) מחוברות למילה הבאה. סוכנים עלולים לפצל טוקנים בצורה שגויה ולפגוע בזיהוי כוונות.
 - משתמשים ישראליים מצפים לתקשורת צ'אטבוט לא פורמלית ("דוגרי"). עברית רשמית מדי נשמעת רובוטית ומנוכרת. סוכנים עלולים ליצור עברית פורמלית שמרחיקה משתמשים ישראליים.
+
+## קישורי עזר
+
+| מקור | קישור | מה לבדוק |
+|------|--------|----------|
+| WhatsApp Cloud API Docs | https://developers.facebook.com/docs/whatsapp/cloud-api/ | גרסת API, סוגי הודעות, פורמט webhook |
+| Meta Graph API Changelog | https://developers.facebook.com/docs/graph-api/changelog/ | גרסת API עדכנית, שינויים שוברים |
+| Telegram Bot API Docs | https://core.telegram.org/bots/api | מתודות Bot API, מקלדות inline, הגדרת webhook |
+| python-telegram-bot Docs | https://docs.python-telegram-bot.org/ | גרסת ספרייה, שינויים ב-API אסינכרוני |
+| Meta Business Suite | https://business.facebook.com/ | יצירת תבניות, הגדרת מספר טלפון |

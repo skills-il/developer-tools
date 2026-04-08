@@ -1,6 +1,6 @@
 {
   "author": "skills-il",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "category": "developer-tools",
   "tags": {
     "he": [
@@ -23,8 +23,8 @@
     "en": "Hebrew Chatbot Builder"
   },
   "display_description": {
-    "he": "בניית צ'אטבוטים של AI עם תמיכה מקורית בעברית, כולל אינטגרציה עם WhatsApp Business API, בניית בוט לטלגרם, ווידג'ט צ'אט לאתרים, תבניות NLP בעברית, ורכיבי ממשק צ'אט RTL.",
-    "en": "Build conversational AI chatbots with native Hebrew support, including WhatsApp Business API integration, Telegram bot scaffolding, web chat widgets, Hebrew NLP patterns, and RTL chat UI components."
+    "he": "בניית צ'אטבוטים של AI עם תמיכה מקורית בעברית, כולל אינטגרציה עם WhatsApp Business API, בניית בוט לטלגרם, ווידג'ט צ'אט לאתרים, דפוסי NLP בעברית, ורכיבי ממשק צ'אט RTL. מונע שגיאות נפוצות כמו יישור RTL שבור, הטיות מגדר שגויות, וטוקניזציה לקויה של אותיות שימוש שפוגעת בזיהוי כוונות. לא מיועד לצ'אטבוטים ללא רכיב עברית.",
+    "en": "Build conversational AI chatbots with native Hebrew support, including WhatsApp Business API integration, Telegram bot scaffolding, web chat widgets, Hebrew NLP patterns, and RTL chat UI components. Prevents common Hebrew chatbot mistakes like broken RTL alignment, incorrect gender inflections, and poor tokenization of prefixed prepositions. Do NOT use for non-Hebrew chatbots."
   },
   "supported_agents": [
     "claude-code",

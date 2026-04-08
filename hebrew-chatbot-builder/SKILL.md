@@ -1,6 +1,6 @@
 ---
 name: hebrew-chatbot-builder
-description: Build conversational AI chatbots with native Hebrew support, including WhatsApp Business API integration, Telegram bot scaffolding, web chat widgets, Hebrew NLP patterns, and RTL chat UI components. Use when user asks to "build a Hebrew chatbot", "integrate WhatsApp bot in Hebrew", "binui bot b'ivrit", or design conversation flows for Hebrew speakers. Covers intent detection for Hebrew morphology, entity extraction for Israeli data (NIS amounts, phone numbers, dates), and gender-aware responses. Do NOT use for non-Hebrew chatbots or general NLP pipelines without a Hebrew component.
+description: Build conversational AI chatbots with native Hebrew support, including WhatsApp Business API integration, Telegram bot scaffolding, web chat widgets, Hebrew NLP patterns, and RTL chat UI components. Prevents common Hebrew chatbot mistakes like broken RTL alignment, incorrect gender inflections, and poor tokenization of prefixed prepositions that break intent detection. Use when user asks to "build a Hebrew chatbot", "integrate WhatsApp bot in Hebrew", "binui bot b'ivrit", or design conversation flows for Hebrew speakers. Covers intent detection for Hebrew morphology, entity extraction for Israeli data (NIS amounts, phone numbers, dates), and gender-aware responses. Do NOT use for non-Hebrew chatbots or general NLP pipelines without a Hebrew component.
 license: MIT
 allowed-tools: Bash(python:*), Bash(psql:*)
 compatibility: No special requirements. Works with Claude Code, Cursor, Windsurf.
@@ -98,7 +98,7 @@ import requests
 
 def send_template_message(phone_number: str, template_data: dict):
     """Send a WhatsApp template message in Hebrew."""
-    url = f"https://graph.facebook.com/v21.0/{PHONE_NUMBER_ID}/messages"
+    url = f"https://graph.facebook.com/v23.0/{PHONE_NUMBER_ID}/messages"
 
     payload = {
         "messaging_product": "whatsapp",
@@ -875,3 +875,13 @@ And reference documents in `references/`:
 - Common Hebrew greetings change by time of day: "בוקר טוב" (morning), "צהריים טובים" (noon), "ערב טוב" (evening). Agents may use a single greeting regardless of time.
 - Hebrew word tokenization differs from English. Prefixed prepositions (ב-, ל-, מ-) are attached to the following word. Agents may split tokens incorrectly, breaking intent detection.
 - Israeli users expect informal chatbot communication ("דוגרי"). Overly formal Hebrew sounds robotic and unnatural. Agents may generate formal Hebrew that alienates Israeli users.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| WhatsApp Cloud API Docs | https://developers.facebook.com/docs/whatsapp/cloud-api/ | API version, message types, webhook format |
+| Meta Graph API Changelog | https://developers.facebook.com/docs/graph-api/changelog/ | Latest API version, breaking changes |
+| Telegram Bot API Docs | https://core.telegram.org/bots/api | Bot API methods, inline keyboards, webhook setup |
+| python-telegram-bot Docs | https://docs.python-telegram-bot.org/ | Library version, async API changes |
+| Meta Business Suite | https://business.facebook.com/ | Template creation, phone number setup |
