@@ -271,6 +271,31 @@ async def start(update: Update, context):
     )
 ```
 
+### הרשאות בוט קבוצתי
+
+לבוטים בקבוצות טלגרם, הגדירו הרשאות מתאימות:
+
+```python
+# ב-BotFather:
+# /setjoingroups - הפעלה/כיבוי הצטרפות לקבוצות
+# /setprivacy - הגדרת מצב פרטיות (מומלץ: מופעל, הבוט רואה רק פקודות)
+
+# טיפול שונה בהודעות קבוצתיות
+async def handle_message(update: Update, context):
+    chat_type = update.effective_chat.type
+
+    if chat_type in ("group", "supergroup"):
+        # בקבוצות, הגיבו רק לפקודות או אזכורים
+        if update.message.text and (
+            update.message.text.startswith("/") or
+            f"@{context.bot.username}" in update.message.text
+        ):
+            await process_group_command(update, context)
+    else:
+        # בצ'אט פרטי, הגיבו לכל ההודעות
+        await process_private_message(update, context)
+```
+
 ## ווידג'ט צ'אט לאתרים
 
 ### פריסת בועות צ'אט RTL
@@ -595,3 +620,21 @@ async def handoff_to_human(user_id: str, context: dict):
 | Telegram Bot API Docs | https://core.telegram.org/bots/api | מתודות Bot API, מקלדות inline, הגדרת webhook |
 | python-telegram-bot Docs | https://docs.python-telegram-bot.org/ | גרסת ספרייה, שינויים ב-API אסינכרוני |
 | Meta Business Suite | https://business.facebook.com/ | יצירת תבניות, הגדרת מספר טלפון |
+
+## פתרון בעיות
+
+**Webhook של וואטסאפ מחזיר 403 אחרי פריסה**
+- סיבה: אימות `X-Hub-Signature-256` נכשל כי `APP_SECRET` לא הוגדר או מכיל ערך שגוי. מטא חותמת את הודעות ה-webhook עם ה-App Secret, לא עם ה-verify token.
+- פתרון: הגדירו את `WHATSAPP_APP_SECRET` לערך מ-Meta Developers > App Settings > Basic > App Secret. הפעילו מחדש את השרת וודאו שהערך תואם בדיוק (ללא רווחים מיותרים).
+
+**תבנית הודעה בעברית נדחתה על ידי מטא**
+- סיבה: גוף התבנית מכיל משתנים ({{1}}) שמרכיבים את כל ההודעה, או משתמש בשפה שיווקית בתבנית מסוג Utility. תהליך הביקורת של מטא מסמן דפוסים כאלה.
+- פתרון: וודאו שטקסט התבנית מכיל תוכן קבוע משמעותי סביב המשתנים. אם נדחתה, בדקו את סיבת הדחייה ב-Meta Business Suite > WhatsApp > Message Templates, התאימו את הנוסח ושלחו מחדש.
+
+**בוט טלגרם מתעלם מהודעות בקבוצות**
+- סיבה: מצב פרטיות מופעל כברירת מחדל ב-BotFather. במצב פרטיות, הבוט מקבל רק הודעות שמתחילות ב-`/` או שמזכירות את הבוט עם @.
+- פתרון: תכננו את הבוט לעבוד עם פקודות בלבד בקבוצות (מומלץ), או כבו את מצב הפרטיות דרך BotFather: `/setprivacy` > Disable. שימו לב שכיבוי הפרטיות גורם לבוט לקבל את כל הודעות הקבוצה.
+
+**טקסט RTL בווידג'ט צ'אט מיושר שמאלה למרות `direction: rtl`**
+- סיבה: אלמנט צאצא דורס את הכיוון, או שה-CSS מוחל על המכולה הלא נכונה. נפוץ בשימוש עם framework שמגדיר `direction: ltr` ברמת ה-body.
+- פתרון: הגדירו `dir="rtl"` על אלמנט ה-HTML של מכולת הצ'אט החיצונית (לא רק ב-CSS). הוסיפו גם `direction: rtl` לשדה הקלט ולכל מכולות בועות ההודעות בנפרד. בדקו עם DevTools בדפדפן היכן הדריסה מתרחשת.

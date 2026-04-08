@@ -10,7 +10,7 @@ A starter Telegram bot with:
 - Bilingual support (Hebrew/English toggle)
 
 Requirements:
-  pip install python-telegram-bot>=20.0
+  pip install python-telegram-bot>=21.0
 
 Environment Variables:
   TELEGRAM_BOT_TOKEN - Bot token from @BotFather

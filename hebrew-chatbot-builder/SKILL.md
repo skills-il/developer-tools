@@ -885,3 +885,21 @@ And reference documents in `references/`:
 | Telegram Bot API Docs | https://core.telegram.org/bots/api | Bot API methods, inline keyboards, webhook setup |
 | python-telegram-bot Docs | https://docs.python-telegram-bot.org/ | Library version, async API changes |
 | Meta Business Suite | https://business.facebook.com/ | Template creation, phone number setup |
+
+## Troubleshooting
+
+**WhatsApp webhook returns 403 after deployment**
+- Cause: The `X-Hub-Signature-256` verification is failing because `APP_SECRET` is not set or uses the wrong value. Meta signs webhook payloads with your App Secret, not the verify token.
+- Solution: Set `WHATSAPP_APP_SECRET` to the value from Meta Developers > App Settings > Basic > App Secret. Restart the server and verify it matches exactly (no trailing whitespace).
+
+**Hebrew text in WhatsApp template rejected by Meta**
+- Cause: Template body contains variables ({{1}}) that make up the entire message, or uses promotional language in a Utility-category template. Meta's review process flags these patterns.
+- Solution: Ensure template text has substantial fixed content around variables. If rejected, check the rejection reason in Meta Business Suite > WhatsApp > Message Templates, adjust the wording, and resubmit.
+
+**Telegram bot ignores messages in groups**
+- Cause: Privacy mode is enabled by default in BotFather. In privacy mode, the bot only receives messages that start with `/` or mention the bot by @username.
+- Solution: Either design your bot to work with commands only in groups (recommended), or disable privacy mode via BotFather: `/setprivacy` > Disable. Note that disabling privacy means the bot receives all group messages.
+
+**RTL chat widget text aligns left despite `direction: rtl`**
+- Cause: A child element overrides the direction, or the CSS is applied to the wrong container. Common when using a UI framework that sets `direction: ltr` at the body level.
+- Solution: Set `dir="rtl"` on the outermost chat container HTML element (not just CSS). Also add `direction: rtl` to the input field and any message bubble containers individually. Inspect with browser DevTools to find where the override occurs.
