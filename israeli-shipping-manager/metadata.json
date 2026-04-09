@@ -36,7 +36,8 @@
     "cline",
     "aider",
     "continue",
-    "copilot"
+    "copilot",
+    "gemini-cli"
   ],
   "openclaw": {
     "requires": {
