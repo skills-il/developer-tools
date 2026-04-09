@@ -67,17 +67,19 @@ Cross-reference Zap results with direct retailer websites, as some retailers off
 For products that may be cheaper abroad, compare:
 
 1. **AliExpress / Amazon Global**: Check the product price including shipping to Israel
-2. **Customs duty calculation**: Products above 150 USD (approximately 550 NIS) are subject to customs duty and VAT (threshold doubled from $75 in January 2026):
-   - Standard rate: 12% customs + 18% VAT (applied on product + shipping + customs)
-   - Electronics: Often reduced or zero customs duty, but VAT still applies
-   - The effective additional cost is approximately 18-30% of the declared value
+2. **Customs duty calculation** (thresholds updated February 25, 2026 via executive order, raised from the previous $75 limit):
+   - **Up to 130 USD**: Fully exempt from customs, VAT, and purchase tax
+   - **130-500 USD**: VAT only (18%), no customs duty
+   - **Above 500 USD**: Full customs + VAT + purchase tax (where applicable). Standard customs rate: 12% + 18% VAT (applied on product + shipping + customs)
+   - Electronics: Often reduced or zero customs duty, but VAT still applies above the $130 threshold
+   - The effective additional cost for products above $130 is approximately 18-30% of the declared value
 3. **Warranty considerations**: Products bought internationally typically have no local warranty. Israeli retailers are required by law to provide warranty (minimum 1 year for electronics).
 4. **Delivery time**: Local purchase is 1-5 days. International shipping is 2-6 weeks.
 
 **Recommendation framework**:
 - Buy locally if the price difference is less than 20% (warranty + delivery time value)
 - Buy internationally if the price difference exceeds 30% and warranty is not critical
-- For products priced under 150 USD internationally, always check AliExpress (no customs duty or VAT)
+- For products priced under 130 USD internationally, always check AliExpress (no customs duty or VAT)
 
 ### Step 5: Leverage Price Tracking and Coupon Tools
 
@@ -127,7 +129,7 @@ Actions:
 1. Search Zap.co.il for "Samsung Galaxy S24 Ultra" to get the price comparison across retailers
 2. Check KSP directly for any exclusive bundles or price-match offers
 3. Check iDigital for any trade-in promotions
-4. Compare with Amazon.com price + estimated customs (product over 150 USD threshold)
+4. Compare with Amazon.com price + estimated customs (product over 130 USD threshold)
 5. Check if TopCash offers cashback on any of the retailers
 
 Result: Present a table with prices from Zap (aggregated), KSP, iDigital, Ivory, and Amazon (with customs estimate). Recommend the retailer offering the best combination of price, warranty, and delivery. Note the 14-day online return policy.
@@ -150,7 +152,7 @@ Result: Recommend 2-3 models at different price points. Include total cost of ow
 User says: "Should I buy Sony WH-1000XM5 headphones from Amazon or locally?"
 
 Actions:
-1. Check current price on Amazon.com and calculate landed cost (product + shipping + customs if over 150 USD)
+1. Check current price on Amazon.com and calculate landed cost (product + shipping + customs/VAT if over 130 USD)
 2. Search Zap.co.il for current Israeli prices
 3. Check KSP price-match policy applicability
 4. Compare warranty terms: Amazon (international warranty, no local service) vs. local retailer (full local warranty)
@@ -161,7 +163,7 @@ Result: Present side-by-side comparison showing Amazon price with customs estima
 
 - All Israeli consumer prices must include 18% VAT by law. Agents may scrape or compare prices excluding VAT, producing incorrect comparisons.
 - Israeli price comparison sites (Zap, Pricez) list prices in NIS. Agents may convert to USD for comparison, which introduces exchange rate fluctuations that mislead users.
-- The personal import duty-free threshold was doubled from $75 to $150 in January 2026. Agents using older training data may still reference the $75 limit, producing incorrect import cost estimates.
+- The personal import duty-free threshold was raised from $75 to $130 via executive order effective February 25, 2026 (a $150 proposal was rejected by the Knesset). Agents using older training data may still reference the $75 or $150 limits, producing incorrect import cost estimates. The current tiers are: up to $130 = fully exempt, $130-$500 = VAT only (18%), above $500 = full customs + VAT.
 - Zap.co.il prices are cached and may lag behind actual retailer prices by hours or days. Agents must verify the final price on the retailer's own website before presenting a recommendation.
 
 ## Troubleshooting
