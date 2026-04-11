@@ -351,6 +351,41 @@ Create SKILL_HE.md with the same structure but in Hebrew:
 
 The Hebrew file uses the same frontmatter as SKILL.md (frontmatter stays in English).
 
+### Step 9.5: Validate All Links (MANDATORY)
+
+Before running the validation script, verify that every URL in the skill content actually resolves. Broken links in published skills erode trust and cause the automated fact-check pipeline to flag false positives.
+
+**Step 1: Extract all URLs** from all skill files:
+```bash
+grep -rEoh 'https?://[^ )>"'\'']+' <skill-name>/ | sort -u > /tmp/<skill-name>-urls.txt
+cat /tmp/<skill-name>-urls.txt
+```
+
+**Step 2: Check each URL returns HTTP 200:**
+```bash
+while IFS= read -r url; do
+  status=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 10 "$url" 2>/dev/null)
+  [ "$status" != "200" ] && echo "[$status] $url"
+done < /tmp/<skill-name>-urls.txt
+```
+
+If no output, all links are valid. If any lines appear, fix them:
+
+| HTTP Status | Action |
+|-------------|--------|
+| 301/302 | Update URL to the final redirect destination |
+| 403 | May be geo-blocked or bot-blocked. Verify manually in a browser. If it works in a browser, keep it |
+| 404 | **BROKEN** -- find the correct URL via WebSearch, or remove the link |
+| 5xx | Retry once. If still failing, the service may be down temporarily. Note it |
+| Timeout / DNS failure | **BROKEN** -- the domain may no longer exist. Remove all references to this URL |
+
+**Pay special attention to:**
+- `.gov.il` URLs (Israeli government sites restructure frequently)
+- Israeli startup domains (`.co.il`) that may have gone offline
+- Reference Links table entries (Step 8.5) -- these are the most visible links to users
+
+**Do NOT proceed to Step 10 with broken links.** Fix every broken URL first.
+
 ### Step 10: Validate and Prepare for Submission
 
 Run the validation script:
@@ -375,6 +410,7 @@ The script checks 9 rules:
 
 After validation passes, review against the quality checklist:
 - [ ] Domain facts verified against official sources (Step 4)
+- [ ] All URLs return HTTP 200 (Step 9.5)
 - [ ] Description includes WHAT and WHEN
 - [ ] Instructions are specific and actionable
 - [ ] Examples cover 2+ real scenarios
