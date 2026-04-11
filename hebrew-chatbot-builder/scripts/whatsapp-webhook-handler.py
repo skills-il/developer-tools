@@ -462,9 +462,19 @@ def health_check():
 # =============================================================================
 
 if __name__ == "__main__":
+    missing = []
     if not VERIFY_TOKEN:
-        logger.warning("WHATSAPP_VERIFY_TOKEN not set")
+        missing.append("WHATSAPP_VERIFY_TOKEN")
+    if not APP_SECRET:
+        missing.append("WHATSAPP_APP_SECRET")
     if not ACCESS_TOKEN:
-        logger.warning("WHATSAPP_ACCESS_TOKEN not set")
+        missing.append("WHATSAPP_ACCESS_TOKEN")
+    if not PHONE_NUMBER_ID:
+        missing.append("WHATSAPP_PHONE_ID")
+
+    if missing:
+        logger.error("Missing required environment variables: %s", ", ".join(missing))
+        logger.error("Set them before starting the server. See docstring for details.")
+        sys.exit(1)
 
     app.run(host="0.0.0.0", port=8080, debug=True)
