@@ -36,6 +36,14 @@
     "emoji": "🛒"
   },
   "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "openclaw",
+    "antigravity",
     "gemini-cli"
   ]
 }
