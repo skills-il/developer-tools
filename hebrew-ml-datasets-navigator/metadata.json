@@ -1,0 +1,45 @@
+{
+  "author": "skills-il",
+  "version": "1.0.0",
+  "category": "developer-tools",
+  "tags": {
+    "he": [
+      "datasets",
+      "ml",
+      "עברית",
+      "יידיש",
+      "huggingface",
+      "ivrit-ai",
+      "dicta",
+      "nnlp-il",
+      "רישוי",
+      "ישראל"
+    ],
+    "en": [
+      "datasets",
+      "ml",
+      "hebrew",
+      "yiddish",
+      "huggingface",
+      "ivrit-ai",
+      "dicta",
+      "nnlp-il",
+      "licensing",
+      "israel"
+    ]
+  },
+  "display_name": {
+    "he": "ניווט במאגרי ML עבריים",
+    "en": "Hebrew ML Datasets Navigator"
+  },
+  "display_description": {
+    "he": "נווטו את הנוף המפוצל של מאגרי ML ומודלים בעברית וביידיש: ivrit.ai (יותר מ-22 אלף שעות אודיו עברי, מודלי ASR של whisper-large-v3, מודלי יידיש), Dicta (משפחת DictaLM 3.0, וריאנטים של DictaBERT, HeQ), התכנית הלאומית ל-NLP (HebrewSentiment, HebNLI), AlephBERT, ומליאות הכנסת. עוזר לחוקרים ומהנדסי ML לבחור את הדאטהסט הנכון לפי משימה, רישיון (מסחרי או מחקר), כיסוי רגיסטר עברי, והתאמת דאטהסט למודל. השתמשו כשבוחרים נתוני אימון לפרויקט NLP או ASR עברי, מוודאים תאימות רישיון למוצר מסחרי, מחפשים baseline למשימה עברית, או בודקים משאבי ML ליידיש. אל תשתמשו למאגרי NLP ערבי, חיפוש כללי ב-HuggingFace Hub, או בחירת דאטהסט OCR עברי (hebrew-ocr-forms).",
+    "en": "Navigate the fragmented landscape of Hebrew and Yiddish ML datasets and models. Covers ivrit.ai (22K+ hours of Hebrew audio, whisper-large-v3 ASR variants, Yiddish models), Dicta (DictaLM 3.0 LLM family, DictaBERT variants, HeQ reading comprehension), the Israeli National NLP Program / NNLP-IL (HebrewSentiment, HebNLI), AlephBERT, and Knesset Plenums. Helps researchers and ML engineers pick the right dataset for a task by use case, license (commercial vs research), Hebrew register coverage, and model-dataset pairing. Use when choosing training data for a Hebrew NLP or ASR project, verifying license compatibility for a commercial product, finding a baseline model for a Hebrew downstream task, or exploring Yiddish ML resources. Do NOT use for Arabic NLP, general HuggingFace dataset discovery, or Hebrew OCR dataset selection (use hebrew-ocr-forms)."
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "codex"
+  ],
+  "openclaw": false
+}
