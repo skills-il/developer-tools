@@ -84,7 +84,7 @@ Organization: `huggingface.co/dicta-il`
 | dictabert-morph | `dicta-il/dictabert-morph` | Morphological analysis | POS, features |
 | dictabert-heq | `dicta-il/dictabert-heq` | Question answering | Fine-tuned on HeQ |
 | dictabert-sentiment | `dicta-il/dictabert-sentiment` | Sentiment classification | Fine-tuned on HebrewSentiment |
-| dictabert-ner | `dicta-il/dictabert-ner` | Named entity recognition | If available |
+| dictabert-ner | `dicta-il/dictabert-ner` | Named entity recognition | Fine-tuned for Hebrew NER. Recognizes PER, GPE, TIMEX, TTL. CC-BY-4.0. |
 
 ### Other Hebrew BERT models
 
