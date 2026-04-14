@@ -1,0 +1,442 @@
+EREZ KALMAN ATTRIBUTION COPYLEFT LICENSE v2.2 (EKACL-2.2)
+======================================================
+
+Copyright © 2025 Erez Kalman / KSEC
+
+GRANT OF LICENSE
+You are granted a free, royalty-free license to use, modify, and distribute
+this Software ("Licensed Work") under the following conditions:
+
+================================================================================
+SECTION 1: USE RIGHTS
+================================================================================
+
+FREE (NON-COMMERCIAL) USE:
+✓ Use without commercial license from copyright holder
+✓ Modify and create enhancements/derivatives
+✓ Distribute to others under this license
+✓ Use in private, internal, or non-commercial projects
+✓ Accept support and new features voluntarily
+
+RESTRICTIONS ON FREE USE:
+✗ Cannot restrict enhancements; all derivatives must remain fully modifiable
+✗ Cannot use for ANY commercial purposes without explicit license agreement
+✗ Cannot monetize directly or indirectly
+✗ Cannot restrict derivatives; must remain free forever
+
+COMMERCIAL USE DEFINITION:
+Commercial use includes but is not limited to:
+- For-profit businesses and companies
+- Government agencies and departments
+- Non-profit organizations (NPOs)
+- Non-governmental organizations (NGOs)
+- Educational institutions using for institutional benefit
+- Any entity generating revenue or institutional benefit from use
+- Incorporation into products or services (even free services)
+
+WITHOUT EXPLICIT COMMERCIAL LICENSE AGREEMENT:
+All of the above entities are PROHIBITED from using Licensed Work.
+
+LICENSEES WHO QUALIFY FOR FREE USE:
+- Individual developers for personal projects
+- Community projects with no institutional entity
+- Projects explicitly for educational learning (non-institutional)
+- Personal research and hobby projects
+
+================================================================================
+SECTION 2: SOURCE CODE DISCLOSURE & CONNECTED SERVICES
+================================================================================
+
+FULL SOURCE DISCLOSURE REQUIREMENT:
+This license applies not only to direct uses but to all connected services,
+architectures, and software components regardless of where the Licensed Work
+is deployed (client-side, server-side, backend services, APIs, etc.).
+
+You must:
+1. Publicly disclose complete source code of ANY software or service that:
+   - Incorporates the Licensed Work (directly or indirectly)
+   - Connects to, integrates with, or depends on software using the Licensed Work
+   - Provides services that rely on systems using the Licensed Work
+   - Includes server-side or backend systems serving client-side implementations
+
+2. Make source code available:
+   - Publicly accessible (GitHub, GitLab, or equivalent)
+   - In a format allowing full review and modification
+   - Including all dependencies, build scripts, and deployment configuration
+   - With commit history preserved
+
+3. Include with source code:
+   - This license (EKACL-2.2) unchanged
+   - Copyright notice and attribution
+   - Instructions for building, deploying, and running
+
+SCOPE CLARIFICATION:
+If this Licensed Work is used in a client-side component, all connected
+server-side components, APIs, backends, databases, and services must also
+comply with these terms.
+
+================================================================================
+SECTION 3: LICENSE & ATTRIBUTION REQUIREMENTS
+================================================================================
+
+MANDATORY INCLUSIONS:
+Every copy, derivative, enhancement, and distribution must include:
+
+1. LICENSE FILE:
+   - Original EKACL-2.2 license text (this file) unchanged and complete
+   - In source distributions: LICENSE or LICENSE.txt in root
+   - In binary/executable packages: Accessible from Help/About/Legal notices
+   - In online services: Privacy/Legal/About pages
+   - In documentation: README, docs, help systems
+   - In repositories: LICENSE file in root directory
+   - FULL license must be included everywhere (not links or summaries)
+
+2. FILE HEADERS:
+   Every source code file (where applicable) must contain:
+   ```
+   Copyright © 2025 Erez Kalman / KSEC
+   Licensed under EKACL-2.2 (Erez Kalman Attribution Copyleft License v2.2)
+   See LICENSE file for full terms.
+   [Original/Modified indicator if derivative]
+   ```
+
+3. DOCUMENTATION:
+   README, docs, and user-facing materials must state:
+   - "This software uses or is derived from Licensed Work by Erez Kalman / KSEC"
+   - Full EKACL-2.2 license text or direct link to complete license
+   - Link to source code repository
+   - FULL license text must be included in documentation
+
+4. USER-FACING ATTRIBUTION:
+   In application UI, help pages, about dialogs, footers:
+   - Credit: "Powered by or Derived from work by Erez Kalman / KSEC"
+   - License reference visible to end users
+   - Link to full EKACL-2.2 license text
+
+5. HELP & SUPPORT SYSTEMS:
+   - Help documentation must include full EKACL-2.2 license
+   - Support materials must reference license
+   - All user-accessible documentation must contain complete license
+
+================================================================================
+SECTION 4: ENHANCEMENTS & DERIVATIVES OWNERSHIP
+================================================================================
+
+AUTOMATIC ASSIGNMENT:
+All enhancements, modifications, derivatives, improvements, and any derivative
+works made to or based on the Licensed Work automatically become owned
+exclusively by Erez Kalman / KSEC (copyright holder).
+
+OWNERSHIP AGREEMENT:
+You hereby agree and assign that:
+1. All enhancements/derivatives of this Licensed Work are owned exclusively
+   by Erez Kalman / KSEC
+2. You retain right to use enhancements under EKACL-2.2 terms only
+3. Copyright holder may incorporate enhancements into Licensed Work without
+   further consent or compensation
+4. Copyright holder may relicense enhancements at sole discretion
+5. Copyright holder owns all improvements, bug fixes, features, and variants
+6. You have no ownership claim to enhancements or derivatives
+
+DERIVATIVE WORK DEFINITION:
+Includes: bug fixes, features, optimizations, translations, packaging,
+deployment improvements, API enhancements, architectural improvements,
+performance optimizations, and any modifications to Licensed Work.
+
+NON-RESTRICTION OF ENHANCEMENTS:
+You may NOT restrict enhancements or derivatives. You must:
+- Allow others to modify and improve the work
+- Distribute modifications under EKACL-2.2
+- Not prevent derivative creation or distribution
+- Maintain full access to all enhancements
+
+================================================================================
+SECTION 5: COMMERCIAL LICENSING & MONETIZATION
+================================================================================
+
+FREE USE MONETIZATION (INDIVIDUALS ONLY):
+Without commercial license, individual developers may:
+✓ Charge for support, training, consulting, or professional services
+✓ Offer prioritized feature development (as service, not product)
+✓ Provide hosting, deployment, or managed services
+✓ Accept donations
+
+FOR ALL ORGANIZATIONS/INSTITUTIONS/COMMERCIAL ENTITIES:
+Monetization is PROHIBITED without commercial license. This includes:
+✗ Government agencies
+✗ Non-profit organizations (NPOs)
+✗ Non-governmental organizations (NGOs)
+✗ Educational institutions
+✗ For-profit businesses
+
+BUT YOU MAY NOT (ALL USERS):
+✗ Charge for the software itself (free or commercial user)
+✗ Restrict features to paying customers
+✗ Create proprietary versions for any clients
+✗ Require proprietary licensing for use
+✗ Restrict access to code/software/distribution/documentation
+✗ Require registration or verification for access to code
+✗ Require registration or verification for download of software/distribution
+✗ Prevent public access to source code or documentation
+✗ Require email, account creation, or any form of gating for accessing:
+  - Source code
+  - Software/distribution
+  - Documentation
+  - Help/support materials
+✗ Restrict redistribution of the licensed work
+✗ Prevent others from accessing, downloading, or using the software
+
+ACCESS MUST BE:
+- Fully public and unrestricted
+- Easily accessible without barriers
+- Downloadable without registration
+- Available in distribution packages without gating
+- Accessible in repositories without authentication (read access)
+
+COMMERCIAL LICENSE:
+To use in proprietary, restricted, or commercial contexts (including any
+entity other than individual personal projects), you must obtain explicit
+written commercial license agreement from copyright holder.
+
+PERPETUAL FREE COMMITMENT:
+If you choose to remain unlicensed (free use) and qualify, you agree:
+1. All software/services using Licensed Work remain free forever
+2. Full source code remains publicly accessible forever (no gates, accounts, etc.)
+3. This commitment applies to all future enhancements and derivatives
+4. Even if you discontinue use of Licensed Work, commitments continue
+5. Successors and assignees inherit these obligations
+
+================================================================================
+SECTION 6: DISTRIBUTION & FORK REQUIREMENTS
+================================================================================
+
+COMPREHENSIVE DERIVATIVE REQUIREMENTS:
+Any fork, copy, enhancement, use, derivative, or distribution (partially or
+fully, including using concepts, ideas, architecture, algorithms, design
+patterns, or any intellectual property derived from Licensed Work) must:
+
+1. Retain full EKACL-2.2 license unchanged
+2. Maintain complete source code availability with no access restrictions
+3. Preserve all copyright and attribution notices
+4. Include instructions for obtaining latest version
+5. Allow redistribution under same terms by others
+6. Not restrict enhancements or further derivatives
+7. Include full EKACL-2.2 license text in all distributions
+8. Publicly disclose all source code without gates or registration
+9. Maintain all terms of this license regardless of changes to the work
+
+DERIVATIVE CHAINS:
+If someone creates a derivative of your derivative, it must also:
+- Be free for all non-commercial use (individuals only)
+- Include full source code with no access restrictions
+- Maintain EKACL-2.2 license unchanged
+- Provide attribution to original and all prior authors
+- Not restrict further derivatives
+- Comply with all terms herein
+
+CONCEPT & ARCHITECTURE DERIVATIVES:
+Using concepts, ideas, architectural patterns, or design approaches derived
+from Licensed Work creates a derivative. You must:
+- Acknowledge the derivation
+- Apply EKACL-2.2 license
+- Provide full source disclosure
+- Maintain all license requirements
+
+================================================================================
+SECTION 7: NO WARRANTIES & LIABILITY DISCLAIMER
+================================================================================
+
+"AS-IS" WARRANTY DISCLAIMER:
+The Licensed Work is provided "as-is" without any warranties, express or
+implied, including warranties of merchantability, fitness for particular
+purpose, title, or non-infringement.
+
+LIMITATION OF LIABILITY:
+In no event shall copyright holder or contributors be liable for:
+- Direct, indirect, incidental, special, consequential, or punitive damages
+- Loss of profits, revenue, data, or business
+- Cost of substitute goods or services
+- Any claim arising from use or inability to use the Licensed Work
+
+ASSUMPTION OF RISK:
+You assume full responsibility and risk for:
+- Selection and use of Licensed Work
+- Results and consequences of use
+- Compliance with all applicable laws and regulations
+
+================================================================================
+SECTION 8: ENFORCEMENT & TERMINATION
+================================================================================
+
+ENFORCEMENT:
+Copyright holder retains all rights to:
+- Monitor compliance with this license
+- Demand source code disclosure verification
+- Audit public access and distribution
+- Take legal action for violations
+- Seek damages for unauthorized commercial use or access restrictions
+- Require immediate remediation of violations
+
+TERMINATION:
+Your rights under this license immediately terminate if you:
+1. Breach any term of this agreement
+2. Use Licensed Work for commercial purposes without license
+3. Fail to maintain source code disclosure
+4. Restrict access to source code or software
+5. Require registration/verification for accessing code, software, or docs
+6. Remove or alter license/attribution notices
+7. Attempt to restrict downstream users or enhancements
+8. Restrict redistribution or derivative creation
+9. Fail to comply with any directive issued by copyright holder, including but
+   not limited to: adding/moving/modifying files, adding notices to website,
+   sending emails, publishing information, or any other requirement specified
+   by copyright holder
+
+Upon termination:
+- You must cease all use and distribution
+- Copies already distributed remain under EKACL-2.2
+- You remain liable for past violations
+- Copyright holder may pursue additional remedies
+
+CURE PERIOD & REMEDIATION:
+If notified of breach, you have 30 days to:
+1. Cure ALL violations per EKACL-2.2 requirements
+2. Make any publicly requested disclosures or publications
+3. Restore full public access to code/software/documentation
+4. Remove all access restrictions and gates
+5. Provide full compliance certification to copyright holder
+6. Complete all directives issued by copyright holder, including but not limited
+   to: adding/moving files, modifying code/documentation, adding notices to
+   websites, sending emails, publishing information, or any other requirement
+7. Obtain commercial license if required by this license or if other
+   permissions/terms are desired
+
+Cure does not withdraw or lessen any license requirements herein. All terms
+of EKACL-2.2 remain fully in effect. Copyright holder may impose additional
+remediation requirements beyond this license terms.
+
+SURVIVAL:
+All enforcement, compliance, source disclosure, attribution, and derivative
+ownership sections survive termination.
+
+================================================================================
+SECTION 9: COMMERCIAL LICENSE TERMS
+================================================================================
+
+COMMERCIAL LICENSE AGREEMENT:
+A separate written agreement may be negotiated with copyright holder for:
+- Commercial use by organizations/institutions/government/NPOs/NGOs
+- Relief from specific EKACL-2.2 requirements
+- Custom licensing terms
+- Proprietary use or restrictions
+
+SCOPE:
+A commercial license will detail explicitly:
+- What use is permitted
+- Which EKACL-2.2 requirements are waived (if any)
+- Source disclosure requirements (if modified)
+- Attribution requirements (if modified)
+- Derivative ownership terms (if modified)
+- Other permissions, restrictions, or requirements as determined by copyright holder
+
+EKACL-2.2 PRECEDENCE:
+Without explicit written commercial license, EKACL-2.2 terms apply in full.
+Any conflict between EKACL-2.2 and commercial license is resolved in favor of
+the more restrictive terms to the benefit of copyright holder.
+
+================================================================================
+SECTION 10: RELATIONSHIP TO OTHER LICENSES
+================================================================================
+
+COMPATIBILITY:
+This software may incorporate or depend on software licensed under other
+licenses (MIT, GPL, Apache, etc.). Comply with all applicable licenses.
+
+PRECEDENCE:
+In case of conflict between EKACL-2.2 and other licenses:
+- EKACL-2.2 terms apply to Licensed Work specifically
+- Other license terms apply to incorporated software
+- Most restrictive terms control overall distribution
+- EKACL-2.2 requirements are additional and must be met in full
+
+================================================================================
+SECTION 11: GOVERNING LAW & CONTACT
+================================================================================
+
+GOVERNING LAW:
+This license is governed by the laws of the jurisdiction in which the
+copyright holder resides, without regard to conflict of law principles.
+
+DISPUTE RESOLUTION:
+Any disputes arising from or related to this license shall be resolved at the
+sole discretion of copyright holder through mediation, arbitration, and/or
+court proceedings as follows:
+
+COPYRIGHT HOLDER DISCRETION:
+1. RESOLUTION METHOD SELECTION
+   Copyright holder may at any time, in sole discretion, choose:
+   - Mediation only
+   - Arbitration only (skipping mediation)
+   - Court proceedings
+   - Combination: mediation for some disputes, arbitration for others, court
+     proceedings for others
+   - Any other dispute resolution method
+
+2. IRREVOCABLE AGREEMENT
+   By using this Licensed Work, licensee IRREVOCABLY AGREES to:
+   - Submit to any dispute resolution method selected by copyright holder
+   - Participate in mediation if selected by copyright holder
+   - Participate in binding arbitration if selected by copyright holder
+   - Submit to jurisdiction and venue if court proceedings selected
+   - Not challenge selection of method or jurisdiction
+   - Accept binding nature of decisions
+
+3. MEDIATION (IF SELECTED BY COPYRIGHT HOLDER)
+   - Mediator selected by copyright holder from independent neutral third party
+   - Acceptable mediators: professional mediation firms, arbitration
+     organizations, bar associations, professional standards organizations,
+     non-profit dispute resolution entities, or similar unbiased entities
+   - Examples: ISC2 chapters, industry bar associations, independent mediation
+     services, professional standards bodies, or copyright holder's selected org
+   - Mediation timeline: copyright holder determines
+   - Cost split: copyright holder determines
+   - Mediation conducted in good faith per copyright holder's requirements
+
+4. ARBITRATION (IF SELECTED BY COPYRIGHT HOLDER)
+   - Arbitrator selected by copyright holder from independent neutral third party
+   - Acceptable arbitrators: certified arbitration services, professional
+     arbitration organizations, or other unbiased dispute resolution entities
+   - Arbitration shall be binding on licensee
+   - Single arbitrator unless copyright holder determines otherwise
+   - Arbitrator applies EKACL-2.2 terms and applicable law
+   - Arbitration location: jurisdiction of copyright holder
+   - Costs: copyright holder determines allocation
+   - Decision final and enforceable in any court of competent jurisdiction
+
+5. COURT PROCEEDINGS (IF SELECTED BY COPYRIGHT HOLDER)
+   - Jurisdiction: courts in copyright holder's jurisdiction
+   - Venue: determined by copyright holder
+   - Licensee submits to personal jurisdiction
+   - Licensee waives any objection to jurisdiction or venue
+
+6. EXPLICIT IRREVOCABLE CONSENT
+   By using this Licensed Work, licensee EXPLICITLY AND IRREVOCABLY CONSENTS to:
+   - Copyright holder's sole discretion in selecting dispute resolution method
+   - Binding and final nature of any selected resolution process
+   - Mediation and/or arbitration as sole or partial remedy
+   - Court proceedings if selected by copyright holder
+   - Copyright holder's selection of mediator/arbitrator/forum
+   - This process being final and binding without appeal
+   - Copyright holder changing method or forum at any time
+   - No waiver of any rights by copyright holder
+
+COMMERCIAL LICENSING & INQUIRIES:
+For commercial licensing, modifications to terms, or other inquiries:
+Contact: Erez Kalman / KSEC
+
+================================================================================
+ACCEPTANCE
+================================================================================
+
+By using this Licensed Work, you accept all terms and conditions of EKACL-2.2.
+If you do not accept these terms, do not use the Licensed Work.

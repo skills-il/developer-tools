@@ -1,0 +1,70 @@
+{
+  "author": "Erez Kalman",
+  "author_email": "kaerez@gmail.com",
+  "version": "1.0.0",
+  "category": "developer-tools",
+  "tags": {
+    "he": [
+      "github",
+      "הורדה",
+      "api",
+      "מאגר",
+      "אוטומציה",
+      "סקילים",
+      "פיתוח"
+    ],
+    "en": [
+      "github",
+      "download",
+      "api",
+      "repository",
+      "automation",
+      "skills",
+      "development"
+    ]
+  },
+  "display_name": {
+    "he": "מוריד מאגר GitHub",
+    "en": "GitHub Repository Downloader"
+  },
+  "display_description": {
+    "he": "הורד מאגרי GitHub שלמים או תיקיות משנה באמצעות GitHub REST API ללא אימות. עוברים בצורה רקורסיבית על מבנה הספריה עם שמירה על מבנה הקבוצות. מטפל בהגבלות קצב API, שגיאות HTTP ותיקיות ריקות. תומך בהורדה וריזוק של סקילים.",
+    "en": "Download entire GitHub repositories or subdirectories using the GitHub REST API without authentication. Recursively fetches all files and directories while maintaining folder structure. Handles API rate limiting, HTTP errors, and empty directories. Supports skill packaging and downloads."
+  },
+  "supported_agents": [
+    "claude",
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf"
+  ],
+  "compatibility": {
+    "python": "3.6+",
+    "dependencies": "urllib, json (stdlib only)",
+    "platforms": "Any (Linux, macOS, Windows)"
+  },
+  "rate_limits": {
+    "unauthenticated": "60 requests/hour per IP",
+    "authenticated": "5000 requests/hour"
+  },
+  "use_cases": [
+    {
+      "title_en": "Download and package GitHub skills",
+      "title_he": "הורד וריזק סקילים מ-GitHub",
+      "trigger_en": "Download a GitHub skill folder, package skill from GitHub",
+      "trigger_he": "הורד skill מ-GitHub, עטוף skill"
+    },
+    {
+      "title_en": "Mirror GitHub repository locally",
+      "title_he": "שיקוף מאגר GitHub באופן מקומי",
+      "trigger_en": "Mirror a GitHub repo, backup GitHub folder",
+      "trigger_he": "שיקוף מאגר, גיבוי GitHub"
+    },
+    {
+      "title_en": "Scrape specific GitHub directory structure",
+      "title_he": "קרוץ מבנה ספריה מסוים ב-GitHub",
+      "trigger_en": "Scrape GitHub folder, fetch GitHub directory",
+      "trigger_he": "קרוץ GitHub, אסוף תיקייה"
+    }
+  ]
+}
