@@ -249,6 +249,16 @@ items.find({
 - צוותי פיתוח ישראליים עובדים במחזורי פריסה ראשון-חמישי. Pipelines של CI/CD שמוגדרים לשני-שישי עלולים לפספס את יום העבודה הראשון או לרוץ מיותר ביום שישי.
 - סריקת אבטחה של JFrog Xray עלולה לסמן תלויות שעומדות ברגולציה הישראלית אך מסומנות על ידי בקרות יצוא אמריקאיות. צוותים ישראליים צריכים לבדוק התראות Xray בהקשר הרגולטורי המקומי.
 
+## קישורי עזר
+
+| מקור | כתובת | מה לבדוק |
+|------|-------|----------|
+| תיעוד פלטפורמת JFrog | https://jfrog.com/help/r/jfrog-platform-administration-documentation | ניהול רפוזיטוריות, הרשאות, הגדרות HA |
+| Artifactory REST API | https://jfrog.com/help/r/jfrog-rest-apis/artifactory-rest-apis | נקודות קצה, תחביר שאילתות, AQL |
+| תיעוד Xray | https://jfrog.com/xray/ | סריקת פגיעויות, ציות רישוי, מדיניות אבטחה |
+| JFrog CLI | https://jfrog.com/getcli/ | הפניית פקודות, אינטגרציה עם CI |
+| JFrog Docker Registry | https://jfrog.com/help/r/jfrog-artifactory-documentation/docker-registry | ניהול אימג'י Docker, פרוקסי Docker Hub |
+
 ## פתרון בעיות
 
 ### שגיאה: "401 Unauthorized" בקריאות API

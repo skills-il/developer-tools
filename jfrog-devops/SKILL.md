@@ -257,6 +257,16 @@ Result: Use AQL to find artifacts not downloaded in 90+ days, identify snapshot 
 - Israeli software development teams deploy on Sunday-Thursday cycles. CI/CD pipelines configured for Monday-Friday may miss the first day of work or run unnecessarily on Friday.
 - JFrog Xray security scanning may flag dependencies that are compliant with Israeli regulations but flagged by US export controls. Israeli teams should review Xray alerts with local compliance context.
 
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| JFrog Platform Documentation | https://jfrog.com/help/r/jfrog-platform-administration-documentation | Repository management, permissions, HA setup |
+| Artifactory REST API | https://jfrog.com/help/r/jfrog-rest-apis/artifactory-rest-apis | Endpoints, query syntax, AQL |
+| Xray Documentation | https://jfrog.com/xray/ | Vulnerability scanning, license compliance, policies |
+| JFrog CLI | https://jfrog.com/getcli/ | Command reference, CI integration patterns |
+| JFrog Docker Registry | https://jfrog.com/help/r/jfrog-artifactory-documentation/docker-registry | Docker image management, Docker Hub proxy |
+
 ## Troubleshooting
 
 ### Error: "401 Unauthorized" on API calls

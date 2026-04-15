@@ -294,6 +294,16 @@ def compare_option_102_tracks(grant_value, exercise_price, sale_price):
 - שנת המס הישראלית רצה מינואר עד דצמבר (כמו בארה"ב), אך מועדי הגשת דוחות חברות שונים. שיעור מס חברות הוא 23%. סוכנים עלולים לצטט שיעורי מס או מועדים אמריקאיים.
 - סטארטאפים ישראליים שפועלים בארה"ב בדרך כלל מקימים LLC/C-Corp בדלוור כחברת אם ומשאירים את הישות הישראלית כחברת בת. סוכנים עלולים להציע מבנה הפוך.
 
+## קישורי עזר
+
+| מקור | כתובת | מה לבדוק |
+|------|-------|----------|
+| רשות החדשנות | https://innovationisrael.org.il | מענקים, תוכניות מו"פ, תנאי זכאות |
+| רשות המסים | https://www.gov.il/he/departments/israel_tax_authority | סעיף 102, הטבות מו"פ, מס חברות |
+| רשות התאגידים | https://www.gov.il/he/departments/israel_corporations_authority | הקמת חברה, דוחות שנתיים |
+| משרד המשפטים | https://www.gov.il/he/departments/ministry_of_justice | דיני חברות, רישום קניין רוחני |
+| Start-Up Nation Central | https://www.startupnationcentral.org | נתוני אקוסיסטם, מגמות מימון |
+
 ## פתרון בעיות
 
 ### בעיה: "רשות החדשנות דחתה את הבקשה שלנו"

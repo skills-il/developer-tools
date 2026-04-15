@@ -302,6 +302,16 @@ Result: Complete Option 102 setup plan with trustee comparison.
 - Israeli tax year runs January-December (like the US), but corporate tax filing deadlines differ. The standard corporate tax rate is 23%. Agents may cite US tax rates or deadlines.
 - Israeli startups doing business in the US typically incorporate a Delaware LLC/C-Corp as a parent while keeping the Israeli entity as a subsidiary. Agents may suggest the reverse structure.
 
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Israel Innovation Authority | https://innovationisrael.org.il/en | Grants, R&D programs, eligibility criteria |
+| Israeli Tax Authority | https://www.gov.il/en/departments/israel_tax_authority | Option 102, R&D tax benefits, corporate tax |
+| ICA Companies Registrar | https://www.gov.il/en/departments/israel_corporations_authority | Company formation, annual filings |
+| Ministry of Justice | https://www.gov.il/en/departments/ministry_of_justice | Corporate law, IP registration |
+| Start-Up Nation Central | https://www.startupnationcentral.org | Ecosystem data, funding trends |
+
 ## Troubleshooting
 
 ### Issue: "IIA rejected our application"

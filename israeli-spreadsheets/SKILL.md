@@ -77,6 +77,16 @@ Result: VAT-compliant Hebrew invoice spreadsheet template
 - NIS currency formatting should use the ש"ח symbol after the number (1,000 ש"ח), not the ₪ symbol before it. Agents may apply US-style currency formatting.
 - Israeli tax calculations in spreadsheets must account for VAT at 18%. Agents may hardcode older VAT rates (17%) from pre-2025 training data.
 
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Israeli Tax Authority | https://www.gov.il/en/departments/israel_tax_authority | Income tax brackets, credit points, VAT rate |
+| Bituach Leumi | https://www.btl.gov.il/English%20Homepage/Pages/default.aspx | Social security and health tax rates |
+| openpyxl Documentation | https://openpyxl.readthedocs.io/en/stable/ | Writing XLSX files with formatting from Python |
+| Bank of Israel | https://www.boi.org.il/en/ | Exchange rates, monetary policy, CPI for indexation |
+| Excel RTL Worksheet (Microsoft Learn) | https://learn.microsoft.com/en-us/office/vba/api/excel.worksheet.displayrighttoleft | Sheet direction and RTL rendering |
+
 ## Troubleshooting
 
 ### Error: "NIS symbol appears on wrong side of number"
