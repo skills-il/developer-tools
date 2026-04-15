@@ -497,6 +497,17 @@ python scripts/hebrew-stt-demo.py --help
 - מספרי טלפון ישראליים באורך משתנה ב-IVR: קווים נייחים 9 ספרות (0X-XXXXXXX), נייד 10 ספרות (05X-XXXXXXX). בוטים קוליים חייבים לקבל את שני הפורמטים.
 - רמות רעשי רקע בסביבות ישראליות טיפוסיות (בתי קפה, משרדים פתוחים, תחבורה ציבורית) גבוהות מהממוצע העולמי. סף הביטחון בבוטים קוליים צריך להיות נמוך יותר כדי להימנע מחזרות מרובות.
 
+
+## קישורי עזר
+
+| מקור | כתובת | מה לבדוק |
+|------|-------|----------|
+| OpenAI Whisper (זיהוי דיבור עברית) | https://github.com/openai/whisper | המרת דיבור לטקסט רב-לשונית כולל עברית, גדלי מודלים, דיוק |
+| Google Cloud Speech-to-Text | https://cloud.google.com/speech-to-text/docs/languages | תמיכה בעברית (he-IL), זיהוי סטרימינג, תמחור |
+| Azure AI Speech (עברית) | https://learn.microsoft.com/he-il/azure/ai-services/speech-service/language-support | קולות STT/TTS בעברית, רשימת קולות נוירליים |
+| מודלים בעברית ב-HuggingFace | https://huggingface.co/models?language=he | מודלים פתוחים לזיהוי דיבור/המרה לדיבור בעברית |
+| ivrit.ai (קורפוס דיבור בעברית) | https://www.ivrit.ai | קורפוס דיבור עברי פתוח, מודלי ASR מאומנים מראש |
+
 ## פתרון בעיות
 
 ### בעיה: "תמלול עברי מחזיר טקסט בערבית"

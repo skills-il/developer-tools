@@ -759,6 +759,17 @@ Result: Voice bot that correctly transcribes mixed Hebrew-English speech common 
 - Israeli phone numbers have varying IVR input lengths: landlines are 9 digits (0X-XXXXXXX), mobile are 10 digits (05X-XXXXXXX). Voice bots must accept both formats.
 - Background noise levels in typical Israeli environments (cafes, open offices, public transit) are higher than global averages. Voice bot confidence thresholds should be set lower to avoid excessive re-prompts.
 
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| OpenAI Whisper (Hebrew STT) | https://github.com/openai/whisper | Multilingual speech-to-text including Hebrew, model sizes, accuracy benchmarks |
+| Google Cloud Speech-to-Text | https://cloud.google.com/speech-to-text/docs/languages | Hebrew (he-IL) support, streaming recognition, pricing |
+| Azure AI Speech (Hebrew) | https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support | Hebrew STT/TTS voices, neural voice list |
+| HuggingFace Hebrew models | https://huggingface.co/models?language=he | Open Hebrew ASR/TTS models (ivrit.ai, etc.) |
+| ivrit.ai (Hebrew voice corpus) | https://www.ivrit.ai | Open-source Hebrew speech corpus, pre-trained ASR models |
+
 ## Troubleshooting
 
 ### Error: "Hebrew transcription returns Arabic text"
