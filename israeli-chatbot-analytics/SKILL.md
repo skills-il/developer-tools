@@ -1348,6 +1348,17 @@ Result: A formatted Hebrew report with week-over-week comparisons, trend indicat
 - Hebrew text analytics must handle prefixed particles (ב-, ל-, כ-, מ-) that change word boundaries. Standard tokenizers trained on English split Hebrew words incorrectly.
 - Israeli users frequently code-switch between Hebrew and English within a single chatbot conversation. Analytics tools must handle bilingual sessions, not treat them as two separate languages.
 
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Dialogflow CX analytics | https://cloud.google.com/dialogflow/cx/docs/concept/analytics | Built-in conversation analytics, intent metrics |
+| Rasa documentation | https://rasa.com/docs/rasa/ | Event tracking, custom analytics integrations |
+| Mixpanel help | https://mixpanel.com/help | Funnel analysis, cohort retention for chat flows |
+| Matomo analytics | https://matomo.org/docs/ | Self-hosted event tracking, privacy-friendly |
+| HuggingFace Hebrew models | https://huggingface.co/models?language=he | Hebrew sentiment/classification models |
+
 ## Troubleshooting
 
 ### Error: "DictaBERT model not loading"

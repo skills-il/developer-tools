@@ -903,6 +903,17 @@ def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
 - אנליטיקת טקסט בעברית חייבת להתמודד עם אותיות שימוש (ב-, ל-, כ-, מ-) שמשנות גבולות מילים. טוקנייזרים שאומנו על אנגלית מפצלים מילים בעברית בצורה שגויה.
 - משתמשים ישראליים עוברים תדיר בין עברית לאנגלית בתוך שיחת צ'אטבוט אחת. כלי אנליטיקה חייבים לטפל בסשנים דו-לשוניים ולא להתייחס אליהם כשתי שפות נפרדות.
 
+
+## קישורי עזר
+
+| מקור | כתובת | מה לבדוק |
+|------|-------|----------|
+| Dialogflow CX analytics | https://cloud.google.com/dialogflow/cx/docs/concept/analytics | אנליטיקת שיחות מובנית, מדדי כוונה |
+| תיעוד Rasa | https://rasa.com/docs/rasa/ | מעקב אירועים, אינטגרציות אנליטיקה מותאמות |
+| Mixpanel help | https://mixpanel.com/help | ניתוח משפך, שימור קבוצות לזרימות צ'אט |
+| Matomo analytics | https://matomo.org/docs/ | מעקב אירועים עצמי, ידידותי לפרטיות |
+| מודלים בעברית ב-HuggingFace | https://huggingface.co/models?language=he | מודלי סנטימנט/סיווג בעברית |
+
 ## פתרון בעיות
 
 ### שגיאה: "מודל DictaBERT לא נטען"
