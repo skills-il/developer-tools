@@ -97,11 +97,10 @@ Result: Generate 10 valid IDs with 51- prefix for testing.
 
 ## Gotchas
 
-- Israeli ID numbers (Teudat Zehut) are exactly 9 digits with a Luhn-variant check digit. Agents may generate random 9-digit numbers that fail the check digit validation.
+- Israeli ID numbers (Teudat Zehut) are exactly 9 digits with a Luhn (mod 10) check digit. Agents may generate random 9-digit numbers that fail the check digit validation.
 - Israeli ID numbers with fewer than 9 digits must be left-padded with zeros. An ID like "12345678" is actually "012345678". Agents may strip leading zeros and break validation.
 - Israeli military IDs (mispar ishi) use a different format than civilian IDs and should not be validated with the same algorithm.
 - Israeli temporary resident IDs start with specific digit patterns. Agents may reject valid temporary IDs because they do not match permanent ID patterns.
-- The Israeli ID check digit algorithm multiplies alternating digits by 1 and 2 (not 2 and 1 as in standard Luhn). Agents implementing standard Luhn will validate incorrect numbers.
 
 ## Troubleshooting
 
