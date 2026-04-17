@@ -56,6 +56,18 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 
 לפעולות וידאו כמו חיתוך וזיהוי שקט, טענו את [./rules/ffmpeg.md](./rules/ffmpeg.md).
 
+### זיהוי שקט
+
+כשצריך לזהות ולחתוך קטעים שקטים מקבצי וידאו או אודיו, טענו את [./rules/silence-detection.md](./rules/silence-detection.md).
+
+### ויזואליזציה של אודיו
+
+כשצריך להציג גלים של אודיו (עמודות ספקטרום, צורות גל, אפקטים שמגיבים לבאס), טענו את [./rules/audio-visualization.md](./rules/audio-visualization.md).
+
+### אפקטים קוליים
+
+כשצריך להוסיף אפקטים קוליים, טענו את [./rules/sfx.md](./rules/sfx.md).
+
 ### קבצי כללים
 
 כל קובץ כללים מכיל הסברים מפורטים עם דוגמאות קוד:
@@ -66,15 +78,33 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 - [rules/assets.md](rules/assets.md) - ייבוא תמונות, סרטונים, אודיו ופונטים
 - [rules/audio.md](rules/audio.md) - שימוש באודיו ב-Remotion
 - [rules/calculate-metadata.md](rules/calculate-metadata.md) - הגדרת משך, מימדים ו-props דינמיים
+- [rules/can-decode.md](rules/can-decode.md) - בדיקה אם וידאו יכול להיפתח בדפדפן
 - [rules/charts.md](rules/charts.md) - גרפים והצגת נתונים
 - [rules/compositions.md](rules/compositions.md) - הגדרת קומפוזיציות, stills ותיקיות
 - [rules/display-captions.md](rules/display-captions.md) - כתוביות בסגנון TikTok עם הדגשת מילים
+- [rules/extract-frames.md](rules/extract-frames.md) - שליפת פריימים מוידאו בזמנים ספציפיים
 - [rules/fonts.md](rules/fonts.md) - טעינת Google Fonts ופונטים מקומיים
+- [rules/get-audio-duration.md](rules/get-audio-duration.md) - קבלת משך אודיו עם Mediabunny
+- [rules/get-video-dimensions.md](rules/get-video-dimensions.md) - קבלת רוחב וגובה של וידאו
+- [rules/get-video-duration.md](rules/get-video-duration.md) - קבלת משך וידאו בשניות
+- [rules/gifs.md](rules/gifs.md) - הצגת GIFs מסונכרנים לציר הזמן
 - [rules/images.md](rules/images.md) - הטמעת תמונות עם קומפוננטת Img
+- [rules/import-srt-captions.md](rules/import-srt-captions.md) - ייבוא קבצי כתוביות srt
+- [rules/light-leaks.md](rules/light-leaks.md) - אפקטים של דליפת אור
+- [rules/lottie.md](rules/lottie.md) - הטמעת אנימציות Lottie
+- [rules/maps.md](rules/maps.md) - אנימציות מפה עם Mapbox
+- [rules/measuring-dom-nodes.md](rules/measuring-dom-nodes.md) - מדידת מימדים של אלמנטי DOM
+- [rules/measuring-text.md](rules/measuring-text.md) - מדידת מימדי טקסט והתאמה לקונטיינר
+- [rules/parameters.md](rules/parameters.md) - הפיכת סרטון לפרמטרי עם Zod
 - [rules/sequencing.md](rules/sequencing.md) - פטרנים של סיקוונסים לתזמון והשהייה
+- [rules/silence-detection.md](rules/silence-detection.md) - זיהוי שקט אדפטיבי עם FFmpeg
+- [rules/tailwind.md](rules/tailwind.md) - שימוש ב-TailwindCSS ב-Remotion
 - [rules/text-animations.md](rules/text-animations.md) - אנימציות טיפוגרפיה וטקסט
 - [rules/timing.md](rules/timing.md) - עקומות אינטרפולציה, easing ואנימציות spring
+- [rules/transcribe-captions.md](rules/transcribe-captions.md) - תמלול אודיו לכתוביות עם Whisper
 - [rules/transitions.md](rules/transitions.md) - פטרנים של מעברים בין סצנות
+- [rules/transparent-videos.md](rules/transparent-videos.md) - רינדור וידאו שקוף
+- [rules/trimming.md](rules/trimming.md) - פטרנים של חיתוך אנימציות
 - [rules/videos.md](rules/videos.md) - הטמעת סרטונים עם חיתוך, ווליום ומהירות
 - [rules/voiceover.md](rules/voiceover.md) - קריינות AI עם ElevenLabs TTS
 
@@ -106,16 +136,19 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 ## פתרון בעיות
 
 ### טקסט עברי מיושר לשמאל
-הוסיפו `direction: "rtl"` ו-`textAlign: "right"` לסגנון הקונטיינר.
+הוסיפו `direction: "rtl"` ו-`textAlign: "right"` לסגנון של כל אלמנט עם טקסט עברי. בלייאאוט של פריים מלא, שימו `direction: "rtl"` על ה-`<AbsoluteFill>`. בלי זה גם סימני פיסוק יופיעו בצד הלא נכון.
 
 ### כתוביות מציגות מילים בסדר הפוך
-הקונטיינר צריך `direction: "rtl"` ו-`whiteSpace: "pre"`.
+הקונטיינר צריך `direction: "rtl"` וגם `whiteSpace: "pre"`. בלי RTL, סדר הרינדור של הטוקנים הוא LTR וההדגשה של המילה הנוכחית תופיע על המילה הלא נכונה.
 
 ### פונט עברי לא מרונדר (מציג ריבועים)
-ודאו שטענתם את הפונט עם `subsets: ["hebrew"]` וקראתם ל-`waitUntilDone()`.
+ודאו שטענתם את הפונט עם `subsets: ["hebrew"]` וקראתם ל-`waitUntilDone()` לפני שמתחילים לרנדר. בלי ה-subset, הגליפים העבריים לא יורדים בכלל.
 
 ### מספרים מופיעים בצד הלא נכון של טקסט עברי
-השתמשו ב-Unicode bidi isolates: עטפו מספרים עם `\u2066...\u2069` בתוך טקסט עברי.
+השתמשו ב-Unicode bidi isolates: עטפו מספרים או שמות אנגליים עם `\u2066...\u2069` (LTR Isolate) בתוך טקסט עברי. בלי זה, אלגוריתם ה-bidi של הדפדפן עשוי לערבב את הסדר.
 
 ### Whisper מייצר ג'יבריש לאודיו עברי
-החליפו ממודל `medium.en` למודל `medium`. הסיומת `.en` פירושה אנגלית בלבד.
+החליפו ממודל `medium.en` למודל `medium`. הסיומת `.en` פירושה אנגלית בלבד - המודל הרב-לשוני תומך בעברית ובעוד עשרות שפות.
+
+### אייקונים מופיעים בצד הלא נכון בשורות של flex
+בתוך RTL, `justifyContent: "flex-start"` מיישר לימין, לא לשמאל. אל תשתמשו ב-`flexDirection: "row-reverse"` כי הוא הופך את הסדר פעמיים. פשוט שימו את האייקון כאלמנט הראשון ב-DOM.

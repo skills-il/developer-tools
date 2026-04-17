@@ -158,3 +158,6 @@ Use Unicode bidi isolates: wrap numbers with `\u2066...\u2069` (LTR isolate) whe
 
 ### Whisper produces gibberish for Hebrew audio
 Switch from `medium.en` to `medium` model. The `.en` suffix means English-only.
+
+### Icons appear on the wrong side in flex rows
+In an RTL container, `justifyContent: "flex-start"` aligns to the RIGHT, not left. Do not use `flexDirection: "row-reverse"` -- it double-reverses the order. Just put the icon as the first child in the DOM.

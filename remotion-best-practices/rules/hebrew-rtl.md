@@ -100,7 +100,7 @@ export const HebrewScene: React.FC = () => {
 
 ## RTL Flex Containers (Icons + Hebrew Text)
 
-Setting `direction: "rtl"` on a parent does NOT automatically fix flex item ordering. When you have icon + text rows (checkmarks, bullet points, list items), the icon will still appear on the LEFT side. You MUST use `flexDirection: "row-reverse"` on each flex row:
+In RTL flex containers, `flex-start` means RIGHT and `flex-end` means LEFT. This catches everyone. When you have icon + text rows (checkmarks, bullet points, list items), use `justifyContent: "flex-start"` to right-align them. The RTL direction already reverses DOM order, so the first child (icon) renders on the right:
 
 ```tsx
 // WRONG -- icon on left, row centered (ignores RTL)
@@ -368,7 +368,7 @@ const { fontFamily, waitUntilDone } = loadFont("normal", {
 await waitUntilDone();
 
 const { fontSize } = fitText({
-  text: "כ��תרת ראשית לסרטון",
+  text: "כותרת ראשית לסרטון",
   withinWidth: 800,
   fontFamily,
   fontWeight: "bold",
