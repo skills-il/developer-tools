@@ -103,21 +103,20 @@ export const HebrewScene: React.FC = () => {
 Setting `direction: "rtl"` on a parent does NOT automatically fix flex item ordering. When you have icon + text rows (checkmarks, bullet points, list items), the icon will still appear on the LEFT side. You MUST use `flexDirection: "row-reverse"` on each flex row:
 
 ```tsx
-// WRONG -- icon appears on the left despite RTL parent
+// WRONG -- icon on left, row centered (ignores RTL)
 <div style={{ direction: "rtl" }}>
-  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
     <span>✅</span>
-    <span>פונטים עבריים</span>  {/* icon on LEFT, text on RIGHT */}
+    <span>פונטים עבריים</span>  {/* centered row, looks wrong in RTL */}
   </div>
 </div>
 
-// CORRECT -- icon on right, text right-aligned
+// CORRECT -- icon on right, row right-aligned
 <div style={{ direction: "rtl" }}>
   <div style={{
     display: "flex",
-    flexDirection: "row-reverse",
     alignItems: "center",
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     gap: 12,
   }}>
     <span>✅</span>
@@ -126,9 +125,7 @@ Setting `direction: "rtl"` on a parent does NOT automatically fix flex item orde
 </div>
 ```
 
-Two key rules:
-- `flexDirection: "row-reverse"` puts the icon on the right (Hebrew reading start)
-- `justifyContent: "flex-end"` right-aligns the entire row (without it, the row floats to center)
+The critical insight: in an RTL flex container, `flex-start` = RIGHT and `flex-end` = LEFT. This is the opposite of what you expect. So to right-align rows in RTL, use `justifyContent: "flex-start"`. No need for `flexDirection: "row-reverse"` -- the RTL direction already reverses item order (first DOM child renders on the right).
 
 Never set `direction: "ltr"` on Hebrew text spans inside an RTL flex container. It breaks the visual ordering and makes punctuation jump to the wrong side.
 

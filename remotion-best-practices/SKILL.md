@@ -129,7 +129,7 @@ Read individual rule files for detailed explanations and code examples:
 
 5. **Native `<img>` and `<video>` elements cause blank frames.** Always use `<Img>` from `remotion` and `<Video>` from `@remotion/media`. These components ensure assets are fully loaded before rendering.
 
-6. **`direction: "rtl"` on a parent does NOT fix flex item order.** Icon + Hebrew text rows (checkmarks, bullets) will still show the icon on the LEFT. Use `flexDirection: "row-reverse"` on each flex row to put icons on the right, AND `justifyContent: "flex-end"` to right-align the row. Without both, items either have wrong icon order or float to center. Never set `direction: "ltr"` on Hebrew text spans inside RTL flex containers.
+6. **RTL flips `flex-start` and `flex-end`.** In an RTL flex container, `flex-start` = RIGHT and `flex-end` = LEFT. To right-align icon+text rows in Hebrew, use `justifyContent: "flex-start"` (not `flex-end`). The RTL direction already reverses DOM order, so the first child (icon) renders on the right. Do not use `flexDirection: "row-reverse"` in RTL containers -- it double-reverses back to LTR order.
 
 ## Reference Links
 
