@@ -9,7 +9,7 @@ metadata:
 
 Detect silent segments in video or audio files.
 
-Requires FFmpeg — see [ffmpeg.md](./ffmpeg.md) for how to invoke it in Remotion projects.
+Requires FFmpeg -- see [ffmpeg.md](./ffmpeg.md) for how to invoke it in Remotion projects.
 
 ## Step 1: Measure loudness with `loudnorm`
 
@@ -20,8 +20,8 @@ npx remotion ffmpeg -i public/video.mov -map 0:a -af loudnorm=print_format=json 
 ```
 
 As output you will get:
-- `input_i`: Integrated loudness (dB) — the overall perceived volume
-- `input_thresh`: EBU R128 gating threshold (dB) — the level below which audio is considered too quiet to count toward loudness measurement
+- `input_i`: Integrated loudness (dB) -- the overall perceived volume
+- `input_thresh`: EBU R128 gating threshold (dB) -- the level below which audio is considered too quiet to count toward loudness measurement
 
 ## Step 2: Detect silences using adaptive threshold
 

@@ -1,6 +1,6 @@
 ---
 name: timing
-description: Interpolation and timing in Remotion—prefer interpolate with Bézier easing; springs as a specialized option
+description: Interpolation and timing in Remotion--prefer interpolate with Bézier easing; springs as a specialized option
 metadata:
   tags: easing, bezier, interpolation, spring, timing
 ---
@@ -41,7 +41,7 @@ const opacity = interpolate(frame, [0, 60], [0, 1], {
 
 ### Examples (copy-paste curves)
 
-**1. Crisp UI entrance (strong ease-out, no overshoot)** — slows nicely into the rest value; similar to many system “deceleration” curves.
+**1. Crisp UI entrance (strong ease-out, no overshoot)** -- slows nicely into the rest value; similar to many system “deceleration” curves.
 
 ```tsx
 const enter = interpolate(frame, [0, 45], [0, 1], {
@@ -51,7 +51,7 @@ const enter = interpolate(frame, [0, 45], [0, 1], {
 });
 ```
 
-**2. Editorial / slow fade (balanced ease-in-out)** — symmetric acceleration and deceleration over a hold-friendly move.
+**2. Editorial / slow fade (balanced ease-in-out)** -- symmetric acceleration and deceleration over a hold-friendly move.
 
 ```tsx
 const progress = interpolate(frame, [0, 90], [0, 1], {
@@ -61,7 +61,7 @@ const progress = interpolate(frame, [0, 90], [0, 1], {
 });
 ```
 
-**3. Playful overshoot (control point y > 1)** — a little past the target then settles; use sparingly for emphasis.
+**3. Playful overshoot (control point y > 1)** -- a little past the target then settles; use sparingly for emphasis.
 
 ```tsx
 const pop = interpolate(frame, [0, 30], [0, 1], {
@@ -88,8 +88,8 @@ const value1 = interpolate(frame, [0, 100], [0, 1], {
 The default easing is `Easing.linear`.  
 Convexities:
 
-- `Easing.in` — starting slow and accelerating
-- `Easing.out` — starting fast and slowing down
+- `Easing.in` -- starting slow and accelerating
+- `Easing.out` -- starting fast and slowing down
 - `Easing.inOut`
 
 Named curves (from most linear to most curved):

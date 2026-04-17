@@ -1,0 +1,20 @@
+# Positive queries (should trigger this skill)
++ How do I create a video with Hebrew text in Remotion?
++ Add RTL captions to my Remotion composition
++ Which Hebrew fonts work with @remotion/google-fonts?
++ Create a TikTok video with Hebrew subtitles using Remotion
++ How to animate Hebrew text in Remotion
++ Build a marketing video with Remotion and Hebrew voiceover
++ Remotion spring animation best practices
++ How to use transitions between scenes in Remotion
+
+# Negative queries (should NOT trigger this skill)
+- How do I edit a video in Premiere Pro?
+- Create a React component with Tailwind
+- Generate a Hebrew PDF document
+- How to set up Next.js routing
+
+# Edge cases
+~ Create a programmatic video with React
+~ Add subtitles to my video
+~ Hebrew text animation

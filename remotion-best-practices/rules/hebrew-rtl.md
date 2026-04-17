@@ -186,6 +186,34 @@ Hebrew fonts like Heebo at display weights are wider than their English equivale
 
 Rule of thumb: Hebrew at the same font size renders ~20-30% wider than English. If an English title at `fontSize: 72` fits, the Hebrew equivalent needs `fontSize: 54-60` on the same canvas width.
 
+## Hebrew Copy in Video Captions -- Natural Israeli Phrasing
+
+Hebrew captions and on-screen text in videos must sound like natural spoken Israeli Hebrew, not translated English. Translated-sounding Hebrew makes videos feel AI-generated and loses native viewers.
+
+Red flags to avoid in Hebrew video copy:
+
+| Translated feel | Natural Israeli |
+|-----------------|-----------------|
+| "תמיכה מלאה ב-X" (full support for X) | "זה עובד עם X, כמו שצריך" (it works with X, as it should) |
+| "טקסט מיושר לשמאל" (passive participle, spec-like) | "הטקסט נופל שמאלה" / "עברית מתיישבת שמאלה" (vivid, active) |
+| "פונטים לא נטענים" (formal) | "פונטים לא עולים" (Israeli dev slang for "load") |
+| "מכונת כתיבה" (typewriter = physical machine) | "אפקט הקלדה" (typing effect = actual CSS term) |
+| "ניתן להשתמש" (formal passive) | "אפשר להשתמש" / "השתמשו" (imperative or casual) |
+| "על ידי" (by means of) | just drop it, use active voice |
+
+For interjections and excitement: "סוף סוף" (finally), "כמו שצריך" (as it should), "באמת" (really), "בטח" (sure) -- these make Hebrew copy feel native.
+
+## Em Dashes Forbidden
+
+Never use em dashes (`—`) or en dashes (`–`) in skill content, video captions, or any Hebrew/English text. Replace with:
+- `,` (comma) for mid-sentence pauses
+- `:` (colon) for explanations
+- `()` (parentheses) for asides
+- `--` (double hyphen) for stronger breaks
+- `.` (period) to split into two sentences
+
+Em dashes do not exist on standard keyboards and don't render reliably in every rendering context. They also make text feel machine-generated to Israeli readers.
+
 ## Bidirectional Text (Bidi)
 
 When mixing Hebrew with English or numbers, use Unicode bidi isolates to prevent reordering bugs:

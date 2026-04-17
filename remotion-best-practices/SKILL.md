@@ -133,6 +133,10 @@ Read individual rule files for detailed explanations and code examples:
 
 7. **Hebrew text wraps to a second line at the same font size English fits on one line.** Hebrew fonts (Heebo, Rubik, Assistant) at display weights render 20-30% wider than English at the same size. If an English title works at `fontSize: 72`, the Hebrew equivalent needs `54-60`. Also set `flexWrap: "nowrap"` and `whiteSpace: "nowrap"` on any flex row containing display-size Hebrew words to prevent unwanted line breaks mid-phrase.
 
+8. **Hebrew captions must sound Israeli, not translated.** Avoid corporate-sounding phrases like "תמיכה מלאה", passive-participle text descriptions, and literal translations of English idioms. Israeli dev slang: "עולים" (load), "נופלת" (falls), "אפקט הקלדה" (not "מכונת כתיבה"). Use "אפשר" not "ניתן", use active voice, and sprinkle natural connectors like "סוף סוף", "כמו שצריך", "באמת".
+
+9. **Never use em dashes or en dashes.** Replace em/en dash characters with commas, colons, parentheses, or double hyphens (`--`). They are not on standard keyboards, don't render reliably across platforms, and make text feel machine-generated. This applies to both English and Hebrew content in SKILL.md, video captions, and UI copy.
+
 ## Reference Links
 
 | Source | URL | What to Check |
