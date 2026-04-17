@@ -129,6 +129,63 @@ The critical insight: in an RTL flex container, `flex-start` = RIGHT and `flex-e
 
 Never set `direction: "ltr"` on Hebrew text spans inside an RTL flex container. It breaks the visual ordering and makes punctuation jump to the wrong side.
 
+## RTL Multi-Group Text (Equations, Mixed Colors, Accent Phrases)
+
+When you need a single line of Hebrew text split into multiple groups (different colors, different animation timings, or accent phrases), the same RTL rule applies at the outer flex level.
+
+Reading order for `A + B = C` in Hebrew should be: start from the RIGHT with "A", flow left through "+ B = C" and end with "C" on the LEFT.
+
+```tsx
+// WRONG -- row-reverse + RTL double-reverses, ordering is broken
+<div style={{
+  direction: "rtl",
+  display: "flex",
+  flexDirection: "row-reverse",
+  gap: 20,
+}}>
+  <KineticWords words={["Remotion", "+", "עברית", "="]} color="black" />
+  <KineticWords words={["כאב", "ראש"]} color="red" />
+</div>
+
+// CORRECT -- default flex row in RTL puts first DOM child on the RIGHT
+<div style={{
+  direction: "rtl",
+  display: "flex",
+  justifyContent: "flex-start",
+  gap: 20,
+}}>
+  <KineticWords words={["Remotion", "+", "עברית", "="]} color="black" />
+  {/* renders on the RIGHT */}
+  <KineticWords words={["כאב", "ראש"]} color="red" />
+  {/* renders on the LEFT */}
+</div>
+```
+
+The rule: the FIRST DOM child goes on the RIGHT in an RTL flex row. Write your DOM in natural reading order (what comes FIRST in Hebrew reading goes FIRST in the JSX), and RTL will position it correctly without needing `row-reverse`.
+
+## Preventing Line Wrapping on Hebrew Titles
+
+Hebrew fonts like Heebo at display weights are wider than their English equivalents. Multi-word titles that look fine in English often wrap to 2 lines in Hebrew.
+
+```tsx
+// WRONG -- words wrap, breaking the composition rhythm
+<div style={{ display: "flex", gap: 12 }}>
+  {words.map(w => <span>{w}</span>)}
+</div>
+
+// CORRECT -- force single line, shrink font if needed
+<div style={{
+  display: "flex",
+  gap: 12,
+  flexWrap: "nowrap",
+  whiteSpace: "nowrap",
+}}>
+  {words.map(w => <span>{w}</span>)}
+</div>
+```
+
+Rule of thumb: Hebrew at the same font size renders ~20-30% wider than English. If an English title at `fontSize: 72` fits, the Hebrew equivalent needs `fontSize: 54-60` on the same canvas width.
+
 ## Bidirectional Text (Bidi)
 
 When mixing Hebrew with English or numbers, use Unicode bidi isolates to prevent reordering bugs:

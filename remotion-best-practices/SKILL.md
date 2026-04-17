@@ -131,6 +131,8 @@ Read individual rule files for detailed explanations and code examples:
 
 6. **RTL flips `flex-start` and `flex-end`.** In an RTL flex container, `flex-start` = RIGHT and `flex-end` = LEFT. To right-align icon+text rows in Hebrew, use `justifyContent: "flex-start"` (not `flex-end`). The RTL direction already reverses DOM order, so the first child (icon) renders on the right. Do not use `flexDirection: "row-reverse"` in RTL containers -- it double-reverses back to LTR order.
 
+7. **Hebrew text wraps to a second line at the same font size English fits on one line.** Hebrew fonts (Heebo, Rubik, Assistant) at display weights render 20-30% wider than English at the same size. If an English title works at `fontSize: 72`, the Hebrew equivalent needs `54-60`. Also set `flexWrap: "nowrap"` and `whiteSpace: "nowrap"` on any flex row containing display-size Hebrew words to prevent unwanted line breaks mid-phrase.
+
 ## Reference Links
 
 | Source | URL | What to Check |
