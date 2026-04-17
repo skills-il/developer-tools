@@ -42,29 +42,29 @@ license: MIT
 ארגון ללא מטרות רווח שמתמקד במשאבי דיבור עבריים. נכון ל-2025-2026 מארח את קורפוס האודיו העברי הגדול בעולם (יותר מ-22,000 שעות) תחת רישיון שמתיר שימוש מסחרי במפורש.
 
 מודלים וקורפוסים מרכזיים:
-- `ivrit-ai/crowd-transcribe-v5` — דאטהסט ASR עברי מקראוד-סורסינג
-- `ivrit-ai/whisper-large-v3-turbo-ct2` — גרסה הכי מהירה להשקה בפרודקשן
-- `ivrit-ai/pyannote-speaker-diarization-3.1` — diarization עברי
-- `ivrit-ai/yi-whisper-large-v3` — ASR יידיש
+- `ivrit-ai/crowd-transcribe-v5`, דאטהסט ASR עברי מקראוד-סורסינג
+- `ivrit-ai/whisper-large-v3-turbo-ct2`, גרסה הכי מהירה להשקה בפרודקשן
+- `ivrit-ai/pyannote-speaker-diarization-3.1`, diarization עברי
+- `ivrit-ai/yi-whisper-large-v3`, ASR יידיש
 
 #### Dicta
 
 ארגון ה-LLM וה-BERT העברי המוביל בישראל.
 
 מודלים מרכזיים:
-- `dicta-il/DictaLM-3.0-24B-Base` — LLM בסיס עברי דגלי
-- `dicta-il/DictaLM-3.0-Nemotron-12B-Instruct` — instruction-tuned בגודל בינוני
-- `dicta-il/dictabert` — BERT עברי בסיסי
-- `dicta-il/dictabert-sentiment` — סיווג סנטימנט עברי
-- `dicta-il/dictabert-heq` — מכוון ל-QA עברי
+- `dicta-il/DictaLM-3.0-24B-Base`, LLM בסיס עברי דגלי
+- `dicta-il/DictaLM-3.0-Nemotron-12B-Instruct`, instruction-tuned בגודל בינוני
+- `dicta-il/dictabert`, BERT עברי בסיסי
+- `dicta-il/dictabert-sentiment`, סיווג סנטימנט עברי
+- `dicta-il/dictabert-heq`, מכוון ל-QA עברי
 
 #### התכנית הלאומית ל-NLP (HebArabNlpProject)
 
 יוזמה לאומית לתשתיות NLP עברי-ערבי, ממומנת על ידי משרד הביטחון ונתמכת על ידי Dicta ו-Webiks.
 
 מאגרים מרכזיים:
-- `HebArabNlpProject/HebrewSentiment` — 41,305 דוגמאות מתויגות, CC-BY-4.0
-- `HebArabNlpProject/HebNLI` — NLI עברי
+- `HebArabNlpProject/HebrewSentiment`, 41,305 דוגמאות מתויגות, CC-BY-4.0
+- `HebArabNlpProject/HebNLI`, NLI עברי
 
 ### שלב 3: תאימות רישיון לפי שימוש
 
@@ -118,7 +118,7 @@ license: MIT
 
 פעולות:
 1. משימה: סיווג סנטימנט על עברית דיבורית
-2. בדקו `HebArabNlpProject/HebrewSentiment` — 41,305 דוגמאות, CC-BY-4.0, כולל דיבור מסוים. מסחרי OK עם ייחוס.
+2. בדקו `HebArabNlpProject/HebrewSentiment`, 41,305 דוגמאות, CC-BY-4.0, כולל דיבור מסוים. מסחרי OK עם ייחוס.
 3. בדקו `dicta-il/dictabert-sentiment` כ-baseline מוכן
 4. התחילו עם מודל Dicta והעריכו על צ'אטים אמיתיים מוחזקים
 5. אם הבסיס לא מספיק, עשו fine-tune של `dicta-il/dictabert` על HebrewSentiment + הנתונים שלכם
@@ -132,7 +132,7 @@ license: MIT
 
 פעולות:
 1. משימה: דיבור לטקסט עברי על אודיו שיחתי
-2. בדקו מודלי ivrit.ai — משפחת whisper-large-v3 היא SOTA לעברית
+2. בדקו מודלי ivrit.ai, משפחת whisper-large-v3 היא SOTA לעברית
 3. להשהייה בפרודקשן, השתמשו ב-`whisper-large-v3-turbo-ct2`
 4. לפודקאסטים מרובי דוברים, שלבו עם `pyannote-speaker-diarization-3.1`
 5. אשרו שהרישיון של ivrit.ai מתיר שימוש מסחרי

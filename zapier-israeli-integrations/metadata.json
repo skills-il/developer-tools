@@ -27,7 +27,7 @@
     "en": "Zapier Israeli Integrations"
   },
   "display_description": {
-    "he": "בניית Zaps שמחברים אפליקציות עסקיות ישראליות (Morning/חשבונית ירוקה, קארדקום, טרנזילה, iCount, Grow) עם שירותים גלובליים לחיוב, תשלום ואוטומציית תהליכי עבודה. כולל טיפול בעברית, פורמט מטבע שקלי, לוגיקת מע\"מ דו-חודשית, רפורמת חשבוניות 2026, ושילוב יכולות AI של Zapier (Copilot, Agents, MCP). לא מתאים לתהליכי n8n או Make.com.",
+    "he": "בונים Zaps שמחברים אפליקציות עסקיות ישראליות (Morning/חשבונית ירוקה, קארדקום, טרנזילה, iCount, Grow) עם שירותים גלובליים לחיוב, תשלום ואוטומציה. כולל טיפול בעברית, פורמט מטבע שקלי, לוגיקת מע\"מ דו-חודשית, רפורמת חשבוניות 2026 ויכולות AI של Zapier (Copilot, Agents, MCP). לא מתאים לתהליכי n8n או Make.com.",
     "en": "Build Zapier Zaps that connect Israeli business apps (Morning/Green Invoice, Cardcom, Tranzila, iCount, Grow by Meshulam) with global services for billing, payment, and workflow automation. Covers Hebrew text handling, ILS formatting, bimonthly VAT logic, Israel Invoice Reform 2026, and Zapier AI features (Copilot, Agents, MCP Server). Includes WhatsApp Business via third-party providers (Twilio, WATI), Zapier Tables as Google Sheets alternative, and comparison with Make.com/n8n. Do NOT use for n8n workflows (use n8n-hebrew-workflows), Make.com scenarios (use make-com-israeli-automations), or custom code automation without Zapier."
   },
   "supported_agents": [

@@ -83,7 +83,7 @@ Authorization: Bearer {{$json.token}}
 | 330 | חשבונית זיכוי / זיכוי |
 | 400 | קבלה |
 
-למידע מפורט יש לעיין ב-`references/israeli-api-endpoints.md`.
+למידע מפורט עיינו ב-`references/israeli-api-endpoints.md`.
 
 #### israeli-bank-scrapers דרך Code Node
 
@@ -295,7 +295,7 @@ GET https://www.hebcal.com/hebcal?v=1&cfg=json&year=now&month=now&maj=on&mod=on
 
 מסננים פריטים עם `yomtov: true` שבהם חלות מגבלות עבודה (כמו שבת).
 
-למידע מפורט יש לעיין ב-`references/shabbat-cron-patterns.md`.
+למידע מפורט עיינו ב-`references/shabbat-cron-patterns.md`.
 
 ### שלב 5: Webhooks של שערי תשלום ישראליים
 
@@ -398,7 +398,7 @@ const payment = {
 return [{ json: payment }];
 ```
 
-**רשימת IP לבנה:** Cardcom ו-Tranzila דורשים שה-IP של שרת ה-webhook יהיה ברשימה המורשית בלוח הבקרה שלהם. באירוח עצמי יש להשתמש ב-IP קבוע או reverse proxy עם כתובת יציאה קבועה.
+**רשימת IP לבנה:** Cardcom ו-Tranzila דורשים שה-IP של שרת ה-webhook יהיה ברשימה המורשית בלוח הבקרה שלהם. באירוח עצמי השתמשו ב-IP קבוע או reverse proxy עם כתובת יציאה קבועה.
 
 #### תשלומי ביט
 
@@ -419,7 +419,7 @@ n8n 2.0 הביא שינויים משמעותיים שמשפיעים על תהל�
 | Execute Command node מושבת כברירת מחדל | תהליכי סריקת בנקים שמשתמשים ב-Execute Command ישברו | מעבר ל-Code node (שלב 2), או הפעלה מחדש דרך משתנה סביבה |
 | מודל שמירה/פרסום | תהליכים חייבים להתפרסם מפורשות כדי לפעול | פרסום תהליכים אחרי ייבוא או יצירה |
 | בידוד task runner ל-Code nodes | Code nodes רצים ב-sandbox מבודד | וידוא שכל החבילות הנדרשות זמינות בסביבת ה-task runner |
-| הסרת תמיכה ב-MySQL/MariaDB | לא ניתן להשתמש ב-MySQL/MariaDB כ-DB backend | מעבר ל-PostgreSQL (מומלץ) או SQLite |
+| הסרת תמיכה ב-MySQL/MariaDB | לא אפשר להשתמש ב-MySQL/MariaDB כ-DB backend | מעבר ל-PostgreSQL (מומלץ) או SQLite |
 | הקשחת אבטחה | הגדרות מחמירות יותר לצמתי קהילה | בדיקת הגדרות אבטחה אם משתמשים בצמתי קהילה |
 
 להפעלה מחדש של Execute Command אם באמת צריך:
@@ -495,7 +495,7 @@ return transactions;
 
 מחברים את הפלט של ה-Code node ל-AI Agent node (Tools Agent) שמוגדר עם ה-LLM המועדף. הסוכן מסווג כל תנועה לפי התיאור העברי וקטגוריות ההוצאות הישראליות המוכרות.
 
-**אינטגרציית MCP ב-n8n:** n8n תומך בשרתי Model Context Protocol (MCP). ניתן לחבר שרת MCP של `israeli-bank-scrapers` לצומת AI Agent ב-n8n, מה שמאפשר לסוכן לשלוף נתוני בנק לפי דרישה כחלק מתהליך שיחתי.
+**אינטגרציית MCP ב-n8n:** n8n תומך בשרתי Model Context Protocol (MCP). אפשר לחבר שרת MCP של `israeli-bank-scrapers` לצומת AI Agent ב-n8n, מה שמאפשר לסוכן לשלוף נתוני בנק לפי דרישה כחלק מתהליך שיחתי.
 
 ### שלב 8: מתי להשתמש ב-n8n לעומת חלופות
 
@@ -526,8 +526,8 @@ return transactions;
 ## משאבים מצורפים
 
 ### מסמכי עזר
-- `references/israeli-api-endpoints.md` -- טבלת עזר מלאה של נקודות קצה API ישראליות לתהליכי n8n, כולל Morning (חשבונית ירוקה), data.gov.il, שערי SMS, שערי תשלום ו-Hebcal. יש לעיין בו בעת הגדרת HTTP Request nodes לשירותים ישראליים.
-- `references/shabbat-cron-patterns.md` -- תבניות תזמון מוכנות מראש מותאמות שבת ל-n8n כולל הגדרות שבועיות, חודשיות ומותאמות חגים עם אינטגרציית Hebcal API. יש לעיין בו בעת הגדרת כל תהליך מתוזמן שצריך לכבד שבת וחגים.
+- `references/israeli-api-endpoints.md` -- טבלת עזר מלאה של נקודות קצה API ישראליות לתהליכי n8n, כולל Morning (חשבונית ירוקה), data.gov.il, שערי SMS, שערי תשלום ו-Hebcal. עיינו בו בעת הגדרת HTTP Request nodes לשירותים ישראליים.
+- `references/shabbat-cron-patterns.md` -- תבניות תזמון מוכנות מראש מותאמות שבת ל-n8n כולל הגדרות שבועיות, חודשיות ומותאמות חגים עם אינטגרציית Hebcal API. עיינו בו בעת הגדרת כל תהליך מתוזמן שצריך לכבד שבת וחגים.
 
 ## פתרון בעיות
 

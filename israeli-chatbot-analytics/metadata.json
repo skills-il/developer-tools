@@ -25,7 +25,7 @@
     "en": "Israeli Chatbot Analytics"
   },
   "display_description": {
-    "he": "ניתוח ואופטימיזציה של ביצועי צ'אטבוטים בעברית, כולל אנליטיקת זרימת שיחה, ניתוח רגשות בעברית, זיהוי נקודות נטישה, מדידת שביעות רצון, בדיקות A/B לווריאציות תגובה, ודשבורדים לדיווח.",
+    "he": "מנתחים ומשפרים ביצועי צ'אטבוטים בעברית: אנליטיקת זרימת שיחה, ניתוח סנטימנט בעברית, זיהוי נקודות נטישה, מדידת שביעות רצון, A/B לווריאציות תגובה ודשבורדים לדיווח.",
     "en": "Analyze and optimize Hebrew chatbot performance with conversation flow analytics, Hebrew sentiment analysis, drop-off detection, user satisfaction scoring, A/B testing for response variants, and reporting dashboards."
   },
   "supported_agents": [

@@ -30,7 +30,7 @@ license: MIT
 | פלאגינים | עשיר (sessions, menus, conversations, i18n) | בינוני (scenes, sessions) | הרחבות (JobQueue, persistence) |
 | serverless | Vercel, CF Workers, Deno Deploy, Supabase Edge, Fly.io | Express/Fastify/Lambda adapters | ASGI adapters, webhook ידני |
 | מודל middleware | Composer (כמו Koa) | Composer (כמו Koa) | Handler groups עם filters |
-| מומלץ ל... | פרויקטים חדשים, serverless, פיצ'רים חדשים | אפליקציות Express/Fastify קיימות | צוותי Python, ML/data pipelines |
+| כדאי ל... | פרויקטים חדשים, serverless, פיצ'רים חדשים | אפליקציות Express/Fastify קיימות | צוותי Python, ML/data pipelines |
 
 **איך בוחרים:**
 - צריכים פיצ'רים של Bot API v9.5? בחרו **grammY** או **python-telegram-bot**.
@@ -580,7 +580,7 @@ await ctx.reply("בחרו מהתפריט:", { reply_markup: hebrewMenu });
 
 ## API תשלומים (Telegram Stars)
 
-טלגרם תומך בתשלומים פנימיים באמצעות Telegram Stars (XTR), מטבע פנימי. לא צריך ספק תשלום חיצוני למוצרים דיגיטליים.
+טלגרם תומך בתשלומים פנימיים דרך Telegram Stars (XTR), מטבע פנימי. לא צריך ספק תשלום חיצוני למוצרים דיגיטליים.
 
 ### יצירת חשבונית
 

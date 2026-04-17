@@ -44,7 +44,7 @@ metadata:
 
 ### שלב 2: זיהוי דיבור בעברית (STT)
 
-#### OpenAI Whisper (מומלץ לדיוק)
+#### OpenAI Whisper (כדאי לדיוק)
 
 Whisper מספק את הדיוק הטוב ביותר בתמלול עברית, במיוחד לדיבור מעורב עברית-אנגלית שנפוץ בסביבות הייטק ישראליות.
 
@@ -126,7 +126,7 @@ def transcribe_hebrew_azure(audio_file_path: str) -> str:
 
 ### שלב 3: סינתזת דיבור בעברית (TTS)
 
-#### Google Cloud TTS (מומלץ לצליל טבעי)
+#### Google Cloud TTS (כדאי לצליל טבעי)
 
 ```python
 from google.cloud import texttospeech
@@ -483,11 +483,11 @@ python scripts/hebrew-stt-demo.py --help
 ## משאבים מצורפים
 
 ### סקריפטים
-- `scripts/hebrew-stt-demo.py` -- סקריפט הדגמה לזיהוי דיבור בעברית באמצעות OpenAI Whisper. מייצר קובץ אודיו לדוגמה ומתמלל אותו בחזרה לטקסט. הרצה: `python scripts/hebrew-stt-demo.py --help`
+- `scripts/hebrew-stt-demo.py` -- סקריפט הדגמה לזיהוי דיבור בעברית דרך OpenAI Whisper. מייצר קובץ אודיו לדוגמה ומתמלל אותו בחזרה לטקסט. הרצה: `python scripts/hebrew-stt-demo.py --help`
 
 ### חומרי עזר
-- `references/hebrew-stt-models.md` -- טבלת השוואה של מודלים לזיהוי דיבור בעברית (Whisper, Google Cloud STT, Azure Speech) עם בנצ'מרקים של דיוק, זמן תגובה, תמחור והמלצות לפי תרחיש. יש לעיין בו בעת בחירת ספק STT.
-- `references/ivr-design-patterns.md` -- תבניות נפוצות של תהליכי IVR לעסקים ישראליים, כולל מסעדות, מרפאות, שירות לקוחות ומשרדי ממשלה. יש לעיין בו בעת עיצוב מבנה תפריט IVR.
+- `references/hebrew-stt-models.md` -- טבלת השוואה של מודלים לזיהוי דיבור בעברית (Whisper, Google Cloud STT, Azure Speech) עם בנצ'מרקים של דיוק, זמן תגובה, תמחור והמלצות לפי תרחיש. עיינו בו בעת בחירת ספק STT.
+- `references/ivr-design-patterns.md` -- תבניות נפוצות של תהליכי IVR לעסקים ישראליים, כולל מסעדות, מרפאות, שירות לקוחות ומשרדי ממשלה. עיינו בו בעת עיצוב מבנה תפריט IVR.
 
 ## מלכודות נפוצות
 

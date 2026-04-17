@@ -23,7 +23,7 @@
     "en": "Israeli Phone Formatter"
   },
   "display_description": {
-    "he": "אימות ועיצוב מספרי טלפון ישראליים בכל הפורמטים",
+    "he": "מאמתים ומעצבים מספרי טלפון ישראליים בכל הפורמטים.",
     "en": "Validate, format, and convert Israeli phone numbers between local and international (+972) formats. Use when user asks to validate Israeli phone number, format phone for SMS, convert to +972, check phone prefix, or implement Israeli phone input validation in code. Handles mobile (050-058), landline (02-09), VoIP (072-077), toll-free (1-800), and star-service numbers. Do NOT use for non-Israeli phone systems or general telecom questions."
   },
   "supported_agents": [

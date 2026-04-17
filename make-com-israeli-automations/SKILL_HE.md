@@ -40,7 +40,7 @@ compatibility: Requires Make.com account (Free plan has 1,000 credits/month). Mo
 הגדרת החיבור:
 
 1. ב-Make.com, חפשו "Morning" בפלטת המודולים (לא "Green Invoice")
-2. צרו חיבור באמצעות מפתח API וסוד מדשבורד Morning: הגדרות > API Integration
+2. צרו חיבור דרך מפתח API וסוד מדשבורד Morning: הגדרות > API Integration
 3. הדומיין של ה-API נשאר `api.greeninvoice.co.il` למרות שינוי המותג
 
 פעולות זמינות (אין מודולי watch/trigger):
@@ -196,7 +196,7 @@ Make.com מאחסן תאריכים בפורמט ISO 8601. להצגה ישראל�
 | 11 | נובמבר |
 | 12 | דצמבר |
 
-השתמשו ב-`formatDate(now; "M")` לקבלת מספר החודש, ואז מפו אותו לשם העברי באמצעות פונקציית switch או טבלת מיפוי במודול Set Variable.
+השתמשו ב-`formatDate(now; "M")` לקבלת מספר החודש, ואז מפו אותו לשם העברי דרך פונקציית switch או טבלת מיפוי במודול Set Variable.
 
 ### שלב 4: בניית דפוסי Router למחזורי חיוב ישראליים
 
@@ -468,7 +468,7 @@ Make.com השיקה AI Agents באפריל 2025, ו-Visual AI Agents ב-Scenario
 2. הוסיפו מודול AI Agent של Make.com עם הנחיות בעברית: סווג את הצרופה כחשבונית, קבלה, הצעת מחיר, או הודעת זיכוי
 3. הוסיפו "Add Document" של Morning כ-Module Tool, עם פרמטר type ממופה מסיווג הסוכן (305 = חשבונית מס, 320 = חשבונית מס/קבלה, 400 = קבלה, 10 = הצעת מחיר)
 4. הוסיפו "Search Clients" של Morning כ-Module Tool כדי שהסוכן יוכל לחפש לקוחות קיימים
-5. הוסיפו error handler route למסמכים שלא ניתן לסווג
+5. הוסיפו error handler route למסמכים שלא אפשר לסווג
 
 תוצאה: עיבוד מסמכים מבוסס AI שמסווג חשבוניות בעברית אוטומטית ויוצר את סוג המסמך הנכון ב-Morning.
 

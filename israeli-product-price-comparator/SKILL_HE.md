@@ -92,7 +92,7 @@ allowed-tools: "Bash(node:*) Bash(python:*) WebFetch"
 - **Last Price** (`https://www.lastprice.co.il`): אתר השוואת מחירים חלופי עם רשת קמעונאים משלו
 
 **אגרגטורי קופונים:**
-- **TopCash** (`https://www.topcash.co.il`): פלטפורמת cashback (באמצעות אמריקן אקספרס) המציעה 1%-10% החזר מקמעונאים שותפים
+- **TopCash** (`https://www.topcash.co.il`): פלטפורמת cashback (דרך אמריקן אקספרס) המציעה 1%-10% החזר מקמעונאים שותפים
 - **Cashback.co.il** (`https://www.cashback.co.il`): פלטפורמת ה-cashback העצמאית הגדולה בישראל עם 250,000+ משתמשים ו-500+ חנויות שותפות
 - **ניוזלטרים של קמעונאים**: KSP, Ivory ו-iDigital שולחים מבצעים שבועיים למנויים
 

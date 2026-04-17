@@ -23,7 +23,7 @@
     "en": "Israeli Id Validator"
   },
   "display_description": {
-    "he": "אימות מספרי תעודת זהות, ח\"פ ומספרי רישום חברות",
+    "he": "מאמתים מספרי תעודת זהות, ח\"פ ומספרי רישום חברות.",
     "en": "Validate and format Israeli identification numbers including Teudat Zehut (personal ID), company numbers, amuta (non-profit) numbers, and partnership numbers. Use when user asks to validate Israeli ID, \"teudat zehut\", \"mispar zehut\", company number validation, or needs to implement Israeli ID validation in code. Includes check digit algorithm and test ID generation. Do NOT use for non-Israeli identification systems."
   },
   "supported_agents": [

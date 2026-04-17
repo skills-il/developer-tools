@@ -223,7 +223,7 @@ items.find({
 
 ### דוגמה 2: צינור CI/CD עם Docker
 המשתמש אומר: "שלבו את Artifactory כ-Docker registry בצינור ה-CI שלנו"
-תוצאה: הגדרת מאגר Docker וירטואלי, הגדרת docker login ב-CI, דחיפת images עם מידע build באמצעות jf docker push, סריקה עם Xray, קידום מ-staging לייצור.
+תוצאה: הגדרת מאגר Docker וירטואלי, הגדרת docker login ב-CI, דחיפת images עם מידע build דרך jf docker push, סריקה עם Xray, קידום מ-staging לייצור.
 
 ### דוגמה 3: שער אבטחה
 המשתמש אומר: "חסמו פריסת artifacts עם CVE קריטיים"
@@ -236,11 +236,11 @@ items.find({
 ## משאבים מצורפים
 
 ### סקריפטים
-- `scripts/artifactory_client.py` — לקוח מלא ל-REST API של JFrog Artifactory התומך בבדיקות תקינות, רשימת/יצירת מאגרים, העלאת/הורדת/מחיקת artifacts, חיפוש AQL, ניהול properties, שליפת מידע build וקידום build. מאומת באמצעות access token (ארגומנט CLI או משתנה סביבה JFROG_ACCESS_TOKEN). הרצה: `python scripts/artifactory_client.py --help`
-- `scripts/xray_client.py` — לקוח REST API של JFrog Xray לסריקת פגיעויות, ניהול מדיניות אבטחה ו-watches, חיפוש הפרות והפקת דוחות פגיעויות. השתמשו בו לסריקת artifacts עבור CVE, יצירת שערי אבטחה שחוסמים פגיעויות קריטיות, והפקת דוחות עמידה. הרצה: `python scripts/xray_client.py --help`
+- `scripts/artifactory_client.py`, לקוח מלא ל-REST API של JFrog Artifactory התומך בבדיקות תקינות, רשימת/יצירת מאגרים, העלאת/הורדת/מחיקת artifacts, חיפוש AQL, ניהול properties, שליפת מידע build וקידום build. מאומת דרך access token (ארגומנט CLI או משתנה סביבה JFROG_ACCESS_TOKEN). הרצה: `python scripts/artifactory_client.py --help`
+- `scripts/xray_client.py`, לקוח REST API של JFrog Xray לסריקת פגיעויות, ניהול מדיניות אבטחה ו-watches, חיפוש הפרות והפקת דוחות פגיעויות. השתמשו בו לסריקת artifacts עבור CVE, יצירת שערי אבטחה שחוסמים פגיעויות קריטיות, והפקת דוחות עמידה. הרצה: `python scripts/xray_client.py --help`
 
 ### חומרי עזר
-- `references/api-reference.md` — מדריך מהיר לנקודות קצה של REST API ב-Artifactory וב-Xray מאורגנים לפי קטגוריה (מערכת, מאגרים, artifacts, חיפוש, properties, מידע build, סריקה, מדיניות, הפרות), דף פקודות JFrog CLI, תבניות שאילתות AQL, הסברי סוגי מאגרים ומוסכמות מבנה מאגר סטנדרטיות. עיינו בו בעת בניית קריאות API, כתיבת שאילתות AQL, או הגדרת מבני מאגרים.
+- `references/api-reference.md`, מדריך מהיר לנקודות קצה של REST API ב-Artifactory וב-Xray מאורגנים לפי קטגוריה (מערכת, מאגרים, artifacts, חיפוש, properties, מידע build, סריקה, מדיניות, הפרות), דף פקודות JFrog CLI, תבניות שאילתות AQL, הסברי סוגי מאגרים ומוסכמות מבנה מאגר סטנדרטיות. עיינו בו בעת בניית קריאות API, כתיבת שאילתות AQL, או הגדרת מבני מאגרים.
 
 ## מלכודות נפוצות
 

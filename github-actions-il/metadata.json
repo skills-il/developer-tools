@@ -25,7 +25,7 @@
     "en": "GitHub Actions for Israeli Teams"
   },
   "display_description": {
-    "he": "תבניות CI/CD מותאמות לצוותים ישראליים: הקפאת פריסה בשבת וחגים, התראות Slack בעברית, בדיקות תאימות ישראליות (IS-5568, פרטיות), סנכרון Monday.com, ותבניות workflow לסטארטאפים ישראליים.",
+    "he": "תבניות CI/CD מותאמות לצוותים ישראליים: הקפאת פריסות בשבת וחגים, התראות Slack בעברית, בדיקות תאימות (IS-5568, פרטיות), סנכרון Monday.com ו-workflow מוכן לסטארטאפ ישראלי.",
     "en": "CI/CD workflow templates tailored for Israeli development teams, including Shabbat/holiday-aware deployment schedules, Hebrew Slack/Teams notifications, Israeli compliance checks (IS-5568 accessibility, Privacy Protection Authority), Monday.com issue sync, and reusable composite actions for Israeli startup stacks."
   },
   "supported_agents": [

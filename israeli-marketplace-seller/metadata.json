@@ -25,7 +25,7 @@
     "en": "Israeli Marketplace Seller"
   },
   "display_description": {
-    "he": "ניהול מכירות אונליין בשווקים ישראליים — זאפ, KSP, פייסבוק מרקטפלייס ואינסטגרם שופינג",
+    "he": "מנהלים מכירות אונליין בשווקים ישראליים, זאפ, KSP, פייסבוק מרקטפלייס ואינסטגרם שופינג.",
     "en": "Manage online selling across Israeli marketplaces — Zap, KSP, Facebook Marketplace, and Instagram Shopping. Use when user asks about \"sell on Zap\", \"Facebook Marketplace Israel\", \"Instagram Shopping Israel\", \"online selling Israel\", \"price comparison KSP\", \"product listing Hebrew\", or \"מכירה אונליין\". Covers product listing creation, competitor price monitoring, inventory sync, review management, and sales analytics across Israeli marketplaces. Do NOT use for international marketplaces (Amazon, eBay) or physical store operations."
   },
   "openclaw": {

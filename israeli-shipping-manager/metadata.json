@@ -25,7 +25,7 @@
     "en": "Israeli Shipping Manager"
   },
   "display_description": {
-    "he": "מדריך למפתחים לבניית אינטגרציות שילוח עם חברות שילוח ישראליות (דואר ישראל, צ'יטה, HFD, מהיר לי) ושירותי לוקרים (BOX2GO, שלאגר, Done). הסקיל מכסה בחירת חברת שילוח, עיצוב כתובות ישראליות, הפקת תוויות, בניית מערכת מעקב חוצה-חברות והתראות ללקוחות. אל תשתמשו בסקיל הזה לבדיקת סטטוס של חבילה ספציפית (הפנו ל-mypost.israelpost.co.il), למשלוחים בינלאומיים מחוץ לישראל, או לנושאי מכס ויבוא.",
+    "he": "מדריך למפתחים לאינטגרציית שילוח עם חברות ישראליות (דואר ישראל, צ'יטה, HFD, מהיר לי) ושירותי לוקרים (BOX2GO, שלאגר, Done). הסקיל מכסה בחירת חברה, עיצוב כתובות ישראליות, הפקת תוויות, מעקב חוצה-חברות והתראות ללקוחות. אל תשתמשו לבדיקת סטטוס של חבילה ספציפית (הפנו ל-mypost.israelpost.co.il), משלוחים בינלאומיים מחוץ לישראל או נושאי מכס וייבוא.",
     "en": "Build and manage shipping integrations with Israeli carriers, including Israel Post, Cheetah, HFD, and Mahir Li, plus locker pickup services (BOX2GO, Shlager, Done). Use when user asks about \"shipping Israel\", \"Cheetah delivery\", \"meshloach\", \"shipping label\", \"HFD\", \"locker pickup Israel\", or setting up carrier integrations for an e-commerce store. Covers carrier selection, Israeli address formatting, label generation, cross-carrier tracking system setup, and customer delivery notifications. Do NOT use for looking up a specific package tracking status (direct users to mypost.israelpost.co.il or hfd.co.il). Do NOT use for international shipping outside Israel or customs/import."
   },
   "supported_agents": [

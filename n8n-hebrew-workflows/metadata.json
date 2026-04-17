@@ -33,7 +33,7 @@
     "en": "n8n Hebrew Workflows"
   },
   "display_description": {
-    "he": "בנייה ואופטימיזציה של תהליכי n8n 2.0 עם חיבורים ל-API ישראליים כולל Morning (חשבונית ירוקה), israeli-bank-scrapers, data.gov.il, שערי SMS ושערי תשלום (Cardcom, Tranzila, Grow by Meshulam). כולל צמתי AI Agent, אינטגרציית MCP, רפורמת חשבוניות 2026, תשלומי ביט, טיפול בעברית, תזמון מותאם שבת וחגים, ואירוח עצמי בענן ישראלי. אל תשתמשו בסקיל הזה להדרכות n8n כלליות בלי הקשר ישראלי.",
+    "he": "בונים וממטבים תהליכי n8n 2.0 עם חיבורים ל-API ישראליים: Morning (חשבונית ירוקה), israeli-bank-scrapers, data.gov.il, שערי SMS ושערי תשלום (Cardcom, Tranzila, Grow by Meshulam). כולל צמתי AI Agent, אינטגרציית MCP, רפורמת חשבוניות 2026, תשלומי ביט, טיפול בעברית, תזמון שמתחשב בשבת וחגים ואירוח עצמי בענן ישראלי. אל תשתמשו בסקיל לעריכת n8n כללית בלי הקשר ישראלי.",
     "en": "Build and optimize n8n 2.0 automation workflows with Israeli API integrations including Morning (formerly Green Invoice), israeli-bank-scrapers, data.gov.il, SMS gateways, and payment processors (Cardcom, Tranzila, Grow by Meshulam). Covers AI Agent nodes, MCP integration, Israel Invoice Reform 2026, Bit payments, Hebrew data handling, Shabbat-aware scheduling, and self-hosting on Israeli cloud. Do NOT use for general n8n tutorials without Israeli context."
   },
   "supported_agents": [

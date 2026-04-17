@@ -41,7 +41,7 @@ metadata:
 | בדיקת i18n עברית | `i18n-validation.yml` | סקריפט מותאם, JSON schema check |
 | תזמון שבוע עבודה ישראלי | כל workflow | Cron בימים א-ה |
 
-אם לצוות יש מספר צרכים, שלבו workflows באמצעות composite actions מ-`references/workflow-templates.md`.
+אם לצוות יש מספר צרכים, שלבו workflows דרך composite actions מ-`references/workflow-templates.md`.
 
 ### שלב 2: הגדרת תזמון מודע לשבת וחגים
 
@@ -298,7 +298,7 @@ deploy-vercel:
 
 ### שלב 7: יצירת Composite Actions לשימוש חוזר
 
-בנו ספריית composite actions שמקודדת מוסכמות של סטארטאפים ישראליים. הם נמצאים ב-`.github/actions/` וניתן לשתף אותם בין ריפואים.
+בנו ספריית composite actions שמקודדת מוסכמות של סטארטאפים ישראליים. הם נמצאים ב-`.github/actions/` ואפשר לשתף אותם בין ריפואים.
 
 **Hebrew i18n validation action:**
 

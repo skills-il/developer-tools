@@ -67,7 +67,7 @@ python scripts/run_eval.py --suite hebrew-core --models claude-sonnet-4-6,gpt-5,
 |---------|--------------|--------|
 | HeQ | F1, Exact Match | דיוק unanswerable |
 | HebrewSentiment | דיוק | Macro-F1 |
-| Hebrew Winograd | דיוק | — |
+| Hebrew Winograd | דיוק |, |
 | תרגום | BLEU, chrF | העדפה אנושית |
 | HebNLI | דיוק | Macro-F1 |
 | סיכום | ROUGE-L, BERTScore-HE | העדפה אנושית |
