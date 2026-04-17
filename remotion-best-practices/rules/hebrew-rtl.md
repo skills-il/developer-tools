@@ -111,21 +111,26 @@ Setting `direction: "rtl"` on a parent does NOT automatically fix flex item orde
   </div>
 </div>
 
-// CORRECT -- icon appears on the right (Hebrew reading start)
+// CORRECT -- icon on right, text right-aligned
 <div style={{ direction: "rtl" }}>
   <div style={{
     display: "flex",
     flexDirection: "row-reverse",
     alignItems: "center",
+    justifyContent: "flex-end",
     gap: 12,
   }}>
     <span>✅</span>
-    <span>פונטים עבריים</span>  {/* icon on RIGHT, text on LEFT */}
+    <span>פונטים עבריים</span>  {/* icon on RIGHT, row hugs the right edge */}
   </div>
 </div>
 ```
 
-Also: never set `direction: "ltr"` on Hebrew text spans inside an RTL flex container. It breaks the visual ordering and makes punctuation jump to the wrong side.
+Two key rules:
+- `flexDirection: "row-reverse"` puts the icon on the right (Hebrew reading start)
+- `justifyContent: "flex-end"` right-aligns the entire row (without it, the row floats to center)
+
+Never set `direction: "ltr"` on Hebrew text spans inside an RTL flex container. It breaks the visual ordering and makes punctuation jump to the wrong side.
 
 ## Bidirectional Text (Bidi)
 
