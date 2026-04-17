@@ -195,13 +195,15 @@ Red flags to avoid in Hebrew video copy:
 | Translated feel | Natural Israeli |
 |-----------------|-----------------|
 | "תמיכה מלאה ב-X" (full support for X) | "זה עובד עם X, כמו שצריך" (it works with X, as it should) |
-| "טקסט מיושר לשמאל" (passive participle, spec-like) | "הטקסט נופל שמאלה" / "עברית מתיישבת שמאלה" (vivid, active) |
+| "טקסט מיושר לשמאל" (passive participle, spec-like) | "עברית מתיישרת לשמאל" / "הטקסט נדחף לשמאל" (active verb) |
 | "פונטים לא נטענים" (formal) | "פונטים לא עולים" (Israeli dev slang for "load") |
 | "מכונת כתיבה" (typewriter = physical machine) | "אפקט הקלדה" (typing effect = actual CSS term) |
 | "ניתן להשתמש" (formal passive) | "אפשר להשתמש" / "השתמשו" (imperative or casual) |
 | "על ידי" (by means of) | just drop it, use active voice |
 
 For interjections and excitement: "סוף סוף" (finally), "כמו שצריך" (as it should), "באמת" (really), "בטח" (sure) -- these make Hebrew copy feel native.
+
+**Warning: do not invent vivid metaphors in Hebrew that work in English.** English metaphors rarely translate. "Hebrew falls to the left" (עברית נופלת שמאלה) sounds wrong in Hebrew because `נופלת` means "falls down" (gravity direction), not "goes sideways". Stick to active-voice verbs that Israeli developers actually say: `מתיישרת` (aligns itself), `נדחפת` (gets pushed), `יוצאת` (comes out), `מופיעה` (appears). When in doubt, keep it simple over poetic. Ask a native speaker before using any unusual verb choice.
 
 ## Em Dashes Forbidden
 
