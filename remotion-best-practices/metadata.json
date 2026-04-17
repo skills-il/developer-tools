@@ -1,0 +1,19 @@
+{
+  "display_name": {
+    "he": "Remotion - שיטות עבודה מומלצות",
+    "en": "Remotion Best Practices"
+  },
+  "display_description": {
+    "he": "שיטות עבודה מומלצות ליצירת סרטונים פרוגרמטיים ב-React עם Remotion, כולל תמיכה מלאה בעברית ו-RTL. מכסה אנימציות, קומפוזיציות, סיקוונסים, מעברים, כתוביות עם הדגשת מילים, קריינות AI, תלת-ממד, גרפים, פונטים עבריים, ואנימציות טקסט דו-כיווניות. השתמשו כשאתם עובדים עם קוד Remotion או יוצרים סרטוני סושיאל ותוכן שיווקי בעברית. אל תשתמשו לעריכת וידאו שאינה Remotion או לפיתוח React כללי.",
+    "en": "Best practices for programmatic video creation in React with Remotion, including full Hebrew RTL support. Covers animations, compositions, sequencing, transitions, TikTok-style captions with word highlighting, AI voiceover, 3D, charts, Hebrew Google Fonts, and bidirectional text animations. Use when working with Remotion code or creating Hebrew social media videos and marketing content. Do NOT use for non-Remotion video editing or general React development."
+  },
+  "tags": {
+    "he": ["remotion", "וידאו", "react", "אנימציה", "כתוביות", "עברית", "RTL", "סרטונים", "TikTok", "קריינות"],
+    "en": ["remotion", "video", "react", "animation", "captions", "hebrew", "rtl", "programmatic-video", "tiktok", "voiceover"]
+  },
+  "author": "skills-il",
+  "version": "1.0.0",
+  "category": "developer-tools",
+  "supported_agents": ["claude-code", "cursor", "windsurf", "copilot", "opencode", "codex"],
+  "openclaw": true
+}
