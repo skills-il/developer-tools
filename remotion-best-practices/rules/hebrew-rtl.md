@@ -98,6 +98,35 @@ export const HebrewScene: React.FC = () => {
 };
 ```
 
+## RTL Flex Containers (Icons + Hebrew Text)
+
+Setting `direction: "rtl"` on a parent does NOT automatically fix flex item ordering. When you have icon + text rows (checkmarks, bullet points, list items), the icon will still appear on the LEFT side. You MUST use `flexDirection: "row-reverse"` on each flex row:
+
+```tsx
+// WRONG -- icon appears on the left despite RTL parent
+<div style={{ direction: "rtl" }}>
+  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+    <span>✅</span>
+    <span>פונטים עבריים</span>  {/* icon on LEFT, text on RIGHT */}
+  </div>
+</div>
+
+// CORRECT -- icon appears on the right (Hebrew reading start)
+<div style={{ direction: "rtl" }}>
+  <div style={{
+    display: "flex",
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    gap: 12,
+  }}>
+    <span>✅</span>
+    <span>פונטים עבריים</span>  {/* icon on RIGHT, text on LEFT */}
+  </div>
+</div>
+```
+
+Also: never set `direction: "ltr"` on Hebrew text spans inside an RTL flex container. It breaks the visual ordering and makes punctuation jump to the wrong side.
+
 ## Bidirectional Text (Bidi)
 
 When mixing Hebrew with English or numbers, use Unicode bidi isolates to prevent reordering bugs:
@@ -112,7 +141,7 @@ const brand = "Remotion";
 const text2 = `צור סרטונים עם \u2066${brand}\u2069 בקלות`;
 
 // Hebrew in English context -- wrap Hebrew in RTL isolate
-const feature = "כתוביו��";
+const feature = "כתוביות";
 const text3 = `Supports \u2067${feature}\u2069 rendering`;
 ```
 
