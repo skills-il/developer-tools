@@ -1,0 +1,36 @@
+# Voice AI Architecture: Anti-Patterns & Pitfalls
+
+1. The "God Node" (Central Hub)
+- Definition: Using a single node (like a Validator or Dispatcher) as a traffic circle where all arrows enter and exit.
+- Why it’s bad: Breaks LangGraph modularity, makes debugging impossible, and creates "spaghetti routing."
+- Correct Pattern: Nodes should route directly to the next logical business stage.
+
+2. The Monolith (Logic Compression)
+- Definition: Cramming multiple conversational phases (e.g., Greeting + Qualification + Objection) into one Python function using massive if/else blocks.
+- Why it’s bad: Prevents granular state control and makes it harder for the LLM to focus on a single micro-task.
+- Correct Pattern: 1:1 mapping between a business stage and a LangGraph node.
+
+3. Backend/Brain Leakage
+- Definition: Trying to handle "pipes" (latency masking, stall fillers, audio streaming, DB persistence) inside the Graph logic.
+- Why it’s bad: Bloats the graph with non-business nodes and creates visual chaos.
+- Correct Pattern: Delegate infrastructure to the Application Wrapper. The Graph strictly owns "The Brain" (Logic & Prompts).
+
+4. Validator-as-Router
+- Definition: Using a guardrail/validator node to decide the next business step in the conversation.
+- Why it’s bad: High risk of the agent getting stuck in a loop or losing context. 
+- Correct Pattern: The Validator is an "Exit Filter" only. It sanitizes text before END/TTS and never routes to a business node.
+
+5. Uncounted Loops (State Stagnation)
+- Definition: Routing back to the same node (e.g., Objection Handler) without incrementing a counter or updating the summary.
+- Why it’s bad: Leads to repetitive "broken record" behavior where the agent asks the same question indefinitely.
+- Correct Pattern: Every loop must have a clear exit condition (e.g., objection_count >= 2) leading to a fallback or close.
+
+6. The IVR Trap (Triage Nodes)
+- Definition: Creating a central `intent_triage` node that evaluates every user input after an action to decide where to go next.
+- Why it's bad: It breaks state continuity. If a user says "tomorrow at 3" inside a scheduling branch, a global triage won't understand it.
+- Correct Pattern: Intent classification happens *inside* the conversational node via Structured Output, and routes directly via Conditional Edges.
+
+7. Pydantic Sprawl (Code Bloat)
+- Definition: Creating a unique Pydantic model for every single node's output (e.g., `PolicyOutput`, `WrapupOutput`, `FaqOutput`).
+- Why it's bad: Wastes tokens and over-engineers simple text responses.
+- Correct Pattern: Default to a single `StandardVoiceOutput(assistant_message: str)` for all basic nodes. Only create custom structured outputs for nodes extracting specific workflow variables (e.g., `StylingSlotOutput` for dates).

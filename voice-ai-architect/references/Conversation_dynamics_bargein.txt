@@ -1,0 +1,17 @@
+# Conversation Dynamics: Adaptive Barge-In Handling
+
+In Voice AI, a "Barge-in" occurs when the user interrupts the agent mid-sentence.
+
+CRITICAL ARCHITECTURAL RULE: The LangGraph (The Brain) DOES NOT handle the audio mechanics of barge-ins.
+
+1. The Wrapper's Job: 
+The external application wrapper (VAPI, LiveKit, etc.) handles Voice Activity Detection (VAD), halting the TTS audio, clearing audio buffers, and calculating latency. The Graph NEVER models TTS cancellation.
+
+2. The Graph's Job: 
+The Graph only receives the *classified result* of the interruption from the wrapper (e.g., `interruption_kind = "backchannel" | "substantive"`).
+
+3. Routing Rule (No God Nodes): 
+Interruption handling MUST return the user to the `active_node` (the specific branch they were currently in). 
+- Do NOT route interruptions through a central "Intent Triage" or "God Node" that resets the context. 
+- If it's a backchannel ("uh-huh"), the active node simply resumes. 
+- If it's substantive, it may route to an Objection Handler or handle the input directly, but the context of the active branch remains isolated and intact.

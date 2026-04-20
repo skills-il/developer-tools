@@ -1,0 +1,18 @@
+# Guardrails Architecture: The 3-Layer Defense
+
+To ensure safe and reliable voice agents, guardrails must be decoupled into three distinct layers. Do NOT combine these into a single monolithic safety node.
+
+1. Layer 1: Input Moderation (Pre-Brain)
+- Function: Sanitizes the user's raw transcript before it reaches the core business logic.
+- Responsibility: Blocks explicit prompt injections, jailbreak attempts, or highly abusive language.
+- Implementation: Usually handled by a lightweight, fast classifier or the Wrapper BEFORE invoking the main LangGraph routing. The core Graph assumes the input is generally safe to process.
+
+2. Layer 2: Reasoning Control (Within Business Nodes)
+- Function: Keeps the AI's logic on track during the specific conversational turn.
+- Responsibility: Ensures the agent adheres to strict business rules (e.g., "Do not discuss pricing," "Only offer 30-minute slots").
+- Implementation: Embedded directly within the `SYSTEM` micro-prompts of each specific business node (e.g., `STYLING_SLOT_SYSTEM`). It is context-specific.
+
+3. Layer 3: Output Filtering (The Pre-TTS Validator)
+- Function: The final safety net before the agent's response is converted to audio.
+- Responsibility: Catches LLM hallucinations, strips out accidentally generated prices, removes markdown that TTS can't read, and ensures the tone is safe.
+- Implementation: This is the `pre_tts_validator_node`. It acts STRICTLY as an exit filter at the end of a turn. It takes the `last_assistant_draft`, sanitizes it into `last_assistant_safe`, and routes to `END`. It NEVER routes the conversation back to a business node.

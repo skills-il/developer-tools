@@ -1,0 +1,24 @@
+# Orchestration & Tool Use: The "Think -> Act" Pattern
+
+In a real-time voice agent, you must strictly separate interpretation (Thinking) from execution (Acting).
+
+1. The Boundary of Action (No Direct Side-Effects)
+- The LLM (The Brain) NEVER executes side effects directly (e.g., it does not make direct HTTP requests or write to databases). 
+- The LLM only interprets intent and emits a structured `function_call` (or tool invocation)[cite: 588, 589].
+
+2. The "Think -> Act -> Respond" Loop
+- THINK: The LLM processes the user transcript and decides an action is needed[cite: 595].
+- ACT: The LLM outputs a tool call. The Graph routes to a deterministic tool node to execute the function[cite: 602, 603, 604].
+- RESPOND: The tool node returns the result to the state, and the LLM formulates a spoken response based on that result[cite: 605, 606, 607].
+
+3. Interruption-Aware Execution
+- If a user interrupts (barge-in) while an action is being reasoned or executed, listening MUST preempt the action[cite: 618]. 
+- Tool calls and asynchronous actions should be safely cancelable or ignored if the user changes the subject mid-task[cite: 624].
+
+4. State Determinism vs. Probabilistic Memory
+- Do not rely on the LLM's raw conversation history to remember if a critical action was completed. 
+- Track critical business state (e.g., `booking_confirmed = True`) explicitly in the Graph's State schema[cite: 644, 645]. Lower the decoding temperature for these transactional nodes.
+
+5. Retrieval (RAG) belongs in Orchestration
+- If the agent needs to look up knowledge, do not embed massive static knowledge bases directly into the node's system prompt[cite: 654]. 
+- Instead, provide a retrieval tool (function call) that the LLM can invoke to fetch small, high-relevance snippets dynamically[cite: 655].

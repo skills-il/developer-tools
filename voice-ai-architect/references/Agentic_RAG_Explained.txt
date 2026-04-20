@@ -1,0 +1,19 @@
+# Agentic RAG: Implementation Rules for Voice AI
+
+When a Voice AI agent requires external knowledge, you MUST implement Retrieval-Augmented Generation (RAG) strictly using the following architectural rules:
+
+1. RAG as a Tool, Not a Prompt (No Prompt Bloat)
+- NEVER inject large knowledge bases, catalogs, or static documents directly into the node's System Prompt.
+- RAG must be implemented as a specific, callable Tool within the "Think -> Act" loop.
+
+2. State-Driven Context (Dedicated Nodes)
+- If retrieval is a core step, create a dedicated `retrieval_node`.
+- The retrieved information must be saved explicitly to the AgentState (e.g., `retrieved_context: str`) so subsequent conversational nodes can access it to formulate the response.
+
+3. Voice-Optimized Summarization
+- Voice agents cannot read raw document chunks to users. 
+- The LLM node consuming the `retrieved_context` must synthesize the data into a short, natural spoken sentence (1-2 lines max).
+
+4. Fallback Routing (Zero Hallucination)
+- Always include conditional edges to handle RAG failures (e.g., empty results, timeouts).
+- If the RAG tool returns no relevant data, the agent MUST route to a fallback or explicitly state "I don't have that information," rather than hallucinating an answer.

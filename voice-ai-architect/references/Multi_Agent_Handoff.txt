@@ -1,0 +1,19 @@
+# Multi-Agent Architecture: The Handoff Pattern
+
+When a Voice AI system grows complex, it must be split into specialized Sub-Graphs (e.g., Sales Agent, Support Agent). To maintain sub-second latency and avoid token bloat, you must strictly follow the Summary Handoff Pattern.
+
+1. Sub-Graph Isolation
+- Never build one massive graph for multiple domains. 
+- Each specialized agent (Sub-Graph) should have its own narrow System Prompt and specific tools.
+
+2. The Context Bloat Danger (No Raw History Transfer)
+- NEVER pass the full raw `recent_messages` array from the Main Router to the Sub-Graph. 
+- Giving a specialized agent the entire history of an unrelated conversation distracts the LLM, increases latency, and risks prompt injection crossover.
+
+3. The Summary Injection (The Handoff)
+- Before routing to a Sub-Graph, the current node or router MUST compress the context into a dense `conversation_summary` string.
+- Only pass this `conversation_summary` and explicit structured variables (e.g., `customer_display_name`, `last_interested_branch`) to the new agent's state.
+
+4. Clean Return (The Resolution)
+- When the Sub-Graph completes its task, it does not return its internal dialogue history to the Main Router.
+- It returns a structured resolution state (e.g., `task_completed = True`, `updated_summary`), allowing the Main Router to seamlessly continue or wrap up the call.

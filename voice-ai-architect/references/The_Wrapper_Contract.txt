@@ -1,0 +1,20 @@
+# The Wrapper Contract: Application Layer vs. AI Brain
+
+The LangGraph strictly acts as the "Brain" (Business Logic & Decision Making). The external Application Layer (VAPI, LiveKit, Twilio + Backend DB) acts as the "Wrapper" and handles all physical infrastructure. 
+
+When designing the LangGraph, assume the following contract:
+
+1. Latency & Streaming: 
+The Wrapper handles Time-To-First-Byte (TTFB) optimizations, audio chunk streaming, and playing "Stall Fillers" (e.g., "just a second while I check...") during slow API calls. The Graph MUST NOT model latency flags or stall-filler nodes.
+
+2. Audio & Barge-in: 
+The Wrapper detects interruptions, halts the ongoing TTS audio, and classifies the interruption type.
+
+3. Database Idempotency & Action Execution: 
+The Graph only sets boolean flags (e.g., `styling_booking_confirmed = True`) or enum topics (e.g., `ticket_topic = "inventory"`). The Wrapper is responsible for securely executing the actual SMS sending or saving the ticket to Supabase. The Graph does not handle idempotency keys or HTTP retry logic.
+
+4. Turn-Taking (`await_user_input`): 
+The Graph's `await_user_input` node strictly routes to `END`. It halts the graph. The Wrapper waits for the user to speak, and then wakes up the Graph by invoking it again from `START` with the new user message.
+
+5. Initial Context Injection: 
+The Wrapper queries the database based on the caller's phone number before the very first invocation, injecting known data (like `customer_display_name` or `last_interested_branch`) into the initial AgentState.

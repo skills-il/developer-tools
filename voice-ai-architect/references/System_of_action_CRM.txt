@@ -1,0 +1,20 @@
+# System of Action: CRM Integration Rules
+
+To transform the Voice AI into a reliable "System of Action" without breaking the low-latency streaming architecture, you MUST decouple CRM execution from the conversational graph.
+
+1. The Graph Extracts, The Wrapper Executes
+- The LangGraph (The Brain) is ONLY responsible for extracting structured data from the conversation (e.g., Lead Name, Budget, Intent).
+- The LangGraph MUST NOT import CRM SDKs (HubSpot/Salesforce) or make blocking HTTP requests to update records. 
+
+2. Structured Pydantic Extraction
+- When a conversational phase concludes (e.g., lead qualification), use a dedicated node with a Pydantic `StructuredOutput` to rigidly extract the required CRM fields from the transcript.
+
+3. State-Based Payload Hand-off
+- Save the extracted data into a dedicated key in the `AgentState` (e.g., `crm_sync_payload: dict`).
+- Set a boolean trigger flag in the state (e.g., `trigger_crm_sync: bool = True`).
+
+4. Asynchronous Execution (Wrapper Domain)
+- The external Application Wrapper detects the `trigger_crm_sync` flag, executes the actual CRM API call, and handles idempotency, retries, and network latency.
+
+5. Graph-Level Error Handling
+- If the Wrapper fails to update the CRM, it injects a failure flag back into the state on the next turn. The Graph must handle this gracefully (e.g., routing to a node that says "I had trouble saving that, can you repeat your email?").
