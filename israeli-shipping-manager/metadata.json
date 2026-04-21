@@ -33,10 +33,7 @@
     "openclaw",
     "cursor",
     "windsurf",
-    "cline",
-    "aider",
-    "continue",
-    "copilot",
+    "github-copilot",
     "gemini-cli"
   ],
   "openclaw": {
