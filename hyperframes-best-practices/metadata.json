@@ -1,0 +1,30 @@
+{
+  "display_name": {
+    "en": "HyperFrames Best Practices",
+    "he": "HyperFrames - שיטות עבודה מומלצות"
+  },
+  "display_description": {
+    "en": "Best practices for programmatic video creation using HyperFrames — plain HTML compositions with GSAP animations rendered to MP4 — with full Hebrew and RTL support. Covers composition authoring, data-* timing attributes, GSAP timeline contract, layout-before-animation methodology, visual identity gate, Hebrew fonts via Google Fonts auto-fetch (Heebo, Rubik, Assistant), RTL text with dir=\"rtl\", Hebrew captions via Whisper, Hebrew voiceover via external TTS (Kokoro doesn't support Hebrew), audio-reactive visuals, scene transitions, and bidirectional text with <bdi>. Use when building HTML-based video content or Hebrew social/marketing videos without React. Do NOT use for Remotion or general React video work.",
+    "he": "שיטות עבודה מומלצות ליצירת סרטונים מקוד עם HyperFrames — קומפוזיציות HTML רגילות עם אנימציות GSAP שמתרנדרות ל-MP4 — כולל תמיכה מלאה בעברית ו-RTL. מכסה כתיבת קומפוזיציות, מאפייני data-* לתזמון, חוזה Timeline של GSAP, מתודולוגיית Layout-Before-Animation, Visual Identity Gate, פונטים עבריים דרך הורדה אוטומטית מ-Google Fonts (Heebo, Rubik, Assistant), טקסט RTL עם dir=\"rtl\", כתוביות עברית דרך Whisper, קריינות בעברית דרך TTS חיצוני (Kokoro המובנה לא תומך בעברית), אפקטים מגיבים לאודיו, מעברי סצנות, וטקסט דו-כיווני עם <bdi>. השתמשו כשאתם בונים תוכן וידאו מבוסס-HTML או סרטוני סושיאל/שיווק בעברית בלי React. אל תשתמשו עבור Remotion או עבודת וידאו כללית ב-React."
+  },
+  "tags": {
+    "en": ["hyperframes", "video", "html", "gsap", "animation", "captions", "hebrew", "rtl", "programmatic-video", "tiktok", "voiceover"],
+    "he": ["HyperFrames", "וידאו", "HTML", "GSAP", "אנימציה", "כתוביות", "עברית", "RTL", "סרטונים", "TikTok", "קריינות"]
+  },
+  "author": "skills-il",
+  "version": "1.0.0",
+  "category": "developer-tools",
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "windsurf",
+    "github-copilot",
+    "opencode",
+    "codex",
+    "chatgpt",
+    "claude-ai",
+    "claude-desktop",
+    "manus"
+  ],
+  "openclaw": true
+}
