@@ -4,7 +4,7 @@ Named visual identities for HyperFrames videos. Each style is grounded in a real
 
 **How to pick:** Match mood first, content second. Ask: _"What should the viewer FEEL?"_
 
-**How to use:** Reference the style in your scene plan. Translate the style's principles into concrete composition decisions — palette choice, font selection, entrance patterns, transition type, ambient motion feel.
+**How to use:** Reference the style in your scene plan. Translate the style's principles into concrete composition decisions, palette choice, font selection, entrance patterns, transition type, ambient motion feel.
 
 ## Quick Reference
 
@@ -21,11 +21,11 @@ Named visual identities for HyperFrames videos. Each style is grounded in a real
 
 ---
 
-## 1. Swiss Pulse — Josef Müller-Brockmann
+## 1. Swiss Pulse, Josef Müller-Brockmann
 
 **Mood:** Clinical, precise | **Best for:** SaaS dashboards, developer tools, APIs, metrics
 
-- Black (`#1a1a1a`), white, ONE accent — electric blue (`#0066FF`) or amber (`#FFB300`)
+- Black (`#1a1a1a`), white, ONE accent, electric blue (`#0066FF`) or amber (`#FFB300`)
 - Helvetica or Inter Bold for headlines, Regular for labels. Numbers large (80–120px)
 - Grid-locked compositions. Every element snaps to an invisible 12-column grid
 - Animated counters count up from 0. Hard cuts, no decorative transitions
@@ -41,27 +41,27 @@ Hard cuts or geometric transitions. Nothing decorative.
 
 ---
 
-## 2. Velvet Standard — Massimo Vignelli
+## 2. Velvet Standard, Massimo Vignelli
 
 **Mood:** Premium, timeless | **Best for:** Luxury products, enterprise software, keynotes, investor decks
 
-- Black, white, ONE rich accent — deep navy (`#1a237e`) or gold (`#c9a84c`)
+- Black, white, ONE rich accent, deep navy (`#1a237e`) or gold (`#c9a84c`)
 - Thin sans-serif, ALL CAPS, wide letter-spacing (`0.15em+`)
 - Generous negative space. Symmetrical, centered, architectural precision
 - Slow, deliberate. Sequential reveals with long holds. No frantic motion
 - Transitions: Cross-Warp Morph (elegant, organic flow between scenes)
 
-**GSAP signature:** `sine.inOut`, `power1`. Nothing snaps — everything glides with intention.
+**GSAP signature:** `sine.inOut`, `power1`. Nothing snaps, everything glides with intention.
 
 ```
 Velvet Standard: Black, white, one rich accent. Thin ALL CAPS type with wide tracking.
 Generous negative space. Sequential reveals, long holds.
-Cross-Warp Morph transitions. Slow and deliberate — luxury takes its time.
+Cross-Warp Morph transitions. Slow and deliberate, luxury takes its time.
 ```
 
 ---
 
-## 3. Deconstructed — Neville Brody
+## 3. Deconstructed, Neville Brody
 
 **Mood:** Industrial, raw | **Best for:** Tech news, developer launches, security products, punk-energy reveals
 
@@ -76,37 +76,37 @@ Cross-Warp Morph transitions. Slow and deliberate — luxury takes its time.
 ```
 Deconstructed: Dark grey #1a1a1a + rust orange #D4501E. Type at angles, escaping frames.
 Scan-line glitch overlays. Text SLAMS and scrambles into place.
-Glitch shader transitions. Industrial and raw — nothing should feel polished.
+Glitch shader transitions. Industrial and raw, nothing should feel polished.
 ```
 
 ---
 
-## 4. Maximalist Type — Paula Scher
+## 4. Maximalist Type, Paula Scher
 
 **Mood:** Loud, kinetic | **Best for:** Big product launches, milestone announcements, high-energy hype videos
 
-- Bold saturated: red (`#E63946`), yellow (`#FFD60A`), black, white — maximum contrast
+- Bold saturated: red (`#E63946`), yellow (`#FFD60A`), black, white, maximum contrast
 - Text IS the visual. Overlapping type layers at different scales and angles, filling 50–80% of frame
 - Everything is kinetic: slamming, sliding, scaling. 2–3 second rapid-fire scenes
-- Text layered OVER footage — never empty backgrounds
+- Text layered OVER footage, never empty backgrounds
 - Transitions: Ridged Burn (explosive, dramatic, impossible to ignore)
 
 **GSAP signature:** `expo.out`, `back.out(1.8)`. Fast arrivals, hard stops.
 
 ```
-Maximalist Type: Red, yellow, black, white — max contrast. Text IS the visual.
+Maximalist Type: Red, yellow, black, white, max contrast. Text IS the visual.
 Overlapping at different scales, 50-80% of frame. Everything in motion.
-Ridged Burn transitions. No static moments — kinetic energy throughout.
+Ridged Burn transitions. No static moments, kinetic energy throughout.
 ```
 
 ---
 
-## 5. Data Drift — Refik Anadol
+## 5. Data Drift, Refik Anadol
 
 **Mood:** Futuristic, immersive | **Best for:** AI products, ML platforms, data companies, speculative tech
 
 - Iridescent: deep black (`#0a0a0a`), electric purple (`#7c3aed`), cyan (`#06b6d4`)
-- Thin futuristic sans-serif — floating, weightless, minimal
+- Thin futuristic sans-serif, floating, weightless, minimal
 - Fluid morphing compositions. Extreme scale shifts (micro → macro)
 - Particles coalesce into numbers. Light traces data paths through the frame
 - Transitions: Gravitational Lens or Domain Warp (otherworldly distortion)
@@ -121,7 +121,7 @@ Gravitational Lens or Domain Warp transitions. Fluid, immersive, otherworldly.
 
 ---
 
-## 6. Soft Signal — Stefan Sagmeister
+## 6. Soft Signal, Stefan Sagmeister
 
 **Mood:** Intimate, warm | **Best for:** Wellness brands, personal stories, lifestyle products, human-centered apps
 
@@ -135,19 +135,19 @@ Gravitational Lens or Domain Warp transitions. Fluid, immersive, otherworldly.
 
 ```
 Soft Signal: Warm amber, cream, dusty rose, sage green. Humanist or handwritten type.
-Single elements fill the frame — intimate, never corporate.
+Single elements fill the frame, intimate, never corporate.
 Slow drifts and floats throughout. Thermal Distortion transitions.
 Nothing should feel hurried or polished.
 ```
 
 ---
 
-## 7. Folk Frequency — Eduardo Terrazas
+## 7. Folk Frequency, Eduardo Terrazas
 
 **Mood:** Cultural, vivid | **Best for:** Consumer apps, food platforms, community products, festive launches
 
 - Vivid folk: hot pink (`#FF1493`), cobalt blue (`#0047AB`), sun yellow (`#FFE000`), emerald (`#009B77`)
-- Bold warm rounded type. Pattern and repetition — folk art rhythm and density
+- Bold warm rounded type. Pattern and repetition, folk art rhythm and density
 - Layered compositions with rich visual texture. Every frame feels handcrafted
 - Colorful motion: elements bounce, pop, and spin into place with joy
 - Transitions: Swirl Vortex or Ripple Waves (hypnotic, celebratory)
@@ -162,13 +162,13 @@ Swirl Vortex or Ripple Waves transitions. Joyful, celebratory energy.
 
 ---
 
-## 8. Shadow Cut — Hans Hillmann
+## 8. Shadow Cut, Hans Hillmann
 
 **Mood:** Dark, cinematic | **Best for:** Security products, dramatic reveals, investigative content, intense launches
 
 - Near-monochrome: deep blacks (`#0a0a0a`), cold greys (`#3a3a3a`), stark white + blood red (`#C1121F`) or toxic green (`#39FF14`)
 - Sharp angular text like film noir title cards. Heavy contrast, no softness
-- Heavy shadow — elements emerge from darkness. Reveal is the narrative
+- Heavy shadow, elements emerge from darkness. Reveal is the narrative
 - Slow creeping push-ins, dramatic scale reveals, silence before the hit
 - Transitions: Domain Warp (dissolves reality itself before revealing the next scene)
 
@@ -199,7 +199,7 @@ Slow creeping push-ins. Domain Warp transitions. The reveal IS the story.
 
 ## Creating Custom Styles
 
-These 8 styles are examples — not constraints. Create your own by:
+These 8 styles are examples, not constraints. Create your own by:
 
 1. **Name it** after a designer, art movement, or cultural reference
 2. **Palette**: 2-3 colors max. Declare explicit hex values

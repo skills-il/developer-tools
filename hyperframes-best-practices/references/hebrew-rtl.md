@@ -8,7 +8,7 @@ HyperFrames handles most of the HTML-to-video pipeline for English out of the bo
 
 The compiler already resolves non-canonical `font-family` values through `fetchGoogleFont()` in `packages/producer/src/services/deterministicFonts.ts`. When your composition CSS sets `font-family: 'Heebo'`, the compiler:
 
-1. Checks its 18-font canonical list (no Hebrew fonts are bundled — inter, roboto, montserrat, outfit, nunito, oswald, league-gothic, archivo-black, space-mono, ibm-plex-mono, jetbrains-mono, eb-garamond, playfair-display, source-code-pro, noto-sans-jp, open-sans, lato, poppins).
+1. Checks its 18-font canonical list (no Hebrew fonts are bundled, inter, roboto, montserrat, outfit, nunito, oswald, league-gothic, archivo-black, space-mono, ibm-plex-mono, jetbrains-mono, eb-garamond, playfair-display, source-code-pro, noto-sans-jp, open-sans, lato, poppins).
 2. Falls through to `fetchGoogleFont('Heebo')` which calls the Google Fonts CSS2 API with a Chrome 131 User-Agent (triggers WOFF2 responses including the Hebrew `unicode-range` block). The compiled URL follows the pattern `https://fonts.googleapis.com/css2?family=Heebo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700`.
 3. Caches the WOFF2 files at `~/.cache/hyperframes/fonts/heebo/<weight>-<style>.woff2`.
 4. Embeds each face as a base64 `data:font/woff2;base64,...` URI in the compiled HTML via an injected `@font-face` rule.
@@ -28,11 +28,11 @@ All auto-resolve via the Google Fonts fallback:
 | Frank Ruhl Libre | Modernized traditional serif | Long-form, editorial, prestige |
 | Noto Sans Hebrew | Neutral pan-Unicode sans | Mixed-script, accessibility fallback |
 
-First compile fetches the WOFF2; subsequent runs hit the local cache. To pre-warm a fresh machine, run `npx hyperframes preview` once — it triggers the same font path as render.
+First compile fetches the WOFF2; subsequent runs hit the local cache. To pre-warm a fresh machine, run `npx hyperframes preview` once, it triggers the same font path as render.
 
 ### Weight contrast
 
-Hebrew display letterforms carry less visual weight than equivalent Latin glyphs at the same `font-weight`. Where the upstream typography rules call for 300 vs 900 weight contrast, Hebrew benefits from 400 vs 900. Very light Hebrew (100-200) breaks up at video sizes — avoid it for anything smaller than a headline.
+Hebrew display letterforms carry less visual weight than equivalent Latin glyphs at the same `font-weight`. Where the upstream typography rules call for 300 vs 900 weight contrast, Hebrew benefits from 400 vs 900. Very light Hebrew (100-200) breaks up at video sizes, avoid it for anything smaller than a headline.
 
 ## Direction
 
@@ -62,7 +62,7 @@ Set `dir="rtl"` explicitly on Hebrew text containers. Composition roots inherit 
 </div>
 ```
 
-Apply `dir="rtl"` to each Hebrew text element when the composition also carries English runs — don't rely on the container. Caption tracks specifically need per-word `dir="rtl"` because word spans are injected dynamically.
+Apply `dir="rtl"` to each Hebrew text element when the composition also carries English runs, don't rely on the container. Caption tracks specifically need per-word `dir="rtl"` because word spans are injected dynamically.
 
 ## GSAP x-axis mirroring
 
@@ -78,11 +78,11 @@ tl.from('.title-he', { x: 80, opacity: 0, duration: 0.6, ease: 'power3.out' }, 0
 
 Same rule for `xPercent`, `translateX` in keyframes, and wipe transitions. Exits mirror too: a Latin title that exits to the right with `x: 40` exits to the left for Hebrew with `x: -40`.
 
-Rotation, scale, and y-axis tweens are direction-agnostic — leave them alone.
+Rotation, scale, and y-axis tweens are direction-agnostic, leave them alone.
 
 ## Captions
 
-Transcribe Hebrew audio with a multilingual Whisper model and explicit language flag. **Never use `.en` models on Hebrew audio** — they TRANSLATE Hebrew into English instead of transcribing it.
+Transcribe Hebrew audio with a multilingual Whisper model and explicit language flag. **Never use `.en` models on Hebrew audio**, they TRANSLATE Hebrew into English instead of transcribing it.
 
 ```bash
 # Default Hebrew caption pipeline
@@ -95,7 +95,7 @@ npx hyperframes transcribe narration-he.wav --model medium --language he
 npx hyperframes transcribe narration-he.wav --model large-v3 --language he
 ```
 
-For caption rendering, wrap the word span with `dir="rtl"` and choose a highlight animation that reads right-to-left. The upstream `references/captions.md` marker-sweep patterns work for Hebrew — mirror the GSAP sweep direction so the highlighter moves right-to-left across the word group.
+For caption rendering, wrap the word span with `dir="rtl"` and choose a highlight animation that reads right-to-left. The upstream `references/captions.md` marker-sweep patterns work for Hebrew, mirror the GSAP sweep direction so the highlighter moves right-to-left across the word group.
 
 ```html
 <div class="caption" dir="rtl">
@@ -109,7 +109,7 @@ For caption rendering, wrap the word span with `dir="rtl"` and choose a highligh
 tl.fromTo('.caption-word.highlight', { '--sweep': '100%' }, { '--sweep': '0%', duration: 0.3 });
 ```
 
-Word-level timestamps produce better Hebrew captions than phrase-level SRT/VTT — per-word animation effects (karaoke, slam, scatter) depend on accurate word boundaries.
+Word-level timestamps produce better Hebrew captions than phrase-level SRT/VTT, per-word animation effects (karaoke, slam, scatter) depend on accurate word boundaries.
 
 ## Voiceover
 
@@ -157,14 +157,14 @@ Wrap Latin runs with `<bdi>` or apply `unicode-bidi: isolate` via CSS:
 .brand { unicode-bidi: isolate; }
 ```
 
-Numbers in Hebrew context (prices, statistics, dates) are already handled correctly by the bidi algorithm — they display left-to-right inside an RTL paragraph without any wrapper.
+Numbers in Hebrew context (prices, statistics, dates) are already handled correctly by the bidi algorithm, they display left-to-right inside an RTL paragraph without any wrapper.
 
 ## Quick checklist
 
 Before rendering a Hebrew composition:
 
 1. Root `<div data-composition-id>` has `dir="rtl"` (or the text containers do).
-2. `font-family` references a Google Fonts Hebrew family — no `@import`, no `<link>`.
+2. `font-family` references a Google Fonts Hebrew family, no `@import`, no `<link>`.
 3. GSAP entrance x-values are positive (entering from the right) for Hebrew elements.
 4. Mixed-script runs use `<bdi>` or `unicode-bidi: isolate`.
 5. Audio narration file exists; it was generated externally (not via `hyperframes tts`).

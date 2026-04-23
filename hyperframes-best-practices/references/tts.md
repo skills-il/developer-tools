@@ -18,7 +18,7 @@ Run `npx hyperframes tts --list` for all 54 voices (8 languages).
 
 ## Multilingual Phonemization
 
-Kokoro voice IDs encode language in the first letter: `a`=American English, `b`=British English, `e`=Spanish, `f`=French, `h`=Hindi, `i`=Italian, `j`=Japanese, `p`=Brazilian Portuguese, `z`=Mandarin. The CLI auto-detects the phonemizer locale from that prefix — you don't need to pass `--lang` when the voice matches the text.
+Kokoro voice IDs encode language in the first letter: `a`=American English, `b`=British English, `e`=Spanish, `f`=French, `h`=Hindi, `i`=Italian, `j`=Japanese, `p`=Brazilian Portuguese, `z`=Mandarin. The CLI auto-detects the phonemizer locale from that prefix, you don't need to pass `--lang` when the voice matches the text.
 
 ```bash
 npx hyperframes tts "La reunión empieza a las nueve" --voice ef_dora --output es.wav
@@ -37,10 +37,10 @@ Non-English phonemization requires `espeak-ng` installed system-wide (`brew inst
 
 ## Speed Tuning
 
-- **0.7-0.8** — Tutorial, complex content
-- **1.0** — Natural pace (default)
-- **1.1-1.2** — Intros, upbeat content
-- **1.5+** — Rarely appropriate
+- **0.7-0.8**, Tutorial, complex content
+- **1.0**, Natural pace (default)
+- **1.1-1.2**, Intros, upbeat content
+- **1.5+**, Rarely appropriate
 
 ## Usage
 

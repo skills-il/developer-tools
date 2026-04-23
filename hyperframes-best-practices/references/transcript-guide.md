@@ -42,23 +42,23 @@ The default model (`small.en`) balances accuracy and speed. For better results, 
 | ---------- | ------ | -------- | --------- | ------------------------------------- |
 | `tiny`     | 75 MB  | Fastest  | Low       | Quick previews, testing pipeline      |
 | `base`     | 142 MB | Fast     | Fair      | Short clips, clear audio              |
-| `small`    | 466 MB | Moderate | Good      | **Default** — good for most content   |
+| `small`    | 466 MB | Moderate | Good      | **Default**, good for most content   |
 | `medium`   | 1.5 GB | Slow     | Very good | Important content, noisy audio, music |
 | `large-v3` | 3.1 GB | Slowest  | Best      | Production quality                    |
 
 **Only add `.en` suffix when the user explicitly says the audio is English.** `.en` models are slightly more accurate for English but will TRANSLATE non-English audio instead of transcribing it.
 
-**Critical: `.en` models translate non-English audio into English** — they don't transcribe it. If the audio might not be English, always use a model without the `.en` suffix and pass `--language` to specify the source language. If you're unsure of the language, use `small` (not `small.en`) without `--language` — whisper will auto-detect.
+**Critical: `.en` models translate non-English audio into English**, they don't transcribe it. If the audio might not be English, always use a model without the `.en` suffix and pass `--language` to specify the source language. If you're unsure of the language, use `small` (not `small.en`) without `--language`, whisper will auto-detect.
 
 ```bash
 # Spanish audio
 npx hyperframes transcribe audio.mp3 --model small --language es
 
-# Unknown language — let whisper auto-detect
+# Unknown language, let whisper auto-detect
 npx hyperframes transcribe audio.mp3 --model small
 ```
 
-**Music and vocals over instrumentation**: `small.en` will misidentify lyrics — use `medium.en` as the minimum, or import lyrics manually. Even `medium.en` struggles with heavily produced tracks; for music videos, providing known lyrics as an SRT/VTT and importing with `hyperframes transcribe lyrics.srt` will always beat automated transcription.
+**Music and vocals over instrumentation**: `small.en` will misidentify lyrics, use `medium.en` as the minimum, or import lyrics manually. Even `medium.en` struggles with heavily produced tracks; for music videos, providing known lyrics as an SRT/VTT and importing with `hyperframes transcribe lyrics.srt` will always beat automated transcription.
 
 ## Transcript Quality Check (Mandatory)
 
@@ -70,7 +70,7 @@ After every transcription, **read the transcript and check for quality issues be
 | ---------------------------- | -------------------------------------- | ---------------------------------------------------------------------------- |
 | Music note tokens (`♪`, `�`) | `{ "text": "♪" }` or `{ "text": "�" }` | Whisper detected music, not speech                                           |
 | Garbled / nonsense words     | "Do a chin", "Get so gay", "huh"       | Model misheard lyrics or background noise                                    |
-| Long gaps with no words      | 20+ seconds of only `♪` tokens         | Instrumental section — expected, but high ratio means speech is being missed |
+| Long gaps with no words      | 20+ seconds of only `♪` tokens         | Instrumental section, expected, but high ratio means speech is being missed |
 | Repeated filler              | Many "huh", "uh", "oh" entries         | Model is hallucinating on music                                              |
 | Very short word spans        | Words with `end - start < 0.05`        | Unreliable timestamp alignment                                               |
 
@@ -84,8 +84,8 @@ After every transcription, **read the transcript and check for quality issues be
    ```
 2. **If `medium.en` also fails** (still >20% music tokens or garbled), tell the user the audio is too noisy for local transcription and suggest:
    - Providing lyrics manually as an SRT/VTT file
-   - Using an external API (OpenAI or Groq Whisper — see below)
-3. **Always clean the transcript** before building captions — filter out `♪`/`�` tokens and entries where `text` is a single non-word character. Only real words should reach the caption composition.
+   - Using an external API (OpenAI or Groq Whisper, see below)
+3. **Always clean the transcript** before building captions, filter out `♪`/`�` tokens and entries where `text` is a single non-word character. Only real words should reach the caption composition.
 
 ### Cleaning a transcript
 
@@ -142,7 +142,7 @@ npx hyperframes transcribe transcript-groq.json
 ## If No Transcript Exists
 
 1. Check the project root for `transcript.json`, `.srt`, or `.vtt` files
-2. If none found, run transcription — pick the starting model based on the content type:
+2. If none found, run transcription, pick the starting model based on the content type:
    - Speech/voiceover → `small.en`
    - Music with vocals → `medium.en`
    ```bash

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// animation-map.mjs — HyperFrames animation map for agents
+// animation-map.mjs, HyperFrames animation map for agents
 //
 // Reads every GSAP timeline registered in window.__timelines, enumerates
 // tweens, samples bboxes at N points per tween, computes flags and

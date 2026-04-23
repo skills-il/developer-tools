@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// contrast-report.mjs — HyperFrames contrast audit
+// contrast-report.mjs, HyperFrames contrast audit
 //
 // Reads a composition, seeks to N sample timestamps, walks the DOM for text
 // elements, measures the WCAG 2.1 contrast ratio between each element's
@@ -13,7 +13,7 @@
 //     [--samples N] [--out <dir>] [--width W] [--height H] [--fps N]
 //
 // The composition directory must contain an index.html. Raw authoring HTML
-// works — the producer's file server auto-injects the runtime at serve time.
+// works, the producer's file server auto-injects the runtime at serve time.
 // Exits 1 if any text element fails WCAG AA.
 
 import { mkdir, writeFile } from "node:fs/promises";
@@ -21,7 +21,7 @@ import { resolve } from "node:path";
 
 import sharp from "sharp";
 
-// Use the producer's file server — it auto-injects the HyperFrames runtime
+// Use the producer's file server, it auto-injects the HyperFrames runtime
 // and render-seek bridge, so raw authoring HTML works without a build step.
 import {
   createFileServer,
