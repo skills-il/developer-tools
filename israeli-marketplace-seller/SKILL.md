@@ -136,7 +136,7 @@ Result: Total monthly revenue: 38,500 NIS across 26 sales. Zap has highest avera
 
 ## Gotchas
 
-- Israeli marketplace platforms (Zap, WinWin, Yad2) use NIS pricing that must include 17% VAT. Agents may list prices excluding VAT, which is illegal for consumer-facing listings.
+- Israeli marketplace platforms (Zap, WinWin, Yad2) use NIS pricing that must include 18% VAT (raised from 17% on 2025-01-01). Agents may list prices excluding VAT or using the outdated 17% rate, which is illegal for consumer-facing listings.
 - Yad2 is the dominant Israeli classifieds platform, not Craigslist or eBay. Agents may recommend irrelevant international platforms for Israeli local selling.
 - Israeli marketplace shipping typically uses Israel Post or courier services (Mahirpak, ShipBob IL), not FedEx/UPS for domestic orders. Agents may recommend international carriers with higher costs.
 - Product descriptions on Israeli marketplaces should be in Hebrew first, with English optional. Agents may default to English-first content that gets less visibility.

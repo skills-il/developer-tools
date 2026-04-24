@@ -37,7 +37,7 @@ Set `ws.sheet_view.rightToLeft = True` for RTL sheets. NIS format: '#,##0.00 "â‚
 ### Step 5: Templates
 
 - **Invoice (Heshbonit Mas)**: Business/customer details, item table, subtotal, 18% VAT, total
-- **Salary slip (Tlush Maskoret)**: Earnings, deductions (income tax, Bituach Leumi, health tax, pension, keren hishtalmut), net pay
+- **Salary slip (Tlush Maskoret)**: Earnings, deductions (income tax, Bituach Leumi, health tax, pension, keren hishtalmut), net pay. For the "income tax" line, subtract the Section 45a pension credit (35% of the employee-side pension deposit, subject to annual ceilings) from the progressive tax owed, otherwise the withheld amount will be overstated.
 - **Arnona estimator**: Rates by city (Tel Aviv 55.80, Jerusalem 40.50, Haifa 33.20, Beer Sheva 27.90, Netanya 43.10 per sqm/bi-monthly)
 
 ## Examples
@@ -46,11 +46,12 @@ Set `ws.sheet_view.rightToLeft = True` for RTL sheets. NIS format: '#,##0.00 "â‚
 User says: "Build a payroll Excel sheet for an Israeli employee"
 Actions:
 1. Create RTL workbook with Hebrew headers
-2. Add income tax brackets (2024 rates: 10%-50%)
-3. Calculate Bituach Leumi (3.5%/12% thresholds), health tax (3.1%/5%)
-4. Include pension (6.5% employee + 6.5% employer) and keren hishtalmut
-5. Format all amounts as NIS with Hebrew labels
-Result: Complete Israeli payroll calculator with net salary computation
+2. Add income tax brackets (2025 rates: 10%-50%)
+3. Calculate Bituach Leumi (0.4%/7% employee-side thresholds), health tax (3.1%/5%)
+4. Include pension (6.0% employee + 6.5% employer, plus 6.0% severance by employer) and keren hishtalmut
+5. Apply Section 45a tax credit (35% of employee-side pension deposit) against the income tax line
+6. Format all amounts as NIS with Hebrew labels
+Result: Complete Israeli payroll calculator with net salary computation that reflects the 45a pension credit
 
 ### Example 2: Generate Israeli Invoice Template
 User says: "Create a tax invoice template in Hebrew with VAT calculation"

@@ -106,12 +106,12 @@ CREATE TABLE invoices (
 
 ### VAT Calculation
 
-Israeli VAT (Ma'am) is 17% as of 2023. Store the rate in a config table so it can be updated:
+Israeli VAT (Ma'am) is 18% (raised from 17% on 2025-01-01). Store the rate in a config table so it can be updated without a code deploy when the next rate change lands:
 
 ```sql
 CREATE TABLE tax_config (
   id int PRIMARY KEY DEFAULT 1 CHECK (id = 1),  -- singleton row
-  vat_rate numeric(5, 4) NOT NULL DEFAULT 0.1700,
+  vat_rate numeric(5, 4) NOT NULL DEFAULT 0.1800,
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 

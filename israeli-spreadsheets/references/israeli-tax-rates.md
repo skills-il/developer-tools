@@ -32,7 +32,7 @@
 | Above 7,122 NIS/month | 5.00% |
 
 ## VAT (Ma'am)
-- Standard rate: 17%
+- Standard rate: 18% (raised from 17% on 2025-01-01)
 - Eilat: 0% (tax-free zone)
 
 ## Pension Contributions (2025)
@@ -41,6 +41,9 @@
 | Pension savings | 6.0% | 6.5% |
 | Severance fund | - | 6.0% |
 | Disability insurance | - | 0.5% |
+
+### Section 45a Tax Credit on Pension Contributions
+Employees and self-employed who contribute to a recognized pension fund are entitled to a 35% tax credit on qualifying pension contributions under Section 45a of the Income Tax Ordinance. The credit is computed on the employee-side deposit (and the self-employed deposit for the self-employed), subject to annual ceilings set by the Tax Authority. A tlush maskoret (salary slip) spreadsheet that shows "income tax" without subtracting the 45a credit will overstate the actual tax withheld.
 
 ## Keren Hishtalmut (Education Fund)
 | | Employee | Employer |

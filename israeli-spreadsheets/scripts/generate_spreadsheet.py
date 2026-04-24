@@ -26,8 +26,8 @@ except ImportError:
     sys.exit(1)
 
 
-# Israeli financial constants (2025)
-VAT_RATE = Decimal("0.17")
+# Israeli financial constants (2025 onward, VAT raised from 17% to 18% on 2025-01-01)
+VAT_RATE = Decimal("0.18")
 TAX_BRACKETS = [
     (Decimal("84120"), Decimal("0.10")),
     (Decimal("120720"), Decimal("0.14")),
@@ -97,7 +97,7 @@ def create_invoice(output_path):
     # Totals
     ws.cell(row=12, column=3, value="סכום ביניים:").font = Font(bold=True)
     ws.cell(row=12, column=4).number_format = NIS_FORMAT
-    ws.cell(row=13, column=3, value="מע\"מ (17%):").font = Font(bold=True)
+    ws.cell(row=13, column=3, value="מע\"מ (18%):").font = Font(bold=True)
     ws.cell(row=13, column=4).number_format = NIS_FORMAT
     ws.cell(row=14, column=3, value="סה\"כ לתשלום:").font = Font(name="Heebo", bold=True, size=12)
     ws.cell(row=14, column=4).number_format = NIS_FORMAT
