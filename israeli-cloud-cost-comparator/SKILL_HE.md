@@ -7,39 +7,8 @@ description: >-
   לסטארטאפים ואסטרטגיות אופטימיזציה של עלויות FinOps.
   אל תשתמש להשוואת אחסון מקומי, שירותי colocation, או תמחור SaaS שאינו ענן.
 license: MIT
-allowed-tools: "Bash(node:*) Bash(python:*) WebFetch"
-metadata:
-  author: skills-il
-  version: 1.1.0
-  category: developer-tools
-  tags:
-    he:
-      - ענן
-      - אחסון
-      - שרתים
-      - עלויות
-      - השוואת מחירים
-      - סטארטאפ
-    en:
-      - cloud
-      - hosting
-      - servers
-      - costs
-      - price-comparison
-      - startup
-  display_name:
-    he: "השוואת עלויות ענן בישראל"
-    en: "Israeli Cloud Cost Comparator"
-  display_description:
-    he: "השוואת עלויות אחסון ענן לסטארטאפים ומפתחים ישראליים כולל AWS ישראל, Azure, GCP וספקים מקומיים"
-    en: "Compare cloud hosting costs for Israeli startups and developers across AWS Israel, Azure, GCP, and local providers"
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+version: 1.2.0
+allowed-tools: Bash(node:*) Bash(python:*) WebFetch
 ---
 
 # השוואת עלויות ענן בישראל
@@ -60,7 +29,7 @@ metadata:
 
 ### שלב 2: השוואת אזור AWS ישראל (il-central-1)
 
-AWS השיקה את אזור ישראל (תל אביב) `il-central-1` ב-2023. פרטים עיקריים:
+AWS השיקה את אזור ישראל (תל אביב) `il-central-1` באוגוסט 2023. פרטים עיקריים:
 
 **שירותים זמינים ב-il-central-1:**
 - EC2 (מחשוב), EBS (אחסון בלוקים), S3 (אחסון אובייקטים)
@@ -90,7 +59,7 @@ AWS השיקה את אזור ישראל (תל אביב) `il-central-1` ב-2023. 
 
 ### שלב 3: השוואת Google Cloud Platform (me-west1)
 
-אזור `me-west1` של GCP ממוקם בתל אביב, הושק ב-2022.
+אזור `me-west1` של GCP ממוקם בתל אביב, נפתח ב-2022 והגיע לזמינות כללית בנובמבר 2022. זהו האזור הראשון של GCP במזרח התיכון.
 
 **שירותים זמינים ב-me-west1:**
 - Compute Engine, Cloud Storage, Cloud SQL
@@ -117,7 +86,7 @@ AWS השיקה את אזור ישראל (תל אביב) `il-central-1` ב-2023. 
 Azure משרתת את ישראל בעיקר דרך האזורים הבאים:
 
 **אזורים:**
-- **Israel Central** (הושק 2023): אזור Azure מלא בישראל
+- **Israel Central** (הושק בספטמבר 2023): אזור Azure מלא בישראל
 - **West Europe** (הולנד): חלופה עם קטלוג שירותים רחב יותר
 
 **שירותים זמינים ב-Israel Central:**
@@ -246,9 +215,14 @@ Azure משרתת את ישראל בעיקר דרך האזורים הבאים:
 
 ### שלב 9: חישוב עלות בעלות כוללת
 
+**תוכניות הנחה במחויבות (תמיד אמת מול דפי התמחור הרשמיים, מאחר שהתנאים משתנים):**
+- **AWS Savings Plans** (Compute ו-EC2 Instance Savings Plans): עד כ-66% הנחה ממחיר on-demand במחויבות לשנה או לשלוש שנים. גמישות יותר מ-Reserved Instances הקלאסיים, מאחר שהן חלות על מספר משפחות מכונות ואזורים (במקרה של Compute Savings Plans). RIs עדיין זמינים ל-RDS, ElastiCache, Redshift ו-OpenSearch.
+- **GCP Committed Use Discounts (CUDs)**: CUDs מבוססי הוצאה ו-CUDs מבוססי משאבים ל-Compute Engine ולשירותים נוספים, וגם **Flexible CUDs** שחלים על מספר משפחות מכונות ואזורים. הנחות Sustained Use ממשיכות לחול אוטומטית על שימוש on-demand.
+- **Azure Reservations** (שנה / שלוש שנים) ל-VMs, SQL DB, Cosmos DB, Cache for Redis וכו', ובנוסף **Azure Savings Plan for Compute** שגמיש יותר על פני אזורים וסדרות מכונות.
+
 בנה השוואת עלויות מקיפה הכוללת:
 
-1. **עלויות מחשוב**: תמחור on-demand מול reserved מול spot/preemptible
+1. **עלויות מחשוב**: תמחור on-demand מול reserved/committed מול savings plan מול spot/preemptible
 2. **עלויות אחסון**: אחסון אובייקטים + אחסון בלוקים + אחסון מסד נתונים
 3. **עלויות רשת**: העברת נתונים החוצה (egress), העברה בין-אזורית, עלויות CDN
 4. **עלויות שירותים מנוהלים**: מסדי נתונים, מטמונים, תורי הודעות, ניטור
@@ -324,7 +298,6 @@ Azure משרתת את ישראל בעיקר דרך האזורים הבאים:
 - **עיוורון קרדיטים**: כשמשתמש מציין שיש לו קרדיטים או מבצעים אצל ספק מסוים, סוכנים נוטים להמליץ מיד על אותו ספק בלי לבדוק אם ספקים אחרים מציעים עסקאות דומות או טובות יותר. תמיד יש להשוות תוכניות קרדיטים בין כל הספקים לפני שממליצים. למשל, משתמש עם $100 קרדיטים ב-AWS אולי לא יודע ש-GCP מציעה $300 בקרדיטי ניסיון או ש-Azure Founders Hub מציע $150,000 לסטארטאפים.
 - תמחור אזור ישראל ב-AWS (il-central-1) שונה מ-eu-west-1 ומאזורים אחרים. סוכנים עלולים להשתמש בתמחור גלובלי שלא משקף את הפרמיה של האזור הישראלי.
 - עלויות ענן ישראליות צריכות להיות מחושבות בשקלים כולל 18% מע"מ ל-B2C, אך ללא מע"מ ל-B2B עם חשבונית מס תקינה. סוכנים עלולים לשכוח להוסיף מע"מ להשוואות מול צרכן.
-- ל-Google Cloud Platform (GCP) אין אזור ישראלי ייעודי. סוכנים עלולים להמליץ על פריסה באזור ישראל של GCP שלא קיים.
 - דרישות אחסון מידע בישראל למכרזים ממשלתיים עשויות לחייב אחסון בתוך ישראל. סוכנים עלולים להמליץ על אזורים בינלאומיים זולים יותר שמפרים דרישות אלה.
 - תקופות שבת וחגים עלולות להשפיע על תמחור וזמינות spot instances באזור ישראל בצורה שונה מאזורים אחרים בגלל ביקוש מקומי מופחת.
 
@@ -370,3 +343,34 @@ Azure משרתת את ישראל בעיקר דרך האזורים הבאים:
    - השתמש בחשבונות מט"ח עסקיים כדי להפחית עמלות המרה
    - שקול חוזים עתידיים עם הבנק שלך עבור הוצאות מחויבות גדולות
 4. עקוב אחר שער חליפין דולר/שקל והתאם תקציבים כל רבעון
+
+## קישורים נוספים
+
+**דפי תמחור של ספקי ענן (תמיד מקור האמת, מאחר שמחירי המחירון משתנים מדי רבעון):**
+- AWS EC2 on-demand: `https://aws.amazon.com/ec2/pricing/on-demand/`
+- מחשבון תמחור AWS: `https://calculator.aws/`
+- GCP Compute Engine: `https://cloud.google.com/compute/all-pricing`
+- מחשבון תמחור GCP: `https://cloud.google.com/products/calculator`
+- מחשבון תמחור Azure: `https://azure.microsoft.com/en-us/pricing/calculator/`
+- תמחור Azure VMs: `https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/`
+
+**הודעות אזורים ישראליים וזמינות שירותים:**
+- אזור AWS ישראל (תל אביב): `https://aws.amazon.com/about-aws/whats-new/2023/08/aws-israel-tel-aviv-region/`
+- שירותים אזוריים של AWS: `https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/`
+- מיקומי GCP ושירותים לפי אזור: `https://cloud.google.com/about/locations`
+- מוצרי Azure לפי אזור: `https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/`
+
+**הנחות מחויבות:**
+- AWS Savings Plans: `https://aws.amazon.com/savingsplans/`
+- GCP Committed Use Discounts: `https://cloud.google.com/docs/cuds`
+- Azure Reservations: `https://azure.microsoft.com/en-us/pricing/reserved-vm-instances/`
+- Azure Savings Plan for Compute: `https://azure.microsoft.com/en-us/pricing/offers/savings-plan-compute/`
+
+**תוכניות קרדיטים לסטארטאפים:**
+- AWS Activate: `https://aws.amazon.com/startups`
+- Google for Startups Cloud Program: `https://cloud.google.com/startup`
+- Microsoft for Startups Founders Hub: `https://www.microsoft.com/en-us/startups`
+- רשות החדשנות: `https://innovationisrael.org.il`
+
+**ספקי ענן ישראליים:**
+- Kamatera: `https://www.kamatera.com`

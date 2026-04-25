@@ -2,7 +2,7 @@
 name: israeli-cloud-cost-comparator
 description: Compare cloud hosting costs for Israeli startups and developers across AWS (il-central-1), Azure, GCP (me-west1), and Israeli providers like Kamatera. Use when the user needs to evaluate cloud pricing with Israel-specific considerations including data residency requirements, latency from Tel Aviv, NIS billing options, startup credit programs, and FinOps cost optimization strategies. Do NOT use for comparing on-premise hosting, colocation services, or non-cloud SaaS pricing.
 license: MIT
-version: 1.0.1
+version: 1.2.0
 allowed-tools: Bash(node:*) Bash(python:*) WebFetch
 ---
 
@@ -25,7 +25,7 @@ Gather the following information before comparing costs:
 
 ### Step 2: Compare AWS Israel Region (il-central-1)
 
-AWS launched the Israel (Tel Aviv) region `il-central-1` in 2023. Key details:
+AWS launched the Israel (Tel Aviv) region `il-central-1` in August 2023. Key details:
 
 **Available services in il-central-1:**
 - EC2 (compute), EBS (block storage), S3 (object storage)
@@ -55,7 +55,7 @@ AWS launched the Israel (Tel Aviv) region `il-central-1` in 2023. Key details:
 
 ### Step 3: Compare Google Cloud Platform (me-west1)
 
-GCP's `me-west1` region is located in Tel Aviv, launched in 2023.
+GCP's `me-west1` region is located in Tel Aviv, opened in 2022 and reached general availability in November 2022. It is GCP's first region in the Middle East.
 
 **Available services in me-west1:**
 - Compute Engine, Cloud Storage, Cloud SQL
@@ -82,7 +82,7 @@ GCP's `me-west1` region is located in Tel Aviv, launched in 2023.
 Azure serves Israel primarily through the following regions:
 
 **Regions:**
-- **Israel Central** (launched 2023): Full Azure region in Israel
+- **Israel Central** (launched September 2023): Full Azure region in Israel
 - **West Europe** (Netherlands): Alternative with broader service catalog
 
 **Available services in Israel Central:**
@@ -211,9 +211,14 @@ Latency from Tel Aviv to major cloud regions (approximate round-trip time):
 
 ### Step 9: Calculate Total Cost of Ownership
 
+**Commitment-discount programs (verify current rates against the provider pricing pages, since terms shift):**
+- **AWS Savings Plans** (Compute and EC2 Instance Savings Plans): up to ~66% off on-demand for 1-year or 3-year commitments. More flexible than classic Reserved Instances since they apply across instance families and regions for Compute Savings Plans. RIs are still offered for RDS, ElastiCache, Redshift, and OpenSearch.
+- **GCP Committed Use Discounts (CUDs)**: spend-based and resource-based CUDs for Compute Engine and several other services, plus **Flexible CUDs** that apply across machine families and regions. Sustained Use Discounts also still apply automatically to on-demand Compute Engine usage.
+- **Azure Reservations** (1-year / 3-year) for VMs, SQL DB, Cosmos DB, Cache for Redis, etc., plus **Azure Savings Plan for Compute** which is more flexible across regions and series.
+
 Build a comprehensive cost comparison including:
 
-1. **Compute costs**: On-demand vs. reserved vs. spot/preemptible pricing
+1. **Compute costs**: On-demand vs. reserved/committed vs. savings plan vs. spot/preemptible pricing
 2. **Storage costs**: Object storage + block storage + database storage
 3. **Network costs**: Data transfer out (egress), inter-region transfer, CDN costs
 4. **Managed service costs**: Databases, caches, message queues, monitoring
@@ -334,3 +339,34 @@ Solution:
    - Use corporate foreign currency accounts to reduce exchange fees
    - Consider forward contracts with your bank for large committed spends
 4. Track the USD/NIS exchange rate and adjust budgets quarterly
+
+## Reference Links
+
+**Provider pricing pages (always treat as the source of truth, since list prices change quarterly):**
+- AWS EC2 on-demand pricing: `https://aws.amazon.com/ec2/pricing/on-demand/`
+- AWS pricing calculator: `https://calculator.aws/`
+- GCP Compute Engine pricing: `https://cloud.google.com/compute/all-pricing`
+- GCP pricing calculator: `https://cloud.google.com/products/calculator`
+- Azure pricing calculator: `https://azure.microsoft.com/en-us/pricing/calculator/`
+- Azure VMs pricing: `https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/`
+
+**Israeli region announcements and service availability:**
+- AWS Israel (Tel Aviv) region: `https://aws.amazon.com/about-aws/whats-new/2023/08/aws-israel-tel-aviv-region/`
+- AWS regional service availability: `https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/`
+- GCP locations and services per region: `https://cloud.google.com/about/locations`
+- Azure products by region: `https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/`
+
+**Commitment discounts:**
+- AWS Savings Plans: `https://aws.amazon.com/savingsplans/`
+- GCP Committed Use Discounts: `https://cloud.google.com/docs/cuds`
+- Azure Reservations: `https://azure.microsoft.com/en-us/pricing/reserved-vm-instances/`
+- Azure Savings Plan for Compute: `https://azure.microsoft.com/en-us/pricing/offers/savings-plan-compute/`
+
+**Startup credit programs:**
+- AWS Activate: `https://aws.amazon.com/startups`
+- Google for Startups Cloud Program: `https://cloud.google.com/startup`
+- Microsoft for Startups Founders Hub: `https://www.microsoft.com/en-us/startups`
+- Israel Innovation Authority: `https://innovationisrael.org.il`
+
+**Israeli cloud providers:**
+- Kamatera: `https://www.kamatera.com`
