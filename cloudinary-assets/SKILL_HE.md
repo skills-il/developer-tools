@@ -1,10 +1,10 @@
 ---
 name: cloudinary-assets
-description: Manage media assets through Cloudinary's REST API -- upload, transform, optimize, and deliver images and videos. Use when user asks about image upload, media optimization, image transformations, responsive images, video management, CDN delivery, or mentions Cloudinary specifically. Covers Upload API, Admin API, URL-based transformations, and delivery optimization. Israeli-founded platform (Tel Aviv, 2012). Do NOT use for non-Cloudinary media hosting or local image processing without cloud upload.
+description: Manage media assets through Cloudinary's REST API -- upload, transform, optimize, and deliver images and videos. Use when user asks about image upload, media optimization, image transformations, responsive images, video management, CDN delivery, or mentions Cloudinary specifically. Covers Upload API, Admin API, URL-based transformations, AI-powered effects (gen_remove, gen_replace, background removal), and delivery optimization. Israeli-founded (2012) with R&D in Petach Tikva; global HQ in Santa Clara, California. Do NOT use for non-Cloudinary media hosting or local image processing without cloud upload.
 license: MIT
 allowed-tools: Bash(python:*) Bash(curl:*) WebFetch
 compatibility: Requires Cloudinary account (free tier available). Needs CLOUDINARY_URL or API key/secret/cloud name environment variables.
-version: 1.0.1
+version: 1.1.0
 ---
 
 # ניהול מדיה ב-Cloudinary
@@ -103,6 +103,35 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 | שיתוף חברתי | w_1200,h_630,c_fill | גודל תמונת OpenGraph |
 | סימן מים | l_watermark,w_200,o_50,g_south_east | סימן מים שקוף למחצה |
 
+### שלב 4ב: טרנספורמציות מבוססות AI (2024-2025)
+
+האפקטים הגנרטיביים של Cloudinary יצאו ל-GA במהלך 2024. משתמשים בהם כמו בכל פרמטר אחר ב-URL:
+
+| פרמטר | מה הוא עושה |
+|--------|--------------|
+| `e_gen_remove:prompt_(person)` | מוחק עם AI את האובייקט שמתאים לתיאור |
+| `e_gen_replace:from_(car);to_(bicycle)` | מחליף עם AI אובייקט אחד באחר |
+| `e_gen_background_replace:prompt_(beach at sunset)` | מחליף את הרקע באופן גנרטיבי |
+| `e_background_removal` | הסרת רקע (כיום חלק מהליבה, כבר לא תוסף בתשלום) |
+| `e_gen_restore` | שחזור AI לתמונות ישנות, מטושטשות או פגומות |
+| `auto_tagging:0.7` | תיוג אוטומטי של העלאות עם AI (סף ביטחון 0.0-1.0); מעבירים בזמן ההעלאה |
+| `f_auto:image` | מגביל את `f_auto` לפורמטים של תמונה (AVIF, WebP, JPEG) |
+| `f_auto:video` | מגביל את `f_auto` לפורמטים של וידאו (mp4, webm) |
+
+דוגמה: מסירים אדם מהתמונה ואז מחליפים את הרקע:
+```
+https://res.cloudinary.com/{cloud_name}/image/upload/e_gen_remove:prompt_(person)/e_gen_background_replace:prompt_(modern office)/{public_id}
+```
+
+תיוג אוטומטי בזמן העלאה:
+```python
+data = {
+    "api_key": api_key, "timestamp": timestamp, "signature": signature,
+    "categorization": "google_tagging",
+    "auto_tagging": 0.7,  # מקבלים תגיות עם ביטחון של 70% ומעלה
+}
+```
+
 ### שלב 5: מיטוב ביצועים
 
 **החלת מיטוב אוטומטי:**
@@ -169,6 +198,60 @@ def delete_asset(public_id, cloud_name, api_key, api_secret):
     return response.json()
 ```
 
+### שלב 7: שימוש ב-URL Gen SDK (אופציונלי)
+
+הגישה של URL גולמי עובדת בכל שפה, אבל ל-Cloudinary יש SDK-ים מודרניים שבונים את אותן כתובות עם autocomplete ופחות הרכבת מחרוזות:
+
+- `@cloudinary/url-gen` v1.x (אגנוסטי לפריימוורק, רץ בדפדפן וב-Node)
+- `@cloudinary/react` (קומפוננטות `<AdvancedImage />` ו-`<AdvancedVideo />`)
+- `@cloudinary/vue` (קומפוננטות ל-Vue 3)
+
+התקנה:
+```bash
+npm install @cloudinary/url-gen @cloudinary/react
+```
+
+המקבילה של `f_auto,q_auto,w_800` יחד עם חיתוך מבוסס זיהוי פנים:
+```ts
+import { Cloudinary } from "@cloudinary/url-gen";
+import { fill } from "@cloudinary/url-gen/actions/resize";
+import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
+import { face } from "@cloudinary/url-gen/qualifiers/focusOn";
+import { auto as autoFormat } from "@cloudinary/url-gen/qualifiers/format";
+import { auto as autoQuality } from "@cloudinary/url-gen/qualifiers/quality";
+import { format, quality } from "@cloudinary/url-gen/actions/delivery";
+
+const cld = new Cloudinary({ cloud: { cloudName: process.env.CLOUDINARY_CLOUD_NAME } });
+
+const url = cld.image("products/shirt-blue")
+  .resize(fill().width(800).height(800).gravity(focusOn(face())))
+  .delivery(format(autoFormat()))
+  .delivery(quality(autoQuality()))
+  .toURL();
+```
+
+ב-React:
+```tsx
+import { AdvancedImage } from "@cloudinary/react";
+<AdvancedImage cldImg={cld.image("products/shirt-blue").resize(fill().width(800))} />
+```
+
+### שלב 8: שכבות טקסט בעברית
+
+האוברליי `l_text:` ב-Cloudinary תומך בעברית כשמקודדים את הטקסט ב-URL ובוחרים פונט שכולל גליפים בעברית. פונטים מובנים שתומכים בעברית (לא צריך להעלות פונט משלכם): **Heebo, Assistant, Rubik, David Libre, Frank Ruhl Libre, Suez One, Secular One**.
+
+תבנית:
+```
+l_text:{font}_{size}_{style}:{url-encoded-text}
+```
+
+דוגמה, "שלום" ב-Heebo 40 מודגש, לבן, בתחתית התמונה:
+```
+https://res.cloudinary.com/{cloud_name}/image/upload/w_800,c_fill/l_text:Heebo_40_bold:%D7%A9%D7%9C%D7%95%D7%9D,co_white,g_south,y_30/{public_id}
+```
+
+טיפ: מקודדים את הטקסט עם `urllib.parse.quote(text, safe="")` בפייתון או `encodeURIComponent()` ב-JS. הגליפים בעברית יוצגו נכון גם בלי דגלי RTL מפורשים, כל עוד הפונט תומך בהם.
+
 ## דוגמאות
 
 ### דוגמה 1: העלאה ומיטוב
@@ -207,9 +290,15 @@ def delete_asset(public_id, cloud_name, api_key, api_secret):
 
 ## מלכודות נפוצות
 
-- שכבות טקסט בעברית ב-Cloudinary דורשות הגדרת כיוון RTL מפורשת. ללא הגדרת כיוון, טקסט עברי מוצג משמאל לימין ונראה כג'יבריש.
+- שכבות טקסט בעברית מוצגות נכון רק כשהפונט תומך בגליפים עבריים (Heebo, Assistant, Rubik, David Libre, Frank Ruhl Libre, Suez One, Secular One). פונטים לטיניים בלבד יציגו ריבועים או גליפים חסרים. חובה לקודד את הטקסט ב-URL.
 - המסלול החינמי כולל 25 קרדיטים בחודש עם חישוב השימוש על בסיס טרנספורמציות, אחסון וצריכת רוחב פס.
 - נקודות קצה של Upload API ו-Admin API דורשות אימות תקין. כתובות URL לדוגמה בתיעוד עלולות להחזיר שגיאות 401/404 כאשר נגישות אליהן ללא פרטי התחברות תקינים.
+- כתובות URL חתומות ומצבי `auth_token` / Strict Transformations: כתובות URL נגזרות עלולות להיחסם אם לא חתומות. מפעילים את "Strict transformations" ב-Settings, Security, וחותמים את כתובות ה-URL להגשה עם `s--{signature}--` או משתמשים ב-`auth_token` לגישה מוגבלת בזמן.
+- Eager לעומת Lazy: ברירת המחדל היא Lazy, כלומר Cloudinary בונה את הגרסה הנגזרת בפעם הראשונה שמבקשים אותה (פגיעה ראשונה איטית) ושומר במטמון. Eager בונה בזמן ההעלאה (פגיעה ראשונה מהירה, אבל צורך קרדיטים בעלייה). שווה Eager לוריאנטים צפויים כמו תמונות ממוזערות וכרטיסי שיתוף; את כל השאר אפשר להשאיר Lazy.
+- Named transformations: מגדירים טרנספורמציה לשימוש חוזר (למשל `t_product_card`) ב-Settings, Transformations. כתובות ה-URL הופכות ל-`.../t_product_card/{public_id}` במקום שרשרת ארוכה של פרמטרים, ואפשר לשנות את המתכון מרכזית בלי לערוך כתובות URL בקוד.
+- CORS להעלאה ישירה מהדפדפן: כברירת מחדל, Upload API חוסם בקשות מדפדפן ממקורות שלא הוגדרו. ב-Settings, Upload, Allowed CORS origins, מוסיפים את המקורות של האתר שלכם (בלי לוכסן בסוף) לפני קריאה מ-`fetch` או `XMLHttpRequest`.
+- `upload_preset` במצב Unsigned: presets לא חתומים מאפשרים העלאה מהדפדפן בלי לחשוף את ה-API secret. נועלים כל preset (פורמטים מותרים, גודל מקסימלי, תיקיות מותרות, תגיות מותרות), אחרת כל מי שמכיר את שם ה-preset יכול להציף את החשבון שלכם.
+- `notification_url`: מעבירים את הפרמטר בזמן ההעלאה (או מגדירים גלובלית) כדי לקבל POST callback כשעבודות אסינכרוניות מסתיימות (טרנספורמציות eager, קידוד וידאו, מודרציה). Cloudinary חותם על הגוף, לכן מאמתים את הכותרת `X-Cld-Signature` לפני שסומכים על התוכן.
 
 ## פתרון בעיות
 
@@ -224,3 +313,28 @@ def delete_asset(public_id, cloud_name, api_key, api_secret):
 ### שגיאה: "Resource not found"
 סיבה: public_id לא תקין או שהנכס נמחק
 פתרון: אמתו את ה-public_id עם רשימת Admin API. בדקו שנתיבי התיקיות כלולים ב-public_id.
+
+### שגיאה: "Invalid Signature" או חוסר התאמה בחתימה בהעלאה
+סיבה: סדר פרמטרים לא נכון, API secret שגוי, או חותמת זמן שסטתה (Cloudinary דוחה חותמות זמן עם פער של מעל שעה).
+פתרון: חותמים על הפרמטרים ממויינים אלפביתית ומחוברים ב-`&` (ללא `file`, `cloud_name`, `api_key`, `signature`), מצרפים את ה-API secret בסוף ומריצים SHA-1. מסנכרנים את שעון השרת (NTP). במקרה של ספק, מדפיסים את `params_to_sign` המדויק ומשווים לתיעוד.
+
+### שגיאה: "Rate limit exceeded" / 420 / 429
+סיבה: המסלול החינמי מוגבל ל-500 קריאות Admin API בשעה ול-25,000 טרנספורמציות בחודש.
+פתרון: שומרים תשובות של list/metadata במטמון, מקבצים פעולות, או משדרגים את המסלול. בעת עומס תעבורה, נשענים על ה-CDN cache (כתובות נגזרות נשמרות 30 ימים ויותר) במקום קריאות חוזרות ל-Admin API.
+
+### שגיאה: "Invalid transformation" / 400 על URL נגזר
+סיבה: פרמטר לא ידוע, פרמטרים סותרים (למשל `c_fit` עם `g_face` לא הגיוניים יחד), או שרשרת טרנספורמציות בלי לוכסן מפריד.
+פתרון: בודקים את ה-URL חלק-חלק ב-Media Explorer של Cloudinary. בין טרנספורמציות בשרשרת מפרידים ב-`/`, ובין פרמטרים בתוך אותה טרנספורמציה ב-`,`.
+
+### AVIF/WebP לא נטענים בדפדפנים ישנים
+סיבה: `f_auto` בוחר AVIF לדפדפנים מודרניים, אבל יש דפדפנים ישנים או middleboxes שמסירים את הכותרת `Accept` כך ש-Cloudinary לא מזהה את היכולות.
+פתרון: Cloudinary נופל אוטומטית ל-JPEG/PNG. אם רואים תמונות שבורות, כופים נפילה בטוחה: `f_auto:image,q_auto` או נועלים `f_jpg` למקטע הבעייתי. בודקים עם `curl -H "Accept: image/avif" {url}` ו-`curl -H "Accept: */*" {url}`.
+
+## קישורי עזר
+
+- בית התיעוד של Cloudinary, https://cloudinary.com/documentation
+- URL Gen SDK ב-GitHub, https://github.com/cloudinary/js-url-gen
+- מדריך פרמטרים לטרנספורמציות, https://cloudinary.com/documentation/transformation_reference
+- סקירה של פיצ'רי ה-AI הגנרטיבי, https://cloudinary.com/documentation/transformation_generative_ai
+- כתובות URL חתומות והגשה מאומתת, https://cloudinary.com/documentation/control_access_to_media
+- מדריך טרנספורמציות וידאו, https://cloudinary.com/documentation/video_transformation_reference

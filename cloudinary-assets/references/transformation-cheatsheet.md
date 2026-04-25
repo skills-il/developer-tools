@@ -45,6 +45,8 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 | q_auto:low | | Lowest auto quality |
 | q_{1-100} | 1-100 | Manual quality percentage |
 | f_auto | | Auto format (WebP, AVIF, etc.) |
+| f_auto:image | | Auto format restricted to image candidates |
+| f_auto:video | | Auto format restricted to video candidates |
 | f_webp | | Force WebP |
 | f_avif | | Force AVIF |
 | f_jpg | | Force JPEG |
@@ -61,8 +63,11 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 | e_brightness:{level} | Adjust brightness |
 | e_contrast:{level} | Adjust contrast |
 | e_saturation:{level} | Adjust saturation |
-| e_background_removal | AI background removal |
-| e_gen_remove:{prompt} | AI generative remove |
+| e_background_removal | Background removal (in core, GA) |
+| e_gen_remove:prompt_(text) | AI generative remove (GA 2024) |
+| e_gen_replace:from_(a);to_(b) | AI generative replace |
+| e_gen_background_replace:prompt_(text) | AI generative background swap |
+| e_gen_restore | AI restore old/blurry/damaged photos |
 
 ## Overlays and Text
 
@@ -120,6 +125,18 @@ w_50,h_50,c_fill,e_blur:1000,q_10,f_auto
 ### Watermark Overlay
 ```
 l_watermark,w_200,o_50,g_south_east,x_10,y_10
+```
+
+### Hebrew Text Overlay
+URL-encode Hebrew characters and pick a Hebrew-capable built-in font: Heebo, Assistant, Rubik, David Libre, Frank Ruhl Libre, Suez One, Secular One.
+```
+# "שלום" in Heebo 40 bold, white, bottom of image
+l_text:Heebo_40_bold:%D7%A9%D7%9C%D7%95%D7%9D,co_white,g_south,y_30
+```
+
+### AI Generative Remove + Background Replace
+```
+e_gen_remove:prompt_(person)/e_gen_background_replace:prompt_(modern office)
 ```
 
 ## Video Transformations
