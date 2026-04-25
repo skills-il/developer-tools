@@ -4,7 +4,6 @@ description: CI/CD workflow templates tailored for Israeli development teams, in
 license: MIT
 allowed-tools: Bash(gh:*) Bash(git:*) Bash(curl:*) Bash(node:*) Bash(act:*)
 compatibility: Requires GitHub repository with Actions enabled. GitHub CLI (gh) recommended for workflow management. act CLI optional for local workflow testing. Works with any GitHub-hosted or self-hosted runner.
-version: 1.0.1
 ---
 
 # GitHub Actions for Israeli Teams
@@ -284,7 +283,7 @@ accessibility-check:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: '22'
+        node-version: '24'
 
     - name: Install accessibility tools
       run: npm install -g @axe-core/cli pa11y-ci

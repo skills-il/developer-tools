@@ -14,10 +14,6 @@ description: >-
   jfrog-devops), general GitHub repository management, non-CI/CD GitHub Actions,
   or Jenkins/CircleCI/GitLab CI configurations.
 license: MIT
-metadata:
-  author: skills-il
-  version: 1.0.0
-  category: developer-tools
 ---
 
 # GitHub Actions לצוותים ישראליים
@@ -211,7 +207,7 @@ accessibility-check:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: '22'
+        node-version: '24'
     - name: Install accessibility tools
       run: npm install -g @axe-core/cli pa11y-ci
 
