@@ -1,6 +1,6 @@
 ---
 name: make-com-israeli-automations
-description: Build and configure Make.com scenarios for Israeli business processes, including Morning (formerly Green Invoice) sync, iCount accounting, Monday.com board automation, Priority ERP data exports, WhatsApp Business Hebrew messaging, and payment gateways (Cardcom, Tranzila, Grow, Bit). Covers Make.com AI Agents, Israel 2026 Invoice Reform (allocation numbers for invoices over 10,000 NIS), community modules for Israeli apps, Hebrew data transformations, Data Store for VAT period tracking, and Shabbat-aware scheduling via the Hebcal community module. Use when user asks to "create a Make.com scenario", "build an automation for Israeli billing", "automate Morning / Green Invoice", "connect Israeli apps in Make.com", or "set up AI agent in Make.com". Do NOT use for n8n workflows (use n8n-hebrew-workflows), Zapier Zaps (use zapier-israeli-integrations), or custom code automation without Make.com.
+description: Build and configure Make.com scenarios for Israeli business processes, including Morning (formerly Green Invoice) sync, iCount accounting, Monday.com board automation, Priority ERP data exports, WhatsApp Business Hebrew messaging, and payment gateways (Cardcom, Tranzila, Grow, Bit). Covers Make.com AI Agents, Israel 2026 Invoice Reform (allocation numbers with a step-down threshold), community modules for Israeli apps, Hebrew data transformations, Data Store for VAT period tracking, and Shabbat-aware scheduling via the Hebcal community module. Use when user asks to "create a Make.com scenario", "build an automation for Israeli billing", "automate Morning / Green Invoice", "connect Israeli apps in Make.com", or "set up AI agent in Make.com". Do NOT use for n8n workflows (use n8n-hebrew-workflows), Zapier Zaps (use zapier-israeli-integrations), or custom code automation without Make.com.
 license: MIT
 allowed-tools: Bash(curl:*) Bash(node:*) Bash(python:*)
 compatibility: Requires Make.com account (Free plan has 1,000 credits/month). Morning community module requires Best plan or higher. iCount has a native module. Priority ERP community module or HTTP module. WhatsApp Cloud API requires Meta Business verification.
@@ -74,11 +74,19 @@ Key field mappings for Morning documents:
 | `vatType` | VAT handling | 0 = Exempt, 1 = Included, 2 = Excluded |
 | `lang` | Document language | `he` for Hebrew, `en` for English |
 
-**Israel Invoice Reform 2026:** Since January 2026, invoices exceeding 10,000 NIS require a Tax Authority allocation number (mispar hiktzava). Morning's API supports this via the `allocationNumber` field. For invoices above this threshold, your scenario must either:
+**Israel Invoice Reform 2026 (threshold step-down):** Tax invoices over the threshold require a Tax Authority allocation number (mispar haktza'a). The threshold drops in 2026:
+
+| Effective | Threshold |
+|-----------|-----------|
+| Jan 1, 2026 | 10,000 NIS |
+| **Jun 1, 2026** | **5,000 NIS** |
+| Jan 1, 2027 | 5,000 NIS (planned to continue) |
+
+Morning's API supports the allocation number via the `allocationNumber` field. For invoices above the current threshold, your scenario must either:
 1. Request an allocation number from the Tax Authority API before creating the document
 2. Use Morning's built-in allocation flow (if enabled in your Morning account settings)
 
-Failure to include an allocation number on qualifying invoices renders them invalid.
+Build the threshold check as a configurable variable in your workflow, not a hardcoded number, since the threshold is scheduled to drop again. Failure to include an allocation number on qualifying invoices renders them invalid.
 
 **iCount**
 
@@ -492,7 +500,7 @@ Result: AI-powered document processing that automatically classifies Hebrew invo
 - Hebrew column names in Monday.com should be referenced by column ID, not by the display title. Agents often try to use the Hebrew title directly, which breaks when users rename columns.
 - Make.com filters use a **visual UI** with dropdown operators, not code syntax. There is no `=` vs `==` distinction since you select "equal to" from a dropdown.
 - The Israeli tax year is January-December (same as calendar year), but agents sometimes assume April-March (UK pattern) or October-September (US fiscal year).
-- **Invoice Reform 2026:** Invoices over 10,000 NIS require Tax Authority allocation numbers since January 2026. Scenarios that create invoices must check the amount and include the allocation number for qualifying documents.
+- **Invoice Reform 2026 affects automation, threshold drops June 1, 2026.** Tax invoices over the threshold (10,000 NIS through May 31, 2026, then 5,000 NIS from June 1, 2026) require Tax Authority allocation numbers. Scenarios that create invoices must check the amount and include the allocation number for qualifying documents. Make the threshold a scenario variable, not a hardcoded literal.
 - Monday.com API v1 is maintained only until May 1, 2026. New scenarios must use v2. The Make.com native module defaults to v2.
 
 ## Troubleshooting
@@ -518,5 +526,5 @@ Cause: The Morning module requires the Best subscription tier or higher. It is a
 Solution: Upgrade your Make.com plan to Best or higher. Alternatively, use the "Make an API Call" action from the Morning module, or use a generic HTTP module with the Morning REST API directly.
 
 ### Error: "Invoice rejected: missing allocation number"
-Cause: Since January 2026, invoices over 10,000 NIS require a Tax Authority allocation number.
-Solution: Add a Filter module before document creation to check if the amount exceeds 10,000 NIS. If yes, request an allocation number first, then pass it in the `allocationNumber` field when creating the document.
+Cause: Invoices over the Invoice Reform threshold require a Tax Authority allocation number. The threshold is 10,000 NIS through May 31, 2026, then drops to 5,000 NIS on June 1, 2026.
+Solution: Add a Filter module before document creation that compares the amount against a workflow variable holding the current threshold (do not hardcode the number, it is scheduled to drop again). If the amount exceeds the threshold, request an allocation number first, then pass it in the `allocationNumber` field when creating the document.

@@ -1,6 +1,6 @@
 ---
 name: make-com-israeli-automations
-description: Build and configure Make.com scenarios for Israeli business processes, including Morning (formerly Green Invoice) sync, iCount accounting, Monday.com board automation, Priority ERP data exports, WhatsApp Business Hebrew messaging, and payment gateways (Cardcom, Tranzila, Grow, Bit). Covers Make.com AI Agents, Israel 2026 Invoice Reform (allocation numbers for invoices over 10,000 NIS), community modules for Israeli apps, Hebrew data transformations, Data Store for VAT period tracking, and Shabbat-aware scheduling via the Hebcal community module. Use when user asks to "create a Make.com scenario", "build an automation for Israeli billing", "automate Morning / Green Invoice", "connect Israeli apps in Make.com", or "set up AI agent in Make.com". Do NOT use for n8n workflows (use n8n-hebrew-workflows), Zapier Zaps (use zapier-israeli-integrations), or custom code automation without Make.com.
+description: Build and configure Make.com scenarios for Israeli business processes, including Morning (formerly Green Invoice) sync, iCount accounting, Monday.com board automation, Priority ERP data exports, WhatsApp Business Hebrew messaging, and payment gateways (Cardcom, Tranzila, Grow, Bit). Covers Make.com AI Agents, Israel 2026 Invoice Reform (allocation numbers with a step-down threshold), community modules for Israeli apps, Hebrew data transformations, Data Store for VAT period tracking, and Shabbat-aware scheduling via the Hebcal community module. Use when user asks to "create a Make.com scenario", "build an automation for Israeli billing", "automate Morning / Green Invoice", "connect Israeli apps in Make.com", or "set up AI agent in Make.com". Do NOT use for n8n workflows (use n8n-hebrew-workflows), Zapier Zaps (use zapier-israeli-integrations), or custom code automation without Make.com.
 license: MIT
 allowed-tools: Bash(curl:*) Bash(node:*) Bash(python:*)
 compatibility: Requires Make.com account (Free plan has 1,000 credits/month). Morning community module requires Best plan or higher. iCount has a native module. Priority ERP community module or HTTP module. WhatsApp Cloud API requires Meta Business verification.
@@ -74,11 +74,19 @@ compatibility: Requires Make.com account (Free plan has 1,000 credits/month). Mo
 | `vatType` | טיפול מע"מ | 0 = פטור, 1 = כולל, 2 = לא כולל |
 | `lang` | שפת מסמך | `he` לעברית, `en` לאנגלית |
 
-**רפורמת חשבוניות 2026:** מינואר 2026, חשבוניות מעל 10,000 שקלים דורשות מספר הקצאה מרשות המסים. ה-API של Morning תומך בזה דרך השדה `allocationNumber`. לחשבוניות מעל הסף, התרחיש שלכם חייב:
+**רפורמת החשבוניות 2026 (הורדת סף):** חשבוניות מס מעל הסף דורשות מספר הקצאה מרשות המסים. הסף יורד במהלך 2026:
+
+| תאריך כניסה לתוקף | סף |
+|--------------------|-----|
+| 1 בינואר 2026 | 10,000 ש"ח |
+| **1 ביוני 2026** | **5,000 ש"ח** |
+| 1 בינואר 2027 | 5,000 ש"ח (מתוכנן להמשיך) |
+
+ה-API של Morning תומך במספר ההקצאה דרך השדה `allocationNumber`. לחשבוניות מעל הסף הנוכחי, התרחיש שלכם חייב:
 1. לבקש מספר הקצאה מ-API של רשות המסים לפני יצירת המסמך
 2. להשתמש בזרימת ההקצאה המובנית של Morning (אם מופעלת בהגדרות החשבון)
 
-חשבוניות מעל הסף ללא מספר הקצאה אינן תקפות.
+בנו את בדיקת הסף כמשתנה ב-workflow, לא כמספר קשיח, מאחר שהסף מתוכנן לרדת שוב. חשבוניות מעל הסף ללא מספר הקצאה אינן תקפות.
 
 **iCount**
 
@@ -490,7 +498,7 @@ Make.com השיקה AI Agents באפריל 2025, ו-Visual AI Agents ב-Scenario
 - שמות עמודות בעברית ב-Monday.com צריכים להיות מופנים לפי מזהה עמודה (column ID), לא לפי כותרת התצוגה. סוכנים מנסים להשתמש בכותרת העברית ישירות, מה ששובר כשמשתמשים משנים שמות עמודות.
 - פילטרים ב-Make.com עובדים דרך **ממשק ויזואלי** עם תפריטי בחירה, לא תחביר קוד. אין הבדל בין `=` ל-`==` כי בוחרים "equal to" מתפריט.
 - שנת המס הישראלית היא ינואר-דצמבר (כמו שנה קלנדרית), אבל סוכנים מניחים לפעמים אפריל-מרץ (דפוס בריטי) או אוקטובר-ספטמבר (שנת כספים אמריקאית).
-- **רפורמת חשבוניות 2026:** חשבוניות מעל 10,000 שקלים דורשות מספר הקצאה מרשות המסים מינואר 2026. תרחישים שיוצרים חשבוניות חייבים לבדוק את הסכום ולכלול מספר הקצאה למסמכים מזכים.
+- **רפורמת החשבוניות 2026 משפיעה על אוטומציות, הסף יורד ב-1 ביוני 2026.** חשבוניות מס מעל הסף (10,000 ש"ח עד 31 במאי 2026, ואז 5,000 ש"ח החל מ-1 ביוני 2026) דורשות מספר הקצאה מרשות המסים. תרחישים שיוצרים חשבוניות חייבים לבדוק את הסכום ולכלול מספר הקצאה למסמכים מזכים. שמרו את הסף כמשתנה בתרחיש, לא כמספר קשיח.
 - API v1 של Monday.com נתמך רק עד 1 במאי 2026. תרחישים חדשים חייבים להשתמש ב-v2. המודול המובנה של Make.com עובד עם v2 כברירת מחדל.
 
 ## פתרון בעיות
@@ -516,5 +524,5 @@ Make.com השיקה AI Agents באפריל 2025, ו-Visual AI Agents ב-Scenario
 פתרון: שדרגו את תוכנית Make.com ל-Best או מעלה. לחלופין, השתמשו בפעולת "Make an API Call" מהמודול, או במודול HTTP כללי ישירות עם ה-REST API של Morning.
 
 ### שגיאה: "חשבונית נדחתה: חסר מספר הקצאה"
-סיבה: מינואר 2026, חשבוניות מעל 10,000 שקלים דורשות מספר הקצאה מרשות המסים.
-פתרון: הוסיפו מודול Filter לפני יצירת מסמך שבודק אם הסכום עולה על 10,000 שקלים. אם כן, בקשו מספר הקצאה קודם, ואז העבירו אותו בשדה `allocationNumber` ביצירת המסמך.
+סיבה: חשבוניות מעל הסף של רפורמת החשבוניות דורשות מספר הקצאה מרשות המסים. הסף הוא 10,000 ש"ח עד 31 במאי 2026, ואז יורד ל-5,000 ש"ח ב-1 ביוני 2026.
+פתרון: הוסיפו מודול Filter לפני יצירת מסמך שמשווה את הסכום למשתנה ב-workflow שמכיל את הסף הנוכחי (אל תקודדו את המספר ישירות, הוא מתוכנן לרדת שוב). אם הסכום עולה על הסף, בקשו מספר הקצאה קודם, ואז העבירו אותו בשדה `allocationNumber` ביצירת המסמך.
