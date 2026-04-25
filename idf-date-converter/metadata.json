@@ -1,6 +1,6 @@
 {
   "author": "skills-il",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "category": "developer-tools",
   "tags": {
     "he": [
@@ -22,7 +22,7 @@
   },
   "display_name": {
     "he": "ממיר תאריכים עברי-לועזי",
-    "en": "Idf Date Converter"
+    "en": "IDF Date Converter"
   },
   "display_description": {
     "he": "ממירים בין תאריכים עבריים ולועזיים בכל הפורמטים.",
