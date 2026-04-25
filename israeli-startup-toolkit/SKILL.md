@@ -90,11 +90,12 @@ def calculate_founder_allocation(founders, vesting_months=48, cliff_months=12):
 
 | Program | Stage | Funding | Max Amount | Repayment |
 |---------|-------|---------|------------|-----------|
-| Tnufa | Pre-seed | Up to 85% | 800K NIS | Royalties 3-5% |
-| R&D Fund | Seed-Growth | Up to 50% | Per budget | Royalties 3-5% |
-| Incubator | Early stage | Up to 85% | Per program | Royalties |
-| BIRD (US-Israel) | Any | Up to 50% | $1M | Royalties |
+| Tnufa | Pre-seed | Up to 85% | Up to 1M NIS (2024+ cap) | Royalties 3-5% |
+| R&D Fund | Seed-Growth | Up to 50% (up to 75% periphery) | Per budget | Royalties 3-5% |
+| Technological Incubator | Early stage | Up to 85% | Up to ~9M NIS over 2 years | Royalties |
+| BIRD (US-Israel) | Any | Up to 50% | $1.5M (raised 2023) | Royalties |
 | Horizon Europe | Any | Varies | Varies | Depends on track |
+| Yozma 2 / Fund-of-Funds | Seed-Series A | Co-investment | Varies | Equity |
 
 **Grant application checklist:**
 ```
@@ -290,9 +291,9 @@ Result: Complete Option 102 setup plan with trustee comparison.
 ## Bundled Resources
 
 ### References
-- `references/iia-programs-guide.md` — Detailed guide to Israel Innovation Authority grant programs including R&D Fund, Tnufa (early stage), incubator programs, BIRD (US-Israel binational), and Horizon Europe tracks. Covers funding percentages, maximum amounts, repayment terms, eligibility requirements, application process, and approval rates. Consult when helping users select the right IIA program or prepare grant applications.
-- `references/investment-term-sheets.md` — Israeli investment agreement templates including SAFE and convertible note structures with Israeli-specific clauses (IIA notification, Section 102 interaction, Israeli securities law exemptions, anti-money laundering). Consult when drafting or reviewing early-stage investment terms under Israeli law.
-- `references/option-102-reference.md` — Complete reference for Section 102 of the Israeli Income Tax Ordinance covering all three tracks (Capital Gains Trustee, Income Trustee, Non-Trustee), holding periods, tax rates, employer deduction rules, ITA-approved trustees, filing procedures, and common pitfalls. Consult when setting up an ESOP or advising on employee equity compensation tax implications.
+- `references/iia-programs-guide.md`: Detailed guide to Israel Innovation Authority grant programs including R&D Fund, Tnufa (early stage), incubator programs, BIRD (US-Israel binational), and Horizon Europe tracks. Covers funding percentages, maximum amounts, repayment terms, eligibility requirements, application process, and approval rates. Consult when helping users select the right IIA program or prepare grant applications.
+- `references/investment-term-sheets.md`: Israeli investment agreement templates including SAFE and convertible note structures with Israeli-specific clauses (IIA notification, Section 102 interaction, Israeli securities law exemptions, anti-money laundering). Consult when drafting or reviewing early-stage investment terms under Israeli law.
+- `references/option-102-reference.md`: Complete reference for Section 102 of the Israeli Income Tax Ordinance covering all three tracks (Capital Gains Trustee, Income Trustee, Non-Trustee), holding periods, tax rates, employer deduction rules, ITA-approved trustees, filing procedures, and common pitfalls. Consult when setting up an ESOP or advising on employee equity compensation tax implications.
 
 ## Gotchas
 
@@ -302,6 +303,16 @@ Result: Complete Option 102 setup plan with trustee comparison.
 - Israeli tax year runs January-December (like the US), but corporate tax filing deadlines differ. The standard corporate tax rate is 23%. Agents may cite US tax rates or deadlines.
 - Israeli startups doing business in the US typically incorporate a Delaware LLC/C-Corp as a parent while keeping the Israeli entity as a subsidiary. Agents may suggest the reverse structure.
 
+## Israeli Ecosystem Context (2024-2026)
+
+After the October 2023 war, Israeli startup funding contracted in late 2023 then partially rebounded through 2024-2025, with cyber, AI infrastructure, and defense tech absorbing most growth-stage capital. Headline data points to track:
+
+- **Funding volume**: 2024 raised roughly $12B across ~600 rounds per Start-Up Nation Central; 2025 H1 trended ahead of 2024 driven by AI and cyber megadeals.
+- **Active local VCs**: Pitango (multi-stage, ~$2B AUM), Aleph (Series A/B), 83North (Series A/B), Vertex Ventures Israel (early growth), Vintage Investment Partners (Vintage Fund X closed at $400M+ in 2024, secondaries plus fund-of-funds), OurCrowd (online platform, equity crowdfunding plus partner funds), Viola Group, Jerusalem Venture Partners (JVP), TLV Partners, Glilot Capital (cyber), Team8 (cyber/AI foundry), Insight Partners (heavy IL deployment despite US base), Amiti Ventures (early stage).
+- **Accelerators / programs**: MassChallenge Israel (zero-equity, runs annually in Jerusalem), OurCrowd Pitch (pitch competition plus syndicate), 8200 EISP (alumni-driven), Microsoft for Startups Israel, Google for Startups TLV, Plus8 / Startup Bootcamp partners. Bizzabo is an Israeli scale-up, not an accelerator (correct any agent that lists it as such).
+- **Recent exits / IPOs**: Mobileye (Intel spinout, NASDAQ since 2022), Wix (NASDAQ since 2013), Lemonade (NYSE 2020), Riskified (NYSE 2021), monday.com (NASDAQ 2021); 2024-2025 saw renewed M&A (Wiz reportedly in advanced talks with Google for ~$23B in 2024, deal status confirmed in 2025) and several mid-cap acquisitions in cyber.
+- **Tax reform watch**: Corporate tax remains 23% as of 2026. The 2025 budget (Arrangements Law) introduced new compliance requirements but did not change Preferred Technological Enterprise rates (still 6% Area A / 12% elsewhere). Section 102 Capital Gains Track 25% rate unchanged. Always verify current rates with the ITA before quoting.
+
 ## Reference Links
 
 | Source | URL | What to Check |
@@ -310,7 +321,13 @@ Result: Complete Option 102 setup plan with trustee comparison.
 | Israeli Tax Authority | https://www.gov.il/en/departments/israel_tax_authority | Option 102, R&D tax benefits, corporate tax |
 | ICA Companies Registrar | https://www.gov.il/en/departments/israel_corporations_authority | Company formation, annual filings |
 | Ministry of Justice | https://www.gov.il/en/departments/ministry_of_justice | Corporate law, IP registration |
-| Start-Up Nation Central | https://www.startupnationcentral.org | Ecosystem data, funding trends |
+| Start-Up Nation Central | https://www.startupnationcentral.org | Ecosystem data, funding trends, Finder DB |
+| Israel Securities Authority | https://www.isa.gov.il/en | Securities law, private placement exemptions |
+| Calcalist Tech | https://www.calcalistech.com | Funding rounds, exits, ecosystem news (EN) |
+| Geektime | https://www.geektime.com | Israeli tech news (EN), startup launches |
+| Globes (Tech) | https://en.globes.co.il/en/section-globestechnology | Funding and exit reporting (EN) |
+| TechAviv / Tech.eu Israel | https://tech.eu/category/israel | Cross-border European deal flow |
+| BIRD Foundation | https://www.birdf.com | US-Israel binational R&D grants |
 
 ## Troubleshooting
 
