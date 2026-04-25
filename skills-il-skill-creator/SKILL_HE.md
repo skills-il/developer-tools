@@ -90,6 +90,9 @@ metadata:
 | שיווק וצמיחה | marketing-growth | SEO, רשתות חברתיות, פרסום, קמפיינים, ASO |
 | חינוך | education | פלטפורמות למידה, שיעורים פרטיים, כלים אקדמיים |
 | שירותי בריאות | health-services | קופות חולים, בתי מרקחת, רשומות רפואיות, תורים |
+| חשבונאות | accounting | הנהלת חשבונות, דוחות פיננסיים, ביקורת, כלי רואי חשבון |
+
+כל 12 ריפו הקטגוריה משתמשים ב-`master` כענף הברירת מחדל (לא `main`). הפורמט המלא של `github_url` הוא `https://github.com/skills-il/<repo>/tree/master/<slug>`.
 
 אם הסקיל לא מתאים לאף קטגוריה, דון עם המשתמש אם הוא שייך לקטגוריה קיימת או מצדיק ריפו חדש.
 
@@ -180,9 +183,11 @@ python scripts/scaffold-skill.py --name <skill-name> --category <category-repo>
 - השם לא מכיל "claude" או "anthropic"
 - אין README.md בתוך התיקייה
 
-### שלב 6: כתיבת YAML Frontmatter
+### שלב 6: כתיבת YAML Frontmatter ו-metadata.json
 
-צור את ה-frontmatter לפי המבנה המדויק. השתמש ב-`creator_name` שנאסף בשלב 2 בשדה `author`:
+**קריטי: skills-il מפצל את המטא-דאטה לשני קבצים.** Claude Desktop דוחה את מפתח `metadata` בתוך frontmatter של SKILL.md, לכן כל המטא-דאטה המועשרת חיה בקובץ נפרד `metadata.json`. ה-frontmatter של SKILL.md מינימלי בכוונה.
+
+**frontmatter של SKILL.md (רק 3-5 השדות האלה):**
 
 ```yaml
 ---
@@ -192,50 +197,52 @@ description: >-
   "[תעתיק עברי]", or [scenarios]. [יכולות מרכזיות].
   Do NOT use for [אנטי-טריגרים].
 license: MIT
-allowed-tools: '<כלים אם נדרש>'
-compatibility: >-
+allowed-tools: '<כלים אם נדרש>'      # אופציונלי, רק אם סקריפטים קוראים לכלי CLI
+compatibility: >-                       # אופציונלי
   [דרישות רשת/מערכת]. Works with Claude Code, Claude.ai, Cursor.
-metadata:
-  author: <creator_name משלב 2>
-  version: 1.0.0
-  category: <category>
-  tags:
-    he:
-      - <tag1-he>
-      - <tag2-he>
-      - ישראל
-    en:
-      - <tag1>
-      - <tag2>
-      - israel
-  display_name:
-    he: "<שם בעברית>"
-    en: <English Name>
-  display_description:
-    he: "<תיאור בעברית>"
-    en: >-
-      <English description>
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
-    - gemini-cli
-    # - openclaw          # הוסף רק אם הסקיל מאומת כתואם OpenClaw
 ---
 ```
 
-**סוכנים נתמכים:** כלול את כל הסוכנים הסטנדרטיים (claude-code עד codex) כברירת מחדל. אם הסקיל תלוי בתכונות ספציפיות לסוכן (למשל כלי MCP זמינים רק ב-Claude Code), הסר סוכנים שלא יכולים לתמוך ותעד מדוע בשדה `compatibility`.
+אסור להוסיף `metadata:`, `version:`, `tags:`, `display_name:`, `display_description:`, `author:`, `category:`, או `supported_agents:` ל-frontmatter. Claude Desktop דוחה אותם.
 
-**תאימות OpenClaw (חובה לשאול):** לפני סיום ה-frontmatter, שאל את המשתמש:
+**metadata.json (באותה תיקיית הסקיל, ליד SKILL.md):**
 
-> "האם הסקיל הזה תואם ל-OpenClaw? OpenClaw הוא סוכן קוד בקוד פתוח. סמן כתואם רק אם הסקיל לא תלוי בתכונות ספציפיות ל-Claude. האם להוסיף `openclaw` לרשימת הסוכנים?"
+```json
+{
+  "author": "<creator_name משלב 2>",
+  "version": "1.0.0",
+  "category": "<category-repo>",
+  "tags": {
+    "he": ["<tag1-he>", "<tag2-he>", "ישראל"],
+    "en": ["<tag1>", "<tag2>", "israel"]
+  },
+  "display_name": {
+    "he": "<שם בעברית>",
+    "en": "<English Name>"
+  },
+  "display_description": {
+    "he": "<תיאור בעברית>",
+    "en": "<English description, מקביל ל-description ב-SKILL.md>"
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "gemini-cli"
+  ]
+}
+```
 
-- אם המשתמש מאשר: הסר את ההערה מ-`openclaw`
-- אם לא בטוח: השאר מוער
-- אסור להניח תאימות -- תמיד שאל
+**סוכנים נתמכים:** כלול את כל הסוכנים הסטנדרטיים (claude-code, cursor, github-copilot, windsurf, opencode, codex, gemini-cli) כברירת מחדל. אם הסקיל תלוי בתכונות ספציפיות לסוכן (למשל כלי MCP זמינים רק ב-Claude Code), הסר סוכנים שלא יכולים לתמוך ותעד מדוע בשדה `compatibility`. הוסף `antigravity` רק אם הסקיל מאומת כתואם Antigravity.
+
+**כללי סגנון של הפרויקט (חלים על כל קובץ סקיל):**
+
+- **אין em dashes (U+2014) או en dashes (U+2013)** בשום מקום ב-SKILL.md, SKILL_HE.md, metadata.json, references או scripts. החלף בפסיקים, סוגריים, נקודות או "to" עבור טווחים. השתמש במקף ASCII רגיל.
+- **כל 12 ריפו הקטגוריה משתמשים ב-`master`**, לא `main`, כענף הברירת מחדל.
+- **`github_url` חייב לכלול את הנתיב המלא לתיקיית הסקיל**: `https://github.com/skills-il/<repo>/tree/master/<slug>`.
 
 **תגיות דו-לשוניות (חובה לשאול):** אחרי הגדרת התגיות באנגלית, שאל:
 

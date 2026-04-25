@@ -33,6 +33,9 @@ Ask the user which category repo this skill belongs to:
 | Marketing & Growth | marketing-growth | SEO, social media, ads, email campaigns, ASO |
 | Education | education | Learning platforms, tutoring, academic tools |
 | Health Services | health-services | HMOs, pharmacy, medical records, appointments |
+| Accounting | accounting | Bookkeeping, financial reporting, audit, accountant tooling |
+
+All 12 category repos use `master` as their default branch (not `main`). The full path format for `github_url` is `https://github.com/skills-il/<repo>/tree/master/<slug>`.
 
 If the skill doesn't fit any category, discuss with the user whether it belongs in an existing category or warrants a new repo.
 
@@ -127,9 +130,11 @@ Verify the output:
 - No README.md inside the skill folder (skill folders must not contain README.md)
 - The **repo-level README.md** (at the root of the category repo) must be written in **English**. This is required because the repo is public on GitHub and the README serves as the entry point for international developers and AI agents. Hebrew content belongs in SKILL_HE.md files inside skill folders, not in the repo README.
 
-### Step 6: Write the YAML Frontmatter
+### Step 6: Write the YAML Frontmatter and metadata.json
 
-Generate the frontmatter following this exact structure. Use the `creator_name` collected in Step 2 for the `author` field:
+**CRITICAL: Skills-il splits metadata across two files.** Claude Desktop rejects the `metadata` key inside SKILL.md frontmatter, so all enriched metadata lives in a separate `metadata.json` file. The SKILL.md frontmatter is intentionally minimal.
+
+**SKILL.md frontmatter (only these 3-5 fields):**
 
 ```yaml
 ---
@@ -139,49 +144,52 @@ description: >-
   "[Hebrew transliteration 1]", "[Hebrew transliteration 2]", or [more triggers].
   [Key capabilities]. Do NOT use for [anti-triggers] (use [alternative-skill] instead).
 license: MIT
-allowed-tools: '<tools if needed>'
-compatibility: >-
+allowed-tools: '<tools if needed>'      # optional, only when scripts call CLI tools
+compatibility: >-                         # optional
   [Network/system requirements]. Works with Claude Code, Claude.ai, Cursor.
-metadata:
-  author: <creator_name from Step 2>
-  version: 1.0.0
-  category: <category-repo>
-  tags:
-    he:
-      - <tag1-he>
-      - <tag2-he>
-      - ישראל
-    en:
-      - <tag1>
-      - <tag2>
-      - israel
-  display_name:
-    he: "<Hebrew display name>"
-    en: <English Display Name>
-  display_description:
-    he: "<Hebrew description>"
-    en: >-
-      <English description -- mirrors the main description field>
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
-    # - openclaw          # Only add if skill is verified as OpenClaw-compatible
 ---
 ```
 
-**Supported agents:** Include all standard agents (claude-code through codex) by default. If the skill relies on agent-specific features (e.g., MCP tools only available in Claude Code), remove agents that cannot support it and document why in the `compatibility` field.
+Do NOT add `metadata:`, `version:`, `tags:`, `display_name:`, `display_description:`, `author:`, `category:`, or `supported_agents:` to the frontmatter. Claude Desktop rejects them.
 
-**OpenClaw compatibility (MUST ASK):** Before finalizing the frontmatter, ask the user:
+**metadata.json (in the same skill folder, alongside SKILL.md):**
 
-> "Is this skill compatible with OpenClaw? OpenClaw is an open-source AI coding agent. Only mark as compatible if the skill does not depend on Claude-specific features (e.g., Claude MCP tools, Anthropic-specific APIs). Should I add `openclaw` to supported_agents?"
+```json
+{
+  "author": "<creator_name from Step 2>",
+  "version": "1.0.0",
+  "category": "<category-repo>",
+  "tags": {
+    "he": ["<tag1-he>", "<tag2-he>", "ישראל"],
+    "en": ["<tag1>", "<tag2>", "israel"]
+  },
+  "display_name": {
+    "he": "<Hebrew display name>",
+    "en": "<English Display Name>"
+  },
+  "display_description": {
+    "he": "<Hebrew description>",
+    "en": "<English description, mirrors the main description field>"
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "gemini-cli"
+  ]
+}
+```
 
-- If the user confirms **yes**: uncomment `openclaw` in the `supported_agents` list
-- If the user says **no** or is unsure: leave it commented out
-- Do NOT assume compatibility -- always ask explicitly
+**Supported agents:** Include all standard agents (claude-code, cursor, github-copilot, windsurf, opencode, codex, gemini-cli) by default. If the skill relies on agent-specific features (e.g., MCP tools only available in Claude Code), remove agents that cannot support it and document why in the `compatibility` field. Add `antigravity` only if the skill is verified as Antigravity-compatible.
+
+**Project style rules (apply to every skill file):**
+
+- **No em dashes (U+2014) or en dashes (U+2013)** anywhere in SKILL.md, SKILL_HE.md, metadata.json, references, or scripts. Replace with commas, parentheses, periods, or "to" for ranges. Use the regular ASCII hyphen-minus instead.
+- **All 12 category repos use `master`**, not `main`, as the default branch.
+- **`github_url` format must include the full path to the skill folder**, not just the repo root: `https://github.com/skills-il/<repo>/tree/master/<slug>`.
 
 **Bilingual tags (MUST ASK):** After defining the English tags, ask the user:
 
@@ -484,7 +492,7 @@ Actions:
 3. Use cases: categorize transactions, detect recurring charges, monthly summary
 4. Fact-check: Verify Israeli bank API patterns, transaction category standards
 5. Scaffold: `python scripts/scaffold-skill.py --name israeli-bank-analyzer --category tax-and-finance`
-6. Frontmatter: add `mcp-server: israeli-bank-mcp` to metadata, triggers include "nituch tenuot bank"
+6. metadata.json: include the relevant Recommended MCP Servers section in SKILL.md (and `## שרתי MCP מומלצים` in SKILL_HE.md) pointing to `israeli-bank-mcp`. Description triggers include "nituch tenuot bank"
 7. Instructions: MCP tool calls for fetching transactions, categorization logic, summary generation
 8. References: `references/bank-api-reference.md`; Scripts: `scripts/transaction-categorizer.py`
 9. Hebrew: SKILL_HE.md with banking terminology
