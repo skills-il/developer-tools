@@ -13,10 +13,6 @@ description: >-
   Hebrew NLP without voice (use hebrew-nlp-toolkit), or SMS messaging (use
   israeli-sms-gateway).
 license: MIT
-metadata:
-  author: skills-il
-  version: 1.0.0
-  category: developer-tools
 ---
 
 # בונה בוטים קוליים בעברית
@@ -38,7 +34,9 @@ metadata:
 
 **החלטות מרכזיות:**
 - **ספק STT**: OpenAI Whisper (הדיוק הכי טוב לעברית), Google Cloud STT (זמן תגובה נמוך), Azure Speech (פיצ'רים ארגוניים)
-- **ספק TTS**: Google Cloud TTS (קולות טבעיים), Amazon Polly Hebrew (משתלם מבחינת עלות), Azure Neural TTS (האיכות הגבוהה ביותר)
+- **ספק STT**: OpenAI `gpt-4o-transcribe` או `gpt-4o-mini-transcribe` (WER הכי טוב לעברית והשהיה נמוכה יותר מ-`whisper-1`, זמין דרך OpenAI Realtime API לסטרימינג), `whisper-large-v3-turbo` ל-self-host, וריאציות מותאמות-עברית של ivrit-ai (`ivrit-ai/whisper-large-v3-turbo-ct2`) ל-WER הפתוח הטוב ביותר בעברית, Google Cloud STT (השהיה נמוכה), Azure Speech (תכונות ארגוניות). ה-API הישן `whisper-1` עדיין נתמך אבל `gpt-4o-transcribe` הוא ברירת המחדל הנוכחית לעברית.
+- **ספק TTS**: ElevenLabs Multilingual v2 / Turbo v2.5 / Flash v2.5 (איכות עברית גבוהה מאוד, Flash בהשהיה נמוכה לבוטים בזמן אמת, ברירת המחדל הישראלית בפועל ב-2026), Azure Neural TTS (`he-IL-HilaNeural`, `he-IL-AvriNeural`), Google Cloud TTS Wavenet (`he-IL-Wavenet-A/B`), Amazon Polly Hebrew (Avri בלבד, אין קול עברי neural נכון לאפריל 2026, יש לוודא לפני הסתמכות).
+- **בזמן אמת / שיחתי**: OpenAI Realtime API (speech-to-speech, עברית טבעית) הוא ברירת המחדל ב-2026 ל-turn-taking של פחות מ-500ms. ללקוחות דפדפן/משובץ השתמשו ב-Twilio Media Streams + barge-in או LiveKit Voice Agents.
 - **טלפוניה**: Twilio (מלאי המספרים הישראלי הגדול ביותר), Vonage (תמחור תחרותי לישראל)
 - **אירוח**: פונקציות ענן לנפח נמוך, שרתים ייעודיים לנפח גבוה
 

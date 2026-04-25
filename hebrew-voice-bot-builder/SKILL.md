@@ -24,10 +24,12 @@ Before building, decide on the voice bot architecture based on the use case:
 | Hybrid | Complex flows with both speech and keypad input | STT + TTS + DTMF + telephony |
 
 **Key decisions:**
-- **STT provider**: OpenAI Whisper (best accuracy for Hebrew), Google Cloud STT (low latency), Azure Speech (enterprise features)
-- **TTS provider**: Google Cloud TTS (natural voices), Amazon Polly Hebrew (cost-effective), Azure Neural TTS (highest quality)
-- **Telephony**: Twilio (largest Israeli number inventory), Vonage (competitive pricing for Israel)
-- **Hosting**: Cloud functions for low-volume, dedicated servers for high-volume
+- **STT provider**: OpenAI `gpt-4o-transcribe` or `gpt-4o-mini-transcribe` (best Hebrew WER and lower latency than `whisper-1`, available via the OpenAI Realtime API for streaming), `whisper-large-v3-turbo` for self-host, ivrit-ai's Hebrew-tuned variants (`ivrit-ai/whisper-large-v3-turbo-ct2`) for the best open Hebrew WER, Google Cloud STT (low latency), Azure Speech (enterprise features). The legacy `whisper-1` API is still supported but `gpt-4o-transcribe` is the current default for Hebrew.
+- **TTS provider**: ElevenLabs Multilingual v2 / Turbo v2.5 / Flash v2.5 (very high Hebrew quality, low-latency Flash for real-time bots, the de-facto Israeli default in 2026), Azure Neural TTS (`he-IL-HilaNeural`, `he-IL-AvriNeural`), Google Cloud TTS Wavenet (`he-IL-Wavenet-A/B`), Amazon Polly Hebrew (Avri only, no neural Hebrew voice as of Apr 2026, verify before relying on it).
+- **Real-time / conversational**: OpenAI Realtime API (speech-to-speech, native Hebrew) is the 2026 default for sub-500ms turn-taking. For browser/embedded clients use Twilio Media Streams + barge-in or LiveKit Voice Agents.
+- **Telephony**: Twilio (largest Israeli number inventory), Vonage (competitive pricing for Israel).
+- **Hosting**: Cloud functions for low-volume, dedicated servers for high-volume.
+- **Recording-consent disclosure**: Israeli outbound automated calls must disclose recording at the start of the call (`השיחה מוקלטת`). Privacy Protection Law Amendment 13 (in force Aug 2025) tightens consent requirements for biometric voice data.
 
 ### Step 2: Hebrew Speech-to-Text (STT)
 
