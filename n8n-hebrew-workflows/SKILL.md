@@ -56,7 +56,15 @@ The response contains a JWT token valid for 60 minutes. Store it and pass to sub
 Authorization: Bearer {{$json.token}}
 ```
 
-**Israel Invoice Reform 2026:** Starting January 2026, tax invoices over 10,000 NIS require an allocation number (mispar haktza'a) from the Israel Tax Authority. After creating a document via the Morning API, you must call the Tax Authority allocation endpoint for qualifying invoices. Morning's API handles this automatically for documents created through their UI, but API-created documents may require explicit allocation requests depending on your integration. Check Morning's API documentation for the latest allocation workflow.
+**Israel Invoice Reform 2026 (threshold step-down):** Tax invoices over the threshold require an allocation number (mispar haktza'a) from the Israel Tax Authority. The threshold drops in 2026:
+
+| Effective | Threshold |
+|-----------|-----------|
+| Jan 1, 2026 | 10,000 NIS |
+| **Jun 1, 2026** | **5,000 NIS** |
+| Jan 1, 2027 | 5,000 NIS (planned to continue) |
+
+After creating a document via the Morning API, call the Tax Authority allocation endpoint for qualifying invoices. Morning's API handles this automatically for documents created through their UI, but API-created documents may require explicit allocation requests depending on your integration. Build the threshold check as a configurable variable in your workflow, not a hardcoded number, since the threshold is scheduled to drop again. Check Morning's API documentation for the latest allocation workflow.
 
 **Amounts are in decimal shekels (NOT agorot).** When creating documents, `price: 50` means 50 NIS, not 50 agorot. Do not multiply or divide by 100.
 
@@ -531,7 +539,7 @@ Choose n8n when: you need self-hosting for Israeli data residency, unlimited aut
 - **Agents miss that Shabbat times vary by city.** Candle lighting in Jerusalem is 40 minutes before sunset, in Haifa and Zikhron Ya'akov 30 minutes, and in Tel Aviv and all other cities 18 minutes. Using a single hardcoded time for all of Israel will cause workflows to run during Shabbat in some cities.
 - **Execute Command node is disabled by default in n8n 2.0.** If your workflow used Execute Command to run shell scripts (e.g., for bank scraping), it will silently fail after upgrading to n8n 2.0. Migrate to Code nodes or explicitly re-enable Execute Command in the n8n environment configuration.
 - **Morning (Green Invoice) amounts are in shekels, not agorot.** The API uses decimal shekels (`price: 50` = 50 NIS). Do not multiply by 100 or perform agorot conversions. This is different from some Israeli payment gateways that use agorot.
-- **Invoice Reform 2026 affects automation.** Tax invoices over 10,000 NIS created via API now require allocation numbers from the Tax Authority. Workflows that auto-generate invoices must handle the allocation step or the invoice may be invalid for tax deduction purposes.
+- **Invoice Reform 2026 affects automation, threshold drops June 1, 2026.** Tax invoices over the threshold (10,000 NIS through May 31, 2026, then 5,000 NIS from June 1, 2026) created via API require allocation numbers from the Tax Authority. Workflows that auto-generate invoices must handle the allocation step or the invoice may be invalid for tax deduction purposes. Make the threshold a workflow variable, not a hardcoded literal.
 
 ## Bundled Resources
 
