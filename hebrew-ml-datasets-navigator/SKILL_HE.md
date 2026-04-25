@@ -20,15 +20,17 @@ license: MIT
 |------|----------|-------------------------------|
 | זיהוי דיבור עברי (ASR) | אודיו + תמלול | ivrit.ai (crowd-transcribe, crowd-recital, audio-v2) |
 | סינתזת דיבור עברי (TTS) | טקסט + אודיו סטודיו | אודיו ברישוי פתוח (מוגבל, בדרך כלל דורש הקלטות משלכם) |
-| Pre-training ל-LLM עברי | קורפוס טקסט עברי גדול | קורפוסי Dicta, תת-קבוצה עברית של MADLAD-400, OSCAR Hebrew, ויקיפדיה עברית, מליאות הכנסת |
+| Pre-training ל-LLM עברי | קורפוס טקסט עברי גדול | קורפוסי Dicta, `allenai/MADLAD-400` עברית, `oscar-corpus/OSCAR-2301` עברית, חתך עברית של `uonlp/CulturaX`, פילטר `heb_Hebr` של `HuggingFaceFW/fineweb-2`, mC4 (החתך העברי באיכות נמוכה אבל לא מנוטרל), ויקיפדיה עברית, מליאות הכנסת |
 | Instruction tuning ל-LLM | זוגות prompt-response בעברית | דאטהסטי instruction של Dicta, Alpaca מתורגם, מותאם |
-| הבנת הנקרא / QA | טקסט + שאלות-תשובות | HeQ (`pig4431/HeQ_v1`) |
+| הבנת הנקרא / QA | טקסט + שאלות-תשובות | HeQ (`Etelis/HeQ_v1` כמראה ב-HF; קנוני ב-`github.com/NNLP-IL/Hebrew-Question-Answering-Dataset`); `omrikeren/ParaShoot` (~3K דוגמאות few-shot) |
 | סיווג סנטימנט | טקסט עברי + תוויות | HebrewSentiment (`HebArabNlpProject/HebrewSentiment`) |
 | NLI | זוגות premise-hypothesis | HebNLI (`HebArabNlpProject/HebNLI`) |
 | NER | טקסט עברי + תגיות ישויות | דאטהסטי NER של Dicta, גרסאות היסטוריות של NNLP-IL |
 | ניתוח מורפולוגי | טקסט עברי + תגיות מורפו | דאטהסטי morph של Dicta |
 | ניקוד | טקסט מנוקד ולא מנוקד | דאטהסטי ניקוד של Dicta |
 | זיהוי פרפראזות | זוגות טקסט עברי | Hebrew paraphrase dataset של NNLP-IL (9,750 זוגות) |
+| סיכום | מאמר עברי + סיכום | `biunlp/HeSum` (10K זוגות מאמר-סיכום מחדשות עבריות, BIU NLP), `HebArabNlpProject/HebSummaries` |
+| בנצ'מרק ידע כללי | שאלות אמריקאיות + תשובות | HEBREW-MMLU (תרגום עברי של MMLU; אמתו את ה-HF mirror הפעיל, יש מספר תרגומים קהילתיים) |
 | תרגום עברית-אנגלית | קורפוסים מקבילים | NeuLabs-TedTalks, תת-קבוצות OPUS |
 | ASR יידיש | אודיו + תמלול יידיש | ivrit.ai Yiddish (yi-whisper) |
 | טקסט יידיש | קורפוסי יידיש | ivrit.ai crowd-whatsapp-yi, crowd-recital-yi |
@@ -51,9 +53,13 @@ license: MIT
 
 ארגון ה-LLM וה-BERT העברי המוביל בישראל.
 
-מודלים מרכזיים:
-- `dicta-il/DictaLM-3.0-24B-Base`, LLM בסיס עברי דגלי
-- `dicta-il/DictaLM-3.0-Nemotron-12B-Instruct`, instruction-tuned בגודל בינוני
+מודלים מרכזיים (אומתו ב-huggingface.co/dicta-il):
+- `dicta-il/DictaLM-3.0-24B-Base`, LLM בסיס עברי דגלי (24B, מבוסס Mistral)
+- `dicta-il/DictaLM-3.0-24B-Thinking`, וריאנט reasoning של ה-24B
+- `dicta-il/DictaLM-3.0-Nemotron-12B-Instruct`, instruction-tuned בגודל בינוני (12B, מבוסס Nemotron)
+- `dicta-il/DictaLM-3.0-1.7B-Thinking-GGUF`, מודל reasoning קטן שרץ על חומרה צרכנית
+- וריאנטים מקוונטים לפרודקשן: `*-FP8`, `*-W4A16`, `*-GGUF` (לדוגמה `DictaLM-3.0-Nemotron-12B-Instruct-FP8`)
+- `dicta-il/dictalm2.0-instruct`, הדור הקודם, 7B מבוסס Mistral-7B, instruct fine-tuned (לפי מתכון Zephyr). קיים גם ב-`dictalm2.0-instruct-GGUF`, `-AWQ`, `-GPTQ`
 - `dicta-il/dictabert`, BERT עברי בסיסי
 - `dicta-il/dictabert-sentiment`, סיווג סנטימנט עברי
 - `dicta-il/dictabert-heq`, מכוון ל-QA עברי
@@ -65,6 +71,19 @@ license: MIT
 מאגרים מרכזיים:
 - `HebArabNlpProject/HebrewSentiment`, 41,305 דוגמאות מתויגות, CC-BY-4.0
 - `HebArabNlpProject/HebNLI`, NLI עברי
+- `HebArabNlpProject/HebSummaries`, סיכום עברי
+
+#### קורפוסים רב-לשוניים בקנה-מידה web עם חתכי עברית
+
+השתמשו באלה ל-pre-training של LLM כשאתם צריכים קנה-מידה ששום קורפוס עברי לבדו לא מספק. תמיד סננו לחתך הסקריפט העברי וגם dedupe מחדש מול נתוני הדומיין שלכם.
+
+- `uonlp/CulturaX`, 6.3T טוקנים על פני 167 שפות, משלב mC4 v3.1.0 עם הוצאות OSCAR עד 2023-01. ניקוי ודה-דופ כבדים. מושכים את החתך העברי לפי קוד שפה. Apache 2.0 (אבל מותנה ברישיונות mC4/OSCAR שמתחת, בדקו לפני אימון מסחרי).
+- `HuggingFaceFW/fineweb-2`, ~20TB על פני 1,868 צמדי שפה-סקריפט. עברית זמינה כ-`heb_Hebr`. סינון איכותי יותר מ-CulturaX. מקור: CommonCrawl 2013 עד אפריל 2024.
+- `allenai/MADLAD-400`, קורפוס רב-לשוני ברמת מסמך על פני 419 שפות. שתי גרסאות: noisy (LangID בלבד) ו-clean (מסונן). עברית כלולה.
+- `oscar-corpus/OSCAR-2301`, קורפוס רב-לשוני שמקורו ב-CommonCrawl, חתך עברי זמין. שימו לב ש-`OSCAR-2301` תחת gating ב-HuggingFace, בקשו גישה בדף הדאטהסט לפני שימוש.
+- mC4 (חתך עברי), לא מנוטרל אבל החלק העברי שלו ספג ביקורת על טקסט רועש וסינון חלש יותר מקורפוסים חדשים. העדיפו FineWeb-2 או CulturaX איפה שאפשר.
+
+תמיד עשו טוקניזציה מחדש ו-dedupe כשמשלבים קורפוסים; CulturaX כבר מכיל mC4 + OSCAR עד 2023, אז שכבת אותם שוב יוצרת כפילות משמעותית.
 
 ### שלב 3: תאימות רישיון לפי שימוש
 
@@ -109,6 +128,34 @@ license: MIT
 5. לטקסט, קראו כמה דוגמאות
 6. בדקו תאימות רישיון לשימוש המסחרי הספציפי
 7. תעדו דרישות ייחוס
+
+### שלב 7: בנצ'מרקים חסרים בעברית
+
+לאקוסיסטם NLP העברי יש פערים. אם המשימה שלכם נמצאת ברשימה הזאת, צפו לבנות נתוני הערכה בעצמכם או לשלב את הבנצ'מרק הקרוב ביותר עם הערכה אנושית ספציפית לדומיין:
+
+- **הערכות בטיחות / red-team עבריים**, אין עמית ציבורי ל-ToxicChat או HarmBench. בנו prompts פנימיים.
+- **יצירת קוד בעברית**, אין בנצ'מרק docstring או הערה בעברית. השתמשו ב-HumanEval/MBPP באנגלית והכירו במחיר.
+- **הערכות long-context בעברית**, אין Needle-in-a-Haystack או LongBench בעברית. בנו פנימי מתוך ויקיפדיה עברית או תמלילי הכנסת.
+- **שימוש בכלים / function-calling בעברית**, אין בנצ'מרק ציבורי. תרגמו prompts מ-BFCL לעברית.
+- **נתוני preference / RLHF בעברית**, נדירים. רוב אות ה-preference המיושרת לעברית פרטית (Dicta, AI21, Hebrew-Mistral).
+- **הערכות דיאלוג מדובר בעברית**, ivrit.ai מכסה ASR אבל אין בנצ'מרק איכות-דיאלוג ציבורי. בנו הערכה פנימית משיחות אמיתיות.
+- **רב-מודאלי בעברית (vision-language)**, כמעט שום דבר ציבורי. הבנת מסמכים עבריים מכוסה ברובה רק על ידי OCR מסחרי + צנרות תרגום.
+
+ידוע שקיים אבל מוגבל:
+- **HEBREW-MMLU**, תרגום עברי של MMLU שמופיע באקוסיסטם של ה-Open Hebrew LLM Leaderboard; מספר תרגומים קהילתיים באיכויות שונות. אמתו את ה-mirror הפעיל לפני פרסום מספרים בני-השוואה. `openai/MMMLU` מכסה 14 שפות אבל עברית לא בקבוצה הרשמית הזאת.
+- **Hebrew Winograd**, פורט קהילתי של Winograd Schema Challenge, פחות מ-300 פריטים. שונות גבוהה בריצה בודדת.
+
+### שלב 8: משאבי NLP אקדמיים בישראל
+
+מעבר ל-ivrit.ai, Dicta והתכנית הלאומית, כמה מעבדות אוניברסיטאיות מפרסמות עבודות NLP עבריות שכדאי לעקוב אחריהן:
+
+- **מעבדת NLP של אוניברסיטת בר-אילן (BIU NLP)**, הקבוצה שמאחורי HeSum (`biunlp/HeSum`), ה-AlephBERT המקורי, ובנצ'מרקי תיוג עבריים. פרסומים ב-`nlp.biu.ac.il`.
+- **האוניברסיטה הפתוחה**, קורפוסים עבריים וטקסטים היסטוריים (לדוגמה קורפוסי הכנסת לפני שחרור ivrit.ai).
+- **טכניון / מעבדת NLPH**, מאמרי NLP עברי, מחקר על טוקניזציה ומורפולוגיה עברית.
+- **האוניברסיטה העברית בירושלים (HUJI)**, שיתופי פעולה עם האוניברסיטה הפתוחה על תחביר, מורפולוגיה ועברית היסטורית. הפורט המקורי של Winograd-HE (vshwartz) יוצא משם.
+- **אוניברסיטת רייכמן / IDC NLP**, פרסומי בנצ'מרק עבריים מזדמנים שקשורים לשיתופי פעולה עם תעשייה.
+
+אסטרטגיית מעקב: הירשמו ל-`NNLP-IL/Hebrew-Resources` ל-curation קהילתי; לפרסומים ראשוניים עקבו אחרי דפי המעבדות וה-authors ב-Hugging Face.
 
 ## דוגמאות
 
@@ -161,12 +208,21 @@ license: MIT
 |------|-----|---------|
 | ארגון ivrit.ai ב-HuggingFace | https://huggingface.co/ivrit-ai | מודלי ASR, דאטהסטים, diarization |
 | אתר ivrit.ai | https://www.ivrit.ai/en/ivrit-ai-2/ | משימה, רישוי |
-| ארגון Dicta ב-HuggingFace | https://huggingface.co/dicta-il | משפחת DictaLM 3.0, DictaBERT |
-| אתר Dicta | https://dicta.org.il | פרסומים, דוח טכני DictaLM |
-| התכנית הלאומית ל-NLP | https://huggingface.co/HebArabNlpProject | בנצ'מרקים עברית-ערבית |
+| ארגון Dicta ב-HuggingFace | https://huggingface.co/dicta-il | משפחת DictaLM 3.0 (24B-Base, Nemotron-12B-Instruct, 1.7B-Thinking-GGUF, 24B-Thinking), DictaLM 2.0, DictaBERT |
+| אתר Dicta | https://dicta.org.il | פרסומים, דוח טכני DictaLM 3.0 |
+| התכנית הלאומית ל-NLP | https://huggingface.co/HebArabNlpProject | HebrewSentiment, HebNLI, HebSummaries ובנצ'מרקים נוספים |
 | NNLP-IL Hebrew Resources | https://github.com/NNLP-IL/Hebrew-Resources | רשימה מקיפה |
 | HeQ GitHub | https://github.com/NNLP-IL/Hebrew-Question-Answering-Dataset | מקור HeQ |
-| Open Hebrew LLM Leaderboard | https://huggingface.co/blog/leaderboard-hebrew | מתודולוגיית בנצ'מרקים |
+| HeQ ב-HuggingFace (מראה) | https://huggingface.co/datasets/Etelis/HeQ_v1 | מראה ל-HeQ ל-loading ישיר |
+| HeSum | https://huggingface.co/datasets/biunlp/HeSum | סיכום אבסטרקטיבי עברי, 10K זוגות מאמר-סיכום (BIU NLP) |
+| ParaShoot | https://github.com/omrikeren/ParaShoot | QA עברית בסגנון SQuAD, ~3K דוגמאות few-shot |
+| CulturaX | https://huggingface.co/datasets/uonlp/CulturaX | קורפוס pre-training רב-לשוני, חתך עברית לפי קוד שפה |
+| FineWeb-2 | https://huggingface.co/datasets/HuggingFaceFW/fineweb-2 | קורפוס web רב-לשוני, עברית ב-`heb_Hebr` |
+| MADLAD-400 | https://huggingface.co/datasets/allenai/MADLAD-400 | קורפוס רב-לשוני ברמת מסמך, תמיכה בעברית |
+| OSCAR-2301 | https://huggingface.co/datasets/oscar-corpus/OSCAR-2301 | קורפוס מבוסס-CommonCrawl, חתך עברי (gated, צריך לבקש גישה) |
+| Open Hebrew LLM Leaderboard (space חי) | https://huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard | דירוגים חיים, ציוני בנצ'מרק עדכניים |
+| Open Hebrew LLM Leaderboard (הכרזה) | https://huggingface.co/blog/leaderboard-hebrew | מתודולוגיית בנצ'מרקים |
+| BIU NLP Lab | https://nlp.biu.ac.il | פרסומי NLP אקדמיים מבר-אילן (HeSum, מקורות AlephBERT) |
 
 ## מלכודות נפוצות
 
@@ -175,7 +231,12 @@ license: MIT
 - DictaLM 3.0 בא במספר גדלים שנגזרים ממודלי בסיס שונים (Mistral, Nemotron, Qwen). הרישיונות של ה-upstream שונים. אל תניחו שרישיון אחד חל על כל ה-DictaLM.
 - המטריקה הראשית של HeQ צריכה להיות F1, לא Exact Match. המורפולוגיה העברית ותופעת הסופיות הופכות את EM לשביר.
 - יידיש ועברית חולקות אלפבית אך הן שפות שונות עם מודלים שונים. אל תאמנו מודל עברי על יידיש או להיפך בלי תכנון מפורש של העברת שפה.
-- הדאטהסט `pig4431/HeQ_v1` הוא מראה תחזוקה-קהילתית של HuggingFace. המקור הקנוני הוא `NNLP-IL/Hebrew-Question-Answering-Dataset` ב-GitHub.
+- מראות HuggingFace של HeQ (`pig4431/HeQ_v1`, `Etelis/HeQ_v1`) הם תחזוקה-קהילתית. המקור הקנוני הוא `NNLP-IL/Hebrew-Question-Answering-Dataset` ב-GitHub. אמתו versioning עדכני לפני פרסום תוצאות בנצ'מרק.
+- שכבת CulturaX מעל mC4 + OSCAR-2301 יוצרת כפילות כבדה. CulturaX כבר מכיל את mC4 v3.1.0 ו-OSCAR עד 2023-01. בחרו קורפוס אחד או עשו dedupe מפורש (sha256 של טקסט מנורמל) לפני אימון.
+- mC4 לא מנוטרל, אבל החתך העברי שלו עם סינון חלש יותר מ-FineWeb-2 או CulturaX. אם אתם צריכים web עברי לפני 2024, העדיפו CulturaX על mC4 גולמי.
+- ל-HEBREW-MMLU יש מספר תרגומים קהילתיים ופורקים. אמתו את ה-dataset ID הפעיל לפני פרסום תוצאות בנצ'מרק; מספרים מתרגומים שונים לא בני-השוואה ישירה. `openai/MMMLU` מכסה 14 שפות אבל עברית לא נכללת בקבוצה הרשמית הזאת.
+- שמות וריאנטים של DictaLM 3.0 כוללים גם משפחות base/thinking/instruct וגם וריאנטים מקוונטים (FP8, W4A16, GGUF). כשמצטטים תוצאות בנצ'מרק, לוגגו את ה-model ID המדויק מדף ה-HF כולל סיומת קוונטיזציה; מספרים לא עוברים בין קוונטיזציות.
+- `oscar-corpus/OSCAR-2301` תחת gating ב-HuggingFace. תכננו לאישור גישה לפני pipelines אימון שתלויים בו.
 
 ## פתרון בעיות
 
