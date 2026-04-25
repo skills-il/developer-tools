@@ -5,7 +5,7 @@
 ### CropX - Soil Monitoring
 - **Website:** cropx.com
 - **Type:** IoT soil sensors + cloud analytics
-- **API:** REST with OAuth2
+- **API:** REST with OAuth2 (partnership-gated; canonical base URL https://api.cropx.com/v2)
 - **Key Endpoints:**
   - /sites - List monitored fields
   - /devices/{id}/measurements - Soil readings
@@ -26,7 +26,7 @@
 ### Taranis - Crop Intelligence
 - **Website:** taranis.com
 - **Type:** AI aerial imagery analysis
-- **API:** REST
+- **API:** REST (partnership-gated; canonical base URL https://api.taranis.com/v1)
 - **Key Endpoints:**
   - /fields - Field management
   - /fields/{id}/detections - Pest/disease detections
@@ -50,14 +50,23 @@
 | Taranis | AI crop intelligence | Growth |
 | AgroScout | Drone crop scouting | Growth |
 | Prospera (Valmont) | Greenhouse CV monitoring | Acquired |
-| Phytec | Plant-based water stress sensors | Growth |
+| Phytech | Plant-based water stress sensors | Growth |
+| Tevel Aerobotics | Autonomous fruit-picking drones | Growth |
+| Agropalette | Produce supply chain analytics | Early |
 
 ### Pollination and Biological
 | Company | Focus | Stage |
 |---------|-------|-------|
 | BeeHero | IoT beehive monitoring | Growth |
+| BeeWise | Robotic AI-managed beehives (Beehome) | Growth |
 | Groundwork BioAg | Mycorrhizal inoculants | Growth |
 | BioBee | Biological pest control | Enterprise |
+
+## Israeli Ecosystem Context
+
+- The Israeli agritech sector is estimated at approximately 600-750 active companies (Start-Up Nation Central agrifoodtech mapping). Treat any single number as a moving target.
+- Many of the foundational technologies originated on **kibbutzim**: Netafim's drip irrigation was developed at Kibbutz Hatzerim in 1965; Volcani Institute (Agricultural Research Organization) supports much of the underlying agronomy science.
+- **Desalination** plays a structural role in the water mix. Plants at Sorek, Hadera, and Ashkelon (alongside Palmachim and Ashdod) feed Mekorot and free up natural reserves for agricultural use.
 
 ## Data Formats
 

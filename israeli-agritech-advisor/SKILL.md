@@ -1,10 +1,10 @@
 ---
 name: israeli-agritech-advisor
-description: Guide developers in integrating Israeli agritech tools and precision agriculture platforms including CropX (soil monitoring), Netafim GrowSphere (IoT irrigation), Taranis (crop intelligence), and 750+ Israeli agritech companies. Use when user asks about agritech APIs, precision agriculture, smart irrigation, "hashkaya cham", crop monitoring, pest detection, Israeli agriculture tech, or needs to build farm management software. Covers irrigation optimization, pest detection, climate data integration, and Israeli agricultural context. Do NOT use for general gardening advice or non-agricultural IoT projects.
+description: Guide developers in integrating Israeli agritech tools and precision agriculture platforms including CropX (soil monitoring), Netafim GrowSphere (IoT irrigation), Taranis (crop intelligence), and the broader Israeli agritech ecosystem (approximately 600-750 companies per Start-Up Nation Central agrifoodtech). Use when user asks about agritech APIs, precision agriculture, smart irrigation, "hashkaya cham", crop monitoring, pest detection, Israeli agriculture tech, or needs to build farm management software. Covers irrigation optimization, pest detection, climate data integration, and Israeli agricultural context. Do NOT use for general gardening advice or non-agricultural IoT projects.
 license: MIT
 allowed-tools: Bash(python:*) Bash(pip:*) Bash(curl:*)
 compatibility: Network required for API calls. Python recommended for data processing. Works with Claude Code, Claude.ai.
-version: 1.0.1
+version: 1.1.0
 ---
 
 # Israeli Agritech Advisor
@@ -30,7 +30,7 @@ import requests
 class CropXClient:
     """Client for CropX soil monitoring API."""
 
-    BASE_URL = "https://cropx.com/api/v2"
+    BASE_URL = "https://api.cropx.com/v2"
 
     def __init__(self, client_id, client_secret):
         self.token = self._authenticate(client_id, client_secret)
@@ -104,7 +104,7 @@ class GrowSphereClient:
 class TaranisClient:
     """Client for Taranis crop intelligence platform."""
 
-    BASE_URL = "https://app.taranis.com/api/v1"
+    BASE_URL = "https://api.taranis.com/v1"
 
     def __init__(self, api_key):
         self.headers = {"Authorization": f"Bearer {api_key}"}
@@ -186,17 +186,22 @@ def calculate_irrigation_need(soil_data, crop_type, weather_data):
 
 ### Step 5: Israeli Agritech Ecosystem Overview
 Key companies beyond the main platforms:
-- **Phytec:** Plant-based sensors for water stress detection
+- **Phytech:** Plant-based sensors for water stress detection
 - **Manna Irrigation:** Satellite-based irrigation, no ground sensors
 - **BeeHero:** IoT beehive monitoring for pollination
+- **BeeWise:** Robotic, AI-managed beehives ("Beehome") for autonomous hive management
 - **AgroScout:** Drone-based crop scouting and disease detection
+- **Tevel Aerobotics:** Autonomous fruit-picking drones tethered to ground units
 - **Supplant:** Stem water potential sensors for irrigation timing
 - **SupPlant:** AI-driven irrigation for smallholder farmers
 - **Groundwork BioAg:** Mycorrhizal inoculants for nutrient uptake
+- **Agropalette:** Data and analytics for produce supply chains
 
 Israel-specific agricultural context:
 - Israel recycles 85%+ of wastewater for agriculture (highest rate globally)
 - Water sources: Mekorot (national), recycled wastewater, desalinated, local wells
+- Desalination feeds the system at scale: the Sorek, Hadera, and Ashkelon plants (among others) supply Mekorot's potable and agricultural mix, making Israel a global leader in seawater reverse osmosis.
+- Kibbutz innovation underpins much of the sector: Netafim's drip irrigation originated at Kibbutz Hatzerim in 1965 and remains a defining export.
 - Data formats: GeoJSON for field boundaries, GeoTIFF for satellite imagery, CSV/JSON for sensors
 
 ## Examples
@@ -216,7 +221,7 @@ Result: Connect flow meters via GrowSphere API, aggregate daily/weekly/monthly u
 ## Bundled Resources
 
 ### References
-- `references/agritech-ecosystem.md` — Directory of Israeli agritech platforms and APIs (CropX, Netafim GrowSphere, Taranis) with endpoint details, plus a company directory covering irrigation, crop monitoring, pollination, and biological sectors. Includes standard data formats (GeoJSON, GeoTIFF, CSV/JSON), agricultural zone rainfall and water source data, and Volcani Institute crop coefficients (Kc) for Israeli conditions. Consult when selecting platforms, configuring API integrations, or looking up crop-specific irrigation parameters.
+- `references/agritech-ecosystem.md` ,  Directory of Israeli agritech platforms and APIs (CropX, Netafim GrowSphere, Taranis) with endpoint details, plus a company directory covering irrigation, crop monitoring, pollination, and biological sectors. Includes standard data formats (GeoJSON, GeoTIFF, CSV/JSON), agricultural zone rainfall and water source data, and Volcani Institute crop coefficients (Kc) for Israeli conditions. Consult when selecting platforms, configuring API integrations, or looking up crop-specific irrigation parameters.
 
 ## Gotchas
 
