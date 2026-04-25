@@ -44,12 +44,25 @@ jf rt ping
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   "https://mycompany.jfrog.io/artifactory/api/system/ping"
 
-# Using API key
-curl -H "X-JFrog-Art-Api: YOUR_API_KEY" \
+# Using identity token (reference token, also works as Bearer)
+curl -H "Authorization: Bearer YOUR_REFERENCE_TOKEN" \
   "https://mycompany.jfrog.io/artifactory/api/system/ping"
 ```
 
-**Option C: Python client:**
+> Legacy API keys (`X-JFrog-Art-Api` header) reached end of life in Q4 2024 and are disabled by default in Artifactory 7.98+. Use access tokens or reference tokens (both sent as `Authorization: Bearer`).
+
+**Option C: OIDC for CI (no long-lived secrets):**
+```yaml
+# GitHub Actions example with jfrog/setup-jfrog-cli
+- uses: jfrog/setup-jfrog-cli@v4
+  with:
+    oidc-provider-name: my-github-oidc-provider
+  env:
+    JF_URL: https://mycompany.jfrog.io
+```
+Configure the OIDC integration once in JFrog (Administration > Identity and Access > Integrations > OIDC), then CI jobs exchange a short-lived JWT for an access token at runtime. JFrog-recommended path for GitHub Actions, GitLab, Buildkite, and Jenkins.
+
+**Option D: Python client:**
 ```python
 import requests
 
@@ -244,16 +257,18 @@ Result: Use AQL to find artifacts not downloaded in 90+ days, identify snapshot 
 ## Bundled Resources
 
 ### Scripts
-- `scripts/artifactory_client.py` — Full-featured JFrog Artifactory REST API client supporting health checks, repository listing/creation, artifact upload/download/delete, AQL search, property management, build info retrieval, and build promotion. Authenticates via access token (CLI arg or JFROG_ACCESS_TOKEN env var). Run: `python scripts/artifactory_client.py --help`
-- `scripts/xray_client.py` — JFrog Xray REST API client for vulnerability scanning, security policy and watch management, violation search, and vulnerability report generation. Use to scan artifacts for CVEs, create security gates that block critical vulnerabilities, and generate compliance reports. Run: `python scripts/xray_client.py --help`
+- `scripts/artifactory_client.py`: Full-featured JFrog Artifactory REST API client supporting health checks, repository listing/creation, artifact upload/download/delete, AQL search, property management, build info retrieval, and build promotion. Authenticates via access token (CLI arg or JFROG_ACCESS_TOKEN env var). Run: `python scripts/artifactory_client.py --help`
+- `scripts/xray_client.py`: JFrog Xray REST API client for vulnerability scanning, security policy and watch management, violation search, and vulnerability report generation. Use to scan artifacts for CVEs, create security gates that block critical vulnerabilities, and generate compliance reports. Run: `python scripts/xray_client.py --help`
 
 ### References
-- `references/api-reference.md` — Quick reference for Artifactory and Xray REST API endpoints organized by category (system, repositories, artifacts, search, properties, build info, scanning, policies, violations), JFrog CLI command cheatsheet, AQL query patterns, repository type explanations, and standard repository layout conventions. Consult when constructing API calls, writing AQL queries, or setting up repository structures.
+- `references/api-reference.md`: Quick reference for Artifactory and Xray REST API endpoints organized by category (system, repositories, artifacts, search, properties, build info, scanning, policies, violations), JFrog CLI command cheatsheet, AQL query patterns, repository type explanations, and standard repository layout conventions. Consult when constructing API calls, writing AQL queries, or setting up repository structures.
 
 ## Gotchas
 
-- JFrog Artifactory SaaS instances for Israeli companies may be hosted in the AWS Israel region (il-central-1) or EU regions. Agents should verify the instance region for data residency compliance.
-- JFrog CLI authentication tokens for Israeli enterprise deployments often require SSO integration with Azure AD or Okta configured for Israeli tenants. Agents may generate basic auth configurations that don't work.
+- **JFrog Pipelines is end-of-life on May 1, 2026.** New customers cannot provision Pipelines and existing customers must migrate. JFrog recommends GitHub Actions, GitLab CI, Jenkins, or Azure DevOps with the `jfrog/setup-jfrog-cli` action/integration. Do not architect new workflows around Pipelines; for existing ones, plan migration before May 2026.
+- **API keys reached end of life Q4 2024.** Legacy keys still work on older instances but new keys cannot be generated. Migrate any `X-JFrog-Art-Api` usage to access tokens or reference tokens (both sent as `Authorization: Bearer ...`).
+- JFrog SaaS regions are a fixed list (us-east, us-west, eu-frankfurt, eu-west, ap-southeast). For Israeli data-residency requirements, BYOL deployments on AWS `il-central-1` are an option but JFrog SaaS itself is not hosted in Israel. Verify the instance region at jfrog.com/help/r/jfrog-platform-administration-documentation/jfrog-saas-regions.
+- JFrog CLI authentication tokens for Israeli enterprise deployments often require SSO integration with Azure AD or Okta configured for Israeli tenants. Agents may generate basic auth configurations that do not work.
 - Israeli software development teams deploy on Sunday-Thursday cycles. CI/CD pipelines configured for Monday-Friday may miss the first day of work or run unnecessarily on Friday.
 - JFrog Xray security scanning may flag dependencies that are compliant with Israeli regulations but flagged by US export controls. Israeli teams should review Xray alerts with local compliance context.
 

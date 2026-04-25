@@ -36,12 +36,25 @@ jf rt ping
 curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   "https://mycompany.jfrog.io/artifactory/api/system/ping"
 
-# Using API key
-curl -H "X-JFrog-Art-Api: YOUR_API_KEY" \
+# Using identity token (reference token, also works as Bearer)
+curl -H "Authorization: Bearer YOUR_REFERENCE_TOKEN" \
   "https://mycompany.jfrog.io/artifactory/api/system/ping"
 ```
 
-**אפשרות ג: לקוח Python:**
+> מפתחות API ישנים (header של `X-JFrog-Art-Api`) הגיעו לסוף חיים ברבעון הרביעי של 2024 ומכובים כברירת מחדל מ-Artifactory 7.98 ואילך. השתמשו ב-access tokens או reference tokens (שניהם נשלחים כ-`Authorization: Bearer`).
+
+**אפשרות ג: OIDC ל-CI (בלי סודות ארוכי-טווח):**
+```yaml
+# דוגמת GitHub Actions עם jfrog/setup-jfrog-cli
+- uses: jfrog/setup-jfrog-cli@v4
+  with:
+    oidc-provider-name: my-github-oidc-provider
+  env:
+    JF_URL: https://mycompany.jfrog.io
+```
+מגדירים את ה-OIDC integration פעם אחת ב-JFrog (Administration > Identity and Access > Integrations > OIDC), ואז ה-CI מחליף JWT קצר-טווח ל-access token בזמן ריצה. זה הנתיב המומלץ של JFrog ל-GitHub Actions, GitLab, Buildkite ו-Jenkins.
+
+**אפשרות ד: לקוח Python:**
 ```python
 import requests
 
@@ -244,7 +257,9 @@ items.find({
 
 ## מלכודות נפוצות
 
-- מופעי JFrog Artifactory SaaS לחברות ישראליות עשויים להתארח באזור ישראל של AWS (il-central-1) או באזורי אירופה. סוכנים צריכים לוודא את אזור המופע לתאימות אחסון מידע.
+- **JFrog Pipelines מסיים את חייו ב-1 במאי 2026.** לקוחות חדשים לא יכולים יותר להקצות Pipelines, ולקוחות קיימים נדרשים להגר. JFrog ממליצים על GitHub Actions, GitLab CI, Jenkins או Azure DevOps עם ה-action או האינטגרציה של `jfrog/setup-jfrog-cli`. אל תתכננו workflows חדשים מסביב ל-Pipelines, ולקיימים תכננו הגירה לפני מאי 2026.
+- **מפתחות API הגיעו לסוף חיים ברבעון הרביעי של 2024.** מפתחות ישנים עוד עובדים על מופעים ישנים, אבל אי אפשר ליצור חדשים. הגרו כל שימוש ב-`X-JFrog-Art-Api` ל-access tokens או reference tokens (שניהם נשלחים כ-`Authorization: Bearer ...`).
+- אזורי SaaS של JFrog הם רשימה קבועה (us-east, us-west, eu-frankfurt, eu-west, ap-southeast). לדרישות אחסון מידע בישראל, פריסות BYOL על AWS `il-central-1` הן אפשרות, אבל JFrog SaaS עצמו לא מארח בישראל. בדקו את אזור המופע ב-jfrog.com/help/r/jfrog-platform-administration-documentation/jfrog-saas-regions.
 - טוקני אימות JFrog CLI לפריסות ארגוניות ישראליות דורשים לעיתים קרובות אינטגרציית SSO עם Azure AD או Okta שמוגדרים לטננטים ישראליים. סוכנים עלולים ליצור קונפיגורציות basic auth שלא עובדות.
 - צוותי פיתוח ישראליים עובדים במחזורי פריסה ראשון-חמישי. Pipelines של CI/CD שמוגדרים לשני-שישי עלולים לפספס את יום העבודה הראשון או לרוץ מיותר ביום שישי.
 - סריקת אבטחה של JFrog Xray עלולה לסמן תלויות שעומדות ברגולציה הישראלית אך מסומנות על ידי בקרות יצוא אמריקאיות. צוותים ישראליים צריכים לבדוק התראות Xray בהקשר הרגולטורי המקומי.
