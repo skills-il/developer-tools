@@ -6,8 +6,8 @@ Detailed comparison of grammY, Telegraf, and python-telegram-bot for building Te
 
 | | grammY | Telegraf | python-telegram-bot |
 |---|---|---|---|
-| **Current version** | v1.41.1 | v4.16.3 | v22.7 |
-| **Bot API support** | v9.5 (latest) | v7.1 | v9.5 (latest) |
+| **Current version** | v1.42.0 | v4.16.3 | v22.7 |
+| **Bot API support** | v9.6 (latest) | v7.1 | v9.6 (latest) |
 | **Language** | TypeScript / JavaScript | TypeScript / JavaScript | Python 3.10+ |
 | **Install** | `npm install grammy` | `npm install telegraf` | `pip install python-telegram-bot` |
 | **License** | MIT | MIT | LGPL-3.0 |
@@ -125,7 +125,7 @@ Major breaking changes (sync to async):
 ### Choose grammY when:
 - Starting a new TypeScript/JavaScript project
 - Deploying to serverless (Vercel, Cloudflare Workers, Deno Deploy)
-- You need the latest Bot API features (v9.5)
+- You need the latest Bot API features (v9.6)
 - You want a rich plugin ecosystem with official support
 - You need concurrent update processing
 - You value auto-generated types from the Bot API spec
@@ -140,7 +140,7 @@ Major breaking changes (sync to async):
 ### Choose python-telegram-bot when:
 - Your team primarily works in Python
 - You are building ML/AI-powered bots with Python libraries
-- You need the latest Bot API features (v9.5)
+- You need the latest Bot API features (v9.6)
 - You want built-in job scheduling (JobQueue)
 - You need Python-native async support
 - Your existing infrastructure is Python-based

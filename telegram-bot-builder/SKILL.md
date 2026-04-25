@@ -1,12 +1,12 @@
 ---
 name: telegram-bot-builder
-description: "Build Telegram bots with grammY, Telegraf, or python-telegram-bot. Covers Bot API v9.5 webhooks vs polling, inline keyboards, commands, middleware patterns, payments API, Mini Apps, and Hebrew message handling. Use when building a Telegram bot, setting up webhooks, handling Hebrew/RTL messages in a bot, or integrating Telegram payments. Do NOT use for WhatsApp bots (use israeli-whatsapp-business), voice bots (use hebrew-voice-bot-builder), or general chatbot design patterns (use hebrew-chatbot-builder)."
+description: "Build Telegram bots with grammY, Telegraf, or python-telegram-bot. Covers Bot API v9.6 webhooks vs polling, inline keyboards, commands, middleware patterns, Telegram Stars + Gifts payments, Mini Apps 2.0, Bot Business mode, and Hebrew message handling. Use when building a Telegram bot, setting up webhooks, handling Hebrew/RTL messages in a bot, or integrating Telegram payments. Do NOT use for WhatsApp bots (use israeli-whatsapp-business), voice bots (use hebrew-voice-bot-builder), or general chatbot design patterns (use hebrew-chatbot-builder)."
 license: MIT
 ---
 
 # Telegram Bot Builder
 
-Build production-ready Telegram bots for the Israeli market using grammY, Telegraf, or python-telegram-bot. This skill covers Bot API v9.5, webhook and polling architectures, inline keyboards, Hebrew/RTL text handling, Telegram Payments, Mini Apps, and deployment to serverless platforms.
+Build production-ready Telegram bots for the Israeli market using grammY, Telegraf, or python-telegram-bot. This skill covers Bot API v9.6 (Last verified: 2026-04-25), webhook and polling architectures, inline keyboards, Hebrew/RTL text handling, Telegram Stars and Gifts payments, Mini Apps 2.0, Bot Business mode, and deployment to serverless platforms.
 
 ## Problem
 
@@ -22,10 +22,10 @@ Building Telegram bots for Israeli users involves several challenges that agents
 
 Choose your framework based on your runtime, deployment target, and Bot API version needs:
 
-| Feature | grammY v1.41.1 | Telegraf v4.16.3 | python-telegram-bot v22.7 |
+| Feature | grammY v1.42.0 | Telegraf v4.16.3 | python-telegram-bot v22.7 |
 |---------|----------------|-------------------|---------------------------|
 | Language | TypeScript/JS | TypeScript/JS | Python 3.10+ |
-| Bot API version | Latest (v9.5) | v7.1 | v9.5 |
+| Bot API version | Latest (v9.6) | v7.1 | v9.6 |
 | Install | `npm install grammy` | `npm install telegraf` | `pip install python-telegram-bot` |
 | Plugin ecosystem | Rich (sessions, menus, conversations, i18n) | Moderate (scenes, sessions) | Extensions (JobQueue, persistence) |
 | Serverless support | Vercel, CF Workers, Deno Deploy, Supabase Edge, Fly.io | Express/Fastify/Lambda adapters | ASGI adapters, manual webhook handlers |
@@ -36,7 +36,7 @@ Choose your framework based on your runtime, deployment target, and Bot API vers
 | Recommended for | New projects, serverless, latest API features | Existing Express/Fastify apps | Python shops, data/ML pipelines |
 
 **Decision guide:**
-- Need Bot API v9.5 features (e.g., latest inline query improvements, new message types)? Use **grammY** or **python-telegram-bot**.
+- Need Bot API v9.6 features (Stars subscriptions, Gifts API, Bot Business mode, Mini Apps 2.0)? Use **grammY** or **python-telegram-bot**.
 - Already have an Express/Fastify server? **Telegraf** integrates cleanly.
 - Python team or ML/data pipeline? **python-telegram-bot** is the only choice.
 - Deploying to Vercel/Cloudflare Workers/Deno? **grammY** has native adapters for all of them.
@@ -366,96 +366,8 @@ application.add_handler(MessageHandler(filters.ALL, log_update), group=-1)
 
 ### Conversation / Multi-Step Flows
 
-For multi-step interactions (forms, wizards), each framework has its own approach:
+For multi-step flows (registration wizards, order forms), each framework has its own pattern: grammY's `@grammyjs/conversations` plugin (await-style flow), Telegraf's `Scenes.WizardScene`, and python-telegram-bot's `ConversationHandler`. Full working snippets in [references/conversations.md](references/conversations.md).
 
-**grammY - Conversations plugin:**
-
-```typescript
-import { conversations, createConversation } from "@grammyjs/conversations";
-
-bot.use(session({ initial: () => ({}) }));
-bot.use(conversations());
-
-async function registration(conversation, ctx) {
-  await ctx.reply("מה השם שלך?");
-  const nameCtx = await conversation.wait();
-  const name = nameCtx.message?.text;
-
-  await ctx.reply("מה האימייל שלך?");
-  const emailCtx = await conversation.wait();
-  const email = emailCtx.message?.text;
-
-  await ctx.reply(`תודה ${name}! נרשמת עם ${email}`);
-}
-
-bot.use(createConversation(registration));
-bot.command("register", async (ctx) => {
-  await ctx.conversation.enter("registration");
-});
-```
-
-**Telegraf - Scenes/Wizard:**
-
-```typescript
-import { Scenes, session } from "telegraf";
-
-const registrationWizard = new Scenes.WizardScene(
-  "registration",
-  async (ctx) => {
-    await ctx.reply("מה השם שלך?");
-    return ctx.wizard.next();
-  },
-  async (ctx) => {
-    ctx.wizard.state.name = ctx.message.text;
-    await ctx.reply("מה האימייל שלך?");
-    return ctx.wizard.next();
-  },
-  async (ctx) => {
-    const email = ctx.message.text;
-    const name = ctx.wizard.state.name;
-    await ctx.reply(`תודה ${name}! נרשמת עם ${email}`);
-    return ctx.scene.leave();
-  }
-);
-
-const stage = new Scenes.Stage([registrationWizard]);
-bot.use(session());
-bot.use(stage.middleware());
-bot.command("register", (ctx) => ctx.scene.enter("registration"));
-```
-
-**python-telegram-bot - ConversationHandler:**
-
-```python
-from telegram.ext import ConversationHandler
-
-NAME, EMAIL = range(2)
-
-async def register_start(update, context):
-    await update.message.reply_text("מה השם שלך?")
-    return NAME
-
-async def get_name(update, context):
-    context.user_data["name"] = update.message.text
-    await update.message.reply_text("מה האימייל שלך?")
-    return EMAIL
-
-async def get_email(update, context):
-    name = context.user_data["name"]
-    email = update.message.text
-    await update.message.reply_text(f"תודה {name}! נרשמת עם {email}")
-    return ConversationHandler.END
-
-conv_handler = ConversationHandler(
-    entry_points=[CommandHandler("register", register_start)],
-    states={
-        NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_name)],
-        EMAIL: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_email)],
-    },
-    fallbacks=[CommandHandler("cancel", cancel)],
-)
-application.add_handler(conv_handler)
-```
 
 ## Webhook vs Polling
 
@@ -642,9 +554,132 @@ const hebrewMenu = new Keyboard()
 await ctx.reply("בחר מהתפריט:", { reply_markup: hebrewMenu });
 ```
 
-## Payments API (Telegram Stars)
+### Israeli Phone-Number Contact Discovery
 
-Telegram supports in-app payments using Telegram Stars (XTR), an in-app currency. No external payment provider needed for digital goods.
+The cleanest way to identify a user by their Israeli phone number is `request_contact` on a reply-keyboard button. The user taps the button, Telegram sends a confirmation sheet, and on confirm the bot gets a `contact` field with the verified `phone_number`. Israeli numbers may arrive with or without the leading `+972`, so always normalize.
+
+```typescript
+import { Keyboard } from "grammy";
+
+bot.command("verify", async (ctx) => {
+  const kb = new Keyboard()
+    .requestContact("שתף את מספר הטלפון שלי")
+    .resized()
+    .oneTime();
+  await ctx.reply("כדי להמשיך, שתף את מספר הטלפון שלך:", { reply_markup: kb });
+});
+
+function normalizeIsraeliPhone(raw: string): string | null {
+  // Strip spaces, dashes, parens
+  let p = raw.replace(/[\s\-()]/g, "");
+  // +972XXXXXXXXX, 972XXXXXXXXX, 0XXXXXXXXX -> +972XXXXXXXXX
+  if (p.startsWith("+972")) return p;
+  if (p.startsWith("972")) return "+" + p;
+  if (p.startsWith("0")) return "+972" + p.slice(1);
+  return null;
+}
+
+bot.on("message:contact", async (ctx) => {
+  const contact = ctx.message.contact;
+  // Security: ensure the contact belongs to the sender, not someone they pasted
+  if (contact.user_id !== ctx.from.id) {
+    return ctx.reply("אנא שתף את המספר שלך, לא של אדם אחר.");
+  }
+  const phone = normalizeIsraeliPhone(contact.phone_number);
+  if (!phone) {
+    return ctx.reply("המספר שהתקבל לא נראה כמספר ישראלי תקין.");
+  }
+  await ctx.reply(`תודה! המספר שלך נשמר: ${phone}`);
+});
+```
+
+## Rate Limits & File Size Limits
+
+Telegram enforces hard limits on outgoing traffic. Hitting them returns HTTP 429 with `retry_after`; ignore them and your bot gets throttled or banned.
+
+**Outgoing message rates:**
+- **30 messages/second** global, across all chats
+- **1 message/second** per individual chat (DM or group)
+- **20 messages/minute** per group chat (broadcasts to the same group)
+
+For grammY use [`@grammyjs/transformer-throttler`](https://github.com/grammyjs/transformer-throttler) to queue and respect these limits automatically. For Telegraf and python-telegram-bot, implement a per-chat token bucket or use an external queue (BullMQ, Celery).
+
+**File size limits:**
+- **Bot file upload:** 50 MB (default Bot API server)
+- **Bot file download:** 20 MB
+- **Premium-bot via local Bot API server:** up to **2 GB**
+
+To upload or download files larger than 50 MB, run a self-hosted [Bot API server](https://github.com/tdlib/telegram-bot-api) and point your bot at it via the `apiRoot` (grammY) / `telegram.apiRoot` (Telegraf) / `base_url` (python-telegram-bot) option. Hosting a local Bot API server is also a hard requirement for streaming live audio/video updates and very large media in groups.
+
+## Scheduling Jobs in Asia/Jerusalem
+
+Bots that fire at "9 AM Israel time" must use an explicit Israel timezone, not server-local or UTC. Israel observes DST shifts that don't align with most cloud regions (Frankfurt, us-east-1), so a naive UTC offset will drift twice a year.
+
+**python-telegram-bot (`JobQueue`):**
+
+```python
+import pytz
+from datetime import time
+
+application.job_queue.run_daily(
+    send_morning_digest,
+    time=time(9, 0, tzinfo=pytz.timezone("Asia/Jerusalem")),
+    name="morning_digest",
+)
+```
+
+**Node (grammY/Telegraf with `node-cron` or `croner`):**
+
+```typescript
+import cron from "node-cron";
+
+cron.schedule("0 9 * * *", sendMorningDigest, {
+  timezone: "Asia/Jerusalem",
+});
+```
+
+Avoid `setInterval` for daily jobs, it drifts by an hour twice a year on the DST boundary.
+
+## Bot Business Mode
+
+Released around Bot API 7.2, **Telegram Business** lets a Telegram Premium subscriber connect a bot to their personal account so the bot can read and reply to direct messages on their behalf. Israeli Premium subscribers can flip this on under Settings > Telegram Business > Chatbots and paste the `@username` of an approved bot.
+
+When the user connects the bot, your bot receives a `business_connection` update with a `business_connection_id`. Every message that arrives in one of the user's connected chats then carries that same `business_connection_id` field, and any outgoing call (`sendMessage`, `editMessageText`, etc.) must echo it back so Telegram routes the reply through the user's account rather than the bot's account.
+
+What the bot can do once connected:
+- Read and reply to incoming DMs on behalf of the Telegram Business user.
+- Get the list of chats the user is talking with (`getBusinessConnection`, then `getBusinessAccountChats`).
+- Send messages, edit, and delete on the user's behalf (subject to per-chat permissions Telegram exposes).
+
+```typescript
+// Capture the connection (store business_connection_id per Premium user)
+bot.on("business_connection", async (ctx) => {
+  const conn = ctx.businessConnection;
+  console.log(`Connected to business user ${conn.user.id}, can_reply=${conn.can_reply}`);
+  // Persist conn.id keyed by conn.user.id
+});
+
+// Reply to an incoming business message - echo business_connection_id
+bot.on("business_message", async (ctx) => {
+  await ctx.api.sendMessage(ctx.businessMessage.chat.id, "אני אחזור אליך תוך מספר דקות", {
+    business_connection_id: ctx.businessMessage.business_connection_id,
+  });
+});
+```
+
+Useful for Israeli small-business owners (אופטיקאים, סטודיות יוגה, סוכני ביטוח) who want auto-replies on their personal Telegram during off-hours without exposing customers to a separate "bot" persona.
+
+Reference: [https://core.telegram.org/bots/business](https://core.telegram.org/bots/business)
+
+## Payments API
+
+Telegram offers three payment paths. Pick by what you sell:
+
+- **Telegram Stars (XTR)** for digital goods, services, and Mini App content. Released ~Bot API 7.4 (2024). No external provider needed. Israeli users see Stars priced in ILS in the purchase sheet (Telegram converts automatically based on the user's App Store / Google Play region), so a 100 Stars invoice surfaces as roughly the local-currency equivalent at purchase time.
+- **Stars subscriptions** for recurring access (added later in 2024). Same `XTR` currency, with `subscription_period` set on the invoice; users can cancel from Telegram Settings > Stars.
+- **Gifts API** (`sendGift`, `convertGiftToStars`) lets a bot send named gifts to users; recipients can keep the gift on their profile or convert it back to Stars.
+- **paid_media** lets you attach a Stars price to photos/videos posted in chats and channels (the receiver pays Stars to unlock).
+- **Traditional payment providers** (Stripe LIVE/TEST, etc.) are still supported for physical goods and non-digital services. Configure a provider token via `/mybots > Payments` in BotFather, then pass it as `provider_token` and a fiat currency (`ILS`, `USD`, etc.).
 
 ### Creating an Invoice
 
@@ -708,8 +743,45 @@ application.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, successful_pa
 **Critical payment rules:**
 - `pre_checkout_query` MUST be answered within 10 seconds or the payment fails.
 - Telegram Stars (XTR) amounts are in whole stars (no decimals).
-- For physical goods or non-digital services, you need a third-party payment provider (Stripe, etc.) configured via BotFather.
+- For physical goods or non-digital services, you need a third-party payment provider (Stripe, etc.) configured via BotFather under `/mybots > Payments`.
 - Refunds are done via `refundStarPayment` API method, not manually.
+
+### Stars Subscriptions (Recurring)
+
+Pass `subscription_period` (in seconds, currently a fixed 30-day period) on the invoice to turn a one-time Stars payment into a renewing subscription. Telegram handles the renewal cycle, and your bot receives `successful_payment` updates on each renewal.
+
+```typescript
+await ctx.replyWithInvoice(
+  "מנוי פרימיום",
+  "גישה לכל התכונות, מתחדש מדי חודש",
+  "premium_sub_v1",
+  "XTR",
+  [{ label: "מנוי חודשי", amount: 100 }],
+  {
+    subscription_period: 30 * 24 * 60 * 60, // 30 days, the only currently supported period
+  },
+);
+```
+
+Users manage and cancel subscriptions from Telegram Settings > Stars > My Subscriptions. Listen for `message:successful_payment` on each renewal to extend access in your DB.
+
+### Gifts API
+
+`sendGift` lets the bot send a named gift sticker to a user (paid in Stars from the bot's balance). The recipient can pin the gift on their profile or `convertGiftToStars` to convert it back into Stars. Useful for loyalty rewards, drawing winners, and giveaways.
+
+```typescript
+await bot.api.sendGift({
+  user_id: ctx.from.id,
+  gift_id: "<one of the IDs returned by getAvailableGifts>",
+  text: "תודה שאתם איתנו!", // optional message attached to the gift
+});
+```
+
+Always call `getAvailableGifts` first to fetch the current catalog and pricing.
+
+### paid_media
+
+Attach a Stars price to a photo or video posted in a chat or channel; the recipient pays Stars to unlock the media. Use `sendPaidMedia` (or the `paid_media` field on `sendMessage`-style methods) with `star_count` set to the price.
 
 ## Mini Apps (WebApp)
 
@@ -779,6 +851,40 @@ bot.on("message:web_app_data", async (ctx) => {
 });
 ```
 
+### Mini Apps 2.0 Features
+
+Bot API 7.x and 8.x added a set of "Mini Apps 2.0" capabilities exposed through `window.Telegram.WebApp`. All of them require the latest Telegram clients and are no-ops on older ones, so feature-detect before calling.
+
+**Cloud storage** (`window.Telegram.WebApp.CloudStorage`) - per-user key-value storage that survives between sessions and devices. Up to 1024 keys per user, 4 KB per value. No backend needed for lightweight preferences:
+
+```javascript
+const tg = window.Telegram.WebApp;
+tg.CloudStorage.setItem("last_order_id", "12345");
+tg.CloudStorage.getItem("last_order_id", (err, value) => {
+  console.log("Restored:", value);
+});
+```
+
+**Biometric authentication** (`window.Telegram.WebApp.BiometricManager`) - prompt the user for Face ID / Touch ID / fingerprint to gate sensitive actions inside the Mini App. Useful for confirming high-value Stars purchases or releasing saved payment tokens:
+
+```javascript
+tg.BiometricManager.init(() => {
+  if (tg.BiometricManager.isBiometricAvailable) {
+    tg.BiometricManager.authenticate({ reason: "אישור תשלום" }, (success) => {
+      if (success) submitOrder();
+    });
+  }
+});
+```
+
+**Location service** (`window.Telegram.WebApp.LocationManager`) - request the user's GPS coordinates with explicit permission. Good for "find my nearest branch" flows in Israeli retail bots.
+
+**Fullscreen mode** - `tg.requestFullscreen()` expands the Mini App to fill the device screen on mobile. Pair with `tg.exitFullscreen()` when you're done.
+
+**Home-screen install** - `tg.addToHomeScreen()` lets the user add the Mini App as a launcher icon on Android (currently iOS shows a manual instructions sheet). Works once `tg.checkHomeScreenStatus()` reports the app is eligible.
+
+**Reference:** [https://core.telegram.org/bots/webapps](https://core.telegram.org/bots/webapps)
+
 ### Mini App Validation
 
 Always validate the `initData` on your server to ensure the request is genuinely from Telegram:
@@ -813,91 +919,18 @@ function validateInitData(initData: string, botToken: string): boolean {
 
 ## Deployment
 
-### Vercel Serverless (grammY)
+Three common targets, each with framework-specific gotchas. Full working configs are in [references/deployment.md](references/deployment.md):
 
-**`api/webhook.ts`:**
-
-```typescript
-import { Bot, webhookCallback } from "grammy";
-
-const bot = new Bot(process.env.BOT_TOKEN!);
-
-// Register all handlers
-bot.command("start", (ctx) => ctx.reply("!שלום"));
-// ... more handlers
-
-export default webhookCallback(bot, "std/http");
-```
-
-**Set webhook after deploying:**
-
-```bash
-curl "https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=https://your-app.vercel.app/api/webhook&secret_token=${SECRET}"
-```
-
-**Important Vercel caveats:**
-- Vercel functions have a 10-second timeout on Hobby plan, 60 seconds on Pro. Long-running operations will fail.
-- Each invocation is stateless. Use external storage (Redis, database) for session data.
-- grammY's `webhookCallback("std/http")` is the correct adapter for Vercel Edge/Serverless.
-
-### Cloudflare Workers (grammY)
-
-**`src/index.ts`:**
-
-```typescript
-import { Bot, webhookCallback } from "grammy";
-
-export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    const bot = new Bot(env.BOT_TOKEN);
-
-    bot.command("start", (ctx) => ctx.reply("!שלום"));
-    // ... more handlers
-
-    return webhookCallback(bot, "cloudflare-mod")(request);
-  },
-};
-```
-
-**Cloudflare caveats:**
-- Use `"cloudflare-mod"` adapter (not `"cloudflare"`).
-- Workers have a 30-second CPU time limit (enough for most bot operations).
-- Use KV or D1 for persistence, not in-memory state.
-
-### VPS with systemd (Any Framework)
-
-For bots that need long polling or persistent connections:
-
-**`/etc/systemd/system/telegram-bot.service`:**
-
-```ini
-[Unit]
-Description=Telegram Bot
-After=network.target
-
-[Service]
-Type=simple
-User=botuser
-WorkingDirectory=/opt/telegram-bot
-ExecStart=/usr/bin/node dist/bot.js
-Restart=always
-RestartSec=10
-Environment=NODE_ENV=production
-EnvironmentFile=/opt/telegram-bot/.env
-
-[Install]
-WantedBy=multi-user.target
-```
-
-```bash
-sudo systemctl enable telegram-bot
-sudo systemctl start telegram-bot
-sudo journalctl -u telegram-bot -f  # View logs
-```
+- **Vercel Serverless (grammY)** - use `webhookCallback(bot, "std/http")`. 10s timeout on Hobby, 60s on Pro. Stateless, so use external session storage.
+- **Cloudflare Workers (grammY)** - use the `"cloudflare-mod"` adapter (not `"cloudflare"`). 30s CPU limit. KV or D1 for persistence.
+- **VPS with systemd** - any framework, good fit for long polling. `Restart=always` + `EnvironmentFile=` for the `.env` file.
 
 ## Bundled Resources
 
 - [Framework Comparison](references/framework-comparison.md) - Detailed feature matrix of grammY vs Telegraf vs python-telegram-bot
+- [Conversations](references/conversations.md) - Multi-step flow recipes for grammY, Telegraf, and python-telegram-bot
+- [Deployment](references/deployment.md) - Vercel, Cloudflare Workers, and systemd configs
+- [Examples](references/examples.md) - Full working bots: Hebrew menu (grammY), Vercel webhook with HTML messages, python-telegram-bot conversation flow
 
 ## Gotchas
 
@@ -926,252 +959,6 @@ These are common failure modes that agents encounter when generating Telegram bo
 11. **Hebrew Markdown escaping nightmare.** MarkdownV2 requires escaping: `_`, `*`, `[`, `]`, `(`, `)`, `~`, `` ` ``, `>`, `#`, `+`, `-`, `=`, `|`, `{`, `}`, `.`, `!`. In Hebrew text this is error-prone. Use HTML parse mode instead.
 
 12. **Missing error handler.** Without a `bot.catch()` (grammY) or error handler, unhandled errors crash the bot process silently. In polling mode, this kills the bot. In webhook mode, Telegram retries the update, potentially causing an infinite error loop.
-
-## Examples
-
-### Example 1: Hebrew Menu Bot with Inline Keyboards
-
-A simple restaurant menu bot that displays categories and items in Hebrew:
-
-```typescript
-import { Bot, InlineKeyboard } from "grammy";
-
-const bot = new Bot(process.env.BOT_TOKEN!);
-
-const menu = {
-  starters: {
-    label: "מנות ראשונות",
-    items: [
-      { name: "חומוס", price: 32 },
-      { name: "סלט ירוק", price: 28 },
-      { name: "מרק יום", price: 35 },
-    ],
-  },
-  mains: {
-    label: "מנות עיקריות",
-    items: [
-      { name: "שניצל", price: 52 },
-      { name: "המבורגר", price: 58 },
-      { name: "פסטה", price: 48 },
-    ],
-  },
-};
-
-bot.command("start", async (ctx) => {
-  const keyboard = new InlineKeyboard()
-    .text(menu.starters.label, "cat:starters")
-    .text(menu.mains.label, "cat:mains");
-
-  await ctx.reply("ברוכים הבאים! בחרו קטגוריה:", { reply_markup: keyboard });
-});
-
-bot.callbackQuery(/^cat:(.+)$/, async (ctx) => {
-  const category = ctx.match[1] as keyof typeof menu;
-  const cat = menu[category];
-  if (!cat) return ctx.answerCallbackQuery("קטגוריה לא נמצאה");
-
-  const keyboard = new InlineKeyboard();
-  cat.items.forEach((item) => {
-    keyboard.text(`${item.name} - ₪${item.price}`, `item:${category}:${item.name}`).row();
-  });
-  keyboard.text("חזרה", "back");
-
-  await ctx.answerCallbackQuery();
-  await ctx.editMessageText(`${cat.label}:`, { reply_markup: keyboard });
-});
-
-bot.callbackQuery("back", async (ctx) => {
-  const keyboard = new InlineKeyboard()
-    .text(menu.starters.label, "cat:starters")
-    .text(menu.mains.label, "cat:mains");
-
-  await ctx.answerCallbackQuery();
-  await ctx.editMessageText("בחרו קטגוריה:", { reply_markup: keyboard });
-});
-
-bot.catch((err) => console.error(err));
-bot.start();
-```
-
-### Example 2: Webhook Bot on Vercel with Hebrew Error Messages
-
-A production webhook bot deployed on Vercel that handles errors gracefully with Hebrew messages:
-
-```typescript
-// api/webhook.ts (Vercel serverless function)
-import { Bot, webhookCallback, GrammyError } from "grammy";
-
-const bot = new Bot(process.env.BOT_TOKEN!);
-
-bot.command("start", async (ctx) => {
-  await ctx.reply(
-    "שלום! אני בוט שירות לקוחות.\n\n" +
-    "שלחו לי הודעה ואחזור אליכם בהקדם.\n" +
-    "לתפריט, שלחו /menu",
-    { parse_mode: "HTML" }
-  );
-});
-
-bot.command("menu", async (ctx) => {
-  await ctx.reply(
-    "<b>תפריט ראשי</b>\n\n" +
-    "/status - בדיקת סטטוס הזמנה\n" +
-    "/contact - פרטי התקשרות\n" +
-    "/hours - שעות פעילות",
-    { parse_mode: "HTML" }
-  );
-});
-
-bot.command("hours", async (ctx) => {
-  await ctx.reply(
-    "<b>שעות פעילות</b>\n\n" +
-    "ראשון-חמישי: 09:00-18:00\n" +
-    "שישי: 09:00-14:00\n" +
-    "שבת: סגור",
-    { parse_mode: "HTML" }
-  );
-});
-
-bot.on("message:text", async (ctx) => {
-  // Forward user messages to admin group
-  const adminChatId = process.env.ADMIN_CHAT_ID;
-  if (adminChatId) {
-    await bot.api.sendMessage(
-      adminChatId,
-      `הודעה מ-${ctx.from.first_name} (${ctx.from.id}):\n\n${ctx.message.text}`
-    );
-  }
-  await ctx.reply("ההודעה התקבלה! נחזור אליכם בהקדם.");
-});
-
-bot.catch((err) => {
-  console.error("Bot error:", err.error);
-  if (err.error instanceof GrammyError) {
-    console.error("Telegram API error:", err.error.description);
-  }
-});
-
-export default webhookCallback(bot, "std/http");
-```
-
-### Example 3: python-telegram-bot with Conversation Flow and Hebrew
-
-A Python bot implementing a multi-step order form:
-
-```python
-import os
-import logging
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import (
-    ApplicationBuilder, CommandHandler, MessageHandler,
-    CallbackQueryHandler, ConversationHandler, filters
-)
-
-logging.basicConfig(level=logging.INFO)
-TOKEN = os.getenv("BOT_TOKEN")
-
-# Conversation states
-CHOOSING_ITEM, CHOOSING_QUANTITY, CONFIRMING = range(3)
-
-ITEMS = {
-    "coffee": {"he": "קפה", "price": 15},
-    "tea": {"he": "תה", "price": 12},
-    "cake": {"he": "עוגה", "price": 25},
-}
-
-
-async def start_order(update: Update, context) -> int:
-    keyboard = [
-        [InlineKeyboardButton(f"{v['he']} - ₪{v['price']}", callback_data=k)]
-        for k, v in ITEMS.items()
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("מה תרצו להזמין?", reply_markup=reply_markup)
-    return CHOOSING_ITEM
-
-
-async def item_chosen(update: Update, context) -> int:
-    query = update.callback_query
-    await query.answer()
-
-    item_key = query.data
-    context.user_data["item"] = item_key
-    item = ITEMS[item_key]
-    await query.edit_message_text(f"בחרתם {item['he']}. כמה יחידות?")
-    return CHOOSING_QUANTITY
-
-
-async def quantity_chosen(update: Update, context) -> int:
-    try:
-        quantity = int(update.message.text)
-        if quantity < 1 or quantity > 10:
-            raise ValueError
-    except ValueError:
-        await update.message.reply_text("אנא הזינו מספר בין 1 ל-10:")
-        return CHOOSING_QUANTITY
-
-    context.user_data["quantity"] = quantity
-    item_key = context.user_data["item"]
-    item = ITEMS[item_key]
-    total = item["price"] * quantity
-
-    keyboard = [
-        [
-            InlineKeyboardButton("אישור", callback_data="confirm"),
-            InlineKeyboardButton("ביטול", callback_data="cancel"),
-        ]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    await update.message.reply_text(
-        f"סיכום הזמנה:\n"
-        f"פריט: {item['he']}\n"
-        f"כמות: {quantity}\n"
-        f"סה\"כ: ₪{total}\n\n"
-        f"לאשר?",
-        reply_markup=reply_markup,
-    )
-    return CONFIRMING
-
-
-async def confirm_order(update: Update, context) -> int:
-    query = update.callback_query
-    await query.answer()
-
-    if query.data == "confirm":
-        await query.edit_message_text("ההזמנה אושרה! תודה רבה 🎉")
-    else:
-        await query.edit_message_text("ההזמנה בוטלה.")
-
-    context.user_data.clear()
-    return ConversationHandler.END
-
-
-async def cancel(update: Update, context) -> int:
-    await update.message.reply_text("ההזמנה בוטלה.")
-    context.user_data.clear()
-    return ConversationHandler.END
-
-
-def main() -> None:
-    application = ApplicationBuilder().token(TOKEN).build()
-
-    conv_handler = ConversationHandler(
-        entry_points=[CommandHandler("order", start_order)],
-        states={
-            CHOOSING_ITEM: [CallbackQueryHandler(item_chosen)],
-            CHOOSING_QUANTITY: [MessageHandler(filters.TEXT & ~filters.COMMAND, quantity_chosen)],
-            CONFIRMING: [CallbackQueryHandler(confirm_order)],
-        },
-        fallbacks=[CommandHandler("cancel", cancel)],
-    )
-    application.add_handler(conv_handler)
-    application.run_polling()
-
-
-if __name__ == "__main__":
-    main()
-```
 
 ## Troubleshooting
 

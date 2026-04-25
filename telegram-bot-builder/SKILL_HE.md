@@ -1,12 +1,12 @@
 ---
 name: telegram-bot-builder
-description: "בנו בוטים לטלגרם עם grammY, Telegraf או python-telegram-bot. מכסה Bot API v9.5, webhooks מול polling, מקלדות אינליין, פקודות, middleware, תשלומים, Mini Apps, וטיפול בהודעות בעברית עם RTL. השתמשו כשבונים בוט טלגרם, מגדירים webhooks, מטפלים בהודעות בעברית בתוך בוט, או משלבים תשלומים דרך טלגרם. אל תשתמשו לבוטים של וואטסאפ (השתמשו ב-israeli-whatsapp-business), בוטים קוליים (השתמשו ב-hebrew-voice-bot-builder), או עיצוב צ'אטבוטים כללי (השתמשו ב-hebrew-chatbot-builder)."
+description: "בנו בוטים לטלגרם עם grammY, Telegraf או python-telegram-bot. מכסה Bot API v9.6, webhooks מול polling, מקלדות אינליין, פקודות, middleware, תשלומים ב-Telegram Stars + Gifts, Mini Apps 2.0, מצב Bot Business וטיפול בהודעות בעברית עם RTL. השתמשו כשבונים בוט טלגרם, מגדירים webhooks, מטפלים בהודעות בעברית בתוך בוט, או משלבים תשלומים דרך טלגרם. אל תשתמשו לבוטים של וואטסאפ (השתמשו ב-israeli-whatsapp-business), בוטים קוליים (השתמשו ב-hebrew-voice-bot-builder), או עיצוב צ'אטבוטים כללי (השתמשו ב-hebrew-chatbot-builder)."
 license: MIT
 ---
 
 # בניית בוט טלגרם
 
-בנו בוטים מוכנים לפרודקשן לשוק הישראלי עם grammY, Telegraf או python-telegram-bot. המדריך מכסה Bot API v9.5, ארכיטקטורות webhook ו-polling, מקלדות אינליין, טיפול בטקסט עברי/RTL, תשלומים בטלגרם, Mini Apps ודיפלוי לפלטפורמות serverless.
+בנו בוטים מוכנים לפרודקשן לשוק הישראלי עם grammY, Telegraf או python-telegram-bot. המדריך מכסה Bot API v9.6 (אומת לאחרונה: 25.04.2026), ארכיטקטורות webhook ו-polling, מקלדות אינליין, טיפול בטקסט עברי/RTL, תשלומים ב-Telegram Stars ו-Gifts, Mini Apps 2.0, מצב Bot Business ודיפלוי לפלטפורמות serverless.
 
 ## בעיה
 
@@ -22,18 +22,20 @@ license: MIT
 
 בחרו פריימוורק לפי השפה, יעד הדיפלוי וגרסת Bot API שאתם צריכים:
 
-| תכונה | grammY v1.41.1 | Telegraf v4.16.3 | python-telegram-bot v22.7 |
+| תכונה | grammY v1.42.0 | Telegraf v4.16.3 | python-telegram-bot v22.7 |
 |--------|----------------|-------------------|---------------------------|
 | שפה | TypeScript/JS | TypeScript/JS | Python 3.10+ |
-| גרסת Bot API | עדכנית (v9.5) | v7.1 | v9.5 |
+| גרסת Bot API | עדכנית (v9.6) | v7.1 | v9.6 |
 | התקנה | `npm install grammy` | `npm install telegraf` | `pip install python-telegram-bot` |
 | פלאגינים | עשיר (sessions, menus, conversations, i18n) | בינוני (scenes, sessions) | הרחבות (JobQueue, persistence) |
 | serverless | Vercel, CF Workers, Deno Deploy, Supabase Edge, Fly.io | Express/Fastify/Lambda adapters | ASGI adapters, webhook ידני |
 | מודל middleware | Composer (כמו Koa) | Composer (כמו Koa) | Handler groups עם filters |
+| Long polling | `bot.start()` | `bot.launch()` | `application.run_polling()` |
+| מצב webhook | `webhookCallback()` | `bot.launch({ webhook })` או `createWebhook()` | `application.run_webhook()` |
 | כדאי ל... | פרויקטים חדשים, serverless, פיצ'רים חדשים | אפליקציות Express/Fastify קיימות | צוותי Python, ML/data pipelines |
 
 **איך בוחרים:**
-- צריכים פיצ'רים של Bot API v9.5? בחרו **grammY** או **python-telegram-bot**.
+- צריכים פיצ'רים של Bot API v9.6 (Stars subscriptions, Gifts API, Bot Business, Mini Apps 2.0)? בחרו **grammY** או **python-telegram-bot**.
 - כבר יש לכם שרת Express/Fastify? **Telegraf** משתלב חלק.
 - צוות Python או פייפליין ML/data? **python-telegram-bot** הבחירה היחידה.
 - דיפלוי ל-Vercel/Cloudflare Workers/Deno? ל-**grammY** יש adapters מובנים.
@@ -578,9 +580,132 @@ const hebrewMenu = new Keyboard()
 await ctx.reply("בחרו מהתפריט:", { reply_markup: hebrewMenu });
 ```
 
-## API תשלומים (Telegram Stars)
+### זיהוי לפי מספר טלפון ישראלי
 
-טלגרם תומך בתשלומים פנימיים דרך Telegram Stars (XTR), מטבע פנימי. לא צריך ספק תשלום חיצוני למוצרים דיגיטליים.
+הדרך הנקייה ביותר לזהות משתמש לפי מספר טלפון ישראלי היא כפתור `request_contact` במקלדת reply. המשתמש לוחץ, טלגרם מציג חלון אישור, ובאישור הבוט מקבל שדה `contact` עם `phone_number` מאומת. מספרים ישראליים יכולים להגיע עם `+972` או בלעדיו, אז תמיד מנרמלים.
+
+```typescript
+import { Keyboard } from "grammy";
+
+bot.command("verify", async (ctx) => {
+  const kb = new Keyboard()
+    .requestContact("שתפו את מספר הטלפון שלי")
+    .resized()
+    .oneTime();
+  await ctx.reply("כדי להמשיך, שתפו את מספר הטלפון שלכם:", { reply_markup: kb });
+});
+
+function normalizeIsraeliPhone(raw: string): string | null {
+  // הסרת רווחים, מקפים וסוגריים
+  let p = raw.replace(/[\s\-()]/g, "");
+  // +972XXXXXXXXX, 972XXXXXXXXX, 0XXXXXXXXX -> +972XXXXXXXXX
+  if (p.startsWith("+972")) return p;
+  if (p.startsWith("972")) return "+" + p;
+  if (p.startsWith("0")) return "+972" + p.slice(1);
+  return null;
+}
+
+bot.on("message:contact", async (ctx) => {
+  const contact = ctx.message.contact;
+  // אבטחה: לוודא שהאיש קשר שייך לשולח עצמו, לא למישהו אחר שהוא הדביק
+  if (contact.user_id !== ctx.from.id) {
+    return ctx.reply("אנא שתפו את המספר שלכם, לא של אדם אחר.");
+  }
+  const phone = normalizeIsraeliPhone(contact.phone_number);
+  if (!phone) {
+    return ctx.reply("המספר שהתקבל לא נראה כמספר ישראלי תקין.");
+  }
+  await ctx.reply(`תודה! המספר שלך נשמר: ${phone}`);
+});
+```
+
+## מגבלות קצב וגדלי קבצים
+
+טלגרם אוכפת מגבלות קשיחות על תעבורה יוצאת. חריגה מחזירה HTTP 429 עם `retry_after`; התעלמות תוביל לחנק או חסימה של הבוט.
+
+**קצב הודעות יוצאות:**
+- **30 הודעות/שנייה** גלובלי, על פני כל הצ'אטים
+- **הודעה אחת לשנייה** לכל צ'אט בודד (DM או קבוצה)
+- **20 הודעות/דקה** לקבוצה (שידור לאותה קבוצה)
+
+ל-grammY מומלץ להשתמש ב-[`@grammyjs/transformer-throttler`](https://github.com/grammyjs/transformer-throttler) שיכניס לתור ויכבד את המגבלות אוטומטית. ב-Telegraf וב-python-telegram-bot ממשים token bucket לפי צ'אט או משתמשים בתור חיצוני (BullMQ, Celery).
+
+**גדלי קבצים:**
+- **העלאת קובץ מהבוט:** 50 MB (שרת Bot API ברירת מחדל)
+- **הורדת קובץ מהבוט:** 20 MB
+- **בוט פרימיום עם שרת Bot API מקומי:** עד **2 GB**
+
+להעלאה או הורדה מעל 50 MB, מריצים [שרת Bot API](https://github.com/tdlib/telegram-bot-api) משלכם ומפנים את הבוט אליו דרך `apiRoot` (grammY) / `telegram.apiRoot` (Telegraf) / `base_url` (python-telegram-bot). שרת Bot API מקומי הוא גם דרישה קשיחה לשידור עדכוני אודיו/וידאו חיים ולמדיה גדולה במיוחד בקבוצות.
+
+## תזמון משימות לפי Asia/Jerusalem
+
+בוטים שצריכים לפעול ב"9 בבוקר שעון ישראל" חייבים להגדיר אזור זמן ישראלי במפורש, לא לפי השרת ולא UTC. בישראל יש מעברי שעון קיץ/חורף שלא תואמים לאזורי ענן (פרנקפורט, us-east-1), אז היסט UTC קבוע יסטה בשעה פעמיים בשנה.
+
+**python-telegram-bot (`JobQueue`):**
+
+```python
+import pytz
+from datetime import time
+
+application.job_queue.run_daily(
+    send_morning_digest,
+    time=time(9, 0, tzinfo=pytz.timezone("Asia/Jerusalem")),
+    name="morning_digest",
+)
+```
+
+**Node (grammY/Telegraf עם `node-cron` או `croner`):**
+
+```typescript
+import cron from "node-cron";
+
+cron.schedule("0 9 * * *", sendMorningDigest, {
+  timezone: "Asia/Jerusalem",
+});
+```
+
+הימנעו מ-`setInterval` למשימות יומיות, הוא סוטה בשעה פעמיים בשנה במעבר השעון.
+
+## מצב Bot Business
+
+ב-Bot API 7.2 הושק **Telegram Business**, שמאפשר למשתמש פרימיום של טלגרם לחבר בוט לחשבון האישי שלו, כך שהבוט קורא ועונה להודעות אישיות בשמו. משתמשי פרימיום ישראלים יכולים להפעיל את זה בהגדרות > Telegram Business > צ'אטבוטים, ולהדביק את ה-`@username` של בוט מאושר.
+
+כשהמשתמש מחבר את הבוט, הבוט מקבל עדכון `business_connection` עם `business_connection_id`. כל הודעה שמגיעה לאחד הצ'אטים המחוברים נושאת את אותו `business_connection_id`, וכל קריאה יוצאת (`sendMessage`, `editMessageText` וכו׳) חייבת להחזיר אותו כדי שטלגרם תנתב את התשובה דרך החשבון של המשתמש ולא של הבוט.
+
+מה הבוט יכול לעשות אחרי החיבור:
+- לקרוא ולענות להודעות DM נכנסות בשם משתמש ה-Telegram Business.
+- לקבל את רשימת הצ'אטים שהמשתמש מתכתב איתם (`getBusinessConnection`, אחר כך `getBusinessAccountChats`).
+- לשלוח, לערוך ולמחוק הודעות בשם המשתמש (לפי הרשאות לכל צ'אט שטלגרם חושפת).
+
+```typescript
+// תפיסת החיבור (שומרים את business_connection_id לפי המשתמש)
+bot.on("business_connection", async (ctx) => {
+  const conn = ctx.businessConnection;
+  console.log(`Connected to business user ${conn.user.id}, can_reply=${conn.can_reply}`);
+  // לשמור את conn.id לפי conn.user.id
+});
+
+// תשובה להודעת business נכנסת, חייבים לכלול business_connection_id
+bot.on("business_message", async (ctx) => {
+  await ctx.api.sendMessage(ctx.businessMessage.chat.id, "אני אחזור אליך תוך מספר דקות", {
+    business_connection_id: ctx.businessMessage.business_connection_id,
+  });
+});
+```
+
+שימושי לבעלי עסקים קטנים בישראל (אופטיקאים, סטודיות יוגה, סוכני ביטוח) שרוצים מענה אוטומטי בטלגרם האישי שלהם בשעות לא-פעילות, בלי להעביר לקוחות לבוט נפרד.
+
+הפניה: [https://core.telegram.org/bots/business](https://core.telegram.org/bots/business)
+
+## API תשלומים
+
+לטלגרם יש שלושה מסלולי תשלום, בוחרים לפי מה שמוכרים:
+
+- **Telegram Stars (XTR)** - למוצרים דיגיטליים, שירותים ותוכן בתוך Mini App. הושק בערך ב-Bot API 7.4 (2024). לא צריך ספק תשלום חיצוני. משתמשים ישראלים רואים את המחיר בשקלים בחלון הרכישה (טלגרם ממירה אוטומטית לפי האזור של ה-App Store / Google Play של המשתמש), כלומר חשבונית של 100 כוכבים מוצגת כשווה ערך בשקלים בזמן הרכישה.
+- **Stars subscriptions** - מנויים מתחדשים (התווסף מאוחר יותר ב-2024). אותו מטבע `XTR`, עם `subscription_period` בחשבונית. משתמשים יכולים לבטל דרך הגדרות > Stars.
+- **Gifts API** (`sendGift`, `convertGiftToStars`) - הבוט שולח מתנה למשתמש; המקבל יכול להשאיר אותה על הפרופיל או להמיר חזרה לכוכבים.
+- **paid_media** - מצמידים מחיר בכוכבים לתמונה/וידאו בצ'אטים וערוצים (המקבל משלם כוכבים כדי לפתוח).
+- **ספקי תשלום מסורתיים** (Stripe LIVE/TEST וכו׳) עדיין נתמכים למוצרים פיזיים ושירותים לא-דיגיטליים. מגדירים provider token דרך BotFather תחת `/mybots > Payments`, ומעבירים אותו כ-`provider_token` עם מטבע פיאט (`ILS`, `USD`).
 
 ### יצירת חשבונית
 
@@ -644,8 +769,45 @@ application.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, successful_pa
 **כללים קריטיים לתשלומים:**
 - חובה לענות ל-`pre_checkout_query` תוך 10 שניות, אחרת התשלום נכשל.
 - סכומי Telegram Stars (XTR) הם במספרים שלמים (ללא עשרוניות).
-- למוצרים פיזיים או שירותים לא-דיגיטליים, צריך ספק תשלום צד שלישי (Stripe וכו׳) שמוגדר דרך BotFather.
+- למוצרים פיזיים או שירותים לא-דיגיטליים, צריך ספק תשלום צד שלישי (Stripe וכו׳) שמוגדר דרך BotFather תחת `/mybots > Payments`.
 - החזרים מתבצעים דרך מתודת `refundStarPayment`, לא ידנית.
+
+### מנויים מתחדשים ב-Stars
+
+מעבירים `subscription_period` (בשניות, כרגע 30 יום בלבד) בחשבונית כדי להפוך תשלום חד-פעמי בכוכבים למנוי מתחדש. טלגרם מטפלת במחזור החיוב, והבוט מקבל עדכון `successful_payment` בכל חידוש.
+
+```typescript
+await ctx.replyWithInvoice(
+  "מנוי פרימיום",
+  "גישה לכל התכונות, מתחדש מדי חודש",
+  "premium_sub_v1",
+  "XTR",
+  [{ label: "מנוי חודשי", amount: 100 }],
+  {
+    subscription_period: 30 * 24 * 60 * 60, // 30 יום, היחיד שנתמך כרגע
+  },
+);
+```
+
+משתמשים מנהלים ומבטלים מנויים דרך הגדרות > Stars > המנויים שלי. האזינו ל-`message:successful_payment` בכל חידוש כדי להאריך גישה ב-DB.
+
+### Gifts API
+
+`sendGift` שולח מדבקת מתנה למשתמש (משלמים בכוכבים מיתרת הבוט). המקבל יכול להציג אותה על הפרופיל או להפעיל `convertGiftToStars` כדי להחזיר אותה לכוכבים. שימושי לתוכניות נאמנות, הגרלות ומבצעים.
+
+```typescript
+await bot.api.sendGift({
+  user_id: ctx.from.id,
+  gift_id: "<אחד מה-IDs ש-getAvailableGifts מחזיר>",
+  text: "תודה שאתם איתנו!", // הודעה אופציונלית
+});
+```
+
+תמיד קוראים ל-`getAvailableGifts` קודם כדי לראות את הקטלוג ואת המחירים העדכניים.
+
+### paid_media
+
+מצמידים מחיר בכוכבים לתמונה או וידאו בצ'אט/ערוץ; המקבל משלם כוכבים כדי לפתוח. משתמשים ב-`sendPaidMedia` (או בשדה `paid_media` במתודות `sendMessage`) עם `star_count` למחיר.
 
 ## Mini Apps (WebApp)
 
@@ -714,6 +876,40 @@ bot.on("message:web_app_data", async (ctx) => {
   await ctx.reply(`הזמנה התקבלה! סה"כ: ₪${data.total}`);
 });
 ```
+
+### תכונות Mini Apps 2.0
+
+Bot API 7.x ו-8.x הוסיפו אוסף יכולות "Mini Apps 2.0" שחשופות דרך `window.Telegram.WebApp`. כולן דורשות גרסאות עדכניות של טלגרם, ואין להן אפקט בגרסאות ישנות, אז כדאי לבדוק תמיכה לפני קריאה.
+
+**אחסון בענן** (`window.Telegram.WebApp.CloudStorage`) - אחסון key-value לכל משתמש שנשמר בין סשנים ובין מכשירים. עד 1024 מפתחות למשתמש, 4 KB לערך. לא צריך backend בשביל העדפות פשוטות:
+
+```javascript
+const tg = window.Telegram.WebApp;
+tg.CloudStorage.setItem("last_order_id", "12345");
+tg.CloudStorage.getItem("last_order_id", (err, value) => {
+  console.log("Restored:", value);
+});
+```
+
+**אימות ביומטרי** (`window.Telegram.WebApp.BiometricManager`) - מבקשים מהמשתמש Face ID / Touch ID / טביעת אצבע כדי לחסום פעולות רגישות בתוך ה-Mini App. שימושי לאישור רכישות גדולות בכוכבים או שחרור טוקני תשלום שמורים:
+
+```javascript
+tg.BiometricManager.init(() => {
+  if (tg.BiometricManager.isBiometricAvailable) {
+    tg.BiometricManager.authenticate({ reason: "אישור תשלום" }, (success) => {
+      if (success) submitOrder();
+    });
+  }
+});
+```
+
+**שירות מיקום** (`window.Telegram.WebApp.LocationManager`) - בקשת קואורדינטות GPS בהרשאה מפורשת. מתאים לזרימות "מצא את הסניף הקרוב" בבוטים של רשתות ישראליות.
+
+**מצב מסך מלא** - `tg.requestFullscreen()` מרחיב את ה-Mini App לכל מסך הנייד. משלימים עם `tg.exitFullscreen()`.
+
+**התקנה למסך הבית** - `tg.addToHomeScreen()` מוסיף קיצור ל-Mini App על המסך הראשי באנדרואיד (ב-iOS מוצגות כרגע הוראות ידניות). עובד אחרי ש-`tg.checkHomeScreenStatus()` מאשר שהאפליקציה זמינה לכך.
+
+**הפניה:** [https://core.telegram.org/bots/webapps](https://core.telegram.org/bots/webapps)
 
 ### אימות Mini App
 
