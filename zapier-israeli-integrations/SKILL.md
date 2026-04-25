@@ -28,7 +28,7 @@ Match the Israeli business need to the correct Zap architecture.
 **Choosing single-step vs multi-step:**
 - Single-step Zaps (free plan): Direct trigger-to-action, e.g., "New Cardcom payment -> Create Zapier Tables row." Free plan includes unlimited Zaps but only two-step (one trigger, one action), 100 tasks/month, and 15-minute polling.
 - Multi-step Zaps (Professional plan, $19.99/month annual or $29.99/month monthly, 750 tasks): Chain actions with logic, e.g., "New payment -> Create invoice -> Send email -> Update CRM"
-- Use Paths (branching) when the Zap needs to handle different scenarios, e.g., "If payment > 10,000 ILS, add Invoice Reform allocation number"
+- Use Paths (branching) when the Zap needs to handle different scenarios, e.g., "If payment is over the Invoice Reform threshold (10,000 ILS through May 31, 2026, then 5,000 ILS from June 1, 2026), add Invoice Reform allocation number". Store the threshold in a workflow variable, not a hardcoded number, since it is scheduled to drop again.
 
 **Use Zapier Copilot** (available on all plans, including free) to describe what you want in plain English or Hebrew. Copilot suggests Zap structures, finds the right apps, and maps fields automatically. Example: "When I get a Cardcom payment, create a Morning receipt and email it to the customer."
 
@@ -152,9 +152,17 @@ Self-employed individuals pay advance tax payments (mikdamot) bimonthly (some pa
 | April 30 | Annual tax filing deadline (standard) | Filing reminder |
 | May 31+ | Extended deadline (with accountant representation) | Filing reminder |
 
-**Israel Invoice Reform 2026:**
-Since January 2026, invoices exceeding 10,000 NIS require a Tax Authority allocation number (mispar hiktza'a). When building invoice-creation Zaps:
-- Add a Filter step: if invoice amount > 10,000 NIS, flag for allocation number
+**Israel Invoice Reform 2026 (threshold step-down):**
+Tax invoices over the threshold require a Tax Authority allocation number (mispar haktza'a). The threshold drops in 2026:
+
+| Effective | Threshold |
+|-----------|-----------|
+| Jan 1, 2026 | 10,000 NIS |
+| **Jun 1, 2026** | **5,000 NIS** |
+| Jan 1, 2027 | 5,000 NIS (planned to continue) |
+
+When building invoice-creation Zaps:
+- Add a Filter step that compares the invoice amount to a workflow variable holding the current threshold, and flag for allocation number when it exceeds it. Build the threshold check as a configurable variable in your workflow, not a hardcoded number, since the threshold is scheduled to drop again.
 - The allocation number must be obtained from the Tax Authority system before the invoice is issued
 - Morning and other authorized invoicing platforms handle this automatically through their API, but verify the document response includes the allocation number
 - For manual webhook-based flows, add a Code by Zapier step that calls the Tax Authority allocation API before creating the invoice
@@ -294,7 +302,7 @@ Zapier Tables and Interfaces are free on all plans in 2026 and provide a better 
 1. Trigger: Morning webhook (new document created)
 2. Filter: Document type = Tax Invoice (305) or Tax Invoice/Receipt (320)
 3. Action: Create record in Zapier Tables with columns: Date, Client Name, Amount (before VAT), VAT Amount, Total, Document Number
-4. Action: If amount > 10,000 ILS, verify Invoice Reform allocation number is present
+4. Action: If amount exceeds the Invoice Reform threshold variable (10,000 ILS through May 31, 2026, then 5,000 ILS from June 1, 2026), verify Invoice Reform allocation number is present
 5. Action: If amount > 25,000 ILS, send Slack notification to accountant channel
 
 **Template 2: E-commerce order-to-invoice**
@@ -342,7 +350,7 @@ Actions:
 3. Add a Filter step: only continue if `DealResponse` = 0 (successful payment)
 4. Add Webhooks by Zapier > Custom Request to call Morning API, Create Document type 400 (Receipt). Use the `Amount` field directly as the item price (Cardcom sends decimal shekels, e.g., 150.50 = 150.50 ILS).
 5. Map fields: `CardOwnerName` to client name, `CardOwnerEmail` to client email, `Amount` to item price
-6. If amount > 10,000 ILS, verify the Morning API response includes an Invoice Reform allocation number
+6. If amount exceeds the Invoice Reform threshold variable (10,000 ILS through May 31, 2026, then 5,000 ILS from June 1, 2026), verify the Morning API response includes an Invoice Reform allocation number
 7. Add email action to send receipt link to customer
 
 Result: Every successful Cardcom payment automatically generates a Morning receipt and emails it to the customer.
@@ -408,7 +416,7 @@ Result: Annual tax preparation data is automatically compiled and sent to the ac
 - **Phone number format for WhatsApp/Twilio**: Israeli mobile numbers must include the +972 prefix and drop the leading 0 (e.g., 0541234567 becomes +972541234567). Use Code by Zapier: `phone.replace(/^0/, '+972')`.
 - **VAT rate**: The current Israeli VAT rate is 18% (since January 2025). Agents sometimes use the outdated 17% rate in calculations.
 - **Formatter does NOT strip Unicode markers**: "Trim Whitespace" removes standard whitespace but not RTL/LTR markers (U+200F, U+200E). Use a Code by Zapier step with regex to clean Hebrew text properly.
-- **Invoice Reform 2026**: Invoices over 10,000 NIS issued since January 2026 require a Tax Authority allocation number. Verify your invoicing API flow includes this step.
+- **Invoice Reform 2026 affects automation, threshold drops June 1, 2026.** Tax invoices over the threshold (10,000 NIS through May 31, 2026, then 5,000 NIS from June 1, 2026) require a Tax Authority allocation number. Verify your invoicing API flow includes this step. Store the threshold in a Zap variable, not a hardcoded literal.
 - **Free plan limitations**: The free plan supports unlimited Zaps but only two-step (trigger + one action) and 100 tasks/month. Most Israeli business automations need multi-step Zaps, requiring the Professional plan ($19.99/month annual).
 
 ## Troubleshooting
@@ -430,8 +438,8 @@ Cause: Using Zapier's native WhatsApp integration, which only sends to yourself.
 Solution: Switch to Twilio WhatsApp Business API, WATI, or Respond.io. These require Meta Business verification and pre-approved message templates. You cannot send free-form messages to customers via WhatsApp Business API.
 
 ### Error: "Invoice Reform allocation number missing"
-Cause: Invoice over 10,000 NIS created without Tax Authority allocation number (required since January 2026).
-Solution: Ensure your Morning API call includes the allocation number request. Morning's API handles this automatically for documents created through their system. If using a manual webhook flow, add a step that requests an allocation number from the Tax Authority before creating the invoice.
+Cause: Invoice over the Invoice Reform threshold created without a Tax Authority allocation number. The threshold is 10,000 NIS through May 31, 2026, then drops to 5,000 NIS on June 1, 2026.
+Solution: Ensure your Morning API call includes the allocation number request. Morning's API handles this automatically for documents created through their system. If using a manual webhook flow, add a step that requests an allocation number from the Tax Authority before creating the invoice. Compare the amount to a workflow variable holding the current threshold rather than a hardcoded number, since the threshold is scheduled to drop again.
 
 ### Error: "Cardcom amount is wrong in Morning invoice"
 Cause: Incorrectly dividing the Cardcom amount by 100 (legacy advice that is wrong).
