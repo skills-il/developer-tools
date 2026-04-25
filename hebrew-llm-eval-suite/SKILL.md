@@ -18,16 +18,26 @@ Different benchmarks test different things. Choose the smallest set that covers 
 
 | Benchmark | HuggingFace ID | What it tests | When to use |
 |-----------|---------------|---------------|-------------|
-| HeQ (Hebrew Question Answering) | `pig4431/HeQ_v1` | Reading comprehension, extractive QA on Hebrew Wikipedia and Geektime articles. 30,147 questions | Any product that answers questions over Hebrew text: search, RAG, support, research assistants |
+| HeQ (Hebrew Question Answering) | `Etelis/HeQ_v1` (HF mirror); canonical at `github.com/NNLP-IL/Hebrew-Question-Answering-Dataset` | Reading comprehension, extractive QA on Hebrew Wikipedia and Geektime articles. 30,147 questions | Any product that answers questions over Hebrew text: search, RAG, support, research assistants |
 | HebrewSentiment | `HebArabNlpProject/HebrewSentiment` | Sentiment classification (positive, negative, neutral). 41,305 samples. License CC-BY-4.0 | Social media analysis, review classification, product feedback |
-| Hebrew Winograd | Community port of Winograd Schema Challenge | Pronoun resolution requiring world knowledge. Reasoning-heavy | Any product that needs nuanced Hebrew understanding |
-| NeuLabs-TedTalks (translation) | Open Hebrew LLM Leaderboard subset | English to Hebrew and Hebrew to English translation quality | Translation products, multilingual apps |
+| Hebrew Winograd | Community port of Winograd Schema Challenge (`cs.ubc.ca/~vshwartz/resources/winograd_he.jsonl`) | Pronoun resolution requiring world knowledge. Reasoning-heavy | Any product that needs nuanced Hebrew understanding |
+| NeuLabs-TedTalks (translation) | OPUS NeuLab-TedTalks en-he subset | English to Hebrew and Hebrew to English translation quality | Translation products, multilingual apps |
 | HebNLI | `HebArabNlpProject/HebNLI` | Natural Language Inference in Hebrew | Classification, content moderation, logical reasoning |
-| DictaLM 3.0 Summarization | Dicta benchmark suite | Abstractive summarization of Hebrew news | Summarization tools, executive briefings |
+| HEBREW-MMLU (general knowledge) | Hebrew-translated MMLU subset, used by the Open Hebrew LLM Leaderboard ecosystem (verify the active HF mirror before use; `openai/MMMLU` covers 14 languages but Hebrew is not in the official set) | 14-subject general-knowledge accuracy; Hebrew adaptation of Massive Multitask Language Understanding | General-purpose chat/RAG products that need broad world knowledge in Hebrew |
+| DictaLM 3.0 Summarization | Dicta benchmark suite (see DictaLM 3.0 technical report) | Abstractive summarization of Hebrew news | Summarization tools, executive briefings |
 | DictaLM 3.0 Nikud | Dicta benchmark suite | Adding vowel diacritics to unvocalized Hebrew | Educational tools, TTS preprocessing, religious text tools |
 | DictaLM 3.0 Israeli Trivia | Dicta benchmark suite | Knowledge of Israeli culture, geography, history, politics | Consumer products where cultural grounding matters |
 
-Rule of thumb: start with HeQ (comprehension) plus one task that matches your specific product. Adding benchmarks past three rarely changes the decision.
+Rule of thumb: start with HeQ (comprehension) plus one task that matches your specific product. Adding benchmarks past three rarely changes the decision. For products that need broad world knowledge, add HEBREW-MMLU.
+
+#### Recommended frameworks
+
+Wrap the benchmarks above in an established eval framework rather than rolling a runner from scratch:
+
+- **`lm-evaluation-harness` (EleutherAI)**: standard for reproducible base-model evals, used by the HuggingFace Open LLM Leaderboard. Hebrew tasks like HeQ, HebrewSentiment, and HebNLI are NOT shipped as native tasks (last checked April 2026); add them as custom YAML tasks pointing at the HF dataset IDs above. Good fit when comparing open-weight models with consistent few-shot prompting.
+- **`inspect_ai` (UK AI Security Institute)**: opinionated framework with primitives for dataset, Task, Solver, and Scorer, plus multi-turn agent flows and a log viewer. Adopted by Anthropic, DeepMind, and others through 2024-25. Good fit for chat-model evals and graded scoring. Companion repo `UKGovernmentBEIS/inspect_evals` ships 200+ pre-built evals; Hebrew tasks are not in the default set but the harness is straightforward to extend.
+
+Pick `lm-evaluation-harness` for base-model leaderboard parity, pick `inspect_ai` for chat-model and agent evals.
 
 ### Step 2: Pick the models to compare
 
@@ -35,15 +45,17 @@ A sensible default set for Israeli product teams:
 
 | Provider | Model | Call via |
 |----------|-------|----------|
-| Anthropic | claude-opus-4-6, claude-sonnet-4-6, claude-haiku-4-5 | Anthropic SDK |
+| Anthropic | claude-opus-4-7 (1M context), claude-opus-4-6, claude-sonnet-4-6, claude-haiku-4-5 | Anthropic SDK |
 | OpenAI | gpt-5 family | OpenAI SDK |
 | Google | gemini-2.x | Google GenAI SDK |
 | AI21 (Israeli) | jamba-1.5-large, jamba-1.5-mini | AI21 SDK or Amazon Bedrock |
-| Dicta (Israeli, open-weight) | DictaLM-3.0-24B-Base, DictaLM-3.0-Nemotron-12B-Instruct, DictaLM-3.0-1.7B | HuggingFace transformers or vLLM |
+| Dicta (Israeli, open-weight) | `dicta-il/DictaLM-3.0-24B-Base`, `dicta-il/DictaLM-3.0-Nemotron-12B-Instruct`, `dicta-il/DictaLM-3.0-1.7B-Thinking-GGUF`, `dicta-il/DictaLM-3.0-24B-Thinking`, plus `dicta-il/dictalm2.0-instruct` (DictaLM 2.0, 7B Mistral-based) | HuggingFace transformers or vLLM |
+| Cohere (multilingual, Hebrew supported) | `CohereLabs/aya-expanse-8b`, `CohereLabs/aya-expanse-32b`, `CohereLabs/aya-23-8B`, `CohereLabs/aya-23-35B` | HuggingFace transformers or Cohere API |
+| Hebrew-finetuned community models | `yam-peleg/Hebrew-Mistral-7B`, `yam-peleg/Hebrew-Gemma-11B-Instruct`, `yam-peleg/Hebrew-Mixtral-8x22B` | HuggingFace transformers |
 | Meta (open-weight) | Llama-3.x-70B-Instruct | HuggingFace transformers or hosted |
 | Mistral (open-weight) | Mistral-Large-Instruct | HuggingFace transformers or hosted |
 
-AI21 explicitly positions Jamba 1.5 as supporting Hebrew as a core language. DictaLM is the strongest Hebrew-native open-weight option. Include at least one Hebrew-native model as a baseline, or the comparison tells you nothing about Hebrew-specific performance.
+AI21 explicitly positions Jamba 1.5 as supporting Hebrew as a core language. DictaLM is the strongest Hebrew-native open-weight option. Cohere's Aya-23 and Aya Expanse list Hebrew among their supported languages. Yam Peleg's Hebrew-* community models are continuously pretrained from Mistral, Gemma, and Mixtral with extended Hebrew tokenizers. Include at least one Hebrew-native model as a baseline, or the comparison tells you nothing about Hebrew-specific performance.
 
 ### Step 3: Set up the harness
 
@@ -113,7 +125,49 @@ A single run on a small subset is not a benchmark. Before trusting a scorecard:
 
 ### Step 7: Handle closed-source model caveats
 
-API-hosted models change silently. Log the exact model version string from each API response where available. For Claude, use the dated model ID. For OpenAI, log the `model` field from the response. For Gemini, log the model version. This makes historical scorecards reproducible.
+API-hosted models change silently. Log the exact model version string from each API response where available. For Claude, use the dated model ID (e.g. `claude-opus-4-7-20260415`) and log the `model` field returned in the response. For OpenAI, log the `model` field from the response and the `system_fingerprint` when available. For Gemini, log the `modelVersion` from the response metadata. This makes historical scorecards reproducible.
+
+### Step 8: Account for tokenizer fairness
+
+Tokenizer differences materially affect Hebrew evals on cost, latency, and even task accuracy:
+
+- **BPE tokenizers** (GPT-4, Llama-3, Mistral) treat Hebrew as a long-tail language. Fertility (tokens per Hebrew word) is typically 3-5x higher than English. A 1,000-Hebrew-word prompt can balloon to 4,000-5,000 tokens.
+- **SentencePiece tokenizers with Hebrew extensions** (DictaLM 2.0/3.0, Hebrew-Mistral-7B, Hebrew-Gemma-11B) inject Hebrew-specific tokens. DictaLM 2.0 reports compression of 2.76 tokens/Hebrew-word vs Mistral-7B's 5.78 tokens/word.
+- **Aya/Cohere tokenizers** are tuned for the 23 supported languages including Hebrew, with fertility closer to native-tuned models than to vanilla BPE.
+
+Implications for evals:
+- Always log tokens-in and tokens-out per benchmark, not just sample count, when comparing cost or latency
+- A model with worse raw F1 but 3x better tokenizer fertility may still be the right pick for a cost-sensitive product
+- Models with high fertility hit context limits sooner; truncate fairly across the comparison set
+
+Report a "fertility table" alongside the scorecard: model, mean tokens per Hebrew word on the same reference paragraph (we use the first 1,000 words of the HeQ test set as a fixed sample). `scripts/measure_fertility.py` computes this.
+
+### Step 9: Normalize Hebrew text before scoring
+
+HeQ scoring already calls Dicta-compatible normalization. Sentiment, NLI, and translation evals also need normalization or you will see artificial losses:
+
+- **Strip nikud (vowel diacritics)** before string comparison. Reference labels and model outputs may differ only in nikud presence. Use the Unicode range U+05B0-U+05BC, U+05BD, U+05BF, U+05C1-U+05C2, U+05C7 plus the cantillation marks U+0591-U+05AF.
+- **Normalize sofit (final) forms** for HeQ EM and string-match scorers: כ/ך, מ/ם, נ/ן, פ/ף, צ/ץ. Replace the final-form variant with its base form on both sides.
+- **Collapse whitespace** including non-breaking space U+00A0, zero-width joiner U+200D, and the Hebrew geresh/gershayim U+05F3-U+05F4 when comparing strings.
+- **Lowercase Latin script** for translation outputs but leave Hebrew untouched (Hebrew has no case).
+- **For sentiment and NLI**, model outputs can be a label word in nikud or with definite article. Apply nikud strip plus prefix-removal for ה־ before mapping to the label vocabulary.
+
+`scripts/score_results.py --normalize hebrew-strict` applies all of the above. `--normalize hebrew-loose` skips sofit and prefix removal for translation evals where they would change meaning.
+
+### Step 10: LLM-as-judge caveats for Hebrew
+
+For graded scoring (summarization, translation, open-ended QA), an LLM judge is convenient but has Hebrew-specific failure modes:
+
+- **English-style answer bias.** Most judge models were trained predominantly on English judgements. They tend to reward Hebrew responses that mirror English style (long, hedged, qualified) over native Israeli style (direct, terse, idiomatic). This systematically penalizes Hebrew-native models.
+- **Script-switching false positives.** A judge may rate a Hebrew response with English technical terms more favorably than the same response in pure Hebrew, because mixed-script answers look more "informative" to a model trained on English.
+- **Nikud and sofit confusion.** Some judge models penalize correct Hebrew that uses or omits nikud differently from their training distribution.
+- **Cultural grounding gaps.** Judge models trained predominantly on English data miss subtle Israeli context (slang, military shorthand, holiday references) and may flag accurate answers as wrong.
+
+Mitigations:
+- Use at least two judge models from different vendors and report agreement; flag disagreements for human review
+- Calibrate the judge with 30-50 human-rated Hebrew examples and report judge-vs-human agreement before trusting at scale
+- Prefer Hebrew-native or strongly multilingual judges (Claude family, Gemini 2.x, Aya Expanse) over English-first judges
+- For sentiment, NLI, and HeQ, prefer reference-based metrics (accuracy, F1) over LLM-as-judge entirely
 
 ## Examples
 
@@ -161,12 +215,18 @@ No MCP server is required for running evals. Consider pairing with Hebrew data-s
 
 | Source | URL | What to Check |
 |--------|-----|---------------|
-| Open Hebrew LLM Leaderboard (HuggingFace) | https://huggingface.co/blog/leaderboard-hebrew | Leaderboard methodology, benchmark sources |
-| HeQ dataset | https://huggingface.co/datasets/pig4431/HeQ_v1 | Dataset card, license, sample format |
+| Open Hebrew LLM Leaderboard (live space) | https://huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard | Live rankings, model submissions, current benchmark scores |
+| Open Hebrew LLM Leaderboard (announcement blog) | https://huggingface.co/blog/leaderboard-hebrew | Leaderboard methodology, benchmark sources |
+| HeQ dataset (HF mirror) | https://huggingface.co/datasets/Etelis/HeQ_v1 | Dataset card, sample format. Canonical source: github.com/NNLP-IL/Hebrew-Question-Answering-Dataset |
 | HebrewSentiment dataset | https://huggingface.co/datasets/HebArabNlpProject/HebrewSentiment | License, splits, label definitions |
-| DictaLM 3.0 Technical Report | https://dicta.org.il/publications/DictaLM_3_0___Techincal_Report.pdf | Dicta's Hebrew benchmark suite and methodology |
-| Dicta organization on HuggingFace | https://huggingface.co/dicta-il | Latest DictaLM and DictaBERT models |
+| HebNLI dataset | https://huggingface.co/datasets/HebArabNlpProject/HebNLI | License, splits, premise-hypothesis structure |
+| DictaLM 3.0 Technical Report | https://dicta.org.il/publications/DictaLM_3_0___Techincal_Report.pdf | Dicta's Hebrew benchmark suite and methodology (note: filename uses "Techincal" not "Technical") |
+| Dicta organization on HuggingFace | https://huggingface.co/dicta-il | Latest DictaLM 3.0 variants (24B-Base, Nemotron-12B-Instruct, 1.7B-Thinking-GGUF, 24B-Thinking) and DictaBERT models |
+| Cohere Aya organization | https://huggingface.co/CohereLabs | Aya-23 (8B/35B) and Aya Expanse (8B/32B) multilingual models with Hebrew support |
+| Yam Peleg Hebrew models | https://huggingface.co/yam-peleg | Hebrew-Mistral-7B, Hebrew-Gemma-11B-Instruct, Hebrew-Mixtral-8x22B community finetunes |
 | AI21 Jamba model family announcement | https://www.ai21.com/blog/announcing-jamba-model-family/ | Jamba Hebrew support and model specs |
+| EleutherAI lm-evaluation-harness | https://github.com/EleutherAI/lm-evaluation-harness | Standard base-model eval framework; Hebrew tasks must be added as custom YAMLs |
+| UK AISI Inspect AI | https://github.com/UKGovernmentBEIS/inspect_ai | Chat-model eval framework with agent and graded-scoring primitives |
 | Hebrew NLP Resources index | https://github.com/NNLP-IL/Hebrew-Resources | Comprehensive list of Hebrew NLP datasets and tools |
 
 ## Gotchas
@@ -176,7 +236,10 @@ No MCP server is required for running evals. Consider pairing with Hebrew data-s
 - Hebrew Winograd has fewer than 300 items. Any single run has high variance. Report results only with multiple runs and standard deviations. Agents that run it once and treat the result as gospel will flip model rankings between runs.
 - AI21 Jamba uses a dedicated API (ai21.com or Amazon Bedrock). Do not assume the OpenAI SDK works with it. Use the AI21 Python SDK or Bedrock runtime.
 - Translation BLEU on Hebrew is less reliable than BLEU on European languages due to Hebrew morphology. Report chrF alongside BLEU and spot-check low-scoring outputs manually. Agents that rely on BLEU alone miss the actual quality signal.
-- DictaLM base models are not chat-tuned by default. Comparing them zero-shot against chat models like Claude is unfair. Use the Dicta instruction-tuned variants or use few-shot prompting with explicit task examples.
+- DictaLM base models are not chat-tuned by default. Comparing them zero-shot against chat models like Claude is unfair. Use the Dicta instruction-tuned variants (Nemotron-12B-Instruct, dictalm2.0-instruct) or use few-shot prompting with explicit task examples.
+- Tokenizer fertility skews cost and latency comparisons. A vanilla BPE model can use 3-5x more tokens per Hebrew word than a Hebrew-tuned SentencePiece tokenizer. Always log tokens-in/tokens-out per benchmark, not just sample count.
+- LLM-as-judge for Hebrew is biased toward English-style answers (long, hedged) over native Israeli style (direct, terse). Use at least two judges from different vendors, calibrate against 30-50 human ratings, and prefer reference-based metrics where they exist.
+- HEBREW-MMLU has multiple community translations and forks. Verify the active dataset ID before publishing a benchmark; numbers from different translations are not comparable.
 
 ## Troubleshooting
 
