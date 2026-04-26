@@ -434,13 +434,32 @@ Solution: <פתרון>
 - [ ] `metadata.tags` עם מערכי `he` ו-`en` באורך שווה ללא מחרוזות ריקות
 - [ ] `creator_name` ו-`creator_email` נאספו מהמשתמש (שלב 2)
 
+### שלב 10.5: הכנת אימות GitHub לפני הגשה
+
+טופס ההגשה מריץ scorecard חי של אימות GitHub על הריפו שלכם לפני שהוא מאפשר להגיש. 5 האותות הקריטיים חייבים לעבור כדי שהצוות יאשר את הסקיל. שווה להגדיר אותם עכשיו (כרבע שעה עבודה), אחרת תיתקעו בשלב ההגשה.
+
+| # | אות | הגדרה מהירה |
+|---|--------|-------------|
+| 1 | `spec_compliant` | התקינו את gh CLI בגרסה 2.90.0 ומעלה, והריצו אצלכם מקומית `gh skill publish --dry-run path/to/your-skill`. תקנו כל שגיאה שמופיעה |
+| 2 | `secret_scanning` | בריפו: Settings ← Code security and analysis ← הפעילו **Secret scanning** וגם **Push protection** |
+| 3 | `code_scanning` | באותו עמוד, תחת **Code scanning** לחצו **Set up** ← **Default** |
+| 4 | `signed_release` | הוסיפו קובץ `.github/workflows/release.yml` שמשתמש ב-`actions/attest-build-provenance@v4` על `tags: ['v*']` (או השתמשו ב-`skills-il/release-workflow@v1` כ-reusable workflow), ואז דחפו תג `v1.0.0` |
+| 5 | `license_declared` | הוסיפו קובץ `LICENSE` בשורש הריפו (השתמשו ב-"Choose a license template" של GitHub; MIT היא הבחירה המקובלת) |
+
+**ב-MCP האות `spec_compliant` לא רלוונטי** (פקודת `gh skill` בודקת SKILL.md בלבד, לא שרתי MCP). 4 האותות האחרים בכל זאת חלים.
+
+**הוראות העתק-הדבק לכל אות**, עם snippets מלאים של YAML ו-screenshots, נמצאות [במדריך צ'קליסט אימות GitHub](https://agentskills.co.il/he/guides/github-verification-checklist). במקרה של ספק, תעקבו אחרי המדריך.
+
+**מדלגים על השלב הזה על אחריותכם:** ה-gate של האדמין לא מאשר הגשה אלא אם כן `critical_all_pass` הוא true. מייל הדחייה מפרט בדיוק אילו אותות נפלו ומפנה למדריך הזה.
+
 ### שלב 11: הגשת הסקיל
 
 לאחר שהאימות עובר, הגש את הסקיל דרך [דף ההגשה באתר](https://agentskills.co.il/he/submit).
 
 1. בחר סוג הגשה: "ריפוזיטורי קיים" (אם דחפת את הסקיל לריפו GitHub) או "הצעה" (אם אתה רוצה שצוות skills-il ייצור את הריפו)
 2. מלא את הטופס עם: כתובת ריפו GitHub, שם יוצר ואימייל (משלב 2)
-3. צוות skills-il יבדוק את ההגשה, יריץ ניתוח אבטחה ויפרסם אם עובר
+3. **הטופס שולף את SKILL.md ומריץ scorecard חי של אימות GitHub.** תראו pass/fail עבור כל אחד מ-5 האותות הקריטיים. אם משהו נכשל, תקנו לפי שלב 10.5 והגישו שוב.
+4. צוות skills-il יבדוק את ההגשה, יריץ ניתוח אבטחה ויפרסם אם עובר
 
 ## דוגמאות
 

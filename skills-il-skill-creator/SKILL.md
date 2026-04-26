@@ -434,13 +434,32 @@ After validation passes, review against the quality checklist:
 - [ ] `creator_name` and `creator_email` collected from user (Step 2)
 - [ ] Repo-level README.md is written in English (not Hebrew)
 
+### Step 10.5: Pre-Submission GitHub Verification Setup
+
+The submission form runs a live GitHub Verification scorecard against your repo before you can submit. The 5 Critical signals must pass for the skills-il team to approve. Set them up now (about 15 minutes total) so you don't bounce at submit time.
+
+| # | Signal | Quick Setup |
+|---|--------|-------------|
+| 1 | `spec_compliant` | Install `gh` CLI 2.90.0+, then run `gh skill publish --dry-run path/to/your-skill` locally and fix any errors |
+| 2 | `secret_scanning` | Repo → Settings → Code security and analysis → enable **Secret scanning** + **Push protection** |
+| 3 | `code_scanning` | Same Settings page → under **Code scanning** click **Set up** → **Default** |
+| 4 | `signed_release` | Add `.github/workflows/release.yml` that uses `actions/attest-build-provenance@v4` on `tags: ['v*']` (or use `skills-il/release-workflow@v1` as a reusable workflow), then push a `v1.0.0` tag |
+| 5 | `license_declared` | Add a `LICENSE` file at the repo root (use GitHub's "Choose a license template"; MIT is the standard) |
+
+**For MCPs the `spec_compliant` row is N/A** (the `gh skill` CLI validates SKILL.md only, not MCP servers). The other 4 still apply.
+
+**Copy-paste setup steps for each signal**, with full YAML snippets and screenshots, are in the [GitHub Verification checklist guide](https://agentskills.co.il/en/guides/github-verification-checklist). When in doubt, follow that guide.
+
+**Skip this step at your own risk:** the admin approval gate refuses approval unless `critical_all_pass` is true. The rejection email will tell you which signals failed and link back to this guide.
+
 ### Step 11: Submit Your Skill
 
 After validation passes, submit your skill through the [submission page](https://agentskills.co.il/en/submit).
 
 1. Choose submission type: "Existing Repository" (if you pushed your skill to a GitHub repo) or "Proposal" (if you want the skills-il team to create the repo)
 2. Fill in the form with: your GitHub repo URL, creator name, and creator email (from Step 2)
-3. The skills-il team will review your submission, run security analysis, and publish it if it passes
+3. **The form will fetch your SKILL.md and run a live GitHub Verification scorecard.** You'll see pass/fail for each of the 5 Critical signals. If any fail, fix them per Step 10.5 and re-submit.
+4. The skills-il team will review your submission, run security analysis, and publish it if it passes
 
 ## Examples
 
