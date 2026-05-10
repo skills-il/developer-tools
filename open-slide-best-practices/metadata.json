@@ -12,7 +12,7 @@
     "en": ["open-slide", "slides", "presentations", "react", "rtl", "hebrew", "themes", "typography", "design-tokens", "deck-authoring"]
   },
   "author": "skills-il",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "category": "developer-tools",
   "supported_agents": ["claude-code", "cursor", "windsurf", "github-copilot", "opencode", "codex", "claude-desktop", "claude-ai"],
   "openclaw": true,
