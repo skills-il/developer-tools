@@ -1,0 +1,28 @@
+{
+  "display_name": {
+    "he": "open-slide - שיטות עבודה מומלצות",
+    "en": "open-slide Best Practices"
+  },
+  "display_description": {
+    "he": "שיטות עבודה לפיתוח מצגות ב-open-slide: הקאנבס הקבוע 1920×1080, חוזה הקובץ של slides/<id>/index.tsx, סקאלת טיפוגרפיה, הטוקנים של DesignSystem, מערכת הערכאות (themes), הסמני @slide-comment של האינספקטור, ועיבוד טקסט עברי עם תמיכת RTL מלאה. מכסה פונטים עבריים מ-Google Fonts (Heebo, Rubik, Assistant, Noto Sans Hebrew), CSS לוגי (paddingInlineStart במקום paddingLeft), ערבוב עברית-אנגלית עם <bdi>, התאמת סקאלת הטיפוגרפיה לעברית, וטיפול ב-themes/ ובקבצי הערכאות. השתמשו בכל פעם שאתם כותבים או עורכים קוד ב-slides/<id>/ של פרויקט open-slide, או כשאתם בונים מצגת בעברית או דו-לשונית על הפריימוורק. אל תשתמשו ליצירת וידאו (השתמשו ב-remotion-best-practices או ב-hyperframes-best-practices), או למצגות עבריות גנריות מחוץ ל-open-slide (השתמשו ב-presentation-generator).",
+    "en": "Best practices for authoring presentations with open-slide: the fixed 1920×1080 canvas, the slides/<id>/index.tsx file contract, type scale, DesignSystem tokens, the themes/ system, @slide-comment inspector markers, and Hebrew text rendering with full RTL support. Covers Hebrew Google Fonts (Heebo, Rubik, Assistant, Noto Sans Hebrew), logical CSS properties (paddingInlineStart over paddingLeft), bidirectional Hebrew+English text with <bdi>, Hebrew-aware type scale tuning, and RTL-friendly themes. Use whenever you are writing or editing code under slides/<id>/ in an open-slide project, or building a Hebrew or bilingual deck on the framework. Do NOT use for video creation (use remotion-best-practices or hyperframes-best-practices), or for generic Hebrew presentations outside open-slide (use presentation-generator)."
+  },
+  "tags": {
+    "he": ["open-slide", "מצגות", "שקפים", "ריאקט", "RTL", "עברית", "ערכות-נושא", "טיפוגרפיה", "DesignSystem", "bidi"],
+    "en": ["open-slide", "slides", "presentations", "react", "rtl", "hebrew", "themes", "typography", "design-tokens", "deck-authoring"]
+  },
+  "author": "skills-il",
+  "version": "1.1.0",
+  "category": "developer-tools",
+  "supported_agents": ["claude-code", "cursor", "windsurf", "github-copilot", "opencode", "codex", "claude-desktop", "claude-ai"],
+  "openclaw": true,
+  "volatility": "versioned",
+  "authoritative_sources": [
+    { "url": "https://github.com/1weiho/open-slide", "type": "upstream-repo", "language": "en" },
+    { "url": "https://open-slide.dev", "type": "upstream-docs", "language": "en" },
+    { "url": "https://www.npmjs.com/package/@open-slide/core", "type": "npm-package", "language": "en" },
+    { "url": "https://www.npmjs.com/package/@open-slide/cli", "type": "npm-package", "language": "en" },
+    { "url": "https://fonts.google.com/?subset=hebrew", "type": "font-source", "language": "en" }
+  ],
+  "domain_checklist_version": 1
+}
