@@ -101,7 +101,7 @@ Result: Generate 10 valid IDs with 51- prefix for testing.
 
 - [Misrad HaPnim, ID numbering page (gov.il)](https://www.gov.il/he/departments/topics/identity_card) , Official Ministry of Interior page on Teudat Zehut issuance, structure, and renewal.
 - [ICA Companies Registrar (justice.gov.il)](https://ica.justice.gov.il/) , Lookup for company (51), amuta (58), partnership (55), and cooperative society (57) numbers.
-- [Kolzchut, "תעודת זהות"](https://www.kolzchut.org.il/he/%D7%AA%D7%A2%D7%95%D7%93%D7%AA_%D7%96%D7%94%D7%95%D7%AA) , Citizen-rights wiki entry covering eligibility, replacement, and ID-number ranges.
+- [Kolzchut, "תעודות זהות, דרכונים ותעודות מעבר"](https://www.kolzchut.org.il/he/תעודות_זהות,_דרכונים_ותעודות_מעבר) , Citizen-rights wiki hub for identity cards, passports, and travel documents, covering eligibility, replacement, and number ranges.
 - [Privacy Protection Law, Amendment 13 (Knesset)](https://main.knesset.gov.il/Activity/Legislation/Laws/Pages/LawPrimary.aspx?lawitemid=2207011) , 2025 amendment tightening consent, breach-notification, and PII handling rules. In force August 2025.
 
 ## Gotchas
