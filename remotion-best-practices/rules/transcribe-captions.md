@@ -34,13 +34,20 @@ import fs from "fs";
 
 const to = path.join(process.cwd(), "whisper.cpp");
 
+// whisper.cpp 1.5.5 is the documented minimum; pin to a current release.
+// As of 2026 the whisper.cpp project is on the 1.8.x line (latest v1.8.4).
+// Check https://github.com/ggml-org/whisper.cpp/releases for the latest tag.
+const WHISPER_CPP_VERSION = "1.8.4";
+
 await installWhisperCpp({
   to,
-  version: "1.5.5",
+  version: WHISPER_CPP_VERSION,
 });
 
+// Use "medium" (multilingual) for Hebrew or any non-English audio.
+// "medium.en" is ENGLISH-ONLY and produces garbage for Hebrew (see SKILL.md Gotcha #3).
 await downloadWhisperModel({
-  model: "medium.en",
+  model: "medium",
   folder: to,
 });
 
@@ -49,9 +56,9 @@ await downloadWhisperModel({
 // execSync('ffmpeg -i /path/to/audio.mp4 -ar 16000 /path/to/audio.wav -y');
 
 const whisperCppOutput = await transcribe({
-  model: "medium.en",
+  model: "medium",
   whisperPath: to,
-  whisperCppVersion: "1.5.5",
+  whisperCppVersion: WHISPER_CPP_VERSION,
   inputPath: "/path/to/audio123.wav",
   tokenLevelTimestamps: true,
 });

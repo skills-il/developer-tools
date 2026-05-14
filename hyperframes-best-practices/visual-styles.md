@@ -26,7 +26,7 @@ Named visual identities for HyperFrames videos. Each style is grounded in a real
 **Mood:** Clinical, precise | **Best for:** SaaS dashboards, developer tools, APIs, metrics
 
 - Black (`#1a1a1a`), white, ONE accent, electric blue (`#0066FF`) or amber (`#FFB300`)
-- Helvetica or Inter Bold for headlines, Regular for labels. Numbers large (80–120px)
+- Helvetica or Inter Bold for headlines, Regular for labels. Numbers large (80-120px)
 - Grid-locked compositions. Every element snaps to an invisible 12-column grid
 - Animated counters count up from 0. Hard cuts, no decorative transitions
 - Transitions: Cinematic Zoom or SDF Iris (precise, geometric)
@@ -86,8 +86,8 @@ Glitch shader transitions. Industrial and raw, nothing should feel polished.
 **Mood:** Loud, kinetic | **Best for:** Big product launches, milestone announcements, high-energy hype videos
 
 - Bold saturated: red (`#E63946`), yellow (`#FFD60A`), black, white, maximum contrast
-- Text IS the visual. Overlapping type layers at different scales and angles, filling 50–80% of frame
-- Everything is kinetic: slamming, sliding, scaling. 2–3 second rapid-fire scenes
+- Text IS the visual. Overlapping type layers at different scales and angles, filling 50-80% of frame
+- Everything is kinetic: slamming, sliding, scaling. 2-3 second rapid-fire scenes
 - Text layered OVER footage, never empty backgrounds
 - Transitions: Ridged Burn (explosive, dramatic, impossible to ignore)
 

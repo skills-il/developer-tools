@@ -46,7 +46,7 @@ All decoratives should have slow ambient GSAP animation, breathing, drift, pulse
 
 ## Motion
 
-See [references/motion-principles.md](references/motion-principles.md) for full rules. Quick: 0.3–0.6s, vary eases, combine transforms on entrances, overlap entries.
+See [references/motion-principles.md](references/motion-principles.md) for full rules. Quick: 0.3-0.6s, vary eases, combine transforms on entrances, overlap entries.
 
 ## Typography
 

@@ -83,7 +83,7 @@ def validate_mikud(mikud: str) -> tuple[bool, str]:
             return False, (
                 f"Mikud '{mikud}' is 5 digits (old format). "
                 "All Israeli mikud codes are now 7 digits. "
-                "Look up the current code at israelpost.co.il/mikud"
+                "Look up the current code at mypost.israelpost.co.il/zipcodesearch"
             )
         return False, (
             f"Mikud '{mikud}' is invalid. Must be exactly 7 digits."

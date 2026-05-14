@@ -12,7 +12,7 @@
     "he": ["HyperFrames", "וידאו", "HTML", "GSAP", "אנימציה", "כתוביות", "עברית", "RTL", "סרטונים", "TikTok", "קריינות"]
   },
   "author": "skills-il",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "category": "developer-tools",
   "supported_agents": [
     "claude-code",

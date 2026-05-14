@@ -6,7 +6,7 @@ license: Apache-2.0
 
 # HyperFrames Best Practices
 
-> Adapted from [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) (Apache-2.0). Hebrew and RTL adaptations by [skills-il](https://agentskills.co.il).
+> Adapted from the upstream HyperFrames v1.0.x skill at [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) (Apache-2.0). Hebrew and RTL adaptations by [skills-il](https://agentskills.co.il).
 
 HTML is the source of truth for video. A composition is an HTML file with `data-*` attributes for timing, a GSAP timeline for animation, and CSS for appearance. The framework handles clip visibility, media playback, and timeline sync.
 
@@ -356,7 +356,7 @@ Skip on small edits (fixing a color, adjusting one duration). Run on new composi
   - [transitions/catalog.md](references/transitions/catalog.md), Hard rules, scene template, and routing to per-type implementation code.
   - Shader transitions are in `@hyperframes/shader-transitions` (`packages/shader-transitions/`), read package source, not skill files.
 
-GSAP patterns and effects are in the `/gsap` skill.
+For GSAP timeline patterns and easing, follow [house-style.md](./house-style.md) and [references/motion-principles.md](references/motion-principles.md) in this skill, plus the official GSAP docs at https://gsap.com/docs/v3/.
 
 ## Gotchas
 
@@ -368,6 +368,31 @@ These are agent failure modes specific to Hebrew/RTL HyperFrames work. Generic H
 - **Don't forget `dir="rtl"` on Hebrew text containers, even inside a RTL-defaulted composition.** HyperFrames sub-compositions set their own direction context. GSAP `x:` tweens also don't auto-mirror. A title that uses `gsap.from({x: -80})` enters from the left in both LTR and RTL, for Hebrew, flip to `x: 80` so it enters from the right, matching reading direction.
 - **Don't paste English brand names into Hebrew paragraphs without `<bdi>` or `unicode-bidi: isolate`.** Without isolation, the Unicode bidi algorithm reorders mixed-direction runs and can place punctuation on the wrong side of the brand name or visually reverse it. Wrap brand names: `הצטרפו ל־<bdi>HyperFrames</bdi> עכשיו`.
 
+## Hebrew Bidi Details
+
+The `<bdi>` rule above covers brand names. Mixed-direction Hebrew compositions need three more bidi habits:
+
+- **Hebrew line-breaking for long headlines.** Hebrew does not hyphenate. A long Hebrew headline that overflows must wrap at word boundaries, never mid-word. Set `max-width` so it wraps naturally, and add `word-break: keep-all` (or `overflow-wrap: normal`) so the compiler does not break inside a Hebrew word. Do NOT use `<br>` to force breaks (see Rule 11). For deliberate one-word-per-line display titles, give each word its own element instead.
+- **Digits and percentages inside RTL runs.** Latin digits (years, percentages, prices) embedded in a Hebrew sentence are a common bidi bug: `2025` next to a Hebrew word can render as `5202` or jump to the wrong side. Wrap any digit run with `<bdi>` or `⁦...⁩` (LTR isolate): `בשנת <bdi>2025</bdi>`, `<bdi>15%</bdi> הנחה`, `<bdi>₪199</bdi>`. The currency symbol stays attached to the number this way.
+- **Punctuation mirroring.** Parentheses, brackets, and quotes are mirrored characters: `(` visually becomes `)` in an RTL run. In Hebrew captions and paragraphs let the browser mirror them by keeping the text in a proper `dir="rtl"` container. Do NOT hand-swap `(` and `)` to "fix" it, and when a parenthetical contains LTR content (a brand, a URL, a number) wrap that inner content in `<bdi>` so only the inner run is LTR while the parentheses stay correctly mirrored.
+
+## Troubleshooting
+
+### `hyperframes` command not found / render fails immediately
+HyperFrames requires Node 22+ and FFmpeg on PATH. Confirm `node --version` is 22 or higher and `ffmpeg -version` resolves. On macOS install FFmpeg with `brew install ffmpeg`; on Debian/Ubuntu use `apt install ffmpeg`. Without FFmpeg the compiler cannot encode the MP4 and aborts before rendering any frames.
+
+### Compiler warns "font not supported" or Hebrew renders in a fallback font
+The compiler only embeds fonts it can fetch from Google Fonts. Use a Hebrew family that exists on Google Fonts (Heebo, Rubik, Assistant, Alef, Frank Ruhl Libre, Noto Sans Hebrew) and write it plainly in CSS: `font-family: 'Heebo', sans-serif;`. Do NOT add a `<link rel="stylesheet">` or `@import` (see Gotchas), that breaks determinism without fixing the warning. If a custom non-Google font is required, the upstream docs cover local font embedding.
+
+### WCAG contrast audit fails (`hyperframes validate`)
+`validate` samples background pixels behind each text element at 5 timestamps and flags ratios under 4.5:1 (normal text) or 3:1 (large text). Fix by adjusting the failing color WITHIN the palette family: brighten it on dark backgrounds, darken it on light backgrounds. Do not invent a new color. Re-run `hyperframes validate` until clean. Use `--no-contrast` only while iterating, never as the final state.
+
+### Composition renders blank or content is invisible
+The most common cause is a `<template>` wrapper on a standalone composition. The main `index.html` must put the `data-composition-id` div directly in `<body>`, not inside `<template>`. Also check that every timeline is registered via `window.__timelines["<composition-id>"] = tl` and built synchronously (not inside `async`, `setTimeout`, or a Promise), the capture engine reads `window.__timelines` synchronously after page load.
+
+### Hebrew title enters from the wrong side
+GSAP `x:` tweens do not auto-mirror for RTL. A `gsap.from({x: -80})` enters from the left in both LTR and RTL. For Hebrew, flip to a positive value (`x: 80`) so the element enters from the right, matching reading direction. See `references/hebrew-rtl.md`.
+
 ## Reference Links
 
 | Source | URL | What to Check |
@@ -375,7 +400,7 @@ These are agent failure modes specific to Hebrew/RTL HyperFrames work. Generic H
 | HyperFrames GitHub | https://github.com/heygen-com/hyperframes | Upstream repo, issues, releases |
 | HyperFrames docs | https://hyperframes.heygen.com/quickstart | CLI, Node 22+, FFmpeg requirement |
 | Compiler font logic | https://github.com/heygen-com/hyperframes/blob/main/packages/producer/src/services/deterministicFonts.ts | Canonical font list, Google Fonts fallback, cache path |
-| Kokoro TTS voices | https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/references/tts.md | 54 voices across 8 languages (no Hebrew) |
+| Kokoro TTS voices | https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/references/narration.md | Kokoro voices across 8 languages (no Hebrew) |
 | Whisper model guide | https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/references/transcript-guide.md | `.en` vs multilingual models, `--language` flag |
 | Google Fonts Hebrew | https://fonts.google.com/?subset=hebrew | Heebo, Rubik, Assistant, Alef, Frank Ruhl Libre, Noto Sans Hebrew |
 | Unicode bidi spec | https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-bidi | `isolate`, `<bdi>`, mixed-direction text |

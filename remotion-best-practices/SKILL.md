@@ -77,6 +77,10 @@ When needing to visualize audio (spectrum bars, waveforms, bass-reactive effects
 
 When needing to use sound effects, load the [./rules/sfx.md](./rules/sfx.md) file for more information.
 
+### Rendering and cloud render
+
+Studio is for previewing only. To produce a final video file, render it. Load the [./rules/rendering.md](./rules/rendering.md) file for the `npx remotion render` CLI, key flags (`--concurrency`, `--scale`, `--codec`), and cloud rendering with `@remotion/lambda` and `@remotion/cloudrun`.
+
 ### Rule files
 
 Read individual rule files for detailed explanations and code examples:
@@ -115,7 +119,41 @@ Read individual rule files for detailed explanations and code examples:
 - [rules/transparent-videos.md](rules/transparent-videos.md) - Rendering video with transparency
 - [rules/trimming.md](rules/trimming.md) - Trimming patterns for animations
 - [rules/videos.md](rules/videos.md) - Embedding videos with trimming, volume, speed
+- [rules/rendering.md](rules/rendering.md) - Rendering videos locally and in the cloud (Lambda, Cloud Run)
 - [rules/voiceover.md](rules/voiceover.md) - AI-generated voiceover with ElevenLabs TTS
+
+## Examples
+
+### Example 1: Hebrew TikTok caption video
+
+User wants a vertical (1080x1920) social clip with a Hebrew voiceover and word-highlighted captions.
+
+1. Scaffold a project: `npx create-video@latest --yes --blank --no-tailwind my-video`.
+2. Generate the Hebrew voiceover (load `rules/voiceover.md`, ElevenLabs multilingual v2).
+3. Transcribe the voiceover to captions (load `rules/transcribe-captions.md`, use the `medium` multilingual Whisper model, never `medium.en`).
+4. Render TikTok-style word-highlighted captions (load `rules/display-captions.md` and `rules/hebrew-rtl.md`): set `direction: "rtl"`, `textAlign: "right"`, and wrap any embedded Latin digits with `⁦...⁩` bidi isolates.
+5. Size the composition 1080x1920, drop the Hebrew display font two steps below the English size you would use (Gotcha #7).
+6. Preview in `npx remotion studio`, then render with `npx remotion render` (load `rules/rendering.md`).
+
+### Example 2: Data-driven chart video
+
+User wants a 16:9 explainer where a bar chart animates from a JSON dataset.
+
+1. Make the composition parametrizable with a Zod schema (load `rules/parameters.md`) so the dataset is a typed prop.
+2. Compute duration and dimensions from the dataset in `calculateMetadata` (load `rules/calculate-metadata.md`); keep it lazy so it does not slow every render.
+3. Build the animated bar chart driven by `useCurrentFrame()` and interpolation/spring curves (load `rules/charts.md` and `rules/timing.md`). Never use CSS animations (Gotcha #1).
+4. For Hebrew axis labels and titles, apply RTL direction and bidi isolates around numbers (load `rules/hebrew-rtl.md`).
+5. Render to MP4 with `npx remotion render`, or batch-render many datasets in the cloud with `@remotion/lambda` (load `rules/rendering.md`).
+
+## Bundled Resources
+
+### Rule files (`rules/`)
+
+The `rules/` folder contains focused topic files loaded on demand. Highlights: `hebrew-rtl.md` (Hebrew fonts, RTL, bidi, Israeli maps), `animations.md`, `timing.md`, `sequencing.md`, `transitions.md`, `compositions.md`, `calculate-metadata.md`, `parameters.md`, `charts.md`, `text-animations.md`, `3d.md`, audio rules (`audio.md`, `audio-visualization.md`, `sfx.md`, `voiceover.md`, `get-audio-duration.md`, `silence-detection.md`), video rules (`videos.md`, `assets.md`, `images.md`, `gifs.md`, `lottie.md`, `transparent-videos.md`, `light-leaks.md`, `maps.md`, `tailwind.md`, `fonts.md`), caption rules (`subtitles.md`, `display-captions.md`, `transcribe-captions.md`, `import-srt-captions.md`), measurement/decode helpers (`measuring-dom-nodes.md`, `measuring-text.md`, `can-decode.md`, `extract-frames.md`, `get-video-dimensions.md`, `get-video-duration.md`, `trimming.md`), `ffmpeg.md`, and `rendering.md`. See the full list under "Rule files" above.
+
+### Assets (`rules/assets/`)
+
+Ready-to-use TSX component examples referenced by the rule files: `charts-bar-chart.tsx` (animated bar chart), `text-animations-typewriter.tsx` (typewriter effect), and `text-animations-word-highlight.tsx` (word-by-word caption highlighting).
 
 ## Gotchas
 
@@ -137,12 +175,19 @@ Read individual rule files for detailed explanations and code examples:
 
 9. **Never use em dashes or en dashes.** Replace em/en dash characters with commas, colons, parentheses, or double hyphens (`--`). They are not on standard keyboards, don't render reliably across platforms, and make text feel machine-generated. This applies to both English and Hebrew content in SKILL.md, video captions, and UI copy.
 
+10. **Remotion is not unconditionally free.** It is free for individuals, non-profits, and for-profit organizations with 3 or fewer employees. Organizations of 4 or more employees must buy a paid Company License from remotion.pro. This applies to using Remotion at all (Studio, rendering, CI), not just to a specific feature. Check https://www.remotion.dev/docs/license and the bundled `LICENSE` file before shipping a commercial project.
+
+11. **Tune render performance, do not just accept defaults.** Lower `--concurrency` if a render runs out of memory; raise it on many-core machines for faster renders. Use `--scale` below 1 for fast draft renders and above 1 for high-resolution masters. Prefer `<OffthreadVideo>` over `<Video>` for embedded video during rendering (it extracts frames deterministically off the main thread). Keep `calculateMetadata` cheap and lazy since it runs before every render. See `rules/rendering.md`.
+
 ## Reference Links
 
 | Source | URL | What to Check |
 |--------|-----|---------------|
 | Remotion Docs | https://www.remotion.dev/docs | API reference, latest version changes |
 | Remotion GitHub | https://github.com/remotion-dev/remotion | Source code, issues, releases |
+| Remotion License | https://www.remotion.dev/docs/license | Free vs paid Company License, 4+ employee threshold |
+| Remotion Render / CLI | https://www.remotion.dev/docs/cli/render | `npx remotion render` flags: concurrency, scale, codec |
+| @remotion/lambda | https://www.remotion.dev/docs/lambda | Cloud rendering on AWS Lambda at scale |
 | @remotion/google-fonts | https://www.remotion.dev/docs/google-fonts | Available Google Fonts with Hebrew subset support |
 | @remotion/captions | https://www.remotion.dev/docs/captions | Caption types, TikTok-style captions API |
 | ElevenLabs TTS | https://elevenlabs.io/docs | Multilingual v2 model, Hebrew voice support |

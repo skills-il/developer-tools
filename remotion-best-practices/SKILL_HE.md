@@ -68,6 +68,10 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 
 כשצריך להוסיף אפקטים קוליים, טענו את [./rules/sfx.md](./rules/sfx.md).
 
+### רינדור ורינדור בענן
+
+סטודיו הוא לתצוגה מקדימה בלבד. כדי להפיק קובץ וידאו סופי צריך לרנדר אותו. טענו את [./rules/rendering.md](./rules/rendering.md) בשביל פקודת `npx remotion render`, הדגלים המרכזיים (`--concurrency`, `--scale`, `--codec`) ורינדור בענן עם `@remotion/lambda` ו-`@remotion/cloudrun`.
+
 ### קבצי כללים
 
 כל קובץ כללים מכיל הסברים מפורטים עם דוגמאות קוד:
@@ -106,7 +110,41 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 - [rules/transparent-videos.md](rules/transparent-videos.md) - רינדור וידאו שקוף
 - [rules/trimming.md](rules/trimming.md) - פטרנים של חיתוך אנימציות
 - [rules/videos.md](rules/videos.md) - הטמעת סרטונים עם חיתוך, ווליום ומהירות
+- [rules/rendering.md](rules/rendering.md) - רינדור סרטונים מקומית ובענן (Lambda, Cloud Run)
 - [rules/voiceover.md](rules/voiceover.md) - קריינות AI עם ElevenLabs TTS
+
+## דוגמאות
+
+### דוגמה 1: סרטון כתוביות בסגנון TikTok בעברית
+
+המשתמש רוצה קליפ סושיאל אנכי (1080x1920) עם קריינות בעברית וכתוביות עם הדגשת מילים.
+
+אחד, מקימים פרויקט: `npx create-video@latest --yes --blank --no-tailwind my-video`.
+שתיים, מייצרים את הקריינות בעברית (טוענים את `rules/voiceover.md`, ElevenLabs multilingual v2).
+שלוש, מתמללים את הקריינות לכתוביות (טוענים את `rules/transcribe-captions.md`, משתמשים במודל הרב-לשוני `medium`, אף פעם לא `medium.en`).
+ארבע, מרנדרים כתוביות בסגנון TikTok עם הדגשת מילים (טוענים את `rules/display-captions.md` ואת `rules/hebrew-rtl.md`): מגדירים `direction: "rtl"`, `textAlign: "right"` ועוטפים ספרות לטיניות מוטמעות ב-bidi isolates.
+חמש, מגדירים קומפוזיציה בגודל 1080x1920 ומקטינים את הפונט העברי בשתי דרגות מתחת לגודל שהייתם נותנים באנגלית (מלכודת 7).
+שש, מציגים תצוגה מקדימה ב-`npx remotion studio` ואז מרנדרים עם `npx remotion render` (טוענים את `rules/rendering.md`).
+
+### דוגמה 2: סרטון גרף מבוסס נתונים
+
+המשתמש רוצה סרטון הסבר ביחס 16:9 שבו גרף עמודות מונפש מתוך מערך נתונים JSON.
+
+אחד, הופכים את הקומפוזיציה לפרמטרית עם סכמת Zod (טוענים את `rules/parameters.md`) כך שמערך הנתונים הוא prop עם טיפוס.
+שתיים, מחשבים משך ומימדים מתוך הנתונים ב-`calculateMetadata` (טוענים את `rules/calculate-metadata.md`); שומרים על זה עצל כדי לא להאט כל רינדור.
+שלוש, בונים גרף עמודות מונפש שמונע על ידי `useCurrentFrame()` ועקומות אינטרפולציה/spring (טוענים את `rules/charts.md` ואת `rules/timing.md`). אף פעם לא משתמשים באנימציות CSS (מלכודת 1).
+ארבע, בשביל תוויות צירים וכותרות בעברית, מחילים כיוון RTL ו-bidi isolates סביב מספרים (טוענים את `rules/hebrew-rtl.md`).
+חמש, מרנדרים ל-MP4 עם `npx remotion render`, או מרנדרים בכמות גדולה בענן עם `@remotion/lambda` (טוענים את `rules/rendering.md`).
+
+## משאבים מצורפים
+
+### קבצי כללים (`rules/`)
+
+תיקיית `rules/` מכילה קבצי נושא ממוקדים שנטענים לפי הצורך. בין השאר: `hebrew-rtl.md` (פונטים עבריים, RTL, bidi, מפות ישראליות), `animations.md`, `timing.md`, `sequencing.md`, `transitions.md`, `compositions.md`, `calculate-metadata.md`, `parameters.md`, `charts.md`, `text-animations.md`, `3d.md`, קבצי אודיו (`audio.md`, `audio-visualization.md`, `sfx.md`, `voiceover.md`, `get-audio-duration.md`, `silence-detection.md`), קבצי וידאו (`videos.md`, `assets.md`, `images.md`, `gifs.md`, `lottie.md`, `transparent-videos.md`, `light-leaks.md`, `maps.md`, `tailwind.md`, `fonts.md`), קבצי כתוביות (`subtitles.md`, `display-captions.md`, `transcribe-captions.md`, `import-srt-captions.md`), עוזרי מדידה ופענוח (`measuring-dom-nodes.md`, `measuring-text.md`, `can-decode.md`, `extract-frames.md`, `get-video-dimensions.md`, `get-video-duration.md`, `trimming.md`), `ffmpeg.md` ו-`rendering.md`. הרשימה המלאה נמצאת תחת "קבצי כללים" למעלה.
+
+### נכסים (`rules/assets/`)
+
+דוגמאות קומפוננטות TSX מוכנות לשימוש שקבצי הכללים מפנים אליהן: `charts-bar-chart.tsx` (גרף עמודות מונפש), `text-animations-typewriter.tsx` (אפקט מכונת כתיבה) ו-`text-animations-word-highlight.tsx` (הדגשת כתוביות מילה אחר מילה).
 
 ## מלכודות נפוצות
 
@@ -128,12 +166,19 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 
 9. **לעולם אל תשתמשו ב-em dash או en dash.** תחליפו אותם בפסיק, נקודתיים, סוגריים או שני מקפים (`--`). הם לא על מקלדת סטנדרטית, לא תמיד מרונדרים נכון, וגורמים לטקסט להרגיש כאילו מכונה כתבה אותו. הכלל תקף גם באנגלית וגם בעברית בקובצי SKILL.md, כתוביות וטקסט ממשק.
 
+10. **רמושן לא חינמי בלי תנאים.** הוא חינמי ליחידים, למלכ"רים ולארגונים עסקיים עם 3 עובדים או פחות. ארגונים של 4 עובדים ומעלה חייבים לקנות רישיון Company License בתשלום מ-remotion.pro. זה תקף לשימוש ב-Remotion בכלל (סטודיו, רינדור, CI), לא רק לפיצ'ר מסוים. בדקו את https://www.remotion.dev/docs/license ואת קובץ ה-`LICENSE` המצורף לפני שמשחררים פרויקט מסחרי.
+
+11. **כווננו את ביצועי הרינדור, אל תקבלו סתם את ברירות המחדל.** הורידו את `--concurrency` אם רינדור נגמר לו הזיכרון; העלו אותו במכונות עם הרבה ליבות בשביל רינדור מהיר יותר. השתמשו ב-`--scale` קטן מ-1 לרינדור טיוטה מהיר וגדול מ-1 למאסטר ברזולוציה גבוהה. העדיפו את `<OffthreadVideo>` על פני `<Video>` לוידאו מוטמע בזמן רינדור (הוא שולף פריימים בצורה דטרמיניסטית מחוץ ל-thread הראשי). שמרו על `calculateMetadata` זול ועצל כי הוא רץ לפני כל רינדור. ראו את `rules/rendering.md`.
+
 ## קישורי עזר
 
 | מקור | URL | מה לבדוק |
 |------|-----|----------|
 | תיעוד Remotion | https://www.remotion.dev/docs | API reference, שינויי גרסה |
 | GitHub של Remotion | https://github.com/remotion-dev/remotion | קוד מקור, issues, releases |
+| רישיון Remotion | https://www.remotion.dev/docs/license | חינמי מול רישיון בתשלום, סף 4 עובדים ומעלה |
+| רינדור / CLI של Remotion | https://www.remotion.dev/docs/cli/render | דגלי `npx remotion render`: concurrency, scale, codec |
+| @remotion/lambda | https://www.remotion.dev/docs/lambda | רינדור בענן על AWS Lambda בכמות גדולה |
 | @remotion/google-fonts | https://www.remotion.dev/docs/google-fonts | פונטים עם תמיכה בעברית |
 | @remotion/captions | https://www.remotion.dev/docs/captions | סוגי כתוביות, API לכתוביות TikTok |
 | ElevenLabs TTS | https://elevenlabs.io/docs | מודל multilingual v2, תמיכה בקולות עבריים |

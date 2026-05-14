@@ -23,7 +23,7 @@ A complete Israeli shipping address contains the following fields, in order:
 ## Mikud (ZIP Code) Validation
 
 - Must be exactly **7 digits** (no letters, no hyphens)
-- Old 5-digit codes are no longer valid — all were converted to 7 digits
+- Old 5-digit codes are no longer valid. All were converted to 7 digits
 - First 2 digits indicate general region:
   - 10-19: Jerusalem area
   - 20-29: Northern area (Haifa, Galilee)
@@ -33,7 +33,7 @@ A complete Israeli shipping address contains the following fields, in order:
   - 60-69: Tel Aviv area
   - 70-79: Southern area
   - 80-89: Negev / Eilat
-- Verify at: https://www.israelpost.co.il/mikud
+- Verify at: https://mypost.israelpost.co.il/zipcodesearch
 
 ## Special Address Formats
 
@@ -67,7 +67,7 @@ Use zone name and building/company name:
 
 ### Arab Localities
 - Use the official Hebrew spelling as registered with Israel Post
-- Some localities have both Arabic and Hebrew names — use Hebrew for carrier APIs
+- Some localities have both Arabic and Hebrew names. Use Hebrew for carrier APIs
 - Verify exact spelling in the carrier's city list to avoid rejection
 
 ## Hebrew Text Normalization for Carrier APIs

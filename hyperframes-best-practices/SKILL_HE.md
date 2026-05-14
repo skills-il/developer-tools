@@ -6,7 +6,7 @@ license: Apache-2.0
 
 # HyperFrames, שיטות עבודה מומלצות
 
-> עיבוד של [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) (Apache-2.0). שכבת העברית וה-RTL נוספה על ידי [skills-il](https://agentskills.co.il).
+> עיבוד של סקיל HyperFrames גרסה 1.0.x מ-[heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) (Apache-2.0). שכבת העברית וה-RTL נוספה על ידי [skills-il](https://agentskills.co.il).
 
 ב-HyperFrames, ה-HTML הוא מה שקובע איך הוידאו נראה. קומפוזיציה זה פשוט קובץ HTML עם מאפייני `data-*` לתזמון, Timeline של GSAP לאנימציה, ו-CSS לעיצוב. המנוע לוקח מפה, דואג להצגת הקליפים, ניגון המדיה והסנכרון של ה-Timeline.
 
@@ -28,7 +28,7 @@ license: Apache-2.0
 4. **Layout.** בונים קודם את המצב הסופי. הפירוט ב"Layout Before Animation" למטה.
 5. **אנימציה.** רק עכשיו מוסיפים תנועה, לפי הכללים.
 
-לתיקונים קטנים (צבע, דירג'ו של תזמון, תוספת של אלמנט בודד), אפשר לקפוץ ישר לכלל הרלוונטי.
+לתיקונים קטנים (צבע, כוונון של תזמון, תוספת של אלמנט בודד), אפשר לקפוץ ישר לכלל הרלוונטי.
 
 ### Visual Identity Gate
 
@@ -81,6 +81,31 @@ license: Apache-2.0
 - **`dir="rtl"` לא נרשם לבד.** גם אם הקומפוזיציה ברירת המחדל שלה RTL, תת-קומפוזיציות קובעות הקשר כיווני בעצמן. גם tweens של GSAP לא הופכים את הכיוון אוטומטית. כותרת עם `gsap.from({x: -80})` נכנסת משמאל ב-LTR וב-RTL כאחד. לעברית, הפכו לערך חיובי `x: 80` כדי שהכותרת תיכנס מצד ימין, בהתאם לכיוון הקריאה.
 - **שמות מותג באנגלית צריכים `<bdi>` או `unicode-bidi: isolate`.** בלי בידוד, האלגוריתם הדו-כיווני של Unicode מסדר מחדש את ה-runs ולעתים ממקם פיסוק בצד הלא נכון, או הופך את המותג ויזואלית. פשוט עוטפים: `הצטרפו ל־<bdi>HyperFrames</bdi> עכשיו`.
 
+## פרטי Bidi בעברית
+
+הכלל של `<bdi>` למעלה מכסה שמות מותג. קומפוזיציות עברית עם כיוון מעורב צריכות עוד שלושה הרגלי bidi:
+
+- **שבירת שורות לכותרות עברית ארוכות.** עברית לא עוברת מיקוף. כותרת עברית ארוכה שגולשת חייבת להישבר בגבולות מילים, לעולם לא באמצע מילה. הגדירו `max-width` כדי שהיא תישבר באופן טבעי, והוסיפו `word-break: keep-all` (או `overflow-wrap: normal`) כדי שהמהדר לא ישבור בתוך מילה עברית. אל תשתמשו ב-`<br>` כדי לכפות שבירה. לכותרות תצוגה שבהן כל מילה בכוונה בשורה משלה, תנו לכל מילה אלמנט נפרד.
+- **ספרות ואחוזים בתוך runs של RTL.** ספרות לטיניות (שנים, אחוזים, מחירים) שמוטמעות במשפט עברי הן באג bidi נפוץ: `2025` ליד מילה עברית יכול להתרנדר כ-`5202` או לקפוץ לצד הלא נכון. עטפו כל רצף ספרות ב-`<bdi>` או ב-`⁦...⁩` (LTR isolate): `בשנת <bdi>2025</bdi>`, `<bdi>15%</bdi> הנחה`, `<bdi>₪199</bdi>`. ככה סימן המטבע נשאר צמוד למספר.
+- **שיקוף סימני פיסוק.** סוגריים, סוגריים מרובעים ומרכאות הם תווים משוקפים: `(` הופך ויזואלית ל-`)` בתוך run של RTL. בכתוביות ובפסקאות עברית תנו לדפדפן לשקף אותם בזה שתשמרו את הטקסט בתוך קונטיינר `dir="rtl"` תקין. אל תחליפו ידנית `(` ו-`)` כדי "לתקן" את זה, וכשבתוך הסוגריים יש תוכן LTR (מותג, URL, מספר) עטפו את התוכן הפנימי ב-`<bdi>` כך שרק ה-run הפנימי יהיה LTR והסוגריים יישארו משוקפים נכון.
+
+## פתרון בעיות
+
+### הפקודה `hyperframes` לא נמצאת או שהרנדר נכשל מיד
+HyperFrames דורש Node 22 ומעלה ו-FFmpeg ב-PATH. ודאו ש-`node --version` הוא 22 ומעלה ושה-`ffmpeg -version` עובד. ב-macOS מתקינים FFmpeg עם `brew install ffmpeg`, ב-Debian/Ubuntu עם `apt install ffmpeg`. בלי FFmpeg המהדר לא יכול לקודד את ה-MP4 והוא עוצר עוד לפני שהוא מרנדר פריים אחד.
+
+### המהדר מזהיר "font not supported" או שהעברית מרונדרת בפונט fallback
+המהדר מטמיע רק פונטים שהוא מצליח להוריד מ-Google Fonts. השתמשו במשפחה עברית שקיימת ב-Google Fonts (Heebo, Rubik, Assistant, Alef, Frank Ruhl Libre, Noto Sans Hebrew) וכתבו אותה רגיל ב-CSS: `font-family: 'Heebo', sans-serif;`. אל תוסיפו `<link rel="stylesheet">` או `@import` (ראו מלכודות), זה שובר דטרמיניסטיות בלי לפתור את האזהרה. אם צריך פונט מותאם שלא מ-Google, התיעוד של ה-upstream מכסה הטמעת פונט מקומי.
+
+### ביקורת ניגודיות WCAG נכשלת (`hyperframes validate`)
+הפקודה `validate` דוגמת פיקסלים של רקע מאחורי כל אלמנט טקסט בחמישה חותמות זמן ומסמנת יחסים מתחת ל-4.5:1 (טקסט רגיל) או 3:1 (טקסט גדול). מתקנים בזה שמכווננים את הצבע שנכשל בתוך משפחת הפלטה: מבהירים אותו על רקע כהה, מכהים אותו על רקע בהיר. אל תמציאו צבע חדש. תריצו `hyperframes validate` שוב עד שזה נקי. השתמשו ב-`--no-contrast` רק בזמן עבודה, אף פעם לא כמצב סופי.
+
+### הקומפוזיציה מרונדרת ריקה או שהתוכן לא נראה
+הסיבה הכי נפוצה היא עטיפת `<template>` על קומפוזיציה standalone. ה-`index.html` הראשי חייב לשים את ה-div עם `data-composition-id` ישירות ב-`<body>`, לא בתוך `<template>`. בדקו גם שכל timeline נרשם דרך `window.__timelines["<composition-id>"] = tl` ושנבנה באופן סינכרוני (לא בתוך `async`, `setTimeout` או Promise), מנוע הלכידה קורא את `window.__timelines` באופן סינכרוני אחרי טעינת הדף.
+
+### כותרת עברית נכנסת מהצד הלא נכון
+tweens של `x:` ב-GSAP לא מתהפכים אוטומטית ל-RTL. `gsap.from({x: -80})` נכנס משמאל גם ב-LTR וגם ב-RTL. לעברית, הפכו לערך חיובי (`x: 80`) כדי שהאלמנט ייכנס מצד ימין, בהתאם לכיוון הקריאה. ראו את `references/hebrew-rtl.md`.
+
 ## קישורי עזר
 
 | מקור | URL | מה בודקים |
@@ -88,7 +113,7 @@ license: Apache-2.0
 | HyperFrames GitHub | https://github.com/heygen-com/hyperframes | ה-repo המקורי, issues, releases |
 | HyperFrames docs | https://hyperframes.heygen.com/quickstart | ה-CLI, דרישות Node 22+ ו-FFmpeg |
 | לוגיקת הפונטים של המהדר | https://github.com/heygen-com/hyperframes/blob/main/packages/producer/src/services/deterministicFonts.ts | רשימת הפונטים הקנוניים, ה-fallback ל-Google Fonts, נתיב ה-cache |
-| קולות Kokoro TTS | https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/references/tts.md | 54 קולות, 8 שפות, בלי עברית |
+| קולות Kokoro TTS | https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/references/narration.md | קולות Kokoro, 8 שפות, בלי עברית |
 | מדריך מודלים של Whisper | https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/references/transcript-guide.md | `.en` מול רב-לשוני, הדגל `--language` |
 | Google Fonts עם תמיכה בעברית | https://fonts.google.com/?subset=hebrew | Heebo, Rubik, Assistant, Alef, Frank Ruhl Libre, Noto Sans Hebrew |
 | מפרט unicode-bidi | https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-bidi | `isolate`, `<bdi>`, טקסט דו-כיווני |

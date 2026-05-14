@@ -12,7 +12,7 @@
     "en": ["remotion", "video", "react", "animation", "captions", "hebrew", "rtl", "programmatic-video", "tiktok", "voiceover"]
   },
   "author": "skills-il",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "category": "developer-tools",
   "supported_agents": ["claude-code", "cursor", "windsurf", "github-copilot", "opencode", "codex", "chatgpt", "claude-ai", "claude-desktop", "manus"],
   "openclaw": true
