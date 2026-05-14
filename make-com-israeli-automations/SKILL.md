@@ -1,6 +1,6 @@
 ---
 name: make-com-israeli-automations
-description: Build and configure Make.com scenarios for Israeli business processes, including Morning (formerly Green Invoice) sync, iCount accounting, Monday.com board automation, Priority ERP data exports, WhatsApp Business Hebrew messaging, and payment gateways (Cardcom, Tranzila, Grow, Bit). Covers Make.com AI Agents, Israel 2026 Invoice Reform (allocation numbers with a step-down threshold), community modules for Israeli apps, Hebrew data transformations, Data Store for VAT period tracking, and Shabbat-aware scheduling via the Hebcal community module. Use when user asks to "create a Make.com scenario", "build an automation for Israeli billing", "automate Morning / Green Invoice", "connect Israeli apps in Make.com", or "set up AI agent in Make.com". Do NOT use for n8n workflows (use n8n-hebrew-workflows), Zapier Zaps (use zapier-israeli-integrations), or custom code automation without Make.com.
+description: Build and configure Make.com scenarios for Israeli business processes, including Morning (formerly Green Invoice) sync, iCount accounting, Monday.com board automation, Priority ERP data exports, WhatsApp Business Hebrew messaging, and payment gateways (Cardcom, Tranzila, Grow, Bit). Covers Make.com AI Agents, the Make.com MCP server for exposing scenarios as agent tools, Israel 2026 Invoice Reform (allocation numbers with a step-down threshold), community modules for Israeli apps, Hebrew data transformations, Data Store for VAT period tracking, and Shabbat-aware scheduling via the Hebcal community module. Use when user asks to "create a Make.com scenario", "build an automation for Israeli billing", "automate Morning / Green Invoice", "connect Israeli apps in Make.com", "set up AI agent in Make.com", or "expose a Make.com scenario as an MCP tool". Do NOT use for n8n workflows (use n8n-hebrew-workflows), Zapier Zaps (use zapier-israeli-integrations), or custom code automation without Make.com.
 license: MIT
 allowed-tools: Bash(curl:*) Bash(node:*) Bash(python:*)
 compatibility: Requires Make.com account (Free plan has 1,000 credits/month). Morning community module requires Best plan or higher. iCount has a native module. Priority ERP community module or HTTP module. WhatsApp Cloud API requires Meta Business verification.
@@ -412,7 +412,15 @@ To set up an AI Agent scenario:
 3. Add Module Tools by selecting existing modules in your scenario
 4. The agent decides which tools to call based on the input context
 
-### Step 9: When to Use Make.com vs Alternatives
+### Step 9: Expose Scenarios as MCP Tools (Make.com MCP Server)
+
+Make.com runs a hosted MCP server that lets AI agents (Claude Code, Cursor, and other MCP clients) call your Make scenarios as tools, turning an Israeli automation you have already built (a Morning invoice creator, a bimonthly VAT summary) into a tool an agent can invoke directly.
+
+Connect via OAuth (`https://mcp.make.com`, nothing to store) or an MCP token (`https://<MAKE_ZONE>/mcp/u/<MCP_TOKEN>`). The scenario-run scope is on all plans; the management scope needs a paid plan. For a scenario to appear as a tool it must be **active**, set to **on-demand** scheduling, and have defined inputs, outputs, and a detailed description (Hebrew descriptions work). Scenario-run tools time out at 25s (OAuth) or 40s (token); longer runs return an `executionId` to poll with `executions_get`.
+
+Consult `references/make-mcp-server.md` for the connection-method details, the Claude Code config blocks, the scope table, and Israeli use cases.
+
+### Step 10: When to Use Make.com vs Alternatives
 
 | Criteria | Make.com | n8n | Zapier |
 |---|---|---|---|
@@ -482,11 +490,14 @@ Actions:
 
 Result: AI-powered document processing that automatically classifies Hebrew invoices and creates the correct document type in Morning.
 
+For a worked example of exposing a Morning invoice scenario as an MCP tool callable from Claude Code, see `references/make-mcp-server.md`.
+
 ## Bundled Resources
 
 ### References
 - `references/make-israeli-modules.md` - Complete reference of Israeli service modules and HTTP configurations for Make.com, including Morning (formerly Green Invoice), iCount, Monday.com, Priority ERP, WhatsApp Cloud API, Israeli SMS providers, and payment gateways. Consult when setting up a new Israeli app connection or troubleshooting API authentication.
 - `references/billing-cycle-patterns.md` - Detailed Israeli billing cycle automation patterns including bimonthly VAT, bimonthly advance payments, annual reporting, and payroll schedules. Includes Make.com Data Store configurations and router patterns. Consult when building time-based automations tied to Israeli tax or billing deadlines.
+- `references/make-mcp-server.md` - Make.com MCP server reference: OAuth and MCP-token connection methods, Claude Code config blocks, scopes, the active + on-demand requirement for exposing a scenario as a tool, timeout behavior, and Israeli use cases. Consult when wiring a Make scenario into an AI agent as an MCP tool.
 
 ## Gotchas
 
@@ -502,6 +513,8 @@ Result: AI-powered document processing that automatically classifies Hebrew invo
 - The Israeli tax year is January-December (same as calendar year), but agents sometimes assume April-March (UK pattern) or October-September (US fiscal year).
 - **Invoice Reform 2026 affects automation, threshold drops June 1, 2026.** Tax invoices over the threshold (10,000 NIS through May 31, 2026, then 5,000 NIS from June 1, 2026) require Tax Authority allocation numbers. Scenarios that create invoices must check the amount and include the allocation number for qualifying documents. Make the threshold a scenario variable, not a hardcoded literal.
 - Monday.com API v1 is maintained only until May 1, 2026. New scenarios must use v2. The Make.com native module defaults to v2.
+- A Make scenario only appears as an MCP tool when it is both **active** AND set to **on-demand** scheduling. Agents often satisfy only one condition. A scheduled or instant-trigger scenario will never show up in the MCP tool list, no matter how the inputs and outputs are configured.
+- MCP scenario-run tools time out at 25s (OAuth) or 40s (token). A bimonthly VAT aggregation scenario can run longer, in which case the call returns an `executionId` instead of the result. Poll with `executions_get` using that ID. Do not treat the timeout as a failure.
 
 ## Troubleshooting
 
@@ -528,3 +541,7 @@ Solution: Upgrade your Make.com plan to Best or higher. Alternatively, use the "
 ### Error: "Invoice rejected: missing allocation number"
 Cause: Invoices over the Invoice Reform threshold require a Tax Authority allocation number. The threshold is 10,000 NIS through May 31, 2026, then drops to 5,000 NIS on June 1, 2026.
 Solution: Add a Filter module before document creation that compares the amount against a workflow variable holding the current threshold (do not hardcode the number, it is scheduled to drop again). If the amount exceeds the threshold, request an allocation number first, then pass it in the `allocationNumber` field when creating the document.
+
+### Error: "Make scenario does not appear as an MCP tool"
+Cause: The scenario is not active, is not set to on-demand scheduling, or the MCP connection is missing the scenario-run scope.
+Solution: Set the scenario to active status AND on-demand scheduling, both are required. Confirm the MCP connection has the "Run your scenarios" scope (OAuth) or the `mcp:use` scope (token). If the tool list is stale, reconnect the MCP client to refresh it.

@@ -1,6 +1,6 @@
 ---
 name: make-com-israeli-automations
-description: Build and configure Make.com scenarios for Israeli business processes, including Morning (formerly Green Invoice) sync, iCount accounting, Monday.com board automation, Priority ERP data exports, WhatsApp Business Hebrew messaging, and payment gateways (Cardcom, Tranzila, Grow, Bit). Covers Make.com AI Agents, Israel 2026 Invoice Reform (allocation numbers with a step-down threshold), community modules for Israeli apps, Hebrew data transformations, Data Store for VAT period tracking, and Shabbat-aware scheduling via the Hebcal community module. Use when user asks to "create a Make.com scenario", "build an automation for Israeli billing", "automate Morning / Green Invoice", "connect Israeli apps in Make.com", or "set up AI agent in Make.com". Do NOT use for n8n workflows (use n8n-hebrew-workflows), Zapier Zaps (use zapier-israeli-integrations), or custom code automation without Make.com.
+description: Build and configure Make.com scenarios for Israeli business processes, including Morning (formerly Green Invoice) sync, iCount accounting, Monday.com board automation, Priority ERP data exports, WhatsApp Business Hebrew messaging, and payment gateways (Cardcom, Tranzila, Grow, Bit). Covers Make.com AI Agents, the Make.com MCP server for exposing scenarios as agent tools, Israel 2026 Invoice Reform (allocation numbers with a step-down threshold), community modules for Israeli apps, Hebrew data transformations, Data Store for VAT period tracking, and Shabbat-aware scheduling via the Hebcal community module. Use when user asks to "create a Make.com scenario", "build an automation for Israeli billing", "automate Morning / Green Invoice", "connect Israeli apps in Make.com", "set up AI agent in Make.com", or "expose a Make.com scenario as an MCP tool". Do NOT use for n8n workflows (use n8n-hebrew-workflows), Zapier Zaps (use zapier-israeli-integrations), or custom code automation without Make.com.
 license: MIT
 allowed-tools: Bash(curl:*) Bash(node:*) Bash(python:*)
 compatibility: Requires Make.com account (Free plan has 1,000 credits/month). Morning community module requires Best plan or higher. iCount has a native module. Priority ERP community module or HTTP module. WhatsApp Cloud API requires Meta Business verification.
@@ -410,7 +410,15 @@ Make.com השיקה AI Agents באפריל 2025, ו-Visual AI Agents ב-Scenario
 3. הוסיפו Module Tools על ידי בחירת מודולים קיימים בתרחיש
 4. הסוכן מחליט אילו כלים להפעיל לפי הקונטקסט
 
-### שלב 9: מתי להשתמש ב-Make.com לעומת חלופות
+### שלב 9: חשיפת תרחישים ככלי MCP (שרת ה-MCP של Make.com)
+
+Make.com מפעילה שרת MCP מתארח שמאפשר לסוכני AI (Claude Code, Cursor ולקוחות MCP נוספים) להפעיל את תרחישי Make שלכם ככלים, וכך אוטומציה עסקית ישראלית שכבר בניתם (יצירת חשבונית ב-Morning, סיכום מע"מ דו-חודשי) הופכת לכלי שהסוכן יכול לקרוא לו ישירות.
+
+החיבור הוא דרך OAuth (`https://mcp.make.com`, אין מה לאחסן) או טוקן MCP (`https://<MAKE_ZONE>/mcp/u/<MCP_TOKEN>`). הרשאת הפעלת-התרחיש זמינה בכל התוכניות; הרשאת הניהול דורשת תוכנית בתשלום. כדי שתרחיש יופיע ככלי הוא חייב להיות **active**, מוגדר לתזמון **on-demand**, ועם קלטים, פלטים ותיאור מפורט מוגדרים (תיאור בעברית עובד). כלי הפעלת-תרחיש מתנתקים אחרי 25 שניות (OAuth) או 40 שניות (טוקן); ריצות ארוכות מחזירות `executionId` למשיכה עם `executions_get`.
+
+עיינו ב-`references/make-mcp-server.md` לפרטי שיטות החיבור, בלוקי ההגדרה ל-Claude Code, טבלת ההרשאות ושימושים עסקיים ישראליים.
+
+### שלב 10: מתי להשתמש ב-Make.com לעומת חלופות
 
 | קריטריון | Make.com | n8n | Zapier |
 |---|---|---|---|
@@ -480,11 +488,14 @@ Make.com השיקה AI Agents באפריל 2025, ו-Visual AI Agents ב-Scenario
 
 תוצאה: עיבוד מסמכים מבוסס AI שמסווג חשבוניות בעברית אוטומטית ויוצר את סוג המסמך הנכון ב-Morning.
 
+לדוגמה מעשית של חשיפת תרחיש חשבוניות Morning ככלי MCP שאפשר לקרוא לו מ-Claude Code, ראו `references/make-mcp-server.md`.
+
 ## משאבים מצורפים
 
 ### מסמכי עזר
 - `references/make-israeli-modules.md` - מדריך מלא של מודולים ישראליים והגדרות HTTP ל-Make.com, כולל Morning (חשבונית ירוקה), iCount, Monday.com, Priority ERP, WhatsApp Cloud API, ספקי SMS ישראליים ושערי תשלום. עיינו בו בעת הגדרת חיבור חדש לאפליקציה ישראלית או פתרון בעיות אימות API.
 - `references/billing-cycle-patterns.md` - דפוסי אוטומציה מפורטים למחזורי חיוב ישראליים כולל מע"מ דו-חודשי, מקדמות דו-חודשיות, דיווח שנתי ולוחות זמנים לשכר. כולל הגדרות Data Store ודפוסי Router של Make.com. עיינו בו בעת בניית אוטומציות מבוססות זמן הקשורות למועדי מס או חיוב ישראליים.
+- `references/make-mcp-server.md` - מדריך לשרת ה-MCP של Make.com: שיטות חיבור OAuth וטוקן MCP, בלוקי הגדרה ל-Claude Code, הרשאות, דרישת ה-active + on-demand לחשיפת תרחיש ככלי, התנהגות timeout ושימושים עסקיים ישראליים. עיינו בו בעת חיבור תרחיש Make לסוכן AI ככלי MCP.
 
 ## מלכודות נפוצות
 
@@ -500,6 +511,8 @@ Make.com השיקה AI Agents באפריל 2025, ו-Visual AI Agents ב-Scenario
 - שנת המס הישראלית היא ינואר-דצמבר (כמו שנה קלנדרית), אבל סוכנים מניחים לפעמים אפריל-מרץ (דפוס בריטי) או אוקטובר-ספטמבר (שנת כספים אמריקאית).
 - **רפורמת החשבוניות 2026 משפיעה על אוטומציות, הסף יורד ב-1 ביוני 2026.** חשבוניות מס מעל הסף (10,000 ש"ח עד 31 במאי 2026, ואז 5,000 ש"ח החל מ-1 ביוני 2026) דורשות מספר הקצאה מרשות המסים. תרחישים שיוצרים חשבוניות חייבים לבדוק את הסכום ולכלול מספר הקצאה למסמכים מזכים. שמרו את הסף כמשתנה בתרחיש, לא כמספר קשיח.
 - API v1 של Monday.com נתמך רק עד 1 במאי 2026. תרחישים חדשים חייבים להשתמש ב-v2. המודול המובנה של Make.com עובד עם v2 כברירת מחדל.
+- תרחיש Make מופיע ככלי MCP רק כשהוא גם **active** וגם מוגדר לתזמון **on-demand**. סוכנים נוטים לקיים רק תנאי אחד. תרחיש מתוזמן או עם טריגר מיידי לא יופיע ברשימת כלי ה-MCP, לא משנה איך מוגדרים הקלטים והפלטים.
+- כלי הפעלת-תרחיש ב-MCP מתנתקים אחרי 25 שניות (OAuth) או 40 שניות (טוקן). תרחיש צבירת מע"מ דו-חודשי עלול לרוץ יותר זמן, ואז הקריאה מחזירה `executionId` במקום התוצאה. משכו את התוצאה עם `executions_get` לפי אותו מזהה. אל תתייחסו ל-timeout ככישלון.
 
 ## פתרון בעיות
 
@@ -526,3 +539,7 @@ Make.com השיקה AI Agents באפריל 2025, ו-Visual AI Agents ב-Scenario
 ### שגיאה: "חשבונית נדחתה: חסר מספר הקצאה"
 סיבה: חשבוניות מעל הסף של רפורמת החשבוניות דורשות מספר הקצאה מרשות המסים. הסף הוא 10,000 ש"ח עד 31 במאי 2026, ואז יורד ל-5,000 ש"ח ב-1 ביוני 2026.
 פתרון: הוסיפו מודול Filter לפני יצירת מסמך שמשווה את הסכום למשתנה ב-workflow שמכיל את הסף הנוכחי (אל תקודדו את המספר ישירות, הוא מתוכנן לרדת שוב). אם הסכום עולה על הסף, בקשו מספר הקצאה קודם, ואז העבירו אותו בשדה `allocationNumber` ביצירת המסמך.
+
+### שגיאה: "תרחיש Make לא מופיע ככלי MCP"
+סיבה: התרחיש לא פעיל, לא מוגדר לתזמון on-demand, או שלחיבור ה-MCP חסרה הרשאת הפעלת-תרחיש.
+פתרון: הגדירו את התרחיש לסטטוס active וגם לתזמון on-demand, שניהם נדרשים. וודאו שלחיבור ה-MCP יש את ההרשאה "Run your scenarios" (OAuth) או `mcp:use` (טוקן). אם רשימת הכלים מיושנת, חברו מחדש את לקוח ה-MCP כדי לרענן אותה.
