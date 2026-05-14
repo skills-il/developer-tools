@@ -2,13 +2,50 @@
 name: hebrew-chatbot-builder
 description: Build conversational AI chatbots with native Hebrew support, including WhatsApp Business API integration, Telegram bot scaffolding, web chat widgets, Hebrew NLP patterns, and RTL chat UI components. Prevents common Hebrew chatbot mistakes like broken RTL alignment, incorrect gender inflections, and poor tokenization of prefixed prepositions that break intent detection. Use when user asks to "build a Hebrew chatbot", "integrate WhatsApp bot in Hebrew", "binui bot b'ivrit", or design conversation flows for Hebrew speakers. Covers intent detection for Hebrew morphology, entity extraction for Israeli data (NIS amounts, phone numbers, dates), and gender-aware responses. Do NOT use for non-Hebrew chatbots or general NLP pipelines without a Hebrew component.
 license: MIT
-allowed-tools: Bash(python:*), Bash(psql:*)
-compatibility: No special requirements. Works with Claude Code, Cursor, Windsurf.
 ---
 
 # Hebrew Chatbot Builder
 
 Build production-ready conversational AI chatbots with native Hebrew support. This skill covers platform integrations (WhatsApp, Telegram, web), Hebrew language patterns, RTL UI components, and conversation flow design for Hebrew speakers.
+
+## Instructions
+
+Follow this procedure when building a Hebrew chatbot:
+
+1. **Identify the platform/channel.** Confirm whether the bot runs on WhatsApp Business API, Telegram, an embedded web widget, or several at once. Each has a different scaffold and message model.
+2. **Confirm formal or informal register.** Ask the user whether the audience expects informal Hebrew ("דוגרי", recommended for most consumer bots) or formal Hebrew (government, banking, legal). This decision shapes every response string.
+3. **Ask the gender-handling strategy.** Decide between asking the user's gender early and remembering it, using gender-neutral phrasing throughout, or slash notation ("את/ה"). See the Gender-Aware Responses section.
+4. **Scaffold via the relevant bundled script.** Use `scripts/whatsapp-webhook-handler.py` for WhatsApp or `scripts/telegram-bot-scaffold.py` for Telegram as the starting point, then adapt the Hebrew response templates and conversation flows.
+5. **Wire entity extraction.** Add `extract_israeli_entities()` (or an equivalent) so the bot recognizes Israeli phone numbers, NIS amounts, dates, and Teudat Zehut from free-text Hebrew input.
+6. **Verify RTL rendering.** For web widgets, set `dir="rtl"` on the outermost container and test on a real device. For WhatsApp and Telegram, verify Hebrew text and interactive buttons render correctly on both iOS and Android.
+
+## Examples
+
+### Example 1: WhatsApp order-status bot in Hebrew
+
+User says: "Build a WhatsApp bot in Hebrew that lets customers check their order status."
+
+Actions:
+1. Identify the channel: WhatsApp Business Cloud API.
+2. Confirm informal register (consumer audience) and gender-neutral phrasing for broad reach.
+3. Start from `scripts/whatsapp-webhook-handler.py`, which already includes webhook verification, signature checks, and Hebrew response templates.
+4. Wire an interactive button menu ("בדיקת הזמנה", "שאלות נפוצות", "דבר/י עם נציג") and a `waiting_order_number` state that validates the order number and looks it up.
+5. Submit a Hebrew `order_confirmation_he` template via Meta Business Suite for proactive outbound updates.
+
+Result: A working webhook handler that greets users in Hebrew, routes button replies, and answers order-status queries.
+
+### Example 2: Add an RTL Hebrew web chat widget to an existing site
+
+User says: "Add a Hebrew chat widget to my website with proper RTL layout."
+
+Actions:
+1. Identify the channel: embedded web widget.
+2. Confirm informal register and slash notation for CTAs.
+3. Use the RTL Chat Bubble Layout CSS and the `MessageBubble` / `detectDirection` components from the Web Chat Widget section.
+4. Set `dir="rtl"` on the outermost chat container element (not only in CSS) and add `direction: rtl` to the input field.
+5. Verify alignment in browser DevTools: user bubbles on the right, bot bubbles on the left, timestamps on the trailing side.
+
+Result: A chat widget that renders Hebrew naturally, handles mixed Hebrew/English messages per-bubble, and does not break when a parent framework sets `direction: ltr`.
 
 ## Hebrew Conversation Design
 
@@ -98,7 +135,7 @@ import requests
 
 def send_template_message(phone_number: str, template_data: dict):
     """Send a WhatsApp template message in Hebrew."""
-    url = f"https://graph.facebook.com/v23.0/{PHONE_NUMBER_ID}/messages"
+    url = f"https://graph.facebook.com/v25.0/{PHONE_NUMBER_ID}/messages"
 
     payload = {
         "messaging_product": "whatsapp",
@@ -611,6 +648,32 @@ def detect_intent(text: str) -> tuple[str, float]:
     return best_intent, min(best_score * 2, 1.0)  # Normalize score
 ```
 
+**Caveats of naive substring matching (read before shipping):**
+
+- **Nikud / vocalization**: the keyword lists above assume unvocalized text. If user input (or your lists) contain nikud, `phrase in text` fails. Strip nikud from both sides first, for example `re.sub(r'[֑-ׇ]', '', text)`.
+- **Prefix prepositions**: Hebrew attaches ב/ל/מ/ה/ו/כ/ש to the following word, so "בהזמנה" will not match the keyword "הזמנה". Naive `phrase in text` silently misses these. For anything beyond a demo, use Hebrew NLP tooling that handles morphology, for example the YAP morphological analyzer (https://github.com/OnlpLab/yap) or Stanza's Hebrew pipeline, or move to an LLM (below).
+
+**LLM-based intent classification and response generation (recommended for production):**
+
+Substring matching breaks on paraphrases, typos, and morphology. For production, prompt an LLM to classify intent and draft the response. A compact pattern:
+
+```python
+# Pseudocode - call your provider's SDK (Anthropic, OpenAI, or Google).
+INTENT_SYSTEM_PROMPT = """אתה מסווג כוונות לצ'אטבוט שירות בעברית.
+החזר JSON בלבד: {"intent": "<one of: greeting|farewell|help|order_status|complaint|pricing|human_agent|unknown>", "confidence": 0.0-1.0}.
+התחשב במורפולוגיה עברית (אותיות שימוש ב/ל/מ), שגיאות כתיב וסלנג."""
+
+# 1. Classification turn: send INTENT_SYSTEM_PROMPT + the user message, parse the JSON.
+# 2. Response turn: send a separate system prompt with the detected intent,
+#    the conversation history, and the register/gender decisions, ask for the Hebrew reply.
+```
+
+Guidance:
+- Keep classification and response generation as two calls so you can log intent accuracy separately.
+- Force JSON output and validate it; fall back to the keyword matcher if parsing fails.
+- Models that handle Hebrew well (current as of early 2026): Anthropic Claude (Sonnet/Opus tiers), OpenAI GPT-4o / GPT-4.1, and Google Gemini 2.x. Model names and tiers change often, so check each provider's current model list before pinning one.
+- For a Hebrew-native option, evaluate DictaLM (Dicta, Bar-Ilan University) for on-prem classification.
+
 ### Entity Extraction
 
 Extract Israeli-specific entities from Hebrew text:
@@ -654,8 +717,11 @@ def extract_israeli_entities(text: str) -> dict:
             entities.setdefault("dates", []).extend(matches)
 
     # Teudat Zehut (9 digits, standalone)
+    # NOTE: this regex matches ANY 9-digit run with no check-digit validation.
+    # It will accept phone numbers, order IDs, and typos. Validate matches
+    # with is_valid_teudat_zehut() below before treating them as a real ID.
     tz_pattern = r'(?<!\d)\d{9}(?!\d)'
-    tz_matches = re.findall(tz_pattern, text)
+    tz_matches = [m for m in re.findall(tz_pattern, text) if is_valid_teudat_zehut(m)]
     if tz_matches:
         entities["teudat_zehut"] = tz_matches
 
@@ -666,6 +732,23 @@ def extract_israeli_entities(text: str) -> dict:
         entities["emails"] = email_matches
 
     return entities
+
+
+def is_valid_teudat_zehut(value: str) -> bool:
+    """Validate an Israeli Teudat Zehut using the official check-digit algorithm.
+
+    A 9-digit run is NOT a valid ID just because it has 9 digits. This applies
+    the Luhn-style weighting the Interior Ministry uses, so phone numbers and
+    random digit runs are rejected.
+    """
+    digits = value.strip()
+    if len(digits) != 9 or not digits.isdigit():
+        return False
+    total = 0
+    for i, ch in enumerate(digits):
+        n = int(ch) * (1 if i % 2 == 0 else 2)
+        total += n if n < 10 else n - 9
+    return total % 10 == 0
 ```
 
 ### Sentiment Analysis for Hebrew
@@ -856,7 +939,7 @@ async def handoff_to_human(user_id: str, context: dict):
 | Hold | ממתין/ה לתגובתך | Mamtin/a le'tguvatekha | Waiting for input |
 | Apology | מצטער/ת על אי הנוחות | Mitztaer/et al i ha'nokhiyut | Service issue |
 
-## Reference Scripts and Documents
+## Bundled Resources
 
 This skill includes helper scripts in the `scripts/` directory:
 

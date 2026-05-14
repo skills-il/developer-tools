@@ -11,10 +11,6 @@ description: >-
   (יש hebrew-nlp-toolkit), הקמת מערכת תמיכה (יש israeli-customer-support-automator),
   או פיתוח בוט קולי (יש hebrew-voice-bot-builder).
 license: MIT
-metadata:
-  author: skills-il
-  version: 1.0.0
-  category: developer-tools
 ---
 
 # אנליטיקת צ'אטבוטים ישראלית
@@ -551,6 +547,59 @@ class ChatbotDashboard:
 - שישי אחר הצהריים ושבת עם תנועה מינימלית
 - תקופות חג (ראש השנה, פסח, סוכות) מראות דפוסים שונים
 
+#### מדדי שימור ומשתמשים חוזרים
+
+מדדים ברמת הסשן מספרים לכם איך עברה שיחה בודדת, אבל לא אם הבוט מזכה בשימוש חוזר. עקבו אחרי ממדי השימור האלה לצד הדשבורד למעלה:
+
+```python
+from datetime import datetime, timedelta
+
+def compute_retention_metrics(conversations: list[dict]) -> dict:
+    """חישוב מדדי שיעור חזרה מלוגי שיחות.
+
+    דורש user_id יציב בין סשנים (ראו את סעיף פרטיות והסכמה
+    לפני שמתמידים מזהים).
+    """
+    # מיפוי כל משתמש לקבוצת התאריכים שבהם ניהל שיחה.
+    user_days: dict[str, set] = {}
+    for convo in conversations:
+        uid = convo.get("user_id")
+        if not uid or not convo.get("started_at"):
+            continue
+        day = datetime.fromisoformat(convo["started_at"]).date()
+        user_days.setdefault(uid, set()).add(day)
+
+    d1_eligible = d1_returned = 0
+    d7_eligible = d7_returned = 0
+    repeat_contact_users = 0
+
+    for uid, days in user_days.items():
+        sorted_days = sorted(days)
+        first = sorted_days[0]
+        if len(days) > 1:
+            repeat_contact_users += 1
+        # D1: האם המשתמש חזר ביום שאחרי המגע הראשון?
+        d1_eligible += 1
+        if (first + timedelta(days=1)) in days:
+            d1_returned += 1
+        # D7: האם המשתמש חזר תוך 2-7 ימים מהמגע הראשון?
+        d7_eligible += 1
+        if any(first + timedelta(days=n) in days for n in range(2, 8)):
+            d7_returned += 1
+
+    total_users = len(user_days) or 1
+    return {
+        "d1_return_rate": round(d1_returned / d1_eligible, 4) if d1_eligible else 0.0,
+        "d7_return_rate": round(d7_returned / d7_eligible, 4) if d7_eligible else 0.0,
+        "repeat_contact_rate": round(repeat_contact_users / total_users, 4),
+        "unique_users": len(user_days),
+    }
+```
+
+- שיעור חזרה D1: אחוז המשתמשים שמתחילים שיחה חדשה ביום שאחרי המגע הראשון. סיגנל שימושי לבוטי שירות שמטרתם ליצור הרגל.
+- שיעור חזרה D7: אחוז המשתמשים שחוזרים תוך שבוע. יציב יותר מ-D1 לבוטים ישראליים בנפח נמוך.
+- שיעור מגע חוזר: אחוז המשתמשים עם יותר משיחה אחת בסך הכל. שיעור מגע חוזר גבוה בבוט שירות יכול להיות טוב (אמון) או רע (בעיות לא נפתרות), אז קראו אותו יחד עם פתרון במגע ראשון.
+
 ### שלב 9: אתגרים ייחודיים באנליטיקה בעברית
 
 #### טקסט RTL בגרפים ויזואליזציות
@@ -794,6 +843,8 @@ def parse_dialogflow_cx_logs(bigquery_rows: list[dict]) -> list[dict]:
 
 #### Rasa Tracker Store
 
+הערה: Rasa Open Source נמצאת במצב תחזוקה. אנליטיקת ה-tracker-store מבוססת-הכוונות שלמטה רלוונטית לפריסות Rasa OSS קיימות; בנייה חדשה ב-Rasa משתמשת ב-CALM (Conversational AI with Language Models) שהיא מבוססת-דיאלוג ולא מבוססת-כוונות, ולכן מדדי דיוק כוונות ממופים שם אחרת. ראו את תיעוד ה-OSS הישן ב-https://legacy-docs-oss.rasa.com/docs/rasa/ לפרטי tracker-store.
+
 ```python
 def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
     """המרת אירועי Tracker Store של Rasa לפורמט שיחות סטנדרטי."""
@@ -903,13 +954,29 @@ def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
 - אנליטיקת טקסט בעברית חייבת להתמודד עם אותיות שימוש (ב-, ל-, כ-, מ-) שמשנות גבולות מילים. טוקנייזרים שאומנו על אנגלית מפצלים מילים בעברית בצורה שגויה.
 - משתמשים ישראליים עוברים תדיר בין עברית לאנגלית בתוך שיחת צ'אטבוט אחת. כלי אנליטיקה חייבים לטפל בסשנים דו-לשוניים ולא להתייחס אליהם כשתי שפות נפרדות.
 
+## פרטיות והסכמה
+
+הסקיל הזה קולט תמלילי שיחות מלאים וערכי `user_id`, ומריץ ניתוח רגשות על הודעות משתמשים. טקסט שיחה הוא מידע אישי ולעתים קרובות מכיל תוכן רגיש (בריאות, כספים, תלונות). טפלו בו תחת חוק הגנת הפרטיות הישראלי, כולל תיקון 13 (נכנס לתוקף באוגוסט 2025), שהחמיר את חובות ההסכמה, היידוע, האחריותיות וצמצום המידע.
+
+כללים מעשיים:
+
+- הסכמה ויידוע: קבלו הסכמה לאחסון ולניתוח של תוכן השיחה, וציינו בהצהרת הפרטיות שלכם ששיחות נשמרות ומנותחות לצורכי איכות. ניתוח רגשות על הודעות משתמשים הוא מטרת עיבוד שצריך לחשוף.
+- פסבדונימיזציה של `user_id`: אל תנתחו מספרי טלפון, אימיילים או תעודות זהות גולמיים כמזהה. גבבו או טוקנו את ה-`user_id` לפני שהוא מגיע לצינור האנליטיקה, ושמרו את טבלת המיפוי בנפרד ובגישה מבוקרת. שימור ושיוך לבדיקות A/B עדיין עובדים על מזהה פסבדונימי יציב.
+- צמצום והסתרה: הסירו או מסכו ישויות שאתם לא צריכים לאנליטיקה (מספרי זהות, שמות מלאים, מספרי כרטיס) לפני אחסון תמלילים. נדיר שצריך את ה-PII הגולמי כדי למדוד נטישה או סנטימנט.
+- הגבלות שימור: הגדירו חלון שימור מפורש לתמלילים גולמיים (למשל 90 יום) ושמרו לטווח ארוך רק מדדים מצרפיים. תעדו את החלון ומחקו לפי לוח זמנים.
+- בקרת גישה ומיקום: הגבילו מי יכול לקרוא שיחות גולמיות, תעדו גישה, וודאו היכן המידע מאוחסן ומעובד.
+- זו הנחיה הנדסית, לא ייעוץ משפטי. אמתו את החובות הספציפיות שלכם מול איש מקצוע בתחום הפרטיות.
+
+## שרתי MCP מומלצים
+
+אין צורך בשרת MCP לסקיל הזה. הוא עובד כולו על לוגי שיחות מיוצאים (ייצוא BigQuery, dumps של Rasa tracker-store, קבצי לוג של האפליקציה) שאתם טוענים מהדיסק ומנתחים מקומית עם סקריפט הפייתון המצורף. אין API חי לעטוף, ולכן אין צורך באינטגרציית MCP.
 
 ## קישורי עזר
 
 | מקור | כתובת | מה לבדוק |
 |------|-------|----------|
 | Dialogflow CX analytics | https://cloud.google.com/dialogflow/cx/docs/concept/analytics | אנליטיקת שיחות מובנית, מדדי כוונה |
-| תיעוד Rasa | https://rasa.com/docs/rasa/ | מעקב אירועים, אינטגרציות אנליטיקה מותאמות |
+| תיעוד Rasa OSS (legacy) | https://legacy-docs-oss.rasa.com/docs/rasa/ | מעקב אירועים, tracker stores, אינטגרציות אנליטיקה מותאמות |
 | Mixpanel help | https://mixpanel.com/help | ניתוח משפך, שימור קבוצות לזרימות צ'אט |
 | Matomo analytics | https://matomo.org/docs/ | מעקב אירועים עצמי, ידידותי לפרטיות |
 | מודלים בעברית ב-HuggingFace | https://huggingface.co/models?language=he | מודלי סנטימנט/סיווג בעברית |

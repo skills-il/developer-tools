@@ -125,14 +125,14 @@ Buttons: [URL: "מעקב משלוח" -> https://tracking.example.com/{{1}}]
 
 ### Sending Messages
 
-**Base URL:** `https://graph.facebook.com/v23.0/{PHONE_NUMBER_ID}/messages`
+**Base URL:** `https://graph.facebook.com/v25.0/{PHONE_NUMBER_ID}/messages`
 
 **Authentication:** Bearer token in Authorization header
 
 ### Send Text Message
 
 ```bash
-curl -X POST "https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages" \
+curl -X POST "https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/messages" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -146,7 +146,7 @@ curl -X POST "https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages" \
 ### Send Template Message
 
 ```bash
-curl -X POST "https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages" \
+curl -X POST "https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/messages" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -172,7 +172,7 @@ curl -X POST "https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages" \
 ### Send Interactive Buttons
 
 ```bash
-curl -X POST "https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages" \
+curl -X POST "https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/messages" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -196,7 +196,7 @@ curl -X POST "https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages" \
 ### Send Interactive List
 
 ```bash
-curl -X POST "https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages" \
+curl -X POST "https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/messages" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -235,16 +235,15 @@ New WhatsApp Business accounts start with limited messaging:
 
 ### Pricing (Israel)
 
-WhatsApp uses conversation-based pricing. Each 24-hour conversation window has a cost:
+As of July 1, 2025, WhatsApp moved from conversation-based pricing to **per-message pricing**. You are now charged per delivered **template message**, not per 24-hour conversation window. Rates depend on the template category and the recipient's country calling code.
 
-| Conversation Type | Description | Approximate Cost (USD) |
-|-------------------|-------------|----------------------|
-| Utility | Transaction updates, confirmations | ~$0.02 |
-| Authentication | OTP, login codes | ~$0.02 |
-| Marketing | Promotional messages | ~$0.05 |
-| Service | User-initiated conversations | Free (first 1000/month) |
+Key points under the current model:
 
-Prices vary by region and are subject to change. Check Meta's pricing page for current rates.
+- **Template categories** are billed: marketing, utility, and authentication (authentication has an `authentication_international` variant).
+- **Free messages**: all non-template (free-form) messages sent inside an open 24-hour customer service window are free. Utility templates delivered inside an open customer service window are also free. Messages within a free entry-point window are free for 72 hours.
+- **Service conversations** as a billing category no longer exist; what used to be a "service conversation" is now just free-form messaging inside the customer service window.
+
+Per-message rates by country and category change regularly. Do not hardcode rates. Check Meta's official pricing page for current Israel rates: https://developers.facebook.com/docs/whatsapp/pricing/
 
 ## Best Practices for Israeli WhatsApp Bots
 
@@ -258,7 +257,7 @@ Prices vary by region and are subject to change. Check Meta's pricing page for c
 
 5. **Support both Hebrew and English.** Many Israeli users are bilingual. Offer a language toggle early in the conversation.
 
-6. **Comply with Israeli privacy laws.** The Israeli Privacy Protection Law (1981) and its regulations apply to WhatsApp communications. Ensure proper consent for marketing messages.
+6. **Comply with Israeli privacy laws.** The Israeli Privacy Protection Law (1981) and its regulations apply to WhatsApp communications. Ensure proper consent for marketing messages. Amendment 13 to the law (in force August 2025) tightened consent, notice, and accountability obligations for processing personal data, so review your consent flow and data handling against the updated requirements.
 
 7. **Use interactive messages.** Israeli users engage more with buttons and lists than free-text input. Use interactive messages wherever possible.
 

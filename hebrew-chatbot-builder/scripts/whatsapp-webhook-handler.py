@@ -30,6 +30,7 @@ import hmac
 import json
 import logging
 import os
+import sys
 from datetime import datetime, timezone
 from typing import Any
 
@@ -41,7 +42,7 @@ VERIFY_TOKEN = os.environ.get("WHATSAPP_VERIFY_TOKEN", "")
 APP_SECRET = os.environ.get("WHATSAPP_APP_SECRET", "")
 ACCESS_TOKEN = os.environ.get("WHATSAPP_ACCESS_TOKEN", "")
 PHONE_NUMBER_ID = os.environ.get("WHATSAPP_PHONE_ID", "")
-GRAPH_API_URL = f"https://graph.facebook.com/v23.0/{PHONE_NUMBER_ID}/messages"
+GRAPH_API_URL = f"https://graph.facebook.com/v25.0/{PHONE_NUMBER_ID}/messages"
 
 # Logging
 logging.basicConfig(level=logging.INFO)
