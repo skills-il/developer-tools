@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """JFrog Artifactory REST API Client.
 
-A standalone client for interacting with JFrog Artifactory — supports
+A standalone client for interacting with JFrog Artifactory, supports
 artifact upload/download, repository management, search (AQL), build info,
 and build promotion.
 

@@ -10,49 +10,20 @@ description: >-
   and common Israeli data type validations. Do NOT use for general PostgreSQL
   administration unrelated to Israeli requirements, or for non-PostgreSQL databases.
 license: MIT
-allowed-tools: 'Bash(python:*), Bash(psql:*)'
-compatibility: 'No special requirements. Works with Claude Code, Cursor, Windsurf.'
-metadata:
-  author: skills-il
-  version: 1.0.0
-  category: developer-tools
-  tags:
-    he:
-      - פוסטגרס
-      - בסיס-נתונים
-      - עברית
-      - סופאבייס
-      - ישראל
-    en:
-      - postgres
-      - database
-      - hebrew
-      - supabase
-      - israel
-  display_name:
-    he: "ערכת כלים לפוסטגרס ישראלי"
-    en: Israeli Postgres Toolkit
-  display_description:
-    he: >-
-      שיטות עבודה מומלצות לפוסטגרס באפליקציות ישראליות, כולל תבניות Supabase,
-      אינדוקס טקסט בעברית עם ICU collation, טיפול במטבע שקל, פורמטים ישראליים
-      לתאריכים, ומלכודות אזור זמן Asia/Jerusalem.
-    en: >-
-      Best practices for PostgreSQL in Israeli apps, covering Supabase patterns,
-      Hebrew text indexing with ICU collation, shekel/NIS currency handling,
-      Israeli date formats, and Asia/Jerusalem timezone gotchas.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
 ---
 
 # ערכת כלים לפוסטגרס ישראלי
 
 שיטות עבודה מומלצות, תבניות וסקריפטים לבניית בסיסי נתונים PostgreSQL שמותאמים לאפליקציות ישראליות. כולל טיפול בטקסט עברי, מטבע שקל, אזורי זמן ישראליים, אינטגרציה עם Supabase, וטיפוסי נתונים ישראליים נפוצים.
+
+## הוראות
+
+עבדו לפי הסדר הזה כשמקימים או סוקרים בסיס נתונים PostgreSQL לאפליקציה ישראלית:
+
+1. **קודם כל בדקו קידוד ואזור זמן.** הריצו `SHOW server_encoding;` (חייב להיות `UTF8`, לעולם לא `SQL_ASCII` או `LATIN1`) ו-`SHOW timezone;`. הגדירו את אזור הזמן עם `ALTER DATABASE your_db SET timezone = 'Asia/Jerusalem';`. טעות בשניים האלה משחיתה עברית ומסיטה כל timestamp, ותיקון מאוחר מחייב מיגרציית נתונים.
+2. **בחרו אסטרטגיית collation.** החליטו לכל עמודה אם צריך מיון תצוגה עברי (ICU לא דטרמיניסטי, `he-IL-x-icu`) או ייחודיות ואינדקס `btree` (collation דטרמיניסטי). בדרך כלל צריך את שניהם, על עמודות שונות או באמצעות אינדקסים נפרדים, כי collation לא דטרמיניסטי לא יכול לגבות אילוץ `UNIQUE` או אינדקס `btree` רגיל.
+3. **בחרו גישת חיפוש.** להתאמה מדויקת ולתחילית השתמשו ב-`btree`. לחיפוש מטושטש וסובלני לשגיאות בעברית השתמשו ב-`pg_trgm`. לחיפוש מדורג רב-שדות השתמשו בחיפוש טקסט מלא עם הקונפיגורציה `simple` (ראו "חיפוש טקסט מלא בעברית" למטה). שלבו את `unaccent` כשצריך התאמה שמתעלמת מניקוד.
+4. **החילו אילוצים על טיפוסי נתונים ישראליים.** השתמשו באילוצי ה-`CHECK` ובפונקציות העזר מ-`scripts/israeli-data-types.sql` (תעודת זהות, טלפון, מיקוד, מספר עוסק, IBAN) וקראו ל-`validate_teudat_zehut()` לבדיקת ספרת הביקורת של תעודת הזהות במקום לממש אותה מחדש בקוד האפליקציה.
 
 ## אינדוקס טקסט בעברית
 
@@ -126,6 +97,30 @@ SELECT * FROM products
 WHERE search_vector @@ plainto_tsquery('simple', 'חשבונית')
 ORDER BY ts_rank(search_vector, plainto_tsquery('simple', 'חשבונית')) DESC;
 ```
+
+### התאמה ללא ניקוד עם unaccent
+
+טקסט עברי לפעמים נושא ניקוד שמשתמשים לא יקלידו בתיבת חיפוש. התוסף `unaccent` מסיר ניקוד (וגם דיאקריטיקה לטינית) כך ש"שָׁלוֹם" ו"שלום" מתאימים:
+
+```sql
+-- הפעלת unaccent
+CREATE EXTENSION IF NOT EXISTS unaccent;
+
+-- unaccent מסיר ניקוד עברי
+SELECT unaccent('שָׁלוֹם');  -- מחזיר 'שלום'
+
+-- שימוש בו ב-search vector כדי שניקוד שמור לא יחסום התאמות
+ALTER TABLE products ADD COLUMN search_vector tsvector
+  GENERATED ALWAYS AS (
+    to_tsvector('simple', unaccent(coalesce(name_he, '')))
+  ) STORED;
+
+-- ומפעילים unaccent על השאילתה באותו אופן
+SELECT * FROM products
+WHERE search_vector @@ plainto_tsquery('simple', unaccent('שָׁלוֹם'));
+```
+
+הערה: `unaccent()` הוא `STABLE` ולא `IMMUTABLE`, לכן עטיפה ישירה שלו בעמודה מחושבת דורשת פונקציית עטיפה `IMMUTABLE` או מילון חיפוש טקסט מותאם. הגישה הפשוטה והיציבה ביותר היא פונקציית SQL קטנה `IMMUTABLE` בשם `f_unaccent(text)` שקוראת ל-`unaccent('unaccent', $1)`, ושימוש בה בעמודה המחושבת ובאינדקס ה-trigram.
 
 ## טיפול במטבע (שקל / NIS)
 
@@ -396,6 +391,14 @@ CREATE TABLE customers (
 );
 ```
 
+האילוץ `~ '^\d{9}$'` בודק רק את הפורמט (9 ספרות), לא את ספרת הביקורת. תעודת זהות משתמשת באלגוריתם ספרת ביקורת מסוג Luhn. הסקיל הזה כולל פונקציה מוכנה `validate_teudat_zehut(text)` ב-`scripts/israeli-data-types.sql`, התקינו אותה והשתמשו בה ב-`CHECK` או ב-trigger מסוג `BEFORE INSERT` כדי שתעודות זהות לא תקינות יידחו בשכבת בסיס הנתונים:
+
+```sql
+-- אחרי התקנת validate_teudat_zehut() מ-israeli-data-types.sql
+ALTER TABLE customers ADD CONSTRAINT chk_teudat_zehut_valid
+  CHECK (teudat_zehut IS NULL OR validate_teudat_zehut(teudat_zehut));
+```
+
 ### מספרי טלפון ישראליים
 
 ```sql
@@ -422,21 +425,74 @@ CREATE TABLE addresses (
 );
 ```
 
-## סקריפטים ומסמכי עזר
+## דוגמאות
+
+### דוגמה 1: קטלוג מוצרים דו-לשוני עם חיפוש מטושטש בעברית
+המשתמש אומר: "אני צריך טבלת מוצרים שתומכת בחיפוש סובלני לשגיאות בעברית ובאנגלית."
+
+פעולות:
+1. `CREATE EXTENSION IF NOT EXISTS pg_trgm;` ו-`unaccent;`
+2. יוצרים `products` עם `name_he`, `name_en`, `description_he`, `description_en`, ועמודה מחושבת `search_vector` שמשתמשת ב-`to_tsvector('simple', unaccent(...))` לעמודות עבריות וב-`'english'` לעמודות אנגליות.
+3. מוסיפים אינדקס GIN על `search_vector` ואינדקסי GIN `gin_trgm_ops` על `name_he` ו-`name_en`.
+4. שואלים עם `plainto_tsquery('simple', unaccent($1))` לתוצאות מדורגות, ונופלים חזרה להתאמת trigram `name_he % $1` לסובלנות שגיאות.
+
+תוצאה: משתמשים מוצאים "חשבונית" גם אם הם מקלידים "חשבונ" או כוללים ניקוד, ושאילתות באנגלית עדיין עובדות דרך אותה עמודה.
+
+### דוגמה 2: טבלת חשבוניות ישראלית עם אילוצי מע"מ ותעודת זהות
+המשתמש אומר: "צור טבלת חשבוניות שאוכפת חישוב מע"מ נכון ותעודות זהות תקינות."
+
+פעולות:
+1. מתקינים את `validate_teudat_zehut()` מ-`scripts/israeli-data-types.sql`.
+2. יוצרים `invoices` עם `subtotal_nis numeric(12,2)`, `vat_rate numeric(5,4) DEFAULT 0.1800`, `vat_amount numeric(12,2)`, `total_nis numeric(12,2)`.
+3. מוסיפים `CHECK (vat_amount = round(subtotal_nis * vat_rate, 2))` ו-`CHECK (total_nis = subtotal_nis + vat_amount)`.
+4. מוסיפים `customer_teudat_zehut text CHECK (customer_teudat_zehut IS NULL OR validate_teudat_zehut(customer_teudat_zehut))`.
+5. שומרים את שיעור המע"מ בטבלת `tax_config` היחידנית כך ששינוי שיעור הוא עדכון נתונים, לא deploy.
+
+תוצאה: בסיס הנתונים עצמו דוחה חשבוניות עם חשבון מע"מ שגוי או מספרי תעודת זהות לא תקינים.
+
+## משאבים מצורפים
 
 הסקיל הזה כולל סקריפטים בתיקיית `scripts/`:
 
 - `hebrew-search-setup.sql`: הגדרת חיפוש טקסט מלא בעברית עם collation, אינדקסים ופונקציות
-- `israeli-data-types.sql`: תבניות CREATE TABLE עם עמודות, אילוצים ואימותים ישראליים
+- `israeli-data-types.sql`: תבניות CREATE TABLE עם עמודות, אילוצים ואימותים ישראליים, כולל פונקציות העזר `validate_teudat_zehut()` ו-`format_israeli_phone()`
 
 ומסמכי עזר בתיקיית `references/`:
 
 - `hebrew-collation-guide.md`: מדריך ICU collation לטקסט עברי בפוסטגרס
 - `supabase-israel-patterns.md`: תבניות ספציפיות ל-Supabase לאפליקציות ישראליות
 
+## שרתי MCP מומלצים
+
+שרתי ה-MCP הבאים מהדירקטוריה משתלבים היטב עם הסקיל הזה כשבסיס נתונים ישראלי צריך נתונים חיצוניים חיים:
+
+- **boi-exchange**: שערי חליפין של בנק ישראל, שימושי למילוי טבלת `exchange_rates` בתזמון במקום לקודד שערים קשיח.
+- **hebcal**: תאריכים עבריים ולוח השנה היהודי, שימושי למילוי עמודות `hebrew_date_display` או להנעת לוגיקת תזמון מותאמת שבת וחגים שאחרת הייתה צריכה תאריכים קשיחים.
+
+## קישורי עזר
+
+| מקור | כתובת | מה לבדוק |
+|------|-------|----------|
+| תיעוד Collation של PostgreSQL | https://www.postgresql.org/docs/current/collation.html | ICU collations, דטרמיניסטי מול לא דטרמיניסטי |
+| pg_trgm של PostgreSQL | https://www.postgresql.org/docs/current/pgtrgm.html | אופרטורי trigram, סף דמיון, אינדקסי GIN |
+| unaccent של PostgreSQL | https://www.postgresql.org/docs/current/unaccent.html | הסרת ניקוד ודיאקריטיקה, עטיפת IMMUTABLE |
+| Row Level Security של Supabase | https://supabase.com/docs/guides/database/postgres/row-level-security | מדיניות RLS, auth.jwt(), תבניות רב-דיירים |
+| שערי חליפין של בנק ישראל | https://www.boi.org.il/en/economic-roles/financial-markets/exchange-rates/ | שערים יציגים לטבלת exchange_rates |
+| מזהי Locale של ICU | https://www.postgresql.org/docs/current/collation.html#ICU-CUSTOM-COLLATIONS | תחביר ה-locale he-IL-x-icu |
+
+## פתרון בעיות
+
+### שגיאה: "could not create unique index ... because the collation is not deterministic"
+סיבה: עמודה שהוגדרה עם ה-collation הלא דטרמיניסטי `hebrew_icu` משמשת באילוץ `UNIQUE` או באינדקס `btree` רגיל.
+פתרון: השאירו את העמודה ב-collation דטרמיניסטי (ברירת מחדל) לייחודיות, והחילו `COLLATE hebrew_icu` רק בסעיפי `ORDER BY` או על עמודת תצוגה נפרדת. collation לא דטרמיניסטי מיועד למיון, לא לאינדוקס שוויון.
+
+### שגיאה: "generation expression is not immutable" בעת הוספת עמודת search_vector
+סיבה: `unaccent()` הוא `STABLE` ולא `IMMUTABLE`, לכן אי אפשר להשתמש בו ישירות בתוך ביטוי `GENERATED ALWAYS AS ... STORED`.
+פתרון: צרו עטיפה `IMMUTABLE`, `CREATE FUNCTION f_unaccent(text) RETURNS text AS $$ SELECT unaccent('unaccent', $1) $$ LANGUAGE sql IMMUTABLE;`, והשתמשו ב-`f_unaccent(...)` בעמודה המחושבת ובכל אינדקס ביטוי.
+
 ## מלכודות נפוצות
 
 - טקסט בעברית ב-PostgreSQL דורש קידוד UTF-8. בסיסי נתונים שנוצרו עם SQL_ASCII או LATIN1 ישחיתו תווים עבריים. תמיד יש לוודא קידוד עם SHOW server_encoding.
 - מיון עברית ב-PostgreSQL (he_IL.UTF-8) שונה מאנגלית. סוכנים עלולים להחיל collation ברירת מחדל שממיין טקסט עברי בצורה שגויה בשאילתות ORDER BY.
-- חיפוש טקסט מלא בעברית דורש קונפיגורציית חיפוש טקסט עברית (לא "english" או "simple"). סוכנים עלולים להשתמש בהגדרות FTS ברירת מחדל שמסירות מילות עצירה בעברית בטעות.
+- ל-PostgreSQL אין מילון חיפוש טקסט מלא לעברית, ולכן `simple` היא הקונפיגורציה הנכונה לעמודות tsvector בעברית. סוכנים נוטים בטעות לבחור `'english'` (שמסיר מילות עצירה באנגלית וגוזע מילים לטיניות, מה שלא עוזר לעברית) או להמציא קונפיגורציית `'hebrew'` שלא קיימת (וזורקת שגיאה). השתמשו ב-`'simple'` לעמודות עבריות ושלבו עם `pg_trgm` ו-`unaccent` לכיסוי טוב יותר.
 - עמודות תאריך ישראליות צריכות לאחסן תאריכים כ-DATE או TIMESTAMPTZ (עם אזור זמן Asia/Jerusalem), לא כ-TEXT בפורמט DD/MM/YYYY. סוכנים עלולים ליצור עמודות טקסט לתאריכים מה ששובר השוואות ומיון.

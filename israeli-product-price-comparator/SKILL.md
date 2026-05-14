@@ -2,7 +2,7 @@
 name: israeli-product-price-comparator
 description: Compare product prices across major Israeli retailers and e-commerce platforms including Zap.co.il, KSP, iDigital, Ivory, Bug, and more. Use when the user wants to find the best price for electronics, appliances, computers, or consumer goods in Israel, needs to compare local vs. import pricing, or wants guidance on price tracking tools and Israeli consumer protection rights. Do NOT use for comparing grocery or food prices, real estate, or financial products.
 license: MIT
-allowed-tools: Bash(node:*) Bash(python:*) WebFetch
+allowed-tools: WebFetch
 ---
 
 
@@ -165,6 +165,20 @@ Result: Present side-by-side comparison showing Amazon price with customs estima
 - Israeli price comparison sites (Zap, Pricez) list prices in NIS. Agents may convert to USD for comparison, which introduces exchange rate fluctuations that mislead users.
 - The personal import duty-free threshold was raised from $75 to $130 via executive order effective February 25, 2026 (a $150 proposal was rejected by the Knesset). Agents using older training data may still reference the $75 or $150 limits, producing incorrect import cost estimates. The current tiers are: up to $130 = fully exempt, $130-$500 = VAT only (18%), above $500 = full customs + VAT.
 - Zap.co.il prices are cached and may lag behind actual retailer prices by hours or days. Agents must verify the final price on the retailer's own website before presenting a recommendation.
+- Most Israeli retail and comparison sites (Zap, ksp.co.il, ivory.co.il, ikea.co.il, and others) deploy anti-bot protection and return 403 Forbidden or a CAPTCHA challenge to automated requests. WebFetch will frequently fail or return an error page instead of product data. Treat scraping as best-effort, when a fetch is blocked, tell the user the site must be checked manually rather than presenting stale or empty results as if they were live prices. Never fabricate a price to fill a gap.
+
+## Recommended MCP Servers
+
+- **supermarket-prices**: Israeli supermarket and grocery price comparison. This skill explicitly does NOT cover groceries or food, when a user asks to compare supermarket prices, hand off to the `supermarket-prices` MCP instead of trying to answer here.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Zap price comparison | https://www.zap.co.il | Primary Israeli price comparison engine |
+| Israel Tax Authority customs calculator | https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/he/PersonalImportTax/Home/Calc | Official personal-import tax estimate by product and value |
+| Personal import rights (Kol Zchut) | https://www.kolzchut.org.il/he/יבוא_אישי | Consumer rights and conditions for personal import |
+| Personal import guide (gov.il) | https://www.gov.il/en/departments/topics/customs-personal-import/govil-landing-page | Official customs rules, exemption thresholds |
 
 ## Troubleshooting
 
@@ -197,3 +211,13 @@ Solution:
 2. For electronics, the customs duty is typically 0% but VAT (18%) still applies on the total value (product + shipping + insurance)
 3. Note that customs authorities may reassess the declared value upward if they believe it is understated
 4. For high-value purchases (over 1,000 USD), consider using a customs broker or a shipping service that handles customs clearance
+
+### Error: "WebFetch returns 403 / CAPTCHA instead of product prices"
+
+Cause: Zap and most Israeli retailers (KSP, Ivory, IKEA Israel, and others) block automated requests with anti-bot protection. Their Terms of Service generally prohibit scraping.
+
+Solution:
+1. Do not retry aggressively, repeated blocked requests can get the IP rate-limited or banned.
+2. Tell the user plainly that the site is bot-protected and the price must be checked manually in a browser, then provide the direct search URL.
+3. Use any results that did come through, but label them with the source and note they could be stale.
+4. Never invent or estimate a price to paper over a blocked fetch, present only verified data.

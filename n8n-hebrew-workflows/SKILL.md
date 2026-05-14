@@ -430,22 +430,25 @@ To accept Bit via Grow by Meshulam: enable Bit in the Grow merchant dashboard. B
 
 #### n8n 2.0 Breaking Changes (December 2025)
 
+n8n 2.0 shipped in December 2025; the stable line is on 2.x (2.19.x as of May 2026, new minor most weeks). Pin a specific tag in production rather than `n8nio/n8n:latest`.
+
 n8n 2.0 introduced significant changes that affect Israeli workflows:
 
 | Change | Impact | Action Required |
 |--------|--------|----------------|
-| Execute Command node disabled by default | Bank scraper workflows using Execute Command will break | Use Code node instead (see Step 2), or re-enable via `N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true` |
+| Execute Command node disabled by default | Bank scraper workflows using Execute Command will break | Use Code node instead (see Step 2), or re-enable via the `NODES_EXCLUDE` env var (see below) |
 | Save/Publish workflow model | Workflows must be explicitly published to be active | Publish workflows after importing or creating them |
 | Task runner isolation for Code nodes | Code nodes run in isolated sandboxes | Ensure all required packages are available in the task runner environment |
 | MySQL/MariaDB support removed | Cannot use MySQL/MariaDB as n8n backend DB | Migrate to PostgreSQL (recommended) or SQLite |
 | Security hardening | Stricter defaults for community nodes and external access | Review security settings if using community nodes for Israeli integrations |
 
-To re-enable Execute Command if absolutely needed:
+In n8n 2.0, the Execute Command node (and Local File Trigger) are added to the default `NODES_EXCLUDE` list, which is why they vanish from the node panel. To re-enable Execute Command, override `NODES_EXCLUDE` so it no longer contains `n8n-nodes-base.executeCommand`, the simplest override is an empty list, then restart n8n:
+
 ```
-N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+NODES_EXCLUDE=[]
 ```
 
-However, the recommended approach is to migrate Execute Command workflows to Code nodes.
+Per the n8n 2.0 breaking-changes docs this is the supported mechanism, there is no `N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE` variable. Enabling Execute Command lets anyone with workflow edit access run arbitrary shell commands, so only do this in trusted single-user deployments. Migrating to Code nodes remains the recommended path.
 
 #### Israeli Cloud Options
 
@@ -530,6 +533,88 @@ Connect the Code node output to an AI Agent node (Tools Agent) configured with y
 
 Choose n8n when: you need self-hosting for Israeli data residency, unlimited automations, full code access for Israeli API quirks (Hebrew encoding, phone formatting, VAT calculations), or AI Agent capabilities with Israeli context.
 
+### Step 9: Workflow JSON Import/Export
+
+n8n workflows are JSON documents. Agents that build workflows programmatically (instead of clicking in the UI) must understand the shape:
+
+```json
+{
+  "name": "Morning daily reconciliation",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "cronExpression", "expression": "0 6 * * 0-4" }] } },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": { "main": [[{ "node": "Get Token", "type": "main", "index": 0 }]] }
+  }
+}
+```
+
+Key structure:
+- **`nodes`**: array of node objects. Each has `name` (unique, used as the connection key), `type` (e.g. `n8n-nodes-base.httpRequest`), `typeVersion` (must match a version n8n supports, or import fails), `parameters` (node config), and `position` (`[x, y]` coords).
+- **`connections`**: object keyed by source node `name`, mapping an output (`main`) to an array of arrays of `{ node, type, index }` targets. The double array allows multiple outputs (e.g. an IF node's branches).
+- Export via the UI ("Download") or `GET /api/v1/workflows/{id}`; import via "Import from File" or `POST /api/v1/workflows`. After importing into n8n 2.0 you must **publish** the workflow before it runs. `typeVersion` values change between releases, so build JSON against a known n8n version.
+
+### Step 10: Credentials Setup for Israeli APIs
+
+n8n stores secrets in its encrypted credential store, never inline in workflow JSON:
+
+- **Morning (Green Invoice) JWT**: no n8n-native credential. Chain HTTP Request nodes, the first calls `/account/token` with the API key + secret, later nodes send `Authorization: Bearer {{token}}` via **Header Auth** or an expression. The token expires after 60 minutes, so refresh per execution rather than storing it long-lived.
+- **Israeli SMS gateways (019, InforUMobile)**: create a **Header Auth** credential, name `Authorization`, value `Bearer <token>`, attach it to the HTTP Request node.
+- **Payment gateways (Cardcom, Tranzila, Grow)**: store merchant IDs / API keys as **Generic Credential** values referenced via `{{$credentials.fieldName}}`. Grow's `multipart/form-data` requests still pull secrets from the credential, not the node body.
+- For self-hosted n8n, set a stable `N8N_ENCRYPTION_KEY` so the credential store stays decryptable across restarts.
+
+## Examples
+
+### Example 1: Connect Morning to n8n for daily invoice reconciliation
+
+User says: "Every morning, pull yesterday's Morning invoices and flag any that are still unpaid."
+
+Node-by-node:
+1. **Schedule Trigger** (`scheduleTrigger`): cron `0 6 * * 0-4` (09:00 Israel winter, Sunday-Thursday).
+2. **HTTP Request, "Get Token"**: `POST https://api.greeninvoice.co.il/api/v1/account/token` with `{ id, secret }` from credentials. Output: JWT.
+3. **HTTP Request, "Search Documents"**: `POST /api/v1/documents/search` with `Authorization: Bearer {{$json.token}}`, body filtering `fromDate`/`toDate` to yesterday and `type` to 305/320.
+4. **IF node**: branch on `status` (open vs closed) to separate unpaid invoices.
+5. **HTTP Request (SMS) or Send Email**: notify the bookkeeper about unpaid invoices, Hebrew body wrapped in `<div dir="rtl">`.
+
+Wrap the whole flow with the Shabbat check from Step 4 if it must never run on a holiday that falls on a weekday.
+
+### Example 2: Bank transactions to a Google Sheet, holiday-aware
+
+User says: "Scrape my business account nightly and append new transactions to a sheet, but skip Shabbat and holidays."
+
+Node-by-node:
+1. **Schedule Trigger**: cron for a weeknight time.
+2. **HTTP Request (Hebcal)** + **Code (Shabbat check)** from Step 4: empty output stops the run during Shabbat/holiday.
+3. **Code node**: run `israeli-bank-scrapers` via `createScraper()` (Step 2), one item per transaction.
+4. **Code node**: normalize Hebrew descriptions, format amounts with `Intl.NumberFormat('he-IL', ...)`, parse dates as DD/MM/YYYY.
+5. **Google Sheets node** (Append): write rows to the bookkeeping sheet.
+6. A separate **Error Trigger** workflow catches a failed run and alerts (see Gotchas).
+
+## Recommended MCP Servers
+
+These MCP servers from the directory give an AI Agent node live Israeli data on demand:
+
+- **hebcal**: Hebrew/Jewish calendar and Shabbat times, an alternative to calling the Hebcal HTTP API in every workflow.
+- **israeli-bank**: Israeli bank account data, lets an agent pull transactions instead of running `israeli-bank-scrapers` in a Code node.
+- **data-gov-il**: Israeli government open data (CKAN), query registries without hand-building HTTP Request nodes.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| n8n Documentation | https://docs.n8n.io/ | Node reference, expressions, self-hosting |
+| n8n 2.0 Breaking Changes | https://docs.n8n.io/2-0-breaking-changes/ | Execute Command, NODES_EXCLUDE, removed DBs |
+| n8n Block Access to Nodes | https://docs.n8n.io/hosting/securing/blocking-nodes/ | NODES_EXCLUDE / NODES_INCLUDE syntax |
+| Morning (Green Invoice) API | https://www.greeninvoice.co.il/api-docs | Endpoints, document types, allocation flow |
+| Hebcal API | https://www.hebcal.com/home/developer-apis | Shabbat times, holidays, geonameid values |
+| data.gov.il CKAN API | https://data.gov.il/api/3 | datastore_search, resource IDs |
+
 ## Gotchas
 
 - **Agents default to UTC for schedule triggers.** Israel uses `Asia/Jerusalem` (UTC+2/+3), and Israeli DST transitions happen on different dates than US/EU (DST begins on the Friday before the last Sunday of March, ends on the last Sunday of October). Always set `GENERIC_TIMEZONE` in n8n config and verify trigger timing after every DST change.
@@ -537,9 +622,10 @@ Choose n8n when: you need self-hosting for Israeli data residency, unlimited aut
 - **Agents send Israeli phone numbers with leading zero.** SMS gateway APIs require international format (`972XXXXXXXXX`). A phone number like `050-1234567` must become `972501234567`. Always strip the leading zero and prepend `972`.
 - **Agents assume VAT is included in amounts.** Israeli invoices commonly show amounts before VAT (lifnei maam). Morning (Green Invoice) API returns both `amount` (before VAT) and `totalAmount` (with VAT). Always check which field you need. Current VAT rate is 18% (as of 2026).
 - **Agents miss that Shabbat times vary by city.** Candle lighting in Jerusalem is 40 minutes before sunset, in Haifa and Zikhron Ya'akov 30 minutes, and in Tel Aviv and all other cities 18 minutes. Using a single hardcoded time for all of Israel will cause workflows to run during Shabbat in some cities.
-- **Execute Command node is disabled by default in n8n 2.0.** If your workflow used Execute Command to run shell scripts (e.g., for bank scraping), it will silently fail after upgrading to n8n 2.0. Migrate to Code nodes or explicitly re-enable Execute Command in the n8n environment configuration.
+- **Execute Command node is disabled by default in n8n 2.0.** If your workflow used Execute Command to run shell scripts (e.g., for bank scraping), it will silently fail after upgrading to n8n 2.0. Migrate to Code nodes, or re-enable it by overriding the `NODES_EXCLUDE` env var so it no longer lists `n8n-nodes-base.executeCommand` (there is no `N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE` variable, that is a common hallucination).
 - **Morning (Green Invoice) amounts are in shekels, not agorot.** The API uses decimal shekels (`price: 50` = 50 NIS). Do not multiply by 100 or perform agorot conversions. This is different from some Israeli payment gateways that use agorot.
 - **Invoice Reform 2026 affects automation, threshold drops June 1, 2026.** Tax invoices over the threshold (10,000 NIS through May 31, 2026, then 5,000 NIS from June 1, 2026) created via API require allocation numbers from the Tax Authority. Workflows that auto-generate invoices must handle the allocation step or the invoice may be invalid for tax deduction purposes. Make the threshold a workflow variable, not a hardcoded literal.
+- **Unattended workflows fail silently without an Error Trigger.** A scheduled bank scrape or invoice sync that throws will just stop, no one sees it until the data is stale. Create a separate workflow starting with an **Error Trigger** node (n8n routes any failed execution to it) that sends a Hebrew alert to Slack or SMS. For transient failures (Cloudflare blocks, expired tokens, rate limits), also enable per-node **Retry On Fail** with a sensible wait, rather than letting the whole run die on the first hiccup.
 
 ## Bundled Resources
 

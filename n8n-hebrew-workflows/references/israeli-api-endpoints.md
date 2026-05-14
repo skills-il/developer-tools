@@ -192,7 +192,7 @@ Israeli mobile prefixes: 050, 051, 052, 053, 054, 055, 058
 
 ### Cardcom
 
-Documentation: `https://kb.cardcom.co.il/`
+Documentation: `https://www.cardcom.solutions/`
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
@@ -238,7 +238,7 @@ Tranzila API v2 also supports Bit payments. For new integrations, prefer v2 over
 
 ### Grow by Meshulam
 
-Documentation: `https://grow.link/developers`
+Documentation: `https://grow-il.readme.io/`
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|

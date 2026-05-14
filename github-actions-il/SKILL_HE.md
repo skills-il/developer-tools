@@ -95,7 +95,7 @@ jobs:
       is_frozen: ${{ steps.shabbat.outputs.is_frozen }}
       reason: ${{ steps.shabbat.outputs.reason }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: shabbat
         uses: ./.github/actions/shabbat-check
 
@@ -127,6 +127,8 @@ if: >
   needs.check-deploy-window.outputs.is_frozen != 'true' ||
   github.event.inputs.force_deploy == 'true'
 ```
+
+> **הערה:** ה-bash המוטמע ב-composite action שלמעלה הוא להמחשה בלבד. ההשוואה הלקסיקלית של מחרוזות `[[ "$NOW" > "$CANDLE" ]]` שבירה, היא עובדת רק כששני ה-timestamps חולקים אותו היסט אזור זמן ואותו פורמט מחרוזת, והיא נשברת במעברי שעון קיץ/חורף ובמעבר תאריך. המימוש הקנוני והנכון ב-`references/shabbat-deploy-freeze.md` ממיר כל timestamp לשניות epoch לפני ההשוואה ומוסיף buffer מתוכנן לפני שבת. השתמשו במימוש הייחוס בתהליכים אמיתיים.
 
 למדריך המלא עם מקרי קצה וטיפול באזורי זמן, עיינו ב-`references/shabbat-deploy-freeze.md`.
 
@@ -204,10 +206,10 @@ IS-5568 הוא תקן הנגישות הישראלי, מבוסס על WCAG 2.1 AA
 accessibility-check:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
       with:
-        node-version: '24'
+        node-version: '22'
     - name: Install accessibility tools
       run: npm install -g @axe-core/cli pa11y-ci
 
@@ -238,7 +240,7 @@ accessibility-check:
 privacy-check:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Scan for exposed PII patterns
       run: |
         if grep -rn '[0-9]\{9\}' src/ --include="*.ts" --include="*.tsx" | \
@@ -267,7 +269,7 @@ privacy-check:
 deploy-vercel:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Deploy to Vercel
       env:
         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -389,6 +391,20 @@ runs:
 ### מסמכי עזר
 - `references/workflow-templates.md` -- תבניות YAML מלאות ומוכנות להעתקה ל-CI/CD של סטארטאפים ישראליים: lint-test-deploy, Supabase migration CI, i18n validation, ו-pipeline תאימות ישראלי. עיינו כשמקימים workflows לפרויקט חדש.
 - `references/shabbat-deploy-freeze.md` -- מדריך יישום מפורט להקפאת פריסה בשבת וחגים, כולל שימוש ב-hebcal API, מקרי קצה של אזורי זמן, אסטרטגיות מרובות סביבות, ונהלי דריסת חירום. עיינו כשמיישמים או מאתרים באגים במערכת ההקפאה.
+
+## שרתי MCP מומלצים
+
+- **hebcal**: לוח השנה היהודי וזמני שבת. חלופת MCP לקריאה ל-Hebcal HTTP API בתוך composite action, שימושית כשסוכן צריך נתוני חגים בזמן כתיבה או חשיבה על תהליך ולא בזמן ריצה.
+
+## קישורי עזר
+
+| מקור | כתובת | מה לבדוק |
+|------|-------|----------|
+| תיעוד GitHub Actions | https://docs.github.com/en/actions | תחביר workflow, לוחות cron, composite actions, environments |
+| Hebcal Shabbat API | https://www.hebcal.com/home/developer-apis | זמני שבת, לוח חגים, ערכי geonameid |
+| API של Monday.com | https://developer.monday.com/api-reference/docs | סכמת GraphQL, mutations, אימות |
+| מכון התקנים הישראלי | https://www.sii.org.il/he/ | תקן IS-5568, הסמכת נגישות |
+| אזורי Vercel | https://vercel.com/docs/edge-network/regions | קודי אזור (fra1) וחביון |
 
 ## מלכודות נפוצות
 

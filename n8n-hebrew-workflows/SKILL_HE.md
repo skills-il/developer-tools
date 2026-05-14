@@ -420,22 +420,23 @@ return [{ json: payment }];
 
 #### שינויים משמעותיים ב-n8n 2.0 (דצמבר 2025)
 
+n8n 2.0 שוחרר בדצמבר 2025; הקו היציב נמצא על 2.x (2.19.x נכון למאי 2026, עם minor חדש כמעט כל שבוע). נעלו תג ספציפי בפרודקשן במקום `n8nio/n8n:latest`.
+
 n8n 2.0 הביא שינויים משמעותיים שמשפיעים על תהליכים ישראליים:
 
 | שינוי | השפעה | פעולה נדרשת |
 |-------|-------|------------|
-| Execute Command node מושבת כברירת מחדל | תהליכי סריקת בנקים שמשתמשים ב-Execute Command ישברו | מעבר ל-Code node (שלב 2), או הפעלה מחדש דרך משתנה סביבה |
+| Execute Command node מושבת כברירת מחדל | תהליכי סריקת בנקים שמשתמשים ב-Execute Command ישברו | מעבר ל-Code node (שלב 2), או הפעלה מחדש דרך משתנה הסביבה `NODES_EXCLUDE` (ראו למטה) |
 | מודל שמירה/פרסום | תהליכים חייבים להתפרסם מפורשות כדי לפעול | פרסום תהליכים אחרי ייבוא או יצירה |
 | בידוד task runner ל-Code nodes | Code nodes רצים ב-sandbox מבודד | וידוא שכל החבילות הנדרשות זמינות בסביבת ה-task runner |
 | הסרת תמיכה ב-MySQL/MariaDB | לא אפשר להשתמש ב-MySQL/MariaDB כ-DB backend | מעבר ל-PostgreSQL (מומלץ) או SQLite |
 | הקשחת אבטחה | הגדרות מחמירות יותר לצמתי קהילה | בדיקת הגדרות אבטחה אם משתמשים בצמתי קהילה |
 
-להפעלה מחדש של Execute Command אם באמת צריך:
+ב-n8n 2.0, צומת Execute Command (וגם Local File Trigger) נוסף לרשימת `NODES_EXCLUDE` של ברירת המחדל, ולכן הוא נעלם מלוח הצמתים. כדי להפעיל מחדש את Execute Command, דורסים את `NODES_EXCLUDE` כך שלא יכיל את `n8n-nodes-base.executeCommand`, הדריסה הפשוטה ביותר היא רשימה ריקה, ואז מפעילים מחדש את n8n:
 ```
-N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+NODES_EXCLUDE=[]
 ```
-
-הגישה המומלצת היא להעביר תהליכי Execute Command ל-Code nodes.
+לפי תיעוד השינויים של n8n 2.0 זה המנגנון הנתמך, אין משתנה `N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE`. הפעלת Execute Command מאפשרת לכל מי שיש לו הרשאת עריכת workflow להריץ פקודות shell שרירותיות, אז עשו זאת רק בסביבות מהימנות וחד-משתמש. הגישה המומלצת נשארת מעבר ל-Code nodes.
 
 #### אפשרויות ענן ישראליות
 
@@ -520,6 +521,88 @@ return transactions;
 
 בחרו n8n כש: צריכים אירוח עצמי למיקום נתוני ישראל, אוטומציות ללא הגבלה, גישה מלאה לקוד לטיפול ב-API ישראליים (קידוד עברית, פורמט טלפונים, חישובי מע"מ), או יכולות AI Agent עם הקשר ישראלי.
 
+### שלב 9: ייבוא וייצוא של workflow כ-JSON
+
+תהליכי n8n הם מסמכי JSON. סוכנים שבונים תהליכים בצורה פרוגרמטית (במקום ללחוץ בממשק) חייבים להבין את המבנה:
+
+```json
+{
+  "name": "Morning daily reconciliation",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "cronExpression", "expression": "0 6 * * 0-4" }] } },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": { "main": [[{ "node": "Get Token", "type": "main", "index": 0 }]] }
+  }
+}
+```
+
+מבנה עיקרי:
+- **`nodes`**: מערך של אובייקטי צמתים. לכל אחד `name` (ייחודי, משמש כמפתח חיבור), `type` (למשל `n8n-nodes-base.httpRequest`), `typeVersion` (חייב להתאים לגרסה ש-n8n תומך בה, אחרת הייבוא נכשל), `parameters` (הגדרות הצומת) ו-`position` (קואורדינטות `[x, y]`).
+- **`connections`**: אובייקט שממופתח לפי `name` של צומת המקור, וממפה פלט (`main`) למערך של מערכים של יעדים `{ node, type, index }`. המערך הכפול מאפשר פלטים מרובים (למשל ענפי צומת IF).
+- ייצוא דרך הממשק ("Download") או `GET /api/v1/workflows/{id}`; ייבוא דרך "Import from File" או `POST /api/v1/workflows`. אחרי ייבוא ל-n8n 2.0 חובה לפרסם את התהליך לפני שהוא רץ. ערכי `typeVersion` משתנים בין גרסאות, לכן בנו JSON מול גרסת n8n ידועה.
+
+### שלב 10: הגדרת credentials ל-API ישראליים
+
+n8n שומר סודות ב-credential store מוצפן, לעולם לא בתוך ה-workflow JSON:
+
+- **JWT של Morning (חשבונית ירוקה)**: אין credential מובנה. משרשרים HTTP Request nodes, הראשון קורא ל-`/account/token` עם ה-API key וה-secret, הצמתים הבאים שולחים `Authorization: Bearer {{token}}` דרך **Header Auth** או ביטוי. הטוקן פג אחרי 60 דקות, אז מרעננים בכל הרצה במקום לשמור אותו לטווח ארוך.
+- **שערי SMS ישראליים (019, InforUMobile)**: יוצרים credential מסוג **Header Auth**, שם `Authorization`, ערך `Bearer <token>`, ומצרפים ל-HTTP Request node.
+- **שערי תשלום (Cardcom, Tranzila, Grow)**: שומרים מזהי סוחר / מפתחות API כערכי **Generic Credential** שמופנים דרך `{{$credentials.fieldName}}`. בקשות ה-`multipart/form-data` של Grow עדיין שולפות סודות מה-credential, לא מגוף הצומת.
+- באירוח עצמי, הגדירו `N8N_ENCRYPTION_KEY` יציב כדי שה-credential store יישאר ניתן לפענוח בין הפעלות מחדש.
+
+## דוגמאות
+
+### דוגמה 1: חיבור Morning ל-n8n להתאמת חשבוניות יומית
+
+המשתמש אומר: "כל בוקר תמשוך את חשבוניות Morning של אתמול ותסמן את אלה שעדיין לא שולמו."
+
+צומת אחר צומת:
+1. **Schedule Trigger**: cron `0 6 * * 0-4` (09:00 שעון ישראל חורף, ראשון-חמישי).
+2. **HTTP Request, "Get Token"**: `POST https://api.greeninvoice.co.il/api/v1/account/token` עם `{ id, secret }` מה-credentials. פלט: JWT.
+3. **HTTP Request, "Search Documents"**: `POST /api/v1/documents/search` עם `Authorization: Bearer {{$json.token}}`, גוף שמסנן `fromDate`/`toDate` לאתמול ו-`type` ל-305/320.
+4. **צומת IF**: מתפצל לפי `status` (פתוח מול סגור) כדי להפריד חשבוניות שלא שולמו.
+5. **HTTP Request (SMS) או Send Email**: מודיע למנהל החשבונות על חשבוניות שלא שולמו, גוף בעברית עטוף ב-`<div dir="rtl">`.
+
+עטפו את כל התהליך בבדיקת השבת משלב 4 אם הוא לא אמור לרוץ לעולם בחג שנופל באמצע השבוע.
+
+### דוגמה 2: תנועות בנק ל-Google Sheet, מודע לחגים
+
+המשתמש אומר: "תסרוק את חשבון העסק שלי כל לילה ותוסיף תנועות חדשות לגיליון, אבל תדלג על שבת וחגים."
+
+צומת אחר צומת:
+1. **Schedule Trigger**: cron לשעת ערב באמצע השבוע.
+2. **HTTP Request (Hebcal)** + **Code (בדיקת שבת)** משלב 4: פלט ריק עוצר את ההרצה בשבת/חג.
+3. **Code node**: מריץ `israeli-bank-scrapers` דרך `createScraper()` (שלב 2), פריט אחד לכל תנועה.
+4. **Code node**: מנרמל תיאורים בעברית, מעצב סכומים עם `Intl.NumberFormat('he-IL', ...)`, מפרסר תאריכים כ-DD/MM/YYYY.
+5. **Google Sheets node** (Append): כותב שורות לגיליון הנהלת החשבונות.
+6. תהליך **Error Trigger** נפרד תופס הרצה שנכשלה ומתריע (ראו מלכודות נפוצות).
+
+## שרתי MCP מומלצים
+
+שרתי ה-MCP הבאים מהדירקטוריה נותנים לצומת AI Agent נתונים ישראליים חיים לפי דרישה:
+
+- **hebcal**: לוח השנה היהודי וזמני שבת, חלופה לקריאה ל-Hebcal HTTP API בכל תהליך.
+- **israeli-bank**: נתוני חשבונות בנק ישראליים, מאפשר לסוכן למשוך תנועות במקום להריץ `israeli-bank-scrapers` ב-Code node.
+- **data-gov-il**: נתונים פתוחים של ממשלת ישראל (CKAN), שאילתת מרשמים בלי לבנות HTTP Request nodes ידנית.
+
+## קישורי עזר
+
+| מקור | כתובת | מה לבדוק |
+|------|-------|----------|
+| תיעוד n8n | https://docs.n8n.io/ | מדריך צמתים, ביטויים, אירוח עצמי |
+| שינויים שוברים ב-n8n 2.0 | https://docs.n8n.io/2-0-breaking-changes/ | Execute Command, NODES_EXCLUDE, DB שהוסרו |
+| חסימת גישה לצמתים ב-n8n | https://docs.n8n.io/hosting/securing/blocking-nodes/ | תחביר NODES_EXCLUDE / NODES_INCLUDE |
+| API של Morning (חשבונית ירוקה) | https://www.greeninvoice.co.il/api-docs | נקודות קצה, סוגי מסמכים, תהליך הקצאה |
+| API של Hebcal | https://www.hebcal.com/home/developer-apis | זמני שבת, חגים, ערכי geonameid |
+| CKAN API של data.gov.il | https://data.gov.il/api/3 | datastore_search, resource IDs |
+
 ## מלכודות נפוצות
 
 - **סוכנים משתמשים ב-UTC כברירת מחדל ל-schedule triggers.** ישראל ב-`Asia/Jerusalem` (UTC+2/+3), ומעבר לשעון קיץ בישראל קורה בתאריכים שונים מארה"ב ואירופה (שעון קיץ מתחיל ביום שישי שלפני יום ראשון האחרון של מרץ, ומסתיים ביום ראשון האחרון של אוקטובר). תמיד להגדיר `GENERIC_TIMEZONE` ולוודא אחרי כל מעבר שעון.
@@ -527,9 +610,10 @@ return transactions;
 - **סוכנים שולחים מספרי טלפון ישראליים עם אפס פותח.** שערי SMS דורשים פורמט בינלאומי (`972XXXXXXXXX`). מספר כמו `050-1234567` חייב להפוך ל-`972501234567`.
 - **סוכנים מניחים שמע"מ כלול בסכומים.** חשבוניות ישראליות מציגות בדרך כלל סכומים לפני מע"מ. Morning API מחזיר גם `amount` (לפני מע"מ) וגם `totalAmount` (כולל מע"מ). תמיד לבדוק איזה שדה נדרש. שיעור מע"מ נוכחי: 18% (נכון ל-2026).
 - **סוכנים מתעלמים מכך שזמני שבת משתנים לפי עיר.** הדלקת נרות בירושלים 40 דקות לפני השקיעה, בחיפה וזיכרון יעקב 30 דקות, ובתל אביב וכל שאר הערים 18 דקות. זמן קבוע אחד לכל ישראל יגרום לתהליכים לרוץ בשבת בחלק מהערים.
-- **Execute Command node מושבת כברירת מחדל ב-n8n 2.0.** תהליכים שהשתמשו ב-Execute Command להרצת סקריפטים (למשל לסריקת בנקים) ייכשלו בשקט אחרי שדרוג ל-n8n 2.0. יש לעבור ל-Code nodes או להפעיל מחדש Execute Command בהגדרות.
+- **Execute Command node מושבת כברירת מחדל ב-n8n 2.0.** תהליכים שהשתמשו ב-Execute Command להרצת סקריפטים (למשל לסריקת בנקים) ייכשלו בשקט אחרי שדרוג ל-n8n 2.0. יש לעבור ל-Code nodes, או להפעיל מחדש דרך דריסת משתנה הסביבה `NODES_EXCLUDE` כך שלא יכיל את `n8n-nodes-base.executeCommand` (אין משתנה `N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE`, זו הזיה נפוצה).
 - **סכומים ב-Morning API הם בשקלים, לא באגורות.** ה-API משתמש בשקלים עשרוניים (`price: 50` = 50 ש"ח). אין להכפיל ב-100 או לבצע המרות אגורות. זה שונה מכמה שערי תשלום שמשתמשים באגורות.
 - **רפורמת החשבוניות 2026 משפיעה על אוטומציות, הסף יורד ב-1 ביוני 2026.** חשבוניות מס מעל הסף (10,000 ש"ח עד 31 במאי 2026, ואז 5,000 ש"ח החל מ-1 ביוני 2026) שנוצרו דרך API דורשות כעת מספרי הקצאה מרשות המסים. תהליכים שמייצרים חשבוניות אוטומטית חייבים לטפל בשלב ההקצאה, אחרת החשבונית לא תקפה לניכוי מס. שמרו את הסף כמשתנה ב-workflow, לא כמספר קשיח.
+- **תהליכים לא מנוטרים נכשלים בשקט בלי Error Trigger.** סריקת בנק מתוזמנת או סנכרון חשבוניות שזורק שגיאה פשוט נעצר, ואף אחד לא יודע עד שהנתונים מיושנים. צרו תהליך נפרד שמתחיל בצומת **Error Trigger** (n8n מנתב כל הרצה שנכשלה אליו) ששולח התראה בעברית ל-Slack או SMS. לכשלים זמניים (חסימות Cloudflare, טוקנים שפגו, rate limit) הפעילו גם **Retry On Fail** ברמת הצומת עם המתנה סבירה, במקום לתת לכל ההרצה למות בכשל הראשון.
 
 ## משאבים מצורפים
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """JFrog Xray REST API Client.
 
-A standalone client for interacting with JFrog Xray — supports vulnerability
+A standalone client for interacting with JFrog Xray, supports vulnerability
 scanning, security policy management, watch creation, violation search, and
 report generation.
 

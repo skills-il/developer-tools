@@ -92,7 +92,7 @@ jobs:
       is_frozen: ${{ steps.shabbat.outputs.is_frozen }}
       reason: ${{ steps.shabbat.outputs.reason }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: shabbat
         uses: ./.github/actions/shabbat-check
 
@@ -133,6 +133,8 @@ if: >
   needs.check-deploy-window.outputs.is_frozen != 'true' ||
   github.event.inputs.force_deploy == 'true'
 ```
+
+> **Note:** The inline bash in the composite action above is illustrative. Its `[[ "$NOW" > "$CANDLE" ]]` lexical string comparison is fragile, it works only when both timestamps share the same timezone offset and string format, and it breaks across DST transitions and date rollovers. The canonical, correct implementation in `references/shabbat-deploy-freeze.md` converts every timestamp to epoch seconds before comparing and adds a configurable pre-Shabbat buffer. Use the reference implementation in real workflows.
 
 For the full implementation guide with edge cases and timezone handling, consult `references/shabbat-deploy-freeze.md`.
 
@@ -280,10 +282,10 @@ Add to your CI pipeline:
 accessibility-check:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
       with:
-        node-version: '24'
+        node-version: '22'
 
     - name: Install accessibility tools
       run: npm install -g @axe-core/cli pa11y-ci
@@ -327,7 +329,7 @@ The Israeli Privacy Protection Authority (Rashut HaHagana al HaPratiut) requires
 privacy-check:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Scan for exposed PII patterns
       run: |
@@ -371,7 +373,7 @@ Israeli projects should deploy to regions with low latency to Israel. Here are t
 deploy-vercel:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Deploy to Vercel
       env:
         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -391,9 +393,9 @@ deploy-aws:
   env:
     AWS_DEFAULT_REGION: eu-west-1  # Or me-south-1 for Bahrain
   steps:
-    - uses: aws-actions/configure-aws-credentials@v4
+    - uses: aws-actions/configure-aws-credentials@v5
       with:
-        role-to-arn: ${{ secrets.AWS_ROLE_ARN }}
+        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     # ... deployment steps
 ```
@@ -535,6 +537,20 @@ Result: Complete CI/CD pipeline respecting Israeli work culture, with compliance
 ### References
 - `references/workflow-templates.md` -- Complete, copy-paste-ready YAML workflow templates for Israeli startup CI/CD: lint-test-deploy, Supabase migration CI, i18n validation, and full Israeli compliance pipeline. Consult when setting up a new project's workflows from scratch.
 - `references/shabbat-deploy-freeze.md` -- Detailed implementation guide for Shabbat and holiday deploy freezes, including hebcal API usage, timezone edge cases, multi-environment strategies, and emergency override procedures. Consult when implementing or debugging the deploy freeze system.
+
+## Recommended MCP Servers
+
+- **hebcal**: Hebrew/Jewish calendar and Shabbat times. An MCP alternative to calling the Hebcal HTTP API inside a composite action, useful when an agent needs holiday data while authoring or reasoning about a workflow rather than at runtime.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| GitHub Actions Documentation | https://docs.github.com/en/actions | Workflow syntax, cron schedules, composite actions, environments |
+| Hebcal Shabbat API | https://www.hebcal.com/home/developer-apis | Shabbat times, holiday calendar, geonameid values |
+| Monday.com API | https://developer.monday.com/api-reference/docs | GraphQL schema, mutations, authentication |
+| Standards Institution of Israel | https://www.sii.org.il/en/ | IS-5568 standard, accessibility certification |
+| Vercel Regions | https://vercel.com/docs/edge-network/regions | Region codes (fra1) and latency reference |
 
 ## Gotchas
 

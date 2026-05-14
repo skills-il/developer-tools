@@ -204,7 +204,7 @@ jobs:
     outputs:
       is_frozen: ${{ steps.check.outputs.is_frozen }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: check
         uses: ./.github/actions/shabbat-check
         with:
@@ -307,7 +307,7 @@ Instead of dropping frozen deploys, queue them for automatic deployment after ha
 ```yaml
 - name: Queue deploy for after Shabbat
   if: steps.shabbat.outputs.is_frozen == 'true'
-  uses: peter-evans/repository-dispatch@v3
+  uses: peter-evans/repository-dispatch@v4
   with:
     event-type: queued-deploy
     client-payload: |
@@ -335,7 +335,7 @@ jobs:
   check-queue:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: shabbat
         uses: ./.github/actions/shabbat-check
       - name: Process queue
