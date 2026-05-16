@@ -172,24 +172,13 @@ Keep the 3-pass cap from upstream. After 3 failed renders, stop iterating and fl
 
 ### Step 7: Caption burn-in recipe (the one that actually works on macOS)
 
-This is the proven recipe for getting Hebrew captions burned in correctly with RTL ordering, proper font, and adequate spacing. The bundled `scripts/burn-hebrew-captions.sh` does all of this in one command, but understand the four moves so you can debug:
+The bundled `scripts/burn-hebrew-captions.sh` does this in one command. The recipe is short:
 
-1. **Pre-shape the SRT with python-bidi.** Convert each Hebrew caption line from logical order (the order you wrote / Scribe transcribed) to display order (the order pixels need to be drawn LTR to produce a correct RTL visual). This bypasses libass's broken BiDi entirely.
-   ```python
-   from bidi.algorithm import get_display
-   display_text = get_display(logical_text)   # "ספריית הסקילז AI שבניתי." → ".יתינבש AI זליקסה תיירפס"
-   ```
-   The pre-shaped text looks "scrambled" when you read it, but that's the point: libass draws it character-by-character LTR, and the result looks RTL-correct on screen.
+1. **Sanitize the SRT** for Scribe garbage characters (Devanagari `्स` etc. that Scribe occasionally drops mid-Hebrew). Auto-fixes known patterns, warns on unknown ones.
+2. **Feed the SRT directly to libass** via the FFmpeg `subtitles=` filter with explicit `fontsdir=` and `force_style=FontName=Heebo\,FontSize=26\,Bold=1\,Spacing=2\,Encoding=1\,...`. libass + SRT handles Hebrew BiDi correctly out of the box. Do NOT convert to ASS first; do NOT pre-shape with python-bidi (both interfere with libass's native BiDi).
+3. **Sample verification frames** (1 per minute, capped at 30).
 
-2. **Convert pre-shaped SRT to ASS with `ffmpeg -i master_bidi.srt master_bidi.ass`.** ASS gives libass explicit style metadata.
-
-3. **Patch the ASS file:**
-   - `PlayResX/PlayResY` to match output resolution (ffmpeg defaults to 384x288, which renders fonts comically small at 1280x720)
-   - Replace the `Default` style line with Heebo at the right size, with `Spacing=2` for letter tracking and `Encoding=1` per the libass rule
-
-4. **Burn with explicit `fontsdir=`:** `subtitles=master_bidi.ass:fontsdir=$HOME/Library/Fonts`. The `fontsdir` parameter is more reliable than fontconfig discovery in static FFmpeg builds.
-
-One-line invocation via the bundled script:
+One-line invocation:
 
 ```bash
 bash scripts/burn-hebrew-captions.sh \
@@ -199,7 +188,9 @@ bash scripts/burn-hebrew-captions.sh \
   --ffmpeg /tmp/ffmpeg
 ```
 
-After it runs, open the PNGs in the `verify_*/` directory it creates and apply the Step 6 checks.
+**Important correction (v1.2.3):** earlier versions of this skill (v1.1.0 through v1.2.2) claimed libass+SRT was silently broken for Hebrew BiDi on macOS and recommended a python-bidi pre-shape + SRT→ASS chain to work around it. **That diagnosis was wrong.** libass+SRT actually handles BiDi correctly. The pre-shape chain was double-reversing back to source byte order, producing the exact symptom (period on right, first word on left) the workaround was meant to fix. Renders produced with v1.1.0-v1.2.2 that look broken will render correctly with v1.2.3+ unchanged.
+
+**FontSize is in absolute pixels** when using libass+SRT directly (no PlayRes scaling). Defaults: 26 for 720p, 36-42 for 1080p, 56-72 for 4K.
 
 ### Step 8: Long video, captions-only mode (cheap path for non-editors)
 
@@ -302,7 +293,7 @@ video-use is a standalone Claude Code skill and does not require any MCP server.
 
 - **Scribe occasionally drops non-Hebrew Unicode characters into Hebrew transcripts.** Most commonly Devanagari (`्` U+094D, `स` U+0938) at the end of words where the speaker's soft `-s` or `-m` ending sounded ambiguous. The classic failure mode: "סקילים" (skills, plural) transcribed as "סקיל्स" with two Devanagari characters instead of `ים`. These chars then render as boxes or wrong shapes in the burned-in caption. Always scan the SRT for non-Hebrew/Latin characters before burning. `burn-hebrew-captions.sh` does this automatically in its Step 0 sanitization pass with auto-fixes for common Scribe failure modes (extend the `auto_fixes` dict as you encounter more). To scan manually: `python3 -c "import re; bad=[(ln,line,[(c,hex(ord(c))) for c in line if not re.match(r'[֐-׿a-zA-Z0-9 .,!?\\\"\\'():;\\-]', c)]) for ln,line in enumerate(open('master.srt').read().split('\\n'),1) if '-->' not in line]; bad=[x for x in bad if x[2]]; [print(b) for b in bad]"`.
 - **Helvetica is the most common mistake.** The bundled `SUB_FORCE_STYLE` in `render.py` uses `FontName=Helvetica`. Helvetica's Hebrew glyphs do NOT exist in the macOS or Linux Helvetica builds (Apple's "Helvetica" font is Latin-only; Linux usually maps it to a metric-equivalent). libass silently falls back to a tofu box. Always override `FontName` to a known Hebrew font before invoking the caption-burn step.
-- **libass + SRT BiDi is silently broken on macOS.** Even with `--enable-libass --enable-fontconfig --enable-libharfbuzz` all present in the ffmpeg build, the SRT path frequently does NOT apply BiDi character reordering. Captions appear with characters in source byte order (period on the right, first word on the left). The "convert SRT to ASS" workaround alone does NOT fix this. The reliable fix is to pre-shape the text with python-bidi BEFORE converting to ASS. The bundled `burn-hebrew-captions.sh` does this automatically.
+- **libass + SRT BiDi works correctly** (corrected in v1.2.3). Earlier versions of this skill claimed otherwise and recommended a python-bidi pre-shape workaround. End-to-end testing proved that diagnosis wrong: libass + SRT renders Hebrew with correct BiDi when the SRT is fed directly to the `subtitles=` filter. Avoid `ffmpeg -i master.srt master.ass` + `subtitles=master.ass` chains — ASS conversion silently re-applies BiDi on already-source-order text, producing the same broken-looking output the original workaround was trying to fix.
 - **Homebrew's default ffmpeg lacks libass and fontconfig.** As of 2026-05, a fresh `brew install ffmpeg` produces a binary that cannot burn captions at all. See `references/macos-ffmpeg-setup.md` for the static-build or homebrew-tap fixes.
 - **2-word UPPERCASE chunks do not translate to Hebrew.** Hebrew has no uppercase. Do not try to fake it with `\fnHeebo Bold`, the result looks the same as regular Heebo. The Hebrew kinetic-typography equivalent is bold weight + larger size + tighter line breaks (4-6 Hebrew words per chunk, since Hebrew words are shorter than English on average).
 - **`fontsdir=` is more reliable than fontconfig.** Even when `fc-match Heebo` resolves correctly, the `subtitles` filter sometimes ignores fontconfig and falls back to libass's built-in font, producing the wrong typeface in the burned-in output. Always pass `subtitles=foo.ass:fontsdir=$HOME/Library/Fonts` (or wherever Heebo lives per `fc-list :family=Heebo file`).
@@ -338,7 +329,7 @@ Solution: scan the SRT for non-Hebrew/Latin characters and fix them. `burn-hebre
 Cause: libass cannot find a Hebrew font, or ffmpeg lacks libass. Fix: `ffmpeg -version | grep enable-libass` (if empty, see `references/macos-ffmpeg-setup.md`); `fc-list :lang=he` (if empty, run `install-hebrew-fonts.sh`); always pass `fontsdir=$HOME/Library/Fonts` explicitly.
 
 ### Hebrew letters correctly shaped but in wrong visual positions
-The #1 Hebrew failure on macOS. Symptoms: period on right instead of left; first word on visual left instead of right. Cause: libass skipped BiDi. Fix: pre-shape the SRT with `python-bidi.get_display()` before rendering. `burn-hebrew-captions.sh` does this. SRT->ASS conversion alone does NOT fix this; the pre-shape is non-optional.
+Symptoms: period on right instead of left; first word on visual left instead of right. Cause: source SRT got run through python-bidi pre-shape AND then through libass (which itself does BiDi), producing double-reversal back to source order. Fix: feed the source SRT directly to libass via `subtitles=master.srt:fontsdir=...:force_style=...`. Do not pre-shape. Do not convert to ASS. `burn-hebrew-captions.sh` v1.2.3+ does this correctly.
 
 ### Wrong font (not Heebo) despite Heebo installed
 Cause: libass fell back to its built-in font because fontconfig integration is unreliable. Fix: pass `fontsdir=$HOME/Library/Fonts` explicitly to `subtitles=`.
