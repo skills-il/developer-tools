@@ -14,28 +14,62 @@ video-use ships with a strong English-first default: the bundled `SUB_FORCE_STYL
 
 ## Pricing you should understand before you start
 
-video-use is a free open-source skill, but the underlying services it calls are paid. Read this before you transcribe your first file.
+video-use is a free open-source skill, but the underlying services it calls are paid. **The price depends entirely on which mode you use.** Read this before you transcribe your first file.
 
-| What | Provider | Typical cost |
-|------|----------|--------------|
-| Speech-to-text | ElevenLabs Scribe | ~$0.40 / hour of audio. A 10-minute talking-head file is ~$0.07. Free tier covers ~10 hours/month. Cached per source file, so re-edits of the same footage cost nothing. |
-| Agent orchestration (Claude Code) | Anthropic | A typical 75-second teaser cut from raw footage runs **$5-$12** in Claude tokens across the full strategy + render + self-eval loop. This is the dominant cost, not Scribe. Iteration cycles after the first render are cheaper (~$1-$3 each) because the transcript is cached and the agent reuses the project memory. |
-| Hosting / rendering | Local (your machine) | $0. All FFmpeg + libass + Heebo rendering happens on your machine. |
+### Two modes, very different prices
 
-**Real numbers from a validated test run** (May 2026, 11:29 source → 75s Hebrew teaser):
-- Scribe: ~$0.08 (one transcription, cached after)
-- Claude API: $2.34 (strategy) + $7.16 (full cut with self-eval and 1 re-render) = $9.50
-- **Total: ~$9.60 for first-pass output**, ~$1-3 per follow-up iteration
+| Mode | What it does | Best for | Cost on 1-hour video |
+|------|--------------|----------|----------------------|
+| **A. Captions-only** (`scripts/captions-only.sh`) | Transcribes the video, burns Hebrew captions on the original. No cuts, no edit, no agent loop. | Lectures, webinars, full talks, podcast videos. Anyone who wants captions on a full video without editing. | **~$1-3 total** (~$0.40 Scribe + ~$1-2 Claude orchestration) |
+| **B. Full cut workflow** (the default video-use flow) | Inventory → strategy → cut decisions → render → self-eval. Produces a curated edit from raw footage. | Cutting a long recording into a short teaser. Multi-take selection. Creative edit work. | **~$25-60** on a 1-hour source; **$120-300** on a 3-hour source. Scales super-linearly with duration because the agent re-reads the transcript across turns. |
 
-If you are budget-sensitive, two cheap moves:
-1. Start with a transcribe-and-propose run only (no cuts). Costs ~$2 and tells you whether the agent's strategy matches what you wanted before committing to a full render.
-2. Use `claude -p` headless mode for long mechanical phases. Interactive sessions cost more because every back-and-forth is a new turn with the full system prompt.
+| Service | Provider | Per-unit cost |
+|---------|----------|---------------|
+| Speech-to-text | ElevenLabs Scribe | ~$0.40 / hour of audio. Free tier covers ~10 hours/month. Cached per source file, so re-runs cost nothing. |
+| Agent orchestration | Anthropic Claude | Depends on mode (see table above). Caption-only ≈ flat $1-3. Full cut scales with transcript length. |
+| Local rendering | Your machine | $0. All FFmpeg + libass + Heebo work happens locally. |
 
-**One pricing trap to avoid:** `no_verbatim=true` on Scribe sounds like it saves money by dropping fillers, but it's destructive , your editor agent loses the ability to make per-instance keep/cut decisions, which usually leads to a re-transcription later. Keep `no_verbatim=false` (the default) and run the Hebrew lexicon post-pass instead.
+**Real numbers from a validated test run** (May 2026, 11:29 Hebrew source → 75s teaser via Full cut mode):
+- Scribe: ~$0.08 (one transcription)
+- Claude API: $2.34 (strategy) + $7.16 (cut + self-eval + 1 re-render) = $9.50
+- Total: **~$9.60** for first pass, ~$1-3 per follow-up iteration
+
+### Pick the mode that matches your goal
+
+**If you have a long video and just want captions on it** (the most common non-technical request), use captions-only. It's 20-100x cheaper than the full workflow and produces the same caption quality. Skip the rest of this skill and jump to Step 9.
+
+**If you have raw footage and want a curated edit** (talking-head highlights, multi-take montage, teaser cut), use the full workflow. That's what the rest of the steps below cover.
+
+### Budget tips
+
+1. **Always start with captions-only mode if you're not sure.** If the captioned full video is enough, you saved ~$50. If you decide to cut later, the Scribe transcript is cached.
+2. **For the full cut workflow, start with a transcribe-and-propose run only** (no cuts). Costs ~$2 and tells you whether the agent's strategy matches what you wanted before committing.
+3. **Use `claude -p` headless mode for long mechanical phases.** Interactive sessions cost more per turn.
+
+**One pricing trap to avoid:** `no_verbatim=true` on Scribe sounds like it saves money by dropping fillers, but it's destructive, your editor agent loses the ability to make per-instance keep/cut decisions, which usually leads to a re-transcription later. Keep `no_verbatim=false` (the default) and run the Hebrew lexicon post-pass instead.
 
 ## Instructions
 
 This skill is an **overlay** on top of video-use's upstream SKILL.md. Read the upstream SKILL.md first for the 12 Hard Rules, the EDL JSON schema, `takes_packed.md`, `render.py`, and the parallel-animation pattern. Then apply the Hebrew deltas below.
+
+### Step 0 (MANDATORY FIRST QUESTION): Ask the user which mode they want
+
+Before transcribing, before checking env, before anything else, ask the user this question in plain Hebrew (or English if they wrote in English). Do NOT assume the answer based on file length or filename, ask explicitly. Most users who land here want option A and don't know about option B; some users want B and would waste $50 finding out captions-only would have done it.
+
+> *"איזה משני המסלולים אתה רוצה?*
+>
+> *(א) כתוביות בלבד על כל הסרטון, בלי חיתוך, בלי עריכה. עולה כ-$1 עד $3 לכל סרטון בכל אורך. מתאים להרצאה, וובינר, פודקאסט, או כל סרטון שאתה רוצה לצרוב עליו כתוביות בעברית בלי לערוך אותו.*
+>
+> *(ב) חיתוך וערוך לטיזר/קליפ קצר, עם כתוביות. עולה כ-$10 עד $300 תלוי באורך המקור. מתאים אם אתה רוצה להפיק קליפ קצר מחומר גלם ארוך, לבחור best takes, או לסדר ביטים מחדש."*
+
+Or in English: *"Which path do you want? (A) Just captions on the full video, no cuts (~$1-3 any length) or (B) Cut + edit into a teaser with captions (~$10-300 depending on source length)?"*
+
+Route based on answer:
+- **A → captions-only**: skip to Step 8 (captions-only mode). Steps 1-7 are not needed for this path.
+- **B → full cut workflow**: continue with Step 1 onward.
+- **Unsure / "do both"**: recommend A first. If the captioned full video isn't enough, the Scribe transcript is already cached and the B path becomes ~$0.08 cheaper.
+
+This question replaces the upstream's "Converse" step 3 framing for the first turn. After they pick, you can still ask the upstream's content-shaped questions (target length, aspect, must-keep moments) within whichever path they chose.
 
 ### Step 1: Verify the environment before the first render
 
@@ -187,7 +221,41 @@ bash scripts/burn-hebrew-captions.sh \
 
 After it runs, open the PNGs in the `verify_*/` directory it creates and apply the Step 6 checks.
 
-### Step 8: Sample Hebrew prompts to drive the conversation phase
+### Step 8: Long video, captions-only mode (cheap path for non-editors)
+
+**Use this when:** the user has a full lecture, webinar, podcast video, or talking-head recording, and just wants Hebrew captions burned in on the whole thing. No cuts. No editing. No multi-take selection. This is by far the most common request from non-technical users, and the full Steps 1-7 workflow is overkill (and 20-100x more expensive) for it.
+
+The bundled `scripts/captions-only.sh` collapses the full workflow into one command:
+
+```bash
+# Basic: just add captions
+bash scripts/captions-only.sh ~/Movies/my-lecture.mp4
+
+# Add captions AND remove "אה / אהה / אם" filler words from the on-screen text
+# (audio stays untouched, words just won't appear in captions):
+bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 --strip-fillers
+
+# With custom output path and a static ffmpeg
+bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 \
+  --output ~/Movies/my-lecture-with-captions.mp4 \
+  --ffmpeg /tmp/ffmpeg
+```
+
+What it does, end-to-end:
+1. Auto-detects `ELEVENLABS_API_KEY` from env or `~/Developer/video-use/.env`
+2. Probes the video duration and prints the estimated Scribe cost
+3. Transcribes the full video via Scribe with `language_code=heb` and `timestamps_granularity=word`
+4. Builds an SRT chunking 5-7 words per caption, breaking on silence ≥250ms or sentence-end punctuation
+5. (Optional) strips ALWAYS-FILLER tokens from the SRT if `--strip-fillers` is passed
+6. Invokes `burn-hebrew-captions.sh` which does the python-bidi pre-shape + libass burn with Heebo + verify frames
+
+Output lands at `<input>.captioned.<ext>` next to the source (or wherever `--output` says). Verify frames land in a `verify_*/` directory you can open with `open`.
+
+**Cost on a real example:** a 1-hour Hebrew lecture costs ~$0.40 in Scribe + ~$1 in Claude tokens for the orchestration around the bash script = **~$1.40 total**. A 3-hour webinar: ~$1.20 + ~$2 = **~$3.20**. Compare to the full cut workflow on the same 3-hour source: **$120-300**.
+
+**When NOT to use this:** if you need to cut the long video down to a short teaser, or pick the best take from multiple recordings of the same content, or rearrange beats for narrative flow, you need the full Steps 1-7 workflow. Captions-only just captions the original.
+
+### Step 9: Sample Hebrew prompts to drive the conversation phase
 
 video-use's "Converse" step (step 3 of "The process") asks questions shaped by the material. Sample Hebrew prompts users send:
 
@@ -255,7 +323,8 @@ video-use is a standalone Claude Code skill and does not require any MCP server.
 ### Scripts
 
 - `scripts/install-hebrew-fonts.sh`: Idempotent installer for Heebo, Rubik, Assistant, Noto Sans Hebrew. macOS (Homebrew cask) and Debian/Ubuntu (apt + manual fallback) paths. Re-runs `fc-cache` and verifies via `fc-list :lang=he`.
-- `scripts/burn-hebrew-captions.sh`: The Step 7 caption burn-in recipe in one command. Pre-shapes SRT with python-bidi, converts to ASS, patches PlayRes/Style/Spacing, burns with explicit fontsdir, samples verification frames. Pre-flight checks that ffmpeg has libass and that Hebrew fonts exist before running.
+- `scripts/burn-hebrew-captions.sh`: The Step 7 caption burn-in recipe in one command. Pre-shapes SRT with python-bidi, converts to ASS, patches PlayRes/Style/Spacing, burns with explicit fontsdir, samples verification frames. Pre-flight checks that ffmpeg has libass and that Hebrew fonts exist before running. Step 0 of the script also sanitizes Scribe garbage characters (Devanagari etc.) with auto-fixes.
+- `scripts/captions-only.sh`: The Step 8 cheap path for non-technical users. One command, full video in, captioned full video out. Transcribes via Scribe, builds SRT, optionally strips ALWAYS-FILLER tokens (`--strip-fillers`), then runs burn-hebrew-captions.sh. ~$1-3 total regardless of video length, vs. ~$25-300 for the full cut workflow.
 
 ### References
 
