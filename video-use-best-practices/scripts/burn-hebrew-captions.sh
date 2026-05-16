@@ -210,20 +210,30 @@ ESCAPED_ASS=$(printf '%s' "$PATCHED_ASS" | sed 's/\\/\\\\\\\\/g; s/:/\\:/g')
   -c:v libx264 -preset medium -crf 18 \
   "$OUT"
 
-# Step 5: Sample 3 frames for self-verification
+# Step 5: Sample verification frames (one per minute, capped at 30)
 log "Step 5: Sampling frames for visual verification"
 DURATION=$("$FFMPEG" -v error -i "$OUT" -hide_banner 2>&1 | sed -nE 's/.*Duration: ([0-9]+):([0-9]+):([0-9]+).*/\1*3600+\2*60+\3/p' | head -1 | bc)
 [[ -z "$DURATION" ]] && DURATION=60
 
 VERIFY_DIR="${WORKDIR}/verify_$(date +%s)"
 mkdir -p "$VERIFY_DIR"
-for t in 5 $((DURATION / 2)) $((DURATION - 5)); do
-  [[ $t -lt 0 ]] && t=1
+
+# Sample density: ~1 frame per minute, but at least 3 frames, at most 30
+NUM_FRAMES=$(( DURATION / 60 ))
+[[ $NUM_FRAMES -lt 3 ]] && NUM_FRAMES=3
+[[ $NUM_FRAMES -gt 30 ]] && NUM_FRAMES=30
+STEP=$(( DURATION / NUM_FRAMES ))
+[[ $STEP -lt 1 ]] && STEP=1
+
+log "  Sampling ${NUM_FRAMES} frames (every ~${STEP}s across ${DURATION}s output)"
+for ((i=0; i<NUM_FRAMES; i++)); do
+  t=$(( STEP * i + STEP / 2 ))
+  [[ $t -lt 1 ]] && t=1
   [[ $t -ge $DURATION ]] && t=$((DURATION - 1))
   "$FFMPEG" -y -loglevel error -ss "$t" -i "$OUT" -frames:v 1 \
-    -vf "crop=iw:200:0:ih-220" "${VERIFY_DIR}/t${t}s.png"
-  log "  ${VERIFY_DIR}/t${t}s.png"
+    -vf "crop=iw:200:0:ih-220" "${VERIFY_DIR}/t$(printf '%04d' $t)s.png"
 done
+log "  ${VERIFY_DIR}/ contains ${NUM_FRAMES} verification frames"
 
 # Final summary
 log ""

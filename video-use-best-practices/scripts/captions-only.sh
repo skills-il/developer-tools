@@ -16,6 +16,11 @@
 #   --font-size N         Font size in ASS PlayRes units (default: 52)
 #   --ffmpeg PATH         Path to ffmpeg with libass (default: ffmpeg on PATH)
 #   --keep-work           Don't delete temp work directory after success
+#   --yes                 Skip the cost confirmation prompt (for unattended/CI runs)
+#
+# Side outputs (alongside the captioned video):
+#   <video>.he.srt        The generated SRT file (useful for YouTube/Vimeo upload
+#                         if you want soft captions there instead of burned-in)
 #
 # Why this exists: the full video-use workflow is designed for "raw footage -> curated cut"
 # and costs $25-300 in Claude API tokens on long videos because the agent re-reads the
@@ -38,6 +43,7 @@ FONT="Heebo"
 FONTSIZE=52
 FFMPEG="ffmpeg"
 KEEP_WORK=0
+ASSUME_YES=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -47,7 +53,8 @@ while [[ $# -gt 0 ]]; do
     --output) OUTPUT="$2"; shift 2 ;;
     --ffmpeg) FFMPEG="$2"; shift 2 ;;
     --keep-work) KEEP_WORK=1; shift ;;
-    -h|--help) sed -n '2,30p' "$0"; exit 0 ;;
+    --yes|-y) ASSUME_YES=1; shift ;;
+    -h|--help) sed -n '2,35p' "$0"; exit 0 ;;
     -*) echo "Unknown option: $1" >&2; exit 1 ;;
     *) [[ -z "$VIDEO" ]] && VIDEO="$1" || { echo "Multiple inputs not supported: $1" >&2; exit 1; }; shift ;;
   esac
@@ -106,7 +113,19 @@ fi
 if [[ -n "$DURATION_SEC" ]] && [[ "$DURATION_SEC" -gt 0 ]]; then
   MIN=$((DURATION_SEC / 60))
   COST_CENTS=$(( DURATION_SEC * 40 / 3600 ))
-  log "Duration: ${MIN} minutes. Estimated Scribe cost: ~\$0.$(printf '%02d' $COST_CENTS)"
+  COST_STR="\$0.$(printf '%02d' $COST_CENTS)"
+  [[ $COST_CENTS -gt 99 ]] && COST_STR="\$$(($COST_CENTS / 100)).$(printf '%02d' $((COST_CENTS % 100)))"
+  log "Duration: ${MIN} minutes. Estimated Scribe cost: ~${COST_STR}"
+
+  # Cost confirmation gate (skipped with --yes)
+  if [[ $ASSUME_YES -eq 0 ]]; then
+    printf '[captions-only] Proceed and bill your ElevenLabs account ~%s? [y/N] ' "${COST_STR}"
+    read -r CONFIRM
+    case "$CONFIRM" in
+      y|Y|yes|YES) ;;
+      *) log "Aborted by user."; exit 0 ;;
+    esac
+  fi
 fi
 
 log "Step 1: Transcribing with ElevenLabs Scribe (no_verbatim=false, language_code=heb)"
@@ -198,9 +217,15 @@ bash "$BURN_SCRIPT" \
   --font-size "$FONTSIZE" \
   --ffmpeg "$FFMPEG"
 
+# Step 4: Export the SRT alongside the output for users who want soft captions
+SRT_OUT="${OUTPUT%.*}.he.srt"
+cp "${WORKDIR}/captions.srt" "$SRT_OUT"
+log "  SRT exported:    $SRT_OUT (upload to YouTube/Vimeo for soft captions)"
+
 log ""
 log "Done."
 log "  Captioned video: $OUTPUT"
+log "  Side SRT:        $SRT_OUT"
 log ""
 log "Open verify frames (from the burn script) with:"
 log "  open \"$(dirname "$OUTPUT")\"/verify_*"

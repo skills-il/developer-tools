@@ -49,27 +49,16 @@ sudo mv /tmp/ffmpeg /usr/local/bin/ffmpeg-static
 ln -sf /usr/local/bin/ffmpeg-static /usr/local/bin/ffmpeg
 ```
 
-## Fix option B: Homebrew with extra flags
+## Fix option B: Third-party Homebrew tap
 
-`brew install ffmpeg` accepts feature flags but the syntax varies by Homebrew version. As of 2026-05 the working incantation is:
-
-```bash
-brew uninstall ffmpeg
-brew install ffmpeg --with-libass --with-fontconfig --with-freetype --with-harfbuzz
-```
-
-If `brew install` complains about unknown flags, you are on a recent Homebrew that has removed feature flags from the main formula. Fall back to **fix option A** (static build) or **option C** (third-party tap).
-
-## Fix option C: Third-party Homebrew tap
-
-`homebrew-ffmpeg/ffmpeg` re-introduces the feature-flag syntax:
+Homebrew removed feature flags from the main `ffmpeg` formula years ago (no `brew install ffmpeg --with-libass`). The `homebrew-ffmpeg/ffmpeg` tap re-introduces them:
 
 ```bash
 brew tap homebrew-ffmpeg/ffmpeg
 brew install homebrew-ffmpeg/ffmpeg/ffmpeg --with-libass --with-fontconfig --with-libharfbuzz
 ```
 
-This installs to `/opt/homebrew/bin/ffmpeg` (Apple Silicon) or `/usr/local/bin/ffmpeg` (Intel) and shadows the default formula.
+This installs to `/opt/homebrew/bin/ffmpeg` (Apple Silicon) or `/usr/local/bin/ffmpeg` (Intel) and shadows the default formula. Slower to install than option A (compiles from source), but the binary is dynamically linked and updates with Homebrew's normal cadence.
 
 ## Known gotchas after install
 
