@@ -37,12 +37,7 @@
     "en": "Hebrew override layer on top of browser-use/video-use. Covers SUB_FORCE_STYLE override (Helvetica has no Hebrew glyphs), Hebrew filler-word post-pass on Scribe word timestamps, libass + fontconfig font discovery for Heebo, takes_packed.md handling for Hebrew with sofit/nikud/code-switching, and animation slot guidance that defers to hyperframes-best-practices and remotion-best-practices. Use when editing Hebrew talking-head video, podcast clips, tutorials, or marketing video with video-use. Do NOT use for non-Hebrew video-use sessions, Hebrew podcast audio-only post-production (use hebrew-podcast-postproduction), or generic FFmpeg work without video-use orchestration."
   },
   "supported_agents": [
-    "claude-code",
-    "cursor",
-    "codex",
-    "opencode",
-    "windsurf",
-    "gemini-cli"
+    "claude-code"
   ],
   "volatility": "versioned",
   "authoritative_sources": [

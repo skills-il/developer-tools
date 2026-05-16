@@ -3,7 +3,7 @@ name: video-use-best-practices
 description: "Best practices for using browser-use/video-use to edit Hebrew videos end-to-end with Claude Code. Covers the Hebrew-specific deltas to video-use's 12 Hard Rules: SUB_FORCE_STYLE override (Helvetica has no Hebrew glyphs), Hebrew filler-word post-pass on Scribe word timestamps, libass + fontconfig font discovery for Heebo, takes_packed.md handling for Hebrew with sofit/nikud/code-switching, and animation slot guidance that defers to hyperframes-best-practices and remotion-best-practices. Use when editing Hebrew talking-head video, podcast clips, tutorials, or marketing video with video-use. Do NOT use for non-Hebrew video-use sessions (read upstream SKILL.md directly), Hebrew podcast audio-only post-production (use hebrew-podcast-postproduction), or generic FFmpeg work without video-use orchestration."
 license: MIT
 allowed-tools: Bash Read Write Edit
-compatibility: "Requires video-use installed (see upstream install.md). Hebrew fonts (Heebo) need to be installed on the host. Works with Claude Code (primary), Cursor, Codex. Designed to be read alongside the upstream video-use SKILL.md, not as a replacement."
+compatibility: "Claude Code only. video-use's Hard Rule 10 requires the Agent tool for parallel animation sub-agent dispatch, which is Claude Code's specific primitive. The upstream install.md mentions Codex as well, but the parallel-agent model differs and is not tested here. Also requires video-use installed (see upstream install.md), and Hebrew fonts (Heebo) on the host. Designed to be read alongside the upstream video-use SKILL.md, not as a replacement."
 ---
 
 # video-use Best Practices (Hebrew)
