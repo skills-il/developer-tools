@@ -2,19 +2,18 @@
 # burn-hebrew-captions.sh
 # End-to-end Hebrew caption burn-in for video-use output (and any base.mp4 + master.srt pair).
 #
-# Why this script exists: libass on macOS with static-build FFmpeg silently skips BiDi
-# reordering even when libfribidi is theoretically linked. The result is that Hebrew
-# characters get drawn in source byte order (LTR), which looks like the words are in the
-# wrong positions. Calling `ffmpeg -i master.srt master.ass` alone does NOT fix this.
-# The reliable workaround is to pre-shape the text with python-bidi BEFORE rendering, so
-# libass just draws what it sees and the result is RTL-correct on screen.
+# IMPORTANT CORRECTION (v1.2.3): the original v1.1.0 approach assumed libass + SRT was
+# silently broken for Hebrew BiDi on macOS, and pre-shaped the text with python-bidi
+# before rendering. End-to-end testing on a real video proved that diagnosis WRONG:
+# libass + SRT actually handles Hebrew BiDi correctly when the SRT is fed DIRECTLY
+# to the subtitles filter. The python-bidi pre-shape + SRT->ASS chain was double-
+# reversing the text back to source byte order. The CORRECT recipe is to skip
+# pre-shape and ASS conversion entirely, and let libass do its job with the source SRT.
 #
-# This script does the full working recipe:
-#   1. Pre-shape SRT with python-bidi (logical -> display order)
-#   2. Convert pre-shaped SRT to ASS via ffmpeg
-#   3. Patch ASS: PlayResX/Y to match output resolution, Heebo style with proper spacing
-#   4. Burn captions onto the base video with explicit fontsdir
-#   5. Sample 3 frames for visual self-verification
+# What this script now does:
+#   0. Sanitize Scribe garbage characters (Devanagari `्स` etc.) from the SRT
+#   1. Burn captions onto the base video with libass + explicit fontsdir + force_style
+#   2. Sample verification frames (1 per minute, capped at 30)
 #
 # Usage:
 #   burn-hebrew-captions.sh \
@@ -35,9 +34,11 @@ set -euo pipefail
 
 FONT="Heebo"
 FONTSDIR="$HOME/Library/Fonts"
-FONTSIZE="52"
+# Note: FontSize is in absolute pixels for libass+SRT (no PlayResY scaling).
+# 26 is good for 720p; bump to 36-42 for 1080p, 56-72 for 4K.
+FONTSIZE="26"
 SPACING="2"
-MARGINV="80"
+MARGINV="35"
 FFMPEG="ffmpeg"
 
 BASE=""
@@ -81,11 +82,8 @@ if ! fc-list :lang=he 2>/dev/null | grep -qi "$FONT"; then
   exit 1
 fi
 
-log "Pre-flight: verifying python3 + python-bidi"
-if ! python3 -c 'import bidi' 2>/dev/null; then
-  log "Installing python-bidi (one-time)."
-  pip3 install --quiet python-bidi
-fi
+log "Pre-flight: verifying python3 (for SRT sanitization)"
+command -v python3 >/dev/null 2>&1 || { log "ERROR: python3 not found"; exit 1; }
 
 # Probe base for resolution so we can size the ASS PlayResX/Y to match
 # Use ffprobe if next to ffmpeg, else fall back to ffmpeg with verbose output
@@ -104,9 +102,6 @@ fi
 log "Base resolution: ${BASE_W}x${BASE_H}"
 
 WORKDIR=$(dirname "$OUT")
-BIDI_SRT="${WORKDIR}/.bidi_$(basename "$SRT")"
-RAW_ASS="${WORKDIR}/.raw_$(basename "${SRT%.srt}.ass")"
-PATCHED_ASS="${WORKDIR}/$(basename "${SRT%.srt}.bidi.ass")"
 
 # Step 0: Scribe sanitization , strip non-Hebrew/Latin "garbage" characters
 # Scribe occasionally drops Devanagari, Tamil, Cyrillic, or CJK characters into
@@ -114,9 +109,8 @@ PATCHED_ASS="${WORKDIR}/$(basename "${SRT%.srt}.bidi.ass")"
 # colloquial "סקילים" can be transcribed as Devanagari `्स`).
 log "Step 0: Scanning for non-Hebrew/Latin garbage characters in SRT"
 python3 <<PYEOF
-import re, sys
+import re
 content = open('${SRT}', encoding='utf-8-sig').read()
-# Auto-fixes for known Scribe Hebrew failure modes (extend as you find more)
 auto_fixes = {
     'סקיל्स': 'סקילים',          # Devanagari ्स → Hebrew ים (final-mem plural)
     'סקילז्': 'סקילז',                 # Devanagari virama after Hebrew → drop virama
@@ -128,8 +122,6 @@ for bad, good in auto_fixes.items():
         fixed_count += 1
         print(f'  Auto-fixed: {repr(bad)} -> {repr(good)}')
 
-# Now scan for remaining suspicious characters
-# Allowed: Hebrew (U+0590-U+05FF), Latin a-zA-Z, digits, common punctuation, SRT structure
 allowed = re.compile(r'[֐-׿a-zA-Z0-9\s.,!?\'"()\\[\\]:;\\-–,’>﻿]')
 suspicious = []
 for ln_num, line in enumerate(content.split('\n'), 1):
@@ -139,79 +131,42 @@ for ln_num, line in enumerate(content.split('\n'), 1):
         suspicious.append((ln_num, line, bad))
 
 if suspicious:
-    print(f'  WARN: {len(suspicious)} caption line(s) still contain non-Hebrew/Latin characters after auto-fix:')
+    print(f'  WARN: {len(suspicious)} caption line(s) contain non-Hebrew/Latin characters after auto-fix:')
     for ln, txt, bad in suspicious[:5]:
         print(f'    Line {ln}: {txt}')
-        for c, code in bad:
-            print(f'      -> {repr(c)} ({code})')
-    print('  These may render as boxes or wrong shapes. Fix manually in the SRT before re-running.')
+        for c, code in bad: print(f'      -> {repr(c)} ({code})')
+    print('  These may render as boxes or wrong shapes. Fix manually before re-running.')
 else:
     print(f'  Clean. {fixed_count} auto-fix(es) applied.')
 
-# Write back the sanitized version
+# Write sanitized SRT back (with BOM for libass compatibility)
 with open('${SRT}', 'w', encoding='utf-8') as f:
     f.write('﻿' + content.lstrip('﻿'))
 PYEOF
 
-# Step 1: Pre-shape SRT with python-bidi
-log "Step 1: Pre-shaping Hebrew with python-bidi (logical -> display order)"
-python3 <<PYEOF
-import re
-from bidi.algorithm import get_display
+# Step 1: Burn captions directly from SRT via libass
+# libass + SRT handles Hebrew BiDi correctly without ASS conversion or pre-shape.
+# Style is passed inline via force_style (commas in force_style values are escaped \,).
+log "Step 1: Burning captions onto ${BASE} -> ${OUT}"
+log "  Style: Font=${FONT} ${FONTSIZE}pt Bold, Spacing=${SPACING}, MarginV=${MARGINV}"
 
-src = open('${SRT}', encoding='utf-8-sig').read()  # strip leading BOM if present
-out_lines = []
-for line in src.split('\n'):
-    if re.match(r'^\d+$', line.strip()) or '-->' in line or line.strip() == '':
-        out_lines.append(line)
-    else:
-        out_lines.append(get_display(line))
-# Write WITH UTF-8 BOM for downstream libass compatibility
-with open('${BIDI_SRT}', 'w', encoding='utf-8') as f:
-    f.write('﻿' + '\n'.join(out_lines))
-print(f'Pre-shaped: {len([l for l in out_lines if l.strip() and not l.strip().isdigit() and "-->" not in l])} caption lines')
-PYEOF
+# Escape SRT path for ffmpeg subtitles filter (colons need escaping)
+ESCAPED_SRT=$(printf '%s' "$SRT" | sed 's/\\/\\\\\\\\/g; s/:/\\:/g')
 
-# Step 2: Convert to ASS
-log "Step 2: Converting pre-shaped SRT to ASS"
-"$FFMPEG" -y -loglevel error -i "$BIDI_SRT" "$RAW_ASS"
+# Build force_style with commas escaped (filter argument separator is comma, so style
+# field separators have to be escaped). PrimaryColour white, OutlineColour black,
+# BorderStyle=1 outline, Outline=2px, Alignment=2 (bottom-center), Encoding=1.
+FORCE_STYLE="FontName=${FONT}\\,FontSize=${FONTSIZE}\\,Bold=1\\,PrimaryColour=&H00FFFFFF\\,OutlineColour=&H00000000\\,BorderStyle=1\\,Outline=2\\,Shadow=0\\,Alignment=2\\,Spacing=${SPACING}\\,MarginV=${MARGINV}\\,Encoding=1"
 
-# Step 3: Patch ASS - PlayRes to match output, Heebo style with Spacing
-log "Step 3: Patching ASS (PlayRes=${BASE_W}x${BASE_H}, Font=${FONT} ${FONTSIZE}, Spacing=${SPACING}, MarginV=${MARGINV})"
-python3 <<PYEOF
-src = open('${RAW_ASS}').read()
-src = src.replace('PlayResX: 384', 'PlayResX: ${BASE_W}')
-src = src.replace('PlayResY: 288', 'PlayResY: ${BASE_H}')
-# Build the V4+ Style line in canonical order:
-# Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour,
-# Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle,
-# Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-new_style = (
-    'Style: Default,${FONT},${FONTSIZE},'
-    '&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,'  # white text, black outline
-    '-1,0,0,0,'                                     # Bold=true, no italic/underline/strikeout
-    '100,100,${SPACING},0,'                         # ScaleX/Y=100, Spacing, Angle=0
-    '1,4,0,'                                        # BorderStyle=1 outline, Outline=4px, Shadow=0
-    '2,40,40,${MARGINV},'                           # Alignment=bottom-center, MarginL/R=40, MarginV
-    '1'                                             # Encoding=1 (libass: MUST always be 1)
-)
-out = [new_style if l.startswith('Style: Default,') else l for l in src.splitlines()]
-open('${PATCHED_ASS}', 'w').write('\n'.join(out) + '\n')
-PYEOF
-
-# Step 4: Burn captions
-log "Step 4: Burning captions onto ${BASE} -> ${OUT}"
-# Escape the ASS path for ffmpeg subtitles filter (colons and backslashes)
-ESCAPED_ASS=$(printf '%s' "$PATCHED_ASS" | sed 's/\\/\\\\\\\\/g; s/:/\\:/g')
 "$FFMPEG" -y -loglevel warning \
   -i "$BASE" \
-  -vf "subtitles=${ESCAPED_ASS}:fontsdir=${FONTSDIR}" \
+  -vf "subtitles=${ESCAPED_SRT}:fontsdir=${FONTSDIR}:force_style=${FORCE_STYLE}" \
   -c:a copy \
   -c:v libx264 -preset medium -crf 18 \
   "$OUT"
 
-# Step 5: Sample verification frames (one per minute, capped at 30)
-log "Step 5: Sampling frames for visual verification"
+# Step 2: Sample verification frames (one per minute, capped at 30)
+log "Step 2: Sampling frames for visual verification"
 # Probe duration via ffprobe (more reliable than parsing ffmpeg stderr, which is silenced by -v error)
 if command -v "$FFPROBE" >/dev/null 2>&1; then
   DURATION_FLOAT=$("$FFPROBE" -v error -show_entries format=duration -of csv=p=0 "$OUT" 2>/dev/null)
@@ -255,11 +210,12 @@ log ""
 log "MANDATORY VISUAL CHECK (per video-use-best-practices Step 6):"
 log "  1. Open each verify_*/t*s.png and confirm:"
 log "     a. Captions render in ${FONT} (no tofu boxes, no fallback font)"
-log "     b. Hebrew words appear in correct RTL visual order"
-log "        For 'ספריית הסקילז AI שבניתי.' the pixel LTR order should read:"
-log "        ספריית [right] הסקילז AI שבניתי [left] ."
-log "        (period on LEFT, first source word on RIGHT)"
+log "     b. Hebrew READS correctly (right-to-left)"
+log "        Verification: pick any visible caption and confirm Hebrew words read"
+log "        naturally from RIGHT to LEFT, periods/question marks at the left end"
+log "        of the line (the visual end of the RTL flow)."
 log "     c. For mixed-script lines (e.g., 'התקנתי React'), the English token"
-log "        stays LTR inline within the RTL flow."
-log "  2. If ANY check fails, the python-bidi pre-shape didn't run or the ffmpeg"
-log "     used is not the one this script invoked. Re-check the pre-flight output."
+log "        stays LTR inline within the RTL flow (React, not tcaeR)."
+log "  2. If captions look broken, check: ffmpeg has libass+fontconfig"
+log "     (\`ffmpeg -version | grep enable-libass\`), Heebo is installed"
+log "     (\`fc-list :family=Heebo\`), and you ran THIS ffmpeg not a different one."

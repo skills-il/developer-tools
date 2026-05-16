@@ -40,7 +40,8 @@ VIDEO=""
 OUTPUT=""
 STRIP_FILLERS=0
 FONT="Heebo"
-FONTSIZE=52
+# Default FontSize is in absolute pixels (good for 720p); bump for higher resolutions.
+FONTSIZE=26
 FFMPEG="ffmpeg"
 KEEP_WORK=0
 ASSUME_YES=0
