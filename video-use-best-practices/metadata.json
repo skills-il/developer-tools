@@ -1,6 +1,6 @@
 {
   "author": "skills-il",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "category": "developer-tools",
   "tags": {
     "he": [
@@ -33,8 +33,8 @@
     "en": "video-use Best Practices (Hebrew)"
   },
   "display_description": {
-    "he": "שכבת התאמות לעברית מעל video-use של browser-use. מכסה החלפה של SUB_FORCE_STYLE (Helvetica אין לו אותיות בעברית), מעבר נוסף לזיהוי מילות מילוי בעברית (אֶה, כאילו, יעני) על תוצאות Scribe, התקנת פונטים בעברית דרך libass + fontconfig, takes_packed.md בעברית עם ערבוב שפות, והפניות לסקילים hyperframes-best-practices ו-remotion-best-practices לסלוטי אנימציה. השתמשו לעריכה של סרטון מדבר בעברית, קליפים מפודקאסט, סרטון הדרכה או סרטון שיווקי עם video-use. אל תשתמשו לסשנים שאינם בעברית, לפוסט פרודקשן של אודיו בלבד, או לעבודת FFmpeg כללית בלי video-use.",
-    "en": "Hebrew override layer on top of browser-use/video-use. Covers SUB_FORCE_STYLE override (Helvetica has no Hebrew glyphs), Hebrew filler-word post-pass on Scribe word timestamps, libass + fontconfig font discovery for Heebo, takes_packed.md handling for Hebrew with sofit/nikud/code-switching, and animation slot guidance that defers to hyperframes-best-practices and remotion-best-practices. Use when editing Hebrew talking-head video, podcast clips, tutorials, or marketing video with video-use. Do NOT use for non-Hebrew video-use sessions, Hebrew podcast audio-only post-production (use hebrew-podcast-postproduction), or generic FFmpeg work without video-use orchestration."
+    "he": "שכבת התאמות לעברית מעל video-use של browser-use. מכסה החלפה של SUB_FORCE_STYLE (Helvetica אין לו אותיות בעברית), תיקון BiDi דרך python-bidi (libass+SRT לא מטפלים בכיוון נכון ב-macOS), זיהוי תווי גרבג של Scribe (Devanagari ושאר אותיות זרות שמתערבבות בתמליל עברי), מעבר נוסף לזיהוי מילות מילוי בעברית (אֶה, כאילו, יעני), פרמטר fontsdir= לזיהוי פונטים אמין, ופרוטוקול בדיקה עצמית של דגימת פריימים. כולל סקריפט burn-hebrew-captions.sh שעושה את כל הצריבה בפקודה אחת. השתמשו לעריכה של סרטון מדבר בעברית, קליפים מפודקאסט, סרטון הדרכה או סרטון שיווקי עם video-use. אל תשתמשו לסשנים שאינם בעברית, לפוסט פרודקשן של אודיו בלבד, או לעבודת FFmpeg כללית בלי video-use.",
+    "en": "Hebrew override layer on top of browser-use/video-use. Covers SUB_FORCE_STYLE override (Helvetica has no Hebrew glyphs), python-bidi pre-shape recipe (libass+SRT BiDi is silently broken on macOS), Scribe garbage-character sanitization (Devanagari and other non-Hebrew chars that Scribe mixes into Hebrew transcripts), Hebrew filler-word post-pass on Scribe word timestamps, explicit fontsdir= for reliable font discovery, frame-sampling self-eval protocol, and the bundled burn-hebrew-captions.sh helper that does the full caption burn-in in one command. Use when editing Hebrew talking-head video, podcast clips, tutorials, or marketing video with video-use. Do NOT use for non-Hebrew video-use sessions, Hebrew podcast audio-only post-production (use hebrew-podcast-postproduction), or generic FFmpeg work without video-use orchestration."
   },
   "supported_agents": [
     "claude-code"
@@ -45,7 +45,9 @@
     { "url": "https://github.com/libass/libass/wiki/ASS-File-Format-Guide", "type": "vendor-docs", "language": "en" },
     { "url": "https://ffmpeg.org/ffmpeg-filters.html", "type": "vendor-docs", "language": "en" },
     { "url": "https://www.unicode.org/reports/tr9/", "type": "standard", "language": "en" },
-    { "url": "https://fonts.google.com/specimen/Heebo", "type": "vendor-docs", "language": "en" }
+    { "url": "https://fonts.google.com/specimen/Heebo", "type": "vendor-docs", "language": "en" },
+    { "url": "https://github.com/MeirKriheli/python-bidi", "type": "vendor-docs", "language": "en" },
+    { "url": "https://elevenlabs.io/pricing", "type": "vendor-docs", "language": "en" }
   ],
-  "domain_checklist_version": 1
+  "domain_checklist_version": 2
 }
