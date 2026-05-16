@@ -128,36 +128,36 @@ for bad, good in auto_fixes.items():
         fixed_count += 1
         print(f'  Auto-fixed: {repr(bad)} -> {repr(good)}')
 
-# Move trailing sentence-end punctuation to the START of each caption line.
-# Why: with the python-bidi pre-shape + ASS chain, the double-reversal puts
-# Hebrew chars in source-order LTR pixel positions (which renders as readable
-# Hebrew in screenshots), BUT the period stays at the source-end position
-# which lands on the visual RIGHT. For proper Hebrew display the period
-# should be on the visual LEFT (end of sentence in RTL reading order).
-# Moving it to source-start places it on the LEFT in the rendered output.
+# STRIP trailing sentence-end punctuation from Hebrew lines (BBC/Netflix style).
+# Why: the python-bidi + libass double-reversal puts Hebrew chars in source-order
+# LTR pixel positions (which the user wants), but punctuation positioning becomes
+# unstable depending on script mix (pure Hebrew vs Hebrew+English). Rather than
+# fight the BiDi algorithm with positioning hacks, just drop sentence-end
+# punctuation from captions entirely. This matches BBC and Netflix caption style
+# guides, which recommend minimal punctuation since line breaks and timing
+# already signal end-of-thought.
 HEBREW_RANGE = re.compile(r'[֐-׿]')
-SENTENCE_END = re.compile(r'^(.*?)([.?!]+)\s*\$')
-period_moves = 0
+SENTENCE_END = re.compile(r'^(.*?)\s*[.?!]+\s*\$')
+punct_stripped = 0
 new_lines = []
 for line in content.split('\n'):
     # Only touch caption text lines (not cue numbers, not timestamps)
     if '-->' in line or re.match(r'^\d+\$', line.strip()) or not line.strip():
         new_lines.append(line)
         continue
-    # Only act if the line contains Hebrew (otherwise it's English or mixed-LTR)
+    # Only act if the line contains Hebrew
     if not HEBREW_RANGE.search(line):
         new_lines.append(line)
         continue
     m = SENTENCE_END.match(line)
     if m and m.group(1).strip():
-        rest, punct = m.group(1).rstrip(), m.group(2)
-        new_lines.append(f'{punct}{rest}')
-        period_moves += 1
+        new_lines.append(m.group(1).rstrip())
+        punct_stripped += 1
     else:
         new_lines.append(line)
 content = '\n'.join(new_lines)
-if period_moves > 0:
-    print(f'  Moved sentence-end punctuation to start on {period_moves} Hebrew line(s) (for correct visual position).')
+if punct_stripped > 0:
+    print(f'  Stripped sentence-end punctuation (. ? !) from {punct_stripped} Hebrew line(s) for clean caption display.')
 
 # Now scan for remaining suspicious characters
 allowed = re.compile(r'[֐-׿a-zA-Z0-9\s.,!?\'"()\\[\\]:;\\-–,’>﻿]')
@@ -175,7 +175,7 @@ if suspicious:
         for c, code in bad:
             print(f'      -> {repr(c)} ({code})')
     print('  These may render as boxes or wrong shapes. Fix manually in the SRT before re-running.')
-elif fixed_count == 0 and period_moves == 0:
+elif fixed_count == 0 and punct_stripped == 0:
     print(f'  Clean. No changes needed.')
 
 # Write back the sanitized version

@@ -149,6 +149,105 @@ fi
 SCRIBE_SIZE=$(wc -c < "${WORKDIR}/scribe.json" | tr -d ' ')
 log "  Transcript received: ${SCRIBE_SIZE} bytes"
 
+log "Step 1.5: Scanning for Scribe gaps (drops occasionally dropped 30s+ chunks)"
+# Scribe sometimes silently fails to transcribe a section of audio. Detect:
+#   (a) MID-FILE GAP: any gap > 30s between consecutive transcribed words
+#   (b) TAIL GAP: if the last transcribed word ends > 10s before video end
+# For each such gap, re-transcribe just that audio segment (Scribe usually
+# succeeds when given an isolated short segment) and merge the recovered
+# words into the main transcript.
+
+GAP_THRESHOLD=30   # mid-file: consecutive words >30s apart = suspect
+TAIL_THRESHOLD=10  # tail: last word ends >10s before video end = suspect
+
+# Get video duration in seconds
+VIDEO_DUR=$("$FFPROBE" -v error -show_entries format=duration -of csv=p=0 "$VIDEO" 2>/dev/null | cut -d. -f1)
+[[ -z "$VIDEO_DUR" ]] && VIDEO_DUR=0
+
+# Find gap windows to re-transcribe
+GAPS_FILE="${WORKDIR}/gaps.txt"
+python3 << PYEOF > "$GAPS_FILE"
+import json
+data = json.load(open("${WORKDIR}/scribe.json"))
+words = [w for w in data.get('words', []) if w.get('type') == 'word']
+gaps = []
+for i in range(len(words) - 1):
+    gap = words[i+1]['start'] - words[i]['end']
+    if gap > $GAP_THRESHOLD:
+        gaps.append((words[i]['end'], words[i+1]['start']))
+# Tail gap
+if words and words[-1]['end'] < $VIDEO_DUR - $TAIL_THRESHOLD:
+    gaps.append((words[-1]['end'], $VIDEO_DUR))
+for start, end in gaps:
+    print(f"{start:.2f} {end:.2f}")
+PYEOF
+
+GAP_COUNT=$(wc -l < "$GAPS_FILE" | tr -d ' ')
+if [[ "$GAP_COUNT" -eq 0 ]]; then
+  log "  No gaps detected. Transcript covers the full video."
+else
+  log "  Detected ${GAP_COUNT} gap(s). Re-transcribing each with scribe_v2."
+  GAP_IDX=0
+  while IFS=' ' read -r gap_start gap_end; do
+    GAP_IDX=$((GAP_IDX + 1))
+    DUR=$(echo "$gap_end - $gap_start" | bc)
+    log "  Gap ${GAP_IDX}: ${gap_start}s -> ${gap_end}s (${DUR}s window)"
+    GAP_AUDIO="${WORKDIR}/gap_${GAP_IDX}.m4a"
+    GAP_JSON="${WORKDIR}/gap_${GAP_IDX}.json"
+    "$FFMPEG" -y -loglevel error -ss "$gap_start" -i "$VIDEO" -t "$DUR" -vn -c:a aac "$GAP_AUDIO" 2>/dev/null
+    HTTP=$(curl -sS -o "$GAP_JSON" -w '%{http_code}' \
+      -H "xi-api-key: $EL_KEY" \
+      -F "model_id=scribe_v2" \
+      -F "language_code=heb" \
+      -F "tag_audio_events=false" \
+      -F "diarize=false" \
+      -F "timestamps_granularity=word" \
+      -F "file=@${GAP_AUDIO}")
+    if [[ "$HTTP" = "200" ]]; then
+      NEW_WORDS=$(python3 -c "import json; d=json.load(open('$GAP_JSON')); print(len([w for w in d.get('words',[]) if w.get('type')=='word']))")
+      log "    Recovered ${NEW_WORDS} word(s) from gap"
+    else
+      log "    WARN: gap re-transcribe returned HTTP $HTTP, skipping"
+    fi
+  done < "$GAPS_FILE"
+
+  # Merge all recovered gap words back into the main transcript
+  log "  Merging ${GAP_COUNT} recovered gap(s) into main transcript"
+  WORKDIR=$WORKDIR GAP_COUNT=$GAP_COUNT python3 <<'PYEOF'
+import json, os, glob
+workdir = os.environ['WORKDIR']
+gap_count = int(os.environ['GAP_COUNT'])
+
+main = json.load(open(f"{workdir}/scribe.json"))
+main_words = [w for w in main.get('words', []) if w.get('type') == 'word']
+gaps_file = open(f"{workdir}/gaps.txt").readlines()
+gap_windows = []
+for i, line in enumerate(gaps_file, 1):
+    parts = line.strip().split()
+    if len(parts) == 2:
+        gap_windows.append((float(parts[0]), float(parts[1]), i))
+
+recovered_total = 0
+for gap_start, gap_end, idx in gap_windows:
+    gap_json_path = f"{workdir}/gap_{idx}.json"
+    if not os.path.exists(gap_json_path): continue
+    gap_data = json.load(open(gap_json_path))
+    gap_words = [w for w in gap_data.get('words', []) if w.get('type') == 'word']
+    # Shift timestamps to video time
+    for w in gap_words:
+        w['start'] += gap_start
+        w['end'] += gap_start
+    main_words += gap_words
+    recovered_total += len(gap_words)
+
+# Sort by start time
+main_words.sort(key=lambda w: w['start'])
+main['words'] = main_words
+json.dump(main, open(f"{workdir}/scribe.json", 'w'), ensure_ascii=False)
+print(f"  Merged {recovered_total} recovered words. Transcript now has {len(main_words)} total words.")
+PYEOF
+fi
+
 log "Step 2: Building SRT (5-7 word chunks, break on silence >=250ms or sentence end)"
 STRIP_FILLERS=$STRIP_FILLERS WORKDIR=$WORKDIR python3 <<'PYEOF'
 import json, os, re
@@ -162,6 +261,20 @@ with open(f"{workdir}/scribe.json") as f:
 words = [w for w in data.get("words", []) if w.get("type") == "word"]
 if not words:
     raise SystemExit("ERROR: Scribe returned no word-type entries. Check the transcript JSON.")
+
+# Sanitize pathologically long word durations. Scribe occasionally assigns an
+# 80+ second end-timestamp to a single word that brackets a long silence gap,
+# which would chain a whole chunk across the silence and cause "stuck" or
+# "missing" captions downstream. Clip any single-word duration above 2s to 2s.
+# A word genuinely taking >2s to pronounce is implausible for any natural speech.
+MAX_WORD_DUR = 2.0
+clipped = 0
+for w in words:
+    if w["end"] - w["start"] > MAX_WORD_DUR:
+        w["end"] = w["start"] + MAX_WORD_DUR
+        clipped += 1
+if clipped > 0:
+    print(f"  Clipped {clipped} pathologically long word duration(s) at {MAX_WORD_DUR}s (Scribe artifact)")
 
 ALWAYS_FILLER = {"אֶה","אה","אם","אֶמ","אממ","אמממ","אהמ","המ","ממ"}
 
@@ -196,13 +309,23 @@ def fmt(t):
     s = t % 60
     return f"{h:02d}:{m:02d}:{int(s):02d},{int((s % 1) * 1000):03d}"
 
+# Cap caption max display duration as a belt-and-suspenders safety. With
+# word-level clipping above, chunks should naturally stay short, but this
+# guards against any remaining edge case.
+MAX_DISPLAY_SEC = 7.0
+capped = 0
 with open(f"{workdir}/captions.srt", "w", encoding="utf-8") as f:
     f.write("﻿")
     for i, ch in enumerate(chunks, 1):
         start = ch[0]["start"]
         end = ch[-1]["end"]
+        if end - start > MAX_DISPLAY_SEC:
+            end = start + MAX_DISPLAY_SEC
+            capped += 1
         text = " ".join(w["text"] for w in ch)
         f.write(f"{i}\n{fmt(start)} --> {fmt(end)}\n{text}\n\n")
+if capped > 0:
+    print(f"  Capped display duration on {capped} cue(s) at {MAX_DISPLAY_SEC}s")
 
 print(f"  Wrote {len(chunks)} caption cues to captions.srt")
 if strip_fillers:
