@@ -219,6 +219,9 @@ bash scripts/captions-only.sh ~/Movies/my-lecture.mp4
 # (האודיו נשאר ללא שינוי, רק המילים האלה לא יופיעו בכתוביות):
 bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 --strip-fillers
 
+# ללא אינטראקציה (מדלג על אישור עלות, שימושי ב-CI / batch)
+bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 --yes
+
 # עם נתיב פלט מותאם ו-ffmpeg סטטי
 bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 \
   --output ~/Movies/my-lecture-with-captions.mp4 \
@@ -227,11 +230,18 @@ bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 \
 
 מה הוא עושה מקצה לקצה:
 1. מאתר אוטומטית `ELEVENLABS_API_KEY` מ-env או מ-`~/Developer/video-use/.env`
-2. בודק את אורך הסרטון ומדפיס הערכת עלות של Scribe
-3. מתמלל את הסרטון המלא דרך Scribe עם `language_code=heb` ו-`timestamps_granularity=word`
-4. בונה SRT עם חתיכות של 5-7 מילים, שובר על שתיקה ≥250ms או על סוף משפט
-5. (אופציונלי) מסיר מילות ALWAYS-FILLER מה-SRT אם מועבר `--strip-fillers`
-6. קורא ל-`burn-hebrew-captions.sh` שעושה את העיצוב מראש עם python-bidi והצריבה עם libass + Heebo + פריימי אימות
+2. בודק את אורך הסרטון ומדפיס הערכת עלות של Scribe (אלא אם הועבר `--yes`)
+3. מתמלל את הסרטון המלא דרך Scribe v1 עם `language_code=heb` ו-`timestamps_granularity=word`
+4. **שחזור אוטומטי של פערים ב-Scribe** (גרסה 1.2.7 ומעלה): סורק כל פער של 30 שניות ויותר בין מילים רצופות, או זנב שבו המילה האחרונה מסתיימת יותר מ-10 שניות לפני סוף הסרטון. כל חלון כזה מתמלל מחדש בנפרד דרך `scribe_v2` והמילים המשוחזרות ממוזגות חזרה לתמליל הראשי. Scribe לפעמים מוריד שקט של 30 שניות ומעלה בקבצים ארוכים בעברית, וזה הופך את הכשל לרפא את עצמו במקום שמשתמשים יגלו פערים שבועיים אחר כך.
+5. בונה SRT עם חתיכות של 5-7 מילים, שובר על שתיקה ≥250ms או על סוף משפט
+6. (אופציונלי) מסיר מילות ALWAYS-FILLER מה-SRT אם מועבר `--strip-fillers`
+7. קורא ל-`burn-hebrew-captions.sh` שעושה:
+   - **מסיר את סימני הפיסוק `.`/`?`/`!` בסוף משפטים מהשורות בעברית כברירת מחדל** (סגנון כתוביות של BBC/Netflix). הסיבה: המתכון של python-bidi + libass יציב מבחינת אותיות אבל מיקום הפיסוק הופך לבלתי צפוי תלוי בתערובת של סקריפטים. ההסרה סוגרת את כל מחלקת הכשלים הזאת. אם רוצים להחזיר פיסוק, להעיר את הבלוק של `SENTENCE_END` בשלב 0 של `scripts/burn-hebrew-captions.sh`.
+   - את העיצוב מראש עם python-bidi והצריבה עם libass + Heebo + פריימי אימות
+
+הפלט מגיע ל-`<input>.captioned.<ext>` ליד המקור (או איפה ש-`--output` אומר). גם ה-SRT הממוזג נכתב ליד הפלט כ-`<output>.he.srt` כדי שאפשר יהיה להעלות אותו בנפרד ל-YouTube/Vimeo כקובץ כתוביות צד.
+
+**כוונון:** ספים (`MAX_WORD_DUR`, `GAP_THRESHOLD`, `TAIL_THRESHOLD`, `MAX_DISPLAY_SEC`), הפיצול בין Scribe v1 ל-v2, ואיך לבטל את הסרת הפיסוק, מתועדים ב-`references/captions-only-tuning.md`.
 
 הפלט נחת ב-`<input>.captioned.<ext>` ליד המקור (או איפה ש-`--output` אומר). פריימי האימות נוחתים בתיקייה `verify_*/` שאפשר לפתוח עם `open`.
 

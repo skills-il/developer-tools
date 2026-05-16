@@ -21,7 +21,9 @@ video-use is free; underlying services are paid. Mode determines cost.
 | **A. Captions-only** (`scripts/captions-only.sh`) | Transcribe + burn Hebrew captions on original. No cuts. | Lectures, webinars, podcast videos. | **~$1-3 total** |
 | **B. Full cut** (default video-use flow) | Inventory → strategy → cut → render → self-eval. | Teaser from raw footage; multi-take selection. | **~$25-60** (1hr); **$120-300** (3hr). Scales super-linearly. |
 
-Per-unit: Scribe ~$0.40/hr (free tier ~10hr/mo, cached per source). Claude tokens depend on mode (above). Local FFmpeg/libass rendering is $0.
+Per-unit: Scribe ~$0.40/hr (paid). Claude tokens depend on mode (above). Local FFmpeg/libass rendering is $0.
+
+**Free-tier reality check (the "$1-3" number assumes paid Starter, $5/mo).** ElevenLabs free tier is **10,000 characters/month**, not hours. A 10-minute Hebrew talking-head burns ~7,000-8,000 characters in one transcription. Gap-recovery (see Step 8) re-transcribes the dropped window, which counts again. So on free tier you realistically get **~1 long Hebrew video/month** before the quota wall. If the user is non-technical and "just wants captions on this one lecture", warn them upfront.
 
 **Validated test (May 2026, 11:29 source → 75s teaser via Full cut):** Scribe $0.08 + Claude $9.50 = **~$9.60 first pass**, ~$1-3 per iteration.
 
@@ -206,6 +208,9 @@ bash scripts/captions-only.sh ~/Movies/my-lecture.mp4
 # (audio stays untouched, words just won't appear in captions):
 bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 --strip-fillers
 
+# Non-interactive (skip the cost-confirmation prompt; useful in CI / batch runs)
+bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 --yes
+
 # With custom output path and a static ffmpeg
 bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 \
   --output ~/Movies/my-lecture-with-captions.mp4 \
@@ -214,13 +219,18 @@ bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 \
 
 What it does, end-to-end:
 1. Auto-detects `ELEVENLABS_API_KEY` from env or `~/Developer/video-use/.env`
-2. Probes the video duration and prints the estimated Scribe cost
-3. Transcribes the full video via Scribe with `language_code=heb` and `timestamps_granularity=word`
-4. Builds an SRT chunking 5-7 words per caption, breaking on silence ≥250ms or sentence-end punctuation
-5. (Optional) strips ALWAYS-FILLER tokens from the SRT if `--strip-fillers` is passed
-6. Invokes `burn-hebrew-captions.sh` which does the python-bidi pre-shape + libass burn with Heebo + verify frames
+2. Probes the video duration and prints the estimated Scribe cost (unless `--yes` is passed)
+3. Transcribes the full video via Scribe v1 with `language_code=heb` and `timestamps_granularity=word`
+4. **Auto-recovers Scribe gaps** (v1.2.7+): scans for any 30s+ mid-file silence between consecutive transcribed words OR a tail end where the last word finishes >10s before the video ends. For each detected window, re-transcribes that isolated segment with `scribe_v2` and merges the recovered words back into the main transcript. Scribe occasionally drops 30s+ chunks silently on long Hebrew files; this makes the failure self-healing instead of "users discover untranscribed sections weeks later".
+5. Builds an SRT chunking 5-7 words per caption, breaking on silence ≥250ms or sentence-end punctuation
+6. (Optional) strips ALWAYS-FILLER tokens from the SRT if `--strip-fillers` is passed
+7. Invokes `burn-hebrew-captions.sh` which:
+   - **Strips sentence-end `.`/`?`/`!` from Hebrew lines by default** (BBC/Netflix caption style). Why: the python-bidi + libass double-reversal recipe is BiDi-stable for letters but punctuation positioning becomes unpredictable depending on script mix. Stripping ends that whole class of failure modes. If you want punctuation back, comment out the `SENTENCE_END` block in Step 0 of `burn-hebrew-captions.sh` , characters and words stay correct either way.
+   - Does the python-bidi pre-shape + libass burn with Heebo + verify frames
 
-Output lands at `<input>.captioned.<ext>` next to the source (or wherever `--output` says). Verify frames land in a `verify_*/` directory you can open with `open`.
+Output lands at `<input>.captioned.<ext>` next to the source (or wherever `--output` says). The merged SRT is also written next to the output as `<output>.he.srt` so you can upload it separately to YouTube/Vimeo as a sidecar caption track. Verify frames land in a `verify_*/` directory you can open with `open`.
+
+**Tuning:** thresholds (`MAX_WORD_DUR`, `GAP_THRESHOLD`, `TAIL_THRESHOLD`, `MAX_DISPLAY_SEC`), the Scribe v1 / v2 split, and how to disable punctuation-stripping are documented in `references/captions-only-tuning.md`.
 
 **Cost on a real example:** a 1-hour Hebrew lecture costs ~$0.40 in Scribe + ~$1 in Claude tokens for the orchestration around the bash script = **~$1.40 total**. A 3-hour webinar: ~$1.20 + ~$2 = **~$3.20**. Compare to the full cut workflow on the same 3-hour source: **$120-300**.
 
@@ -293,7 +303,7 @@ video-use is a standalone Claude Code skill and does not require any MCP server.
 
 - **Scribe occasionally drops non-Hebrew Unicode characters into Hebrew transcripts.** Most commonly Devanagari (`्` U+094D, `स` U+0938) at the end of words where the speaker's soft `-s` or `-m` ending sounded ambiguous. The classic failure mode: "סקילים" (skills, plural) transcribed as "סקיל्स" with two Devanagari characters instead of `ים`. These chars then render as boxes or wrong shapes in the burned-in caption. Always scan the SRT for non-Hebrew/Latin characters before burning. `burn-hebrew-captions.sh` does this automatically in its Step 0 sanitization pass with auto-fixes for common Scribe failure modes (extend the `auto_fixes` dict as you encounter more). To scan manually: `python3 -c "import re; bad=[(ln,line,[(c,hex(ord(c))) for c in line if not re.match(r'[֐-׿a-zA-Z0-9 .,!?\\\"\\'():;\\-]', c)]) for ln,line in enumerate(open('master.srt').read().split('\\n'),1) if '-->' not in line]; bad=[x for x in bad if x[2]]; [print(b) for b in bad]"`.
 - **Helvetica is the most common mistake.** The bundled `SUB_FORCE_STYLE` in `render.py` uses `FontName=Helvetica`. Helvetica's Hebrew glyphs do NOT exist in the macOS or Linux Helvetica builds (Apple's "Helvetica" font is Latin-only; Linux usually maps it to a metric-equivalent). libass silently falls back to a tofu box. Always override `FontName` to a known Hebrew font before invoking the caption-burn step.
-- **libass + SRT BiDi works correctly** (corrected in v1.2.3). Earlier versions of this skill claimed otherwise and recommended a python-bidi pre-shape workaround. End-to-end testing proved that diagnosis wrong: libass + SRT renders Hebrew with correct BiDi when the SRT is fed directly to the `subtitles=` filter. Avoid `ffmpeg -i master.srt master.ass` + `subtitles=master.ass` chains — ASS conversion silently re-applies BiDi on already-source-order text, producing the same broken-looking output the original workaround was trying to fix.
+- **libass + SRT BiDi works correctly** (corrected in v1.2.3). Earlier versions of this skill claimed otherwise and recommended a python-bidi pre-shape workaround. End-to-end testing proved that diagnosis wrong: libass + SRT renders Hebrew with correct BiDi when the SRT is fed directly to the `subtitles=` filter. Avoid `ffmpeg -i master.srt master.ass` + `subtitles=master.ass` chains , ASS conversion silently re-applies BiDi on already-source-order text, producing the same broken-looking output the original workaround was trying to fix.
 - **Homebrew's default ffmpeg lacks libass and fontconfig.** As of 2026-05, a fresh `brew install ffmpeg` produces a binary that cannot burn captions at all. See `references/macos-ffmpeg-setup.md` for the static-build or homebrew-tap fixes.
 - **2-word UPPERCASE chunks do not translate to Hebrew.** Hebrew has no uppercase. Do not try to fake it with `\fnHeebo Bold`, the result looks the same as regular Heebo. The Hebrew kinetic-typography equivalent is bold weight + larger size + tighter line breaks (4-6 Hebrew words per chunk, since Hebrew words are shorter than English on average).
 - **`fontsdir=` is more reliable than fontconfig.** Even when `fc-match Heebo` resolves correctly, the `subtitles` filter sometimes ignores fontconfig and falls back to libass's built-in font, producing the wrong typeface in the burned-in output. Always pass `subtitles=foo.ass:fontsdir=$HOME/Library/Fonts` (or wherever Heebo lives per `fc-list :family=Heebo file`).
