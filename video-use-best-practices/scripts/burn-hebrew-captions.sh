@@ -212,8 +212,14 @@ ESCAPED_ASS=$(printf '%s' "$PATCHED_ASS" | sed 's/\\/\\\\\\\\/g; s/:/\\:/g')
 
 # Step 5: Sample verification frames (one per minute, capped at 30)
 log "Step 5: Sampling frames for visual verification"
-DURATION=$("$FFMPEG" -v error -i "$OUT" -hide_banner 2>&1 | sed -nE 's/.*Duration: ([0-9]+):([0-9]+):([0-9]+).*/\1*3600+\2*60+\3/p' | head -1 | bc)
-[[ -z "$DURATION" ]] && DURATION=60
+# Probe duration via ffprobe (more reliable than parsing ffmpeg stderr, which is silenced by -v error)
+if command -v "$FFPROBE" >/dev/null 2>&1; then
+  DURATION_FLOAT=$("$FFPROBE" -v error -show_entries format=duration -of csv=p=0 "$OUT" 2>/dev/null)
+  DURATION=$(printf '%.0f' "${DURATION_FLOAT:-60}" 2>/dev/null || echo 60)
+else
+  DURATION=$("$FFMPEG" -hide_banner -i "$OUT" 2>&1 | sed -nE 's/.*Duration: ([0-9]+):([0-9]+):([0-9]+).*/\1*3600+\2*60+\3/p' | head -1 | bc)
+fi
+[[ -z "$DURATION" ]] || [[ "$DURATION" -le 0 ]] && DURATION=60
 
 VERIFY_DIR="${WORKDIR}/verify_$(date +%s)"
 mkdir -p "$VERIFY_DIR"
@@ -226,14 +232,19 @@ STEP=$(( DURATION / NUM_FRAMES ))
 [[ $STEP -lt 1 ]] && STEP=1
 
 log "  Sampling ${NUM_FRAMES} frames (every ~${STEP}s across ${DURATION}s output)"
+# Frame sampling is best-effort: if a single frame fails (e.g. ss past EOF), keep going.
+# Do not let this kill the parent script via set -e since the captioned video is already done.
+set +e
 for ((i=0; i<NUM_FRAMES; i++)); do
   t=$(( STEP * i + STEP / 2 ))
   [[ $t -lt 1 ]] && t=1
   [[ $t -ge $DURATION ]] && t=$((DURATION - 1))
   "$FFMPEG" -y -loglevel error -ss "$t" -i "$OUT" -frames:v 1 \
-    -vf "crop=iw:200:0:ih-220" "${VERIFY_DIR}/t$(printf '%04d' $t)s.png"
+    -vf "crop=iw:200:0:ih-220" "${VERIFY_DIR}/t$(printf '%04d' $t)s.png" 2>/dev/null
 done
-log "  ${VERIFY_DIR}/ contains ${NUM_FRAMES} verification frames"
+set -e
+FRAME_COUNT=$(ls "${VERIFY_DIR}"/*.png 2>/dev/null | wc -l | tr -d ' ')
+log "  ${VERIFY_DIR}/ contains ${FRAME_COUNT} verification frames"
 
 # Final summary
 log ""

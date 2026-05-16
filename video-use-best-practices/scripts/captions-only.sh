@@ -208,7 +208,13 @@ if strip_fillers:
     print(f"  Stripped {filtered_count} ALWAYS-FILLER words from the captions")
 PYEOF
 
-log "Step 3: Burning captions onto ${VIDEO}"
+# Step 3a: Export the SRT alongside the (future) output BEFORE the burn step,
+# so the user has soft captions even if the burn or verify steps fail.
+SRT_OUT="${OUTPUT%.*}.he.srt"
+cp "${WORKDIR}/captions.srt" "$SRT_OUT"
+log "Step 3a: Exported soft-caption SRT to $SRT_OUT"
+
+log "Step 3b: Burning captions onto ${VIDEO}"
 bash "$BURN_SCRIPT" \
   --base "$VIDEO" \
   --srt "${WORKDIR}/captions.srt" \
@@ -216,11 +222,6 @@ bash "$BURN_SCRIPT" \
   --font "$FONT" \
   --font-size "$FONTSIZE" \
   --ffmpeg "$FFMPEG"
-
-# Step 4: Export the SRT alongside the output for users who want soft captions
-SRT_OUT="${OUTPUT%.*}.he.srt"
-cp "${WORKDIR}/captions.srt" "$SRT_OUT"
-log "  SRT exported:    $SRT_OUT (upload to YouTube/Vimeo for soft captions)"
 
 log ""
 log "Done."
