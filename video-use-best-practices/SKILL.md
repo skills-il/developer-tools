@@ -10,7 +10,7 @@ compatibility: "Requires video-use installed (see upstream install.md). Hebrew f
 
 ## Problem
 
-video-use ships with a strong English-first default: the bundled `SUB_FORCE_STYLE` uses Helvetica (no Hebrew glyphs, renders as boxes), 2-word UPPERCASE chunks (Hebrew has no uppercase), and ElevenLabs Scribe's filler tagging is English-centric (misses "אֶה", "כאילו", "יעני"). Hebrew creators using video-use hit the same three walls every time: missing-glyph boxes burned into the final video, captions that look wrong because UPPERCASE doesn't exist in Hebrew, and a "filler removal" step that leaves the Hebrew fillers in. This skill is the Hebrew-specific override layer on top of video-use's 12 Hard Rules, none of the rules change, only the style values, font fallback chain, and filler list.
+video-use ships with a strong English-first default: the bundled `SUB_FORCE_STYLE` uses Helvetica (no Hebrew glyphs, renders as boxes), 2-word UPPERCASE chunks (Hebrew has no uppercase), and the filler-removal step assumes an English filler lexicon while Scribe itself doesn't tag fillers per-word in any language. Hebrew creators using video-use hit the same three walls every time: missing-glyph boxes burned into the final video, captions that look wrong because UPPERCASE doesn't exist in Hebrew, and a "filler removal" step that leaves "אֶה", "כאילו", "יעני", and friends in. This skill is the Hebrew-specific override layer on top of video-use's 12 Hard Rules, none of the rules change, only the style values, font fallback chain, and filler list.
 
 ## Instructions
 
@@ -58,20 +58,27 @@ The full ready-to-use override file is at `references/sub-force-style-hebrew.md`
 
 ### Step 3: Add a Hebrew filler-word post-pass
 
-ElevenLabs Scribe returns word-level timestamps and tags English fillers (`umm`, `uh`, `like`, `you know`, false starts). Hebrew fillers are NOT tagged. Add a post-pass on the Scribe JSON before generating cut candidates from silence gaps.
+**Important correction to a common assumption:** ElevenLabs Scribe does NOT tag fillers per word in ANY language. The Scribe word object exposes `type` values of `'word'`, `'spacing'`, or `'audio_event'` only, there is no `'filler'` or `'is_filler'` field. The only filler-related control is the request-level boolean `no_verbatim` (scribe_v2 only), which is **destructive**: it removes filler words, false starts, and disfluencies from the output entirely instead of marking them for review. `tag_audio_events` tags non-speech audio like `(laughter)` and `(applause)`, not verbal hesitations.
 
-Canonical Hebrew filler list (see `references/hebrew-filler-words.md` for the full annotated list and rationale per item):
+What that means in practice: call Scribe with `no_verbatim=false` (the default, keeps fillers in the word stream verbatim), then run your own lexicon match over `words[].text` to mark filler candidates. Cutting based on a lexicon you control beats `no_verbatim=true` because it preserves the editor sub-agent's ability to keep meaning-bearing instances.
+
+Apply the Hebrew filler lexicon at `references/hebrew-filler-words.md`. The full list there has ~30 entries split into ALWAYS-FILLER (safe to auto-cut) and CONTEXT-DEPENDENT (flag for the editor sub-agent, these words have real meaning in some contexts). The core entries:
 
 ```
-אֶה, אה, אם, אֶמ, אממ, אמממ,
-כאילו, יעני, אז, אז ככה, בעצם,
-טוב, אוקיי, סבבה, נו, האמת, בסדר,
-את יודע, את יודעת, אתה יודע
+ALWAYS-FILLER:
+אֶה, אה, אם, אֶמ, אממ, אמממ, אהמ, המ, ממ
+
+CONTEXT-DEPENDENT (flag, don't auto-cut):
+כאילו, יעני, אז, אז ככה, בעצם, טוב, טוב נו, אוקיי, סבבה,
+נו, האמת, בסדר, וואלה, כזה, ככה, נכון, פשוט, ממש,
+סוג של, בקיצור, כנראה, לדעתי,
+את יודע, את יודעת, אתה יודע, אתה מבין, את מבינה, הבנת,
+תראה, תראי, שמע, שמעי, בוא, בואי
 ```
 
-Apply the same rule as upstream: do not strip mid-phrase. Treat detected fillers as silence-equivalent cut candidates, same 30-200ms padding window (Hard Rule 7), same word-boundary snap (Hard Rule 6).
+Apply the same rule as upstream: do not strip mid-phrase. Treat detected ALWAYS-FILLER tokens as silence-equivalent cut candidates with the same 30-200ms padding window (Hard Rule 7) and the same word-boundary snap (Hard Rule 6). For CONTEXT-DEPENDENT tokens, surface them to the editor sub-agent with a flag rather than auto-cutting.
 
-**Editorial nuance:** "כאילו" and "יעני" are sometimes load-bearing in casual speech (filler) and sometimes part of meaning ("kind of", "I mean"). Per upstream's "Unavoidable slips are kept if no better take exists" rule, prefer leaving them in over multiple cuts in tight succession. A small number per minute tends to read as natural Israeli speech.
+**Editorial nuance:** the CONTEXT-DEPENDENT entries each have a literal sense and a filler sense. "כאילו" is filler in "זה כאילו לא עבד" but a literal "as if" in "התנהגה כאילו לא קרה כלום". "תראה / שמע / בוא" function as turn-starters far more often than as the literal verb in spoken Hebrew, but they ARE sometimes literal. Per upstream's "Unavoidable slips are kept if no better take exists" rule, prefer leaving them in over multiple cuts in tight succession. A small number per minute tends to read as natural Israeli speech.
 
 ### Step 4: `takes_packed.md` with Hebrew transcripts
 
