@@ -29,6 +29,16 @@ Generated: 2026-05-16 via research on: github.com/browser-use/video-use SKILL.md
 - **TTS Hebrew voiceover** , out: covered separately by `hyperframes-best-practices` and `remotion-best-practices` (both document Hebrew TTS via external providers since Kokoro does not support Hebrew). video-use does not have a TTS stage.
 - **Right-to-left video orientation** , out: RTL is a text-direction concern, not a video-frame concern. Hebrew creators record left-to-right cameras like everyone else.
 
+## Known failure modes (mitigated)
+
+These are Scribe / libass failure modes discovered during real-use validation. Each has a programmatic mitigation in `scripts/captions-only.sh` or `scripts/burn-hebrew-captions.sh`. Listed here so the next `update-skill` run recognizes them as covered and doesn't re-discover them as "gaps".
+
+- [x] **Scribe silently drops 30s+ chunks of speech mid-file or at the tail** , mitigation: `captions-only.sh` v1.2.7+ auto-detects gaps (>30s mid-file or >10s untranscribed tail) and re-transcribes each isolated window with `scribe_v2`, then merges the recovered words back into the main transcript. Documented in Step 8 and `references/captions-only-tuning.md`.
+- [x] **Scribe occasionally emits a single "word" with 80+s duration** , mitigation: `captions-only.sh` clips any word with duration > `MAX_WORD_DUR` (default 2.0s). Without clipping, a single freak cue would freeze on screen for the full duration. Tunable in `references/captions-only-tuning.md`.
+- [x] **Punctuation positioning unstable under python-bidi + libass double-reversal** , mitigation: `burn-hebrew-captions.sh` Step 0 strips trailing `.`/`?`/`!` from Hebrew lines by default (BBC/Netflix style). Disable rationale + how-to in `references/captions-only-tuning.md`. Troubleshooting entry: "Captions have no periods or question marks".
+- [x] **ElevenLabs free-tier limit is per-character, not per-hour** , mitigation: pricing section explicitly states the 10K characters/month reality (~1 long Hebrew video) so non-technical users understand they can't run a second video the same month. Quick-test recipe in `references/quick-test.md` lets users validate the pipeline without burning the quota.
+- [x] **VSFilter-era pre-shape recipe is user-validated, not a workaround** , mitigation: Gotchas entry and Troubleshooting entry both flag the double-reversal as DELIBERATE rendering, with explicit instructions for switching to canonical BiDi if the user prefers it. Prevents future maintainers from "fixing" the working render.
+
 ## Authoritative sources
 
 - https://github.com/browser-use/video-use , upstream SKILL.md, install.md, helpers/. Re-check on every video-use minor version bump (currently early-stage, ~16 commits as of 2026-05).

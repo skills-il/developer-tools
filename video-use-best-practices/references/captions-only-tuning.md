@@ -41,3 +41,13 @@ Every successful run writes two artifacts:
 | `--yes` | Skip the cost-confirmation prompt. Useful in CI / batch / scripted runs. |
 | `--output PATH` | Override the default `<input>.captioned.<ext>` output path. |
 | `--ffmpeg PATH` | Override the `ffmpeg` binary (e.g. `/tmp/ffmpeg` for the static evermeet build on macOS, where Homebrew ffmpeg often lacks libass). |
+
+## Uploading the side-export SRT to YouTube/Vimeo
+
+The `<output>.he.srt` written alongside the MP4 is a standard SRT in source-byte order (NOT the pre-shaped form fed to libass). Suitable for sidecar caption upload to any platform that consumes SRT.
+
+- **YouTube**: Studio > select video > Subtitles > Add language > Hebrew > Upload file > pick the `.he.srt`. Choose "With timing" since the file has timestamps.
+- **Vimeo**: video Settings > Distribution > Subtitles > Add new file > Language: Hebrew > Upload.
+- **Self-hosted / Plyr / Video.js**: reference the `.he.srt` as a `<track kind="captions" srclang="he" src="...">` child of the `<video>` element.
+
+The advantage over burned-in pixels: users can toggle captions off, accessibility tools can read them, and search engines can index the text.
