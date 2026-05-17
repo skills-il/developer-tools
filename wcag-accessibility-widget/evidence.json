@@ -1,0 +1,70 @@
+{
+  "version": "1.0",
+  "skill": "wcag-accessibility-widget",
+  "verified_date": "2026-05",
+  "claims": [
+    {
+      "id": "claim-001",
+      "claim": "WCAG 2.1 Level AA requires normal text contrast ratio of at least 4.5:1",
+      "source_url": "https://www.w3.org/TR/WCAG21/#contrast-minimum",
+      "source_title": "W3C WCAG 2.1 - Success Criterion 1.4.3 Contrast (Minimum)",
+      "verified": "2026-05"
+    },
+    {
+      "id": "claim-002",
+      "claim": "WCAG 2.1 Level AA requires large text contrast ratio of at least 3:1",
+      "source_url": "https://www.w3.org/TR/WCAG21/#contrast-minimum",
+      "source_title": "W3C WCAG 2.1 - Success Criterion 1.4.3 Contrast (Minimum)",
+      "verified": "2026-05"
+    },
+    {
+      "id": "claim-003",
+      "claim": "Israeli Standard ת\"י 5568 governs digital accessibility requirements for websites in Israel",
+      "source_url": "https://www.sii.org.il/1772-he/SII.aspx",
+      "source_title": "Israeli Standards Institution (מכון התקנים הישראלי) - ת\"י 5568",
+      "verified": "2026-05"
+    },
+    {
+      "id": "claim-004",
+      "claim": "Israeli accessibility law (חוק שוויון זכויות לאנשים עם מוגבלות) requires an accessibility declaration page (הצהרת נגישות) on websites",
+      "source_url": "https://www.gov.il/he/departments/guides/nigushot_web",
+      "source_title": "Israeli Government - Web Accessibility Requirements",
+      "verified": "2026-05"
+    },
+    {
+      "id": "claim-005",
+      "claim": "CSS filter property creates a new stacking context, which causes position:fixed children to be positioned relative to the filtered ancestor instead of the viewport",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/filter#formal_definition",
+      "source_title": "MDN Web Docs - CSS filter (stacking context behavior)",
+      "verified": "2026-05"
+    },
+    {
+      "id": "claim-006",
+      "claim": "The html element should have lang and dir attributes set (e.g., lang=\"he\" dir=\"rtl\" for Hebrew) for accessibility and correct RTL rendering",
+      "source_url": "https://www.w3.org/TR/WCAG21/#language-of-page",
+      "source_title": "W3C WCAG 2.1 - Success Criterion 3.1.1 Language of Page",
+      "verified": "2026-05"
+    },
+    {
+      "id": "claim-007",
+      "claim": "All interactive elements must be reachable by keyboard (Tab key) per WCAG 2.1 AA Success Criterion 2.1.1",
+      "source_url": "https://www.w3.org/TR/WCAG21/#keyboard",
+      "source_title": "W3C WCAG 2.1 - Success Criterion 2.1.1 Keyboard",
+      "verified": "2026-05"
+    },
+    {
+      "id": "claim-008",
+      "claim": "Decorative images must have empty alt text (alt=\"\") and aria-hidden=\"true\" per WCAG 2.1",
+      "source_url": "https://www.w3.org/TR/WCAG21/#non-text-content",
+      "source_title": "W3C WCAG 2.1 - Success Criterion 1.1.1 Non-text Content",
+      "verified": "2026-05"
+    },
+    {
+      "id": "claim-009",
+      "claim": "localStorage is available in all modern browsers and can be used to persist user accessibility preferences across sessions",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage",
+      "source_title": "MDN Web Docs - Window.localStorage",
+      "verified": "2026-05"
+    }
+  ]
+}
