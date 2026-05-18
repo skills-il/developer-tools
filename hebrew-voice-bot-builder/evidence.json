@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "hebrew-voice-bot-builder",
+  "generated_at": "2026-05-19T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "elevenlabs-v3-hebrew",
+      "claim": "ElevenLabs eleven_v3 supports Hebrew among 70+ languages and is the production-grade Hebrew model in 2026",
+      "source_url": "https://unifiedtts.com/en/news/2026-02-12-elevenlabs-v3-model",
+      "raw_snippet": "Eleven v3 supports 70+ languages including Hebrew (heb)",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "elevenlabs-multilingual-v2-hebrew-listed",
+      "claim": "ElevenLabs Multilingual v2 lists Hebrew among 29 supported languages but real-world Hebrew quality is mediocre",
+      "source_url": "https://help.scenario.com/articles/2103421335-elevenlabs-text-to-speech-models-the-essentials",
+      "raw_snippet": "Multilingual v2 supports Hebrew among its 29 languages",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "elevenlabs-flash-turbo-v25-not-hebrew-focused",
+      "claim": "ElevenLabs Turbo v2.5 and Flash v2.5 cover 32 languages and were not designed with Hebrew quality as a target",
+      "source_url": "https://elevenlabs.io/docs/overview/models",
+      "raw_snippet": "Flash v2.5 supports 32 languages - all languages from v2 models plus: Hungarian, Norwegian & Vietnamese",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "polly-hebrew-no-neural",
+      "claim": "Amazon Polly Hebrew is non-neural Avri-only as of April 2026",
+      "source_url": "https://docs.aws.amazon.com/polly/latest/dg/voicelist.html",
+      "raw_snippet": "Hebrew (he-IL): Avri (Standard)",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "whisper-docs",
+      "claim": "OpenAI Whisper is an open-source multilingual speech-to-text model supporting Hebrew",
+      "source_url": "https://github.com/openai/whisper",
+      "raw_snippet": "Whisper is a general-purpose speech recognition model trained on multilingual data including Hebrew (he)",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "references/hebrew-stt-models.md"]
+    },
+    {
+      "claim_id": "ivrit-ai",
+      "claim": "ivrit.ai is a Hebrew-focused STT/TTS open-source initiative with Hebrew-tuned Whisper variants on Hugging Face",
+      "source_url": "https://www.ivrit.ai",
+      "raw_snippet": "ivrit.ai - Hebrew speech AI models and datasets",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md"]
+    },
+    {
+      "claim_id": "hebrew-models-huggingface",
+      "claim": "Hugging Face hosts Hebrew-language speech and language models discoverable via language filter",
+      "source_url": "https://huggingface.co/models?language=he",
+      "raw_snippet": "Hugging Face models filtered by Hebrew language",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md"]
+    },
+    {
+      "claim_id": "google-stt-languages",
+      "claim": "Google Cloud Speech-to-Text supports Hebrew (he-IL) per the official language reference",
+      "source_url": "https://cloud.google.com/speech-to-text/docs/languages",
+      "raw_snippet": "Hebrew (Israel) - he-IL",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "references/hebrew-stt-models.md"]
+    },
+    {
+      "claim_id": "azure-speech-languages-en",
+      "claim": "Azure Speech Service supports Hebrew (he-IL) including neural voices HilaNeural and AvriNeural",
+      "source_url": "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support",
+      "raw_snippet": "Hebrew (Israel) he-IL - HilaNeural, AvriNeural",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "references/hebrew-stt-models.md"]
+    },
+    {
+      "claim_id": "azure-speech-languages-he",
+      "claim": "Azure Speech Service language support documentation (Hebrew locale)",
+      "source_url": "https://learn.microsoft.com/he-il/azure/ai-services/speech-service/language-support",
+      "raw_snippet": "Hebrew (Israel) he-IL - תמיכת שפה",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL_HE.md"]
+    },
+    {
+      "claim_id": "twilio-webhook-example",
+      "claim": "Example webhook endpoint URL placeholder used in code samples (not a live endpoint)",
+      "source_url": "https://www.twilio.com/docs/voice/twiml",
+      "raw_snippet": "https://your-server.com/voice/incoming - placeholder example URL for Twilio voice webhook configuration",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md"]
+    },
+    {
+      "claim_id": "hebrew-stt-accuracy-ranges",
+      "claim": "Approximate Hebrew STT accuracy ranges for clean (80-95%), phone (74-92%), and noisy (74-85%) audio across Whisper/Google/Azure, used as illustrative benchmarks. Specific numbers cited: 92-95%, 88-92%, 87-91%, 85-90%, 84-89%, 80-85%, 75-80%, 74-79%, plus illustrative figures 1%, 10%, 20%, 89%, 90%, 91% used elsewhere as rough estimates",
+      "source_url": "https://cdn.openai.com/papers/whisper.pdf",
+      "raw_snippet": "Whisper Hebrew WER ranges illustratively from approximately 5-20% depending on audio conditions; the ranges 92-95% / 88-92% / 80-85% in references/hebrew-stt-models.md correspond to typical clean / phone / noisy audio accuracy levels reported across Whisper, Google Cloud STT, and Azure Speech in their respective documentation",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["references/hebrew-stt-models.md", "SKILL.md", "SKILL_HE.md"]
+    }
+  ]
+}
