@@ -1,10 +1,10 @@
 ---
 name: israeli-phone-formatter
-description: Validate, format, and convert Israeli phone numbers between local and international (+972) formats. Use when user asks to validate Israeli phone number, format phone for SMS or WhatsApp, convert to +972, check phone prefix, or implement Israeli phone input validation in code. Handles mobile (050-058), landline (02-09), non-geographic / VoIP (072-077, 079), toll-free (1-800), and star-service numbers, and emits strict E.164 output for libphonenumber and WhatsApp Business API. Do NOT use for non-Israeli phone systems or general telecom questions.
+description: Validate, format, and convert Israeli phone numbers between local and international (+972) formats. Use when user asks to validate Israeli phone number, format phone for SMS or WhatsApp, convert to +972, check phone prefix, or implement Israeli phone input validation in code. Handles mobile (050-058), landline (02-09), non-geographic / VoIP (072-079), toll-free (1-800), and star-service numbers, and emits strict E.164 output for libphonenumber and WhatsApp Business API. Do NOT use for non-Israeli phone systems or general telecom questions.
 license: MIT
 allowed-tools: Bash(python:*)
 compatibility: No network required. Works with Claude Code, Claude.ai, Cursor.
-version: 1.1.0
+version: 1.2.0
 ---
 
 # מפרמט טלפונים ישראלי
@@ -18,7 +18,7 @@ version: 1.1.0
 | נייד | 050, 051, 052, 053, 054, 055, 058 | 10 | 052-1234567 |
 | נייד פלסטיני (לסמן) | 056 (וטניה), 059 (ג'וואל) | 10 | 059-1234567 |
 | קווי | 02-04, 08-09 | 9 | 02-6251111 |
-| לא גיאוגרפי / VoIP | 072, 073, 074, 076, 077, 079 | 10 | 077-1234567 |
+| לא גיאוגרפי / VoIP | 072, 073, 074, 076, 077, 078, 079 | 10 | 077-1234567 |
 | חינם | 1-800 | 10 | 1-800-123456 |
 | פרימיום | 1-700 | 10 | 1-700-123456 |
 | שירות כוכבית | *XXXX | 5-7 | *2421 |
@@ -38,7 +38,7 @@ version: 1.1.0
 שגיאות אימות נפוצות:
 - **ספירת ספרות שגויה**: מספרי נייד חייבים להיות בדיוק 10 ספרות עם הקידומת `0`
 - **ספקים פלסטיניים שמחליקים פנימה**: 056 (וטניה) ו-059 (ג'וואל) מתאימים למבנה הנייד הישראלי אבל הם ספקים בשטחים הפלסטיניים. סמנו אותם בנפרד כשהלוגיקה דורשת SIM ישראלי.
-- **079 נדחה כלא תקין**: regex ישן בסגנון `0(7[2-7])` דוחה 079 (Widely, 019 Mobile, אנטאל). השתמשו ב-`0(7[234567]|79)`.
+- **078 או 079 נדחים כלא תקינים**: regex ישן בסגנון `0(7[2-7])` דוחה גם את 078 (ספקי VoIP שונים) וגם את 079 (Widely, 019 Mobile, אנטאל). השתמשו ב-`07[2-9]`.
 - **חסר אפס מוביל**: מספרים מקומיים תמיד מתחילים ב-`0` (חוץ מחינם וכוכבית)
 
 ### שלב 3: עיצוב או המרה
@@ -102,7 +102,20 @@ version: 1.1.0
 - `scripts/validate_phone.py` -- מאמת, מעצב וממיר מספרי טלפון ישראליים. תומך באימות מספר בודד, עיבוד CSV באצווה, המרת פורמט בין מקומי לבינלאומי, ופלט E.164 מחמיר. הרצה: `python scripts/validate_phone.py --help`
 
 ### חומרי עזר
-- `references/prefix-allocation.md` -- טבלת הקצאת קידומות טלפון ישראליות מלאה לפי משרד התקשורת, כולל ייחוס ספק מנפיק לקידומות נייד (050-058 כולל 056 / 059 הפלסטיניים), אזורי חיוג לקווים נייחים, טווחים לא גיאוגרפיים (072-077, 079), הסתייגות ניידות מספרים, והנחיות תאימות ל-E.164 / libphonenumber.
+- `references/prefix-allocation.md` -- טבלת הקצאת קידומות טלפון ישראליות מלאה לפי משרד התקשורת, כולל ייחוס ספק מנפיק לקידומות נייד (050-058 כולל 056 / 059 הפלסטיניים), אזורי חיוג לקווים נייחים, טווחים לא גיאוגרפיים (072-079), הסתייגות ניידות מספרים, והנחיות תאימות ל-E.164 / libphonenumber.
+
+## שרתי MCP מומלצים
+
+אין כרגע MCP ייעודי לטלקום ישראלי בספרייה. לפענוח כללי של מספרי טלפון, הספרייה `libphonenumber-js` (שמופעלת מקוד הסוכן) היא מקור האמת הנפוץ ביותר ומתאימה למה ש-WhatsApp Business API, Twilio וערכות SDK עיקריות מצפים לו.
+
+## קישורי עזר
+
+| מקור | URL | מה לבדוק |
+|------|-----|----------|
+| Telephone numbers in Israel (Wikipedia) | https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel | הקצאת קידומות עדכנית, ייחוס ספקים, אזורי חיוג |
+| משרד התקשורת | https://www.gov.il/he/departments/ministry_of_communications | עדכוני תכנית המספור הרשמיים והרגולציה |
+| libphonenumber (Google) | https://github.com/google/libphonenumber | כללי אימות E.164 הקנוניים שעליהם מתבססות רוב ערכות ה-SDK |
+| libphonenumber-js (npm) | https://www.npmjs.com/package/libphonenumber-js | פורט JavaScript בשימוש נפוץ ברכיבי קלט טלפון בפרונטאנד |
 
 ## מלכודות נפוצות
 
@@ -113,7 +126,7 @@ version: 1.1.0
 - 056 ו-059 מתאימים למבנה הנייד הישראלי אבל הם ספקים פלסטיניים (וטניה, ג'וואל). בלוגיקה עסקית שדורשת תושב ישראל, סמנו אותם בנפרד במקום להתייחס אליהם כמספרי נייד ישראליים.
 - 055 הוא טווח רב-MVNO (סלקום, 019 Mobile, Widely, רמי לוי, Cellact, פלאפון מנפיקים בו מספרים); אל תשייכו אותו לספק יחיד.
 - מספרי חירום ישראליים (משטרה 100, מד"א 101, כיבוי 102) הם קודים קצרים שאין לעצב עם קידומת מדינה או אזור.
-- 077 הוא טווח לא גיאוגרפי של HOT Telecom (לא VoIP גנרי). 079 נמצא בשימוש על ידי Widely, 019 Mobile ואנטאל, ולעיתים קרובות נשמט מ-regex ישן בסגנון `0(7[2-7])`.
+- 077 הוא טווח לא גיאוגרפי של HOT Telecom (לא VoIP גנרי). 078 ו-079 בשימוש של ספקי VoIP אחרים ושל ספקים לא גיאוגרפיים (Widely, 019 Mobile, אנטאל), ולעיתים קרובות שניהם נשמטים מ-regex ישן בסגנון `0(7[2-7])`.
 - קידומות אזוריות ישראליות השתנו היסטורית (02 לירושלים, 03 לתל אביב, 04 לחיפה, 08 לדרום, 09 לשרון). סוכנים עלולים להשתמש במיפויי קידומות מיושנים.
 - קידומות נייד מוקצות הן: 050, 051, 052, 053, 054, 055, 058, ובנוסף 056 ו-059 הפלסטיניים. 057 אינה בשימוש.
 
@@ -123,9 +136,9 @@ version: 1.1.0
 סיבה: בלבול בין אורך מספרי נייד (10 ספרות) לקווים נייחים (9 ספרות)
 פתרון: מספרי נייד / לא גיאוגרפי תמיד מכילים 10 ספרות כולל ה-`0`. קווים נייחים מכילים 9. ספרו ספרות אחרי הסרת כל העיצוב.
 
-### שגיאה: "079 נדחה כלא תקין"
-סיבה: ה-regex `0(7[2-7])` שולל את 079, שהיא הקצאה אמיתית (Widely, 019 Mobile, אנטאל).
-פתרון: השתמשו ב-`0(7[234567]|79)` למחלקה הלא גיאוגרפית. הסקריפט המצורף `validate_phone.py` כבר כולל את התיקון.
+### שגיאה: "078 או 079 נדחים כלא תקינים"
+סיבה: ה-regex `0(7[2-7])` שולל גם את 078 (ספקי VoIP שונים) וגם את 079 (Widely, 019 Mobile, אנטאל), שהן הקצאות אמיתיות.
+פתרון: השתמשו ב-`07[2-9]` למחלקה הלא גיאוגרפית. הסקריפט המצורף `validate_phone.py` כבר כולל את התיקון.
 
 ### שגיאה: "המספר מתחיל ב-05 אך הקידומת לא מזוהה"
 סיבה: לא כל קידומות 05X מוקצות לנייד צרכני ישראלי (057 לא בשימוש; 056 / 059 פלסטיניים).

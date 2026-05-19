@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "israeli-phone-formatter",
+  "generated_at": "2026-05-20T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "israel-numbering-plan",
+      "claim": "Israeli phone numbering uses +972 country code; mobile prefixes are 050-058 (10 digits), landline area codes are 02-04, 08, 09 (9 digits), and non-geographic / VoIP prefixes are 072-079.",
+      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
+      "raw_snippet": "+972 ... 050 ... 052 ... 072 ... 079",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/prefix-allocation.md", "scripts/validate_phone.py", "metadata.json"]
+    },
+    {
+      "claim_id": "mnp-since-2007",
+      "claim": "Israel implemented Mobile Number Portability in 2007, so the leading prefix indicates the originally issuing carrier rather than the currently servicing carrier.",
+      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
+      "raw_snippet": "Mobile Number Portability",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/prefix-allocation.md"]
+    },
+    {
+      "claim_id": "059-jawwal-palestinian",
+      "claim": "The 059 prefix matches the Israeli mobile shape but is assigned to Jawwal, a Palestinian mobile operator. The 056 prefix is similarly used by Wataniya in the Palestinian territories.",
+      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
+      "raw_snippet": "Jawwal ... Wataniya",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/prefix-allocation.md", "scripts/validate_phone.py"]
+    },
+    {
+      "claim_id": "moc-israel",
+      "claim": "Israel's Ministry of Communications publishes official numbering-plan changes at gov.il under /departments/ministry_of_communications.",
+      "source_url": "https://www.gov.il/en/departments/ministry_of_communications",
+      "raw_snippet": "Ministry of Communications",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "moc-israel-he",
+      "claim": "Israel's Ministry of Communications also publishes the Hebrew version of its homepage at gov.il/he/departments/ministry_of_communications.",
+      "source_url": "https://www.gov.il/he/departments/ministry_of_communications",
+      "raw_snippet": "משרד התקשורת",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL_HE.md"]
+    },
+    {
+      "claim_id": "libphonenumber-google",
+      "claim": "Google's libphonenumber library provides the canonical E.164 validation and formatting rules used across major messaging SDKs and is hosted at github.com/google/libphonenumber.",
+      "source_url": "https://github.com/google/libphonenumber",
+      "raw_snippet": "libphonenumber",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "libphonenumber-js",
+      "claim": "The libphonenumber-js npm package is a JavaScript port of Google's libphonenumber commonly used in frontend phone-input components.",
+      "source_url": "https://www.npmjs.com/package/libphonenumber-js",
+      "raw_snippet": "libphonenumber-js",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "e164-format",
+      "claim": "E.164 international format for Israeli mobile numbers strips the leading 0 from the domestic format (e.g., domestic 050-1234567 becomes international +972501234567).",
+      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
+      "raw_snippet": "+972",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "israel-emergency-numbers",
+      "claim": "Israeli emergency short codes: police 100, ambulance 101, fire 102.",
+      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
+      "raw_snippet": "100 ... 101 ... 102",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "star-service-format",
+      "claim": "Israeli star-service short codes follow the *XXXX shape with 4-6 digits after the star. *2421 is shown only as an illustrative example of that shape, with no claim about which carrier operates that specific code.",
+      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
+      "raw_snippet": "*",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    }
+  ]
+}
