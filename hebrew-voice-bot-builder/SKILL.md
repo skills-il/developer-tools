@@ -25,8 +25,10 @@ Before building, decide on the voice bot architecture based on the use case:
 
 **Key decisions:**
 - **STT provider**: OpenAI `gpt-4o-transcribe` or `gpt-4o-mini-transcribe` (best Hebrew WER and lower latency than `whisper-1`, available via the OpenAI Realtime API for streaming), `whisper-large-v3-turbo` for self-host, ivrit-ai's Hebrew-tuned variants (`ivrit-ai/whisper-large-v3-turbo-ct2`) for the best open Hebrew WER, Google Cloud STT (low latency), Azure Speech (enterprise features). The legacy `whisper-1` API is still supported but `gpt-4o-transcribe` is the current default for Hebrew.
-- **TTS provider**: ElevenLabs `eleven_v3` (the only ElevenLabs model that delivers production-grade Hebrew as of 2026, the Israeli default for new builds). Multilingual v2 lists Hebrew in its 29-language table but real-world Hebrew quality is mediocre, treat it as fallback only. Turbo v2.5 and Flash v2.5 were not designed with Hebrew in mind, avoid them for Hebrew-primary output. Alternatives: Azure Neural TTS (`he-IL-HilaNeural`, `he-IL-AvriNeural`), Google Cloud TTS Wavenet (`he-IL-Wavenet-A/B`), Amazon Polly Hebrew (Avri only, no neural Hebrew voice as of Apr 2026, verify before relying on it).
-- **Real-time / conversational**: OpenAI Realtime API (speech-to-speech, native Hebrew) is the 2026 default for sub-500ms turn-taking. For browser/embedded clients use Twilio Media Streams + barge-in or LiveKit Voice Agents.
+- **TTS provider — split by use case**:
+  - **Real-time / streaming (voice agents, IVR, live conversation)**: OpenAI Realtime API (`gpt-4o-realtime`) — native multilingual speech-to-speech including Hebrew, the 2026 default for sub-500ms turn-taking. Inworld TTS-1.5 / Realtime TTS-2 — explicitly lists Hebrew, sub-130ms P90 latency, designed for live conversation. Deepdub Phantom X 3.2 — Israeli company, real-time Hebrew with emotive eTTS, launched March 2026. ElevenLabs `eleven_flash_v2_5` — WebSocket-capable but Hebrew quality is weak, use only when latency dominates over quality.
+  - **Offline / max quality (audiobooks, voicemail playback, batch generation)**: ElevenLabs `eleven_v3` — best Hebrew quality ElevenLabs offers, supports Hebrew (heb) among 70+ languages but **NO WebSocket / streaming API**, REST only. Deepdub Phantom X 3.2 also serves this track with emotional control.
+  - **Fallbacks**: Azure Neural TTS (`he-IL-HilaNeural`, `he-IL-AvriNeural`), Google Cloud TTS Wavenet (`he-IL-Wavenet-A/B`), Amazon Polly Hebrew (Avri only, no neural Hebrew voice as of Apr 2026, verify before relying on it). ElevenLabs Multilingual v2 lists Hebrew in its 29-language table but real-world Hebrew quality is mediocre; Turbo v2.5 was not designed with Hebrew in mind.
 - **Telephony**: Twilio (largest Israeli number inventory), Vonage (competitive pricing for Israel).
 - **Hosting**: Cloud functions for low-volume, dedicated servers for high-volume.
 - **Recording-consent disclosure**: Israeli outbound automated calls must disclose recording at the start of the call (`השיחה מוקלטת`). Privacy Protection Law Amendment 13 (in force Aug 2025) tightens consent requirements for biometric voice data.
@@ -760,6 +762,8 @@ Result: Voice bot that correctly transcribes mixed Hebrew-English speech common 
 - Hebrew Text-to-Speech (TTS) requires correct nikud (vowel diacritics) placement for proper pronunciation. Without nikud, ambiguous words like "דבר" may be read as "davar" (thing) or "daber" (speak).
 - Israeli phone numbers have varying IVR input lengths: landlines are 9 digits (0X-XXXXXXX), mobile are 10 digits (05X-XXXXXXX). Voice bots must accept both formats.
 - Background noise levels in typical Israeli environments (cafes, open offices, public transit) are higher than global averages. Voice bot confidence thresholds should be set lower to avoid excessive re-prompts.
+- **ElevenLabs `eleven_v3` is REST-only**, no WebSocket / streaming API as of May 2026. Agents that pick v3 for "best Hebrew quality" and then try to wire it into a live voice agent will hit unacceptable latency. Use OpenAI Realtime API, Inworld Realtime TTS-2, or Deepdub Phantom X 3.2 for sub-second turn-taking in Hebrew; reserve v3 for offline / batch / playback scenarios.
+- The Hebrew TTS landscape moves fast (Deepdub Phantom X shipped March 2026, Inworld TTS-1.5 January 2026, Realtime TTS-2 later in 2026). Re-verify provider Hebrew support at build time rather than trusting any list older than a few months.
 
 
 ## Reference Links
@@ -771,6 +775,9 @@ Result: Voice bot that correctly transcribes mixed Hebrew-English speech common 
 | Azure AI Speech (Hebrew) | https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support | Hebrew STT/TTS voices, neural voice list |
 | HuggingFace Hebrew models | https://huggingface.co/models?language=he | Open Hebrew ASR/TTS models (ivrit.ai, etc.) |
 | ivrit.ai (Hebrew voice corpus) | https://www.ivrit.ai | Open-source Hebrew speech corpus, pre-trained ASR models |
+| ElevenLabs WebSocket docs | https://elevenlabs.io/docs/developers/websockets | Which models support streaming (v3 does NOT, Flash v2.5 does) |
+| Deepdub (Israeli) | https://deepdub.ai | Phantom X 3.2 real-time AI voice with native Hebrew, emotive eTTS |
+| Inworld TTS | https://inworld.ai/tts | TTS-1.5 (15 languages incl. Hebrew) + Realtime TTS-2 (100+ languages, sub-130ms) |
 
 ## Troubleshooting
 

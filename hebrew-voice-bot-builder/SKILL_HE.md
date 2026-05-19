@@ -35,8 +35,10 @@ license: MIT
 **החלטות מרכזיות:**
 - **ספק STT**: OpenAI Whisper (הדיוק הכי טוב לעברית), Google Cloud STT (זמן תגובה נמוך), Azure Speech (פיצ'רים ארגוניים)
 - **ספק STT**: OpenAI `gpt-4o-transcribe` או `gpt-4o-mini-transcribe` (WER הכי טוב לעברית והשהיה נמוכה יותר מ-`whisper-1`, זמין דרך OpenAI Realtime API לסטרימינג), `whisper-large-v3-turbo` ל-self-host, וריאציות מותאמות-עברית של ivrit-ai (`ivrit-ai/whisper-large-v3-turbo-ct2`) ל-WER הפתוח הטוב ביותר בעברית, Google Cloud STT (השהיה נמוכה), Azure Speech (תכונות ארגוניות). ה-API הישן `whisper-1` עדיין נתמך אבל `gpt-4o-transcribe` הוא ברירת המחדל הנוכחית לעברית.
-- **ספק TTS**: ElevenLabs `eleven_v3` הוא המודל היחיד של ElevenLabs שנותן עברית באיכות פרודקשן ב-2026, וזו ברירת המחדל הישראלית לבילדים חדשים. Multilingual v2 רשום בתיעוד הרשמי כתומך בעברית (אחת מ-29 שפות) אבל איכות העברית בפועל בינונית, להשתמש רק כ-fallback. Turbo v2.5 ו-Flash v2.5 לא תוכננו עם עברית בראש, לא להשתמש בהם לעברית כשפת יעד ראשית. חלופות: Azure Neural TTS (`he-IL-HilaNeural`, `he-IL-AvriNeural`), Google Cloud TTS Wavenet (`he-IL-Wavenet-A/B`), Amazon Polly Hebrew (Avri בלבד, אין קול עברי neural נכון לאפריל 2026, יש לוודא לפני הסתמכות).
-- **בזמן אמת / שיחתי**: OpenAI Realtime API (speech-to-speech, עברית טבעית) הוא ברירת המחדל ב-2026 ל-turn-taking של פחות מ-500ms. ללקוחות דפדפן/משובץ השתמשו ב-Twilio Media Streams + barge-in או LiveKit Voice Agents.
+- **ספק TTS, פיצול לפי תרחיש שימוש**:
+  - **זמן אמת / streaming (סוכן קולי, IVR, שיחה חיה)**: OpenAI Realtime API (`gpt-4o-realtime`) — speech-to-speech רב-לשוני שתומך בעברית באופן טבעי, ברירת המחדל של 2026 ל-turn-taking של פחות מ-500ms. Inworld TTS-1.5 / Realtime TTS-2 — מציינים תמיכה בעברית במפורש, P90 latency מתחת ל-130ms, תוכנן לשיחה חיה. Deepdub Phantom X 3.2 — חברה ישראלית, עברית בזמן אמת עם eTTS רגשי, יצא במרץ 2026. ElevenLabs `eleven_flash_v2_5` — תומך WebSocket אבל איכות העברית חלשה, להשתמש רק כשהשהיה דומיננטית על איכות.
+  - **Offline / איכות מקסימלית (אודיובוקים, השמעת הודעות, יצירה בבאטץ׳)**: ElevenLabs `eleven_v3` — איכות העברית הכי טובה ש-ElevenLabs מציעה, תומך בעברית בין 70+ שפות, אבל **אין WebSocket / streaming API**, REST בלבד. Deepdub Phantom X 3.2 משרת גם את המסלול הזה עם שליטה ברגש.
+  - **חלופות וגיבוי**: Azure Neural TTS (`he-IL-HilaNeural`, `he-IL-AvriNeural`), Google Cloud TTS Wavenet (`he-IL-Wavenet-A/B`), Amazon Polly Hebrew (Avri בלבד, אין קול עברי neural נכון לאפריל 2026, יש לוודא לפני הסתמכות). ElevenLabs Multilingual v2 רשום בתיעוד כתומך בעברית (אחת מ-29 שפות) אבל איכות העברית בפועל בינונית; Turbo v2.5 לא תוכנן עם עברית בראש.
 - **טלפוניה**: Twilio (מלאי המספרים הישראלי הגדול ביותר), Vonage (תמחור תחרותי לישראל)
 - **אירוח**: פונקציות ענן לנפח נמוך, שרתים ייעודיים לנפח גבוה
 
@@ -494,6 +496,8 @@ python scripts/hebrew-stt-demo.py --help
 - המרת טקסט לדיבור (TTS) בעברית דורשת ניקוד נכון לביטוי תקין. ללא ניקוד, מילים דו-משמעיות כמו "דבר" עלולות להיקרא "דָּבָר" (thing) או "דַּבֵּר" (speak).
 - מספרי טלפון ישראליים באורך משתנה ב-IVR: קווים נייחים 9 ספרות (0X-XXXXXXX), נייד 10 ספרות (05X-XXXXXXX). בוטים קוליים חייבים לקבל את שני הפורמטים.
 - רמות רעשי רקע בסביבות ישראליות טיפוסיות (בתי קפה, משרדים פתוחים, תחבורה ציבורית) גבוהות מהממוצע העולמי. סף הביטחון בבוטים קוליים צריך להיות נמוך יותר כדי להימנע מחזרות מרובות.
+- **ElevenLabs `eleven_v3` עובד רק על REST**, אין WebSocket / streaming API נכון למאי 2026. סוכנים שיבחרו ב-v3 בגלל "איכות עברית הכי טובה" וינסו לחבר אותו לסוכן קולי חי ייתקלו בהשהיה לא קבילה. השתמשו ב-OpenAI Realtime API, Inworld Realtime TTS-2 או Deepdub Phantom X 3.2 לזמן אמת בעברית; שמרו את v3 לתרחישי offline / batch / השמעת תוכן מוקלט.
+- נוף ה-TTS בעברית משתנה במהירות (Deepdub Phantom X יצא במרץ 2026, Inworld TTS-1.5 בינואר 2026, Realtime TTS-2 בהמשך 2026). אמתו תמיכה בעברית של כל ספק בזמן הבנייה, לא להסתמך על רשימות בנות כמה חודשים.
 
 
 ## קישורי עזר
@@ -505,6 +509,9 @@ python scripts/hebrew-stt-demo.py --help
 | Azure AI Speech (עברית) | https://learn.microsoft.com/he-il/azure/ai-services/speech-service/language-support | קולות STT/TTS בעברית, רשימת קולות נוירליים |
 | מודלים בעברית ב-HuggingFace | https://huggingface.co/models?language=he | מודלים פתוחים לזיהוי דיבור/המרה לדיבור בעברית |
 | ivrit.ai (קורפוס דיבור בעברית) | https://www.ivrit.ai | קורפוס דיבור עברי פתוח, מודלי ASR מאומנים מראש |
+| תיעוד WebSocket של ElevenLabs | https://elevenlabs.io/docs/developers/websockets | אילו מודלים תומכים ב-streaming (v3 לא, Flash v2.5 כן) |
+| Deepdub (ישראלי) | https://deepdub.ai | Phantom X 3.2, קול AI בזמן אמת עם תמיכה ילידית בעברית ו-eTTS רגשי |
+| Inworld TTS | https://inworld.ai/tts | TTS-1.5 (15 שפות כולל עברית) + Realtime TTS-2 (100+ שפות, מתחת ל-130ms) |
 
 ## פתרון בעיות
 

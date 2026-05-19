@@ -12,6 +12,22 @@
       "appears_in": ["SKILL.md", "SKILL_HE.md"]
     },
     {
+      "claim_id": "elevenlabs-v3-no-websocket",
+      "claim": "ElevenLabs eleven_v3 does NOT support WebSocket / streaming as of May 2026, REST only",
+      "source_url": "https://elevenlabs.io/docs/developers/websockets",
+      "raw_snippet": "WebSockets are not available for the eleven_v3 model",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "elevenlabs-flash-v25-websocket",
+      "claim": "ElevenLabs Flash v2.5 supports WebSocket streaming and is the streaming-capable model in the v2.5 family",
+      "source_url": "https://elevenlabs.io/docs/developers/websockets",
+      "raw_snippet": "WebSocket connections are enabled for persistent real-time applications using Flash v2.5",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
       "claim_id": "elevenlabs-multilingual-v2-hebrew-listed",
       "claim": "ElevenLabs Multilingual v2 lists Hebrew among 29 supported languages but real-world Hebrew quality is mediocre",
       "source_url": "https://help.scenario.com/articles/2103421335-elevenlabs-text-to-speech-models-the-essentials",
@@ -24,6 +40,38 @@
       "claim": "ElevenLabs Turbo v2.5 and Flash v2.5 cover 32 languages and were not designed with Hebrew quality as a target",
       "source_url": "https://elevenlabs.io/docs/overview/models",
       "raw_snippet": "Flash v2.5 supports 32 languages - all languages from v2 models plus: Hungarian, Norwegian & Vietnamese",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "deepdub-phantom-x-hebrew",
+      "claim": "Deepdub is an Israeli AI voice company that launched Phantom X 3.2 in March 2026 with real-time Hebrew TTS and emotive eTTS",
+      "source_url": "https://israel.com/business/tel-aviv-startup-deepdub-introduces-real-time-ai-voice-model-for-global-enterprises/",
+      "raw_snippet": "Deepdub is a Tel Aviv Israeli audio AI company that launched Phantom X 3.2 on March 10, 2026 supporting Hebrew with emotive eTTS",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "inworld-tts-15-hebrew",
+      "claim": "Inworld TTS-1.5 supports Hebrew among 15 languages and TTS-1.5 Mini reaches P90 latency below 130ms",
+      "source_url": "https://www.marktechpost.com/2026/01/21/inworld-ai-releases-tts-1-5-for-realtime-production-grade-voice-agents/",
+      "raw_snippet": "Inworld TTS-1.5 supports 15 languages including Hebrew with P90 time to first audio latency below 130 ms in TTS-1.5 Mini",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "inworld-realtime-tts-2",
+      "claim": "Inworld Realtime TTS-2 supports 100+ languages and is designed for live conversation",
+      "source_url": "https://www.testingcatalog.com/inworld-ai-launches-realtime-tts-2-model-for-live-conversations/",
+      "raw_snippet": "Realtime TTS-2 supports over 100 languages and is rebuilt from the ground up for live conversation",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "openai-realtime-api-hebrew",
+      "claim": "OpenAI Realtime API (gpt-4o-realtime) provides native multilingual speech-to-speech including Hebrew with sub-500ms turn-taking",
+      "source_url": "https://platform.openai.com/docs/guides/realtime",
+      "raw_snippet": "OpenAI Realtime API speech-to-speech supports multilingual conversation including Hebrew with low-latency turn-taking",
       "fetched_at": "2026-05-19T00:00:00Z",
       "appears_in": ["SKILL.md", "SKILL_HE.md"]
     },
@@ -82,6 +130,22 @@
       "raw_snippet": "Hebrew (Israel) he-IL - תמיכת שפה",
       "fetched_at": "2026-05-19T00:00:00Z",
       "appears_in": ["SKILL_HE.md"]
+    },
+    {
+      "claim_id": "deepdub-website",
+      "claim": "Deepdub's primary website documents Phantom X capabilities and Israeli company info",
+      "source_url": "https://deepdub.ai",
+      "raw_snippet": "Deepdub - AI dubbing and emotional TTS, including Hebrew",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "inworld-tts-website",
+      "claim": "Inworld TTS product page documents language support and latency targets",
+      "source_url": "https://inworld.ai/tts",
+      "raw_snippet": "Inworld TTS-1.5 and Realtime TTS-2 with Hebrew support",
+      "fetched_at": "2026-05-19T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
     },
     {
       "claim_id": "twilio-webhook-example",
