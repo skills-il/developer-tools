@@ -1,6 +1,6 @@
 ---
 name: cloudinary-assets
-description: Manage media assets through Cloudinary's REST API -- upload, transform, optimize, and deliver images and videos. Use when user asks about image upload, media optimization, image transformations, responsive images, video management, CDN delivery, or mentions Cloudinary specifically. Covers Upload API, Admin API, URL-based transformations, AI-powered effects (gen_remove, gen_replace, background removal), and delivery optimization. Israeli-founded (2012) with R&D in Petach Tikva; global HQ in Santa Clara, California. Do NOT use for non-Cloudinary media hosting or local image processing without cloud upload.
+description: Manage media assets through Cloudinary's REST API -- upload, transform, optimize, and deliver images and videos. Use when user asks about image upload, media optimization, image transformations, responsive images, video management, CDN delivery, or mentions Cloudinary specifically. Covers Upload API, Admin API, URL-based transformations, AI-powered effects (gen_remove, gen_replace, background removal), and delivery optimization. Israeli-founded (2012) with R&D in Petah Tikva; global HQ in San Jose, California. Do NOT use for non-Cloudinary media hosting or local image processing without cloud upload.
 license: MIT
 allowed-tools: Bash(python:*) Bash(curl:*) WebFetch
 compatibility: Requires Cloudinary account (free tier available). Needs CLOUDINARY_URL or API key/secret/cloud name environment variables.
@@ -105,7 +105,7 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 
 ### שלב 4ב: טרנספורמציות מבוססות AI (2024-2025)
 
-האפקטים הגנרטיביים של Cloudinary יצאו ל-GA במהלך 2024. משתמשים בהם כמו בכל פרמטר אחר ב-URL:
+האפקטים הגנרטיביים של Cloudinary (gen_remove, gen_replace, gen_background_replace, gen_recolor, gen_fill, gen_restore) זמינים כפרמטרי URL. חלק מהווריאנטים עדיין מסומנים כ-Beta בתיעוד, אז כדאי לבדוק את הסטטוס העדכני לפני שמסתמכים על אפקט ספציפי בפרודקשן:
 
 | פרמטר | מה הוא עושה |
 |--------|--------------|
@@ -291,7 +291,7 @@ https://res.cloudinary.com/{cloud_name}/image/upload/w_800,c_fill/l_text:Heebo_4
 ## מלכודות נפוצות
 
 - שכבות טקסט בעברית מוצגות נכון רק כשהפונט תומך בגליפים עבריים (Heebo, Assistant, Rubik, David Libre, Frank Ruhl Libre, Suez One, Secular One). פונטים לטיניים בלבד יציגו ריבועים או גליפים חסרים. חובה לקודד את הטקסט ב-URL.
-- המסלול החינמי כולל 25 קרדיטים בחודש עם חישוב השימוש על בסיס טרנספורמציות, אחסון וצריכת רוחב פס.
+- המסלול החינמי כולל 25 קרדיטים בחודש. קרדיט אחד שווה ל-1,000 טרנספורמציות או 1 ג'יגה אחסון מנוהל או 1 ג'יגה רוחב פס נטו (המדד הראשון שעוברים אותו הוא זה שמחויבים עליו). השימוש נמדד בחלון נע של 30 ימים, לא בחודש קלנדרי. המעבר Free → Plus יקר (בערך 89-99 דולר לחודש במחירון 2026), אז כדאי לתכנן מראש את הוריאנטים ב-Eager לפני העלאה לאוויר.
 - נקודות קצה של Upload API ו-Admin API דורשות אימות תקין. כתובות URL לדוגמה בתיעוד עלולות להחזיר שגיאות 401/404 כאשר נגישות אליהן ללא פרטי התחברות תקינים.
 - כתובות URL חתומות ומצבי `auth_token` / Strict Transformations: כתובות URL נגזרות עלולות להיחסם אם לא חתומות. מפעילים את "Strict transformations" ב-Settings, Security, וחותמים את כתובות ה-URL להגשה עם `s--{signature}--` או משתמשים ב-`auth_token` לגישה מוגבלת בזמן.
 - Eager לעומת Lazy: ברירת המחדל היא Lazy, כלומר Cloudinary בונה את הגרסה הנגזרת בפעם הראשונה שמבקשים אותה (פגיעה ראשונה איטית) ושומר במטמון. Eager בונה בזמן ההעלאה (פגיעה ראשונה מהירה, אבל צורך קרדיטים בעלייה). שווה Eager לוריאנטים צפויים כמו תמונות ממוזערות וכרטיסי שיתוף; את כל השאר אפשר להשאיר Lazy.
@@ -335,6 +335,6 @@ https://res.cloudinary.com/{cloud_name}/image/upload/w_800,c_fill/l_text:Heebo_4
 - בית התיעוד של Cloudinary, https://cloudinary.com/documentation
 - URL Gen SDK ב-GitHub, https://github.com/cloudinary/js-url-gen
 - מדריך פרמטרים לטרנספורמציות, https://cloudinary.com/documentation/transformation_reference
-- סקירה של פיצ'רי ה-AI הגנרטיבי, https://cloudinary.com/documentation/transformation_generative_ai
+- סקירה של פיצ'רי ה-AI הגנרטיבי, https://cloudinary.com/documentation/generative_ai_transformations
 - כתובות URL חתומות והגשה מאומתת, https://cloudinary.com/documentation/control_access_to_media
 - מדריך טרנספורמציות וידאו, https://cloudinary.com/documentation/video_transformation_reference

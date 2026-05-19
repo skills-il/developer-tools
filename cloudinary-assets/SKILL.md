@@ -1,6 +1,6 @@
 ---
 name: cloudinary-assets
-description: Manage media assets through Cloudinary's REST API -- upload, transform, optimize, and deliver images and videos. Use when user asks about image upload, media optimization, image transformations, responsive images, video management, CDN delivery, or mentions Cloudinary specifically. Covers Upload API, Admin API, URL-based transformations, AI-powered effects (gen_remove, gen_replace, background removal), and delivery optimization. Israeli-founded (2012) with R&D in Petach Tikva; global HQ in Santa Clara, California. Do NOT use for non-Cloudinary media hosting or local image processing without cloud upload.
+description: Manage media assets through Cloudinary's REST API -- upload, transform, optimize, and deliver images and videos. Use when user asks about image upload, media optimization, image transformations, responsive images, video management, CDN delivery, or mentions Cloudinary specifically. Covers Upload API, Admin API, URL-based transformations, AI-powered effects (gen_remove, gen_replace, background removal), and delivery optimization. Israeli-founded (2012) with R&D in Petah Tikva; global HQ in San Jose, California. Do NOT use for non-Cloudinary media hosting or local image processing without cloud upload.
 license: MIT
 allowed-tools: Bash(python:*) Bash(curl:*) WebFetch
 compatibility: Requires Cloudinary account (free tier available). Needs CLOUDINARY_URL or API key/secret/cloud name environment variables.
@@ -105,7 +105,7 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 
 ### Step 4b: AI-Powered Transformations (2024-2025)
 
-Cloudinary's generative AI effects went GA in 2024. Use them as URL params like any other transformation:
+Cloudinary's generative AI effects (gen_remove, gen_replace, gen_background_replace, gen_recolor, gen_fill, gen_restore) are available as URL params. Some variants may still be flagged as Beta on the docs page, so check the current status before relying on a specific effect in production:
 
 | Param | What it does |
 |-------|--------------|
@@ -291,7 +291,7 @@ Result: Video URL with optimized delivery and poster image.
 ## Gotchas
 
 - Hebrew text overlays render correctly only when the font supports Hebrew glyphs (Heebo, Assistant, Rubik, David Libre, Frank Ruhl Libre, Suez One, Secular One). Latin-only fonts produce missing glyphs or boxes. The text value must be URL-encoded.
-- Free tier includes 25 credits per month with usage calculated based on transformations, storage, and bandwidth consumption.
+- Free tier includes 25 credits per month. One credit equals 1,000 transformations OR 1 GB managed storage OR 1 GB net viewing bandwidth (the metric whose consumption you exceed first is the one that bills). Usage is measured on a rolling 30-day window, not a calendar month. The Free → Plus jump is steep (around $89-99/month list price as of 2026), so model your eager-transform variants carefully before launch.
 - Upload and Admin API endpoints require proper authentication. Example URLs in documentation may return 401/404 errors when accessed without valid credentials.
 - Signed URLs and `auth_token`/strict transformation modes: derived URLs may be blocked unless signed. Toggle "Strict transformations" in Settings, Security, then sign delivery URLs with `s--{signature}--` or use `auth_token` for time-bound access.
 - Eager vs lazy transforms: lazy (default) builds the derived asset on first request and caches it (slow first hit). Eager builds at upload time (faster first hit, costs upload credits). Use eager for predictable variants like thumbnails and social cards; let everything else stay lazy.
@@ -335,6 +335,6 @@ Solution: Cloudinary falls back to JPEG/PNG automatically. If you see broken ima
 - Cloudinary documentation home, https://cloudinary.com/documentation
 - URL Gen SDK on GitHub, https://github.com/cloudinary/js-url-gen
 - Transformation reference (URL params), https://cloudinary.com/documentation/transformation_reference
-- Generative AI features overview, https://cloudinary.com/documentation/transformation_generative_ai
+- Generative AI features overview, https://cloudinary.com/documentation/generative_ai_transformations
 - Signed URLs and authenticated delivery, https://cloudinary.com/documentation/control_access_to_media
 - Video transformation reference, https://cloudinary.com/documentation/video_transformation_reference

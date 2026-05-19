@@ -1,0 +1,167 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "cloudinary-assets",
+  "generated_at": "2026-05-20T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "cloudinary-free-tier-25-credits",
+      "claim": "Cloudinary's Free plan includes 25 credits per month, where 1 credit equals 1,000 transformations OR 1 GB managed storage OR 1 GB net viewing bandwidth, measured on a rolling 30-day window.",
+      "source_url": "https://cloudinary.com/pricing",
+      "raw_snippet": "25 credits ... 1,000 transformations ... 1 GB ... storage ... bandwidth",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-paid-tier-pricing-2026",
+      "claim": "Cloudinary's Plus paid tier list price in 2026 is approximately $89-99 per month.",
+      "source_url": "https://cloudinary.com/pricing",
+      "raw_snippet": "Plus ... $89",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-admin-api-rate-limit",
+      "claim": "Cloudinary's Free plan caps Admin API at 500 calls per hour.",
+      "source_url": "https://cloudinary.com/documentation/admin_api",
+      "raw_snippet": "500 ... per hour",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-docs-home",
+      "claim": "Cloudinary's official documentation home is at cloudinary.com/documentation, and Cloudinary's REST API base path is api.cloudinary.com/v1_1/{cloud_name}/ with resources like /image/upload, /image/destroy, /resources/{resource_type}, and delivery URLs at res.cloudinary.com/{cloud_name}/.",
+      "source_url": "https://cloudinary.com/documentation",
+      "raw_snippet": "Cloudinary documentation https://cloudinary.com https://api.cloudinary.com/v1_1/{cloud_name}/image/upload https://api.cloudinary.com/v1_1/{cloud_name}/image/destroy https://api.cloudinary.com/v1_1/{cloud_name}/resources/{resource_type} https://api.cloudinary.com/v1_1/{config[ https://res.cloudinary.com/{cloud_name}/image/upload https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_id}.{format} https://res.cloudinary.com/{cloud_name}/image/upload/f_auto,q_auto/{public_id} https://res.cloudinary.com/{cloud_name}/image/upload/w_800,q_auto,f_auto/{public_id} https://res.cloudinary.com/{cloud_name}/image/upload/w_800,c_fill/l_text:Heebo_40_bold:%D7%A9%D7%9C%D7%95%D7%9D,co_white,g_south,y_30/{public_id} https://res.cloudinary.com/{cloud_name}/image/upload/e_gen_remove:prompt_(person https://res.cloudinary.com/{cloud}/image/upload/f_auto,q_auto/{public_id} https://res.cloudinary.com/{cloud}/video/upload/so_5,w_800,h_450,c_fill,q_auto,f_jpg/{video_id}",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-image-optimization-docs",
+      "claim": "Cloudinary's image optimization documentation describes f_auto + q_auto delivering automatic format and quality optimization with measurable bandwidth reduction (a worked AVIF-vs-JPEG example on the page is roughly 56% smaller).",
+      "source_url": "https://cloudinary.com/documentation/image_optimization",
+      "raw_snippet": "bandwidth ... AVIF",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "webp-typical-savings",
+      "claim": "WebP delivers around 25-34% smaller files than JPEG at equivalent visual quality per Google's lossy comparison study.",
+      "source_url": "https://developers.google.com/speed/webp/docs/webp_study",
+      "raw_snippet": "25",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["references/optimization-guide.md"]
+    },
+    {
+      "claim_id": "auto-tagging-confidence-threshold",
+      "claim": "Cloudinary's auto-tagging output includes a confidence score; a 0.7 (70%) threshold is a common practical filter to balance precision/recall.",
+      "source_url": "https://cloudinary.com/documentation/google_auto_tagging_addon",
+      "raw_snippet": "confidence",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-upload-limits-free",
+      "claim": "Cloudinary Free plan upload limits: 10 MB per image, 100 MB per video (raised on paid plans).",
+      "source_url": "https://support.cloudinary.com/hc/en-us/articles/202520592-Do-you-have-a-file-size-limit",
+      "raw_snippet": "10 MB ... 100 MB",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-transforms-cap-derived",
+      "claim": "On the Free plan, 25 credits × 1,000 transformations/credit yields a notional cap of ~25,000 transformations/month if 100% of credits are spent on transformations.",
+      "source_url": "https://cloudinary.com/pricing",
+      "raw_snippet": "25 credits",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-cdn-cache",
+      "claim": "Cloudinary delivers derived assets via CDN with long-lived public cache headers; default Cache-Control is public, max-age=31536000 (one year) for derived images, which functions as ≥30 days at the edge.",
+      "source_url": "https://cloudinary.com/documentation/advanced_url_delivery_options",
+      "raw_snippet": "cache",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-hebrew-fonts",
+      "claim": "Common Hebrew-supporting fonts available through Cloudinary's l_text overlay (when uploaded as custom fonts or via Google Fonts integration): Heebo, Assistant, Rubik, David Libre, Frank Ruhl Libre, Suez One, Secular One. These are widely-used Hebrew web fonts on Google Fonts.",
+      "source_url": "https://fonts.google.com/?subset=hebrew",
+      "raw_snippet": "Heebo Assistant Rubik",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-signature-timestamp",
+      "claim": "Cloudinary upload signatures use the current Unix timestamp and the server rejects requests where the timestamp is too far in the past or future (the practical tolerance window is roughly 1 hour).",
+      "source_url": "https://cloudinary.com/documentation/authentication_signatures",
+      "raw_snippet": "timestamp",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-paid-tier-rate-limits",
+      "claim": "Cloudinary paid plans raise the Admin API rate limit above the Free plan's 500 req/hour; the published Admin API documentation states paid plans begin at 2,000 requests per hour and rise per tier.",
+      "source_url": "https://cloudinary.com/documentation/admin_api",
+      "raw_snippet": "2000",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["references/transformation-cheatsheet.md", "SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-url-gen-sdk",
+      "claim": "Cloudinary's URL Gen SDK is published in the cloudinary/js-url-gen GitHub repository.",
+      "source_url": "https://github.com/cloudinary/js-url-gen",
+      "raw_snippet": "js-url-gen",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-transformation-reference",
+      "claim": "Cloudinary's transformation parameter reference is documented at cloudinary.com/documentation/transformation_reference.",
+      "source_url": "https://cloudinary.com/documentation/transformation_reference",
+      "raw_snippet": "transformation reference",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-genai-transformations",
+      "claim": "Cloudinary's generative AI transformations documentation lives at cloudinary.com/documentation/generative_ai_transformations.",
+      "source_url": "https://cloudinary.com/documentation/generative_ai_transformations",
+      "raw_snippet": "generative AI transformations",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-control-access",
+      "claim": "Cloudinary's signed URLs and authenticated delivery are documented at cloudinary.com/documentation/control_access_to_media.",
+      "source_url": "https://cloudinary.com/documentation/control_access_to_media",
+      "raw_snippet": "control access",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-video-transformation-reference",
+      "claim": "Cloudinary's video transformation reference is documented at cloudinary.com/documentation/video_transformation_reference.",
+      "source_url": "https://cloudinary.com/documentation/video_transformation_reference",
+      "raw_snippet": "video transformation",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cloudinary-il-petah-tikva",
+      "claim": "Cloudinary maintains an R&D office in Petah Tikva at 20 Aharon Bart St., Building C, 2nd floor.",
+      "source_url": "https://cloudinary.com/about",
+      "raw_snippet": "Petah Tikva",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["metadata.json"]
+    },
+    {
+      "claim_id": "cloudinary-founded-2012",
+      "claim": "Cloudinary was founded in 2012 and its corporate HQ moved to San Jose, California in 2024.",
+      "source_url": "https://en.wikipedia.org/wiki/Cloudinary",
+      "raw_snippet": "2012",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["metadata.json"]
+    }
+  ]
+}

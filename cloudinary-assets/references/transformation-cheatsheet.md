@@ -64,7 +64,7 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 | e_contrast:{level} | Adjust contrast |
 | e_saturation:{level} | Adjust saturation |
 | e_background_removal | Background removal (in core, GA) |
-| e_gen_remove:prompt_(text) | AI generative remove (GA 2024) |
+| e_gen_remove:prompt_(text) | AI generative remove |
 | e_gen_replace:from_(a);to_(b) | AI generative replace |
 | e_gen_background_replace:prompt_(text) | AI generative background swap |
 | e_gen_restore | AI restore old/blurry/damaged photos |
@@ -161,11 +161,7 @@ https://res.cloudinary.com/{cloud}/video/upload/so_5,w_800,h_450,c_fill,q_auto,f
 
 ## Rate Limits
 
-| Plan | Requests/Hour | Transformations/Month |
-|------|--------------|----------------------|
-| Free | 500 | ~25,000 |
-| Plus | 5,000 | ~225,000 |
-| Advanced | 10,000 | ~2,250,000 |
+The Free plan is rate-limited to 500 Admin API requests per hour and 25 monthly credits worth of transformations / storage / bandwidth (each credit equals 1,000 transformations or 1 GB storage or 1 GB net bandwidth, measured on a rolling 30-day window). Cloudinary's published Admin API doc states paid plans "begin at 2,000 requests per hour" and rise per tier; check the current pricing page or your plan dashboard for the exact limit on Plus, Advanced, and Enterprise tiers.
 
 ## Environment Setup
 

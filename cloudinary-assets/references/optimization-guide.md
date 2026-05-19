@@ -8,7 +8,7 @@ Cloudinary detects the browser's capabilities and serves the best format:
 - Safari: WebP (modern) or JPEG
 - Older browsers: JPEG or PNG
 
-Typical savings: 30-50% smaller than JPEG
+Typical bandwidth reduction vs original JPEG depends on the source and the format the browser actually accepts. Order-of-magnitude reference points published by the format owners: WebP delivers around 25-34% smaller files than JPEG at equivalent visual quality per Google's lossy comparison study, and AVIF is reported by Netflix's published comparisons to deliver further reductions on top of WebP. Real-world results depend heavily on the source image, the q_auto level you pair with f_auto, and which format the viewer's browser ends up receiving.
 
 ### q_auto (Automatic Quality)
 Perceptual quality optimization that reduces file size without visible quality loss:
@@ -17,7 +17,7 @@ Perceptual quality optimization that reduces file size without visible quality l
 - q_auto:eco - More aggressive compression
 - q_auto:low - Maximum compression
 
-Typical savings: 40-80% smaller files
+Combined f_auto + q_auto on a typical photo can cut byte size well below the original; measured savings vary by source.
 
 ### Combined: f_auto,q_auto
 Always use both together for maximum optimization:

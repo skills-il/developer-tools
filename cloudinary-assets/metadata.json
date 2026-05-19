@@ -1,6 +1,6 @@
 {
   "author": "skills-il",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "category": "developer-tools",
   "tags": {
     "he": [
@@ -28,7 +28,7 @@
   },
   "display_description": {
     "he": "מנהלים תמונות, וידאו וקבצי מדיה דרך Cloudinary API, העלאה, טרנספורמציות, מיטוב והגשה מ-CDN.",
-    "en": "Manage media assets through Cloudinary's REST API -- upload, transform, optimize, and deliver images and videos. Use when user asks about image upload, media optimization, image transformations, responsive images, video management, CDN delivery, or mentions Cloudinary specifically. Covers Upload API, Admin API, URL-based transformations, AI-powered effects (gen_remove, gen_replace, background removal), and delivery optimization. Israeli-founded (2012) with R&D in Petach Tikva; global HQ in Santa Clara, California. Do NOT use for non-Cloudinary media hosting or local image processing without cloud upload."
+    "en": "Manage media assets through Cloudinary's REST API -- upload, transform, optimize, and deliver images and videos. Use when user asks about image upload, media optimization, image transformations, responsive images, video management, CDN delivery, or mentions Cloudinary specifically. Covers Upload API, Admin API, URL-based transformations, AI-powered effects (gen_remove, gen_replace, background removal), and delivery optimization. Israeli-founded (2012) with R&D in Petah Tikva; global HQ in San Jose, California. Do NOT use for non-Cloudinary media hosting or local image processing without cloud upload."
   },
   "supported_agents": [
     "claude-code",
