@@ -82,7 +82,7 @@ License posture: check each model card individually. Many permit commercial use 
 National initiative for Hebrew and Arabic NLP infrastructure, sponsored by DDR&D IMOD and supported by Dicta and Webiks.
 
 Key artifacts:
-- `HebArabNlpProject/HebrewSentiment` ,  41,305 labeled Hebrew sentiment samples, CC-BY-4.0
+- `HebArabNlpProject/HebrewSentiment` ,  labeled Hebrew sentiment samples across train/validation/test splits; check the dataset card for current license and exact sample counts before commercial use
 - `HebArabNlpProject/HebNLI` ,  Hebrew natural language inference
 - Paraphrase datasets, NER datasets, and other Hebrew benchmarks
 
@@ -165,7 +165,7 @@ Before committing compute to fine-tuning:
 
 ### Step 7: Missing benchmarks for Hebrew
 
-The Hebrew NLP ecosystem has gaps. If your task is in this list, expect to either build evaluation data yourself or pair the closest existing benchmark with domain-specific human evaluation:
+The Hebrew NLP ecosystem has gaps. Note that the DictaLM 3.0 release (Feb 2026) shipped its own benchmark suite covering Translation, Summarization, Winograd-style schemas, Israeli Trivia, and Hebrew Diacritization, narrowing the gap for those tasks. The list below is what is still missing as of May 2026: if your task is in this list, expect to either build evaluation data yourself or pair the closest existing benchmark with domain-specific human evaluation.
 
 - **Hebrew safety / red-team evals** ,  no public Hebrew counterpart to ToxicChat, HarmBench. Build internal red-team prompts.
 - **Hebrew code generation** ,  no Hebrew-language docstring or comment benchmark. Use English HumanEval/MBPP and accept the language mismatch.
@@ -199,7 +199,7 @@ User says: "We need to classify sentiment in Hebrew customer support messages fo
 
 Actions:
 1. Task: sentiment classification on conversational Hebrew
-2. Check `HebArabNlpProject/HebrewSentiment` ,  41,305 samples, CC-BY-4.0, includes some spoken register. Commercial use OK with attribution.
+2. Check `HebArabNlpProject/HebrewSentiment` ,  Hebrew sentiment samples across train/validation/test, includes some spoken register. Verify the current license posture on the dataset card before relying on it for commercial use.
 3. Check `dicta-il/dictabert-sentiment` as a ready baseline before fine-tuning anything
 4. Start with the Dicta sentiment model and evaluate on a held-out set of real customer support chats
 5. If the baseline is insufficient, fine-tune `dicta-il/dictabert` on HebrewSentiment + your labeled data

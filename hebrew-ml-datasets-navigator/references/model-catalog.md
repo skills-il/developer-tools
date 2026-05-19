@@ -66,10 +66,13 @@ Organization: AI21 Labs
 
 | Model | Access | Hebrew support |
 |-------|--------|----------------|
-| jamba-1.5-large | AI21 SDK or Amazon Bedrock | Core language support per AI21 |
-| jamba-1.5-mini | AI21 SDK or Amazon Bedrock | Core language support per AI21 |
+| jamba-1.6-large | AI21 SDK or Amazon Bedrock | Core language support per AI21 |
+| jamba-1.6-mini | AI21 SDK or Amazon Bedrock | Core language support per AI21 |
+| jamba-reasoning-3b | Open weights on Hugging Face | Compact reasoning model |
+| jamba-1.5-large | Legacy SDK and Bedrock | Predecessor of 1.6 |
+| jamba-1.5-mini | Legacy SDK and Bedrock | Predecessor of 1.6 |
 
-AI21 markets Hebrew as a "core language" for Jamba 1.5, making it a relevant option for Hebrew-first products.
+AI21 markets Hebrew as a "core language" for the Jamba family, making it a relevant option for Hebrew-first products. The 3B reasoning model is the most accessible self-hostable Jamba variant.
 
 ## Hebrew BERT Models
 

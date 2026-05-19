@@ -1,0 +1,167 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "hebrew-ml-datasets-navigator",
+  "generated_at": "2026-05-20T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "ivrit-ai-org",
+      "claim": "ivrit.ai is a Hebrew speech dataset and model organization on Hugging Face publishing Hebrew ASR corpora and Whisper-fine-tuned models.",
+      "source_url": "https://huggingface.co/ivrit-ai",
+      "raw_snippet": "ivrit-ai",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/dataset-catalog.md", "references/model-catalog.md"]
+    },
+    {
+      "claim_id": "ivrit-ai-hours",
+      "claim": "ivrit.ai has aggregated 22,000+ hours of Hebrew audio across its dataset family.",
+      "source_url": "https://www.ivrit.ai/en/ivrit-ai-2/",
+      "raw_snippet": "22,000",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "metadata.json"]
+    },
+    {
+      "claim_id": "dicta-il-org",
+      "claim": "Dicta publishes Hebrew language models on Hugging Face under dicta-il, including the DictaLM and DictaBERT families.",
+      "source_url": "https://huggingface.co/dicta-il",
+      "raw_snippet": "dicta-il",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/model-catalog.md"]
+    },
+    {
+      "claim_id": "dicta-org-il",
+      "claim": "Dicta's homepage is dicta.org.il.",
+      "source_url": "https://dicta.org.il",
+      "raw_snippet": "Dicta",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "dictalm-3-lineage",
+      "claim": "DictaLM 3.0 family includes a 24B variant based on Mistral-Small-3.1, a 12B Nemotron variant based on NVIDIA Nemotron Nano V2, and a 1.7B variant based on Qwen3-1.7B (Feb 2026 release).",
+      "source_url": "https://dicta.org.il/publications/DictaLM_3_0___Techincal_Report.pdf",
+      "raw_snippet": "DictaLM 3.0",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["references/model-catalog.md"]
+    },
+    {
+      "claim_id": "hebarabnlpproject-org",
+      "claim": "The Israeli National NLP Program publishes Hebrew evaluation datasets on Hugging Face under HebArabNlpProject.",
+      "source_url": "https://huggingface.co/HebArabNlpProject",
+      "raw_snippet": "HebArabNlpProject",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/dataset-catalog.md"]
+    },
+    {
+      "claim_id": "hebrew-sentiment-dataset",
+      "claim": "HebrewSentiment is a 3-class Hebrew sentiment dataset published on Hugging Face by the Israeli National NLP Program (HebArabNlpProject). Authors must check the dataset card for the current license posture and exact split sizes before commercial use.",
+      "source_url": "https://huggingface.co/datasets/HebArabNlpProject/HebrewSentiment",
+      "raw_snippet": "HebrewSentiment",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/dataset-catalog.md", "scripts/find_dataset.py", "references/license-quick-guide.md"]
+    },
+    {
+      "claim_id": "heq-dataset",
+      "claim": "HeQ is an extractive Hebrew question-answering dataset with 30,147 questions (21,784 answerable + 8,363 unanswerable), with paragraphs from Hebrew Wikipedia and Geektime.",
+      "source_url": "https://github.com/NNLP-IL/Hebrew-Question-Answering-Dataset",
+      "raw_snippet": "HeQ",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/dataset-catalog.md"]
+    },
+    {
+      "claim_id": "heq-v1-hf-mirror",
+      "claim": "HeQ_v1 is mirrored on Hugging Face by the Etelis user.",
+      "source_url": "https://huggingface.co/datasets/Etelis/HeQ_v1",
+      "raw_snippet": "HeQ",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "nnlp-il-resources",
+      "claim": "The Israeli National NLP Program maintains a Hebrew-Resources catalog of datasets and models on GitHub.",
+      "source_url": "https://github.com/NNLP-IL/Hebrew-Resources",
+      "raw_snippet": "Hebrew Resources",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "parashoot-dataset",
+      "claim": "ParaShoot is a Hebrew QA dataset from BIU NLP available at github.com/omrikeren/ParaShoot.",
+      "source_url": "https://github.com/omrikeren/ParaShoot",
+      "raw_snippet": "ParaShoot",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "open-hebrew-llm-leaderboard",
+      "claim": "Hugging Face hosts the Open Hebrew LLM Leaderboard, a public benchmark suite for Hebrew language models.",
+      "source_url": "https://huggingface.co/blog/leaderboard-hebrew",
+      "raw_snippet": "Hebrew LLM Leaderboard",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "hebrew-llm-leaderboard-space",
+      "claim": "The Open Hebrew LLM Leaderboard live space is at huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard.",
+      "source_url": "https://huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard",
+      "raw_snippet": "hebrew-llm-leaderboard",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "biunlp-hesum",
+      "claim": "HeSum is the BIU NLP Hebrew summarization dataset published on Hugging Face under biunlp/HeSum.",
+      "source_url": "https://huggingface.co/datasets/biunlp/HeSum",
+      "raw_snippet": "HeSum",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "biu-nlp",
+      "claim": "BIU NLP (Bar-Ilan University NLP Lab) publishes Hebrew NLP research and datasets at nlp.biu.ac.il.",
+      "source_url": "https://nlp.biu.ac.il",
+      "raw_snippet": "BIU NLP",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "oscar-corpus",
+      "claim": "OSCAR-2301 is a large multilingual web corpus including a Hebrew subset, published on Hugging Face under oscar-corpus/OSCAR-2301.",
+      "source_url": "https://huggingface.co/datasets/oscar-corpus/OSCAR-2301",
+      "raw_snippet": "OSCAR",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "culturax",
+      "claim": "CulturaX is a multilingual cleaned web corpus published by uonlp on Hugging Face.",
+      "source_url": "https://huggingface.co/datasets/uonlp/CulturaX",
+      "raw_snippet": "CulturaX",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "fineweb-2",
+      "claim": "FineWeb-2 is a multilingual web corpus from HuggingFaceFW including Hebrew.",
+      "source_url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-2",
+      "raw_snippet": "fineweb-2",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "madlad-400",
+      "claim": "MADLAD-400 is Google's 400-language multilingual corpus published on Hugging Face by allenai.",
+      "source_url": "https://huggingface.co/datasets/allenai/MADLAD-400",
+      "raw_snippet": "MADLAD-400",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/dataset-catalog.md"]
+    },
+    {
+      "claim_id": "ivrit-ai-website",
+      "claim": "ivrit.ai's English-language project page is at ivrit.ai/en/ivrit-ai-2/.",
+      "source_url": "https://www.ivrit.ai/en/ivrit-ai-2/",
+      "raw_snippet": "ivrit.ai",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    }
+  ]
+}

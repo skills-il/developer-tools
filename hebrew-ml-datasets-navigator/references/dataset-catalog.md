@@ -30,7 +30,7 @@ Organization: `huggingface.co/HebArabNlpProject`
 
 | Dataset | HuggingFace ID | Task | Size | License |
 |---------|---------------|------|------|---------|
-| HebrewSentiment | `HebArabNlpProject/HebrewSentiment` | Sentiment (3-class) | 41,305 samples | CC-BY-4.0 |
+| HebrewSentiment | `HebArabNlpProject/HebrewSentiment` | Sentiment (3-class) | Check dataset card (split across train/validation/test) | Check dataset card |
 | HebNLI | `HebArabNlpProject/HebNLI` | Natural language inference | Check card | Check card |
 
 ### Hebrew Question Answering

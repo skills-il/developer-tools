@@ -10,7 +10,7 @@ Plain-English summary of the most common licenses in the Hebrew ML ecosystem and
 - **Modification:** Yes
 - **Distribution:** Yes
 - **Requirements:** Attribute the original creator, indicate if changes were made, link to the license
-- **Common uses:** Hebrew NLP datasets from the Israeli National NLP Program (HebrewSentiment is under this license)
+- **Common uses:** Many Hebrew NLP datasets and academic releases (always check the live dataset card for the exact license string before relying on it)
 - **What to do:** Credit the creator in your product documentation or model card
 
 ### MIT License
@@ -127,11 +127,10 @@ Plain-English summary of the most common licenses in the Hebrew ML ecosystem and
 
 ## Attribution templates
 
-For CC-BY datasets, include in your model card or product docs:
+For CC-BY datasets, include attribution in your model card or product docs. Verify the exact license string on the dataset card itself — the HebArabNlpProject/HebrewSentiment card, for example, has shifted between license labels and currently reads "other"; treat the templates below as a structure, not a guarantee of the live license:
 
 ```
-This product uses the HebrewSentiment dataset by the Israel National NLP Program,
-licensed under CC-BY-4.0. https://huggingface.co/datasets/HebArabNlpProject/HebrewSentiment
+This product uses the {DatasetName} dataset by {Author}, licensed under {LicenseFromTheDatasetCard}. {DatasetURL}
 ```
 
 For ivrit.ai, cite the Interspeech 2025 paper:
