@@ -1,9 +1,9 @@
 ---
 name: jfrog-devops
-description: Manage JFrog Artifactory repositories, artifacts, Docker registry, build info, and Xray security scanning for DevOps workflows. Use when user asks about JFrog, Artifactory, Xray, artifact management, "deploy artifact", Docker registry with Artifactory, build promotion, vulnerability scanning with Xray, or DevOps artifact pipeline. Covers REST API operations, JFrog CLI usage, Docker registry configuration, and security scanning patterns. Do NOT use for general Docker or CI/CD questions unrelated to JFrog.
+description: Manage JFrog Artifactory repositories, artifacts, Docker registry, build info, ML model registry (JFrog ML / AI Catalog), and Xray security scanning for DevOps and MLOps workflows. Use when user asks about JFrog, Artifactory, Xray, Curation, Frogbot, JFrog ML, AI Catalog, artifact management, "deploy artifact", Docker registry with Artifactory, Hugging Face / MLflow model registry, build promotion, vulnerability scanning, SBOM (SPDX/CycloneDX/VEX), or DevOps artifact pipeline. Covers REST API operations, JFrog CLI usage, Docker registry configuration, OIDC with GitHub Actions, and security scanning patterns. Do NOT use for general Docker or CI/CD questions unrelated to JFrog.
 license: MIT
 allowed-tools: Bash(curl:*) Bash(jf:*) Bash(docker:*) Bash(python:*)
-compatibility: Requires network access to JFrog instance (SaaS or self-hosted). JFrog CLI (jf) recommended.
+compatibility: Requires network access to JFrog instance (SaaS or self-hosted). JFrog CLI 2.75.0+ (jf) recommended for OIDC, 2.103.0+ for latest features.
 ---
 
 # JFrog DevOps
@@ -22,6 +22,9 @@ compatibility: Requires network access to JFrog instance (SaaS or self-hosted). 
 | Scan for CVEs | Xray | POST /api/v1/scanArtifact or jf xr scan | Yes |
 | Create watch/policy | Xray | POST /api/v2/watches | Yes (admin) |
 | Generate report | Xray | POST /api/v1/reports/vulnerabilities | Yes |
+| Export SBOM (SPDX or CycloneDX) | Xray | POST /api/v1/sbom or jf scan --format=cyclonedx | Yes |
+| Vet OSS packages before download | Curation | Configured per remote repo | Yes (admin) |
+| Manage ML model (Hugging Face, MLflow, NIM) | Artifactory ML repo | jf rt upload or FrogML SDK | Yes |
 | Cleanup old artifacts | Artifactory | AQL + delete or retention policies | Yes (admin) |
 
 ### Step 2: Configure Authentication
@@ -200,7 +203,44 @@ jf docker scan mycompany.jfrog.io/docker-local/myapp:1.0.0
 
 # Scan with fail threshold (for CI)
 jf audit --fail --min-severity=High
+
+# Generate SBOM in CycloneDX (with VEX data from Xray 3.67+)
+jf scan --format=cyclonedx mycompany.jfrog.io/docker-local/myapp:1.0.0 > sbom.json
+
+# Generate SBOM in SPDX (ISO/IEC standard, OSS-friendly)
+jf scan --format=spdx mycompany.jfrog.io/docker-local/myapp:1.0.0 > sbom.spdx.json
 ```
+
+Xray 3.131+ embeds CBOM (Cryptography Bill of Materials, certificates and secrets findings) into CycloneDX exports when JFrog Advanced Security with secrets scanning is enabled. Xray also ingests external SPDX and CycloneDX SBOMs (including VEX contextual analysis) for vetting third-party artifacts.
+
+**Frogbot for pull-request scanning (free with a JFrog free-tier account):**
+```yaml
+# .github/workflows/frogbot-scan-pr.yml
+- uses: jfrog/frogbot@v2
+  env:
+    JF_URL: ${{ secrets.JF_URL }}
+    JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+    JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+Frogbot scans PRs with SCA + SAST + IaC, comments on findings, and can open fix PRs. Good first step for Israeli OSS projects that do not yet have a paid JFrog tier.
+
+### Step 5b: AI / ML Model Management (JFrog ML + AI Catalog)
+
+JFrog ML (March 2025, from the Qwak acquisition) and the AI Catalog (September 2025) extend Artifactory and Xray to ML models. The new **Machine Learning** repository type in Artifactory 7.111.1+ stores Hugging Face models alongside PyTorch, ONNX, .pkl, .joblib, .pth, and .cbm files in one format-agnostic repo, with FrogML SDK + Xet protocol support.
+
+```bash
+# Configure an ML repo (admin UI or REST):
+# Administration > Repositories > Add Repository > Local > Machine Learning
+
+# Upload a model artifact with build info
+jf rt upload "model.onnx" ml-local/myapp/v1.0.0/ \
+  --build-name=ml-build --build-number=42
+
+# Xray scans models the same way it scans Docker images
+jf docker scan mycompany.jfrog.io/ml-local/myapp:v1.0.0
+```
+
+The **AI Catalog** lets central platform teams curate access to OpenAI, Anthropic, NVIDIA NIM (including Nemotron open-weight models), and Hugging Face models behind one governance layer: scanning, lineage, model cards, and one-click deployment.
 
 ### Step 6: AQL (Artifactory Query Language) Patterns
 
@@ -265,9 +305,12 @@ Result: Use AQL to find artifacts not downloaded in 90+ days, identify snapshot 
 
 ## Gotchas
 
-- **JFrog Pipelines is end-of-life on May 1, 2026.** New customers cannot provision Pipelines and existing customers must migrate. JFrog recommends GitHub Actions, GitLab CI, Jenkins, or Azure DevOps with the `jfrog/setup-jfrog-cli` action/integration. Do not architect new workflows around Pipelines; for existing ones, plan migration before May 2026.
+- **JFrog Pipelines reached end of life on May 1, 2026.** New customers cannot provision Pipelines and existing customers must already be migrated. JFrog recommends GitHub Actions, GitLab CI, Jenkins, or Azure DevOps with the `jfrog/setup-jfrog-cli` action/integration. If an Israeli team is still on Pipelines, treat the migration as overdue: no feature updates and no support are available.
+- **Legacy Hugging Face repositories deprecate in June 2026.** Artifactory's original "Hugging Face" repository type (from 7.77.x) loses full functionality and must be migrated to the new "Machine Learning" layout (introduced in Artifactory 7.111.1). Migration is effectively one-way (the `restore_layout` API deletes packages added after the upgrade), federated repos cannot mix layouts, and Hugging Face Hub rate limits spike during cache-warming. Israeli ML teams that proxy Hugging Face through Artifactory must inventory and migrate, ideally upgrading their Hub-side identity to Enterprise tier first.
 - **API keys reached end of life Q4 2024.** Legacy keys still work on older instances but new keys cannot be generated. Migrate any `X-JFrog-Art-Api` usage to access tokens or reference tokens (both sent as `Authorization: Bearer ...`).
+- **OIDC is now the JFrog-recommended GitHub Actions auth method.** Requires JFrog CLI 2.75.0+ and the workflow needs `permissions: id-token: write`. Long-lived access tokens stored in GitHub secrets are still supported but discouraged for new pipelines.
 - JFrog SaaS regions are a fixed list (us-east, us-west, eu-frankfurt, eu-west, ap-southeast). For Israeli data-residency requirements, BYOL deployments on AWS `il-central-1` are an option but JFrog SaaS itself is not hosted in Israel. Verify the instance region at jfrog.com/help/r/jfrog-platform-administration-documentation/jfrog-saas-regions.
+- **Cloud tier pricing transparency varies.** JFrog publishes Pro at about $150/month and Enterprise X at about $950/month for SaaS, with Enterprise+ on quote. Self-managed pricing (around $27k/year Pro X, $48k/year Enterprise X) is rarely public. Israeli buyers should confirm current pricing directly with JFrog Israel before architecting.
 - JFrog CLI authentication tokens for Israeli enterprise deployments often require SSO integration with Azure AD or Okta configured for Israeli tenants. Agents may generate basic auth configurations that do not work.
 - Israeli software development teams deploy on Sunday-Thursday cycles. CI/CD pipelines configured for Monday-Friday may miss the first day of work or run unnecessarily on Friday.
 - JFrog Xray security scanning may flag dependencies that are compliant with Israeli regulations but flagged by US export controls. Israeli teams should review Xray alerts with local compliance context.
@@ -278,9 +321,16 @@ Result: Use AQL to find artifacts not downloaded in 90+ days, identify snapshot 
 |--------|-----|---------------|
 | JFrog Platform Documentation | https://jfrog.com/help/r/jfrog-platform-administration-documentation | Repository management, permissions, HA setup |
 | Artifactory REST API | https://jfrog.com/help/r/jfrog-rest-apis/artifactory-rest-apis | Endpoints, query syntax, AQL |
-| Xray Documentation | https://jfrog.com/xray/ | Vulnerability scanning, license compliance, policies |
-| JFrog CLI | https://jfrog.com/getcli/ | Command reference, CI integration patterns |
+| Xray Documentation | https://jfrog.com/xray/ | Vulnerability scanning, license compliance, policies, SBOM/VEX |
+| JFrog CLI Releases | https://github.com/jfrog/jfrog-cli/releases | Latest CLI version (2.103.0 as of April 2026), changelog |
 | JFrog Docker Registry | https://jfrog.com/help/r/jfrog-artifactory-documentation/docker-registry | Docker image management, Docker Hub proxy |
+| JFrog ML | https://jfrog.com/jfrog-ml/ | MLOps platform (from Qwak acquisition), model registry, FrogML SDK |
+| JFrog AI Catalog | https://jfrog.com/press-room/jfrog-launches-ai-catalog-to-secure-and-govern-ai-model-delivery/ | Governance for OpenAI, Anthropic, NVIDIA NIM, Hugging Face |
+| Machine Learning Repositories | https://jfrog.com/help/r/jfrog-artifactory-documentation/log-hugging-face-models | New ML repo layout, June 2026 HF migration |
+| JFrog Curation | https://jfrog.com/curation/ | OSS package vetting, Compliant Version Selection, MCP Servers label |
+| Frogbot | https://github.com/jfrog/frogbot | Free PR-scanning bot, SCA + SAST + IaC |
+| OIDC + GitHub Actions | https://jfrog.com/help/r/jfrog-platform-administration-documentation/configure-jfrog-platform-oidc-integration-with-github-actions | Recommended auth for CI, requires CLI 2.75.0+ |
+| Pipelines End of Life | https://jfrog.com/help/r/jfrog-release-information/pipelines-end-of-life | May 1 2026 EOL, migration guidance |
 
 ## Troubleshooting
 

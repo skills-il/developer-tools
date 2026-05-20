@@ -14,6 +14,9 @@
 | סריקת CVE | Xray | POST /api/v1/scanArtifact או jf xr scan | כן |
 | יצירת watch/policy | Xray | POST /api/v2/watches | כן (מנהל) |
 | הפקת דוח | Xray | POST /api/v1/reports/vulnerabilities | כן |
+| ייצוא SBOM (SPDX או CycloneDX) | Xray | POST /api/v1/sbom או jf scan --format=cyclonedx | כן |
+| סינון חבילות OSS לפני הורדה | Curation | מוגדר לכל remote repo | כן (מנהל) |
+| ניהול מודלי ML (Hugging Face, MLflow, NIM) | Artifactory ML repo | jf rt upload או FrogML SDK | כן |
 | ניקוי artifacts ישנים | Artifactory | AQL + מחיקה או מדיניות שמירה | כן (מנהל) |
 
 ### שלב 2: הגדרת אימות
@@ -192,7 +195,44 @@ jf docker scan mycompany.jfrog.io/docker-local/myapp:1.0.0
 
 # Scan with fail threshold (for CI)
 jf audit --fail --min-severity=High
+
+# Generate SBOM in CycloneDX (with VEX data from Xray 3.67+)
+jf scan --format=cyclonedx mycompany.jfrog.io/docker-local/myapp:1.0.0 > sbom.json
+
+# Generate SBOM in SPDX (ISO/IEC standard, OSS-friendly)
+jf scan --format=spdx mycompany.jfrog.io/docker-local/myapp:1.0.0 > sbom.spdx.json
 ```
+
+מ-Xray 3.131 ואילך, ה-CycloneDX כולל גם CBOM (Cryptography Bill of Materials, ממצאי תעודות וסודות) כשמפעילים את JFrog Advanced Security עם סריקת secrets. Xray גם יודע לקלוט SBOM חיצוניים בפורמט SPDX או CycloneDX (כולל VEX לניתוח קונטקסטואלי) כדי לבדוק artifacts של ספקים.
+
+**Frogbot לסריקת pull requests (חינם עם חשבון free-tier של JFrog):**
+```yaml
+# .github/workflows/frogbot-scan-pr.yml
+- uses: jfrog/frogbot@v2
+  env:
+    JF_URL: ${{ secrets.JF_URL }}
+    JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+    JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+הבוט Frogbot סורק PRs עם SCA, SAST ו-IaC, מגיב על ממצאים, ויודע לפתוח PRs לתיקונים. נקודת התחלה טובה לפרויקטי OSS ישראליים שעדיין לא משלמים ל-JFrog.
+
+### שלב 5b: ניהול מודלי AI ו-ML (JFrog ML + AI Catalog)
+
+הפלטפורמות JFrog ML (מרץ 2025, פרי רכישת Qwak) ו-AI Catalog (ספטמבר 2025) מרחיבים את Artifactory ו-Xray כך שיתמכו במודלי ML. סוג ה-repo החדש **Machine Learning** ב-Artifactory 7.111.1+ שומר מודלים של Hugging Face לצד PyTorch, ONNX, .pkl, .joblib, .pth ו-.cbm באותו repo פורמט-אגנוסטי, עם FrogML SDK ותמיכת Xet.
+
+```bash
+# יוצרים ML repo (דרך ממשק הניהול או REST):
+# Administration > Repositories > Add Repository > Local > Machine Learning
+
+# מעלים מודל עם build info
+jf rt upload "model.onnx" ml-local/myapp/v1.0.0/ \
+  --build-name=ml-build --build-number=42
+
+# Xray סורק מודלים בדיוק כמו שסורק Docker images
+jf docker scan mycompany.jfrog.io/ml-local/myapp:v1.0.0
+```
+
+**AI Catalog** מאפשר לצוותי פלטפורמה לנהל באופן מרכזי גישה ל-OpenAI, Anthropic, NVIDIA NIM (כולל מודלי Nemotron עם משקלות פתוחים) ו-Hugging Face, מאחורי שכבת governance אחת: סריקה, lineage, model cards ופריסה ב-click אחד.
 
 ### שלב 6: תבניות AQL (Artifactory Query Language)
 
@@ -257,9 +297,12 @@ items.find({
 
 ## מלכודות נפוצות
 
-- **JFrog Pipelines מסיים את חייו ב-1 במאי 2026.** לקוחות חדשים לא יכולים יותר להקצות Pipelines, ולקוחות קיימים נדרשים להגר. JFrog ממליצים על GitHub Actions, GitLab CI, Jenkins או Azure DevOps עם ה-action או האינטגרציה של `jfrog/setup-jfrog-cli`. אל תתכננו workflows חדשים מסביב ל-Pipelines, ולקיימים תכננו הגירה לפני מאי 2026.
+- **JFrog Pipelines הגיע לסוף חיים ב-1 במאי 2026.** לקוחות חדשים כבר לא יכולים להקצות Pipelines, ולקוחות קיימים חייבים להיות אחרי ההגירה. JFrog ממליצים על GitHub Actions, GitLab CI, Jenkins או Azure DevOps עם `jfrog/setup-jfrog-cli`. אם צוות ישראלי עדיין על Pipelines, ההגירה כבר באיחור: אין יותר feature updates ואין תמיכה.
+- **רפוזיטוריות Hugging Face הישנות מוצאות משימוש ביוני 2026.** סוג ה-repo המקורי של Artifactory בשם "Hugging Face" (מ-7.77.x) מאבד פונקציונליות מלאה ויש לעבור ל-layout החדש "Machine Learning" (הוצג ב-Artifactory 7.111.1). ההגירה היא חד-כיוונית בפועל (ה-API של `restore_layout` מוחק חבילות שנוספו אחרי השדרוג), repos של federation לא יכולים לערבב layouts, ומכסות ה-rate limit של Hugging Face Hub עולות בזמן ה-cache warming. צוותי ML ישראליים שמשתמשים ב-Artifactory כפרוקסי ל-Hugging Face צריכים למפות ולהגר, רצוי אחרי שדרוג ה-identity ב-Hub ל-Enterprise.
 - **מפתחות API הגיעו לסוף חיים ברבעון הרביעי של 2024.** מפתחות ישנים עוד עובדים על מופעים ישנים, אבל אי אפשר ליצור חדשים. הגרו כל שימוש ב-`X-JFrog-Art-Api` ל-access tokens או reference tokens (שניהם נשלחים כ-`Authorization: Bearer ...`).
+- **OIDC הוא היום שיטת האימות המומלצת של JFrog ל-GitHub Actions.** דורש JFrog CLI 2.75.0+ וה-workflow צריך `permissions: id-token: write`. טוקני access ארוכי טווח ב-GitHub secrets עדיין נתמכים, אבל לא מומלצים ל-pipelines חדשים.
 - אזורי SaaS של JFrog הם רשימה קבועה (us-east, us-west, eu-frankfurt, eu-west, ap-southeast). לדרישות אחסון מידע בישראל, פריסות BYOL על AWS `il-central-1` הן אפשרות, אבל JFrog SaaS עצמו לא מארח בישראל. בדקו את אזור המופע ב-jfrog.com/help/r/jfrog-platform-administration-documentation/jfrog-saas-regions.
+- **שקיפות תמחור משתנה לפי tier.** JFrog מפרסמים בפומבי Pro בערך 150 דולר לחודש ו-Enterprise X בערך 950 דולר לחודש ל-SaaS, כשה-Enterprise+ ב-quote. תמחור self-managed (סביב 27,000 דולר לשנה ל-Pro X ו-48,000 דולר לשנה ל-Enterprise X) כמעט אף פעם לא פומבי. קונים ישראלים צריכים לאמת את המחירים מול JFrog ישראל לפני התכנון.
 - טוקני אימות JFrog CLI לפריסות ארגוניות ישראליות דורשים לעיתים קרובות אינטגרציית SSO עם Azure AD או Okta שמוגדרים לטננטים ישראליים. סוכנים עלולים ליצור קונפיגורציות basic auth שלא עובדות.
 - צוותי פיתוח ישראליים עובדים במחזורי פריסה ראשון-חמישי. Pipelines של CI/CD שמוגדרים לשני-שישי עלולים לפספס את יום העבודה הראשון או לרוץ מיותר ביום שישי.
 - סריקת אבטחה של JFrog Xray עלולה לסמן תלויות שעומדות ברגולציה הישראלית אך מסומנות על ידי בקרות יצוא אמריקאיות. צוותים ישראליים צריכים לבדוק התראות Xray בהקשר הרגולטורי המקומי.
@@ -270,9 +313,16 @@ items.find({
 |------|-------|----------|
 | תיעוד פלטפורמת JFrog | https://jfrog.com/help/r/jfrog-platform-administration-documentation | ניהול רפוזיטוריות, הרשאות, הגדרות HA |
 | Artifactory REST API | https://jfrog.com/help/r/jfrog-rest-apis/artifactory-rest-apis | נקודות קצה, תחביר שאילתות, AQL |
-| תיעוד Xray | https://jfrog.com/xray/ | סריקת פגיעויות, ציות רישוי, מדיניות אבטחה |
-| JFrog CLI | https://jfrog.com/getcli/ | הפניית פקודות, אינטגרציה עם CI |
+| תיעוד Xray | https://jfrog.com/xray/ | סריקת פגיעויות, ציות רישוי, מדיניות, SBOM ו-VEX |
+| JFrog CLI Releases | https://github.com/jfrog/jfrog-cli/releases | גרסה אחרונה של ה-CLI (2.103.0 נכון לאפריל 2026), changelog |
 | JFrog Docker Registry | https://jfrog.com/help/r/jfrog-artifactory-documentation/docker-registry | ניהול אימג'י Docker, פרוקסי Docker Hub |
+| JFrog ML | https://jfrog.com/jfrog-ml/ | פלטפורמת MLOps (מרכישת Qwak), model registry, FrogML SDK |
+| JFrog AI Catalog | https://jfrog.com/press-room/jfrog-launches-ai-catalog-to-secure-and-govern-ai-model-delivery/ | Governance ל-OpenAI, Anthropic, NVIDIA NIM ו-Hugging Face |
+| Machine Learning Repositories | https://jfrog.com/help/r/jfrog-artifactory-documentation/log-hugging-face-models | סוג ה-repo החדש, הגירת HF ביוני 2026 |
+| JFrog Curation | https://jfrog.com/curation/ | סינון חבילות OSS, Compliant Version Selection, תווית MCP Servers |
+| Frogbot | https://github.com/jfrog/frogbot | בוט סריקת PR חינמי, SCA + SAST + IaC |
+| OIDC עם GitHub Actions | https://jfrog.com/help/r/jfrog-platform-administration-documentation/configure-jfrog-platform-oidc-integration-with-github-actions | האימות המומלץ ל-CI, דורש CLI 2.75.0+ |
+| Pipelines End of Life | https://jfrog.com/help/r/jfrog-release-information/pipelines-end-of-life | EOL ב-1 במאי 2026, הנחיות הגירה |
 
 ## פתרון בעיות
 

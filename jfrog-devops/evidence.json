@@ -1,0 +1,124 @@
+{
+  "skill": "jfrog-devops",
+  "version_target": "1.2.0",
+  "audit_date": "2026-05-20",
+  "auditor": "claude-opus-4-7 (skills-il update-skill phase 3)",
+  "summary": "Phase 3 audit of jfrog-devops at v1.1.1. Found 6 substantive content updates needed: (1) JFrog Pipelines EOL date is now in the past (May 1 2026) and copy needed past-tense; (2) Hugging Face legacy repo deprecation in June 2026 is a major new Israeli-relevance gotcha for ML teams; (3) JFrog ML and AI Catalog (from the Qwak acquisition in June 2024, not RunAI as the prompt suggested) are new platform pillars; (4) Xray SBOM/CBOM/VEX support has matured and deserves first-class coverage; (5) OIDC is now the JFrog-recommended GitHub Actions auth path; (6) JFrog CLI is at 2.103.0 (April 29 2026). Pricing tier ranges also added. All facts cross-verified against jfrog.com, github.com/jfrog, huggingface.co/blog, and investors.jfrog.com.",
+  "claims": [
+    {
+      "claim": "Latest JFrog CLI version is v2.103.0, released April 29, 2026",
+      "source": "https://github.com/jfrog/jfrog-cli/releases",
+      "confidence": "high",
+      "evidence": "GitHub releases page lists v2.103.0 (Apr 29 2026), v2.102.0 (Apr 21 2026), v2.101.0 (Apr 18 2026)"
+    },
+    {
+      "claim": "JFrog acquired Qwak in June 2024 for approximately $230M to add MLOps to its platform",
+      "source": "https://jfrog.com/press-room/jfrog-to-acquire-qwak-to-streamline-ai-models-from-development-to-production/, https://www.calcalistech.com/ctechnews/article/s1hitsd8c",
+      "confidence": "high",
+      "evidence": "Press release + Ctech reporting confirm $230M Qwak acquisition. (RunAI was acquired by NVIDIA, not JFrog, contrary to the prompt's hypothesis.)"
+    },
+    {
+      "claim": "JFrog ML launched March 2025 as the first product from the Qwak acquisition",
+      "source": "https://jfrog.com/press-room/jfrog-launches-jfrog-ml-a-revolutionary-mlops-solution/, https://www.devopsdigest.com/jfrog-ml-released",
+      "confidence": "high",
+      "evidence": "BusinessWire/JFrog press release dated March 4 2025 announces JFrog ML"
+    },
+    {
+      "claim": "JFrog AI Catalog launched September 2025 for governing OpenAI, Anthropic, NVIDIA NIM, and Hugging Face access",
+      "source": "https://jfrog.com/press-room/jfrog-launches-ai-catalog-to-secure-and-govern-ai-model-delivery/, https://www.businesswire.com/news/home/20250909916138/en/JFrog-Launches-AI-Catalog-to-Secure-and-Govern-AI-Model-Delivery",
+      "confidence": "high",
+      "evidence": "Sept 9 2025 BusinessWire / JFrog press release explicitly names OpenAI, Anthropic, NVIDIA NIM, Hugging Face integrations + Nemotron access"
+    },
+    {
+      "claim": "JFrog Pipelines reached end of life on May 1, 2026",
+      "source": "https://docs.jfrog.com/releases/docs/pipelines-end-of-life (and prior copy in this skill)",
+      "confidence": "high",
+      "evidence": "Multiple JFrog help-center pages and third-party trackers (invgate.com itdb) confirm May 1 2026 EOL. Today is 2026-05-20, so EOL is in the past."
+    },
+    {
+      "claim": "Legacy Hugging Face repository type in Artifactory deprecates June 2026; migration to new Machine Learning layout required",
+      "source": "https://huggingface.co/blog/jeffboudier/jfrog-artifactory-june-2026, https://docs.jfrog.com/artifactory/docs/hugging-face-repositories",
+      "confidence": "high",
+      "evidence": "Hugging Face engineering blog (jeffboudier) details June 2026 migration deadline, one-way nature, restore_layout caveat, and federation constraints"
+    },
+    {
+      "claim": "New Machine Learning repository type introduced in Artifactory 7.111.1+ supports Hugging Face + PyTorch + ONNX + .pkl + .joblib + .pth + .cbm with FrogML SDK and Xet protocol",
+      "source": "https://docs.jfrog.com/artifactory/docs/hugging-face-repositories, https://jfrog.com/help/r/jfrog-artifactory-documentation/log-hugging-face-models",
+      "confidence": "high",
+      "evidence": "Both Hugging Face blog and JFrog docs list the file types, version, FrogML SDK, and Xet support"
+    },
+    {
+      "claim": "Xray exports SBOMs in SPDX and CycloneDX formats; CycloneDX includes VEX data from Xray 3.67+",
+      "source": "https://docs.jfrog.com/security/docs/export-scan-results, https://docs.jfrog.com/security/docs/sbom-import",
+      "confidence": "high",
+      "evidence": "JFrog security docs explicitly cover SPDX (ISO/IEC standard) and CycloneDX exports, plus VEX integration from Xray 3.67.x"
+    },
+    {
+      "claim": "Xray 3.131+ embeds CBOM (Cryptography Bill of Materials) into CycloneDX exports when JFrog Advanced Security secrets scanning is enabled",
+      "source": "https://docs.jfrog.com/releases/docs/xray (release notes), https://docs.jfrog.com/security/docs/export-scan-results",
+      "confidence": "high",
+      "evidence": "Release notes confirm 3.131 CBOM addition; documentation describes the CycloneDX + secrets payload"
+    },
+    {
+      "claim": "OIDC is the JFrog-recommended GitHub Actions auth method; requires JFrog CLI 2.75.0+ and id-token: write permission",
+      "source": "https://github.com/jfrog/setup-jfrog-cli, https://jfrog.com/help/r/jfrog-platform-administration-documentation/configure-jfrog-platform-oidc-integration-with-github-actions, https://docs.github.com/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-jfrog",
+      "confidence": "high",
+      "evidence": "setup-jfrog-cli README and JFrog OIDC docs both call out CLI 2.75.0+ requirement and id-token: write permission"
+    },
+    {
+      "claim": "Legacy X-JFrog-Art-Api API keys reached end of life Q4 2024; disabled by default in Artifactory 7.98+",
+      "source": "https://jfrog.com/help/r/jfrog-release-information/jfrog-platform-deprecations (and existing skill copy)",
+      "confidence": "medium-high",
+      "evidence": "Carried over from v1.1.1 of this skill; still consistent with current JFrog deprecation pages"
+    },
+    {
+      "claim": "Frogbot is a free Git scanner that runs SCA + SAST + IaC on PRs; latest releases through Dec 2025",
+      "source": "https://github.com/jfrog/frogbot, https://docs.jfrog.com/security/docs/frogbot",
+      "confidence": "high",
+      "evidence": "GitHub repo and JFrog docs describe SCA+SAST+IaC, PR commenting, fix-PR opening, and free-tier compatibility"
+    },
+    {
+      "claim": "JFrog Curation added Compliant Version Selection (CVS), waiver requests, MCP Servers public label, and VS Code integration in 2025-2026",
+      "source": "https://docs.jfrog.com/releases/docs/security-self-managed-releases, https://docs.jfrog.com/security/docs/compliant-version-selection",
+      "confidence": "high",
+      "evidence": "Security self-managed releases page details CVS expansion (Conda/NuGet/RubyGems/Pub/Composer/Debian/Ubuntu), waiver requests, MCP Servers label, VS Code remote-repo curation"
+    },
+    {
+      "claim": "JFrog SaaS Pro tier published at $150/month, Enterprise X at $950/month, Enterprise+ on quote; self-managed Pro X ~$27k/yr, Enterprise X ~$48k/yr",
+      "source": "https://jfrog.com/pricing/, https://www.vendr.com/marketplace/jfrog, https://checkthat.ai/brands/jfrog/pricing",
+      "confidence": "medium",
+      "evidence": "Pricing page + third-party trackers cite these tier prices for 2026; quotes vary by consumption. Marked medium because pricing changes more often than docs."
+    },
+    {
+      "claim": "JFrog SaaS regions remain a fixed list (us-east, us-west, eu-frankfurt, eu-west, ap-southeast); no Israel region",
+      "source": "https://jfrog.com/help/r/jfrog-platform-administration-documentation/jfrog-saas-regions",
+      "confidence": "medium-high",
+      "evidence": "Carried from v1.1.1; JFrog SaaS regions page lists fixed AWS regions, no Tel Aviv. AWS Tel Aviv (il-central-1) does exist for BYOL."
+    },
+    {
+      "claim": "JFrog integrated its platform with NVIDIA Enterprise AI Factory for agentic AI workflows",
+      "source": "https://jfrog.com/press-room/jfrog-joins-nvidias-enterprise-ai-factory-design-to-accelerate-agentic-ai/",
+      "confidence": "high",
+      "evidence": "JFrog press release confirms NVIDIA Enterprise AI Factory partnership"
+    },
+    {
+      "claim": "Conan 2 (V2) package support is available in Artifactory",
+      "source": "https://jfrog.com/help/r/jfrog-artifactory-documentation/conan-v2-package-support, https://github.com/jfrog/jfrog-cli/releases/tag/v2.101.0",
+      "confidence": "high",
+      "evidence": "JFrog docs page dedicated to Conan V2 support; CLI 2.101.0 release notes call out Conan additions"
+    }
+  ],
+  "decisions_made": [
+    "Did NOT change skill name or core scope; remains DevOps + artifact + security focused with new MLOps section.",
+    "Kept SKILL_HE.md technical body in technical Hebrew per skills-il convention (the 'non-developer Hebrew' rule scopes to descriptions, FAQ, etc., per MEMORY).",
+    "Bumped version 1.1.1 -> 1.2.0 (minor: substantial new ML/AI section + SBOM + OIDC section, no breaking changes).",
+    "Added 3 tags (mlops, sbom, oidc) in both HE and EN.",
+    "Did NOT remove the 'API keys EOL Q4 2024' gotcha or the Israel-specific gotchas; they are still accurate.",
+    "Did NOT rewrite the Python client classes (artifactory_client.py / xray_client.py); their REST endpoints are still current. No scripts/ changes this pass.",
+    "Corrected the prompt's RunAI vs Qwak confusion in audit notes (NVIDIA acquired RunAI; JFrog acquired Qwak)."
+  ],
+  "out_of_scope": [
+    "No update to scripts/artifactory_client.py or scripts/xray_client.py (no API endpoint changes detected).",
+    "No update to references/api-reference.md (endpoints still valid; could add SBOM endpoints in a follow-up if needed)."
+  ]
+}
