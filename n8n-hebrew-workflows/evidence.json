@@ -1,0 +1,131 @@
+{
+  "skill": "n8n-hebrew-workflows",
+  "version": "2.3.0",
+  "evidence_date": "2026-05-20",
+  "previous_version": "2.2.0",
+  "claims": [
+    {
+      "claim": "n8n stable line is 2.21.x as of May 2026, beta on 2.22.0",
+      "source": "https://releasebot.io/updates/n8n",
+      "verified": "2026-05-20",
+      "note": "Releasebot lists 2.22.0 released 2026-05-20 (bug fixes), current stable 2.21.4"
+    },
+    {
+      "claim": "CVE-2026-21858 (Ni8mare) is unauthenticated RCE via webhook/form, CVSS 10.0, patched in 1.121.0 and 2.10.1",
+      "source": "https://www.aikido.dev/blog/n8n-rce-vulnerability-cve-2026-21858",
+      "verified": "2026-05-20",
+      "note": "Cross-confirmed via The Hacker News and Rapid7"
+    },
+    {
+      "claim": "CVE-2026-27493 and CVE-2026-27577 chain (March 2026) escalates to host RCE on n8n < 2.10.1 / 2.9.3 / 1.123.22",
+      "source": "https://thehackernews.com/2026/03/critical-n8n-flaws-allow-remote-code.html",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "n8n 2.x ships native LangChain integration (Tools Agent, Conversational Agent, Memory nodes, Vector Stores for RAG)",
+      "source": "https://docs.n8n.io/advanced-ai/langchain/langchain-n8n/",
+      "verified": "2026-05-20",
+      "note": "Confirmed via n8n docs and finbyz.tech 2.0 article"
+    },
+    {
+      "claim": "n8n Vector Store nodes support Pinecone, Qdrant, and Supabase pgvector for RAG",
+      "source": "https://fast.io/resources/best-n8n-tools-ai-agents/",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "n8n ships MCP Client Tool and MCP Server Trigger nodes for Model Context Protocol",
+      "source": "https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.toolmcp/",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "Israel Invoice Reform 2026 threshold drops to 5,000 NIS from June 1, 2026 (was 10,000 NIS Jan 1)",
+      "source": "https://kpmg.com/us/en/taxnewsflash/news/2025/12/tnf-israel-expansion-of-mandatory-e-invoicing-model.html",
+      "verified": "2026-05-20",
+      "note": "Confirmed via KPMG and Morning by Green Invoice support docs"
+    },
+    {
+      "claim": "Tranzila API v2 authenticates via X-tranzila-api-app-key HTTP header (not Basic Auth)",
+      "source": "https://docs.tranzila.com/",
+      "verified": "2026-05-20",
+      "note": "Header confirmed via Stoplight API explorer at docs.tranzila.com (deep-link to the v2 page returns 404 from public CDN; navigate from the docs index)"
+    },
+    {
+      "claim": "Tranzila v2 Bit flow returns iframe URL with QR code; supports tokenization, recurring billing, 3D Secure",
+      "source": "https://docs.tranzila.com/docs/payments-billing/dcljft4y7sgj2-bit",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "Cardcom API v11 endpoint is https://secure.cardcom.solutions/api/v11 with HTTPS-only webhook URLs",
+      "source": "https://secure.cardcom.solutions/api/v11/DOCS",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "Cardcom webhook requires publicly-accessible HTTPS URL; localhost requires tunneling (ngrok / Cloudflare Tunnel)",
+      "source": "https://www.npmjs.com/package/@tsdiapi/cardcom",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "EZCount provides REST documents API with api_key + api_email auth in body and SDKs in PHP/Java/.NET/Ruby/Node/Python",
+      "source": "https://api.ezcount.com/",
+      "verified": "2026-05-20",
+      "note": "API contract per EZCount developer support; Postman documenter URL renders only the heading without anonymous access. Endpoint + auth shape verified against EZCount developer support docs."
+    },
+    {
+      "claim": "n8n Webhook node supports four auth modes: None, Basic Auth, Header Auth, JWT Auth",
+      "source": "https://docs.n8n.io/integrations/builtin/credentials/webhook/",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "n8n JWT Auth validates signature but does NOT auto-check exp / iss / aud claims",
+      "source": "https://docs.n8n.io/integrations/builtin/credentials/jwt/",
+      "verified": "2026-05-20",
+      "note": "Confirmed via blog.nocodecreative.io guide"
+    },
+    {
+      "claim": "n8n has no built-in HMAC signature verifier; must be implemented in a Code node",
+      "source": "https://codehooks.io/blog/secure-zapier-make-n8n-webhooks-signature-verification",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "n8n editor keyboard shortcuts fail under Hebrew keyboard layout (uses e.key instead of e.code), tracked as issue #12569",
+      "source": "https://github.com/n8n-io/n8n/issues/12569",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "n8n text/expression editor has no native RTL support (community feature request)",
+      "source": "https://community.n8n.io/t/add-rtl-support-to-the-text-editor/80768",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "n8n Sustainable Use License 2026: free self-hosted, allows commercial consulting/support, blocks rebranding as a competing SaaS",
+      "source": "https://docs.n8n.io/sustainable-use-license/",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "Azure Israel Central region has been GA since 2023 (already covered in skill, not new in 2026)",
+      "source": "https://www.datacenterdynamics.com/en/news/microsoft-quietly-launches-israeli-azure-cloud-region/",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "Hebcal REST API rate limit is 90 requests per 10-second window (returns HTTP 429 over limit)",
+      "source": "https://www.hebcal.com/home/developer-apis",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "Hebcal API content is licensed CC-BY 4.0 (commercial reuse permitted with attribution)",
+      "source": "https://www.hebcal.com/home/developer-apis",
+      "verified": "2026-05-20"
+    },
+    {
+      "claim": "n8n cloud pricing 2026: free self-hosted, Starter EUR 24/mo, Pro EUR 60/mo, Business EUR 800/mo; EU-hosted in Frankfurt",
+      "source": "https://n8n.io/pricing/",
+      "verified": "2026-05-20",
+      "note": "No Israeli cloud region for n8n SaaS; self-hosted on Israeli VPS (Kamatera, AWS il-central-1) covers data residency"
+    },
+    {
+      "claim": "n8n Anthropic Chat Model node added adaptive thinking mode for Claude Opus 4.7+ in recent releases",
+      "source": "https://releasebot.io/updates/n8n",
+      "verified": "2026-05-20"
+    }
+  ]
+}

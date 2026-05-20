@@ -1,11 +1,13 @@
 ---
 name: n8n-hebrew-workflows
 description: >-
-  Build and optimize n8n 2.0 automation workflows with Israeli API integrations
-  including Morning (formerly Green Invoice), israeli-bank-scrapers, data.gov.il,
-  Israeli SMS gateways, and payment processors (Cardcom, Tranzila, Grow by Meshulam).
-  Covers n8n 2.0 breaking changes, AI Agent nodes, MCP integration, Israel Invoice
-  Reform 2026, Hebrew data handling in Code nodes, and Shabbat-aware scheduling.
+  Build and optimize n8n 2.x automation workflows (stable line 2.21 as of May 2026) with
+  Israeli API integrations including Morning (formerly Green Invoice), EZCount,
+  israeli-bank-scrapers, data.gov.il, Israeli SMS gateways, and payment processors
+  (Cardcom v11, Tranzila API v2, Grow by Meshulam). Covers n8n 2.x security patches
+  (Ni8mare CVE-2026-21858), AI Agent nodes with native LangChain + RAG, MCP Client Tool
+  and MCP Server Trigger nodes, Israel Invoice Reform 2026 (5,000 NIS threshold from June
+  2026), Hebrew data handling in Code nodes, and Shabbat-aware scheduling.
 license: MIT
 ---
 
@@ -92,6 +94,31 @@ Authorization: Bearer {{$json.token}}
 | 400 | קבלה |
 
 למידע מפורט עיינו ב-`references/israeli-api-endpoints.md`.
+
+#### EZCount (EasyCount) API
+
+EZCount (נכתב גם EasyCount) הוא חלופה פופולרית ל-Morning לעוסקים קטנים. ה-API למסמכים הוא REST עם payload JSON, אימות דרך `api_key` + `api_email` בגוף הבקשה (לא OAuth, לא Bearer).
+
+```
+Method: POST
+URL: https://api.ezcount.co.il/api/createDoc
+Headers:
+  Content-Type: application/json
+Body:
+{
+  "api_key": "{{$env.EZCOUNT_API_KEY}}",
+  "api_email": "{{$env.EZCOUNT_API_EMAIL}}",
+  "developer_email": "you@example.com",
+  "type": 320,
+  "customer_name": "שם הלקוח",
+  "customer_email": "client@example.com",
+  "item": [{ "details": "שירותי ייעוץ", "amount": 1, "price": 500, "vat_type": "INC" }]
+}
+```
+
+קודי סוגי מסמכים תואמים לקודי רשות המסים שבהם משתמש Morning (305 / 320 / 330 / 400). כמו ב-Morning, **הסכומים בשקלים עשרוניים, לא באגורות**. אותה רפורמת חשבוניות 2026 חלה גם כאן, מעל הסף (10,000 ש"ח עד 31.5.2026, 5,000 ש"ח החל מ-1.6.2026) ה-API שולח אוטומטית לסליקה מול שע"ם ומחזיר את מספר ההקצאה בתגובה. בנו ענף נפילה: אם ה-API מחזיר `allocation_status: 'pending'`, בצעו retry אחרי 30 שניות לפני שאתם מסמנים את החשבונית כסופית.
+
+EZCount ו-Morning מפיקים את אותו פלט משפטי (חשבוניות מס מסולקות), אז הבחירה ביניהם תפעולית ולא טכנית. בחרו EZCount אם הלקוח כבר על המערכת החשבונאית של EasyCount, אחרת ל-Morning יש תיעוד API עשיר יותר.
 
 #### israeli-bank-scrapers דרך Code Node
 
@@ -349,7 +376,7 @@ return [{
 }];
 ```
 
-**Cardcom API v11:** לאינטגרציות חדשות, מגדירים את ה-webhook URL דרך Cardcom API v11 במקום לוח הבקרה הישן.
+**Cardcom API v11:** לאינטגרציות חדשות, מגדירים את ה-webhook URL דרך Cardcom API v11 (`https://secure.cardcom.solutions/api/v11`) במקום לוח הבקרה הישן. נקודת ה-v11 גם מאפשרת רישום webhooks לאירועי יצירת מסמכים (קבלות, חשבוניות) בנוסף לקריאות חיוב. ה-webhook חייב להיות HTTPS וזמין לאינטרנט (לא `localhost`, השתמשו ב-ngrok או Cloudflare Tunnel בפיתוח). תיעוד מלא: `https://secure.cardcom.solutions/api/v11/DOCS`.
 
 #### Tranzila
 
@@ -363,7 +390,7 @@ Tranzila משתמש בתבנית callback עם פרמטרי GET:
 | `currency` | קוד מטבע | `1` = ILS, `2` = USD, `3` = GBP, `7` = EUR |
 | `Rone` | תשלומים | מספר |
 
-**Tranzila API v2:** Tranzila מציעה אינטגרציה מודרנית מבוססת iframe ושדות מתארחים לציות PCI. ה-v2 API תומך גם בתשלומי ביט (ראו בהמשך). לאינטגרציות חדשות, עדיף להשתמש ב-v2 API.
+**Tranzila API v2:** Tranzila מציעה אינטגרציית server-to-server (SAQ-D) פלוס iframe ושדות מתארחים לציות PCI. אימות דרך header בשם `X-tranzila-api-app-key` (לא Basic Auth, לא פרמטרי query). ה-v2 API תומך בתשלומי ביט, טוקניזציה, חיוב חוזר, החזרים, ו-3D Secure (חובה לכרטיסי אשראי ישראליים לפי כללי שב"א). לאינטגרציות חדשות, עדיף v2 על פני התבנית הישנה `tranzila71dl.cgi`. זרימת ביט: השרת קורא ל-Tranzila v2, התגובה כוללת URL להטמעה ב-iframe (שמציג קוד QR וטלפון להתראת push). תיעוד: `https://docs.tranzila.com/`.
 
 #### Grow by Meshulam
 
@@ -416,11 +443,44 @@ return [{ json: payment }];
 
 ביט דרך Grow by Meshulam: מפעילים ביט בלוח הבקרה של Grow. עסקאות ביט מופיעות באותו תהליך webhook כמו עסקאות כרטיס, עם ערך `transactionType` שונה.
 
+#### אופני אימות ל-Webhook
+
+צומת Webhook של n8n תומך בארבעה אופני אימות. אחרי שרשרת ה-CVE של Ni8mare, "None" על webhook ציבורי הוא למעשה פרצת אבטחה. בכל זרימת תשלום או טופס ציבורי בחרו אחד מהשלושה האחרים:
+
+| אופן | איפה מגדירים | מתי להשתמש |
+|------|--------------|------------|
+| None | dropdown "Authentication" בצומת Webhook | רק בדיקות מקומיות, אסור בפרודקשן |
+| Basic Auth | Generic Credential | webhook פנימי מאחורי VPN; עובד עם כל לקוח HTTP |
+| Header Auth | credential מסוג Header Auth (למשל `X-API-Key: <token>`) | ברירת המחדל ל-callbacks של שערי SMS ו-webhooks פנימיים |
+| JWT Auth | credential מסוג JWT (HMAC HS256/384/512 או RSA/ECDSA דרך PEM) | אינטגרציות בין-ארגוניות שבהן הקורא כבר מנפיק JWT |
+
+**אימות חתימת HMAC (Cardcom, Grow, אינטגרציות מותאמות):** ל-n8n אין מאמת HMAC מובנה. ממשים אותו ב-Code node מיד אחרי ה-Webhook:
+
+```javascript
+const crypto = require('crypto');
+const signature = $input.first().headers['x-signature']; // או x-cardcom-signature וכו'
+const rawBody = JSON.stringify($input.first().body);
+const secret = $env.WEBHOOK_HMAC_SECRET;
+const expected = crypto.createHmac('sha256', secret).update(rawBody).digest('hex');
+
+// השוואה בטוחה מבחינת זמן כדי לא להדליף את החתימה דרך timing
+const a = Buffer.from(signature || '', 'hex');
+const b = Buffer.from(expected, 'hex');
+if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+  throw new Error('Invalid HMAC signature');
+}
+return $input.all();
+```
+
+**הסתייגות JWT:** ה-JWT Auth של n8n מאמת חתימה אבל לא בודק `exp`, `iss` או `aud`. אם צריך אימות claims, הוסיפו Code node אחרי ה-Webhook שמפענח את הטוקן ומאמת כל claim, אחרת טוקן שפג תוקף יעבור.
+
 ### שלב 6: שיקולי אירוח עצמי
 
-#### שינויים משמעותיים ב-n8n 2.0 (דצמבר 2025)
+#### שינויים משמעותיים ב-n8n 2.0 (דצמבר 2025) + עדכוני אבטחה (2026)
 
-n8n 2.0 שוחרר בדצמבר 2025; הקו היציב נמצא על 2.x (2.19.x נכון למאי 2026, עם minor חדש כמעט כל שבוע). נעלו תג ספציפי בפרודקשן במקום `n8nio/n8n:latest`.
+n8n 2.0 שוחרר בדצמבר 2025; הקו היציב נמצא על 2.x (2.21.x נכון למאי 2026, בטא על 2.22.0, עם minor חדש כמעט כל שבוע). נעלו תג ספציפי בפרודקשן במקום `n8nio/n8n:latest`.
+
+**טלאי אבטחה קריטי, חובה לעבור ל-2.10.1 לפחות:** CVE-2026-21858 ("Ni8mare", CVSS 10.0) הוא RCE לא מאומת דרך webhook/form, פורסם בינואר 2026 ותוקן ב-1.121.0 וב-2.10.1. צמד חולשות נוסף ממרץ 2026 (CVE-2026-27493 + CVE-2026-27577) מאפשר RCE על השרת במחשב מארח בגרסאות 2.10.1>, 2.9.3>, 1.123.22> ותוקן ב-2.10.1 / 2.9.3 / 1.123.22. אם ה-workflow חושף Webhook ציבורי (כל זרימת תשלום בסקיל הזה חושפת), חובה להריץ 2.10.1 ומעלה, רצוי על 2.21.x הנוכחי. נעלו את התג ב-`docker-compose.yml` ועקבו אחרי פיד אבטחה של n8n.
 
 n8n 2.0 הביא שינויים משמעותיים שמשפיעים על תהליכים ישראליים:
 
@@ -455,7 +515,9 @@ NODES_EXCLUDE=[]
 ```yaml
 services:
   n8n:
-    image: n8nio/n8n:latest
+    # נועלים תג ספציפי. אסור :latest בפרודקשן.
+    # חייב להיות לפחות 2.10.1 כדי להיות מטולא נגד CVE-2026-21858 (Ni8mare).
+    image: n8nio/n8n:2.21.4
     restart: unless-stopped
     ports:
       - "5678:5678"
@@ -466,6 +528,8 @@ services:
       - WEBHOOK_URL=https://${N8N_HOST}/
       - GENERIC_TIMEZONE=Asia/Jerusalem
       - TZ=Asia/Jerusalem
+      # מומלץ: רוטציה של מפתח ההצפנה רק דרך תהליך המיגרציה המתועד.
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
     volumes:
       - n8n_data:/home/node/.n8n
 
@@ -480,7 +544,18 @@ volumes:
 
 ### שלב 7: צמתי AI Agent של n8n לתהליכים ישראליים
 
-n8n 2.0 כולל למעלה מ-70 צמתי AI כולל Tools Agent, Conversational Agent, ואינטגרציות LLM. אלה חזקים במיוחד לאוטומציות עסקיות ישראליות.
+n8n 2.x מגיע עם אינטגרציית LangChain מובנית (קבוצת הצמתים "Advanced AI"). מעל 70 צמתי AI: Tools Agent, Conversational Agent, צמתי זיכרון (Window Buffer, Summary Buffer), צמתי Vector Store ל-RAG (Pinecone, Qdrant, Supabase pgvector), וצמתי Model עבור OpenAI (GPT-4o), Anthropic (Claude 3.5 Sonnet, Claude Opus 4.7 עם מצב חשיבה דינמי), ומודלים מקומיים דרך Ollama. כלים חזקים לאוטומציה עסקית ישראלית.
+
+**בחירת מודל לתוכן ישראלי:**
+
+| שימוש | מודל מומלץ | למה |
+|-------|-----------|------|
+| סיווג תנועות בעברית | Claude 3.5 Sonnet דרך Anthropic Chat Model node | הבנת עברית חזקה, חלון הקשר גדול, פחות הזיות בקטגוריות מס ישראליות לעומת GPT-4o |
+| סיכום מסמכים עברית (PDF ארוכים) | Claude Opus 4.7 עם מצב חשיבה דינמי | n8n 2.21 הוסיף adaptive thinking; טוב יותר מ-GPT-4o לטקסט משפטי עברי מורכב |
+| צ'אט עברית בזמן אמת | GPT-4o דרך OpenAI Chat Model node | לטנסי נמוכה יותר מ-Claude לתגובות עברית קצרות |
+| On-prem / מיקום נתונים בארץ | Ollama (Llama 3.1, Qwen 2.5) על VPS ישראלי | שומר PII בארץ; העברית של Llama 3.1 סבירה לסיווג, חלשה ליצירה |
+
+**RAG על תוכן ישראלי (צמתי Vector Store):** מחברים צומת Vector Store (Pinecone, Qdrant או Supabase pgvector) ל-AI Agent כדי לבצע retrieval על קורפוסים בעברית (היסטוריית חשבוניות, PDF של חוקי מס, יומני צ'אט לקוחות). השתמשו במודל embedding רב-לשוני שמטפל בעברית (Cohere `embed-multilingual-v3.0` או OpenAI `text-embedding-3-large`); ברירת המחדל `text-embedding-ada-002` חלשה בעברית לעומת שפות בכתב לטיני.
 
 **דוגמה: סיווג אוטומטי של תנועות בנק עם AI**
 
@@ -504,7 +579,12 @@ return transactions;
 
 מחברים את הפלט של ה-Code node ל-AI Agent node (Tools Agent) שמוגדר עם ה-LLM המועדף. הסוכן מסווג כל תנועה לפי התיאור העברי וקטגוריות ההוצאות הישראליות המוכרות.
 
-**אינטגרציית MCP ב-n8n:** n8n תומך בשרתי Model Context Protocol (MCP). אפשר לחבר שרת MCP של `israeli-bank-scrapers` לצומת AI Agent ב-n8n, מה שמאפשר לסוכן לשלוף נתוני בנק לפי דרישה כחלק מתהליך שיחתי.
+**אינטגרציית MCP ב-n8n (שני צמתים):** n8n 2.x מגיע עם שני צמתי MCP מובנים:
+
+- **MCP Client Tool** (`@n8n/n8n-nodes-langchain.toolMcp`): מתחבר כצומת משנה ל-AI Agent כך שהסוכן יקרא לכלים שחשופים בשרת MCP חיצוני. שימושי לחיבור שרתי MCP מ-agentskills.co.il כמו `hebcal`, `israeli-bank` או `data-gov-il` לסוכנים שלכם.
+- **MCP Server Trigger**: חושף תהליך n8n כשלעצמו ככלי MCP. לקוחות AI חיצוניים (Claude Desktop, Cursor, Windsurf, GPT מותאמים) יכולים לגלות ולהפעיל את התהליך כאילו הוא כלי native. שימושי לעטיפת תהליך חיפוש חשבוניות Morning או סורק בנק כך שכל עוזר AI במשרד יוכל להפעיל אותו לפי דרישה.
+
+ביחד הצמתים האלה הופכים את n8n גם למארח כלים וגם לצרכן כלים בסטאק סוכני מבוסס MCP.
 
 ### שלב 8: מתי להשתמש ב-n8n לעומת חלופות
 
@@ -605,6 +685,7 @@ n8n שומר סודות ב-credential store מוצפן, לעולם לא בתוך
 
 ## מלכודות נפוצות
 
+- **סוכנים נועלים `n8nio/n8n:latest` או תג ישן של 1.x.** גרסאות n8n self-hosted לפני 2.10.1 / 1.121.0 פגיעות לשרשרת ה-RCE של Ni8mare (CVE-2026-21858, CVSS 10.0) פלוס שרשרת CVE-2026-27493 + CVE-2026-27577 של מרץ 2026. כל Webhook ציבורי (כל workflow של שער תשלום בסקיל הזה) הופך את המארח לניתן לניצול. נעלו תג ספציפי של 2.10.1 ומעלה (היציב הנוכחי הוא 2.21.x) ב-Docker Compose ועקבו אחרי פיד אבטחה של n8n.
 - **סוכנים משתמשים ב-UTC כברירת מחדל ל-schedule triggers.** ישראל ב-`Asia/Jerusalem` (UTC+2/+3), ומעבר לשעון קיץ בישראל קורה בתאריכים שונים מארה"ב ואירופה (שעון קיץ מתחיל ביום שישי שלפני יום ראשון האחרון של מרץ, ומסתיים ביום ראשון האחרון של אוקטובר). תמיד להגדיר `GENERIC_TIMEZONE` ולוודא אחרי כל מעבר שעון.
 - **סוכנים מפרמטים תאריכים כ-MM/DD/YYYY.** בישראל הפורמט הוא DD/MM/YYYY. כל Code node שמפרסר תאריכים חייב לטפל בזה מפורשות. Morning API מחזיר ISO 8601, אבל מערכות ממשלה מחזירות DD/MM/YYYY כמחרוזות.
 - **סוכנים שולחים מספרי טלפון ישראליים עם אפס פותח.** שערי SMS דורשים פורמט בינלאומי (`972XXXXXXXXX`). מספר כמו `050-1234567` חייב להפוך ל-`972501234567`.
@@ -613,6 +694,8 @@ n8n שומר סודות ב-credential store מוצפן, לעולם לא בתוך
 - **Execute Command node מושבת כברירת מחדל ב-n8n 2.0.** תהליכים שהשתמשו ב-Execute Command להרצת סקריפטים (למשל לסריקת בנקים) ייכשלו בשקט אחרי שדרוג ל-n8n 2.0. יש לעבור ל-Code nodes, או להפעיל מחדש דרך דריסת משתנה הסביבה `NODES_EXCLUDE` כך שלא יכיל את `n8n-nodes-base.executeCommand` (אין משתנה `N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE`, זו הזיה נפוצה).
 - **סכומים ב-Morning API הם בשקלים, לא באגורות.** ה-API משתמש בשקלים עשרוניים (`price: 50` = 50 ש"ח). אין להכפיל ב-100 או לבצע המרות אגורות. זה שונה מכמה שערי תשלום שמשתמשים באגורות.
 - **רפורמת החשבוניות 2026 משפיעה על אוטומציות, הסף יורד ב-1 ביוני 2026.** חשבוניות מס מעל הסף (10,000 ש"ח עד 31 במאי 2026, ואז 5,000 ש"ח החל מ-1 ביוני 2026) שנוצרו דרך API דורשות כעת מספרי הקצאה מרשות המסים. תהליכים שמייצרים חשבוניות אוטומטית חייבים לטפל בשלב ההקצאה, אחרת החשבונית לא תקפה לניכוי מס. שמרו את הסף כמשתנה ב-workflow, לא כמספר קשיח.
+- **קיצורי המקלדת בעורך של n8n נשברים תחת פריסת מקלדת בעברית.** הקנבס קורא את `e.key` במקום `e.code`, אז כשמקלדת עברית פעילה `Ctrl+C` מחזיר `e.key = 'ב'` והקיצור נכשל. החליפו את שפת הקלט לאנגלית בזמן עריכה, או השתמשו בפעולות מהתפריט. issue 12569 ב-GitHub של n8n.
+- **לעורך הביטויים והטקסט של n8n אין תמיכה native ב-RTL.** טקסט עברי בשדות ביטוי מוצג משמאל לימין, מה שמקשה לקרוא מחרוזות עברית ארוכות ושובר את היישור הויזואלי עם סימני פיסוק סובבים. למחרוזות עברית ליטרליות ארוכות, שמרו אותן במשתני סביבה או ב-static workflow data וקראו להן בשם, במקום להקליד אותן בעורך הביטויים.
 - **תהליכים לא מנוטרים נכשלים בשקט בלי Error Trigger.** סריקת בנק מתוזמנת או סנכרון חשבוניות שזורק שגיאה פשוט נעצר, ואף אחד לא יודע עד שהנתונים מיושנים. צרו תהליך נפרד שמתחיל בצומת **Error Trigger** (n8n מנתב כל הרצה שנכשלה אליו) ששולח התראה בעברית ל-Slack או SMS. לכשלים זמניים (חסימות Cloudflare, טוקנים שפגו, rate limit) הפעילו גם **Retry On Fail** ברמת הצומת עם המתנה סבירה, במקום לתת לכל ההרצה למות בכשל הראשון.
 
 ## משאבים מצורפים

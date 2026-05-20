@@ -40,7 +40,15 @@ Token TTL: 60 minutes. Refresh proactively before expiry.
 
 ### Israel Invoice Reform 2026
 
-Starting January 2026, tax invoices (type 305, 320) over 10,000 NIS require an allocation number (mispar haktza'a) from the Israel Tax Authority. When creating documents via API, check Morning's documentation for the allocation workflow applicable to API-created documents.
+Tax invoices (type 305, 320) over the threshold require an allocation number (mispar haktza'a) from the Israel Tax Authority via SHAAM clearance. Threshold schedule:
+
+| Effective | Threshold |
+|-----------|-----------|
+| Jan 1, 2026 | 10,000 NIS |
+| **Jun 1, 2026** | **5,000 NIS** |
+| Jan 1, 2027 | 5,000 NIS (planned to continue) |
+
+When creating documents via API, check Morning's documentation for the allocation workflow applicable to API-created documents. Build the threshold as a workflow variable rather than a hardcoded literal.
 
 ### Client Endpoints
 
@@ -72,6 +80,48 @@ Starting January 2026, tax invoices (type 305, 320) over 10,000 NIS require an a
 | `client.taxId` | string | Israeli tax ID (osek morshe/patur number) |
 
 **Amounts are in decimal shekels.** `amount: 50` means 50.00 NIS. Do not multiply or divide by 100.
+
+---
+
+## EZCount (EasyCount) API
+
+Base URL: `https://api.ezcount.co.il/api`
+
+EZCount is a Morning alternative for SMB invoicing in Israel.
+
+### Authentication
+
+Authentication via `api_key` + `api_email` in the request body (not OAuth, not Bearer).
+
+### Document Endpoints
+
+| Endpoint | Method | Description | Key Parameters |
+|----------|--------|-------------|----------------|
+| `/createDoc` | POST | Create document | `type`, `customer_name`, `item[]`, `api_key`, `api_email` |
+| `/searchDocuments` | POST | Search documents | `fromDate`, `toDate`, `type`, `api_key`, `api_email` |
+| `/getDocPdf` | POST | Download PDF | `docNum` |
+| `/sendDocByEmail` | POST | Email document to client | `docNum`, `to` |
+
+### Document Type Codes
+
+Same Tax Authority codes as Morning: 10 (price quote), 305 (tax invoice), 320 (tax invoice / receipt), 330 (credit note), 400 (receipt).
+
+### Israel Invoice Reform 2026
+
+EZCount auto-clears qualifying tax invoices against SHAAM and returns the allocation number in the response. If `allocation_status: 'pending'`, retry after 30 seconds before treating the invoice as final. SDK code samples in PHP, Java, .NET, ASP, Ruby, Node, and Python on the EZCount developer portal.
+
+### Common Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `success` | boolean | Operation result |
+| `errMsg` | string | Error in Hebrew |
+| `docNum` | string | Document number |
+| `pdfLink` | string | Public PDF URL |
+| `allocation_number` | string | SHAAM-issued mispar haktza'a (Invoice Reform 2026) |
+| `allocation_status` | string | `cleared` / `pending` / `not_required` |
+
+**Amounts are in decimal shekels.** Same convention as Morning.
 
 ---
 
@@ -216,10 +266,13 @@ Callback fields:
 
 Documentation: `https://docs.tranzila.com/`
 
+Tranzila API v2 authenticates via the `X-tranzila-api-app-key` HTTP header (not Basic Auth, not query parameters). v2 covers server-to-server (SAQ-D), iframe, hosted fields, Bit (init returns an iframe URL with QR + push), tokenization, recurring billing, refunds, and 3D Secure.
+
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `https://secure5.tranzila.com/cgi-bin/tranzila71dl.cgi` | GET/POST | Process payment (legacy) |
-| Tranzila API v2 (iframe/hosted fields) | POST | Process payment (modern, PCI-compliant) |
+| `https://secure5.tranzila.com/cgi-bin/tranzila71dl.cgi` | GET/POST | Process payment (legacy CGI, avoid for new integrations) |
+| `https://api.tranzila.com/v1/transaction/create` | POST | v2 server-to-server charge (auth: `X-tranzila-api-app-key`) |
+| `https://api.tranzila.com/v1/bit/init` | POST | v2 Bit init, response contains iframe URL with QR code |
 | Callback URL (configured in terminal settings) | GET | Payment result via query params |
 
 Callback query parameters:
