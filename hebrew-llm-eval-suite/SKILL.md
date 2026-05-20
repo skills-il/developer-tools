@@ -47,8 +47,8 @@ A sensible default set for Israeli product teams:
 |----------|-------|----------|
 | Anthropic | claude-opus-4-7 (1M context), claude-opus-4-6, claude-sonnet-4-6, claude-haiku-4-5 | Anthropic SDK |
 | OpenAI | gpt-5 family | OpenAI SDK |
-| Google | gemini-2.x | Google GenAI SDK |
-| AI21 (Israeli) | jamba-1.5-large, jamba-1.5-mini | AI21 SDK or Amazon Bedrock |
+| Google | gemini-3 family (gemini-3-pro, gemini-3-flash), gemini-2.5-pro | Google GenAI SDK |
+| AI21 (Israeli) | jamba-1.6-large, jamba-1.6-mini, jamba-reasoning-3b (open weights), legacy jamba-1.5-large, jamba-1.5-mini | AI21 SDK or Amazon Bedrock |
 | Dicta (Israeli, open-weight) | `dicta-il/DictaLM-3.0-24B-Base`, `dicta-il/DictaLM-3.0-Nemotron-12B-Instruct`, `dicta-il/DictaLM-3.0-1.7B-Thinking-GGUF`, `dicta-il/DictaLM-3.0-24B-Thinking`, plus `dicta-il/dictalm2.0-instruct` (DictaLM 2.0, 7B Mistral-based) | HuggingFace transformers or vLLM |
 | Cohere (multilingual, Hebrew supported) | `CohereLabs/aya-expanse-8b`, `CohereLabs/aya-expanse-32b`, `CohereLabs/aya-23-8B`, `CohereLabs/aya-23-35B` | HuggingFace transformers or Cohere API |
 | Hebrew-finetuned community models | `yam-peleg/Hebrew-Mistral-7B`, `yam-peleg/Hebrew-Gemma-11B-Instruct`, `yam-peleg/Hebrew-Mixtral-8x22B` | HuggingFace transformers |
@@ -96,18 +96,18 @@ Use `scripts/score_results.py` to compute metrics. It handles HeQ normalization 
 
 Use `scripts/make_scorecard.py` to generate a comparison report. Output includes JSON for programmatic use, markdown with a model-vs-benchmark table, per-benchmark winner and gap analysis, and a weighted recommendation.
 
-Example output excerpt:
+Example output excerpt (ILLUSTRATIVE PLACEHOLDERS, NOT MEASURED RESULTS):
 
 ```
 | Model                          | HeQ F1 | Sentiment | Winograd | Trans BLEU | Weighted |
 |--------------------------------|--------|-----------|----------|------------|----------|
-| claude-sonnet-4-6              | 78.2   | 88.1      | 74.5     | 41.3       | 70.5     |
-| gpt-5                          | 76.8   | 87.4      | 73.1     | 40.9       | 69.6     |
-| jamba-1.5-large                | 74.1   | 85.9      | 70.2     | 38.7       | 67.2     |
-| DictaLM-3.0-24B-Base           | 72.3   | 84.5      | 68.0     | 37.1       | 65.5     |
+| MODEL_A (placeholder)          | XX.X   | XX.X      | XX.X     | XX.X       | XX.X     |
+| MODEL_B (placeholder)          | XX.X   | XX.X      | XX.X     | XX.X       | XX.X     |
+| MODEL_C (placeholder)          | XX.X   | XX.X      | XX.X     | XX.X       | XX.X     |
+| MODEL_D (placeholder)          | XX.X   | XX.X      | XX.X     | XX.X       | XX.X     |
 ```
 
-These are illustrative numbers. Actual results depend on prompts, dataset slices, and sampling parameters. Always attach the run config to the scorecard.
+The numbers above are placeholders for the shape of the scorecard, not real benchmark scores. Run your own evaluation (see Step 4) to fill in real values; actual results depend on prompts, dataset slices, sampling parameters, and the snapshot date of API-hosted models. Always attach the run config to the scorecard.
 
 ### Step 6: Control for statistical noise
 

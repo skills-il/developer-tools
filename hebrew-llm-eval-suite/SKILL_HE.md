@@ -47,8 +47,8 @@ license: MIT
 |-----|------|------------|
 | Anthropic | claude-opus-4-7 (1M context), claude-opus-4-6, claude-sonnet-4-6, claude-haiku-4-5 | Anthropic SDK |
 | OpenAI | משפחת gpt-5 | OpenAI SDK |
-| Google | gemini-2.x | Google GenAI SDK |
-| AI21 (ישראלי) | jamba-1.5-large, jamba-1.5-mini | AI21 SDK או Amazon Bedrock |
+| Google | משפחת gemini-3 (gemini-3-pro, gemini-3-flash), gemini-2.5-pro | Google GenAI SDK |
+| AI21 (ישראלי) | jamba-1.6-large, jamba-1.6-mini, jamba-reasoning-3b (משקלים פתוחים), legacy jamba-1.5-large, jamba-1.5-mini | AI21 SDK או Amazon Bedrock |
 | Dicta (ישראלי, open-weight) | `dicta-il/DictaLM-3.0-24B-Base`, `dicta-il/DictaLM-3.0-Nemotron-12B-Instruct`, `dicta-il/DictaLM-3.0-1.7B-Thinking-GGUF`, `dicta-il/DictaLM-3.0-24B-Thinking`, וגם `dicta-il/dictalm2.0-instruct` (DictaLM 2.0 על בסיס Mistral 7B) | transformers של HuggingFace או vLLM |
 | Cohere (רב-לשוני, תמיכה בעברית) | `CohereLabs/aya-expanse-8b`, `CohereLabs/aya-expanse-32b`, `CohereLabs/aya-23-8B`, `CohereLabs/aya-23-35B` | transformers של HuggingFace או Cohere API |
 | מודלים קהילתיים שעברו fine-tune לעברית | `yam-peleg/Hebrew-Mistral-7B`, `yam-peleg/Hebrew-Gemma-11B-Instruct`, `yam-peleg/Hebrew-Mixtral-8x22B` | transformers של HuggingFace |

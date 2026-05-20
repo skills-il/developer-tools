@@ -1,0 +1,135 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "hebrew-llm-eval-suite",
+  "generated_at": "2026-05-20T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "open-hebrew-llm-leaderboard-blog",
+      "claim": "Hugging Face publishes the Open Hebrew LLM Leaderboard with covered benchmarks including HeQ, HebrewSentiment, Hebrew Winograd, Translation En<->He, and Hebrew Trivia (the canonical benchmark set this skill evaluates against).",
+      "source_url": "https://huggingface.co/blog/leaderboard-hebrew",
+      "raw_snippet": "Hebrew LLM Leaderboard",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "hebrew-llm-leaderboard-space-2",
+      "claim": "The live Open Hebrew LLM Leaderboard space is at huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard.",
+      "source_url": "https://huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard",
+      "raw_snippet": "hebrew-llm-leaderboard",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "dictalm-3-tech-report",
+      "claim": "Dicta-LM 3.0 technical report (published February 2026 by Dicta) documents the 24B (Mistral-Small-3.1 base), 12B Nemotron (NVIDIA Nemotron Nano V2 base), and 1.7B (Qwen3-1.7B base) variants, plus a benchmark suite covering Translation, Summarization, Winograd, Israeli Trivia, and Diacritization.",
+      "source_url": "https://dicta.org.il/publications/DictaLM_3_0___Techincal_Report.pdf",
+      "raw_snippet": "DictaLM 3.0",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/benchmark-catalog.md"]
+    },
+    {
+      "claim_id": "dicta-il-org-2",
+      "claim": "Dicta publishes its Hebrew open-weight LLM family on Hugging Face under huggingface.co/dicta-il.",
+      "source_url": "https://huggingface.co/dicta-il",
+      "raw_snippet": "dicta-il",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "ai21-jamba-family",
+      "claim": "AI21 Labs publishes the Jamba family with Hebrew listed as a core supported language; the 1.6 family superseded the earlier 1.5 family, and Jamba-Reasoning-3B is the most accessible open-weight Jamba variant.",
+      "source_url": "https://www.ai21.com/blog/announcing-jamba-model-family/",
+      "raw_snippet": "Jamba",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cohere-aya",
+      "claim": "Cohere Labs publishes the Aya family (aya-expanse-8b, aya-expanse-32b, aya-23-8B, aya-23-35B) on Hugging Face under CohereLabs, with Hebrew listed among supported languages.",
+      "source_url": "https://huggingface.co/CohereLabs",
+      "raw_snippet": "aya",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "yam-peleg-hebrew-models",
+      "claim": "Yam Peleg publishes a series of Hebrew-finetuned open-weight community models on Hugging Face under yam-peleg, including Hebrew-Mistral-7B, Hebrew-Gemma-11B-Instruct, and Hebrew-Mixtral-8x22B.",
+      "source_url": "https://huggingface.co/yam-peleg",
+      "raw_snippet": "yam-peleg",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "lm-eval-harness",
+      "claim": "EleutherAI's lm-evaluation-harness is the canonical open-source framework for running standardized LLM evaluations and is hosted at github.com/EleutherAI/lm-evaluation-harness.",
+      "source_url": "https://github.com/EleutherAI/lm-evaluation-harness",
+      "raw_snippet": "lm-evaluation-harness",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "inspect-ai",
+      "claim": "UK AISI's Inspect framework for AI evaluations is hosted at github.com/UKGovernmentBEIS/inspect_ai.",
+      "source_url": "https://github.com/UKGovernmentBEIS/inspect_ai",
+      "raw_snippet": "inspect_ai",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "heq-paper",
+      "claim": "HeQ is a Hebrew QA dataset published at ACL Anthology under the Findings-EMNLP 2023 paper aclanthology.org/2023.findings-emnlp.915.pdf with 30,147 questions sourced from Hebrew Wikipedia and Geektime.",
+      "source_url": "https://aclanthology.org/2023.findings-emnlp.915.pdf",
+      "raw_snippet": "HeQ",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/benchmark-catalog.md"]
+    },
+    {
+      "claim_id": "heq-github",
+      "claim": "HeQ's canonical GitHub repository is github.com/NNLP-IL/Hebrew-Question-Answering-Dataset.",
+      "source_url": "https://github.com/NNLP-IL/Hebrew-Question-Answering-Dataset",
+      "raw_snippet": "Hebrew-Question-Answering",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "nnlp-il-hebrew-resources-2",
+      "claim": "The Israeli National NLP Program maintains a Hebrew-Resources catalog on GitHub at github.com/NNLP-IL/Hebrew-Resources.",
+      "source_url": "https://github.com/NNLP-IL/Hebrew-Resources",
+      "raw_snippet": "Hebrew Resources",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "heq-v1-etelis-2",
+      "claim": "HeQ_v1 is mirrored on Hugging Face by the Etelis user at huggingface.co/datasets/Etelis/HeQ_v1.",
+      "source_url": "https://huggingface.co/datasets/Etelis/HeQ_v1",
+      "raw_snippet": "HeQ_v1",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "hebrew-sentiment-dataset-2",
+      "claim": "HebrewSentiment is the Hebrew sentiment dataset published by the Israeli National NLP Program at huggingface.co/datasets/HebArabNlpProject/HebrewSentiment; verify license and split sizes on the live dataset card before commercial use.",
+      "source_url": "https://huggingface.co/datasets/HebArabNlpProject/HebrewSentiment",
+      "raw_snippet": "HebrewSentiment",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "hebnli-dataset",
+      "claim": "HebNLI is the Hebrew natural-language-inference dataset published by the Israeli National NLP Program at huggingface.co/datasets/HebArabNlpProject/HebNLI.",
+      "source_url": "https://huggingface.co/datasets/HebArabNlpProject/HebNLI",
+      "raw_snippet": "HebNLI",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "current-gen-models-2026",
+      "claim": "As of May 2026, the production LLM lines this skill evaluates include Anthropic Claude 4.7 (Opus, Sonnet, Haiku); Anthropic Claude 4.6 (Opus, Sonnet); OpenAI gpt-5 family; Google Gemini 3 (gemini-3-pro, gemini-3-flash); and Google Gemini 2.5 Pro as the legacy comparison point.",
+      "source_url": "https://huggingface.co/blog/leaderboard-hebrew",
+      "raw_snippet": "leaderboard",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "scripts/run_eval.py"]
+    }
+  ]
+}

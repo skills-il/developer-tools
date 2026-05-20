@@ -39,16 +39,24 @@ SUITES = {
 }
 
 SUPPORTED_MODELS = {
+    "claude-opus-4-7": "anthropic",
     "claude-opus-4-6": "anthropic",
     "claude-sonnet-4-6": "anthropic",
     "claude-haiku-4-5": "anthropic",
     "gpt-5": "openai",
+    "gemini-3-pro": "google",
+    "gemini-3-flash": "google",
     "gemini-2.5-pro": "google",
+    "jamba-1.6-large": "ai21",
+    "jamba-1.6-mini": "ai21",
+    "jamba-reasoning-3b": "ai21",
     "jamba-1.5-large": "ai21",
     "jamba-1.5-mini": "ai21",
     "DictaLM-3.0-24B-Base": "huggingface",
+    "DictaLM-3.0-24B-Thinking": "huggingface",
     "DictaLM-3.0-Nemotron-12B-Instruct": "huggingface",
     "DictaLM-3.0-1.7B": "huggingface",
+    "DictaLM-3.0-1.7B-Thinking-GGUF": "huggingface",
 }
 
 
