@@ -1,0 +1,152 @@
+{
+  "skill": "israeli-chatbot-analytics",
+  "version": "1.2.0",
+  "reviewed_at": "2026-05-20",
+  "reviewer": "skills-il update-skill subagent (Phase 3 audit, Opus 4.7 1M)",
+  "claims": [
+    {
+      "id": "dialogflow-cx-hebrew-code",
+      "claim": "Dialogflow CX deprecated the `iw` Hebrew language code; new agents must use `he-il`. Existing `iw` agents keep working but will not receive new features.",
+      "source": "https://docs.cloud.google.com/dialogflow/cx/docs/reference/language",
+      "evidence_type": "vendor_docs",
+      "verification": "Google Cloud Dialogflow CX language reference page lists `he-il` as the supported Hebrew code with deprecation notice for `iw`. Confirmed via Google Developer forum thread on the Twilio integration issue (May 2026).",
+      "confidence": "high"
+    },
+    {
+      "id": "whatsapp-per-message-pricing-2025",
+      "claim": "Effective July 1, 2025, Meta replaced WhatsApp Business Platform conversation-based pricing with a per-message model across four categories: marketing, utility, authentication, and service.",
+      "source": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "evidence_type": "vendor_docs",
+      "verification": "Multiple independent 2026 pricing guides (engagelab, flowcall, sleekflow, whautomate, twilio) all describe the July 2025 cutover and the four-category split.",
+      "confidence": "high"
+    },
+    {
+      "id": "whatsapp-service-window-free",
+      "claim": "Service messages sent in reply to an inbound user message within 24 hours are free with no monthly cap.",
+      "source": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "evidence_type": "vendor_docs",
+      "verification": "Meta WhatsApp Business pricing page explicitly states free 24-hour service window. Same fact restated by sleekflow / engagelab 2026 guides.",
+      "confidence": "high"
+    },
+    {
+      "id": "whatsapp-ctw-ad-72h-free",
+      "claim": "When a user arrives from a click-to-WhatsApp ad or Facebook Page CTA button, all messages including templates are free for 72 hours.",
+      "source": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "evidence_type": "vendor_docs",
+      "verification": "Meta confirms 72h free entry-point conversation rules; engagelab 2026 pricing guide also explicitly cites this window.",
+      "confidence": "high"
+    },
+    {
+      "id": "dictalm-2-instruct-availability",
+      "claim": "DictaLM 2.0 and DictaLM 2.0-Instruct are open Hebrew LLMs from Dicta, derived from Mistral, with 7B parameters and trained on roughly 200B tokens in Hebrew and English. The tokenizer adds 1,000 Hebrew-specific tokens, raising compression from 5.78 to 2.76 tokens per word.",
+      "source": "https://huggingface.co/dicta-il/dictalm2.0-instruct",
+      "evidence_type": "model_card + paper",
+      "verification": "arXiv 2407.07080 (Adapting LLMs to Hebrew, July 2024) confirms architecture and token-compression numbers. Model card on HuggingFace matches.",
+      "confidence": "high"
+    },
+    {
+      "id": "alephbert-onlplab",
+      "claim": "AlephBERT (`onlplab/alephbert-base`) is a pre-trained Hebrew BERT from BIU's OnlpLab, trained on OSCAR Hebrew + Wikipedia + Twitter Hebrew data.",
+      "source": "https://huggingface.co/onlplab/alephbert-base",
+      "evidence_type": "model_card + ACL paper",
+      "verification": "ACL 2022 long paper (Seker et al., AlephBERT) describes training corpus and benchmark improvements. HuggingFace model card matches.",
+      "confidence": "high"
+    },
+    {
+      "id": "rasa-oss-maintenance-mode",
+      "claim": "Rasa Open Source entered maintenance mode in 2025; active development shifted to Rasa Pro and the CALM dialogue engine.",
+      "source": "https://rasa.com/docs/learn/concepts/calm/",
+      "evidence_type": "vendor_docs + blog",
+      "verification": "Rasa's official docs describe CALM as the dialogue system for Rasa Pro text/voice assistants. The 2026 Conversational AI Predictions blog and intuitionlabs open-source roundup both confirm OSS maintenance status.",
+      "confidence": "high"
+    },
+    {
+      "id": "rasa-calm-dialogue-driven",
+      "claim": "Rasa CALM is dialogue-driven (LLM understanding + deterministic flows) rather than intent-driven, so legacy intent-accuracy KPIs map differently to CALM-based bots.",
+      "source": "https://rasa.com/calm",
+      "evidence_type": "vendor_docs",
+      "verification": "Rasa CALM landing page describes flow-based dialogue with LLM-powered command generation, explicitly contrasting with classic intent classification.",
+      "confidence": "high"
+    },
+    {
+      "id": "amendment-13-effective-date",
+      "claim": "Israel's Privacy Protection Law Amendment 13 took effect on August 14, 2025, tightening consent, notice, accountability, and data-minimization obligations.",
+      "source": "https://iapp.org/news/a/israel-marks-a-new-era-in-privacy-law-amendment-13-ushers-in-sweeping-reform",
+      "evidence_type": "iapp_article + law_firm_guides",
+      "verification": "IAPP, BigID, and Safetica all cite August 14, 2025 effective date. Existing project memory + skill body already references this; refreshed against 2026 Chambers Israel Data Protection guide.",
+      "confidence": "high"
+    },
+    {
+      "id": "section-30a-im-apps-coverage",
+      "claim": "Section 30A of Israel's Communications Law (Telecom and Broadcasts) 5742-1982 requires prior written opt-in consent before sending advertising messages via SMS, email, fax, robocalls, and electronic communication that Israeli courts have interpreted to include IM apps like WhatsApp, Telegram, and Signal.",
+      "source": "https://www.dlapiperdataprotection.com/index.html?t=electronic-marketing&c=IL",
+      "evidence_type": "law_firm_summary + lexology",
+      "verification": "DLA Piper Israel electronic marketing summary + Lexology / Hunton / law.co.il analyses all describe the 2008 amendment language and its broad interpretation reaching IM apps. The maximum NIS 1,000 statutory damages per message without proof of damages is established in court rulings.",
+      "confidence": "high"
+    },
+    {
+      "id": "fallback-rate-benchmark",
+      "claim": "Industry fallback-rate benchmarks for chatbots are below 10% (excellent < 5%), with rates above 20% indicating significant training gaps. Intent recognition accuracy below ~80% causes fallback rates to spike.",
+      "source": "https://omq.ai/lexicon/chatbot-kpi/",
+      "evidence_type": "industry_benchmark",
+      "verification": "OMQ chatbot KPI 2026 lexicon + ChatBench 2026 metrics article + IrisAgent 2026 intent guide all converge on the < 10% target.",
+      "confidence": "medium"
+    },
+    {
+      "id": "statsig-openai-acquisition",
+      "claim": "OpenAI acquired feature-flagging and experimentation platform Statsig in 2025 for approximately $1.1 billion.",
+      "source": "https://www.statsig.com/perspectives/ab-testing-feature-flags-comparison-tools",
+      "evidence_type": "vendor_blog + press_coverage",
+      "verification": "Statsig's own comparison page references the OpenAI acquisition. Restated across Flagsmith / Amplitude / Kameleoon 2026 roundups.",
+      "confidence": "high"
+    },
+    {
+      "id": "ga4-ai-assistant-channel",
+      "claim": "GA4 added a built-in `Channel Group: AI Assistant` with Medium `ai-assistant` that auto-categorizes traffic from ChatGPT, Gemini, Claude, and Perplexity, removing the need for custom regex referrer filters.",
+      "source": "https://martech.org/ga4-now-tracks-ai-chatbot-traffic-automatically/",
+      "evidence_type": "industry_article",
+      "verification": "MarTech 2026 article documents the auto-tracking behavior. Triple Dart marketing analytics guide and Tripledart how-to corroborate.",
+      "confidence": "high"
+    },
+    {
+      "id": "mixpanel-spark-mcp",
+      "claim": "Mixpanel shipped Spark (AI query builder) and an MCP Server in 2025-2026 that lets Claude / ChatGPT / Cursor query Mixpanel data conversationally.",
+      "source": "https://mixpanel.com/ai/info-page",
+      "evidence_type": "vendor_page + review",
+      "verification": "Mixpanel's AI info page lists Spark, Magic Playlists, AI Summaries on replays, and MCP Server. Prettyinsights 2026 review describes the same feature set.",
+      "confidence": "high"
+    },
+    {
+      "id": "growthbook-no-event-collection",
+      "claim": "GrowthBook is an open-source experimentation platform that does not collect or store event data itself; it connects to an existing data warehouse (BigQuery, Snowflake, Postgres, etc.) and runs statistical analysis on data that already lives there.",
+      "source": "https://productgrowth.in/tools/experimentation/growthbook/",
+      "evidence_type": "vendor_docs + review",
+      "verification": "GrowthBook architecture is documented across its own docs and multiple 2026 comparison reviews (Flagsmith alternatives roundup, Statsig comparison page). Relevant to Amendment 13 data-residency posture.",
+      "confidence": "high"
+    },
+    {
+      "id": "botpress-hebrew-rtl-gap",
+      "claim": "Botpress lists Hebrew among its supported languages, but full RTL text alignment in the default webchat widget is a community-reported gap as of 2026.",
+      "source": "https://discord.botpress.com/t/13157702/i-ve-been-using-your-platform-and-it-s-really-cool-but-i-ve-",
+      "evidence_type": "community_thread",
+      "verification": "Botpress Discord feature-requests thread documents the open issue about Hebrew + English alignment. Saleshive 2026 review confirms Hebrew is in the language list. Confidence is medium because exact widget version may have shipped fixes after the screenshot date.",
+      "confidence": "medium"
+    },
+    {
+      "id": "dictabert-sentiment-model-card",
+      "claim": "dicta-il/dictabert-sentiment is a fine-tuned BERT classifier for Hebrew sentiment released by Dicta, based on the HebrewSentiment dataset from the Israeli National Program for Hebrew and Arabic NLP.",
+      "source": "https://huggingface.co/dicta-il/dictabert-sentiment",
+      "evidence_type": "model_card",
+      "verification": "Model card on HuggingFace describes training dataset, label set, and CC-BY 4.0 license. DictaBERT base model paper (RANLP 2023) confirms the broader suite.",
+      "confidence": "high"
+    },
+    {
+      "id": "amendment-13-log-retention",
+      "claim": "Under Israel's Privacy Protection (Data Security) Regulations Article 10, controllers of medium/high-security databases must retain database-access log files for a minimum of 24 months.",
+      "source": "https://www.shibolet.com/en/privacy-day-key-development-in-2024-and-what-to-expect-for-2025/",
+      "evidence_type": "law_firm_summary",
+      "verification": "Shibolet privacy summary references Article 10 retention rule. Note: this applies to ACCESS LOGS of regulated databases, not to chat-transcript retention itself, which is governed by data-minimization principles, not a mandated minimum.",
+      "confidence": "medium"
+    }
+  ]
+}

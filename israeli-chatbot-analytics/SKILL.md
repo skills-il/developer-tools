@@ -49,74 +49,21 @@ If your platform does not export in this format, write a transformer to normaliz
 
 | Platform | Export Method | Format |
 |----------|-------------|--------|
-| Dialogflow CX | BigQuery export | JSON rows with session context |
-| Rasa | Tracker Store (SQL/Mongo) | Events list per conversation |
+| Dialogflow CX | BigQuery export | JSON rows with session context. Use the `he-il` language code on new agents; `iw` is deprecated and frozen for new features (https://docs.cloud.google.com/dialogflow/cx/docs/reference/language). |
+| Rasa Pro / CALM | Analytics dashboard + tracker events | Flow-step events (Rasa Pro 3.x with CALM is dialogue-driven, not intent-driven, so legacy intent-accuracy metrics map differently). |
+| Rasa Open Source (legacy) | Tracker Store (SQL/Mongo) | Events list per conversation. Rasa OSS entered maintenance mode in 2025, see https://legacy-docs-oss.rasa.com/docs/rasa/. |
+| Botpress | Conversation export / DB | JSON. Hebrew is listed as a supported language but full RTL alignment in the default web webchat is still a community-reported gap as of 2026, verify message bubble alignment in your widget before reporting on dialect distribution. |
 | Custom bots | Application logs | Varies (normalize to schema above) |
-| WhatsApp Cloud API | Webhook logs | Message objects with metadata |
+| WhatsApp Cloud API | Webhook logs | Message objects with metadata. See `## WhatsApp Business Platform pricing notes` below for the per-message cost model that started July 2025. |
+| ManyChat | Audience + flow exports | CSV/JSON. WhatsApp send-out costs flow through Meta's per-message tariff. |
 
 ### Step 2: Conversation Flow Analysis
 
 Analyze session-level metrics to understand overall chatbot health:
 
-```python
-from dataclasses import dataclass, field
-from datetime import datetime, timedelta
-from collections import Counter, defaultdict
-import statistics
+Build a `ConversationMetrics` dataclass that tracks `total_sessions`, `completed_sessions`, `escalated_sessions`, `abandoned_sessions`, `session_lengths` (per-session message count), and `session_durations` (seconds). Derive rate properties (`completion_rate`, `escalation_rate`, `abandonment_rate`) as `count / total_sessions`, and `avg_session_length` / `median_session_duration_seconds` from the list fields.
 
-@dataclass
-class ConversationMetrics:
-    """Session-level metrics computed from conversation logs."""
-
-    total_sessions: int = 0
-    completed_sessions: int = 0
-    escalated_sessions: int = 0
-    abandoned_sessions: int = 0
-    session_lengths: list = field(default_factory=list)    # message counts
-    session_durations: list = field(default_factory=list)  # seconds
-
-    def _rate(self, n: int) -> float:
-        return n / self.total_sessions if self.total_sessions else 0.0
-
-    @property
-    def completion_rate(self) -> float:
-        return self._rate(self.completed_sessions)
-
-    @property
-    def escalation_rate(self) -> float:
-        return self._rate(self.escalated_sessions)
-
-    @property
-    def abandonment_rate(self) -> float:
-        return self._rate(self.abandoned_sessions)
-
-    @property
-    def avg_session_length(self) -> float:
-        return statistics.mean(self.session_lengths) if self.session_lengths else 0.0
-
-    @property
-    def median_session_duration_seconds(self) -> float:
-        return statistics.median(self.session_durations) if self.session_durations else 0.0
-
-
-def compute_flow_metrics(conversations: list[dict]) -> ConversationMetrics:
-    """Analyze conversation flow from structured logs."""
-    m = ConversationMetrics()
-    for convo in conversations:
-        m.total_sessions += 1
-        m.session_lengths.append(len(convo.get("messages", [])))
-        started = datetime.fromisoformat(convo["started_at"])
-        ended = datetime.fromisoformat(convo.get("ended_at", convo["started_at"]))
-        m.session_durations.append((ended - started).total_seconds())
-        outcome = convo.get("outcome", "unknown")
-        if outcome == "resolved":
-            m.completed_sessions += 1
-        elif outcome == "escalated":
-            m.escalated_sessions += 1
-        elif outcome == "abandoned":
-            m.abandoned_sessions += 1
-    return m
-```
+`compute_flow_metrics(conversations)` iterates the structured logs once, increments the right outcome counter (`resolved` / `escalated` / `abandoned`), appends message count and `(ended_at - started_at).total_seconds()`, and returns the metrics object.
 
 **Key benchmarks for Hebrew chatbots (Israeli market, 2025-2026):**
 
@@ -132,103 +79,27 @@ def compute_flow_metrics(conversations: list[dict]) -> ConversationMetrics:
 
 Identify where users abandon conversations. This reveals UX problems, confusing prompts, or missing capabilities:
 
-```python
-def detect_drop_off_points(conversations: list[dict]) -> dict:
-    """Find where users commonly abandon conversations (by depth, intent, last msg)."""
-    drop_offs, intent_at_drop, last_bot_messages = Counter(), Counter(), Counter()
-    for convo in conversations:
-        if convo.get("outcome") != "abandoned":
-            continue
-        messages = convo.get("messages", [])
-        if not messages:
-            continue
-        drop_offs[len(messages)] += 1  # conversation depth at drop
-        for msg in reversed(messages):  # last bot message
-            if msg["sender"] == "bot":
-                last_bot_messages[msg["text"][:80]] += 1
-                break
-        for msg in reversed(messages):  # active intent at drop
-            if msg.get("intent"):
-                intent_at_drop[msg["intent"]] += 1
-                break
-    return {
-        "drop_off_by_depth": dict(drop_offs.most_common(20)),
-        "drop_off_by_intent": dict(intent_at_drop.most_common(10)),
-        "drop_off_by_last_bot_msg": dict(last_bot_messages.most_common(10)),
-    }
+`detect_drop_off_points(conversations)` filters to `outcome == "abandoned"` and returns three `Counter.most_common` slices: drop-off by conversation depth (message count), by active intent at drop (walking from the tail to the first message with an intent), and by last bot message (first 80 chars, walking from the tail for the last `sender == "bot"`).
 
-
-def detect_conversation_loops(conversations: list[dict], threshold: int = 3) -> list[dict]:
-    """Flag sessions where the bot repeats the same response >= threshold times
-    in a row, indicating the user is stuck in a loop."""
-    looped = []
-    for convo in conversations:
-        bot_msgs = [m["text"] for m in convo.get("messages", []) if m["sender"] == "bot"]
-        repeat = 1
-        for i in range(1, len(bot_msgs)):
-            if bot_msgs[i] == bot_msgs[i - 1]:
-                repeat += 1
-                if repeat >= threshold:
-                    looped.append({
-                        "session_id": convo["session_id"],
-                        "repeated_message": bot_msgs[i][:100],
-                        "repeat_count": repeat,
-                        "total_messages": len(convo["messages"]),
-                    })
-                    break
-            else:
-                repeat = 1
-    return looped
-```
+`detect_conversation_loops(conversations, threshold=3)` flags sessions where the bot repeats the same `text` ≥ `threshold` times in a row by scanning the bot-message stream and tracking a consecutive-repeat counter; emit `{session_id, repeated_message, repeat_count, total_messages}` for each looped session.
 
 ### Step 4: Hebrew Sentiment Analysis
 
-Hebrew sentiment analysis requires special handling due to morphological complexity, negation patterns, and slang. Use DictaBERT or DictaLM for production accuracy, or a lexicon-based approach for lightweight analysis.
+Hebrew sentiment analysis requires special handling due to morphological complexity, negation patterns, and slang. Use DictaBERT (encoder, classification) or DictaLM 2.0-Instruct (generative, 7B parameters, Mistral-based) for production accuracy, AlephBERT (`onlplab/alephbert-base` from BIU's OnlpLab) as an alternative encoder baseline, or a lexicon-based approach for lightweight analysis. DictaLM 2.0 (released July 2024) is the current state-of-the-art Hebrew LLM from Dicta and ships an instruct variant trained on roughly 200B Hebrew+English tokens with a 2.76 tokens-per-word compression rate, useful when you need a single model to classify sentiment AND summarize the conversation in Hebrew prose for the ops team.
 
 **Using DictaBERT (recommended for production):**
 
-```python
-# DictaBERT: Hebrew BERT model by Dicta (Bar-Ilan University)
-# Pretrained on 10B+ Hebrew tokens
-# https://huggingface.co/dicta-il/dictabert
+Build `HebrewSentimentAnalyzer` around the `dicta-il/dictabert-sentiment` model (3-class: negative/neutral/positive).
 
+```python
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
-class HebrewSentimentAnalyzer:
-    """Hebrew sentiment analysis using DictaBERT fine-tuned model."""
-
-    def __init__(self, model_name: str = "dicta-il/dictabert-sentiment"):
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForSequenceClassification.from_pretrained(model_name)
-        self.model.eval()
-        self.labels = ["negative", "neutral", "positive"]
-
-    def _score(self, probs) -> dict:
-        """Turn a probability row into a {label, score, scores} dict."""
-        scores = {lbl: round(p.item(), 4) for lbl, p in zip(self.labels, probs)}
-        best = max(scores, key=scores.get)
-        return {"label": best, "score": scores[best], "scores": scores}
-
-    def analyze(self, text: str) -> dict:
-        """Analyze sentiment of a single Hebrew string."""
-        inputs = self.tokenizer(text, return_tensors="pt", truncation=True,
-                                max_length=512, padding=True)
-        with torch.no_grad():
-            probs = torch.softmax(self.model(**inputs).logits, dim=-1)
-        return self._score(probs[0])
-
-    def analyze_batch(self, texts: list[str], batch_size: int = 32) -> list[dict]:
-        """Analyze sentiment for a batch of Hebrew texts."""
-        results = []
-        for i in range(0, len(texts), batch_size):
-            inputs = self.tokenizer(texts[i:i + batch_size], return_tensors="pt",
-                                    truncation=True, max_length=512, padding=True)
-            with torch.no_grad():
-                probs = torch.softmax(self.model(**inputs).logits, dim=-1)
-            results.extend(self._score(row) for row in probs)
-        return results
+tok = AutoTokenizer.from_pretrained("dicta-il/dictabert-sentiment")
+model = AutoModelForSequenceClassification.from_pretrained("dicta-il/dictabert-sentiment").eval()
 ```
+
+Wrap `tok(text, return_tensors="pt", truncation=True, max_length=512, padding=True)` + `torch.softmax(model(**inputs).logits, dim=-1)`, then map each probability row to `{label, score, scores}` (label = argmax over `["negative","neutral","positive"]`). Add an `analyze_batch(texts, batch_size=32)` that loops over slices.
 
 **Hebrew-specific sentiment challenges (summary):**
 
@@ -243,75 +114,12 @@ See `references/hebrew-sentiment-guide.md` for the full treatment of these chall
 
 Track how well your chatbot understands user requests over time:
 
-```python
-import numpy as np
-from collections import defaultdict
+Build `IntentAccuracyTracker` to log `(predicted, actual, confidence, timestamp)` per prediction and expose:
 
-class IntentAccuracyTracker:
-    """Track and analyze intent recognition accuracy."""
-
-    def __init__(self):
-        self.predictions = []                    # list of prediction dicts
-        self.daily_accuracy = defaultdict(list)  # date -> [correct bools]
-
-    def log_prediction(self, predicted_intent: str, actual_intent: str,
-                       confidence: float, timestamp: str):
-        """Log a single intent prediction for analysis."""
-        correct = predicted_intent == actual_intent
-        self.predictions.append({
-            "predicted": predicted_intent, "actual": actual_intent,
-            "confidence": confidence, "correct": correct, "timestamp": timestamp,
-        })
-        self.daily_accuracy[timestamp[:10]].append(correct)
-
-    def confusion_matrix(self) -> dict:
-        """Build a confusion matrix: returns 'matrix' (2D dict) + sorted 'intents'."""
-        matrix = defaultdict(lambda: defaultdict(int))
-        intents = set()
-        for p in self.predictions:
-            matrix[p["actual"]][p["predicted"]] += 1
-            intents.update((p["actual"], p["predicted"]))
-        si = sorted(intents)
-        return {
-            "matrix": {a: {pr: matrix[a][pr] for pr in si} for a in si},
-            "intents": si,
-        }
-
-    def misclassification_report(self, min_count: int = 5) -> list[dict]:
-        """Most common misclassification pairs with count >= min_count."""
-        misclass = Counter()
-        for p in self.predictions:
-            if not p["correct"]:
-                misclass[(p["actual"], p["predicted"])] += 1
-        return [
-            {"actual_intent": a, "predicted_as": pr, "count": c}
-            for (a, pr), c in misclass.most_common() if c >= min_count
-        ]
-
-    def low_confidence_intents(self, threshold: float = 0.6) -> dict:
-        """Intents whose average prediction confidence falls below threshold."""
-        by_intent = defaultdict(list)
-        for p in self.predictions:
-            by_intent[p["predicted"]].append(p["confidence"])
-        low = {}
-        for intent, confs in by_intent.items():
-            avg = statistics.mean(confs)
-            if avg < threshold:
-                low[intent] = {
-                    "avg_confidence": round(avg, 3),
-                    "sample_count": len(confs),
-                    "below_threshold_pct": round(
-                        sum(c < threshold for c in confs) / len(confs) * 100, 1),
-                }
-        return dict(sorted(low.items(), key=lambda x: x[1]["avg_confidence"]))
-
-    def accuracy_trend(self) -> list[dict]:
-        """Daily accuracy trend for plotting: list of date/accuracy/sample_count."""
-        return [
-            {"date": d, "accuracy": round(sum(r) / len(r), 4), "sample_count": len(r)}
-            for d, r in sorted(self.daily_accuracy.items())
-        ]
-```
+- `confusion_matrix()`: 2D `{actual: {predicted: count}}` over the sorted intent universe.
+- `misclassification_report(min_count=5)`: top `(actual, predicted)` pairs where `predicted != actual`.
+- `low_confidence_intents(threshold=0.6)`: intents whose mean confidence is below `threshold`, with `sample_count` and `below_threshold_pct`.
+- `accuracy_trend()`: daily `{date, accuracy, sample_count}` series for plotting (bucket by `timestamp[:10]`).
 
 **How to get ground truth labels:**
 
@@ -344,142 +152,33 @@ class SatisfactionSignals:
     sentiment_trend: str = "stable"      # improving/stable/declining
 
     def composite_score(self) -> float:
-        """Composite satisfaction score (0.0-1.0). Direct CSAT wins if present."""
-        if self.csat_score is not None:
-            return round((self.csat_score - 1) / 4, 2)  # normalize 1-5 to 0-1
-
-        score = 0.5  # start neutral
-        if self.thumbs_rating == "up":
-            score = 0.8
-        elif self.thumbs_rating == "down":
-            score = 0.2
-
-        # Behavioral adjustments
-        if self.session_resolved:
-            score += 0.15
-        if self.escalated_to_human:
-            score -= 0.1
-        if self.abandoned:
-            score -= 0.2
-        if self.repeated_fallbacks > 2:
-            score -= 0.15
-        if self.loop_detected:
-            score -= 0.2
-
-        # Sentiment adjustments
-        score += {"positive": 0.1, "neutral": 0.0, "negative": -0.15}.get(
-            self.final_sentiment, 0)
-        score += {"improving": 0.05, "stable": 0.0, "declining": -0.1}.get(
-            self.sentiment_trend, 0)
-        return round(max(0.0, min(1.0, score)), 2)
-
-
-def collect_post_chat_survey_he() -> dict:
-    """Hebrew post-chat survey template for integration with your chat platform."""
-    return {
-        "title": "נשמח לשמוע מה חשבת",
-        "questions": [
-            {"id": "satisfaction", "type": "rating",
-             "text": "עד כמה הצ'אטבוט עזר לך?", "scale": {"min": 1, "max": 5},
-             "labels": {1: "לא עזר בכלל", 2: "עזר מעט", 3: "עזר בינוני",
-                        4: "עזר טוב", 5: "עזר מצוין"}},
-            {"id": "understood", "type": "yes_no",
-             "text": "האם הצ'אטבוט הבין את מה שרצית?"},
-            {"id": "open_feedback", "type": "free_text",
-             "text": "רוצה לשתף עוד משהו? (לא חובה)", "required": False},
-        ],
-        "submit_label": "שלח משוב",
-        "thank_you": "תודה על המשוב! זה עוזר לנו להשתפר.",
-    }
+        """Composite satisfaction (0.0-1.0). If `csat_score` is present, return
+        `(csat_score - 1) / 4` directly. Otherwise start at 0.5 (or 0.8/0.2 for
+        thumbs up/down), then add: +0.15 resolved, -0.1 escalated, -0.2 abandoned,
+        -0.15 repeated_fallbacks>2, -0.2 loop_detected, +/-0.1-0.15 final_sentiment,
+        +/-0.05-0.1 sentiment_trend; clamp to [0, 1]."""
+        ...
 ```
+
+Provide `collect_post_chat_survey_he()` that returns a Hebrew post-chat survey: title `"נשמח לשמוע מה חשבת"`, a 1-5 rating on `"עד כמה הצ'אטבוט עזר לך?"`, a yes/no on `"האם הצ'אטבוט הבין את מה שרצית?"`, and an optional open `"רוצה לשתף עוד משהו?"` field. Use `"שלח משוב"` as the submit label.
 
 ### Step 7: A/B Testing for Hebrew Response Variants
 
 Test different phrasings, formality levels, and gender handling strategies:
 
+Build `HebrewABTestManager` with three responsibilities:
+
+1. **Register a test.** `create_test(test_id, variants: {name: response_text}, traffic_split=None)`. Default split is uniform across variants. Store `{variants, traffic_split, created_at}` per test_id. Example variants:
+
 ```python
-import hashlib
-import random
-from datetime import datetime
-
-class HebrewABTestManager:
-    """Manage A/B tests for Hebrew chatbot responses."""
-
-    def __init__(self):
-        self.active_tests = {}
-        self.results = defaultdict(lambda: {
-            "impressions": 0,
-            "completions": 0,
-            "satisfaction_scores": [],
-            "escalations": 0,
-        })
-
-    def create_test(self, test_id: str, variants: dict[str, str],
-                    traffic_split: dict[str, float] | None = None):
-        """Create a new A/B test.
-
-        variants: variant_name -> response_text. traffic_split: variant_name ->
-        percentage (0-1), defaults to equal split. Example variants:
-        {"formal": "שלום וברוכים הבאים. כיצד נוכל לסייע לכם?",
-         "casual": "היי! איך אפשר לעזור?",
-         "gender_neutral": "שלום! ניתן לבחור מהאפשרויות הבאות:"}
-        """
-        if traffic_split is None:
-            traffic_split = {name: 1.0 / len(variants) for name in variants}
-        self.active_tests[test_id] = {
-            "variants": variants, "traffic_split": traffic_split,
-            "created_at": datetime.now().isoformat(),
-        }
-
-    def assign_variant(self, test_id: str, user_id: str) -> str:
-        """Deterministically assign a user to a variant (same user, same variant)."""
-        test = self.active_tests.get(test_id)
-        if not test:
-            raise ValueError(f"Test '{test_id}' not found")
-        hash_val = int(hashlib.md5(f"{user_id}:{test_id}".encode()).hexdigest(), 16)
-        bucket = (hash_val % 1000) / 1000.0
-        cumulative = 0.0
-        for name, split in test["traffic_split"].items():
-            cumulative += split
-            if bucket < cumulative:
-                return name
-        return list(test["traffic_split"].keys())[-1]
-
-    def get_response(self, test_id: str, user_id: str) -> tuple[str, str]:
-        """Return (variant_name, response_text) and track an impression."""
-        variant = self.assign_variant(test_id, user_id)
-        self.results[f"{test_id}:{variant}"]["impressions"] += 1
-        return variant, self.active_tests[test_id]["variants"][variant]
-
-    def record_outcome(self, test_id: str, variant: str, completed: bool = False,
-                       satisfaction: float | None = None, escalated: bool = False):
-        """Record the outcome for a test variant."""
-        r = self.results[f"{test_id}:{variant}"]
-        if completed:
-            r["completions"] += 1
-        if satisfaction is not None:
-            r["satisfaction_scores"].append(satisfaction)
-        if escalated:
-            r["escalations"] += 1
-
-    def get_test_results(self, test_id: str) -> dict:
-        """Get a results summary (completion + escalation rates, avg satisfaction)."""
-        test = self.active_tests.get(test_id)
-        if not test:
-            return {}
-        summary = {}
-        for name in test["variants"]:
-            data = self.results[f"{test_id}:{name}"]
-            imp = data["impressions"]
-            summary[name] = {
-                "impressions": imp,
-                "completion_rate": round(data["completions"] / imp, 4) if imp else 0,
-                "avg_satisfaction": (round(statistics.mean(data["satisfaction_scores"]), 2)
-                                     if data["satisfaction_scores"] else None),
-                "escalation_rate": round(data["escalations"] / imp, 4) if imp else 0,
-            }
-        return summary
+{"formal": "שלום וברוכים הבאים. כיצד נוכל לסייע לכם?",
+ "casual": "היי! איך אפשר לעזור?",
+ "gender_neutral": "שלום! ניתן לבחור מהאפשרויות הבאות:"}
 ```
+
+2. **Deterministic bucketing.** `assign_variant(test_id, user_id)` hashes `f"{user_id}:{test_id}"` with `hashlib.md5`, maps to a bucket in `[0, 1)`, and walks the cumulative `traffic_split` so the same user always gets the same variant. Use this in `get_response(...)` and increment an `impressions` counter at the same time.
+
+3. **Outcome tracking.** `record_outcome(test_id, variant, completed=False, satisfaction=None, escalated=False)` and `get_test_results(test_id)` returning per-variant `{impressions, completion_rate, avg_satisfaction, escalation_rate}`.
 
 **Common Hebrew A/B test dimensions:**
 
@@ -527,99 +226,19 @@ class ChatbotDashboard:
     busiest_day: str = ""               # "Sunday" etc.
 
     def to_report_dict(self) -> dict:
-        """Format metrics into grouped sections for reporting."""
-        return {
-            "core": {
-                "total_conversations": self.total_conversations,
-                "resolution_rate": f"{self.resolution_rate:.1%}",
-                "first_contact_resolution": f"{self.first_contact_resolution:.1%}",
-                "avg_handle_time": f"{self.avg_handle_time_seconds:.0f}s",
-                "escalation_rate": f"{self.escalation_rate:.1%}",
-                "abandonment_rate": f"{self.abandonment_rate:.1%}",
-            },
-            "satisfaction": {"avg_csat": f"{self.avg_csat:.1f}/5",
-                             "nps": f"{self.nps_score:+.0f}",
-                             "thumbs_up": f"{self.thumbs_up_ratio:.1%}"},
-            "accuracy": {"intent_accuracy": f"{self.intent_accuracy:.1%}",
-                         "fallback_rate": f"{self.fallback_rate:.1%}"},
-            "performance": {"avg_response_time": f"{self.avg_response_time_ms:.0f}ms",
-                            "p95_response_time": f"{self.p95_response_time_ms:.0f}ms"},
-            "volume": {"daily_avg": f"{self.conversations_per_day:.0f}",
-                       "peak_hour": f"{self.peak_hour}:00",
-                       "busiest_day": self.busiest_day},
-        }
-
-
-def build_dashboard(conversations: list[dict], period_days: int = 7) -> ChatbotDashboard:
-    """Build a dashboard from conversation logs."""
-    d = ChatbotDashboard()
-    d.total_conversations = len(conversations)
-    if not conversations:
-        return d
-    n = len(conversations)
-
-    # Outcome rates
-    outcomes = Counter(c.get("outcome", "unknown") for c in conversations)
-    d.resolution_rate = outcomes.get("resolved", 0) / n
-    d.escalation_rate = outcomes.get("escalated", 0) / n
-    d.abandonment_rate = outcomes.get("abandoned", 0) / n
-
-    # Handle time
-    durations = [
-        (datetime.fromisoformat(c["ended_at"]) - datetime.fromisoformat(c["started_at"])).total_seconds()
-        for c in conversations if c.get("started_at") and c.get("ended_at")
-    ]
-    if durations:
-        d.avg_handle_time_seconds = statistics.mean(durations)
-
-    # CSAT
-    csat = [c["satisfaction_score"] for c in conversations if c.get("satisfaction_score") is not None]
-    if csat:
-        d.avg_csat = statistics.mean(csat)
-
-    # Response times (avg + p95)
-    rts = [
-        m["response_time_ms"] for c in conversations for m in c.get("messages", [])
-        if m["sender"] == "bot" and m.get("response_time_ms")
-    ]
-    if rts:
-        d.avg_response_time_ms = statistics.mean(rts)
-        sorted_rt = sorted(rts)
-        d.p95_response_time_ms = sorted_rt[min(int(len(sorted_rt) * 0.95), len(sorted_rt) - 1)]
-
-    # Intent accuracy + fallback rate (uses confidence > 0.7 as a proxy for correct)
-    total_intents = correct = fallbacks = total_msgs = 0
-    for c in conversations:
-        for m in c.get("messages", []):
-            if m["sender"] != "user":
-                continue
-            total_msgs += 1
-            if m.get("intent"):
-                total_intents += 1
-                if m.get("intent_confidence", 0) > 0.7:
-                    correct += 1
-                if m["intent"] == "fallback":
-                    fallbacks += 1
-    if total_intents:
-        d.intent_accuracy = correct / total_intents
-    if total_msgs:
-        d.fallback_rate = fallbacks / total_msgs
-
-    # Volume, peak hour, busiest day
-    d.conversations_per_day = n / max(period_days, 1)
-    hours, days = Counter(), Counter()
-    for c in conversations:
-        if c.get("started_at"):
-            dt = datetime.fromisoformat(c["started_at"])
-            hours[dt.hour] += 1
-            days[dt.strftime("%A")] += 1
-    if hours:
-        d.peak_hour = hours.most_common(1)[0][0]
-    if days:
-        d.busiest_day = days.most_common(1)[0][0]
-
-    return d
+        """Group fields into core / satisfaction / accuracy / performance / volume
+        sections for reporting (format rates as %, times as ms)."""
+        ...
 ```
+
+Implement `build_dashboard(conversations, period_days=7)` to populate the dataclass:
+
+- Outcome rates from `Counter(c["outcome"])` / `n`.
+- `avg_handle_time_seconds` from `(ended_at - started_at).total_seconds()` per session.
+- `avg_csat` from `satisfaction_score` where present.
+- `avg_response_time_ms` / `p95_response_time_ms` from bot messages with `response_time_ms` (p95 via `sorted_rts[int(len * 0.95)]`).
+- `intent_accuracy` = share of user messages with `intent_confidence > 0.7`. `fallback_rate` = share of user messages with `intent == "fallback"`.
+- `conversations_per_day = n / period_days`. `peak_hour` and `busiest_day` from `Counter` over `started_at` hour and weekday.
 
 **Israeli traffic patterns to expect:**
 - Peak hours are typically 10:00-12:00 and 19:00-22:00 (Israel Time, UTC+2/+3)
@@ -631,37 +250,11 @@ def build_dashboard(conversations: list[dict], period_days: int = 7) -> ChatbotD
 
 Session-level metrics tell you how a single conversation went, but not whether the bot earns repeat use. Track these retention dimensions alongside the dashboard above (all require a stable `user_id` across sessions, pseudonymized per the Privacy and Consent section):
 
-```python
-from datetime import datetime, timedelta
+For each `user_id`, collect the set of distinct dates with a conversation. Then:
 
-def compute_retention_metrics(conversations: list[dict]) -> dict:
-    """Compute D1/D7 return rate and repeat-contact rate from logs."""
-    # Map each user to the set of dates they had a conversation.
-    user_days: dict[str, set] = {}
-    for c in conversations:
-        uid, started = c.get("user_id"), c.get("started_at")
-        if uid and started:
-            user_days.setdefault(uid, set()).add(
-                datetime.fromisoformat(started).date())
-
-    d1 = d7 = repeat = 0
-    for days in user_days.values():
-        first = min(days)
-        if len(days) > 1:
-            repeat += 1
-        if (first + timedelta(days=1)) in days:
-            d1 += 1
-        if any(first + timedelta(days=n) in days for n in range(2, 8)):
-            d7 += 1
-
-    n = len(user_days) or 1
-    return {
-        "d1_return_rate": round(d1 / n, 4),
-        "d7_return_rate": round(d7 / n, 4),
-        "repeat_contact_rate": round(repeat / n, 4),
-        "unique_users": len(user_days),
-    }
-```
+- **D1 return rate** = share whose first-date + 1 day is also in their set.
+- **D7 return rate** = share whose first-date + 2..7 days intersects their set.
+- **Repeat-contact rate** = share with > 1 distinct date.
 
 - **D1 / D7 return rate**: share of users who start a new conversation the day after, or within a week of, their first contact. D7 is more stable than D1 for low-volume Israeli bots.
 - **Repeat-contact rate**: share of users with more than one conversation. On a support bot this can be good (trust) or bad (unresolved issues), so read it with first-contact resolution.
@@ -757,177 +350,86 @@ DEFAULT_ALERT_RULES = [
 ]
 
 
-class AlertManager:
-    """Monitor metrics and trigger alerts."""
-
-    def __init__(self, rules: list[AlertRule] | None = None):
-        self.rules = rules or DEFAULT_ALERT_RULES
-        self.triggered_alerts = []
-
-    def check_metrics(self, current_metrics: dict) -> list[dict]:
-        """Check current metrics (metric_name -> value) against the rules."""
-        alerts = []
-        for rule in self.rules:
-            value = current_metrics.get(rule.metric)
-            if value is None:
-                continue
-            triggered = ((rule.operator == "gt" and value > rule.threshold)
-                         or (rule.operator == "lt" and value < rule.threshold))
-            if triggered:
-                alert = {
-                    "rule_name": rule.name, "severity": rule.severity,
-                    "metric": rule.metric, "current_value": value,
-                    "threshold": rule.threshold,
-                    "description_he": rule.description_he,
-                    "triggered_at": datetime.now().isoformat(),
-                }
-                alerts.append(alert)
-                self.triggered_alerts.append(alert)
-        return alerts
 ```
+
+`AlertManager` wraps the rule list. `check_metrics(current_metrics: dict)` walks every rule, skips when the metric is missing, and triggers when `value > threshold` (op `gt`) or `value < threshold` (op `lt`). Each triggered alert is a dict with `rule_name`, `severity`, `metric`, `current_value`, `threshold`, `description_he`, and `triggered_at`.
 
 ### Step 11: Reporting Templates
 
 Generate periodic reports summarizing chatbot performance:
 
-```python
-def generate_weekly_report(dashboard: ChatbotDashboard,
-                           previous_dashboard: ChatbotDashboard | None = None,
-                           period_start: str = "", period_end: str = "") -> str:
-    """Generate a Hebrew weekly performance report (with week-over-week trends)."""
+Implement `generate_weekly_report(dashboard, previous_dashboard=None, period_start, period_end)`:
 
-    def trend_arrow(current: float, previous: float, higher_is_better: bool = True) -> str:
-        if previous == 0:
-            return ""
-        pct = ((current - previous) / previous) * 100
-        if abs(pct) < 1:
-            return "(ללא שינוי)"
-        good = (current - previous > 0) == higher_is_better
-        arrow = "+" if current - previous > 0 else ""
-        return f"{'[v]' if good else '[!]'} {arrow}{pct:.1f}%"
-
-    d, prev = dashboard, previous_dashboard
-    # (label, formatted value, current, previous, higher_is_better)
-    rows = [
-        ("שיחות", f"{d.total_conversations:,}", d.total_conversations,
-         prev.total_conversations if prev else 0, True),
-        ("שיעור פתרון", f"{d.resolution_rate:.1%}", d.resolution_rate,
-         prev.resolution_rate if prev else 0, True),
-        ("שביעות רצון (CSAT)", f"{d.avg_csat:.1f}/5", d.avg_csat,
-         prev.avg_csat if prev else 0, True),
-        ("שיעור הסלמה", f"{d.escalation_rate:.1%}", d.escalation_rate,
-         prev.escalation_rate if prev else 0, False),
-        ("שיעור נטישה", f"{d.abandonment_rate:.1%}", d.abandonment_rate,
-         prev.abandonment_rate if prev else 0, False),
-        ("דיוק זיהוי כוונות", f"{d.intent_accuracy:.1%}", d.intent_accuracy,
-         prev.intent_accuracy if prev else 0, True),
-        ("זמן תגובה ממוצע", f"{d.avg_response_time_ms:.0f}ms", d.avg_response_time_ms,
-         prev.avg_response_time_ms if prev else 0, False),
-    ]
-    lines = [
-        "# דוח ביצועי צ'אטבוט שבועי",
-        f"## תקופה: {period_start} עד {period_end}",
-        "", "## מדדים מרכזיים", "",
-        "| מדד | ערך | שינוי מהשבוע הקודם |",
-        "|------|------|---------------------|",
-    ]
-    for name, value, cur, prv, hib in rows:
-        lines.append(f"| {name} | {value} | {trend_arrow(cur, prv, hib)} |")
-    lines += [
-        "", "## תנועה",
-        f"- ממוצע שיחות ביום: {d.conversations_per_day:.0f}",
-        f"- שעת שיא: {d.peak_hour}:00",
-        f"- יום עמוס ביותר: {d.busiest_day}",
-    ]
-    return "\n".join(lines)
-```
+- Helper `trend_arrow(current, previous, higher_is_better)`: returns `(ללא שינוי)` for < 1% delta; otherwise emits `[v] +X.X%` (good direction) or `[!] +X.X%` (bad direction).
+- Emit a `# דוח ביצועי צ'אטבוט שבועי` header, period subheader, and a `| מדד | ערך | שינוי מהשבוע הקודם |` markdown table over: שיחות, שיעור פתרון, CSAT, שיעור הסלמה (lower-is-better), שיעור נטישה (lower-is-better), דיוק זיהוי כוונות, זמן תגובה ממוצע (lower-is-better).
+- Append a `## תנועה` block with `conversations_per_day`, `peak_hour`, `busiest_day`.
 
 ### Step 12: Integration with Chatbot Platforms
 
 #### Dialogflow CX Analytics
 
-```python
-def parse_dialogflow_cx_logs(bigquery_rows: list[dict]) -> list[dict]:
-    """Transform a Dialogflow CX BigQuery export to the standard format.
+Implement `parse_dialogflow_cx_logs(bigquery_rows)` to fold a Dialogflow CX BigQuery export into the standard `conversations` shape.
 
-    Export query: SELECT * FROM `project.dataset.dialogflow_cx_interactions`
-    WHERE DATE(request_time) BETWEEN @start AND @end
-    """
-    sessions = defaultdict(lambda: {"messages": [], "started_at": None, "ended_at": None})
-    for row in bigquery_rows:
-        s = sessions[row["session_id"]]
-        ts = row["request_time"]
-        if s["started_at"] is None or ts < s["started_at"]:
-            s["started_at"] = ts
-        if s["ended_at"] is None or ts > s["ended_at"]:
-            s["ended_at"] = ts
-        if row.get("query_text"):
-            s["messages"].append({
-                "timestamp": ts, "sender": "user", "text": row["query_text"],
-                "intent": row.get("matched_intent", ""),
-                "intent_confidence": row.get("intent_confidence", 0),
-            })
-        if row.get("response_text"):
-            s["messages"].append({
-                "timestamp": ts, "sender": "bot", "text": row["response_text"],
-            })
-
-    conversations = []
-    for sid, s in sessions.items():
-        s["messages"].sort(key=lambda m: m["timestamp"])
-        conversations.append({
-            "session_id": sid, "started_at": s["started_at"],
-            "ended_at": s["ended_at"], "messages": s["messages"],
-            "outcome": "unknown",  # derive from flow completion
-            "language": "he",
-        })
-    return conversations
-```
+- Export query: `SELECT * FROM project.dataset.dialogflow_cx_interactions WHERE DATE(request_time) BETWEEN @start AND @end`.
+- Group rows by `session_id`. For each session, track min/max `request_time` as `started_at` / `ended_at`.
+- For each row, append a user message (`text = query_text`, `intent = matched_intent`, `intent_confidence`) and/or bot message (`text = response_text`). Sort each session's messages by `timestamp`. Set `language = "he"`, `outcome = "unknown"` (derive from flow completion downstream).
 
 #### Rasa Tracker Store Analytics
 
 Note: Rasa Open Source is in maintenance mode. The intent-based tracker-store analytics below apply to existing Rasa OSS deployments; new Rasa builds use CALM (Conversational AI with Language Models), which is dialogue-driven rather than intent-driven, so intent-accuracy metrics map differently there. See the legacy OSS docs at https://legacy-docs-oss.rasa.com/docs/rasa/ for tracker-store details.
 
-```python
-def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
-    """Transform Rasa tracker-store events to the standard format.
+Implement `parse_rasa_tracker_events(tracker_events)` to fold a Rasa tracker-store stream into the standard `conversations` shape.
 
-    Query: SELECT * FROM events WHERE sender_id = @sender_id ORDER BY timestamp
-    """
-    conversations = []
-    current = {"messages": [], "started_at": None, "ended_at": None}
+- Query: `SELECT * FROM events WHERE sender_id = @sender_id ORDER BY timestamp`.
+- Iterate events. On `session_started`, flush the in-progress session and start a new one. On `user`, append a user message with `intent.name` and `intent.confidence` from `parse_data`. On `bot`, append a bot message with `text`. On `action` with `name == "action_human_handoff"`, set `outcome = "escalated"`. Flush the trailing session at the end.
 
-    for event in tracker_events:
-        et = event.get("event")
-        ts = event.get("timestamp", "")
-        if et == "session_started":
-            if current["messages"]:
-                conversations.append(current)
-            current = {
-                "session_id": event.get("metadata", {}).get("session_id", ""),
-                "messages": [], "started_at": ts, "ended_at": None,
-                "outcome": "unknown", "language": "he",
-            }
-        elif et == "user":
-            current["ended_at"] = ts
-            intent = event.get("parse_data", {}).get("intent", {})
-            current["messages"].append({
-                "timestamp": ts, "sender": "user", "text": event.get("text", ""),
-                "intent": intent.get("name", ""),
-                "intent_confidence": intent.get("confidence", 0),
-            })
-        elif et == "bot":
-            current["ended_at"] = ts
-            current["messages"].append({
-                "timestamp": ts, "sender": "bot", "text": event.get("text", ""),
-            })
-        elif et == "action" and event.get("name") == "action_human_handoff":
-            current["outcome"] = "escalated"
+## WhatsApp Business Platform pricing notes
 
-    if current["messages"]:
-        conversations.append(current)
-    return conversations
-```
+Many Israeli chatbots run on WhatsApp Cloud API, where send-out cost is a first-class analytics dimension. Pricing changed on July 1, 2025 from a per-conversation model to **per-message billing across 4 categories**:
+
+| Category | Pricing posture | When to use |
+|----------|-----------------|-------------|
+| Marketing | Highest per-message rate, no volume discount | Promotions, broadcasts, re-engagement |
+| Utility | Lower than marketing (typically under $0.03), eligible for volume discounts | Order updates, appointment reminders, account notices triggered by user action |
+| Authentication | Lowest non-free tier, eligible for volume discounts | OTP codes for login / payment / 2FA |
+| Service | **Free** | Any reply from the business within the 24-hour customer service window (user-initiated session) |
+
+Two free windows worth tracking explicitly in your analytics:
+
+1. **24-hour service window.** When a user sends an inbound message, you can reply with free-form text (no template, no charge) for the next 24 hours. Optimizing analytics for "did we resolve in the service window?" can eliminate a whole template-cost line item for reactive support flows. See https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing.
+2. **72-hour click-to-WhatsApp / Facebook ad window.** When the user arrives from a click-to-WhatsApp ad or a Facebook Page CTA, all messages (including templates) are free for 72 hours.
+
+Add `template_category` (marketing/utility/authentication/service) and `arrived_via_ctw_ad` boolean to your conversation log schema so finance and product can split CSAT/resolution by paid vs. free interaction. Israeli rates are not published per-country in the public docs, pull your specific Israel rate from the Meta Business Manager pricing tool or your BSP (e.g. Twilio, 360dialog, Vonage) when sizing campaigns.
+
+## Anti-spam compliance (Israel Communications Law, Section 30A)
+
+If your chatbot sends marketing messages (broadcasts, promotional templates on WhatsApp, Telegram campaigns, SMS retargeting), Section 30A of the Communications Law (Telecom and Broadcasts) 5742-1982 applies. The law requires **prior written opt-in consent** before sending advertising messages via SMS, email, fax, robocalls, and, under the 2008 amendment language as interpreted by Israeli courts, electronic communication that includes WhatsApp, Telegram, and similar IM apps. The term "advertisement" is interpreted broadly: any message not purely service-related can be treated as advertising.
+
+Practical analytics tracking:
+
+- **Tag every send as `opt_in_basis`**: "explicit_form" / "ctw_ad_click" / "service_reply" / "transactional". This is your audit trail if a complaint reaches the Ministry of Communications.
+- **Track unsubscribe path success rate.** Marketing messages must include the word "advertisement" (פרסומת), the sender's name and address, and a working opt-out path. Measure the time-to-unsubscribe and the success rate of the opt-out flow as a compliance KPI.
+- **Service vs. marketing split.** Run completion-rate and CSAT separately for opt-in marketing flows vs. user-initiated service flows, they behave very differently and combining them masks both.
+- Cross-reference: `gws-hebrew-email-automation` and `israeli-telegram-business-bot` cover the same opt-in regime for email and Telegram. Use those skills if you also operate those channels.
+
+This is engineering guidance, not legal advice. The maximum statutory damages per unsolicited marketing message are NIS 1,000 without proof of damages, so a misconfigured broadcast to even a few hundred non-consenting users can become a meaningful financial event. Confirm specifics with a privacy lawyer.
+
+## Experimentation platforms for Hebrew chatbots
+
+When you outgrow `HebrewABTestManager` (in-process bucketing, in-memory results) and need real statistical analysis with sequential testing and CUPED variance reduction, the mainstream feature-flag + experimentation platforms all work fine for Hebrew chatbots, none of them care what language your `variant_text` is in. Pick by team and infra fit:
+
+| Platform | Best fit | Notes for Hebrew chatbot teams |
+|----------|----------|--------------------------------|
+| Statsig | Teams wanting flags + experiments + product analytics in one stack | OpenAI acquired Statsig in 2025 for $1.1B; generous free tier still good for small Israeli bots. |
+| LaunchDarkly | Mature enterprise teams needing approvals, audit logs, RBAC | The "safe" enterprise choice; pair with your existing analytics for stats. |
+| GrowthBook | Teams with a data warehouse (BigQuery, Snowflake, Postgres) who want stats run against their own data | Open source; does NOT collect event data, so Hebrew transcripts never leave your warehouse, useful for Amendment 13 data-residency posture. |
+
+For Hebrew-specific gotchas, plan on longer test durations (2+ weeks, 200+ impressions per variant), Israeli user bases are smaller and weekly seasonality (Sun-Thu work week) makes 1-week tests unreliable.
+
+## Modern analytics stack notes (GA4 + Mixpanel, 2026)
+
+- **GA4 "AI Assistant" channel.** GA4 now ships a built-in `Channel Group: AI Assistant` (Medium `ai-assistant`) that auto-categorizes traffic from ChatGPT, Gemini, and Claude (Perplexity reportedly included; Google has not formally confirmed). If you embed your bot on a marketing site, this is the easiest way to attribute incoming traffic referred by an LLM to the bot's funnel, no custom regex needed (https://martech.org/ga4-now-tracks-ai-chatbot-traffic-automatically/).
+- **Mixpanel Spark + MCP Server.** Mixpanel released Spark (AI query builder) and an MCP server in 2025-2026 that lets Claude / ChatGPT / Cursor query Mixpanel data conversationally. For Hebrew dashboards specifically this matters because you can ask follow-up questions in Hebrew and Spark routes them to the right event/property, useful when the ops team is not fluent in funnel-query UI.
 
 ## Examples
 
@@ -1018,11 +520,20 @@ No MCP server is required for this skill. It operates entirely on exported conve
 
 | Source | URL | What to Check |
 |--------|-----|---------------|
+| Dialogflow CX language reference | https://docs.cloud.google.com/dialogflow/cx/docs/reference/language | Hebrew language code `he-il` (use this on new agents; `iw` is deprecated) |
 | Dialogflow CX analytics | https://cloud.google.com/dialogflow/cx/docs/concept/analytics | Built-in conversation analytics, intent metrics |
-| Rasa OSS documentation (legacy) | https://legacy-docs-oss.rasa.com/docs/rasa/ | Event tracking, tracker stores, custom analytics integrations |
+| Rasa CALM docs | https://rasa.com/docs/learn/concepts/calm/ | Dialogue-driven flows for Rasa Pro 3.x, replaces intent-based design for new builds |
+| Rasa OSS documentation (legacy) | https://legacy-docs-oss.rasa.com/docs/rasa/ | Event tracking, tracker stores, custom analytics integrations (maintenance mode) |
+| WhatsApp Business Platform pricing | https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing | Per-message rates by country + category (marketing/utility/auth/service), free 24h window rules |
+| DictaBERT (Hebrew BERT suite) | https://huggingface.co/dicta-il/dictabert | Pre-trained Hebrew BERT for classification fine-tunes |
+| DictaBERT sentiment | https://huggingface.co/dicta-il/dictabert-sentiment | Off-the-shelf Hebrew sentiment classifier (3-class) |
+| DictaLM 2.0 Instruct | https://huggingface.co/dicta-il/dictalm2.0-instruct | Generative Hebrew LLM (7B, Mistral-based) for summaries + classification in one call |
+| AlephBERT | https://huggingface.co/onlplab/alephbert-base | Alternative Hebrew BERT from BIU OnlpLab |
+| HuggingFace Hebrew models | https://huggingface.co/models?language=he | Browse the full Hebrew model catalog |
 | Mixpanel help | https://mixpanel.com/help | Funnel analysis, cohort retention for chat flows |
 | Matomo analytics | https://matomo.org/docs/ | Self-hosted event tracking, privacy-friendly |
-| HuggingFace Hebrew models | https://huggingface.co/models?language=he | Hebrew sentiment/classification models |
+| Israel Privacy Amendment 13 (IAPP) | https://iapp.org/news/a/israel-marks-a-new-era-in-privacy-law-amendment-13-ushers-in-sweeping-reform | Effective Aug 14, 2025: consent, notice, retention limits, deletion mechanisms |
+| Section 30A anti-spam guide (DLA Piper) | https://www.dlapiperdataprotection.com/index.html?t=electronic-marketing&c=IL | Opt-in regime for SMS / email / IM marketing in Israel |
 
 ## Troubleshooting
 
