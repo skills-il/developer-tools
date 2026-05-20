@@ -1,12 +1,12 @@
 ---
 name: telegram-bot-builder
-description: "Build Telegram bots with grammY, Telegraf, or python-telegram-bot. Covers Bot API v9.6 webhooks vs polling, inline keyboards, commands, middleware patterns, Telegram Stars + Gifts payments, Mini Apps 2.0, Bot Business mode, and Hebrew message handling. Use when building a Telegram bot, setting up webhooks, handling Hebrew/RTL messages in a bot, or integrating Telegram payments. Do NOT use for WhatsApp bots (use israeli-whatsapp-business), voice bots (use hebrew-voice-bot-builder), or general chatbot design patterns (use hebrew-chatbot-builder)."
+description: "Build Telegram bots with grammY, Telegraf, or python-telegram-bot. Covers Bot API v10.0 webhooks vs polling, inline keyboards, commands, middleware patterns, Telegram Stars + Gifts payments, Mini Apps 2.0, Bot Business mode, and Hebrew message handling. Use when building a Telegram bot, setting up webhooks, handling Hebrew/RTL messages in a bot, or integrating Telegram payments. Do NOT use for WhatsApp bots (use israeli-whatsapp-business), voice bots (use hebrew-voice-bot-builder), or general chatbot design patterns (use hebrew-chatbot-builder)."
 license: MIT
 ---
 
 # Telegram Bot Builder
 
-Build production-ready Telegram bots for the Israeli market using grammY, Telegraf, or python-telegram-bot. This skill covers Bot API v9.6 (Last verified: 2026-04-25), webhook and polling architectures, inline keyboards, Hebrew/RTL text handling, Telegram Stars and Gifts payments, Mini Apps 2.0, Bot Business mode, and deployment to serverless platforms.
+Build production-ready Telegram bots for the Israeli market using grammY, Telegraf, or python-telegram-bot. Covers Bot API v10.0 (April 2026), webhooks vs polling, inline keyboards, Hebrew/RTL text, Telegram Stars + Gifts payments, Mini Apps 2.0, Bot Business mode, Managed Bots, and serverless deployment.
 
 ## Problem
 
@@ -25,7 +25,7 @@ Choose your framework based on your runtime, deployment target, and Bot API vers
 | Feature | grammY v1.42.0 | Telegraf v4.16.3 | python-telegram-bot v22.7 |
 |---------|----------------|-------------------|---------------------------|
 | Language | TypeScript/JS | TypeScript/JS | Python 3.10+ |
-| Bot API version | Latest (v9.6) | v7.1 | v9.6 |
+| Bot API version | Latest (v10.0) | v7.1 | v10.0 |
 | Install | `npm install grammy` | `npm install telegraf` | `pip install python-telegram-bot` |
 | Plugin ecosystem | Rich (sessions, menus, conversations, i18n) | Moderate (scenes, sessions) | Extensions (JobQueue, persistence) |
 | Serverless support | Vercel, CF Workers, Deno Deploy, Supabase Edge, Fly.io | Express/Fastify/Lambda adapters | ASGI adapters, manual webhook handlers |
@@ -36,7 +36,7 @@ Choose your framework based on your runtime, deployment target, and Bot API vers
 | Recommended for | New projects, serverless, latest API features | Existing Express/Fastify apps | Python shops, data/ML pipelines |
 
 **Decision guide:**
-- Need Bot API v9.6 features (Stars subscriptions, Gifts API, Bot Business mode, Mini Apps 2.0)? Use **grammY** or **python-telegram-bot**.
+- Need Bot API v10.0 features (Stars subscriptions, Gifts, Bot Business, Mini Apps 2.0, Managed Bots, guest-bot)? Use **grammY** or **python-telegram-bot**.
 - Already have an Express/Fastify server? **Telegraf** integrates cleanly.
 - Python team or ML/data pipeline? **python-telegram-bot** is the only choice.
 - Deploying to Vercel/Cloudflare Workers/Deno? **grammY** has native adapters for all of them.
@@ -927,10 +927,22 @@ Three common targets, each with framework-specific gotchas. Full working configs
 
 ## Bundled Resources
 
-- [Framework Comparison](references/framework-comparison.md) - Detailed feature matrix of grammY vs Telegraf vs python-telegram-bot
-- [Conversations](references/conversations.md) - Multi-step flow recipes for grammY, Telegraf, and python-telegram-bot
-- [Deployment](references/deployment.md) - Vercel, Cloudflare Workers, and systemd configs
-- [Examples](references/examples.md) - Full working bots: Hebrew menu (grammY), Vercel webhook with HTML messages, python-telegram-bot conversation flow
+- [Framework Comparison](references/framework-comparison.md)
+- [Conversations](references/conversations.md) - multi-step flow recipes
+- [Deployment](references/deployment.md) - Vercel, Cloudflare Workers, systemd
+- [Examples](references/examples.md) - working bots: Hebrew menu, Vercel webhook, python conversation
+
+## Recommended MCP Servers
+
+No Telegram-specific MCP in the directory yet.
+
+## Reference Links
+
+- Bot API changelog: https://core.telegram.org/bots/api-changelog
+- BotNews channel: https://t.me/botnews
+- grammY: https://grammy.dev/
+- python-telegram-bot: https://docs.python-telegram-bot.org/
+- Telegraf: https://telegraf.js.org/
 
 ## Gotchas
 

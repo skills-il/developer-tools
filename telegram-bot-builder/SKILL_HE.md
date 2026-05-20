@@ -1,12 +1,12 @@
 ---
 name: telegram-bot-builder
-description: "בנו בוטים לטלגרם עם grammY, Telegraf או python-telegram-bot. מכסה Bot API v9.6, webhooks מול polling, מקלדות אינליין, פקודות, middleware, תשלומים ב-Telegram Stars + Gifts, Mini Apps 2.0, מצב Bot Business וטיפול בהודעות בעברית עם RTL. השתמשו כשבונים בוט טלגרם, מגדירים webhooks, מטפלים בהודעות בעברית בתוך בוט, או משלבים תשלומים דרך טלגרם. אל תשתמשו לבוטים של וואטסאפ (השתמשו ב-israeli-whatsapp-business), בוטים קוליים (השתמשו ב-hebrew-voice-bot-builder), או עיצוב צ'אטבוטים כללי (השתמשו ב-hebrew-chatbot-builder)."
+description: "בנו בוטים לטלגרם עם grammY, Telegraf או python-telegram-bot. מכסה Bot API v10.0, webhooks מול polling, מקלדות אינליין, פקודות, middleware, תשלומים ב-Telegram Stars + Gifts, Mini Apps 2.0, מצב Bot Business וטיפול בהודעות בעברית עם RTL. השתמשו כשבונים בוט טלגרם, מגדירים webhooks, מטפלים בהודעות בעברית בתוך בוט, או משלבים תשלומים דרך טלגרם. אל תשתמשו לבוטים של וואטסאפ (השתמשו ב-israeli-whatsapp-business), בוטים קוליים (השתמשו ב-hebrew-voice-bot-builder), או עיצוב צ'אטבוטים כללי (השתמשו ב-hebrew-chatbot-builder)."
 license: MIT
 ---
 
 # בניית בוט טלגרם
 
-בנו בוטים מוכנים לפרודקשן לשוק הישראלי עם grammY, Telegraf או python-telegram-bot. המדריך מכסה Bot API v9.6 (אומת לאחרונה: 25.04.2026), ארכיטקטורות webhook ו-polling, מקלדות אינליין, טיפול בטקסט עברי/RTL, תשלומים ב-Telegram Stars ו-Gifts, Mini Apps 2.0, מצב Bot Business ודיפלוי לפלטפורמות serverless.
+בנו בוטים מוכנים לפרודקשן לשוק הישראלי עם grammY, Telegraf או python-telegram-bot. המדריך מכסה Bot API v10.0 (שוחרר באפריל 2026; אומת ב-20.05.2026), ארכיטקטורות webhook ו-polling, מקלדות אינליין, טיפול בטקסט עברי/RTL, תשלומים ב-Telegram Stars ו-Gifts, Mini Apps 2.0, מצב Bot Business, זרימת Managed Bots מ-v9.6, זרימת guest-bot של v10.0 לאיגנט-טים, ודיפלוי לפלטפורמות serverless.
 
 ## בעיה
 
@@ -35,7 +35,7 @@ license: MIT
 | כדאי ל... | פרויקטים חדשים, serverless, פיצ'רים חדשים | אפליקציות Express/Fastify קיימות | צוותי Python, ML/data pipelines |
 
 **איך בוחרים:**
-- צריכים פיצ'רים של Bot API v9.6 (Stars subscriptions, Gifts API, Bot Business, Mini Apps 2.0)? בחרו **grammY** או **python-telegram-bot**.
+- צריכים פיצ'רים של Bot API v10.0 (Stars subscriptions, Gifts API, Bot Business, Mini Apps 2.0)? בחרו **grammY** או **python-telegram-bot**.
 - כבר יש לכם שרת Express/Fastify? **Telegraf** משתלב חלק.
 - צוות Python או פייפליין ML/data? **python-telegram-bot** הבחירה היחידה.
 - דיפלוי ל-Vercel/Cloudflare Workers/Deno? ל-**grammY** יש adapters מובנים.
@@ -1030,6 +1030,20 @@ sudo journalctl -u telegram-bot -f  # צפייה בלוגים
 ## משאבים מצורפים
 
 - [השוואת פריימוורקים](references/framework-comparison.md) - מטריצת תכונות מפורטת של grammY מול Telegraf מול python-telegram-bot
+
+## שרתי MCP מומלצים
+
+אין כרגע MCP ייעודי לטלגרם בספרייה.
+
+## קישורי עזר
+
+| מקור | URL |
+|------|-----|
+| Telegram Bot API changelog | https://core.telegram.org/bots/api-changelog |
+| ערוץ BotNews של טלגרם | https://t.me/botnews |
+| תיעוד grammY | https://grammy.dev/ |
+| תיעוד python-telegram-bot | https://docs.python-telegram-bot.org/ |
+| תיעוד Telegraf | https://telegraf.js.org/ |
 
 ## מלכודות נפוצות
 

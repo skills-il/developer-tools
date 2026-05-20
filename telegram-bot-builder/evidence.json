@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "telegram-bot-builder",
+  "generated_at": "2026-05-20T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "bot-api-v10",
+      "claim": "Telegram released Bot API v10.0 in April 2026, adding guest-bot multi-agent flows on top of v9.6 features (Managed Bots, Stars subscriptions, Gifts API, Bot Business mode, Mini Apps 2.0).",
+      "source_url": "https://core.telegram.org/bots/api-changelog",
+      "raw_snippet": "Bot API",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "metadata.json"]
+    },
+    {
+      "claim_id": "telegram-botnews",
+      "claim": "Telegram publishes official Bot API release notes on the BotNews Telegram channel at t.me/botnews.",
+      "source_url": "https://t.me/botnews",
+      "raw_snippet": "BotNews",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "grammy-docs",
+      "claim": "grammY (JavaScript/TypeScript Telegram bot framework) documentation is at grammy.dev.",
+      "source_url": "https://grammy.dev/",
+      "raw_snippet": "grammY",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "python-telegram-bot-docs",
+      "claim": "python-telegram-bot documentation is at docs.python-telegram-bot.org.",
+      "source_url": "https://docs.python-telegram-bot.org/",
+      "raw_snippet": "python-telegram-bot",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "telegraf-docs",
+      "claim": "Telegraf (JavaScript Telegram bot framework, predecessor of grammY) documentation is at telegraf.js.org.",
+      "source_url": "https://telegraf.js.org/",
+      "raw_snippet": "Telegraf",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "bot-file-upload-limit",
+      "claim": "Telegram's default Bot API server limits bot file uploads to 50 MB; running a local Bot API server raises the limit to 2 GB for premium bots.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "50",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "telegram-bot-api-endpoint",
+      "claim": "Telegram's REST Bot API endpoint pattern is api.telegram.org/bot<token>/<method>; the canonical endpoint for registering webhooks is the setWebhook method. Example webhook URLs in the skill (your-domain.com, your-app.vercel.app, your-app.com, example.com) are placeholders the user must replace with their real deployment host.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "api.telegram.org https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=https://your-app.vercel.app/api/webhook&secret_token=${SECRET} https://api.telegram.org/bot<token https://example.com/webhook https://your-app.com/mini-app https://your-domain.com https://your-domain.com/webhook https://your-domain.com/webhook/${process.env.WEBHOOK_SECRET}",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "botfather-commands",
+      "claim": "BotFather is Telegram's official bot management bot; the /newbot command creates a new bot and /revokentoken regenerates the token of an existing one.",
+      "source_url": "https://core.telegram.org/bots/tutorial",
+      "raw_snippet": "/newbot",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "systemd-service-path",
+      "claim": "systemd unit files for Telegram bot deployments are conventionally placed at /etc/systemd/system/telegram-bot.service following the standard systemd directory layout.",
+      "source_url": "https://systemd.io/",
+      "raw_snippet": "systemd",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/deployment.md"]
+    },
+    {
+      "claim_id": "bot-business-docs",
+      "claim": "Telegram Bot Business mode (introduced in 2024) is documented at core.telegram.org/bots/business and Mini Apps / WebApp at core.telegram.org/bots/webapps.",
+      "source_url": "https://core.telegram.org/bots/business",
+      "raw_snippet": "Bot Business https://core.telegram.org/bots/business](https://core.telegram.org/bots/business",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "telegram-webapps-docs",
+      "claim": "Telegram Mini Apps (WebApp) documentation is at core.telegram.org/bots/webapps.",
+      "source_url": "https://core.telegram.org/bots/webapps",
+      "raw_snippet": "webapps https://core.telegram.org/bots/webapps](https://core.telegram.org/bots/webapps",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "grammy-transformer-throttler",
+      "claim": "The grammy-transformer-throttler middleware (github.com/grammyjs/transformer-throttler) enforces Telegram's rate limits in grammY-based bots.",
+      "source_url": "https://github.com/grammyjs/transformer-throttler",
+      "raw_snippet": "transformer-throttler",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "telegram-bot-api-local",
+      "claim": "Telegram's self-hostable local Bot API server (allowing the 2 GB upload limit) is published at github.com/tdlib/telegram-bot-api.",
+      "source_url": "https://github.com/tdlib/telegram-bot-api",
+      "raw_snippet": "telegram-bot-api",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    }
+  ]
+}
