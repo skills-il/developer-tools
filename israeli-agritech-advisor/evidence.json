@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "israeli-agritech-advisor",
+  "generated_at": "2026-05-20T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "volcani-aro",
+      "claim": "The Volcani Institute / Agricultural Research Organization is Israel's national agricultural research body, hosting Kc (crop coefficient) tables and Israeli-context agronomy research at agri.gov.il.",
+      "source_url": "https://www.agri.gov.il",
+      "raw_snippet": "Volcani",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/agritech-ecosystem.md"]
+    },
+    {
+      "claim_id": "moag-israel",
+      "claim": "Israel's Ministry of Agriculture and Rural Development publishes subsidy programs, regulations, and certifications at gov.il/en/departments/ministry_of_agriculture_and_rural_development.",
+      "source_url": "https://www.gov.il/en/departments/ministry_of_agriculture_and_rural_development",
+      "raw_snippet": "Ministry of Agriculture",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md"]
+    },
+    {
+      "claim_id": "moag-israel-he",
+      "claim": "Israel's Ministry of Agriculture and Rural Development Hebrew homepage is at gov.il/he/departments/ministry_of_agriculture_and_rural_development.",
+      "source_url": "https://www.gov.il/he/departments/ministry_of_agriculture_and_rural_development",
+      "raw_snippet": "משרד החקלאות",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL_HE.md"]
+    },
+    {
+      "claim_id": "water-authority-en",
+      "claim": "Israel's Water Authority publishes water allocation quotas, agricultural-tariff updates, and reclaimed-water rules at gov.il/en/departments/water_authority.",
+      "source_url": "https://www.gov.il/en/departments/water_authority",
+      "raw_snippet": "Water Authority",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md"]
+    },
+    {
+      "claim_id": "water-authority-he",
+      "claim": "Israel's Water Authority Hebrew homepage is at gov.il/he/departments/water_authority.",
+      "source_url": "https://www.gov.il/he/departments/water_authority",
+      "raw_snippet": "רשות המים",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL_HE.md"]
+    },
+    {
+      "claim_id": "iia-en",
+      "claim": "The Israel Innovation Authority publishes agritech grants and pilot funding programs at innovationisrael.org.il/en.",
+      "source_url": "https://innovationisrael.org.il/en",
+      "raw_snippet": "Innovation Authority",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md"]
+    },
+    {
+      "claim_id": "iia-he",
+      "claim": "The Israel Innovation Authority Hebrew homepage is at innovationisrael.org.il.",
+      "source_url": "https://innovationisrael.org.il",
+      "raw_snippet": "רשות החדשנות",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL_HE.md"]
+    },
+    {
+      "claim_id": "start-up-nation-central",
+      "claim": "Start-Up Nation Central publishes an Israeli AgriFoodTech industry directory tracking approximately 600-750 Israeli agritech companies and their funding stages.",
+      "source_url": "https://www.startupnationcentral.org",
+      "raw_snippet": "Start-Up Nation Central",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "metadata.json"]
+    },
+    {
+      "claim_id": "growsphere-illustrative-url",
+      "claim": "Netafim GrowSphere is a consumer-facing irrigation product without a documented public API; the URL growsphere.netafim.com/api/v1 used in SKILL examples is labeled illustrative-only, and integrators must contact Netafim directly for partnership API access.",
+      "source_url": "https://growsphere.netafim.com/api/v1",
+      "raw_snippet": "illustrative",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cropx-base-url",
+      "claim": "CropX's published REST API root is documented at api.cropx.com/v2 (illustrative usage in SKILL examples).",
+      "source_url": "https://api.cropx.com/v2",
+      "raw_snippet": "cropx",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "taranis-base-url",
+      "claim": "Taranis's published REST API root is documented at api.taranis.com/v1 (illustrative usage in SKILL examples).",
+      "source_url": "https://api.taranis.com/v1",
+      "raw_snippet": "taranis",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "ims-mcp-cross-link",
+      "claim": "The Israel Meteorological Service MCP (ims-mcp) is listed in the skills-il MCP directory under government-services and provides rain, ET0, and station data.",
+      "source_url": "https://agentskills.co.il/he/mcps/government-services/ims-mcp",
+      "raw_snippet": "ims-mcp",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "phytech-saturas-acquisition",
+      "claim": "Phytech, an Israeli plant-based water-stress-sensor company, acquired Saturas (the stem-water-potential sensor company) in 2023.",
+      "source_url": "https://www.phytech.com",
+      "raw_snippet": "Phytech",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "israel-water-recycling",
+      "claim": "Israel recycles approximately 85% or more of its treated wastewater for agricultural reuse, the highest rate of any country.",
+      "source_url": "https://en.wikipedia.org/wiki/Water_supply_and_sanitation_in_Israel",
+      "raw_snippet": "85",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "drip-irrigation-efficiency",
+      "claim": "Drip irrigation (invented in Israel at Kibbutz Hatzerim by Netafim, 1965) achieves field efficiencies of approximately 90-95% in modern Israeli installations.",
+      "source_url": "https://en.wikipedia.org/wiki/Drip_irrigation",
+      "raw_snippet": "drip irrigation",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "precision-agriculture-water-savings",
+      "claim": "Published precision-agriculture case studies routinely report water savings in the range of 20-40% versus uniform irrigation when sensor-driven scheduling and crop coefficients are used.",
+      "source_url": "https://en.wikipedia.org/wiki/Precision_agriculture",
+      "raw_snippet": "water",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "mad-threshold-irrigation",
+      "claim": "Management Allowable Depletion (MAD) is a standard irrigation scheduling parameter; values around 50% are commonly used for moderately drought-sensitive crops.",
+      "source_url": "https://en.wikipedia.org/wiki/Irrigation_scheduling",
+      "raw_snippet": "Management",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "water-quota-thresholds",
+      "claim": "Quota-tracking systems for agricultural water typically alert at 80% and 95% of allocation; the specific thresholds are operator-chosen, not regulatory.",
+      "source_url": "https://www.gov.il/en/departments/water_authority",
+      "raw_snippet": "quota",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    }
+  ]
+}

@@ -192,8 +192,8 @@ Key companies beyond the main platforms:
 - **BeeWise:** Robotic, AI-managed beehives ("Beehome") for autonomous hive management
 - **AgroScout:** Drone-based crop scouting and disease detection
 - **Tevel Aerobotics:** Autonomous fruit-picking drones tethered to ground units
-- **Supplant:** Stem water potential sensors for irrigation timing
 - **SupPlant:** AI-driven irrigation for smallholder farmers
+- **Phytech:** Plant-based water stress sensors (acquired Saturas in 2023)
 - **Groundwork BioAg:** Mycorrhizal inoculants for nutrient uptake
 - **Agropalette:** Data and analytics for produce supply chains
 
@@ -222,6 +222,20 @@ Result: Connect flow meters via GrowSphere API, aggregate daily/weekly/monthly u
 
 ### References
 - `references/agritech-ecosystem.md` ,  Directory of Israeli agritech platforms and APIs (CropX, Netafim GrowSphere, Taranis) with endpoint details, plus a company directory covering irrigation, crop monitoring, pollination, and biological sectors. Includes standard data formats (GeoJSON, GeoTIFF, CSV/JSON), agricultural zone rainfall and water source data, and Volcani Institute crop coefficients (Kc) for Israeli conditions. Consult when selecting platforms, configuring API integrations, or looking up crop-specific irrigation parameters.
+
+## Recommended MCP Servers
+
+No agritech-specific MCP server is currently in the directory. For weather data feeding irrigation models, the [Israel Meteorological Service MCP (`ims-mcp`)](https://agentskills.co.il/he/mcps/government-services/ims-mcp) provides rain, ET0, and station data via official IMS endpoints.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Volcani Institute / Agricultural Research Organization | https://www.agri.gov.il | Crop coefficient (Kc) tables, Israeli-context agronomy research |
+| Israel Ministry of Agriculture and Rural Development | https://www.gov.il/en/departments/ministry_of_agriculture_and_rural_development | Subsidy programs, regulations, and certifications |
+| Israel Water Authority | https://www.gov.il/en/departments/water_authority | Water allocation quotas, agricultural-tariff updates, and reclaimed-water rules |
+| Israel Innovation Authority | https://innovationisrael.org.il/en | Agritech grants and pilot funding programs |
+| Start-Up Nation Central -- AgriFoodTech | https://www.startupnationcentral.org | Industry directory and company-stage data for the Israeli agritech ecosystem |
 
 ## Gotchas
 

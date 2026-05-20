@@ -65,7 +65,7 @@ class GrowSphereClient:
     """Client for Netafim GrowSphere irrigation platform.
     NOTE: No documented public API exists. Contact Netafim for access."""
 
-    BASE_URL = "https://api.growsphere.netafim.com/v1"  # לא מאומת, להמחשה בלבד
+    BASE_URL = "https://growsphere.netafim.com/api/v1"  # לא מאומת, להמחשה בלבד
 
     def __init__(self, api_key):
         self.headers = {"X-API-Key": api_key, "Content-Type": "application/json"}
@@ -186,8 +186,8 @@ def calculate_irrigation_need(soil_data, crop_type, weather_data):
 - **BeeWise:** כוורות רובוטיות מנוהלות ב-AI ("Beehome") לניהול אוטונומי של מושבות דבורים
 - **AgroScout:** סיור גידולים דרך רחפנים וזיהוי מחלות
 - **Tevel Aerobotics:** רחפנים אוטונומיים לקטיף פירות, מחוברים בכבל ליחידת קרקע
-- **Supplant:** חיישני פוטנציאל מים בגבעול לתזמון השקיה
 - **SupPlant:** השקיה מונחית AI לחקלאים קטנים
+- **Phytech:** חיישני מתח מים מבוססי-צמח (רכשו את Saturas ב-2023)
 - **Groundwork BioAg:** תרכובות מיקוריזה לשיפור קליטת חומרי הזנה
 - **Agropalette:** ניתוח נתונים בשרשרת האספקה של תוצרת חקלאית
 
@@ -216,6 +216,20 @@ def calculate_irrigation_need(soil_data, crop_type, weather_data):
 
 ### חומרי עזר
 - `references/agritech-ecosystem.md`, מדריך לפלטפורמות ו-API של אגריטק ישראלי (CropX, Netafim GrowSphere, Taranis) עם פרטי endpoints, בנוסף לספריית חברות המכסה השקיה, ניטור גידולים, האבקה ומגזרים ביולוגיים. כולל פורמטי נתונים סטנדרטיים (GeoJSON, GeoTIFF, CSV/JSON), נתוני משקעים ומקורות מים לפי אזורים חקלאיים, ומקדמי גידול (Kc) של מכון וולקני לתנאים ישראליים. עיינו בו בעת בחירת פלטפורמות, הגדרת שילובי API, או חיפוש פרמטרי השקיה ספציפיים לגידולים.
+
+## שרתי MCP מומלצים
+
+אין כרגע MCP ייעודי לאגריטק בספרייה. עבור נתוני מזג אוויר שמזינים מודלי השקיה, [שרת ה-MCP של השירות המטאורולוגי הישראלי (`ims-mcp`)](https://agentskills.co.il/he/mcps/government-services/ims-mcp) מספק נתוני גשם, ET0 ותחנות מודדים דרך ה-API הרשמי של ה-IMS.
+
+## קישורי עזר
+
+| מקור | URL | מה לבדוק |
+|------|-----|----------|
+| מכון וולקני / מנהל המחקר החקלאי | https://www.agri.gov.il | טבלאות מקדמי גידול (Kc), מחקר אגרונומי בהקשר ישראלי |
+| משרד החקלאות ופיתוח הכפר | https://www.gov.il/he/departments/ministry_of_agriculture_and_rural_development | תוכניות סבסוד, רגולציה ותעודות |
+| רשות המים | https://www.gov.il/he/departments/water_authority | מכסות מים, עדכוני תעריפי חקלאות, וכללי מים מושבים |
+| רשות החדשנות | https://innovationisrael.org.il | מענקי אגריטק ותוכניות פיילוט |
+| Start-Up Nation Central, AgriFoodTech | https://www.startupnationcentral.org | מדריך תעשייה ונתוני שלבי חברות לאקוסיסטם האגריטק הישראלי |
 
 ## מלכודות נפוצות
 

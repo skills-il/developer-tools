@@ -41,7 +41,6 @@
 | Netafim | Drip irrigation (inventor) | Enterprise |
 | CropX | Soil monitoring + irrigation | Growth |
 | Manna Irrigation | Satellite-based irrigation | Growth |
-| Supplant (ex-Saturas) | Stem water potential sensors | Growth |
 | SupPlant | AI irrigation for smallholders | Growth |
 
 ### Crop Monitoring and Protection

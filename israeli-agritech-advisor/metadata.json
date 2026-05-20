@@ -1,6 +1,6 @@
 {
   "author": "skills-il",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "category": "developer-tools",
   "tags": {
     "he": [
@@ -29,7 +29,7 @@
     "en": "Israeli Agritech Advisor"
   },
   "display_description": {
-    "he": "משלבים כלי אגריטק ישראליים, CropX, נטפים, Taranis.",
+    "he": "מדריך מפתחים בשילוב כלי אגריטק ישראליים ופלטפורמות חקלאות מדויקת, כולל CropX (ניטור קרקע), Netafim GrowSphere (השקיה מבוססת IoT), Taranis (בינת גידולים), והאקוסיסטם הישראלי הרחב (כ-600-750 חברות לפי Start-Up Nation Central). השתמשו כשהמשתמש שואל על API של אגריטק, חקלאות מדויקת, השקיה חכמה, ניטור גידולים, זיהוי מזיקים, או צריך לבנות תוכנת ניהול חוות. הסקיל מכסה מיטוב השקיה, זיהוי מזיקים, שילוב נתוני אקלים, מקדמי גידול של מכון וולקני, ואת ההקשר החקלאי הישראלי (משטר Mekorot, שמיטה, אזורי גידול). לא מתאים לעצות גינון כלליות או פרויקטי IoT שאינם חקלאיים.",
     "en": "Guide developers in integrating Israeli agritech tools and precision agriculture platforms including CropX (soil monitoring), Netafim GrowSphere (IoT irrigation), Taranis (crop intelligence), and the broader Israeli agritech ecosystem (approximately 600-750 companies per Start-Up Nation Central agrifoodtech). Use when user asks about agritech APIs, precision agriculture, smart irrigation, \"hashkaya cham\", crop monitoring, pest detection, Israeli agriculture tech, or needs to build farm management software. Covers irrigation optimization, pest detection, climate data integration, and Israeli agricultural context. Do NOT use for general gardening advice or non-agricultural IoT projects."
   },
   "supported_agents": [
