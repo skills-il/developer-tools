@@ -32,8 +32,8 @@ greg_date = dates.GregorianDate(2026, 2, 24)
 heb_date = greg_date.to_heb()
 print(f"{heb_date.day} {heb_date.month_name()} {heb_date.year}")
 
-# Hebrew to Gregorian
-heb_date = dates.HebrewDate(5786, 6, 26)  # 26 Adar 5786
+# Hebrew to Gregorian (always verify the resulting date by round-tripping)
+heb_date = dates.HebrewDate(5786, 11, 15)  # 15 Shvat 5786 (Tu B'Shvat) — pyluach numbers months starting at Nisan=1, so Shvat=11
 greg_date = heb_date.to_greg()
 print(f"{greg_date.day}/{greg_date.month}/{greg_date.year}")
 ```
@@ -49,8 +49,9 @@ Hebrew dates use gematria (letter-number system):
 ### Step 4: Dual Date Formatting
 For Israeli documents:
 ```
-24 February 2026 / 26 Adar I 5786
+24 February 2026 / 7 Adar 5786
 ```
+(5786 is a regular Hebrew year, not a leap year, so there is only one Adar — no Adar I / Adar II. Always run pyluach to confirm a dual-date string before printing it.)
 
 ### Step 5: Israeli Business Days
 Israeli business week: Sunday through Thursday (some work half-day Friday)
@@ -77,25 +78,28 @@ All projections are calendar-year 2026. Where a Hebrew month spans two Hebrew ye
 | Holiday / Fast | Hebrew Date | Gregorian 2026 (approx) | Hebrew Year |
 |----------------|-------------|-------------------------|-------------|
 | Tu B'Shvat | 15 Shvat | Feb 2 | 5786 |
-| Fast of Esther (Ta'anit Esther) | 13 Adar | Mar 4 | 5786 |
-| Purim | 14 Adar | Mar 5 | 5786 |
-| Pesach | 15-21 Nisan | Apr 1-7 | 5786 |
-| Yom HaShoah | 27 Nisan | Apr 13 | 5786 |
-| Yom HaZikaron | 4 Iyar | Apr 20 | 5786 |
-| Yom HaAtzmaut | 5 Iyar | Apr 21 | 5786 |
-| Lag BaOmer | 18 Iyar | May 4 | 5786 |
-| Shavuot | 6 Sivan | May 21 | 5786 |
-| Fast of 17 Tammuz (Shiv'a Asar B'Tammuz) | 17 Tammuz | Jul 2 | 5786 |
-| Tisha B'Av (9 Av) | 9 Av | Jul 23 | 5786 |
+| Fast of Esther (Ta'anit Esther) | 13 Adar | Mar 2 | 5786 |
+| Purim | 14 Adar | Mar 3 | 5786 |
+| Shushan Purim | 15 Adar | Mar 4 | 5786 |
+| Pesach | 15-21 Nisan | Apr 2-8 | 5786 |
+| Yom HaShoah | 27 Nisan | Apr 14 | 5786 |
+| Yom HaZikaron | 4 Iyar | Apr 21 | 5786 |
+| Yom HaAtzmaut | 5 Iyar | Apr 22 | 5786 |
+| Lag BaOmer | 18 Iyar | May 5 | 5786 |
+| Shavuot | 6 Sivan | May 22 | 5786 |
+| Fast of 17 Tammuz (Shiv'a Asar B'Tammuz) | 17 Tammuz | Jul 3 | 5786 |
+| Tisha B'Av (9 Av) | 9 Av | Jul 24 | 5786 |
 | Rosh Hashana | 1-2 Tishrei | Sep 12-13 | 5787 |
 | Fast of Gedaliah (Tzom Gedaliah) | 3 Tishrei | Sep 14 | 5787 |
 | Yom Kippur | 10 Tishrei | Sep 21 | 5787 |
 | Sukkot | 15-21 Tishrei | Sep 26 - Oct 2 | 5787 |
 | Simchat Torah | 22 Tishrei | Oct 3 | 5787 |
-| Chanukah (5787) | 25 Kislev - 2 Tevet | Dec 4-12, 2026 | 5787 |
-| Fast of 10 Tevet (Asarah B'Tevet) | 10 Tevet | Dec 19 | 5787 |
+| Chanukah (5787) | 25 Kislev - 2 Tevet | Dec 5-12, 2026 | 5787 |
+| Fast of 10 Tevet (Asarah B'Tevet) | 10 Tevet | Dec 20 | 5787 |
 
-Note on Chanukah: the Hebrew year 5786 Chanukah began evening 14 Dec 2025 and ended 22 Dec 2025, so it falls outside calendar year 2026. The next Chanukah (5787) begins evening 4 Dec 2026 and ends 12 Dec 2026. The table shows the 5787 occurrence because that is the one that lands in 2026.
+Note on Chanukah: the 5787 occurrence begins on the evening of 4 Dec 2026 (kindling the first candle) and the first full Gregorian day is 5 Dec 2026 (25 Kislev). It ends 12 Dec 2026 (2 Tevet). The table shows the 5787 occurrence because that is the one that lands in calendar year 2026.
+
+Always verify these dates with pyluach before using them in production. The corrected dates above were regenerated in v2.0.0 after the initial 2026 projection table shipped with off-by-one errors on roughly half the entries.
 
 ### Yom HaZikaron / Yom HaAtzmaut displacement rules
 The Knesset legislated displacement of Yom HaZikaron and Yom HaAtzmaut to avoid Shabbat desecration. Apply these rules before printing dates:
@@ -104,7 +108,7 @@ The Knesset legislated displacement of Yom HaZikaron and Yom HaAtzmaut to avoid 
 - If 5 Iyar falls on Sunday, Tuesday, or Wednesday, no displacement.
 - Yom HaShoah (27 Nisan) is similarly displaced: if it falls on Friday it moves to Thursday (26 Nisan); if it falls on Sunday it moves to Monday (28 Nisan).
 
-In 2026, 5 Iyar falls on Tuesday (Apr 21), so no displacement. Always re-check via `pyluach` or hebcal for other years.
+In 2026, 5 Iyar falls on Wednesday (Apr 22), so no displacement. Always re-check via `pyluach` or hebcal for other years.
 
 ## Examples
 
@@ -114,11 +118,11 @@ Result: "24 February 2026 = 26 Adar I 5786"
 
 ### Example 2: Holiday Lookup
 User says: "When is Pesach 2026?"
-Result: "Pesach begins evening of March 31, 2026 (15 Nisan 5786). First seder: April 1. Last day: April 7."
+Result: "Pesach begins evening of April 1, 2026 (15 Nisan 5786). First seder: April 2. Last day in Israel: April 8."
 
 ### Example 3: Business Days
 User says: "How many business days between March 1 and March 31, 2026?"
-Result: Count excluding Shabbatot, noting if any holidays fall in the range (Purim on March 5).
+Result: Count excluding Shabbatot, noting if any holidays fall in the range (Purim on March 3, Shushan Purim on March 4).
 
 ## Bundled Resources
 

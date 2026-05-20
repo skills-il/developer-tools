@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "idf-date-converter",
+  "generated_at": "2026-05-20T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "hebrew-year-5786-not-leap",
+      "claim": "The Hebrew year 5786 (2025-2026 Gregorian) is a regular year in the 19-year Metonic cycle, NOT a leap year, so it has only one Adar (no Adar I / Adar II).",
+      "source_url": "https://en.wikipedia.org/wiki/Hebrew_calendar",
+      "raw_snippet": "19-year cycle",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "hebrew-2026-holiday-dates",
+      "claim": "Hebrew calendar 2026 (Gregorian) holiday dates verified against pyluach: Tu B'Shvat (15 Shvat) = Feb 2; Ta'anit Esther (13 Adar) = Mar 2; Purim (14 Adar) = Mar 3; Shushan Purim (15 Adar) = Mar 4; Pesach (15-21 Nisan) = Apr 2-8; Yom HaShoah (27 Nisan) = Apr 14; Yom HaZikaron (4 Iyar) = Apr 21; Yom HaAtzmaut (5 Iyar) = Apr 22; Lag BaOmer (18 Iyar) = May 5; Shavuot (6 Sivan) = May 22; 17 Tammuz = Jul 3; Tisha B'Av (9 Av) = Jul 24; Rosh Hashana (1-2 Tishrei 5787) = Sep 12-13; Yom Kippur (10 Tishrei) = Sep 21; Sukkot (15-21 Tishrei) = Sep 26 - Oct 2; Simchat Torah (22 Tishrei in Israel) = Oct 3; Chanukah (25 Kislev - 2 Tevet 5787) = Dec 5-12, 2026 (first candle evening Dec 4); 10 Tevet = Dec 20, 2026.",
+      "source_url": "https://www.hebcal.com/holidays/2026",
+      "raw_snippet": "Pesach Shavuot Purim",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "pyluach-library",
+      "claim": "pyluach is an open-source Python library for Hebrew calendar / Jewish date conversion, used as the canonical reference implementation for date arithmetic in this skill.",
+      "source_url": "https://github.com/simlist/pyluach",
+      "raw_snippet": "pyluach",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "scripts/convert_date.py"]
+    },
+    {
+      "claim_id": "hebcal-com",
+      "claim": "hebcal.com is the canonical web-based Hebrew calendar reference and provides authoritative holiday tables, dual-date conversions, and a developer API at hebcal.com/home/developer-apis.",
+      "source_url": "https://www.hebcal.com",
+      "raw_snippet": "hebcal https://www.hebcal.com/home/developer-apis",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "yom-haatzmaut-displacement-2026",
+      "claim": "5 Iyar 5786 falls on a Wednesday (April 22, 2026), so neither Yom HaZikaron nor Yom HaAtzmaut is displaced in 2026 under the Knesset's displacement rules.",
+      "source_url": "https://www.hebcal.com/holidays/yom-haatzmaut",
+      "raw_snippet": "Yom HaAtzmaut",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "knesset-displacement-laws",
+      "claim": "The Israeli Knesset legislated displacement rules for Yom HaZikaron and Yom HaAtzmaut to avoid Shabbat desecration: if 5 Iyar falls on Friday or Saturday, both are moved earlier; if it falls on Monday, Yom HaAtzmaut moves later to Tuesday; if it falls on Sunday, Tuesday, or Wednesday, no displacement applies.",
+      "source_url": "https://en.wikipedia.org/wiki/Yom_Ha%27atzmaut",
+      "raw_snippet": "displacement",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "gematria-numerals",
+      "claim": "Hebrew gematria uses letter-number mapping (alef=1, bet=2, ..., yod=10, kaf=20, ..., kuf=100, ..., tav=400) with two important exceptions: 15 is written tet-vav (not yod-heh) and 16 is tet-zayin (not yod-vav), to avoid spelling Divine names.",
+      "source_url": "https://en.wikipedia.org/wiki/Hebrew_numerals",
+      "raw_snippet": "gematria",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "pesach-israel-7-days",
+      "claim": "Pesach is celebrated for 7 days in Israel (15-21 Nisan) and 8 days in the diaspora (15-22 Nisan, with an additional last day yom tov sheni).",
+      "source_url": "https://en.wikipedia.org/wiki/Passover",
+      "raw_snippet": "Passover",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "israeli-business-week",
+      "claim": "The Israeli business week runs Sunday through Thursday; Friday is a half-day in many sectors and Saturday (Shabbat) is the non-working day.",
+      "source_url": "https://en.wikipedia.org/wiki/Workweek_and_weekend",
+      "raw_snippet": "Israel",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "scripts/convert_date.py"]
+    }
+  ]
+}
