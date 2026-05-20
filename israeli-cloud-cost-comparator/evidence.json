@@ -1,0 +1,199 @@
+{
+  "skill": "israeli-cloud-cost-comparator",
+  "version": "1.3.0",
+  "generated_at": "2026-05-20",
+  "generated_by": "update-skill (Phase 3 audit, May 2026)",
+  "notes": "Cloud pricing changes quarterly. Treat anchor numbers as 'verify before quoting': they are sanity-check bands, not commitments. The qualitative facts (regions exist / programs exist / law is in force) are stable for this update window.",
+  "claims": [
+    {
+      "id": "aws-il-central-1-launched",
+      "claim": "AWS launched the Israel (Tel Aviv) region il-central-1 in August 2023, and as of May 2026 it remains the AWS region inside Israel.",
+      "source": "https://aws.amazon.com/about-aws/whats-new/2023/08/aws-israel-tel-aviv-region/",
+      "verified": true
+    },
+    {
+      "id": "aws-il-central-1-instance-count",
+      "claim": "il-central-1 supports a broad EC2 catalog (~277 instance types per CloudPrice third-party tracker as of 2026).",
+      "source": "https://cloudprice.net/aws/region/il-central-1",
+      "verified": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "gcp-me-west1-launched",
+      "claim": "GCP me-west1 (Tel Aviv) reached general availability in November 2022 and is GCP's first Middle East region.",
+      "source": "https://cloud.google.com/about/locations",
+      "verified": true
+    },
+    {
+      "id": "gcp-me-west1-n2-standard-4-pricing",
+      "claim": "GCP me-west1 n2-standard-4 (4 vCPU, 16 GB) on-demand is approximately $0.214/hr (~$156/month). 1-year CUD ~$0.135/hr (~$98/month, ~37% off). 3-year CUD ~$0.096/hr (~$70/month, ~55% off). Spot ~$0.073/hr (~$53/month).",
+      "source": "https://calculator.holori.com/gcp/vm/n2-standard-4/me-west1",
+      "verified": true,
+      "confidence": "high",
+      "note": "Values verified Jan 2026 per Holori; still useful as an anchor. Verify on cloud.google.com/compute/all-pricing before quoting to a customer."
+    },
+    {
+      "id": "azure-israel-central-launched",
+      "claim": "Azure Israel Central launched on November 12, 2023 and is Microsoft's Azure region inside Israel.",
+      "source": "https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/",
+      "verified": true
+    },
+    {
+      "id": "oracle-il-jerusalem-1-launched",
+      "claim": "Oracle launched il-jerusalem-1 in Jerusalem on July 8, 2021 inside an underground data center 50 meters below ground level, beneath the Har Hotzvim tech park, in a hardened 14,000 sqm facility four floors below a 17-story building.",
+      "source": "https://www.timesofisrael.com/oracle-inaugurates-regional-cloud-center-in-jerusalem-plans-to-open-2nd-site/",
+      "verified": true
+    },
+    {
+      "id": "oracle-il-jerusalem-1-was-first-hyperscaler",
+      "claim": "OCI il-jerusalem-1 (opened July 2021) was the first hyperscaler region in Israel. It predates GCP me-west1 (Nov '22), AWS il-central-1 (Aug '23), and Azure Israel Central (Nov '23).",
+      "source": "https://www.timesofisrael.com/oracle-to-set-up-regional-cloud-center-in-jerusalem/",
+      "verified": true
+    },
+    {
+      "id": "oracle-global-flat-pricing",
+      "claim": "Oracle Cloud publishes a single global price list; OCI services are priced the same across regions including il-jerusalem-1.",
+      "source": "https://www.oracle.com/il-en/cloud/price-list/",
+      "verified": true,
+      "confidence": "medium",
+      "note": "Verify on the Oracle Israel price list before quoting specific shape rates."
+    },
+    {
+      "id": "oracle-egress-free-tier",
+      "claim": "Oracle Cloud includes 10 TB/month of outbound data transfer free across all regions, which is one of the more aggressive egress allowances among hyperscalers.",
+      "source": "https://www.oracle.com/cloud/pricing/",
+      "verified": true,
+      "confidence": "high"
+    },
+    {
+      "id": "project-nimbus-contract",
+      "claim": "Project Nimbus is a $1.2 billion Israeli-government cloud contract awarded to AWS and Google in 2021. It is a sovereign tenant for government agencies, security services, and military units, and is not a public cloud product.",
+      "source": "https://en.wikipedia.org/wiki/Project_Nimbus",
+      "verified": true
+    },
+    {
+      "id": "project-nimbus-winking-mechanism",
+      "claim": "Reporting from late 2025 to early 2026 describes a contractual 'winking mechanism' under which AWS and Google notify Israel's Finance Ministry via coded signals if a foreign court demands Nimbus data. This is a contract term, not a technical control.",
+      "source": "https://www.business-standard.com/world-news/israel-project-nimbus-google-amazon-winking-mechanism-data-leak-125103000892_1.html",
+      "verified": true
+    },
+    {
+      "id": "israel-lacks-fully-sovereign-cloud",
+      "claim": "Israel does not currently operate a fully sovereign cloud (an Israeli-controlled stack with sovereign AI processing and sovereign language-model hosting); Nimbus is a 'data-stays-in-Israel' arrangement on AWS/Google infrastructure.",
+      "source": "https://www.business-standard.com/world-news/israel-project-nimbus-google-amazon-winking-mechanism-data-leak-125103000892_1.html",
+      "verified": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "iia-telem-program-nebius",
+      "claim": "The Israel Innovation Authority's Telem program selected Nebius (via competitive tender) to establish and operate a national AI supercomputer, with 1,000 Nvidia B200 accelerators allocated 70/30 between hi-tech companies and academic research groups.",
+      "source": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
+      "verified": true
+    },
+    {
+      "id": "iia-telem-program-min-allocation",
+      "claim": "Telem program applications require 1-6 month usage periods, with a minimum of 16 B200 accelerators for companies and 8 for academic research groups.",
+      "source": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
+      "verified": true
+    },
+    {
+      "id": "aws-activate-credits",
+      "claim": "AWS Activate offers up to $100,000 in credits via the Portfolio package, $1,000 for self-funded startups via the Founder package, and up to $300,000 for selective startups building foundational AI models.",
+      "source": "https://aws.amazon.com/startups/credits/",
+      "verified": true
+    },
+    {
+      "id": "microsoft-founders-hub-credits",
+      "claim": "Microsoft for Startups Founders Hub offers $25,000 in Azure credits via self-serve and up to $150,000 via the top tier (typically VC- or accelerator-backed).",
+      "source": "https://partner.microsoft.com/en-us/partnership/founders-hub-benefits-guide",
+      "verified": true
+    },
+    {
+      "id": "google-startups-credits",
+      "claim": "Google Cloud for Startups offers up to $100,000 in year 1 and an additional $20,000 in year 2 for eligible startups.",
+      "source": "https://cloud.google.com/startup",
+      "verified": true,
+      "confidence": "medium",
+      "note": "Tier amounts and structure occasionally change. Verify on the Google for Startups page before recommending a specific number."
+    },
+    {
+      "id": "ppl-amendment-13-in-force",
+      "claim": "Israel's Privacy Protection Law Amendment 13 took effect on August 14, 2025. It introduces binding cross-border transfer rules, breach notification obligations, and DPO requirements.",
+      "source": "https://practiceguides.chambers.com/practice-guides/data-protection-privacy-2026/israel",
+      "verified": true
+    },
+    {
+      "id": "ppl-april-2026-position-paper",
+      "claim": "On April 13, 2026, the Israeli Privacy Protection Authority published a position paper interpreting Section 2(4) of the Cross-Border Transfer Regulations, tightening the practical conditions under the 'controller-responsibility' pathway.",
+      "source": "https://practiceguides.chambers.com/practice-guides/data-protection-privacy-2026/israel",
+      "verified": true,
+      "confidence": "medium",
+      "note": "Date and substance corroborated via the Chambers 2026 Israel chapter; the original PPA publication is in Hebrew on gov.il."
+    },
+    {
+      "id": "usd-ils-2026-average",
+      "claim": "USD/ILS in 2026 has averaged in the 3.10-3.20 band, with spot prints between approximately 2.93 and 3.19, materially lower than the ~3.70 mid-2024 levels.",
+      "source": "https://www.exchange-rates.org/exchange-rate-history/usd-ils-2026",
+      "verified": true,
+      "confidence": "high"
+    },
+    {
+      "id": "h100-hyperscaler-pricing",
+      "claim": "H100 on-demand single-GPU pricing at hyperscalers in 2026 sits roughly at AWS ~$6.88/GPU-hr (p5 8-GPU at $55-60/hr), GCP A3 ~$10-11/GPU-hr (8-GPU at $80-90/hr), and Azure NC-H100 ~$6.98/GPU-hr in East US.",
+      "source": "https://www.cloudzero.com/blog/cloud-gpu-pricing-comparison/",
+      "verified": true,
+      "confidence": "medium",
+      "note": "GPU pricing moves frequently; the band is correct but specific numbers may move ±15% within 2026."
+    },
+    {
+      "id": "h100-specialty-pricing",
+      "claim": "Specialty GPU clouds priced H100 SXM in 2026 in the $1.49-$3.44/GPU-hr range (Vast.ai from $1.49, RunPod $1.99-$2.69, Lambda Labs $2.49-$3.44, Spheron $2.50 on-demand). These are typically 40-85% cheaper than hyperscalers.",
+      "source": "https://intuitionlabs.ai/articles/h100-rental-prices-cloud-comparison",
+      "verified": true,
+      "confidence": "high"
+    },
+    {
+      "id": "h200-specialty-pricing",
+      "claim": "H200 specialty-cloud on-demand pricing in 2026: Lambda Labs $4.99-$5.29/hr, GMI Cloud H200 $2.60/hr. B200 specialty pricing has begun landing in the $5-7/hr on-demand range.",
+      "source": "https://www.spheron.network/blog/gpu-cloud-pricing-comparison-2026/",
+      "verified": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "kamatera-israel-five-dcs",
+      "claim": "Kamatera operates five data centers in Israel and offers VPS starting from approximately $4/month, with hourly or monthly pay-as-you-go billing and a 30-day free trial.",
+      "source": "https://hostadvice.com/vps/israel/",
+      "verified": true,
+      "confidence": "medium",
+      "note": "The 'five Israeli data centers' figure is from a third-party host directory and matches Kamatera's marketing footprint; verify against kamatera.com before quoting."
+    },
+    {
+      "id": "akamai-linode-no-il-dc",
+      "claim": "As of May 2026, Akamai Connected Cloud (Linode) does not operate a data center in Israel. Akamai's announced 12-data-center expansion (2022-2023) did not include Tel Aviv. Akamai does maintain a Tel Aviv office.",
+      "source": "https://www.linode.com/global-infrastructure/availability/",
+      "verified": true
+    },
+    {
+      "id": "hetzner-cheap-eu-fallback",
+      "claim": "Hetzner cloud servers start at approximately €4.59/month from data centers in Falkenstein, Nuremberg, and Helsinki, making them a common low-cost EU fallback for Israeli users (60-75 ms latency Falkenstein, ~65 ms Helsinki).",
+      "source": "https://www.hetzner.com/cloud",
+      "verified": true,
+      "confidence": "high"
+    },
+    {
+      "id": "aws-egress-tiered-pricing-2026",
+      "claim": "AWS internet egress in 2026 starts at $0.09/GB for the first 10 TB/month from US East (N. Virginia), with breakpoints at 10-50 TB ($0.085/GB) and 150 TB+ ($0.07/GB). Some regions (e.g. South America São Paulo) are notably higher (up to $0.15/GB). Specific il-central-1 egress rates should be verified on the AWS pricing page before quoting.",
+      "source": "https://leanopstech.com/blog/aws-data-transfer-pricing-2026/",
+      "verified": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "boi-directive-357-still-applies",
+      "claim": "Bank of Israel Proper Conduct of Banking Business Directive 357 remains the operative cloud-computing framework for supervised entities (banks and other regulated financial institutions) as of 2026.",
+      "source": "https://www.boi.org.il/en/",
+      "verified": true,
+      "confidence": "medium",
+      "note": "Directive 357 has been in force since 2015 with subsequent updates; no public news suggests it has been withdrawn or replaced as of May 2026."
+    }
+  ]
+}
