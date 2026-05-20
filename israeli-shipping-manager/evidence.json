@@ -1,0 +1,265 @@
+{
+  "skill": "israeli-shipping-manager",
+  "version": "2.3.0",
+  "previous_version": "2.2.1",
+  "generated_at": "2026-05-20",
+  "generated_by": "update-skill (Phase 3+4 subagent, Opus 4.7)",
+  "claims": [
+    {
+      "id": "ups-israel-launch",
+      "claim": "UPS Israel launched a nationwide locker network in March 2025 with 100 locker stations + 150 service stores, available 24/7.",
+      "where_used": ["SKILL.md carrier table", "SKILL.md locker services table", "SKILL_HE.md", "references/carrier-apis.md"],
+      "sources": [
+        "https://www.jpost.com/consumerism/article-844866",
+        "https://en.port2port.co.il/article/Air-Transport/Courier-Services/UPS-Israel-Launches-Innovative-Service-for-Convenient-Affordable-Package-Delivery/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-israel-pricing",
+      "claim": "UPS Israel domestic locker service is flat ~27 NIS per package (incl. VAT), 1-2 business days, no minimum volume.",
+      "where_used": ["SKILL.md carrier table", "SKILL_HE.md", "references/carrier-apis.md"],
+      "sources": [
+        "https://en.port2port.co.il/article/Air-Transport/Courier-Services/UPS-Israel-Launches-Innovative-Service-for-Convenient-Affordable-Package-Delivery/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "getpackage-model",
+      "claim": "GetPackage (getpackage.com) is a SaaS platform connecting businesses with crowd-sourced couriers for same-day delivery in Israel, with B2B REST API access available.",
+      "where_used": ["SKILL.md carrier table", "SKILL_HE.md", "references/carrier-apis.md"],
+      "sources": [
+        "https://getpackage.com/en/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "personal-import-threshold-130",
+      "claim": "Israel's personal-import VAT exemption threshold is USD 130 as of 2026 (raised from USD 75 to USD 150 in December 2025, then walked back to USD 130 after retailer pushback). Orders at or above USD 130 (goods value, excluding shipping/insurance) attract 18% VAT.",
+      "where_used": ["SKILL.md description", "SKILL.md Gotchas", "SKILL_HE.md", "metadata.json display_description"],
+      "sources": [
+        "https://www.customsclear.net/en/articles/vat-exemption-for-personal-imports-raised-to-150-in-israel-lrk483h4fdsj",
+        "https://www.vatupdate.com/2026/01/28/israel-updates-vat-customs-rules-and-invoice-thresholds-doubles-personal-import-tax-exemption/",
+        "https://www.comgateway.com/blogs/the-quick-cheat-sheet-for-israel-customs-and-import-taxes/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "distance-selling-14-day",
+      "claim": "Under Israel's Consumer Protection Law (Distance Selling Regulations), a buyer has 14 days from receipt of an online/phone purchase to cancel without justification.",
+      "where_used": ["SKILL.md Step 6 returns", "SKILL_HE.md Step 6"],
+      "sources": [
+        "https://www.gov.il/BlobFolder/generalpage/general_tuota/he/EN_Brushur_SITE.PDF",
+        "https://www.dinolaw.co.il/en/consumerism/cancellation-of-a-transactions-a-comprehensive-consumer-guide/",
+        "https://fionistdream.com/2024/01/02/7-israeli-consumer-rights-you-need-to-know-right-now/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "refund-7-business-days",
+      "claim": "When a return is accepted under the 14-day cancellation right, the seller must refund the buyer in the same payment method within 7 business days of receiving the returned goods.",
+      "where_used": ["SKILL.md Step 6", "SKILL_HE.md Step 6"],
+      "sources": [
+        "https://nofryers.com/returning-goods-cancelling-services-for-cash-in-israel/",
+        "https://www.dinolaw.co.il/en/consumerism/cancellation-of-a-transactions-a-comprehensive-consumer-guide/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "cancellation-fee-5pct-or-100nis",
+      "claim": "For 'changed mind' returns, the seller may charge a cancellation fee of 5% of the purchase price OR 100 NIS, whichever is lower. No cancellation fee is allowed if the item is defective, mis-described, late, or otherwise a breach by the seller.",
+      "where_used": ["SKILL.md Step 6", "SKILL_HE.md Step 6"],
+      "sources": [
+        "https://nofryers.com/returning-goods-cancelling-services-for-cash-in-israel/",
+        "https://www.dinolaw.co.il/en/consumerism/cancellation-of-a-transactions-a-comprehensive-consumer-guide/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "return-exclusions",
+      "claim": "The 14-day cancellation right does not apply to perishable goods, personalized items, undergarments, or furniture already assembled at the buyer's home.",
+      "where_used": ["SKILL.md Step 6", "SKILL_HE.md Step 6"],
+      "sources": [
+        "https://nofryers.com/returning-goods-cancelling-services-for-cash-in-israel/",
+        "https://fionistdream.com/2024/01/02/7-israeli-consumer-rights-you-need-to-know-right-now/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "hebrew-sms-70-chars",
+      "claim": "Hebrew SMS is limited to 70 characters per segment (vs 160 for Latin alphabet) under the GSM/UCS-2 encoding standard.",
+      "where_used": ["SKILL.md Step 5", "SKILL_HE.md Step 5"],
+      "sources": [
+        "https://messaggio.com/sms-gateway-api/israel/",
+        "https://www.easysendsms.com/bulksmscountries/Israel"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "local-sms-gateways",
+      "claim": "Israeli SMS gateway providers commonly used for transactional notifications include 019 (Telzar), Cellact, InforuMobile, and SMS4Free.",
+      "where_used": ["SKILL.md Step 5", "SKILL_HE.md Step 5"],
+      "sources": [
+        "https://agentskills.co.il/en/skills/communication/israeli-sms-gateway",
+        "https://messaggio.com/messaging/carriers/israel/cellact/",
+        "https://messaggio.com/messaging/carriers/israel/019_mobile/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "cheetah-9-branches",
+      "claim": "Cheetah operates 9 branches nationwide (Kiryat Ata to Eilat), so same-day delivery is not limited to Gush Dan.",
+      "where_used": ["references/carrier-apis.md (unchanged, pre-existing claim retained)"],
+      "sources": [
+        "https://chitadelivery.co.il/en/",
+        "https://www.cheetah-group.net/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "hfd-1000-pickup",
+      "claim": "HFD operates ~1,000 pickup points and lockers across Israel.",
+      "where_used": ["SKILL.md carrier table (unchanged)", "references/carrier-apis.md (unchanged)"],
+      "sources": [
+        "https://www.weship.com/en/carriers/hfd",
+        "https://www.hfd.co.il/en/ecommerce/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "mahir-li-lionwheel",
+      "claim": "Mahir Li (mahirli.com) operates on the LionWheel platform (lionwheel.com); integrations go through LionWheel's documented REST API.",
+      "where_used": ["SKILL.md Step 3 (unchanged)", "references/carrier-apis.md (unchanged)"],
+      "sources": [
+        "https://lionwheel.com/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "mahir-li-min-volume",
+      "claim": "Mahir Li requires a minimum of 10 deliveries per day for business accounts.",
+      "where_used": ["SKILL.md Step 1 carrier table (unchanged)", "SKILL_HE.md (unchanged)"],
+      "sources": [
+        "https://mahirli.com/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "mikud-7-digit",
+      "claim": "Israeli mikud (ZIP) is exactly 7 digits. Older 5-digit codes have been fully retired.",
+      "where_used": ["SKILL.md Step 2 (unchanged)", "SKILL.md Troubleshooting (unchanged)", "SKILL_HE.md (unchanged)"],
+      "sources": [
+        "https://mypost.israelpost.co.il/zipcodesearch",
+        "https://worldpostalcode.com/israel/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "no-public-rest-api-il-carriers",
+      "claim": "Israeli domestic shipping carriers (Israel Post, Cheetah, HFD, Mahir Li) do not offer publicly documented REST APIs for general developers. Integration is via Shopify/WooCommerce plugins, the Datalogics third-party API for Israel Post, third-party aggregators, or private B2B contracts.",
+      "where_used": ["SKILL.md Step 4 (unchanged)", "SKILL.md Gotchas (unchanged)", "references/carrier-apis.md (unchanged)"],
+      "sources": [
+        "https://israel-post.datalogics.co.il/",
+        "https://www.aftership.com/carriers/israel-post/api",
+        "https://www.aftership.com/carriers/hfd/api"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-developer-kit",
+      "claim": "UPS provides a documented REST API via the UPS Developer Kit (developer.ups.com) covering label generation, rate calculation, and tracking. This API also serves the new Israeli locker network.",
+      "where_used": ["SKILL.md Step 3", "SKILL_HE.md Step 3", "references/carrier-apis.md"],
+      "sources": [
+        "https://www.ups.com/upsdeveloperkit?loc=en_IL"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "datalogics-endpoint",
+      "claim": "Israel Post domestic shipping is available through the Datalogics third-party REST API at connect.datalogics.co.il/rest/w_create_shipping (auth via token in JSON body).",
+      "where_used": ["SKILL.md Step 3 (unchanged)", "references/carrier-apis.md (unchanged)"],
+      "sources": [
+        "https://israel-post.datalogics.co.il/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "scoped-out-international",
+      "claim": "This skill is deliberately scoped to domestic Israeli shipping. International carriers (Aramex, DHL Express, FedEx, UPS Express) and customs/import topics are out of scope and routed to the israeli-customs-duty-calculator skill.",
+      "where_used": ["SKILL.md description", "SKILL.md Gotchas", "metadata.json display_description"],
+      "sources": [
+        "internal architectural decision; cross-skill boundary"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-locker-bidirectional",
+      "claim": "UPS Israel lockers support BOTH drop-off and pickup (24/7), unlike most other Israeli locker networks which are pickup-only. This is the first locker network in Israel to enable consumer drop-off without a service-store visit.",
+      "where_used": ["SKILL.md Step 3", "SKILL_HE.md Step 3", "references/carrier-apis.md"],
+      "sources": [
+        "https://www.jpost.com/consumerism/article-844866",
+        "https://en.port2port.co.il/article/Air-Transport/Courier-Services/UPS-Israel-Launches-Innovative-Service-for-Convenient-Affordable-Package-Delivery/"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ips-not-distinct-il-carrier",
+      "claim": "There is no separate Israeli domestic carrier called 'IPS' (Israel Postal Solutions). The acronym IPS in postal contexts refers to the Universal Postal Union's 'International Postal System' product, which is back-office software for postal operators, not a developer-facing shipping integration.",
+      "where_used": ["NOT added to SKILL.md (intentionally excluded after research could not verify a distinct domestic carrier)"],
+      "sources": [
+        "https://www.upu.int/en/postal-solutions/technical-solutions/products/ips-line-of-products/ips-international-postal-system"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "ladpack-not-found",
+      "claim": "No verifiable evidence of an active Israeli same-day shipping carrier named 'Ladpack' (ladpack.co.il) was found via web search in May 2026. Domain may be dormant, defunct, or renamed.",
+      "where_used": ["NOT added to SKILL.md (intentionally excluded, precision over coverage)"],
+      "sources": [
+        "Web search returned no results for ladpack.co.il (May 2026)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "perimeterx-bot-protection",
+      "claim": "israelpost.co.il and mypost.israelpost.co.il use ShieldSquare/PerimeterX bot protection, which may block automated scraping of tracking or rate data.",
+      "where_used": ["SKILL.md Gotchas (unchanged)", "SKILL.md Troubleshooting (unchanged)", "references/carrier-apis.md (unchanged)"],
+      "sources": [
+        "https://www.humansecurity.com/products/application-protection/perimeterx-bot-defender/"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "baldar-saas-not-carrier",
+      "claim": "Baldar (baldar.co.il) is delivery-management SaaS used by Israeli courier companies (Tapuz, Hafoz, Isgav, Mach1), not a shipping carrier itself.",
+      "where_used": ["SKILL.md Step 1 note (unchanged)", "SKILL.md Gotchas (unchanged)", "references/carrier-apis.md (unchanged)"],
+      "sources": [
+        "https://baldar.co.il/"
+      ],
+      "confidence": "high"
+    }
+  ],
+  "claims_count": 24,
+  "skipped_topics": [
+    {
+      "topic": "Aramex Israel API",
+      "reason": "Cross-border shipping is out of scope (skill is domestic-only). The israeli-customs-duty-calculator skill owns this lane.",
+      "research_completed": true
+    },
+    {
+      "topic": "DHL eCommerce Israel locker network",
+      "reason": "International / cross-border, out of scope. Israeli-specific 2025-2026 expansion details were not surfaced in public search; would require contacting DHL Israel directly.",
+      "research_completed": true
+    },
+    {
+      "topic": "FedEx Israel Tel Aviv customs",
+      "reason": "Customs / international shipping is out of scope and routed to israeli-customs-duty-calculator.",
+      "research_completed": true
+    },
+    {
+      "topic": "Doar Express / Doar Shaliach lockers",
+      "reason": "Could not find a distinct branded service by these names in 2026 sources. Israel Post's locker presence is already covered via BOX2GO (Israel Post + Paz / Yellow Box).",
+      "research_completed": true
+    }
+  ]
+}

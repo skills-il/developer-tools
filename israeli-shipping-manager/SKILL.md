@@ -1,6 +1,6 @@
 ---
 name: israeli-shipping-manager
-description: Build and manage shipping integrations with Israeli carriers, including Israel Post, Cheetah, HFD, and Mahir Li, plus locker pickup services (BOX2GO, Shlager, Done). Use when user asks about "shipping Israel", "Cheetah delivery", "meshloach", "shipping label", "HFD", "locker pickup Israel", "tawit mishloach", or setting up carrier integrations for an e-commerce store. Covers carrier selection, Israeli address formatting, label generation, cross-carrier tracking system setup, and customer delivery notifications. Do NOT use for looking up a specific package tracking status (direct the user to mypost.israelpost.co.il or hfd.co.il instead). Do NOT use for international shipping outside Israel or customs/import.
+description: Build and manage shipping integrations with Israeli carriers, including Israel Post, Cheetah, HFD, Mahir Li, GetPackage, and UPS Israel, plus locker pickup services (BOX2GO, Shlager, Done, UPS lockers). Use when user asks about "shipping Israel", "Cheetah delivery", "meshloach", "shipping label", "HFD", "locker pickup Israel", "tawit mishloach", "GetPackage", "UPS lockers Israel", or setting up carrier integrations for an e-commerce store. Covers carrier selection, Israeli address formatting, label generation, cross-carrier tracking system setup, customer delivery notifications, and 14-day consumer-protection returns. Do NOT use for looking up a specific package tracking status (direct the user to mypost.israelpost.co.il or hfd.co.il instead). Do NOT use for international shipping outside Israel or customs/import (see israeli-customs-duty-calculator for the personal-import USD 130 VAT threshold).
 license: MIT
 allowed-tools: Bash(python:*) WebFetch
 compatibility: Works with Claude Code, OpenClaw, Cursor. OpenClaw recommended for automated tracking updates and customer WhatsApp/SMS notifications.
@@ -25,6 +25,8 @@ Help the user choose the right carrier for their shipment. Ask about parcel size
 | Cheetah (צ'יטה) | Same-day/express delivery | Same day (often within 4 hours) | Medium-high | Limited | Shopify app, private B2B API |
 | HFD (Hameritz & Flash) | E-commerce fulfillment | 2-4 business days | Medium | ~1,000 pickup points + lockers | Shopify/WooCommerce plugins, private API |
 | Mahir Li (מהיר לי) | Same-day B2B courier | Same day (within 9 hours) | Medium-high | Door-to-door only | Via LionWheel platform |
+| UPS Israel (locker drop-off) | Small parcels, prepaid flat rate | 1-2 business days | ~27 NIS flat (incl. VAT) | 100 lockers + 150 service stores nationwide (launched March 2025) | UPS Developer Kit + locker QR-code drop-off |
+| GetPackage (גט פקג'/getpackage.com) | Crowdsourced same-day courier | Same day (often 1-3 hours) | Variable (bid-based) | Door-to-door only | Web platform + REST API (B2B account) |
 
 Additional courier companies use Baldar delivery management software (Tapuz, Hafoz, Isgav, Mach1). If a user mentions "Baldar," ask which specific courier company they use, as Baldar is software, not a carrier.
 
@@ -37,14 +39,15 @@ Locker/pickup services (not standalone carriers):
 | Done | Done (done.co.il) | Lockers at various locations | ~30 NIS/package, max 5 kg, 3 business days |
 | SafeLocker | SafeLocker | Malls and shopping centers | Locker-based pickup |
 | HFD Points | HFD | ~1,000 nationwide | Part of HFD delivery network |
+| UPS Lockers Israel | UPS franchisee (Israel) | 100 lockers + 150 service stores | 24/7 drop-off and pickup, ~27 NIS flat per package (launched March 2025) |
 
 Selection criteria:
-- **Delivery speed:** Same-day requires Cheetah or Mahir Li; standard allows all carriers
-- **Parcel size/weight:** Heavy or oversized items may limit carrier options. Locker services have size limits.
+- **Delivery speed:** Same-day requires Cheetah, Mahir Li, or GetPackage; UPS Israel is 1-2 business days; standard allows all carriers
+- **Parcel size/weight:** Heavy or oversized items may limit carrier options. Locker services have size limits (Done max 5 kg, UPS locker doors fit small parcels only).
 - **Destination area:** Center (Gush Dan) has full coverage; periphery (Eilat, Galilee) may have limited options for some carriers
-- **Budget:** Israel Post is cheapest for standard; Cheetah and Mahir Li are premium for speed
-- **Pickup vs door-to-door:** BOX2GO/HFD/Done for self-service pickup; Cheetah/Mahir Li for guaranteed door delivery
-- **Volume:** Mahir Li requires minimum 10 deliveries/day; Israel Post and HFD have no minimums
+- **Budget:** Israel Post is cheapest for standard; UPS Israel offers a flat ~27 NIS locker-to-locker rate; Cheetah and Mahir Li are premium for speed
+- **Pickup vs door-to-door:** BOX2GO/HFD/Done/UPS lockers for self-service drop-off and pickup; Cheetah/Mahir Li/GetPackage for guaranteed door delivery
+- **Volume:** Mahir Li requires minimum 10 deliveries/day; Israel Post, HFD, UPS Israel, and GetPackage have no minimums
 
 ### Step 2: Format Israeli Address
 Format addresses correctly per carrier requirements. Run `python scripts/format_address.py --validate` to check format before submission. See references/address-format.md for the complete format specification.
@@ -71,6 +74,8 @@ Label generation depends on the carrier's integration method:
 - **Cheetah:** Use the "Cheetah DeliverIt" Shopify app, or contact Cheetah sales for direct integration
 - **HFD:** Use the "HFD DeliverIt" Shopify app or the "HFD ePost Integration" WooCommerce plugin. HFD also offers a private API for direct integration (contact HFD).
 - **Mahir Li:** Integration via LionWheel platform (lionwheel.com). Contact Mahir Li for business account setup.
+- **UPS Israel:** Use the UPS Developer Kit (developer.ups.com) for label generation, rate calculation, and tracking. For locker drop-off flows, generate a label and present the QR code at any UPS locker (24/7). 100 lockers + 150 service stores nationwide.
+- **GetPackage:** Use the GetPackage business platform (getpackage.com). For high-volume integrations, request REST API access via their business team.
 
 All labels require:
 - Sender details (name, address, phone)
@@ -101,7 +106,9 @@ Normalize status codes to a common set: `pending`, `picked_up`, `in_transit`, `o
 Poll at configurable intervals (default: every 2 hours). Detect anomalies: package stuck in same status for >48 hours, delivery failures, address corrections.
 
 ### Step 5: Configure Customer Notifications
-Set up automated customer notifications on status changes:
+Set up automated customer notifications on status changes. For Hebrew SMS to Israeli numbers, use a local gateway (019/Telzar, Cellact, InforuMobile, SMS4Free) rather than Twilio. Hebrew SMS is limited to 70 characters per segment (vs 160 for Latin), and local providers handle Israeli carrier routing more reliably. See the `israeli-sms-gateway` skill for SMS-specific integration.
+
+Notifications by status:
 - **Shipped:** WhatsApp/SMS with tracking number and estimated delivery -- "החבילה שלך נשלחה! מספר מעקב: [X]. צפי הגעה: [DATE]."
 - **Out for delivery:** "החבילה שלך בדרך אליך! צפי הגעה היום עד [TIME]."
 - **Delivered:** "החבילה נמסרה בהצלחה! תודה על הקנייה."
@@ -111,11 +118,14 @@ Set up automated customer notifications on status changes:
 Respect quiet hours: no notifications between 22:00-08:00 Israel time.
 
 ### Step 6: Handle Returns and RMA
-Manage return shipments:
+Manage return shipments under Israel's distance-selling rules (Israeli Consumer Protection Law, Distance Selling Regulations):
 - Generate return label with original tracking reference
 - Track return shipment back to seller
-- Support different return reasons: defective, wrong item, changed mind (14-day consumer protection per Israeli Consumer Protection Law)
-- Calculate return shipping cost by carrier
+- Support different return reasons: defective, wrong item, changed mind. The buyer has 14 days from receipt to cancel a distance-selling transaction (online/phone purchase) without justification.
+- **Refund deadline:** the seller must refund money in the same payment method used, within 7 business days from the date the return is received.
+- **Cancellation fee:** for "changed mind" returns the seller may charge a cancellation fee of 5% of the purchase price OR 100 NIS, whichever is lower. NO cancellation fee is allowed if the item is defective, mis-described, late, or otherwise a breach of contract by the seller.
+- **Exclusions:** the 14-day cancellation right does not apply to perishable goods, personalized items, undergarments, or furniture already assembled at the buyer's home.
+- Calculate return shipping cost by carrier (UPS locker drop-off is often the cheapest return path for small parcels at ~27 NIS flat)
 - Update order status when return is received
 
 ## Examples
@@ -182,6 +192,8 @@ This shipping-manager skill is a **developer integration guide** for building sh
 - COD (cash on delivery) is still common in Israeli e-commerce. Agents may not include this payment option when setting up shipping flows.
 - Baldar is delivery management software, not a carrier. If a user says "I ship with Baldar," they mean a courier that uses Baldar (Tapuz, Hafoz, Isgav, Mach1). Ask which carrier specifically.
 - Israel Post's website uses bot protection (ShieldSquare/PerimeterX). Automated scraping of tracking or rate data may be blocked. Use the open-source libraries or Datalogics API instead.
+- **Personal-import VAT threshold is USD 130, not USD 150.** The threshold was raised to USD 150 in 2025 and then walked back to USD 130 after retailer pushback. Orders at or above USD 130 (goods value, excluding shipping/insurance) attract 18% VAT and possible customs duty. If a user asks about cross-border shipping cost or customs, refer them to the `israeli-customs-duty-calculator` skill (this skill is domestic-only).
+- **UPS Israel locker network is new (launched March 2025).** Older shipping documentation will not mention it. The network is 100 lockers + 150 service stores nationwide, flat ~27 NIS per package incl. VAT, 1-2 business days. It is not the same as UPS's international express service.
 
 ## Troubleshooting
 

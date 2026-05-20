@@ -123,6 +123,43 @@ Baldar provides white-label CRM portals for courier companies. Each carrier host
 - Founded by two partners from Gush Katif, operates from Petah Tikva
 - B2B focused: requires minimum volume
 
+## UPS Israel (Locker Network)
+
+- **Website:** ups.com/il
+- **Developer portal:** developer.ups.com (UPS Developer Kit -- shared with global UPS)
+- **Launched:** March 2025 by the UPS franchisee in Israel
+
+### Verified Integration Methods
+
+**UPS Developer Kit:** UPS provides documented REST APIs for label generation, rate calculation, and tracking. These work for the Israeli locker network as well. Sign up at developer.ups.com.
+
+**Locker drop-off flow:** Generate a label via the API, present the QR code at any UPS locker (24/7 access). 100 locker stations + 150 service stores nationwide.
+
+### Notes
+- Flat rate ~27 NIS per package (incl. VAT) for the locker-to-locker domestic service
+- Delivery: 1-2 business days to most localities
+- No minimum volume requirement
+- Targets private customers and small businesses (under-served by traditional carriers' B2B contracts)
+- This is the UPS Israel franchisee's domestic locker network, distinct from UPS Express international service
+
+## GetPackage (גט פקג')
+
+- **Website:** getpackage.com
+- **Model:** SaaS platform connecting businesses and individuals with crowd-sourced couriers (collaborative-economy / on-demand)
+
+### Verified Integration Methods
+
+**Web platform:** Order day-to-day deliveries through the GetPackage web interface. Select pickup point + dropoff point; the platform finds available couriers.
+
+**REST API:** Available for business accounts (B2B). Contact GetPackage business team for API credentials.
+
+### Notes
+- Same-day delivery, typically 1-3 hours from pickup
+- Variable pricing (bid-based / dynamic)
+- Door-to-door only; no locker network of their own
+- No minimum volume
+- Common alternative to Cheetah / Mahir Li for sellers without a B2B contract
+
 ## Locker and Pickup Point Services
 
 Israel has several locker and self-service pickup networks. There is no single "BOX" carrier. The main services:
@@ -152,6 +189,13 @@ Israel has several locker and self-service pickup networks. There is no single "
 - ~1,000 pickup point locations
 - Searchable at hfd.co.il
 
+### UPS Lockers Israel
+- 100 lockers + 150 service stores nationwide (launched March 2025)
+- 24/7 drop-off AND pickup (most other Israeli locker networks are pickup-only)
+- Flat ~27 NIS per package (incl. VAT)
+- 1-2 business days
+- Locator: ups.com/il
+
 ## Third-Party Aggregators
 
 For unified multi-carrier integration, consider these aggregator APIs:
@@ -163,6 +207,8 @@ For unified multi-carrier integration, consider these aggregator APIs:
 | ClickPost | Full integration | 150+ carriers including Israeli carriers |
 | WeShip (weship.com) | Full integration | Multi-carrier Israeli shipping platform |
 | LionWheel | Full integration | Used by Mahir Li and other Israeli couriers |
+| UPS Developer Kit | Full integration | Official UPS APIs, also cover the new Israeli locker network |
+| GetPackage Business API | Full integration | Crowd-sourced same-day couriers in Israel; requires business account |
 
 These aggregators provide the unified REST API experience that individual Israeli carriers lack.
 
