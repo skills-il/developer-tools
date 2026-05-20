@@ -26,13 +26,17 @@ except ImportError:
     sys.exit(1)
 
 
-# Israeli financial constants (2025 onward, VAT raised from 17% to 18% on 2025-01-01)
+# Israeli financial constants (2026, VAT at 18% since 2025-01-01)
+# Income tax brackets reflect Amendment 288 (effective 1 January 2026):
+# the 20% and 31% bands were widened, pushing the 35% floor from 269,280
+# to 301,200 NIS annually. The 10/14/35/47/50 rate thresholds are otherwise
+# frozen at 2025 levels through 2027.
 VAT_RATE = Decimal("0.18")
 TAX_BRACKETS = [
     (Decimal("84120"), Decimal("0.10")),
     (Decimal("120720"), Decimal("0.14")),
-    (Decimal("193800"), Decimal("0.20")),
-    (Decimal("269280"), Decimal("0.31")),
+    (Decimal("228000"), Decimal("0.20")),
+    (Decimal("301200"), Decimal("0.31")),
     (Decimal("560280"), Decimal("0.35")),
     (Decimal("721560"), Decimal("0.47")),
     (Decimal("999999999"), Decimal("0.50")),

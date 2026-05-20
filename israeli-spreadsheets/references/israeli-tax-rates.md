@@ -1,17 +1,19 @@
-# Israeli Tax Rates and Financial Constants (2025-2026)
+# Israeli Tax Rates and Financial Constants (2026)
 
-> **Note:** Israel's income tax brackets, credit point value, Bituach Leumi, health tax, and pension rates were frozen at their 2025 levels for 2026 (no across-the-board update). They are labeled "2025-2026" below. The minimum wage did rise on 1 April 2026 and is updated accordingly. Always re-verify against the Tax Authority and Bituach Leumi before relying on these in a calculation.
+> **Note:** The 10%, 14%, 35%, 47%, and 50% bracket thresholds were carried forward from 2025 (no inflation indexation, frozen for 2025-2027). The 20% and 31% brackets were widened by Income Tax Amendment 288, effective for income derived on or after 1 January 2026. The credit point value, Bituach Leumi, health tax, and pension rates were kept at their 2025 levels for 2026. The minimum wage rose on 1 April 2026 and is updated accordingly. Always re-verify against the Tax Authority and Bituach Leumi before relying on these in a calculation.
 
-## Income Tax Brackets (2025-2026, frozen at 2025 levels)
-| Annual Income (NIS) | Marginal Rate |
-|---------------------|---------------|
-| Up to 84,120 | 10% |
-| 84,121 - 120,720 | 14% |
-| 120,721 - 193,800 | 20% |
-| 193,801 - 269,280 | 31% |
-| 269,281 - 560,280 | 35% |
-| 560,281 - 721,560 | 47% |
-| Above 721,560 | 50% |
+## Income Tax Brackets (2026, post-Amendment 288)
+| Annual Income (NIS) | Marginal Rate | Notes |
+|---------------------|---------------|-------|
+| Up to 84,120 | 10% | Unchanged from 2025 |
+| 84,121 - 120,720 | 14% | Unchanged from 2025 |
+| 120,721 - 228,000 | 20% | Widened in 2026 (was up to 193,800) |
+| 228,001 - 301,200 | 31% | Widened in 2026 (was 193,801-269,280) |
+| 301,201 - 560,280 | 35% | Floor raised in 2026 (was 269,281-560,280) |
+| 560,281 - 721,560 | 47% | Unchanged from 2025 |
+| Above 721,560 | 50% | Unchanged (47% + 3% surtax) |
+
+Amendment 288 expanded the middle brackets (20%, 31%, 35%); a taxpayer with 300,000 NIS taxable income saves roughly 5,000 NIS/year compared to the pre-amendment schedule. The top marginal rate (50%) and Bituach Leumi rates were not affected.
 
 ## Tax Credit Points (Nekudot Zikui)
 - Value per point: 2,904 NIS/year (242 NIS/month)
@@ -34,8 +36,14 @@
 | Above 7,122 NIS/month | 5.00% |
 
 ## VAT (Ma'am)
-- Standard rate: 18% (raised from 17% on 2025-01-01)
+- Standard rate: 18% (raised from 17% on 2025-01-01; the Finance Ministry's January 2026 proposal to raise it again to 19% was dropped during budget negotiations and did not take effect).
 - Eilat: 0% (tax-free zone)
+
+### VAT formula cheat sheet
+- Net to gross: `gross = net * 1.18`
+- Gross to net: `net = gross / 1.18`
+- VAT amount inside a VAT-inclusive price: `vat = gross - gross / 1.18` (equivalently `gross * 0.18 / 1.18`)
+- VAT amount on a VAT-exclusive price: `vat = net * 0.18`
 
 ## Pension Contributions (2025-2026, frozen at 2025 levels)
 | Component | Employee | Employer |

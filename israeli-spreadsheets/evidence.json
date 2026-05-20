@@ -1,0 +1,150 @@
+{
+  "skill": "israeli-spreadsheets",
+  "version": "1.3.0",
+  "audit_date": "2026-05-20",
+  "audited_by": "skills-il update-skill pipeline (Opus 4.7)",
+  "claims": [
+    {
+      "id": "vat-rate-2026",
+      "claim": "Israel's standard VAT rate is 18% for 2026 (the proposed January 2026 hike to 19% was dropped).",
+      "evidence": "Knesset raised VAT from 17% to 18% effective 2025-01-01. The Ministry of Finance proposed a further hike to 19% for January 2026 but it was opposed by government leaders and did not take effect; PwC, vatcalc, and tradingeconomics list 18% as the active 2026 rate.",
+      "sources": [
+        "https://main.knesset.gov.il/EN/News/PressReleases/Pages/press12324w.aspx",
+        "https://www.vatcalc.com/vat/israel-vat-rise-to-19-jan-2026-proposal/",
+        "https://taxsummaries.pwc.com/israel/corporate/other-taxes"
+      ]
+    },
+    {
+      "id": "income-tax-brackets-2026-amendment-288",
+      "claim": "Effective 1 January 2026, Income Tax Amendment 288 widened the 20% bracket to 228,000 NIS annually and the 31% bracket to 301,200 NIS annually; the 35% floor moved to 301,201.",
+      "evidence": "Globes (2026-03) and CWS Israel describe Amendment 288 widening the 20% band to NIS 19,000/month (228,000/year) and the 31% band to NIS 25,100/month (301,200/year). Top 47% + 3% surtax above 721,560 was not changed.",
+      "sources": [
+        "https://en.globes.co.il/en/article-revised-income-tax-brackets-boost-march-salary-1001539434",
+        "https://www.cwsisrael.com/israeli-tax-changes-2026-complete-guide/",
+        "https://www.jpost.com/business-and-innovation/banking-and-finance/article-892194"
+      ]
+    },
+    {
+      "id": "credit-point-value-2026",
+      "claim": "Credit point value (nekudat zikui) for 2026 is 2,904 NIS/year (242 NIS/month), unchanged from 2025.",
+      "evidence": "CWS Israel 2026 guide states '₪242/month (₪2,904/year). Value increases if tax bracket freeze is lifted.' The credit point value is frozen alongside other thresholds for 2025-2027.",
+      "sources": [
+        "https://www.cwsisrael.com/israeli-tax-changes-2026-complete-guide/"
+      ]
+    },
+    {
+      "id": "bituach-leumi-ceiling-2026",
+      "claim": "Bituach Leumi employee rates are 0.40% up to 7,122 NIS/month and 7.00% from 7,123 up to the 49,030 NIS/month ceiling for 2026.",
+      "evidence": "VOLEH and CWS Israel 2026 references confirm the ~7% rate up to the 49,030 NIS/month ceiling; Bituach Leumi (btl.gov.il) publishes the threshold tables annually with these same figures.",
+      "sources": [
+        "https://voleh.org/the-duty-to-contribute-a-2026-guide-to-israels-national-insurance-bituach-leumi/",
+        "https://www.cwsisrael.com/national-insurance-bituach-leumi-and-health-tax-in-2025/"
+      ]
+    },
+    {
+      "id": "health-tax-2026",
+      "claim": "Health tax (mas briut) for 2026: 3.10% up to 7,122 NIS/month, 5.00% above (employee side).",
+      "evidence": "CWS Israel 2026 confirms health tax was kept at 2025 levels alongside Bituach Leumi for 2026.",
+      "sources": [
+        "https://www.cwsisrael.com/national-insurance-bituach-leumi-and-health-tax-in-2025/"
+      ]
+    },
+    {
+      "id": "minimum-wage-april-2026",
+      "claim": "From 1 April 2026 the Israeli statutory minimum wage is 6,443.85 NIS/month and ~35.40 NIS/hour at the 182-hour basis (34.64 NIS/hour at the 186-hour basis).",
+      "evidence": "Histadrut announced a 3.3% rise from 6,247.67 to 6,443.85 NIS/month effective 1 April 2026. Bituach Leumi confirms the same figures; wageindicator.org reports both hourly bases.",
+      "sources": [
+        "https://global.histadrut.org.il/news/israels-minimum-wage-to-rise-by-3-3/",
+        "https://www.btl.gov.il/English%20Homepage/Mediniyut/GeneralInformation/Pages/MinimumWage.aspx",
+        "https://wageindicator.org/work/minimum-wage/updates/2026/minimum-wage-updated-in-israel-from-01-april-2026-april-02-2026/"
+      ]
+    },
+    {
+      "id": "vat-formula-inclusive-exclusive",
+      "claim": "For an 18% VAT, gross = net*1.18, net = gross/1.18, VAT-on-gross = gross - gross/1.18 = gross*0.18/1.18.",
+      "evidence": "Standard inclusive/exclusive VAT identities; algebraically: if gross = net*(1+r), then net = gross/(1+r) and vat = gross - net = gross*r/(1+r). At r=0.18, gross*0.18/1.18 yields the same VAT amount as gross - gross/1.18.",
+      "sources": [
+        "https://taxsummaries.pwc.com/israel/corporate/other-taxes"
+      ]
+    },
+    {
+      "id": "section-45a-pension-credit",
+      "claim": "Employees and self-employed taxpayers who contribute to a recognized pension fund get a 35% tax credit on qualifying pension contributions under Section 45a of the Income Tax Ordinance, subject to annual ceilings.",
+      "evidence": "Carried forward from skill v1.2.0; ITA Section 45a continues to grant 35% credit on the employee-side pension deposit; no change between 2025 and 2026.",
+      "sources": [
+        "https://www.gov.il/en/departments/israel_tax_authority"
+      ]
+    },
+    {
+      "id": "google-sheets-ai-function",
+      "claim": "Google Sheets ships a native =AI() formula (powered by Gemini) in 2026 that returns text from a natural-language prompt in a cell.",
+      "evidence": "Google Workspace Updates blog announced general availability of Gemini in Sheets including =AI() formula in 2026. DataCamp and ModelMonkey published tutorials in 2026 documenting the =AI() function as a built-in formula.",
+      "sources": [
+        "https://workspaceupdates.googleblog.com/2026/04/build-and-edit-complex-spreadsheets-with-Gemini-in-Google-Sheets.html",
+        "https://workspace.google.com/resources/spreadsheet-ai/",
+        "https://www.datacamp.com/tutorial/google-sheets-ai-function"
+      ]
+    },
+    {
+      "id": "excel-let-lambda-availability",
+      "claim": "LET and LAMBDA are available in Excel for Microsoft 365, Excel for the Web, and Excel 2021/2024 (and remain available in 2026 builds).",
+      "evidence": "Microsoft Support documents LET as available in Excel 2021 or later and Microsoft 365, and LAMBDA in Microsoft 365 / Excel 2024 / Excel for the web. No deprecation in 2026.",
+      "sources": [
+        "https://support.microsoft.com/en-us/office/lambda-function-bd212d27-1cd1-4321-a34a-ccbf254b8b67"
+      ]
+    },
+    {
+      "id": "excel-hebrew-sort-bug",
+      "claim": "Excel's sort on Hebrew text reliably orders by the first letter but falls back to Unicode codepoint order for subsequent letters in many builds; sorted Hebrew name lists routinely contain ordering errors.",
+      "evidence": "Documented in multiple user threads (MrExcel, Chandoo, ExcelForum) across Excel 2013-2020. Microsoft's own 2003 documentation flagged the shift from Hebrew code-page sort to Unicode collation, which is the root cause: Unicode codepoint order is not Hebrew alphabetical order beyond the first letter in all words.",
+      "sources": [
+        "https://www.mrexcel.com/board/threads/sorting-hebrew-words-correctly.1154571/",
+        "https://chandoo.org/forum/threads/hebrew-sort-order-incorrect.42211/",
+        "https://documentation.help/MS-Office-Excel-2003/acconbidiLearnAboutHeSortOrder1.htm"
+      ]
+    },
+    {
+      "id": "hebcal-spreadsheet-integration",
+      "claim": "Hebcal has no native spreadsheet function; the supported paths are CSV export from hebcal.com or a REST call (https://www.hebcal.com/hebcal) from Apps Script.",
+      "evidence": "Hebcal's developer-APIs page documents the REST endpoint and CSV/iCal/JSON output formats. The hebcal-rest-api GitHub repo confirms CSV is a first-class export. Apps Script's UrlFetchApp is the standard way to call REST from Google Sheets.",
+      "sources": [
+        "https://www.hebcal.com/home/developer-apis",
+        "https://github.com/hebcal/hebcal-rest-api",
+        "https://www.hebcal.com/home/195/jewish-calendar-rest-api"
+      ]
+    },
+    {
+      "id": "nis-format-string-he-il",
+      "claim": "Excel accepts both `#,##0.00 \"₪\"` and `#,##0.00 [$₪-he-IL]` as Israeli NIS currency formats; the locale-tagged variant survives re-saves by non-Israeli Excel installations more reliably.",
+      "evidence": "Office Watch (2025) discusses how Excel labels currency entries by language tag rather than country, and shows the [$<symbol>-<locale>] convention used for locale-tagged custom formats. The 40D hex code is the legacy LCID for he-IL but modern Excel accepts the BCP-47 form `he-IL` directly inside the [$...] block.",
+      "sources": [
+        "https://office-watch.com/2025/excel-hebrew-shekel-currency-list-facts/"
+      ]
+    },
+    {
+      "id": "rtl-merged-cells-flip",
+      "claim": "Merged cells inside an Excel sheet with rightToLeft=true sometimes render in the wrong direction when opened by an Excel installation with a non-Israeli system locale.",
+      "evidence": "Recurring issue reported on Chandoo and MrExcel threads about RTL + merged-cells interaction. Microsoft Learn documents the Worksheet.DisplayRightToLeft VBA property but does not guarantee merged-span alignment across locales.",
+      "sources": [
+        "https://chandoo.org/forum/threads/combining-hebrew-text-with-left-to-right-numbers.45554/",
+        "https://learn.microsoft.com/en-us/office/vba/api/excel.worksheet.displayrighttoleft"
+      ]
+    },
+    {
+      "id": "googlefinance-usdils",
+      "claim": "Google Sheets `=GOOGLEFINANCE(\"CURRENCY:USDILS\")` returns the current USD to ILS exchange rate.",
+      "evidence": "Carried forward from skill v1.2.0; Google's official Sheets function documentation lists CURRENCY:<from><to> as a valid GOOGLEFINANCE attribute and USDILS continues to work in 2026.",
+      "sources": [
+        "https://support.google.com/docs/answer/3093281"
+      ]
+    },
+    {
+      "id": "openpyxl-rtl-property",
+      "claim": "openpyxl exposes `ws.sheet_view.rightToLeft = True` to mark a worksheet as RTL.",
+      "evidence": "openpyxl documentation defines SheetView.rightToLeft as a writable bool that maps to the OOXML <sheetView rightToLeft=\"1\"/> attribute, which Excel honors on open. Verified by inspecting the skill's bundled script which has used this property since v1.0.",
+      "sources": [
+        "https://openpyxl.readthedocs.io/en/stable/api/openpyxl.worksheet.views.html"
+      ]
+    }
+  ]
+}
