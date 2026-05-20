@@ -3,7 +3,7 @@ name: zapier-israeli-integrations
 description: Build Zapier Zaps connecting Israeli business apps (Morning/Green Invoice, Cardcom, Tranzila, iCount, Grow) with global services for billing, payment, and workflow automation. Use when asked to "create a Zap for Israeli invoicing", "automate Morning receipts", "connect Cardcom to my CRM", or set up payment notifications. Covers Hebrew text handling, ILS formatting, bimonthly VAT logic, Invoice Reform 2026, Zapier AI (Copilot, Agents, MCP), and webhooks from Israeli processors. All amounts use decimal shekels, not agorot. Customer WhatsApp requires Twilio/WATI (not Zapier native). Do NOT use for n8n (use n8n-hebrew-workflows), Make.com (use make-com-israeli-automations), or non-Zapier automation.
 license: MIT
 allowed-tools: Bash(curl:*) Bash(node:*) Bash(python:*)
-compatibility: Requires Zapier account. Free plan includes unlimited two-step Zaps, 100 tasks/month, Copilot AI, Tables, and Interfaces. Multi-step Zaps require Professional plan ($19.99/month annual). Webhook triggers use Webhooks by Zapier (available on all plans). No local dependencies.
+compatibility: Requires Zapier account. Free plan includes unlimited two-step Zaps, 100 tasks/month, Copilot AI, Tables, and Interfaces. Multi-step Zaps require the Starter plan ($19.99/month annual, $29.99 monthly, 750 tasks); Professional ($49/month annual, 2,000 tasks) adds advanced features like custom logic and conditional steps. Webhook triggers use Webhooks by Zapier (available on all plans). No local dependencies.
 ---
 
 # Zapier Israeli Integrations
@@ -27,7 +27,7 @@ Match the Israeli business need to the correct Zap architecture.
 
 **Choosing single-step vs multi-step:**
 - Single-step Zaps (free plan): Direct trigger-to-action, e.g., "New Cardcom payment -> Create Zapier Tables row." Free plan includes unlimited Zaps but only two-step (one trigger, one action), 100 tasks/month, and 15-minute polling.
-- Multi-step Zaps (Professional plan, $19.99/month annual or $29.99/month monthly, 750 tasks): Chain actions with logic, e.g., "New payment -> Create invoice -> Send email -> Update CRM"
+- Multi-step Zaps (Starter plan, $19.99/month annual or $29.99/month monthly, 750 tasks): Chain actions with logic, e.g., "New payment -> Create invoice -> Send email -> Update CRM". The Professional plan ($49/month annual, 2,000 tasks) adds advanced features like conditional steps and filters.
 - Use Paths (branching) when the Zap needs to handle different scenarios, e.g., "If payment is over the Invoice Reform threshold (10,000 ILS through May 31, 2026, then 5,000 ILS from June 1, 2026), add Invoice Reform allocation number". Store the threshold in a workflow variable, not a hardcoded number, since it is scheduled to drop again.
 
 **Use Zapier Copilot** (available on all plans, including free) to describe what you want in plain English or Hebrew. Copilot suggests Zap structures, finds the right apps, and maps fields automatically. Example: "When I get a Cardcom payment, create a Morning receipt and email it to the customer."
@@ -403,6 +403,21 @@ Result: Annual tax preparation data is automatically compiled and sent to the ac
 - `references/israeli-zapier-apps.md` -- Directory of Israeli apps available on Zapier (native integrations and webhook-based connections), including auth methods, API endpoints, and field mappings. Consult when connecting a new Israeli app to Zapier or troubleshooting authentication.
 - `references/zap-templates.md` -- Ready-to-use Zap template configurations for common Israeli business workflows, with step-by-step field mappings and trigger/action details. Consult when building a new Zap and looking for a starting point that fits an Israeli business scenario.
 
+## Recommended MCP Servers
+
+[Green Invoice MCP](https://agentskills.co.il/he/mcps/accounting/green-invoice-mcp) for direct agent access to Morning. Zapier ships its own MCP at `mcp.zapier.com` exposing published Zaps.
+
+## Reference Links
+
+| Source | URL |
+|--------|-----|
+| Zapier pricing | https://zapier.com/pricing |
+| Zapier Platform docs | https://platform.zapier.com |
+| Webhooks by Zapier | https://zapier.com/apps/webhook/integrations |
+| Green Invoice API | https://www.greeninvoice.co.il/api-docs/ |
+| Cardcom v11 API | https://kb.cardcom.solutions/category/19-API |
+| Invoice Reform 2026 (ITA) | https://www.gov.il/en/departments/legalInfo/digital_invoice |
+
 ## Gotchas
 
 - **Cardcom amounts are decimal shekels, not agorot**: Cardcom sends `Amount` as decimal shekel values (e.g., 150.50 means 150.50 ILS). Do NOT divide by 100. The Cardcom v11 API Swagger spec confirms `Amount` uses decimal shekel values. Dividing by 100 would create invoices at 1/100th the correct amount.
@@ -417,7 +432,7 @@ Result: Annual tax preparation data is automatically compiled and sent to the ac
 - **VAT rate**: The current Israeli VAT rate is 18% (since January 2025). Agents sometimes use the outdated 17% rate in calculations.
 - **Formatter does NOT strip Unicode markers**: "Trim Whitespace" removes standard whitespace but not RTL/LTR markers (U+200F, U+200E). Use a Code by Zapier step with regex to clean Hebrew text properly.
 - **Invoice Reform 2026 affects automation, threshold drops June 1, 2026.** Tax invoices over the threshold (10,000 NIS through May 31, 2026, then 5,000 NIS from June 1, 2026) require a Tax Authority allocation number. Verify your invoicing API flow includes this step. Store the threshold in a Zap variable, not a hardcoded literal.
-- **Free plan limitations**: The free plan supports unlimited Zaps but only two-step (trigger + one action) and 100 tasks/month. Most Israeli business automations need multi-step Zaps, requiring the Professional plan ($19.99/month annual).
+- **Free plan limitations**: The free plan supports unlimited Zaps but only two-step (trigger + one action) and 100 tasks/month. Most Israeli business automations need multi-step Zaps, which require the Starter plan ($19.99/month annual). Professional ($49/month) is only needed for advanced filters and conditional logic.
 
 ## Troubleshooting
 

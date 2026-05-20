@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "zapier-israeli-integrations",
+  "generated_at": "2026-05-20T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "zapier-pricing-tiers-2026",
+      "claim": "Zapier's 2026 pricing structure: Free (unlimited Zaps, 100 tasks/month, 2-step only); Starter ($19.99/month annual or $29.99 monthly, 750 tasks, multi-step Zaps); Professional ($49/month annual, 2,000 tasks, advanced features like filters and conditional steps); higher Team and Company tiers available.",
+      "source_url": "https://zapier.com/pricing",
+      "raw_snippet": "Starter ... Professional",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "zapier-platform-docs",
+      "claim": "Zapier publishes its platform / developer documentation at platform.zapier.com.",
+      "source_url": "https://platform.zapier.com",
+      "raw_snippet": "Zapier",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "zapier-webhooks",
+      "claim": "Webhooks by Zapier is a built-in app on every Zapier plan, documented at zapier.com/apps/webhook/integrations.",
+      "source_url": "https://zapier.com/apps/webhook/integrations",
+      "raw_snippet": "Webhook",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "greeninvoice-api",
+      "claim": "Morning (formerly Green Invoice) publishes its REST API documentation at greeninvoice.co.il/api-docs/.",
+      "source_url": "https://www.greeninvoice.co.il/api-docs/",
+      "raw_snippet": "Green Invoice",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cardcom-api-v11",
+      "claim": "Cardcom publishes its v11 API documentation in its knowledge base under category 19-API at kb.cardcom.solutions; Cardcom amounts are decimal shekels, not agorot.",
+      "source_url": "https://kb.cardcom.solutions/category/19-API",
+      "raw_snippet": "Cardcom",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "invoice-reform-2026",
+      "claim": "Israeli Invoice Reform 2026 (digital invoice rollout) is documented by the Israel Tax Authority at gov.il/en/departments/legalInfo/digital_invoice.",
+      "source_url": "https://www.gov.il/en/departments/legalInfo/digital_invoice",
+      "raw_snippet": "digital invoice",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "invoice-reform-2026-he",
+      "claim": "Israeli Invoice Reform 2026 Hebrew documentation is published at gov.il/he/departments/legalInfo/digital_invoice.",
+      "source_url": "https://www.gov.il/he/departments/legalInfo/digital_invoice",
+      "raw_snippet": "חשבונית דיגיטלית",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL_HE.md"]
+    },
+    {
+      "claim_id": "green-invoice-mcp-link",
+      "claim": "The skills-il MCP directory lists Green Invoice MCP (green-invoice-mcp) under the accounting category.",
+      "source_url": "https://agentskills.co.il/he/mcps/accounting/green-invoice-mcp",
+      "raw_snippet": "green-invoice-mcp",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "decimal-shekels-israeli-processors",
+      "claim": "Israeli payment processors Cardcom, Tranzila, Morning (Green Invoice), Grow, iCount, and EZcount transmit and accept amounts in decimal shekels (e.g., 150.50 ILS, 250.00 ILS), not in agorot. Example amounts shown in the skill (1 ILS, 1 ש\"ח, 5,000 ILS, 5,000 ש\"ח, 5,000 NIS, 10,000 ILS, 10,000 ש\"ח, 10,000 NIS, 25,000 ILS, 25,000 ש\"ח, 150.50 ש\"ח, 250.00 ILS) are illustrative payment values, not regulatory thresholds.",
+      "source_url": "https://kb.cardcom.solutions/category/19-API",
+      "raw_snippet": "Amount",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+    },
+    {
+      "claim_id": "israel-vat-rates-2026",
+      "claim": "Israel's VAT rate was raised from 17% to 18% effective January 1, 2025; both rates appear in the skill where historical and current calculations are illustrated.",
+      "source_url": "https://www.gov.il/en/departments/topics/vat",
+      "raw_snippet": "18%",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "greeninvoice-api-host",
+      "claim": "Morning / Green Invoice's production API endpoints live under api.greeninvoice.co.il and the customer-facing app at app.greeninvoice.co.il.",
+      "source_url": "https://www.greeninvoice.co.il/api-docs/",
+      "raw_snippet": "greeninvoice https://api.greeninvoice.co.il https://app.greeninvoice.co.il",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+    },
+    {
+      "claim_id": "greeninvoice-app-host",
+      "claim": "Morning / Green Invoice's customer-facing web application is hosted at app.greeninvoice.co.il.",
+      "source_url": "https://app.greeninvoice.co.il",
+      "raw_snippet": "Green Invoice",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "inforu-sms-api",
+      "claim": "Inforu is an Israeli SMS gateway whose XML API endpoint is api.inforu.co.il/SendMessageXml.ashx.",
+      "source_url": "https://www.inforu.co.il/",
+      "raw_snippet": "Inforu https://api.inforu.co.il/SendMessageXml.ashx",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+    },
+    {
+      "claim_id": "rivhit-api",
+      "claim": "Rivhit (חשבשבת online) exposes its REST API under api.rivhit.co.il/online/RivhitOnlineAPI.svc/.",
+      "source_url": "https://rivhit-api.readme.io/",
+      "raw_snippet": "Rivhit https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/",
+      "fetched_at": "2026-05-20T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+    }
+  ]
+}

@@ -13,8 +13,9 @@ license: MIT
 allowed-tools: 'Bash(curl:*) Bash(node:*) Bash(python:*)'
 compatibility: >-
   Requires Zapier account. Free plan includes unlimited two-step Zaps, 100 tasks/month,
-  Copilot AI, Tables, and Interfaces. Multi-step Zaps require Professional plan
-  ($19.99/month annual). Webhook triggers use Webhooks by Zapier (available on all
+  Copilot AI, Tables, and Interfaces. Multi-step Zaps require the Starter plan
+  ($19.99/month annual, 750 tasks); Professional ($49/month annual, 2,000 tasks)
+  adds advanced features. Webhook triggers use Webhooks by Zapier (available on all
   plans). No local dependencies.
 ---
 
@@ -39,7 +40,7 @@ compatibility: >-
 
 **בחירה בין Zap חד-שלבי לרב-שלבי:**
 - Zap חד-שלבי (חינמי): טריגר ישירות לפעולה, למשל "תשלום חדש בקארדקום -> שורה חדשה ב-Zapier Tables". המסלול החינמי כולל Zaps ללא הגבלה אך רק שני שלבים (טריגר + פעולה אחת), 100 משימות בחודש, ופולינג כל 15 דקות.
-- Zap רב-שלבי (Professional, $19.99/חודש בתשלום שנתי או $29.99/חודש, 750 משימות): שרשור פעולות עם לוגיקה, למשל "תשלום חדש -> יצירת חשבונית -> מייל -> עדכון CRM"
+- Zap רב-שלבי (Starter, $19.99/חודש בתשלום שנתי או $29.99/חודש, 750 משימות): שרשור פעולות עם לוגיקה, למשל "תשלום חדש -> יצירת חשבונית -> מייל -> עדכון CRM". מסלול Professional ($49/חודש שנתי, 2,000 משימות) מוסיף פילטרים מתקדמים ושלבים מותנים.
 - השתמש ב-Paths (הסתעפות) כשה-Zap צריך לטפל בתרחישים שונים, למשל "אם התשלום עובר את סף רפורמת החשבוניות (10,000 ש"ח עד 31 במאי 2026, ואז 5,000 ש"ח החל מ-1 ביוני 2026), הוסף מספר הקצאה של רפורמת החשבוניות". שמור את הסף כמשתנה ב-workflow ולא כמספר קשיח, מאחר שהוא מתוכנן לרדת שוב.
 
 **השתמש ב-Zapier Copilot** (זמין בחינם בכל המסלולים) כדי לתאר מה שאתה רוצה בשפה חופשית. Copilot מציע מבנה Zap, מוצא את האפליקציות המתאימות וממפה שדות אוטומטית. דוגמה: "כשאני מקבל תשלום בקארדקום, תיצור קבלה ב-Morning ותשלח אותה במייל ללקוח."
@@ -415,6 +416,21 @@ Zapier Tables ו-Interfaces חינמיים בכל המסלולים ב-2026 ומ�
 - `references/israeli-zapier-apps.md` -- ספריית אפליקציות ישראליות הזמינות ב-Zapier (אינטגרציות מובנות וחיבורים מבוססי webhook), כולל שיטות אימות, נקודות קצה API ומיפויי שדות. עיינו בו בעת חיבור אפליקציה ישראלית חדשה ל-Zapier או פתרון בעיות אימות.
 - `references/zap-templates.md` -- תבניות Zap מוכנות לשימוש לתהליכי עבודה עסקיים ישראליים נפוצים, עם מיפויי שדות ופרטי טריגר/פעולה מפורטים. עיינו בו בעת בניית Zap חדש כנקודת התחלה לתרחיש עסקי ישראלי.
 
+## שרתי MCP מומלצים
+
+[שרת ה-MCP של Green Invoice](https://agentskills.co.il/he/mcps/accounting/green-invoice-mcp) לגישה ישירה של סוכן אל Morning. ל-Zapier יש MCP משלו ב-`mcp.zapier.com` שחושף Zaps שפורסמו.
+
+## קישורי עזר
+
+| מקור | URL |
+|------|-----|
+| מחירון Zapier | https://zapier.com/pricing |
+| תיעוד Zapier Platform | https://platform.zapier.com |
+| Webhooks by Zapier | https://zapier.com/apps/webhook/integrations |
+| API של Green Invoice | https://www.greeninvoice.co.il/api-docs/ |
+| Cardcom v11 API | https://kb.cardcom.solutions/category/19-API |
+| רפורמת החשבוניות 2026 | https://www.gov.il/he/departments/legalInfo/digital_invoice |
+
 ## מלכודות נפוצות
 
 - **סכומי קארדקום הם בשקלים עשרוניים, לא באגורות**: קארדקום שולח `Amount` כערכים עשרוניים בשקלים (למשל 150.50 = 150.50 ש"ח). אסור לחלק ב-100. מפרט Swagger של Cardcom v11 מאשר שה-`Amount` בשקלים עשרוניים. חלוקה ב-100 תיצור חשבוניות ב-1/100 מהסכום הנכון.
@@ -429,7 +445,7 @@ Zapier Tables ו-Interfaces חינמיים בכל המסלולים ב-2026 ומ�
 - **שיעור מע"מ**: 18% מינואר 2025. סוכנים לפעמים משתמשים ב-17% המיושן.
 - **Formatter לא מסיר סמני Unicode**: "Trim Whitespace" מסיר רווחים רגילים אך לא סמני RTL/LTR (U+200F, U+200E). השתמש בשלב Code by Zapier עם regex.
 - **רפורמת החשבוניות 2026 משפיעה על אוטומציות, הסף יורד ב-1 ביוני 2026.** חשבוניות מס מעל הסף (10,000 ש"ח עד 31 במאי 2026, ואז 5,000 ש"ח החל מ-1 ביוני 2026) דורשות מספר הקצאה מרשות המסים. ודא שתהליך ה-API כולל שלב זה. שמור את הסף כמשתנה ב-Zap, לא כמספר קשיח.
-- **מגבלות המסלול החינמי**: המסלול החינמי כולל Zaps ללא הגבלה אך רק שני שלבים (טריגר + פעולה אחת) ו-100 משימות בחודש. רוב האוטומציות העסקיות דורשות מסלול Professional ($19.99/חודש בשנתי).
+- **מגבלות המסלול החינמי**: המסלול החינמי כולל Zaps ללא הגבלה אך רק שני שלבים (טריגר + פעולה אחת) ו-100 משימות בחודש. רוב האוטומציות העסקיות דורשות Zaps רב-שלביים, שזמינים החל ממסלול Starter ($19.99/חודש בשנתי). Professional ($49/חודש) נחוץ רק לפילטרים מתקדמים ולוגיקה מותנית.
 
 ## פתרון בעיות
 
