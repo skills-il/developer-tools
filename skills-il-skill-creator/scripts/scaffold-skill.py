@@ -3,8 +3,9 @@
 
 Creates the complete folder structure for a new skill:
   <skill-name>/
-  ├── SKILL.md          # Template with frontmatter skeleton
+  ├── SKILL.md          # Template with minimal frontmatter (name, description, license)
   ├── SKILL_HE.md       # Hebrew companion stub
+  ├── metadata.json     # All enriched metadata (Claude Desktop rejects it in frontmatter)
   ├── scripts/          # For helper scripts
   └── references/       # For reference documentation
 
@@ -15,6 +16,7 @@ Usage:
 """
 
 import argparse
+import json
 import os
 import re
 import sys
@@ -31,6 +33,8 @@ VALID_CATEGORIES = [
     "legal-tech",
     "education",
     "health-services",
+    "marketing-growth",
+    "accounting",
 ]
 
 KEBAB_CASE_PATTERN = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
@@ -46,31 +50,6 @@ license: MIT
 allowed-tools: ''
 compatibility: >-
   TODO: [Requirements]. Works with Claude Code, Claude.ai, Cursor.
-metadata:
-  author: {author}
-  version: 1.0.0
-  category: {category}
-  tags:
-    he:
-      - TODO
-      - ישראל
-    en:
-      - TODO
-      - israel
-  display_name:
-    he: "TODO: Hebrew display name"
-    en: TODO English Display Name
-  display_description:
-    he: "TODO: Hebrew description"
-    en: >-
-      TODO: English description (mirrors the main description field)
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
 ---
 
 # TODO: Skill Display Name
@@ -109,10 +88,6 @@ description: >-
   TODO: [What it does]. Use when user asks to [triggers], "[Hebrew transliteration]",
   or [scenarios]. [Key capabilities]. Do NOT use for [anti-triggers].
 license: MIT
-metadata:
-  author: {author}
-  version: 1.0.0
-  category: {category}
 ---
 
 # TODO: Hebrew Skill Name
@@ -201,6 +176,38 @@ def scaffold(name: str, category: str, author: str, base_dir: str) -> None:
     )
     (skill_dir / "SKILL_HE.md").write_text(skill_he.lstrip())
 
+    # Create metadata.json (all enriched metadata lives here, NOT in SKILL.md
+    # frontmatter, because Claude Desktop rejects the metadata key in YAML).
+    metadata = {
+        "author": author,
+        "version": "1.0.0",
+        "category": category,
+        "tags": {
+            "he": ["TODO", "ישראל"],
+            "en": ["TODO", "israel"],
+        },
+        "display_name": {
+            "he": "TODO: Hebrew display name",
+            "en": "TODO English Display Name",
+        },
+        "display_description": {
+            "he": "TODO: Hebrew description",
+            "en": "TODO: English description (mirrors the main description field)",
+        },
+        "supported_agents": [
+            "claude-code",
+            "cursor",
+            "github-copilot",
+            "windsurf",
+            "opencode",
+            "codex",
+            "gemini-cli",
+        ],
+    }
+    (skill_dir / "metadata.json").write_text(
+        json.dumps(metadata, ensure_ascii=False, indent=2) + "\n"
+    )
+
     # Create .gitkeep files for empty dirs
     (skill_dir / "scripts" / ".gitkeep").touch()
     (skill_dir / "references" / ".gitkeep").touch()
@@ -210,14 +217,16 @@ def scaffold(name: str, category: str, author: str, base_dir: str) -> None:
     print("Created files:")
     print(f"  {skill_dir}/SKILL.md          -- Fill in frontmatter and instructions")
     print(f"  {skill_dir}/SKILL_HE.md       -- Fill in Hebrew companion")
+    print(f"  {skill_dir}/metadata.json     -- Fill in tags, display names, agents")
     print(f"  {skill_dir}/scripts/          -- Add helper scripts")
     print(f"  {skill_dir}/references/       -- Add reference documentation")
     print()
     print("Next steps:")
-    print("  1. Edit SKILL.md -- replace all TODO placeholders")
-    print("  2. Write instructions with tables, code examples, and Hebrew terms")
-    print("  3. Translate to Hebrew in SKILL_HE.md")
-    print(f"  4. Validate: ./scripts/validate-skill.sh {name}/SKILL.md")
+    print("  1. Edit SKILL.md -- replace all TODO placeholders (keep frontmatter minimal)")
+    print("  2. Edit metadata.json -- fill in tags (he/en), display names, supported_agents")
+    print("  3. Write instructions with tables, code examples, and Hebrew terms")
+    print("  4. Translate to Hebrew in SKILL_HE.md")
+    print(f"  5. Validate: ./scripts/validate-skill.sh {name}/SKILL.md")
 
 
 def main():

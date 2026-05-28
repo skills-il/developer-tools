@@ -102,7 +102,7 @@ Before writing any content, verify the key facts your skill will reference. This
 - Note the verification date so the skill can be updated when facts change
 
 **What to record:**
-For each key fact, note: the fact, the source, and the date verified. Include these as inline references in your SKILL.md instructions (e.g., "NIS 38,900 as of January 2025").
+For each key fact, note: the fact, the source, and the date verified. Include these as inline references in your SKILL.md instructions, always with the effective date (for example, an amount followed by "as of January 2025").
 
 Do NOT skip this step. A skill with outdated or incorrect facts (wrong tax rate, expired law, wrong phone number) is worse than no skill at all.
 
@@ -117,8 +117,9 @@ python scripts/scaffold-skill.py --name <skill-name> --category <category-repo>
 The script creates:
 ```
 <skill-name>/
-├── SKILL.md          # Template with frontmatter skeleton
+├── SKILL.md          # Minimal frontmatter (name, description, license)
 ├── SKILL_HE.md       # Hebrew companion stub
+├── metadata.json     # Enriched metadata (tags, display names, agents)
 ├── scripts/          # For helper scripts
 └── references/       # For reference documentation
 ```
@@ -444,7 +445,7 @@ The submission form runs a live GitHub Verification scorecard against your repo 
 | 2 | `secret_scanning` | Repo → Settings → Code security and analysis → enable **Secret scanning** + **Push protection** |
 | 3 | `code_scanning` | Same Settings page → under **Code scanning** click **Set up** → **Default** |
 | 4 | `signed_release` | Add `.github/workflows/release.yml` that uses `actions/attest-build-provenance@v4` on `tags: ['v*']` (or use `skills-il/release-workflow@v1` as a reusable workflow), then push a `v1.0.0` tag |
-| 5 | `license_declared` | Add a `LICENSE` file at the repo root (use GitHub's "Choose a license template"; MIT is the standard) |
+| 5 | `license_spdx` | Add a `LICENSE` file at the repo root with a recognized SPDX license (use GitHub's "Choose a license template"; MIT is the standard) |
 
 **For MCPs the `spec_compliant` row is N/A** (the `gh skill` CLI validates SKILL.md only, not MCP servers). The other 4 still apply.
 
@@ -523,17 +524,18 @@ Result: MCP-enhanced skill that adds workflow intelligence on top of bank data a
 ## Bundled Resources
 
 ### Scripts
-- `scripts/scaffold-skill.py` -- Creates the complete folder structure for a new skills-il skill: SKILL.md template with frontmatter skeleton, SKILL_HE.md stub, scripts/ and references/ directories. Validates name format and prevents overwrites. Run: `python scripts/scaffold-skill.py --help`
+- `scripts/scaffold-skill.py` -- Creates the complete folder structure for a new skills-il skill: SKILL.md with minimal frontmatter, SKILL_HE.md stub, metadata.json (enriched metadata), and scripts/ and references/ directories. Validates name and category and prevents overwrites. Run: `python scripts/scaffold-skill.py --help`
 
 ### References
 - `references/skill-spec.md` -- Complete skills-il SKILL.md specification including all frontmatter fields (required and optional), description-writing formula with good/bad examples, the 5 skill patterns from Anthropic's guide, quality checklist, and validation rules. Consult when writing frontmatter or instructions and you need detailed guidance beyond the steps above.
 
 ## Gotchas
 
-- SKILL.md frontmatter uses YAML with specific nested structure (metadata.tags.he/en arrays). Agents may flatten the tags into a single array instead of using the bilingual he/en structure.
+- Enriched metadata lives in `metadata.json`, NOT in SKILL.md frontmatter. Claude Desktop rejects a `metadata:` key in YAML frontmatter. Agents trained on older skills (or an old scaffold template) may put `version`, `tags`, `display_name`, and `supported_agents` in the frontmatter, which breaks the skill.
+- `metadata.json` tags use a bilingual `tags.he` / `tags.en` structure of equal length. Agents may flatten the tags into a single array.
 - Hebrew content in SKILL_HE.md must never appear inside code blocks (```) because code blocks do not support RTL rendering. Use plain text or bullet lists for Hebrew content.
 - The skill description field has a dual purpose: it serves as both the YAML frontmatter description and the trigger text for agent matching. Agents may write a generic description that fails to trigger on relevant user queries.
-- Skills must validate with the skills-il schema (name, description, license, metadata with version/category/tags). Agents may omit required fields like supported_agents or display_name.
+- `metadata.json` must include `version`, `category`, bilingual `tags`, `display_name`, `display_description`, and `supported_agents`. Agents may omit required fields like `supported_agents` or `display_name`.
 
 ## Troubleshooting
 

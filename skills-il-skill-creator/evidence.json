@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "skills-il-skill-creator",
+  "generated_at": "2026-05-29T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "ita-reference-url",
+      "claim": "The Israeli Tax Authority page is used as an example official Reference Links source for verifying tax rates, forms, and circulars.",
+      "source_url": "https://www.gov.il/he/departments/israel_tax_authority",
+      "raw_snippet": "רשות המסים בישראל",
+      "fetched_at": "2026-05-29T00:00:00Z",
+      "appears_in": ["SKILL.md", "references/skill-spec.md"]
+    },
+    {
+      "claim_id": "kolzchut-reference-url",
+      "claim": "Kol Zchut is used as an example official Reference Links source for rights, entitlements, and eligibility.",
+      "source_url": "https://www.kolzchut.org.il",
+      "raw_snippet": "כל זכות",
+      "fetched_at": "2026-05-29T00:00:00Z",
+      "appears_in": ["SKILL.md", "references/skill-spec.md"]
+    }
+  ]
+}

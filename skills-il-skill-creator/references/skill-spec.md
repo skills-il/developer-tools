@@ -18,40 +18,43 @@ Complete reference for creating skills-il skills. Consult this when writing fron
 | `license` | Typically MIT | `MIT` |
 | `allowed-tools` | Tool access restrictions | `'Bash(python:*) WebFetch'` |
 | `compatibility` | 1-500 chars, environment requirements | `'Requires network access.'` |
-| `metadata` | Custom key-value pairs | See metadata section |
 
-### Metadata Structure
+**Do NOT put a `metadata:` key in the SKILL.md frontmatter.** Claude Desktop rejects it. All enriched metadata lives in a separate `metadata.json` file alongside SKILL.md.
 
-```yaml
-metadata:
-  author: skills-il
-  version: 1.0.0
-  category: <category-repo-name>
-  mcp-server: <server-name>          # Only if skill uses MCP
-  tags:
-    he:
-      - <domain-tag-he>
-      - <function-tag-he>
-      - ישראל
-    en:
-      - <domain-tag>
-      - <function-tag>
-      - israel
-  display_name:
-    he: "<Hebrew name>"
-    en: <English Name>
-  display_description:
-    he: "<Hebrew description>"
-    en: >-
-      <English description>
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
+### metadata.json Structure
+
+All enriched metadata goes in `metadata.json` (same folder as SKILL.md), NOT in the YAML frontmatter:
+
+```json
+{
+  "author": "skills-il",
+  "version": "1.0.0",
+  "category": "<category-repo-name>",
+  "tags": {
+    "he": ["<domain-tag-he>", "<function-tag-he>", "ישראל"],
+    "en": ["<domain-tag>", "<function-tag>", "israel"]
+  },
+  "display_name": {
+    "he": "<Hebrew name>",
+    "en": "<English Name>"
+  },
+  "display_description": {
+    "he": "<Hebrew description>",
+    "en": "<English description>"
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "gemini-cli"
+  ]
+}
 ```
+
+If the skill recommends an MCP server, add a `## Recommended MCP Servers` section to the SKILL.md body (the old `mcp-server` frontmatter key is no longer used).
 
 **Tags rules:**
 - Both `he` and `en` arrays are required
@@ -221,6 +224,8 @@ Description must contain at least one of:
 | legal-tech | Contracts, legal research, compliance |
 | education | Learning platforms, tutoring, academic tools |
 | health-services | HMOs, pharmacy, medical records, appointments |
+| marketing-growth | SEO, social media, ads, email campaigns, ASO |
+| accounting | Bookkeeping, financial reporting, audit, accountant tooling |
 
 ## Progressive Disclosure Levels
 
