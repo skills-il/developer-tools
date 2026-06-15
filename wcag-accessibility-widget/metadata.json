@@ -1,0 +1,43 @@
+{
+  "name": "wcag-accessibility-widget",
+  "author": "Tura2",
+  "version": "1.0.0",
+  "category": "developer-tools",
+  "tags": {
+    "he": [
+      "נגישות",
+      "wcag",
+      "ת״י-5568",
+      "ווידג'ט-נגישות",
+      "הצהרת-נגישות",
+      "ישראל"
+    ],
+    "en": [
+      "accessibility",
+      "wcag",
+      "a11y",
+      "widget",
+      "ti-5568",
+      "israeli-law",
+      "israel"
+    ]
+  },
+  "display_name": {
+    "he": "ווידג'ט נגישות WCAG",
+    "en": "WCAG Accessibility Widget"
+  },
+  "display_description": {
+    "he": "בנה ווידג'ט נגישות עצמאי לאתרי אינטרנט ישראליים בהתאם ל-WCAG 2.1 AA / ת\"י 5568. השתמשו כשבונים ווידג'ט נגישות, מיישמים דרישות חוק שוויון זכויות לאנשים עם מוגבלות, יוצרים דף הצהרת נגישות, או מאבחנים אלמנטים position:fixed שנשברים בעת שימוש ב-CSS filter. מכסה ניגודיות גבוהה, גודל גופן, ניווט מקלדת, גופן קריא, סימון כותרות וקישורים — ללא שירות צד שלישי. אל תשתמשו עבור שירותי accessibility overlay כמו UserWay או AccessiBe.",
+    "en": "Build a self-hosted floating accessibility widget for Israeli websites compliant with WCAG 2.1 AA / ת\"י 5568 (Israeli Standard). Use when building an accessibility widget, implementing Israeli accessibility law (חוק שוויון זכויות לאנשים עם מוגבלות), creating an הצהרת נגישות (accessibility declaration) page, or debugging position:fixed elements that break under CSS filter. Covers high contrast, font size scaling, keyboard nav highlighting, readable font, heading/link markers — no third-party service required. Do NOT use for third-party accessibility overlays (UserWay, AccessiBe) or non-Israeli WCAG audits."
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "antigravity",
+    "gemini-cli"
+  ]
+}
