@@ -1,0 +1,24 @@
+{
+  "cycles": [
+    {
+      "version": "1.1.2",
+      "date": "2026-06-16",
+      "lessons": [
+        "Anti-circularity defect fixed: all four organization-number examples in the type table (company 51-530820-1, partnership 55-012345-6, cooperative 57-012345-6, amuta 58-012345-6) FAILED the skill's own Luhn check digit. Regenerated with correct check digits (51-530820-3, 55-012345-9, 57-012345-5, 58-012345-3) and verified all 6 worked examples pass via the bundled validate_id.py. A validator skill must never ship examples that fail its own validator.",
+        "Folklore removed (refuted via WebSearch + en.wikipedia): the 'native-born 100-499 million vs resident/foreign 500-899 million' range-by-status framing is undocumented folklore, and the 'foreign-worker IDs land in the 3xx-million sub-range of the 500-899 million block' line was self-contradictory (3xx < 500). Replaced with the accurate model: personal IDs are not typeable by prefix; corporate/registered entities occupy the 5XX-million block.",
+        "Prefix model corrected and broadened (he.wikipedia תאגיד, verbatim): keying only on 51/55/57/58 wrongly classified public (52), government (50), foreign (56), mandatory/general partnerships (53/54), and endowments (59) as personal IDs. identify_id_type now covers the full 50-59 table. 53 = שותפות מנדטורית = MANDATORY partnership (Mandate-era), NOT limited; the body label was correct and the fabricated evidence snippet was the error.",
+        "Expert MAJOR (all-zeros trap) fixed: validate_israeli_id('000000000') and validate_israeli_id('') both returned True (empty zero-pads into all-zeros, which passes Luhn). Added an explicit reject plus a gotcha. This is the most common sentinel/empty-field false positive in production KYC.",
+        "Expert MAJOR (code-vs-prose contradiction) fixed: identify_id_type returned a hard corporate label for any 5X number while the prose hedged; added a heuristic caveat to the CLI output and a code comment on format_id so the tool output matches the documented hedge.",
+        "Judge caught a fabricated evidence snippet: claim #4 cited the Nefesh B'Nefesh page with a raw_snippet that does not appear on that live page. Re-grounded on the verbatim en.wikipedia nine-digit-Luhn quote with an honest absence-of-status-field framing. Lesson: never paraphrase a source into a raw_snippet; fetch and quote verbatim.",
+        "Amendment 13 in-force date tightened to 14 August 2025 (IAPP). Replaced the JS-rendered Knesset ASPX reference link (returns blank to fetchers, judge-unverifiable) with the IAPP analysis page.",
+        "Confirmed correct (no change): the Luhn check-digit algorithm, zfill(9) leading-zero handling, and the same-check-digit-for-orgs claim. Biometric-ID-mandatory 2026 development correctly out of scope for a number-format validator."
+      ],
+      "buckets": {
+        "persistent_fail": [],
+        "deferred": [
+          "identify_id_type still returns a clean corporate label programmatically (the ambiguity hedge lives only in the CLI output layer); a future cycle could return an ambiguity-typed object. Low priority since corporate numbers genuinely occupy the 5XX pool and personal IDs have not reached it."
+        ]
+      }
+    }
+  ]
+}

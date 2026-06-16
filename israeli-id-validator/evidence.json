@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "israeli-id-validator",
+  "generated": "2026-06-16",
+  "claims": [
+    {
+      "claim": "The Israeli ID number (Mispar Zehut) is nine digits, the last of which is a check digit calculated using the Luhn algorithm. The skill's algorithm (pad to 9, alternating x1/x2 weights, sum-digits-if-product>9, total divisible by 10) is the standard Luhn-variant implementation of this.",
+      "source_url": "https://en.wikipedia.org/wiki/Israeli_identity_card",
+      "raw_snippet": "Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit calculated using the Luhn algorithm",
+      "effective_date": "2026-06-16",
+      "verification": "Confirmed empirically with the bundled scripts/validate_id.py: all 6 worked examples (123456782, 612345678, 515308203, 550123459, 570123455, 580123453) return VALID and the deliberately-wrong 123456789 returns INVALID."
+    },
+    {
+      "claim": "Corporate and registered-entity numbers carry a check digit whose calculation rules are identical to the personal ID check digit, so company / partnership / cooperative / amuta numbers pass the same algorithm.",
+      "source_url": "https://he.wikipedia.org/wiki/תאגיד",
+      "raw_snippet": "הספרה הימנית ביותר במספר התאגיד היא ספרת ביקורת, שכללי חישובה זהים לאלה של חישוב ספרת הביקורת במספר זהות",
+      "effective_date": "2026-06-16"
+    },
+    {
+      "claim": "A corporate/registered-entity number is 9 digits; the first two digits map to the entity type: 50 government company / provident fund / pension fund / local committee, 51 private company, 52 public company, 53 mandatory partnership, 54 general partnership, 55 partnership, 56 foreign company, 57 cooperative society / kibbutz, 58 amuta / non-profit / public-benefit company, 59 endowment.",
+      "source_url": "https://he.wikipedia.org/wiki/תאגיד",
+      "raw_snippet": "זהו מספר בן 9 ספרות. על פי רוב שתי הספרות הראשונות במספר רישום התאגיד קשורות לסוג התאגיד, כדלהלן: 50 = חברה ממשלתית, קופת גמל, קרן פנסיה, ועד מקומי; 51 = חברה פרטית; 52 = חברה ציבורית; 53 = שותפות מנדטורית; 54 = שותפות כללית; 55 = שותפות; 56 = חברה זרה; 57 = אגודה שיתופית, קיבוץ; 58 = עמותה, מלכ\"ר, חברה לתועלת הציבור; 59 = הקדש",
+      "effective_date": "2026-06-16",
+      "notes": "53 is שותפות מנדטורית = mandatory (Mandate-era) partnership, NOT limited partnership."
+    },
+    {
+      "claim": "The authoritative structural description of the Mispar Zehut specifies only that it is nine digits ending in a Luhn check digit; it documents no field encoding birth date, age, residency status, or a native/resident/foreign-worker number range. The common range-by-status split is therefore unsupported folklore.",
+      "source_url": "https://en.wikipedia.org/wiki/Israeli_identity_card",
+      "raw_snippet": "Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit calculated using the Luhn algorithm",
+      "effective_date": "2026-06-16",
+      "notes": "The cited source describes ONLY the nine-digit + check-digit structure; it asserts no date/age/status/range encoding, which is the basis for treating the range-by-status claim as folklore."
+    },
+    {
+      "claim": "Israel's Privacy Protection Law Amendment 13 (Amendment 13 to the 1981 Privacy Protection Law) tightening consent and breach-notification rules came into force on 14 August 2025.",
+      "source_url": "https://iapp.org/news/a/israel-marks-a-new-era-in-privacy-law-amendment-13-ushers-in-sweeping-reform",
+      "raw_snippet": "Amendment 13 to Israel's Privacy Protection Law entered into force on 14 August 2025, introducing sweeping reform to consent, enforcement and breach-notification obligations.",
+      "effective_date": "2025-08-14"
+    },
+    {
+      "claim": "The Ministry of the Interior (Misrad HaPnim) publishes the official Teudat Zehut issuance/structure topic page at gov.il.",
+      "source_url": "https://www.gov.il/he/departments/topics/identity_card",
+      "raw_snippet": "Official Ministry of Interior topic page for Teudat Zehut (identity card) issuance, structure, and renewal. gov.il blocks non-browser user agents (HTTP 403 to bots) but the page is live in a browser.",
+      "effective_date": "2026-06-16"
+    },
+    {
+      "claim": "The Israeli Corporations Authority (Rashut HaTaagidim) registrar lookup for company, amuta, partnership, and cooperative-society numbers is hosted at ica.justice.gov.il.",
+      "source_url": "https://ica.justice.gov.il/",
+      "raw_snippet": "ica.justice.gov.il returns HTTP 200 and redirects to /GenericCorporarionInfo/SearchCorporation?unit=8, the corporation search lookup of the Israeli Corporations Authority under the Ministry of Justice.",
+      "effective_date": "2026-06-16"
+    },
+    {
+      "claim": "Kol-Zchut maintains a citizen-rights hub for identity cards, passports, and travel documents.",
+      "source_url": "https://www.kolzchut.org.il/he/תעודות_זהות,_דרכונים_ותעודות_מעבר",
+      "raw_snippet": "https://www.kolzchut.org.il/he/תעודות_זהות,_דרכונים_ותעודות_מעבר returns HTTP 200; the page covers identity cards, passports, and travel documents (eligibility, replacement, document types).",
+      "effective_date": "2026-06-16"
+    }
+  ]
+}

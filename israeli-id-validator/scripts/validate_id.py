@@ -2,15 +2,16 @@
 """Israeli ID Number Validator and Test ID Generator.
 
 Validates and generates Israeli identification numbers including:
-- Teudat Zehut (personal ID)
-- Company numbers (prefix 51)
-- Amuta/non-profit numbers (prefix 58)
-- Partnership numbers (prefix 55)
+- Teudat Zehut (personal ID) - 9 digits, Luhn check digit
+- Corporate / registered-entity numbers - 9 digits starting with 5, where the
+  second digit selects the type (50-59: government/private/public company,
+  mandatory/general partnership, partnership, foreign company, cooperative
+  society, amuta, endowment). All types share the same check-digit algorithm.
 
 Usage:
     python validate_id.py validate 123456782
     python validate_id.py generate --count 10 --prefix 51
-    python validate_id.py identify 515308201
+    python validate_id.py identify 515308203
 """
 
 import argparse
@@ -39,6 +40,12 @@ def validate_israeli_id(id_number: str) -> bool:
     if len(id_str) != 9 or not id_str.isdigit():
         return False
 
+    # 000000000 passes the Luhn check (digit sum 0) but is never a real ID. It
+    # is the most common sentinel/empty-field false positive (an empty string
+    # zero-pads straight into it), so reject it explicitly.
+    if id_str == '000000000':
+        return False
+
     total = 0
     for i, digit in enumerate(id_str):
         val = int(digit) * ((i % 2) + 1)
@@ -49,8 +56,31 @@ def validate_israeli_id(id_number: str) -> bool:
     return total % 10 == 0
 
 
+# Corporate / registered-entity codes: 9-digit numbers in the 5XX-million block.
+# The first two digits encode the entity type; the check digit is identical to a
+# personal Teudat Zehut.
+CORPORATE_PREFIXES = {
+    "50": "Government company / pension or provident fund / local committee",
+    "51": "Company (Chevra Ba'am / Ltd)",
+    "52": "Public company",
+    "53": "Mandatory partnership",
+    "54": "General partnership",
+    "55": "Partnership (Shutafut)",
+    "56": "Foreign company",
+    "57": "Cooperative Society (Aguda Shitufit) / kibbutz",
+    "58": "Amuta (Non-profit / Registered Association)",
+    "59": "Endowment (Hekdesh)",
+}
+
+
 def identify_id_type(id_number: str) -> str:
     """Identify the type of Israeli ID based on prefix.
+
+    Prefix typing is a best-effort heuristic: corporate and registered-entity
+    numbers are allocated from the 5XX-million block (first two digits 50-59),
+    so a 9-digit number starting with 5 is overwhelmingly a registered entity.
+    A personal Teudat Zehut cannot be reliably typed from its prefix; only the
+    issuing registry is authoritative.
 
     Args:
         id_number: Israeli ID number
@@ -59,17 +89,7 @@ def identify_id_type(id_number: str) -> str:
         String describing the ID type
     """
     id_str = id_number.replace('-', '').replace(' ', '').zfill(9)
-
-    if id_str.startswith('51'):
-        return "Company (Chevra Ba'am / Ltd)"
-    elif id_str.startswith('58'):
-        return "Amuta (Non-profit / Registered Association)"
-    elif id_str.startswith('55'):
-        return "Partnership (Shutafut)"
-    elif id_str.startswith('57'):
-        return "Cooperative Society (Aguda Shitufit)"
-    else:
-        return "Teudat Zehut (Personal ID)"
+    return CORPORATE_PREFIXES.get(id_str[:2], "Teudat Zehut (Personal ID)")
 
 
 def generate_test_id(prefix: str = "") -> str:
@@ -101,7 +121,7 @@ def format_id(id_number: str) -> str:
         id_number: Raw ID number
 
     Returns:
-        Formatted ID string (e.g., '51-530820-1' for company numbers)
+        Formatted ID string (e.g., '51-530820-3' for company numbers)
     """
     id_str = id_number.replace('-', '').replace(' ', '').zfill(9)
     id_type = identify_id_type(id_str)
@@ -109,7 +129,9 @@ def format_id(id_number: str) -> str:
     if id_type.startswith("Teudat Zehut"):
         return id_str
     else:
-        # Company/Amuta/Partnership format: XX-XXXXXX-X
+        # Registered-entity display format XX-XXXXXX-X, applied to 5X-prefixed
+        # numbers. This is the heuristic corporate grouping (see identify_id_type);
+        # a personal ID starting with 5 would also be grouped this way.
         return f"{id_str[:2]}-{id_str[2:8]}-{id_str[8]}"
 
 
@@ -139,6 +161,10 @@ def validate_with_details(id_number: str) -> dict:
 
     if not id_str.isdigit():
         result["details"].append("Contains non-digit characters")
+        return result
+
+    if id_str == "000000000":
+        result["details"].append("Placeholder ID (all zeros): passes Luhn but is never a real ID")
         return result
 
     # Show step-by-step calculation
@@ -223,6 +249,11 @@ def main():
         is_valid = validate_israeli_id(args.id_number)
         print(f"Type:  {id_type}")
         print(f"Valid: {is_valid}")
+        norm = args.id_number.replace('-', '').replace(' ', '').zfill(9)
+        if norm[:2] in CORPORATE_PREFIXES:
+            print("Note:  Prefix typing is heuristic. A 9-digit number starting with 5 is "
+                  "usually a registered entity, but a personal ID cannot be ruled out by "
+                  "prefix alone; only the issuing registry is authoritative.")
 
     else:
         parser.print_help()
