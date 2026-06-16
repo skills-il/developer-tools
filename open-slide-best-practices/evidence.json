@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "open-slide-best-practices",
+  "generated_at": "2026-06-16T21:30:00Z",
+  "claims": [
+    {
+      "claim_id": "canvas-1920x1080",
+      "claim": "open-slide renders every page into a fixed 1920 × 1080 React canvas (1920x1080)",
+      "source_url": "https://github.com/1weiho/open-slide",
+      "raw_snippet": "a slide framework built for agents; fixed 1920 × 1080 canvas (1920x1080); CANVAS_WIDTH / CANVAS_HEIGHT exports",
+      "fetched_at": "2026-06-16T21:25:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "rules/slide-authoring.md", "metadata.json"]
+    },
+    {
+      "claim_id": "cli-init-command",
+      "claim": "open-slide projects are scaffolded with `npx @open-slide/cli init <name>`",
+      "source_url": "https://www.npmjs.com/package/@open-slide/cli",
+      "raw_snippet": "@open-slide/cli, npx @open-slide/cli init my-slide",
+      "fetched_at": "2026-06-16T21:25:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "core-type-exports",
+      "claim": "Page, SlideMeta, and DesignSystem are types exported from @open-slide/core; ImagePlaceholder is a value export",
+      "source_url": "https://www.npmjs.com/package/@open-slide/core",
+      "raw_snippet": "@open-slide/core exports types Page, SlideMeta, DesignSystem and value ImagePlaceholder",
+      "fetched_at": "2026-06-16T21:25:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "rules/slide-authoring.md"]
+    },
+    {
+      "claim_id": "steps-step-primitives",
+      "claim": "Steps and Step are progressive-reveal components exported from @open-slide/core (added open-slide core 1.10.0)",
+      "source_url": "https://github.com/1weiho/open-slide/blob/main/packages/core/skills/slide-authoring/SKILL.md",
+      "raw_snippet": "Stepped reveals (`<Steps>` / `<Step>`) ... import { Step, Steps } from '@open-slide/core'; <Step> fades in over duration ms (default 180)",
+      "fetched_at": "2026-06-16T21:25:00Z",
+      "appears_in": ["rules/slide-authoring.md"]
+    },
+    {
+      "claim_id": "builtin-skills",
+      "claim": "open-slide ships five built-in skills (slide-authoring, create-slide, create-theme, apply-comments, current-slide); the /create-slide picker lists available themes",
+      "source_url": "https://github.com/1weiho/open-slide/tree/main/packages/core/skills",
+      "raw_snippet": "packages/core/skills contains exactly: slide-authoring, create-slide, create-theme, apply-comments, current-slide; running /create-slide lists themes as picker options",
+      "fetched_at": "2026-06-16T21:25:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "rules/create-theme.md"]
+    },
+    {
+      "claim_id": "slide-comment-marker",
+      "claim": "The inspector drops {/* @slide-comment ... */} markers in source for the apply-comments workflow",
+      "source_url": "https://github.com/1weiho/open-slide/blob/main/packages/core/skills/apply-comments/SKILL.md",
+      "raw_snippet": "{/* @slide-comment */} marker format with base64url-encoded payload",
+      "fetched_at": "2026-06-16T21:25:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "rules/apply-comments.md"]
+    },
+    {
+      "claim_id": "current-json-cursor",
+      "claim": "The live slide cursor is written to node_modules/.open-slide/current.json",
+      "source_url": "https://github.com/1weiho/open-slide/blob/main/packages/core/skills/current-slide/SKILL.md",
+      "raw_snippet": "node_modules/.open-slide/current.json, slideId, pageIndex, pageNumber, totalPages, slideTitle, selection",
+      "fetched_at": "2026-06-16T21:25:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "rules/current-slide.md"]
+    },
+    {
+      "claim_id": "reference-link-urls",
+      "claim": "The skill's Reference Links and font-loading examples cite these external sources: open-slide docs, MDN logical-properties and bdi pages, the Google Fonts Hebrew subset, the upstream create-slide and create-theme skills",
+      "source_url": "https://open-slide.dev",
+      "raw_snippet": "Reference sources: https://open-slide.dev https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdi https://fonts.google.com/?subset=hebrew https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap&subset=hebrew https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Rubik:wght@400;700;900&display=swap&subset=hebrew https://github.com/1weiho/open-slide/blob/main/packages/core/skills/create-slide/SKILL.md https://github.com/1weiho/open-slide/blob/main/packages/core/skills/create-theme/SKILL.md",
+      "fetched_at": "2026-06-16T21:25:00Z",
+      "appears_in": ["SKILL.md", "rules/hebrew-rtl.md", "rules/create-slide.md", "rules/create-theme.md"]
+    },
+    {
+      "claim_id": "hebrew-type-scale-bump",
+      "claim": "Hebrew renders ~10-15% wider per character than Latin at the same px size, so the skill bumps the Hebrew type scale: hero +10-15%, section heading +10%, page heading +8%",
+      "source_url": "https://fonts.google.com/?subset=hebrew",
+      "raw_snippet": "Hebrew type-scale calibration: hero +10-15%, section +10%, page heading +8%; Hebrew is ~10-15% wider per character at the same font-size",
+      "fetched_at": "2026-06-16T21:25:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "rules/hebrew-rtl.md", "rules/create-slide.md"]
+    },
+    {
+      "claim_id": "css-fill-and-brand-example",
+      "claim": "open-slide page roots fill the canvas with width and height 100%; the brand-discipline example uses a solid 0% label rather than a gradient",
+      "source_url": "https://github.com/1weiho/open-slide/blob/main/packages/core/skills/slide-authoring/SKILL.md",
+      "raw_snippet": "The root element of each page should fill the canvas: width 100%, height 100%. Brand example: a confident solid 0% beats a contrived gradient.",
+      "fetched_at": "2026-06-16T21:25:00Z",
+      "appears_in": ["rules/slide-authoring.md", "rules/hebrew-rtl.md"]
+    },
+    {
+      "claim_id": "hebrew-currency-notation",
+      "claim": "Hebrew currency notation uses ₪1,500 (symbol-first) or 1,500 ש״ח (suffix); NIS 1,500 reads as foreign to a Hebrew audience",
+      "source_url": "https://fonts.google.com/?subset=hebrew",
+      "raw_snippet": "Israeli Shekel notation example: ₪1,500 or 1,500 ש״ח; do not write NIS 1,500 for a Hebrew audience. The ₪ symbol (U+20AA) renders in all listed Google Fonts.",
+      "fetched_at": "2026-06-16T21:25:00Z",
+      "appears_in": ["rules/hebrew-rtl.md"]
+    }
+  ]
+}

@@ -6,7 +6,7 @@ This file is the central Hebrew/RTL reference for open-slide. The upstream frame
 
 For a Hebrew or bilingual `slides/<id>/index.tsx`:
 
-1. Set `dir="rtl"` on the **page component's root `<div>`** only (never on `<html>` — that breaks the dev server chrome).
+1. Set `dir="rtl"` on the **page component's root `<div>`** only (never on `<html>`, that breaks the dev server chrome).
 2. Use **logical CSS** everywhere: `paddingInline`, `paddingInlineStart`, `marginInlineStart`, `insetInlineStart`, `text-align: 'start'`. Never physical (`paddingLeft`, `marginLeft`, `left`, `text-align: 'left'`) inside the page root.
 3. Load **Hebrew Google Fonts** (Heebo, Rubik, Assistant, Noto Sans Hebrew, Frank Ruhl Libre, Suez One) via the global stylesheet OR `@import` in a `<style>` block at the top of the page. List them first in `DesignSystem.fonts.display` / `fonts.body`, with the system stack as fallback.
 4. **Bump the type scale by ~10–15%** for Hebrew (Hebrew renders wider per character at the same px size).
@@ -20,12 +20,12 @@ The remaining sections explain each of these in depth.
 The upstream `slide-authoring` reference is silent on `dir`. The default is whatever `<html>` carries, which is `ltr` in the upstream scaffolder. Resist the urge to flip it globally:
 
 ```tsx
-// ❌ WRONG — flips the upstream dev server chrome (file rail, navigation arrows, inspector)
+// ❌ WRONG, flips the upstream dev server chrome (file rail, navigation arrows, inspector)
 document.documentElement.setAttribute('dir', 'rtl');
 ```
 
 ```tsx
-// ✅ RIGHT — flip on the page root only. The canvas content goes RTL; the chrome stays LTR.
+// ✅ RIGHT, flip on the page root only. The canvas content goes RTL; the chrome stays LTR.
 const Cover: Page = () => (
   <div
     dir="rtl"
@@ -36,7 +36,7 @@ const Cover: Page = () => (
 );
 ```
 
-If every page in the deck is Hebrew, repeat `dir="rtl"` on each page root. There is no project-level "this slide is RTL" config — open-slide treats each page as an independent React component.
+If every page in the deck is Hebrew, repeat `dir="rtl"` on each page root. There is no project-level "this slide is RTL" config, open-slide treats each page as an independent React component.
 
 For a bilingual deck where some pages are English and others Hebrew, set `dir` per page accordingly. Mixing is fine.
 
@@ -59,7 +59,7 @@ Inside any container with `dir="rtl"`, **physical CSS properties read backwards*
 | `padding: '0 160px'` (symmetric) | `paddingInline: 160` (same effect, name-correct) |
 | `padding: '120px 160px'`        | `padding: '120px 160px'` (vertical/horizontal block-axis is unchanged; safe) |
 
-The block-axis properties (`paddingTop`, `paddingBottom`, `marginTop`, `marginBottom`, `top`, `bottom`) are **not** affected by `dir` — those map to writing-mode, which open-slide doesn't tilt. Leave them as physical.
+The block-axis properties (`paddingTop`, `paddingBottom`, `marginTop`, `marginBottom`, `top`, `bottom`) are **not** affected by `dir`, those map to writing-mode, which open-slide doesn't tilt. Leave them as physical.
 
 ### Worked example (the upstream starter, Hebrew-adapted)
 
@@ -158,9 +158,13 @@ export const design: DesignSystem = {
 };
 ```
 
-Pair this with the `@import` in a `<style>` block at the page top, since `DesignSystem.fonts` only declares the CSS `font-family` value — it does NOT load the font file. (The Design panel reads `DesignSystem.fonts` to render its preview; it does not own font loading.)
+Pair this with the `@import` in a `<style>` block at the page top, since `DesignSystem.fonts` only declares the CSS `font-family` value, it does NOT load the font file. (The Design panel reads `DesignSystem.fonts` to render its preview; it does not own font loading.)
 
-**Option C: Project-level injection.** If you control the project (not just `slides/`), add `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Rubik:wght@400;700;900&display=swap&subset=hebrew">` to the project's `index.html` template once. Per-slide work then just references the family name. The upstream "do not touch package.json or open-slide.config.ts" rule does NOT cover `index.html`, but when in doubt, prefer Option A (slide-scoped) — it keeps the slide self-contained.
+**Option C: Project-level injection.** If you control the project (not just `slides/`), add `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Rubik:wght@400;700;900&display=swap&subset=hebrew">` to the project's `index.html` template once. Per-slide work then just references the family name. The upstream "do not touch package.json or open-slide.config.ts" rule does NOT cover `index.html`, but when in doubt, prefer Option A (slide-scoped), it keeps the slide self-contained.
+
+### Exporting to PDF / PPTX
+
+Recent open-slide builds stopped force-loading every registered font into the export root and subset webfonts instead, so an export only embeds the glyphs a deck actually uses. For Hebrew decks this matters: keep the `&subset=hebrew` parameter on the Google Fonts URL (Option A/C above) so the PDF/PPTX export embeds the Hebrew glyph set cleanly rather than falling back to a system Hebrew face (David / Times) in the exported file. If a hero uses only a handful of Hebrew characters, the tighter `&text=...` parameter subsets even further. Verify the exported PDF renders Hebrew in the intended webfont, not a fallback serif, before sharing it.
 
 ## 3.5. Code blocks inside Hebrew slides
 
@@ -184,7 +188,7 @@ A common pattern is showing English code samples inside an otherwise Hebrew page
 ```
 
 - **`dir="ltr"`**: makes the code itself flow LTR (so `const x = 1` reads naturally), even though the surrounding slide is RTL.
-- **`textAlign: 'start'`**: without this, the `<pre>` may inherit `textAlign: 'right'` or `'end'` from the RTL parent, pushing the code to the visual right edge of the box. `'start'` is logical-property aware: in a `dir="ltr"` element it resolves to `left`. Don't use `'left'` directly — same outcome here, but breaks if you ever wrap the code block in another RTL container.
+- **`textAlign: 'start'`**: without this, the `<pre>` may inherit `textAlign: 'right'` or `'end'` from the RTL parent, pushing the code to the visual right edge of the box. `'start'` is logical-property aware: in a `dir="ltr"` element it resolves to `left`. Don't use `'left'` directly, same outcome here, but breaks if you ever wrap the code block in another RTL container.
 - **`whiteSpace: 'pre-wrap'`**: preserves indentation but allows wrapping if the code line exceeds the box width.
 
 Card labels above code blocks (e.g., "אחרי · RTL מלא, פונט עברי") stay in the outer RTL flow. Only the `<pre>` flips. The mixed-direction layout works because each container declares its own direction explicitly.
@@ -263,10 +267,10 @@ Hebrew cover budget at 232px × 0.98 line-height × 3 lines = 682px. Add eyebrow
 
 Hebrew benefits from slightly tighter line-height than the upstream defaults at hero sizes (Hebrew has no ascenders/descenders so the optical line gap looks larger than Latin):
 
-- Hero (160–220px): `lineHeight: 1.1` (upstream default 1.05 — a touch too tight)
+- Hero (160–220px): `lineHeight: 1.1` (upstream default 1.05, a touch too tight)
 - Section heading: `lineHeight: 1.15`
 - Page heading: `lineHeight: 1.2` (unchanged)
-- Body: `lineHeight: 1.5` (a touch tighter than upstream's 1.6 — feels right in Hebrew)
+- Body: `lineHeight: 1.5` (a touch tighter than upstream's 1.6, feels right in Hebrew)
 - Caption: `lineHeight: 1.4`
 
 ## 5. Bidirectional text: `<bdi>` for mixed Hebrew + Latin
@@ -280,7 +284,7 @@ Hebrew copy frequently embeds Latin tokens: brand names, code identifiers, URLs,
 The fix is `<bdi>` (Bidirectional Isolate). It tells the bidi algorithm: "treat this span as a self-contained unit, don't merge its direction with the surrounding text."
 
 ```tsx
-// ❌ Without isolation — punctuation may render in surprising places
+// ❌ Without isolation, punctuation may render in surprising places
 <p>השתמשו בספריית React Router לניתוב.</p>
 
 // ✅ Wrap the Latin run
@@ -297,7 +301,7 @@ Use `<bdi>` for:
 **You do NOT need `<bdi>` for:**
 - Pure Latin runs (English-only paragraphs)
 - Pure Hebrew runs (Hebrew-only paragraphs)
-- Numbers in Hebrew financial copy (e.g. "₪1,500" or "1,500 ש״ח" — the bidi algorithm handles these correctly)
+- Numbers in Hebrew financial copy (e.g. "₪1,500" or "1,500 ש״ח", the bidi algorithm handles these correctly)
 - Logos as `<img>` (they're not text, no bidi to worry about)
 
 CSS alternative: `unicode-bidi: isolate` on a `<span>` does the same thing. `<bdi>` is the semantic shortcut.
@@ -341,7 +345,7 @@ So for a horizontal layout like a footer with brand-on-the-left, page-counter-on
 </div>
 ```
 
-`insetInline: 120` is shorthand for `insetInlineStart: 120; insetInlineEnd: 120` — pinning to both edges with logical-property naming. The brand and page-counter swap visual sides automatically when the surrounding `dir="rtl"` is on the page root.
+`insetInline: 120` is shorthand for `insetInlineStart: 120; insetInlineEnd: 120`, pinning to both edges with logical-property naming. The brand and page-counter swap visual sides automatically when the surrounding `dir="rtl"` is on the page root.
 
 If you want an explicit visual order (e.g. logo always on the visual left, page counter always on the visual right, regardless of `dir`), use `flexDirection: 'row-reverse'` inside an RTL container, or position absolutely with `insetInlineStart` / `insetInlineEnd` separately.
 
@@ -360,7 +364,7 @@ Translation tools and well-meaning agents render English dev terminology into He
 | best practices | שיטות עבודה מומלצות ✓ | correct | same |
 | design tokens | טוקני עיצוב ✓ | correct (transliteration acceptable in tech context) | same |
 
-When unsure: ship the term in English (Latin script) instead of inventing a Hebrew transliteration. `DesignSystem`, `themes`, `bidi`, `RTL` all stay in English even in Hebrew prose — and look natural when wrapped in `<bdi>`.
+When unsure: ship the term in English (Latin script) instead of inventing a Hebrew transliteration. `DesignSystem`, `themes`, `bidi`, `RTL` all stay in English even in Hebrew prose, and look natural when wrapped in `<bdi>`.
 
 ### Tone in Israeli Hebrew
 
@@ -374,9 +378,9 @@ Israeli technical Hebrew is direct, slightly informal, and avoids the formal/pas
 | הסקיל מספק (the skill provides) | הסקיל נותן / יש בסקיל |
 | בכדי (in order to) | כדי |
 | במידה ו (in case that) | אם |
-| במהלך (during) — overused | תוך כדי / כש |
+| במהלך (during), overused | תוך כדי / כש |
 
-If a sentence reads like a legal document, rewrite it. Israeli devs expect warm, direct Hebrew — even in technical reference material.
+If a sentence reads like a legal document, rewrite it. Israeli devs expect warm, direct Hebrew, even in technical reference material.
 
 ## 7. Hebrew typography pitfalls
 
@@ -390,7 +394,7 @@ If your deck quotes biblical text, poetry, or children's content, you may have v
 שָׁלוֹם
 ```
 
-Most Hebrew Google Fonts render nikkud, but quality varies. **Heebo, Frank Ruhl Libre, and Noto Sans Hebrew handle nikkud well.** Rubik and Assistant are weaker — the marks may collide with consonants at small sizes.
+Most Hebrew Google Fonts render nikkud, but quality varies. **Heebo, Frank Ruhl Libre, and Noto Sans Hebrew handle nikkud well.** Rubik and Assistant are weaker, the marks may collide with consonants at small sizes.
 
 If you're using nikkud at body size (40px), test with a real sample. At hero size (160–220px) all listed fonts handle nikkud cleanly.
 
@@ -404,7 +408,7 @@ The standard Unicode hyphen-minus (`-`, U+002D) is fine in Hebrew copy. The prop
 
 ### Apostrophe in transliterations
 
-Words like "ChatGPT-ה" use a regular hyphen between the Latin word and the Hebrew prefix/suffix. Don't substitute curly quotes (`'` or `'`) — they break in monospace fonts and look wrong at hero sizes.
+Words like "ChatGPT-ה" use a regular hyphen between the Latin word and the Hebrew prefix/suffix. Don't substitute curly quotes (`'` or `'`), they break in monospace fonts and look wrong at hero sizes.
 
 ### Numbers: keep Latin
 
@@ -412,13 +416,13 @@ Use `1, 2, 3` not `١, ٢, ٣` (Arabic-Indic digits, used in Arabic but not mode
 
 ### Currency
 
-Israeli Shekel: `₪1,500` (symbol-first) or `1,500 ש״ח` (suffix). Both work. The symbol `₪` (U+20AA) renders in all listed Google Fonts. Don't write `NIS 1,500` for a Hebrew audience — they'll read it but it feels foreign.
+Israeli Shekel: `₪1,500` (symbol-first) or `1,500 ש״ח` (suffix). Both work. The symbol `₪` (U+20AA) renders in all listed Google Fonts. Don't write `NIS 1,500` for a Hebrew audience, they'll read it but it feels foreign.
 
 ## 7.5. Brand-palette discipline (when the slide has a brand to follow)
 
-Hebrew RTL adaptation often coincides with brand alignment — adapting an open-slide deck to a specific Israeli company's visual identity. A common LTR-template instinct is to gradient between primary brand colors for visual punch ("the hero number is a gradient from brand blue to brand magenta"). **This frequently produces an off-brand intermediate hue.**
+Hebrew RTL adaptation often coincides with brand alignment, adapting an open-slide deck to a specific Israeli company's visual identity. A common LTR-template instinct is to gradient between primary brand colors for visual punch ("the hero number is a gradient from brand blue to brand magenta"). **This frequently produces an off-brand intermediate hue.**
 
-Concrete example: agentskills.co.il publishes Israeli Blue (`#003286`) and YooTech Magenta (`#bc46a2`) as separate palette entries. A linear gradient `Israeli Blue → Magenta` blends through saturated purple — which is **not** in the published palette. The site uses each color solid; magenta as accent, Israeli Blue as the dominant brand mark.
+Concrete example: agentskills.co.il publishes Israeli Blue (`#003286`) and YooTech Magenta (`#bc46a2`) as separate palette entries. A linear gradient `Israeli Blue → Magenta` blends through saturated purple, which is **not** in the published palette. The site uses each color solid; magenta as accent, Israeli Blue as the dominant brand mark.
 
 **Rules of thumb when adapting to a brand:**
 
@@ -481,13 +485,13 @@ Add these to the upstream "Self-review before finishing" checklist:
 - [ ] Type scale bumped 10–15% at hero/section sizes vs the upstream defaults.
 - [ ] Vertical budget recomputed at the bumped sizes; every page sums under 1080px.
 - [ ] Hero on covers/section dividers fits 1–2 lines (3 lines at the bumped Hebrew scale almost always overflows).
-- [ ] Latin runs inside Hebrew copy wrapped in `<bdi>` (brand names, code, URLs, version numbers, file extensions). **Audit your own prose recursively** — a skill author writing about `<bdi>` will miss it in their own examples.
+- [ ] Latin runs inside Hebrew copy wrapped in `<bdi>` (brand names, code, URLs, version numbers, file extensions). **Audit your own prose recursively**, a skill author writing about `<bdi>` will miss it in their own examples.
 - [ ] Embedded code blocks: `<pre dir="ltr">` with `textAlign: 'start'`. Verified the code reads LTR while the surrounding slide stays RTL.
 - [ ] No mis-translated technical terms (themes ≠ ערכאות; resolution ≠ רזולוציית; authoring ≠ אוטרינג).
 - [ ] Hebrew tone is direct/Israeli, not government-formal (avoid `ניתן ל...` / `יש לבדוק` / `במידה ו` patterns).
 - [ ] No nikkud quality issues at the chosen font + size (test with a real sample if you used nikkud).
 - [ ] Numbers are Latin digits (`1, 2, 3`), currency uses `₪` or `ש״ח`.
-- [ ] Footer / page-counter / breadcrumb chrome flips correctly in `dir="rtl"` (use `insetInline` shorthand, `flexDirection: 'row'` with `justifyContent: 'space-between'` flips automatically — don't double-flip with `row-reverse`).
+- [ ] Footer / page-counter / breadcrumb chrome flips correctly in `dir="rtl"` (use `insetInline` shorthand, `flexDirection: 'row'` with `justifyContent: 'space-between'` flips automatically, don't double-flip with `row-reverse`).
 - [ ] If the deck follows a brand palette: no invented gradients between non-adjacent brand colors (e.g., Israeli Blue → Magenta blends through purple, which is off-brand).
 
 ## 10. Bilingual decks (some pages Hebrew, some English)
@@ -495,9 +499,9 @@ Add these to the upstream "Self-review before finishing" checklist:
 For decks that mix Hebrew and English pages:
 
 - Set `dir="rtl"` per page (Hebrew pages) or omit it (English pages, default ltr from `<html>`).
-- Define the Hebrew font family in `DesignSystem.fonts` even for English pages — Hebrew fonts in this list (Heebo, Rubik, Noto Sans Hebrew) all render Latin glyphs cleanly, so a single shared `font-family` works for both directions. The English page renders Latin glyphs from the same Hebrew family; visual coherence stays intact.
-- Title and section-heading sizes can stay at the bumped Hebrew values for English pages too (English at 200px hero is fine — generous, not cramped). Or use two different `typeScale` values per page if you want tight English vs roomy Hebrew. Latter requires per-page DesignSystem overrides; not currently supported by the Design panel cleanly. Pragmatic answer: pick one bumped value, apply to both.
-- Keep navigation chrome (page numbers, footer brand) consistent across pages — switching between LTR and RTL chrome page-to-page is jarring. Either always-LTR or always-RTL, regardless of content direction. Pick one.
+- Define the Hebrew font family in `DesignSystem.fonts` even for English pages, Hebrew fonts in this list (Heebo, Rubik, Noto Sans Hebrew) all render Latin glyphs cleanly, so a single shared `font-family` works for both directions. The English page renders Latin glyphs from the same Hebrew family; visual coherence stays intact.
+- Title and section-heading sizes can stay at the bumped Hebrew values for English pages too (English at 200px hero is fine, generous, not cramped). Or use two different `typeScale` values per page if you want tight English vs roomy Hebrew. Latter requires per-page DesignSystem overrides; not currently supported by the Design panel cleanly. Pragmatic answer: pick one bumped value, apply to both.
+- Keep navigation chrome (page numbers, footer brand) consistent across pages, switching between LTR and RTL chrome page-to-page is jarring. Either always-LTR or always-RTL, regardless of content direction. Pick one.
 
 Cover example:
 
@@ -523,4 +527,4 @@ const EnglishDetail: Page = () => (
 export default [HebrewCover, EnglishDetail] satisfies Page[];
 ```
 
-The `dir="rtl"` is missing on the second component, so it inherits `ltr` from `<html>` — correct for English. Both share the Hebrew font family for consistency.
+The `dir="rtl"` is missing on the second component, so it inherits `ltr` from `<html>`, correct for English. Both share the Hebrew font family for consistency.
