@@ -1,0 +1,61 @@
+{
+  "author": "skills-il",
+  "version": "1.0.0",
+  "category": "developer-tools",
+  "volatility": "annual",
+  "authoritative_sources": [
+    { "url": "https://block.org.il/news/yad2-shipping-scams/", "type": "regulator", "language": "he" },
+    { "url": "https://magazine.yad2.co.il/shopping/קונים-אונליין-ככה-תשמרו-על-עצמכם-מהונא/23647", "type": "vendor", "language": "he" },
+    { "url": "https://www.kolzchut.org.il/he/ביטול_עסקה_צרכנית", "type": "statute", "language": "he" },
+    { "url": "https://www.gov.il/he/service/cyber-event-report", "type": "regulator", "language": "he" }
+  ],
+  "domain_checklist_version": 1,
+  "tags": {
+    "he": [
+      "יד2",
+      "יד-שנייה",
+      "הונאות",
+      "מכירה",
+      "מודעה",
+      "ישראל"
+    ],
+    "en": [
+      "yad2",
+      "second-hand",
+      "scam-protection",
+      "selling",
+      "listing",
+      "israel"
+    ]
+  },
+  "display_name": {
+    "he": "מסחר יד שנייה ביד2 והגנה מהונאות",
+    "en": "Yad2 Second-Hand Trade & Scam Shield"
+  },
+  "display_description": {
+    "he": "קונים ומוכרים יד שנייה ביד2 בלי ליפול בפח. הסקיל כותב לכם מודעה בעברית עם תיאור נכון וטווח מחיר שמבוסס על מודעות דומות (לא על מספר מהאוויר), מנסח הודעות מיקוח לקונה או למוכר, ובעיקר עושה בדיקת הונאה: הוא מכיר את כל הטריקים שרצים ביד2 (תשלום מראש לשליח GLS, צילום מסך מזויף של העברה בנקאית, לינק מתחזה לדואר ישראל שגונב פרטי אשראי, דרישת תשלום בביטקוין) ואומר לכם אם העסקה מריחה רע. השתמשו כשאתם מוכרים או קונים מוצר יד שנייה ביד2, כותבים מודעה, או חושדים בקונה או מוכר. שימו לב: בעסקה פרטית ביד2 אין זכות ביטול לפי חוק הגנת הצרכן, היא חלה רק על קנייה מעוסק. אל תשתמשו לבדיקות בעלות ורישוי רכב (לשם יש את israeli-vehicle-manager), למכירה עסקית רב-ערוצית בזאפ/KSP/פייסבוק (israeli-marketplace-seller), לחיפוש דירות להשכרה (israeli-apartment-hunting) או להשוואת מחירים בין חנויות (israeli-product-price-comparator).",
+    "en": "Buy and sell second-hand goods safely on Yad2 (Yad2 Market). The skill writes an optimized Hebrew listing with an honest condition description and a fair-price band derived from comparable listings (never a made-up number), drafts Hebrew negotiation messages for buyer or seller, and runs a fraud red-flag check: it knows the current Israeli Yad2 scam playbook (pay-the-GLS-courier-first, forged bank-transfer screenshots, phishing 'Israel Post' credit-card links, Bitcoin demands) and tells you whether a deal smells wrong. Use when selling or buying a used item on Yad2, writing a listing, or screening a suspicious buyer or seller. Note: a private Yad2 sale has no Consumer Protection Law cancellation right, that applies only to buying from a business. Do NOT use for vehicle ownership/registration checks (use israeli-vehicle-manager), business multi-channel selling on Zap/KSP/Facebook (use israeli-marketplace-seller), rental apartment hunting (use israeli-apartment-hunting), or retailer price comparison (use israeli-product-price-comparator)."
+  },
+  "openclaw": {
+    "requires": {
+      "bins": [],
+      "env": []
+    },
+    "emoji": "🛒"
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "openclaw",
+    "antigravity",
+    "gemini-cli",
+    "chatgpt",
+    "claude-ai",
+    "claude-desktop",
+    "manus"
+  ]
+}

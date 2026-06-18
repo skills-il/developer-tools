@@ -1,0 +1,186 @@
+---
+name: yad2-second-hand-trader
+description: >-
+  Buy and sell second-hand goods safely on Yad2 (Yad2 Market): writes optimized Hebrew
+  listings with a comparable-based fair-price band, drafts buyer/seller negotiation
+  messages, and runs a fraud red-flag checklist against suspicious buyers or sellers.
+  Use when a private person asks to "write a Yad2 listing", "sell my used X on Yad2",
+  "is this Yad2 buyer a scam", "מוכר ביד2", "קונה ביד2", or wants to negotiate a Yad2
+  price. Knows the current Israeli scam playbook (fake GLS shipping payments, forged
+  bank-transfer screenshots, phishing "Israel Post" credit-card links, Bitcoin demands)
+  and the safety rules (never pay in advance, meet and inspect, cash or known payment
+  apps). Do NOT use for vehicle ownership or registration checks (use israeli-vehicle-manager),
+  business multi-channel selling on Zap/KSP/Facebook (use israeli-marketplace-seller),
+  rental apartment hunting (use israeli-apartment-hunting), or retailer price comparison
+  (use israeli-product-price-comparator).
+license: MIT
+allowed-tools: ''
+compatibility: >-
+  Pure text generation (listings, messages, scam verdicts). No local shell, API key, or
+  network access required. Works on Claude Code, Claude.ai, Claude Desktop, Cursor,
+  ChatGPT, Gemini CLI, and other agents.
+---
+
+# Yad2 Second-Hand Trade & Scam Shield
+
+## Problem
+
+Yad2 is where Israelis buy and sell almost everything second-hand, but a private seller has no protection net: there is no built-in escrow, the Consumer Protection Law's cancellation right does not cover private peer-to-peer sales, and the platform is a constant target for a well-known set of scams. People lose money to forged bank-transfer screenshots and fake "pay the courier first" requests, undersell good items because they do not know the going rate, and write weak listings that sit unanswered for weeks. This skill writes a strong Hebrew listing with a defensible price, drafts the negotiation messages, and screens any suspicious buyer or seller against the current Israeli fraud playbook before money changes hands.
+
+## Instructions
+
+This skill does three jobs. Identify which one the user needs, then follow the matching section. A single conversation often chains them (write a listing, then a buyer replies and you screen them).
+
+### Job 1: Write a Yad2 listing (seller)
+
+Collect from the user: item (model/brand if relevant), condition, age, reason for selling, city/area, and any flaws. Then produce a complete Hebrew listing.
+
+A strong Yad2 listing has four parts:
+
+| Part | What to write |
+|------|---------------|
+| Title (כותרת) | Brand + model + key spec + condition word. Searchable, no clickbait. e.g. `ספה תלת-מושבית IKEA EKTORP אפורה, מצב מצוין` |
+| Description (תיאור) | 3 to 6 short lines: what it is, age, why selling, condition honestly (state real flaws, this builds trust and cuts time-wasters), what is included, pickup area. |
+| Condition (מצב) | One of: חדש באריזה / כמו חדש / מצוין / טוב / סביר / דורש תיקון. Be honest, a buyer who drives over and finds hidden damage walks away. |
+| Asking price (מחיר) | A defensible number, see the pricing method below. |
+
+**Pricing method (never invent a number from memory).** Do not state a price as if it were a known market rate. Instead:
+1. Tell the user to open Yad2 Market and search the same item, filtering to active listings of the same model, condition, and rough age.
+2. Take the cluster of comparable asking prices, drop outliers, and propose a band (low / fair / quick-sale).
+3. Adjust for condition and age relative to the original retail price (more wear = lower; rare/discontinued = can hold value).
+4. Present it as: "based on comparable Yad2 listings you find, expect roughly X to Y; price at the higher end if you can wait, lower for a fast sale." If the user has no comparables yet, ask them to gather 3 to 5 first.
+
+Add photo guidance: real photos (not catalog images), multiple angles, natural light, and a photo of any flaw you mentioned.
+
+**If a listing sits unanswered for weeks**, the lever is rarely the price alone. Tell the user to bump/renew the listing (קפיצת מודעה / חידוש מודעה) so it returns to the top of search, refresh the photos and title, and consider Yad2's paid promotion only if comparables show their price is already right. Re-publishing a stale listing usually does more than another price cut.
+
+### Job 2: Draft negotiation messages
+
+Israeli second-hand haggling is normal and expected. Draft short, polite, direct Hebrew messages. Match the user's role:
+
+- **Buyer lowering a price:** acknowledge the item, give a concrete reason for a lower offer (cash now, immediate pickup, a visible flaw, comparable cheaper listings), and name a specific number. Avoid insulting lowballs.
+- **Seller holding or countering:** thank, justify the price briefly (condition, what's included, recent comparable sales), and offer a small concession (round down, throw in an accessory) rather than a big drop.
+
+Keep messages WhatsApp-length. Always close toward a concrete next step (a pickup time and place), because a deal that never sets a meeting time is usually a deal that dies or a scammer stalling.
+
+### Job 3: Scam shield (screen a suspicious interaction)
+
+First ask (or infer) which side the user is on, because the scams differ. Score the interaction against the matching table and return a clear verdict: **likely scam / suspicious, slow down / looks normal**.
+
+**If the user is the SELLER (they posted the item):**
+
+| Red flag | Why it is a scam signal |
+|----------|------------------------|
+| Buyer wants to pay before seeing the item and arrange shipping (especially via GLS) | The signature Yad2 seller scam: the buyer pushes the seller to pay the courier first. |
+| A bank-transfer confirmation screenshot arrives but no money is in your account | Forged transfer screenshots are a core tactic, with apps that fake the confirmation. A screenshot is not a payment. Only your own bank balance proves payment. |
+| A "payment" or "credit" link is sent for you to enter card details (often dressed as Israel Post / דואר ישראל) | The link harvests your credit-card details. Couriers never need YOUR card to pay YOU. |
+| Payment demanded in Bitcoin / crypto | Irreversible, untraceable. Legitimate local second-hand deals do not use crypto. |
+| "I overpaid by mistake, refund me the difference" | Overpayment scam. The original payment is fake or will be reversed; your refund is real money out. |
+| Pressure to move off Yad2 chat fast, urgency, "I'm abroad / in Eilat / soldier / relocating" | Classic social-engineering framing to justify shipping and remote payment. Poor or error-filled Hebrew is a common tell. |
+
+**If the user is the BUYER (they are responding to a listing):**
+
+| Red flag | Why it is a scam signal |
+|----------|------------------------|
+| Seller asks for a deposit / "holding fee" (מקדמה / דמי רצינות) before you see the item | The deposit scam: fake listing for a hot item (PS5, concert tickets, a puppy, an apartment), you pay to "reserve", the seller vanishes. Never send money to hold an item you have not inspected. |
+| Price is far below market for the model/condition | Too-good-to-be-true is bait. Pull comparables first. |
+| Listing photos look like stock or stolen images | Run a reverse-image search. Fake listings reuse photos. |
+| Seller refuses to meet in person or give a real pickup location | Without a physical handover you have no way to inspect or recover anything. |
+| Phone / laptop / e-bike priced suspiciously low, seller dodges proof of origin | Possible stolen goods. Buying stolen property can mean it gets seized and you are out the money. Ask for the box, receipt, or serial. |
+| For phones: seller will not let you verify it on the spot | Before paying, power it on, insert a SIM, and confirm it is not iCloud/Google activation-locked or reported lost/stolen. A locked phone is a brick. |
+
+**The two rules that defeat almost every Yad2 scam, per Yad2's own guidance:**
+1. Never transfer money in advance, and certainly never abroad on a future promise.
+2. Meet in person, inspect the item against the listing, and pay/receive at handover.
+
+**Payment-rails reality (the part that actually protects a seller).** "Cash or a recognized app" is not all equal:
+- **Cash** is safest, instant and final.
+- **Bit / PayBox** are good to RECEIVE because a transfer between people is immediate and effectively final once confirmed (a Bit transfer cannot be cancelled once sent; a PayBox payment can be undone only if the recipient has not yet confirmed). That finality is exactly why a scammer prefers tricks over really sending one.
+- A **bank transfer "confirmation" shown at the meeting is NOT proof** the money cleared. Do not hand over the item against a screenshot; wait until it actually shows in your balance.
+- Beware a **payment REQUEST (בקשת תשלום)** sent to you: approving a request sends YOUR money out, it is the opposite of receiving a payment. Scammers disguise a request as "I'm paying you, just approve."
+
+**Stay on Yad2 chat and report.** Keep the conversation inside Yad2's in-app chat (it preserves evidence and is what lets Yad2 act). If something is a scam, report the user/listing to Yad2 itself (דיווח על משתמש / מודעה) as the first-line action, in addition to the steps below.
+
+**Safe handover.** Meet in a public place in daylight; for large or expensive items bring someone. Do not share your home address until you are committed, and prefer a building lobby or a public spot, especially if meeting alone.
+
+**Beyond scams (time-wasters and weird buyers).** Not every odd buyer is a fraud. A buyer who haggles hard then no-shows, asks "still available?" endlessly without committing, or wants to send a "representative" to pick up and pay is usually a time-waster, not a thief. Set a concrete pickup time, do not hold the item without a deposit you trust, and move on if they stall.
+
+**Consumer-law reality check (state this when relevant).** The Consumer Protection Law's cooling-off / cancellation right applies to a consumer buying from a business (עסקה צרכנית מול עוסק). A private Yad2 sale between two individuals is NOT covered, so do not tell a private buyer they have a 14-day return right, they do not. But "no Consumer Protection Law" does NOT mean "no recourse": a seller must still disclose known defects, and a buyer who was deceived or sold an item with an undisclosed hidden defect (מום נסתר) can pursue remedies under general contract law and the Sales Law (חוק המכר), typically in small claims court (`israeli-small-claims-court`). Inspect before paying anyway, it is far easier than suing.
+
+**If the buyer-arranged courier vs Yad2's own shipping.** The shipping scam is a BUYER-ARRANGED courier the seller is told to pay. Yad2's own in-app protected payment / delivery option (if it is offered in the user's app) is a different, legitimate flow. The rule is not "never ship", it is "never pay a courier the other side arranged, and never pay to receive money".
+
+**If the user was already scammed:** advise them to stop all contact and payment, keep screenshots, report the user/listing to Yad2, contact their bank/credit-card company immediately if card details were entered, file an online complaint with Israel Police, and report phishing links to the National Cyber Directorate (see Reference Links).
+
+## Examples
+
+### Example 1: Write a listing
+User says: "Write me a Yad2 listing for my 2-year-old IKEA EKTORP 3-seat sofa, grey, very good condition, selling because we're moving, in Ramat Gan."
+Actions:
+1. Produce a Hebrew title, description (3 to 5 lines, honest condition, pickup in Ramat Gan), condition tag `מצוין`.
+2. Do NOT state a price as fact. Tell the user to pull comparable active EKTORP listings on Yad2 Market, then propose a band relative to retail and condition.
+3. Add photo guidance (multiple angles, daylight, any flaw shown).
+Result: A ready-to-paste Hebrew listing plus a pricing instruction.
+
+### Example 2: Scam screen
+User says: "A buyer on Yad2 says they'll pay extra and arrange a GLS courier, but I need to pay the courier first via a link they sent. Is this real?"
+Actions:
+1. Match red flags: pay-courier-first + external link + pay before seeing = the signature Yad2 shipping scam.
+2. Return verdict: likely scam. Explain the link harvests card details and the courier never needs the seller to pay.
+3. Tell them to refuse, only accept payment they can see in their account or cash at handover, and report the link to the National Cyber Directorate.
+Result: A clear "likely scam" verdict with the reason and next step.
+
+### Example 3: Negotiate
+User says: "A seller listed a used PS5 above what comparable listings show. Help me offer less, I can pick up today and pay cash."
+Actions:
+1. Draft a short polite Hebrew message offering a concrete lower number, leveraging cash + same-day pickup, and referencing comparable listings if any.
+2. Close with a proposed pickup time/place.
+Result: A WhatsApp-length Hebrew counter-offer message.
+
+## Bundled Resources
+
+### References
+- `references/scam-playbook.md` -- the full Israeli Yad2 scam catalog with the exact buyer/seller scripts and the safe-deal checklist. Consult when screening any suspicious interaction.
+- `references/listing-and-pricing.md` -- listing templates by category (furniture, electronics, baby gear, appliances) and the comparable-based pricing method. Consult when writing a listing.
+- `references/domain-checklist.md` -- coverage contract for this skill (used by maintenance).
+
+## Recommended MCP Servers
+
+No MCP server currently exposes Yad2 second-hand listing data, so this skill is standalone (it generates listings, messages, and scam verdicts from the user's own description and from live comparables the user pulls on Yad2). If a Yad2 marketplace MCP is added later, pair it here for automated comparable-price lookups.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Israeli Internet Association (Block) | https://block.org.il/news/yad2-shipping-scams/ | The GLS/shipping scam mechanics and warning to sellers |
+| Yad2 safety guide | https://magazine.yad2.co.il/shopping/קונים-אונליין-ככה-תשמרו-על-עצמכם-מהונא/23647 | Yad2's official buyer-safety tips |
+| Yad2 Market | https://www.yad2.co.il/market | The second-hand goods marketplace |
+| Kol-Zchut: consumer cancellation right | https://www.kolzchut.org.il/he/ביטול_עסקה_צרכנית | Confirms the cancellation right is for business→consumer sales, not private deals |
+| Smart consumer guide (private sales) | https://taasiri-law.co.il/מדריך-לצרכן-הנבון-120-שאלות-ותשובות-בדינ/ | A seller must disclose known defects even in a private sale; recourse via general law |
+| PayBox FAQ | https://www.payboxapp.com/faq/ | A payment can be undone only before the recipient confirms |
+| Bit FAQ | https://www.bitpay.co.il/he/private-faq | A Bit transfer cannot be cancelled once sent |
+| Israel Police online complaint | https://www.kolzchut.org.il/he/בקשה_להגשת_תלונה_במשטרה_דרך_האינטרנט | How to file an online fraud complaint |
+| National Cyber Directorate | https://www.gov.il/he/service/cyber-event-report | Report phishing links and cyber incidents |
+
+## Gotchas
+
+- **Never invent a price.** Agents confidently state "a used X goes for Y shekel" from memory. Second-hand prices are local and volatile. Always derive the band from comparable ACTIVE Yad2 listings the user pulls, and present it as a range with a method, not a fact.
+- **A bank-transfer screenshot is not a payment.** Agents (and sellers) treat a transfer confirmation image as proof. It is trivially forged and is the core of the Yad2 seller scam. Only the seller's own account balance proves payment.
+- **Do not promise a private buyer a return/cancellation right.** The Consumer Protection Law 14-day cooling-off applies to business sellers (עוסק), not to a private person selling a used item. Telling a Yad2 buyer they can return it within 14 days is wrong and creates disputes.
+- **A courier never needs YOU to pay to send money TO you.** Any "pay the shipping company / pay this link to receive your credit" framing is a scam, full stop. This is counter-intuitive enough that people fall for it.
+- **Do not treat all payment apps as equal, and do not confuse a payment with a payment request.** Cash, Bit, and PayBox are good to RECEIVE (instant, effectively final once confirmed); a bank-transfer screenshot at the meeting is NOT cleared money. A "payment request" (בקשת תשלום) approved by the user sends THEIR money out, the reverse of getting paid.
+- **The buyer's biggest risk is the deposit scam, not the GLS scam.** When the user is buying, the dominant fraud is paying a מקדמה to "hold" a fake listing. Do not give a buyer only the seller-side shipping warning.
+- **Keep negotiation messages short and Hebrew-native.** Long, formal, translated-sounding messages read as bot or scam. Israeli haggling is brief, direct, and friendly.
+
+## Troubleshooting
+
+### Error: "I gave the buyer a price but it's much lower/higher than other listings"
+Cause: priced from memory instead of comparables.
+Solution: pull 3 to 5 active comparable Yad2 listings for the same model/condition first, then set the band.
+
+### Error: "The buyer's bank transfer 'went through' but the money isn't in my account"
+Cause: forged transfer screenshot, a known scam.
+Solution: do not hand over the item. Payment is real only when it shows in your own bank balance. Treat the screenshot as a red flag and stop the deal.
+
+### Error: "Is it safe to ship the item to a buyer I haven't met?"
+Cause: shipping + pre-payment is the highest-risk pattern on Yad2.
+Solution: prefer in-person handover with cash or a recognized payment app. If shipping is unavoidable, never pay any courier yourself and never enter card details in a link the buyer sends.

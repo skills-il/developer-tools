@@ -1,0 +1,133 @@
+{
+  "skill_slug": "yad2-second-hand-trader",
+  "schemaVersion": "1.0",
+  "generated_at": "2026-06-18",
+  "claims": [
+    {
+      "id": "yad2-market-url",
+      "claim": "Yad2 has a dedicated second-hand goods marketplace at yad2.co.il/market",
+      "claim_type": "url",
+      "source_url": "https://www.yad2.co.il/market",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "יד2 | מוצרי יד שנייה - Yad2 Market",
+      "confidence": "high"
+    },
+    {
+      "id": "scam-fake-bank-transfer",
+      "claim": "A common Yad2 scam against sellers: the fake buyer sends a screenshot of a forged bank transfer so the seller believes the deal is legitimate",
+      "claim_type": "feature",
+      "source_url": "https://block.org.il/news/yad2-shipping-scams/",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "שולח 'הרוכש' צילום של העברה בנקאית מזויפת. המוכר חש שהעסקה כשרה",
+      "confidence": "high"
+    },
+    {
+      "id": "scam-gls-shipping-payment",
+      "claim": "In the Yad2 shipping scam, the fake buyer asks the seller to pay the shipping company directly (usually GLS)",
+      "claim_type": "feature",
+      "source_url": "https://block.org.il/news/yad2-shipping-scams/",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "ה'רוכש' מבקש מהמוכר לשלם ישירות לחברת השילוח (GLS, בד\"כ)",
+      "confidence": "high"
+    },
+    {
+      "id": "scam-phishing-credit-card-link",
+      "claim": "The scam uses a fake payment/credit link that is actually used to capture the seller's credit card details under the pretext of receiving a refund/credit",
+      "claim_type": "feature",
+      "source_url": "https://block.org.il/news/yad2-shipping-scams/",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "הלינק משמש לצורך הכנסת פרטי כרטיס אשראי אליו יתקבל, לכאורה, הזיכוי",
+      "confidence": "high"
+    },
+    {
+      "id": "scam-bitcoin-payment",
+      "claim": "The fraudulent payment request is most often demanded via Bitcoin",
+      "claim_type": "feature",
+      "source_url": "https://block.org.il/news/yad2-shipping-scams/",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "בקשת התשלום היא, לרוב, באמצעות ביטקוין",
+      "confidence": "high"
+    },
+    {
+      "id": "safety-no-advance-payment",
+      "claim": "Yad2's own safety guidance: strongly advises not to transfer money in advance, and certainly not abroad",
+      "claim_type": "feature",
+      "source_url": "https://magazine.yad2.co.il/shopping/קונים-אונליין-ככה-תשמרו-על-עצמכם-מהונא/23647",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "מומלץ מאוד שלא להעביר כסף מראש, ובטח לא לחו\"ל",
+      "confidence": "high"
+    },
+    {
+      "id": "safety-inspect-item",
+      "claim": "Yad2's safety guidance: verify the item matches the listing, with no scratches or damage, before paying",
+      "claim_type": "feature",
+      "source_url": "https://magazine.yad2.co.il/shopping/קונים-אונליין-ככה-תשמרו-על-עצמכם-מהונא/23647",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "לוודא שהמוצר הוא אכן כפי שפורסם באתר, ללא שריטות או חבלות",
+      "confidence": "high"
+    },
+    {
+      "id": "safety-cash-or-known-apps",
+      "claim": "Yad2's safety guidance: payment is recommended in cash or through recognized payment apps",
+      "claim_type": "feature",
+      "source_url": "https://magazine.yad2.co.il/shopping/קונים-אונליין-ככה-תשמרו-על-עצמכם-מהונא/23647",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "מומלץ שהתשלום יתבצע במזומן, או דרך אפליקציות תשלומים מוכרות",
+      "confidence": "high"
+    },
+    {
+      "id": "consumer-law-business-only",
+      "claim": "The Consumer Protection Law cancellation right applies to a consumer transaction made with a business (עסקה צרכנית at a business), not to sales between two private individuals",
+      "claim_type": "law",
+      "source_url": "https://www.kolzchut.org.il/he/ביטול_עסקה_צרכנית",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "תקנות הגנת הצרכן מאפשרות לצרכן לבטל עסקה צרכנית שנעשתה בבית העסק באופן חד-צדדי וללא מתן סיבה",
+      "confidence": "high"
+    },
+    {
+      "id": "police-online-complaint",
+      "claim": "Israel Police accepts online complaints for fraud/scams via its online complaint request channel",
+      "claim_type": "url",
+      "source_url": "https://www.kolzchut.org.il/he/בקשה_להגשת_תלונה_במשטרה_דרך_האינטרנט",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "בקשה להגשת תלונה במשטרה דרך האינטרנט",
+      "confidence": "high"
+    },
+    {
+      "id": "cyber-event-report",
+      "claim": "Phishing and cyber incidents can be reported to Israel's National Cyber Directorate",
+      "claim_type": "url",
+      "source_url": "https://www.gov.il/he/service/cyber-event-report",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "דיווח על אירוע סייבר | מערך הסייבר הלאומי",
+      "confidence": "high"
+    },
+    {
+      "id": "paybox-payment-finality",
+      "claim": "A PayBox payment to a user can be cancelled only if the recipient has not yet confirmed receipt; once confirmed it is final",
+      "claim_type": "feature",
+      "source_url": "https://www.payboxapp.com/faq/",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "אם שילמתם למשתמש, תוכלו לבטל את התשלום רק בתנאי שהצד השני עוד לא אישר את קבלת התשלום",
+      "confidence": "high"
+    },
+    {
+      "id": "bit-payment-finality",
+      "claim": "A Bit transfer cannot be cancelled once sent; getting the money back depends on the recipient returning it voluntarily",
+      "claim_type": "feature",
+      "source_url": "https://www.bitpay.co.il/he/private-faq",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "לא ניתן לבטל את ההעברה",
+      "confidence": "high"
+    },
+    {
+      "id": "private-sale-defect-disclosure",
+      "claim": "Even outside the Consumer Protection Law, a seller must disclose known defects in the product",
+      "claim_type": "law",
+      "source_url": "https://taasiri-law.co.il/מדריך-לצרכן-הנבון-120-שאלות-ותשובות-בדינ/",
+      "source_fetched_at": "2026-06-18T00:00:00Z",
+      "raw_snippet": "כל מוכר חייב להודיע לצרכן על פגמים ידועים במוצר",
+      "confidence": "medium"
+    }
+  ]
+}
