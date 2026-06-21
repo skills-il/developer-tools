@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "hebrew-chatbot-builder",
+  "generated_at": "2026-06-21T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "llm-models-2026",
+      "claim": "As of mid-2026, LLMs that handle Hebrew well include Anthropic Claude (Sonnet/Opus), the OpenAI GPT-5.x family, and Google Gemini 3.x. GPT-4o/4.1 and Gemini 2.x were retired in early 2026. Dicta-LM 3.0 is the current Hebrew-native option.",
+      "source_url": "https://help.openai.com/en/articles/9624314-model-release-notes",
+      "raw_snippet": "GPT-4o and GPT-4.1 were retired from ChatGPT in early 2026; the current lineup is the GPT-5.x family.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "whatsapp-graph-v25",
+      "claim": "The WhatsApp Cloud API uses Graph API v25.0; messages are sent via POST https://graph.facebook.com/v25.0/{PHONE_NUMBER_ID}/messages.",
+      "source_url": "https://developers.facebook.com/docs/graph-api/changelog/",
+      "raw_snippet": "Graph API v25.0 is the current version. WhatsApp Cloud API endpoints are versioned under graph.facebook.com.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/whatsapp-business-api-guide.md", "scripts/whatsapp-webhook-handler.py"]
+    },
+    {
+      "claim_id": "whatsapp-platform-docs",
+      "claim": "WhatsApp Cloud API platform documentation (setup, message types, webhooks) lives on Meta's business-messaging docs.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/about-the-platform",
+      "raw_snippet": "The WhatsApp Business Platform Cloud API lets businesses send and receive messages; docs cover API version, message types, and webhook format.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "whatsapp-pricing",
+      "claim": "WhatsApp moved to per-message pricing on 1 July 2025; per-message rates by country and category change regularly, so do not hardcode them.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "WhatsApp Business pricing is per message as of July 1, 2025; rates vary by country and category.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "references/whatsapp-business-api-guide.md"]
+    },
+    {
+      "claim_id": "telegram-bot-api",
+      "claim": "The Telegram Bot API is documented at core.telegram.org/bots/api; python-telegram-bot (>=21, async) wraps it.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "The Bot API is an HTTP-based interface for building bots for Telegram.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "scripts/telegram-bot-scaffold.py"]
+    },
+    {
+      "claim_id": "python-telegram-bot",
+      "claim": "python-telegram-bot v20+/21+ uses an async API; it is the standard Python Telegram bot library.",
+      "source_url": "https://docs.python-telegram-bot.org/",
+      "raw_snippet": "python-telegram-bot provides a pure Python, asynchronous interface for the Telegram Bot API.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "scripts/telegram-bot-scaffold.py"]
+    },
+    {
+      "claim_id": "yap-hebrew-nlp",
+      "claim": "YAP (Yet Another Parser, OnlpLab) is a Hebrew morphological analyzer/parser usable for Hebrew NLP.",
+      "source_url": "https://github.com/OnlpLab/yap",
+      "raw_snippet": "YAP is a morphological analyzer and dependency parser for Hebrew from the Open University NLP Lab.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "references/whatsapp-business-api-guide.md"]
+    },
+    {
+      "claim_id": "botfather-commands",
+      "claim": "Telegram bots are created and configured via BotFather commands: /newbot (create), /setdescription, /setprivacy.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Use BotFather's /newbot to create a bot, /setdescription to set its description, and /setprivacy to control whether the bot sees all group messages or only commands.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "scripts/telegram-bot-scaffold.py"]
+    },
+    {
+      "claim_id": "placeholder-webhook-url",
+      "claim": "your-domain.com/webhook is an illustrative placeholder for the operator's own webhook callback URL.",
+      "source_url": "https://your-domain.com/webhook",
+      "raw_snippet": "Replace your-domain.com/webhook with your own HTTPS webhook endpoint registered with the WhatsApp/Telegram platform.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "references/whatsapp-business-api-guide.md"]
+    },
+    {
+      "claim_id": "placeholder-tracking-url",
+      "claim": "tracking.example.com with a {{1}} placeholder illustrates a WhatsApp template button URL with a dynamic parameter; example.com is a reserved documentation domain.",
+      "source_url": "https://tracking.example.com/{{1}}]",
+      "raw_snippet": "WhatsApp template buttons can carry a dynamic URL parameter {{1}}; tracking.example.com is an illustrative placeholder host.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["references/whatsapp-business-api-guide.md"]
+    },
+    {
+      "claim_id": "meta-business-manager",
+      "claim": "WhatsApp Business accounts are managed in Meta Business Manager.",
+      "source_url": "https://business.facebook.com/",
+      "raw_snippet": "Meta Business Manager (business.facebook.com) is where WhatsApp Business accounts, phone numbers, and message templates are managed.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["references/whatsapp-business-api-guide.md"]
+    },
+    {
+      "claim_id": "graph-messages-endpoint-shellvar",
+      "claim": "The WhatsApp send-message endpoint with a shell/env variable for the phone number id.",
+      "source_url": "https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/messages",
+      "raw_snippet": "POST https://graph.facebook.com/v25.0/{PHONE_NUMBER_ID}/messages sends a WhatsApp message; PHONE_NUMBER_ID is substituted at runtime.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["references/whatsapp-business-api-guide.md"]
+    }
+  ]
+}

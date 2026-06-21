@@ -1,6 +1,6 @@
 {
   "author": "skills-il",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "category": "developer-tools",
   "tags": {
     "he": [
@@ -25,8 +25,8 @@
     "en": "Israeli Marketplace Seller"
   },
   "display_description": {
-    "he": "ניהול מכירות אונליין בשווקים הישראליים: זאפ, KSP, פייסבוק מרקטפלייס ואינסטגרם שופינג. הסקיל מכסה יצירת מודעות מוצר בעברית, מעקב אחר מחירי מתחרים, סנכרון מלאי בין פלטפורמות, ניהול ביקורות ואנליטיקת מכירות, וגם את חובות הרישום העסקי (עוסק מורשה או פטור) והגנת הצרכן (14 ימי ביטול במכר מרחוק). השתמשו כשמוכרים בשווקים ישראליים או שואלים על מכירה אונליין בישראל. שימו לב שמטא ביטלה תשלום מובנה בפייסבוק ואינסטגרם ב-2025, אז התשלום עובר לאתר חיצוני. אל תשתמשו לשווקים בינלאומיים (אמזון, eBay) או לתפעול חנות פיזית.",
-    "en": "Manage online selling across Israeli marketplaces (Zap, KSP, Facebook Marketplace, and Instagram Shopping). Use when user asks about \"sell on Zap\", \"Facebook Marketplace Israel\", \"Instagram Shopping Israel\", \"online selling Israel\", \"price comparison KSP\", \"product listing Hebrew\", or \"מכירה אונליין\". Covers Hebrew product listing creation, competitor price monitoring, inventory sync, review management, sales analytics, business-registration status (osek murshe vs patur), and consumer-protection obligations (14-day cooling-off on remote sales). Note that Meta removed native Facebook/Instagram checkout in 2025, so payment now happens on the merchant's external site. Do NOT use for international marketplaces (Amazon, eBay) or physical store operations."
+    "he": "ניהול מכירות אונליין בשווקים הישראליים: זאפ, יד2, פייסבוק מרקטפלייס ואינסטגרם שופינג. הסקיל מכסה יצירת מודעות מוצר בעברית, מעקב אחר מחירי מתחרים (כולל מול קמעונאים כמו KSP, שהוא קמעונאי צד-ראשון ולא שוק למוכרי צד-שלישי), סנכרון מלאי בין פלטפורמות, ניהול ביקורות ואנליטיקת מכירות, חובות רישום עסקי (עוסק מורשה או פטור), חובות חשבונית מס ומספר הקצאה (חשבוניות ישראל), והגנת הצרכן (14 ימי ביטול במכר מרחוק). השתמשו כשמוכרים בשווקים ישראליים או שואלים על מכירה אונליין בישראל. אל תשתמשו לשווקים בינלאומיים (אמזון, eBay) או לתפעול חנות פיזית.",
+    "en": "Manage online selling across Israeli marketplaces (Zap, Yad2, Facebook Marketplace, and Instagram Shopping). Use when user asks about \"sell on Zap\", \"sell on Yad2\", \"Facebook Marketplace Israel\", \"Instagram Shopping Israel\", \"online selling Israel\", \"product listing Hebrew\", or \"מכירה אונליין\". Covers Hebrew product listing creation, competitor price monitoring (including against first-party retailers like KSP, which is not a third-party seller platform), inventory sync, review management, sales analytics, business-registration status (osek murshe vs patur), tax-invoice and Israel-Invoice (allocation-number) obligations, and consumer-protection rules (14-day cooling-off on remote sales). Do NOT use for international marketplaces (Amazon, eBay) or physical store operations."
   },
   "openclaw": {
     "requires": {

@@ -118,8 +118,12 @@ runs:
         GEONAMEID="${{ steps.resolve-city.outputs.geonameid }}"
         BUFFER="${{ inputs.pre_shabbat_buffer_minutes }}"
 
-        # Fetch Shabbat times
-        SHABBAT_JSON=$(curl -sf "https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on" || echo '{"items":[]}')
+        # Fetch Shabbat times. A deploy freeze is a SAFETY gate, so it must fail CLOSED:
+        # if hebcal is unreachable we freeze rather than risk deploying during Shabbat.
+        # Capture curl's exit WITHOUT letting `set -e` abort the step (composite bash runs with -eo pipefail),
+        # so the fail-closed branch below actually runs on an outage.
+        CURL_OK=0
+        SHABBAT_JSON=$(curl -sf --max-time 10 --retry 2 "https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on") || CURL_OK=$?
 
         CANDLE=$(echo "$SHABBAT_JSON" | jq -r '.items[] | select(.category=="candles") | .date' | head -1)
         HAVDALAH=$(echo "$SHABBAT_JSON" | jq -r '.items[] | select(.category=="havdalah") | .date' | head -1)
@@ -129,6 +133,17 @@ runs:
         FROZEN="false"
         REASON="none"
         NEXT_WINDOW=""
+
+        # Fail CLOSED: if the API call failed or returned no candle-lighting time, block the deploy.
+        # The workflow_dispatch force_deploy input is the documented escape hatch for a genuine incident.
+        if [ "$CURL_OK" -ne 0 ] || [ -z "$CANDLE" ]; then
+          echo "frozen=true" >> $GITHUB_OUTPUT
+          echo "reason=Could not reach hebcal to verify the Shabbat window; failing closed (deploy blocked). Override with force_deploy." >> $GITHUB_OUTPUT
+          echo "next_window=" >> $GITHUB_OUTPUT
+          echo "### Deploy Frozen (fail-closed)" >> $GITHUB_STEP_SUMMARY
+          echo "**Reason:** could not reach the hebcal API to verify the Shabbat/holiday window. Deploy blocked; use force_deploy to override." >> $GITHUB_STEP_SUMMARY
+          exit 0
+        fi
 
         if [ -n "$CANDLE" ] && [ -n "$HAVDALAH" ]; then
           # Convert to epoch for comparison
@@ -155,7 +170,7 @@ runs:
         if [ "$FROZEN" = "false" ] && [ "${{ inputs.check_holidays }}" = "true" ]; then
           YEAR=$(date +%Y)
           MONTH=$(date +%-m)
-          HOLIDAYS_JSON=$(curl -sf "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&yto=on&year=$YEAR&month=$MONTH&geo=geoname&geonameid=$GEONAMEID" || echo '{"items":[]}')
+          HOLIDAYS_JSON=$(curl -sf --max-time 10 --retry 2 "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&yto=on&year=$YEAR&month=$MONTH&geo=geoname&geonameid=$GEONAMEID" || echo '{"items":[]}')
 
           TODAY=$(date +%Y-%m-%d)
           HOLIDAY_TODAY=$(echo "$HOLIDAYS_JSON" | jq -r ".items[] | select(.date | startswith(\"$TODAY\")) | .title" | head -1)
@@ -204,7 +219,7 @@ jobs:
     outputs:
       is_frozen: ${{ steps.check.outputs.is_frozen }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - id: check
         uses: ./.github/actions/shabbat-check
         with:
@@ -335,7 +350,7 @@ jobs:
   check-queue:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - id: shabbat
         uses: ./.github/actions/shabbat-check
       - name: Process queue

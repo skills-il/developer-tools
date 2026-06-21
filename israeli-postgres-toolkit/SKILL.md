@@ -6,7 +6,9 @@ license: MIT
 
 # Israeli Postgres Toolkit
 
-Best practices, patterns, and scripts for building PostgreSQL databases tailored to Israeli applications. Covers Hebrew text handling, NIS currency, Israeli timezones, Supabase integration, and common Israeli data types.
+Best practices, patterns, and scripts for building PostgreSQL databases tailored to Israeli applications. Covers Hebrew text handling, shekel currency, Israeli timezones, Supabase integration, and common Israeli data types.
+
+Assumes **PostgreSQL 13+** (the patterns use `gen_random_uuid()` from core, non-deterministic ICU collations need 12+, and generated columns need 12+). Current stable is PostgreSQL 18.
 
 ## Instructions
 
@@ -14,7 +16,7 @@ Follow this workflow when setting up or reviewing a PostgreSQL database for an I
 
 1. **Verify encoding and timezone first.** Run `SHOW server_encoding;` (must be `UTF8`, never `SQL_ASCII` or `LATIN1`) and `SHOW timezone;`. Set the database timezone with `ALTER DATABASE your_db SET timezone = 'Asia/Jerusalem';`. Getting these wrong corrupts Hebrew and offsets every timestamp, and fixing it later means a data migration.
 2. **Pick the collation strategy.** Decide per column whether you need Hebrew display ordering (non-deterministic ICU collation `he-IL-x-icu`) or uniqueness/`btree` indexing (deterministic collation). You usually need both, on different columns or via separate indexes, because a non-deterministic collation cannot back a `UNIQUE` constraint or a plain `btree` index.
-3. **Choose the search approach.** For exact and prefix matching use `btree`. For fuzzy/typo-tolerant Hebrew search use `pg_trgm`. For multi-field ranked search use full-text search with the `simple` configuration (see "Full-Text Search with Hebrew" below). Combine `unaccent` when you need nikud-insensitive matching.
+3. **Choose the search approach.** For exact and prefix matching use `btree`. For fuzzy/typo-tolerant Hebrew search use `pg_trgm`. For multi-field ranked search use full-text search with the `simple` configuration (see "Full-Text Search with Hebrew" below). For nikud-insensitive Hebrew matching use the `strip_nikud()` function shown below; `unaccent` only strips Latin diacritics, not Hebrew nikud.
 4. **Apply Israeli data-type constraints.** Use the `CHECK` constraints and helper functions from `scripts/israeli-data-types.sql` (teudat zehut, phone, postal code, business number, IBAN) and call `validate_teudat_zehut()` for the ID check digit rather than reimplementing it in application code.
 
 ## Hebrew Text Indexing
@@ -90,29 +92,31 @@ WHERE search_vector @@ plainto_tsquery('simple', 'חשבונית')
 ORDER BY ts_rank(search_vector, plainto_tsquery('simple', 'חשבונית')) DESC;
 ```
 
-### Nikud-Insensitive Matching with unaccent
+### Nikud-Insensitive Matching
 
-Hebrew text sometimes carries nikud (vowel points) that users will not type in a search box. The `unaccent` extension strips nikud (and Latin diacritics) so "שָׁלוֹם" and "שלום" match:
+Hebrew text sometimes carries nikud (vowel points) that users will not type in a search box, so "שָׁלוֹם" must still match "שלום". **The `unaccent` extension does NOT strip Hebrew nikud.** Its default rules only cover Latin/Greek diacritics (combining marks in U+0300-U+0362); the Hebrew points block (U+0591-U+05C7) is left untouched, so `unaccent('שָׁלוֹם')` returns the string unchanged. Strip nikud explicitly with `regexp_replace` over the Hebrew points range, wrapped in an `IMMUTABLE` function so it can back a generated column and an index:
 
 ```sql
--- Enable unaccent
-CREATE EXTENSION IF NOT EXISTS unaccent;
+-- Strip Hebrew nikud + cantillation (U+0591-U+05C7). IMMUTABLE so it can be indexed.
+CREATE FUNCTION strip_nikud(text) RETURNS text
+  AS $$ SELECT regexp_replace($1, '[֑-ׇ]', '', 'g') $$
+  LANGUAGE sql IMMUTABLE;
 
--- unaccent strips Hebrew nikud
-SELECT unaccent('שָׁלוֹם');  -- returns 'שלום'
+-- Verify it actually strips (this returns true; unaccent() would return false here):
+SELECT strip_nikud('שָׁלוֹם') = 'שלום';
 
 -- Use it in a search vector so stored nikud does not block matches
 ALTER TABLE products ADD COLUMN search_vector tsvector
   GENERATED ALWAYS AS (
-    to_tsvector('simple', unaccent(coalesce(name_he, '')))
+    to_tsvector('simple', strip_nikud(coalesce(name_he, '')))
   ) STORED;
 
--- And unaccent the query the same way
+-- Strip nikud from the query the same way
 SELECT * FROM products
-WHERE search_vector @@ plainto_tsquery('simple', unaccent('שָׁלוֹם'));
+WHERE search_vector @@ plainto_tsquery('simple', strip_nikud('שָׁלוֹם'));
 ```
 
-Note: `unaccent()` is `STABLE`, not `IMMUTABLE`, so wrapping it directly in a generated column requires an `IMMUTABLE` wrapper function or a custom `unaccent` text search dictionary. The simplest robust approach is a small `IMMUTABLE` SQL function `f_unaccent(text)` that calls `unaccent('unaccent', $1)` and using that in the generated column and trigram index.
+Note: `unaccent` is still useful for Latin diacritics in your English columns, just not for Hebrew. If you do use `unaccent()` (which is `STABLE`), wrap it in an `IMMUTABLE` `f_unaccent(text)` that calls `unaccent('unaccent', $1)` before putting it in a generated column or expression index.
 
 ## Currency Handling (NIS / Shekel)
 
@@ -251,7 +255,10 @@ BEGIN
   -- Sunday(0) through Thursday(4), 9:00-17:00
   RETURN dow BETWEEN 0 AND 4 AND hour BETWEEN 9 AND 16;
 END;
-$$ LANGUAGE plpgsql IMMUTABLE;
+-- STABLE, not IMMUTABLE: AT TIME ZONE on a timestamptz depends on the tz database,
+-- so a tzdata update can change the result. Marking it IMMUTABLE would risk wrong
+-- cached/indexed values.
+$$ LANGUAGE plpgsql STABLE;
 ```
 
 ## Israeli Date Patterns
@@ -448,11 +455,15 @@ ALTER TABLE customers ADD CONSTRAINT chk_teudat_zehut_valid
 ### Israeli Phone Numbers
 
 ```sql
--- Israeli phone: 10 digits starting with 05 (mobile) or 0 (landline)
+-- Israeli phone. Keep the DB CHECK PERMISSIVE: a too-strict constraint throws on
+-- legitimate numbers (1-700/1-800 service lines, 07X VoIP/non-geographic) and blocks
+-- inserts in production. Do exact formatting/normalization in the app layer.
 ALTER TABLE customers ADD COLUMN phone text CHECK (
-  phone ~ '^05\d{8}$'    -- Mobile: 05X-XXXXXXX (10 digits)
-  OR phone ~ '^0[2-9]\d{7}$'  -- Landline: 0X-XXXXXXX (9 digits)
-  OR phone ~ '^\*\d{4}$'  -- Short numbers: *XXXX
+  phone ~ '^05\d{8}$'         -- Mobile: 05X + 8 digits (10 total)
+  OR phone ~ '^07\d{8}$'      -- VoIP / non-geographic: 07X + 7 digits (10 total)
+  OR phone ~ '^0[23489]\d{7}$' -- Landline: area code + 7 digits (9 total)
+  OR phone ~ '^1[78]00\d{6}$'  -- Service: 1-700 / 1-800 + 6 digits
+  OR phone ~ '^\*\d{3,4}$'     -- Short codes: *XXX or *XXXX
 );
 
 -- Or store in E.164 format for international compatibility
@@ -483,10 +494,10 @@ CREATE TABLE addresses (
 User says: "I need a products table that supports typo-tolerant search in Hebrew and English."
 
 Actions:
-1. `CREATE EXTENSION IF NOT EXISTS pg_trgm;` and `unaccent;`
-2. Create `products` with `name_he`, `name_en`, `description_he`, `description_en`, plus a generated `search_vector` using `to_tsvector('simple', unaccent(...))` for Hebrew columns and `'english'` for English columns.
+1. `CREATE EXTENSION IF NOT EXISTS pg_trgm;` (and `unaccent` for the English columns), then define the `IMMUTABLE` `strip_nikud(text)` function for Hebrew.
+2. Create `products` with `name_he`, `name_en`, `description_he`, `description_en`, plus a generated `search_vector` using `to_tsvector('simple', strip_nikud(...))` for Hebrew columns and `'english'` for English columns.
 3. Add a GIN index on `search_vector` and GIN `gin_trgm_ops` indexes on `name_he` and `name_en`.
-4. Query with `plainto_tsquery('simple', unaccent($1))` for ranked results, and fall back to a `name_he % $1` trigram match for typo tolerance.
+4. Query with `plainto_tsquery('simple', strip_nikud($1))` for ranked results, and fall back to a `name_he % $1` trigram match for typo tolerance.
 
 Result: Users find "חשבונית" even if they type "חשבונ" or include nikud, and English queries still work through the same column.
 
@@ -527,7 +538,7 @@ These MCP servers from the directory pair well with this skill when an Israeli d
 |--------|-----|---------------|
 | PostgreSQL Collation Support | https://www.postgresql.org/docs/current/collation.html | ICU collations, deterministic vs non-deterministic |
 | PostgreSQL pg_trgm | https://www.postgresql.org/docs/current/pgtrgm.html | Trigram operators, similarity threshold, GIN indexes |
-| PostgreSQL unaccent | https://www.postgresql.org/docs/current/unaccent.html | Stripping nikud and diacritics, IMMUTABLE wrapper |
+| PostgreSQL unaccent | https://www.postgresql.org/docs/current/unaccent.html | Latin diacritic stripping (NOT Hebrew nikud), IMMUTABLE wrapper |
 | Supabase Row Level Security | https://supabase.com/docs/guides/database/postgres/row-level-security | RLS policies, auth.jwt(), multi-tenant patterns |
 | Bank of Israel exchange rates | https://www.boi.org.il/en/economic-roles/financial-markets/exchange-rates/ | Representative rates for the exchange_rates table |
 | ICU Locale identifiers | https://www.postgresql.org/docs/current/collation.html#ICU-CUSTOM-COLLATIONS | he-IL-x-icu locale syntax |
@@ -546,5 +557,5 @@ Solution: Create an `IMMUTABLE` SQL wrapper, `CREATE FUNCTION f_unaccent(text) R
 
 - Hebrew text in PostgreSQL requires UTF-8 encoding. Databases created with SQL_ASCII or LATIN1 encoding will corrupt Hebrew characters. Always verify encoding with SHOW server_encoding.
 - Hebrew collation in PostgreSQL (he_IL.UTF-8) sorts differently than English. Agents may apply default collation that sorts Hebrew text incorrectly in ORDER BY queries.
-- PostgreSQL has no Hebrew full-text search dictionary, so `simple` IS the correct configuration for Hebrew tsvector columns. Agents often wrongly reach for `'english'` (which strips English stopwords and stems Latin words, doing nothing useful for Hebrew) or invent a nonexistent `'hebrew'` config (which errors out). Use `'simple'` for Hebrew columns and combine it with `pg_trgm` and `unaccent` for better recall.
+- PostgreSQL has no Hebrew full-text search dictionary, so `simple` IS the correct configuration for Hebrew tsvector columns. Agents often wrongly reach for `'english'` (which strips English stopwords and stems Latin words, doing nothing useful for Hebrew) or invent a nonexistent `'hebrew'` config (which errors out). Use `'simple'` for Hebrew columns and combine it with `pg_trgm` and `strip_nikud()` for better recall (`unaccent` does not help Hebrew recall, it leaves nikud intact). Note `'simple'` does no stemming, so Hebrew prefixes (ו/ב/כ/ל/ה/מ/ש) and plural/construct forms become distinct lexemes; lean on the `pg_trgm` fallback for recall on inflected forms.
 - Israeli date columns should store dates as DATE or TIMESTAMPTZ (with timezone Asia/Jerusalem), not as TEXT in DD/MM/YYYY format. Agents may create text columns for dates, breaking comparisons and sorting.

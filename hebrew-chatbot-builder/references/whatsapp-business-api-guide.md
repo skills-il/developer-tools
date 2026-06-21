@@ -243,7 +243,7 @@ Key points under the current model:
 - **Free messages**: all non-template (free-form) messages sent inside an open 24-hour customer service window are free. Utility templates delivered inside an open customer service window are also free. Messages within a free entry-point window are free for 72 hours.
 - **Service conversations** as a billing category no longer exist; what used to be a "service conversation" is now just free-form messaging inside the customer service window.
 
-Per-message rates by country and category change regularly. Do not hardcode rates. Check Meta's official pricing page for current Israel rates: https://developers.facebook.com/docs/whatsapp/pricing/
+Per-message rates by country and category change regularly. Do not hardcode rates. Check Meta's official pricing page for current Israel rates: https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing
 
 ## Best Practices for Israeli WhatsApp Bots
 

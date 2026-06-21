@@ -11,6 +11,13 @@
 
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
+-- Strip Hebrew nikud (vowel points + cantillation, U+0591-U+05C7) so pointed and
+-- unpointed text match. NOTE: the unaccent extension does NOT strip Hebrew nikud.
+-- IMMUTABLE so it can back the generated column and indexes below.
+CREATE OR REPLACE FUNCTION strip_nikud(text) RETURNS text
+  AS $$ SELECT regexp_replace($1, '[֑-ׇ]', '', 'g') $$
+  LANGUAGE sql IMMUTABLE;
+
 -- ============================================================================
 -- 2. Hebrew ICU Collation
 -- ============================================================================
@@ -44,8 +51,8 @@ CREATE TABLE IF NOT EXISTS searchable_content (
 
   -- Auto-generated search vector
   search_vector tsvector GENERATED ALWAYS AS (
-    setweight(to_tsvector('simple', coalesce(title_he, '')), 'A') ||
-    setweight(to_tsvector('simple', coalesce(body_he, '')), 'B') ||
+    setweight(to_tsvector('simple', strip_nikud(coalesce(title_he, ''))), 'A') ||
+    setweight(to_tsvector('simple', strip_nikud(coalesce(body_he, ''))), 'B') ||
     setweight(to_tsvector('english', coalesce(title_en, '')), 'A') ||
     setweight(to_tsvector('english', coalesce(body_en, '')), 'B')
   ) STORED,
@@ -105,11 +112,11 @@ BEGIN
     sc.id,
     sc.title_he,
     sc.title_en,
-    ts_rank(sc.search_vector, plainto_tsquery('simple', query_text))::float AS rank,
+    ts_rank(sc.search_vector, plainto_tsquery('simple', strip_nikud(query_text)))::float AS rank,
     0.0::float AS similarity,
     'fts'::text AS match_type
   FROM searchable_content sc
-  WHERE sc.search_vector @@ plainto_tsquery('simple', query_text)
+  WHERE sc.search_vector @@ plainto_tsquery('simple', strip_nikud(query_text))
     AND sc.is_published = true
 
   UNION ALL
@@ -125,7 +132,7 @@ BEGIN
   FROM searchable_content sc
   WHERE sc.title_he % query_text
     AND sc.is_published = true
-    AND NOT sc.search_vector @@ plainto_tsquery('simple', query_text)
+    AND NOT sc.search_vector @@ plainto_tsquery('simple', strip_nikud(query_text))
 
   ORDER BY rank DESC, similarity DESC
   LIMIT max_results;

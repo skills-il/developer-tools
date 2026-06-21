@@ -25,7 +25,8 @@ SHOW timezone;
 ```sql
 -- Enable commonly needed extensions
 CREATE EXTENSION IF NOT EXISTS pg_trgm;      -- Fuzzy Hebrew search
-CREATE EXTENSION IF NOT EXISTS pgcrypto;     -- UUID generation
+-- UUIDs need NO extension: gen_random_uuid() is in PostgreSQL core since v13
+-- (pgcrypto's copy is obsolete). Enable pgcrypto only for digest()/hmac()/crypt().
 CREATE EXTENSION IF NOT EXISTS pg_stat_statements;  -- Query performance
 ```
 

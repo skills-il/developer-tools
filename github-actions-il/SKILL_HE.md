@@ -95,7 +95,7 @@ jobs:
       is_frozen: ${{ steps.shabbat.outputs.is_frozen }}
       reason: ${{ steps.shabbat.outputs.reason }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - id: shabbat
         uses: ./.github/actions/shabbat-check
 
@@ -206,8 +206,8 @@ IS-5568 הוא תקן הנגישות הישראלי, מבוסס על WCAG 2.1 AA
 accessibility-check:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v5
-    - uses: actions/setup-node@v5
+    - uses: actions/checkout@v7
+    - uses: actions/setup-node@v6
       with:
         node-version: '22'
     - name: Install accessibility tools
@@ -240,7 +240,7 @@ accessibility-check:
 privacy-check:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - name: Scan for exposed PII patterns
       run: |
         if grep -rn '[0-9]\{9\}' src/ --include="*.ts" --include="*.tsx" | \
@@ -259,7 +259,7 @@ privacy-check:
 | ספק ענן | אזור מומלץ | חביון לישראל | הגדרה ב-Actions |
 |---------|------------|-------------|-----------------|
 | Vercel | fra1 (פרנקפורט) | כ-30ms | `vercel --regions fra1` |
-| AWS | eu-west-1 (אירלנד) / me-south-1 (בחריין) | כ-40ms / כ-20ms | `AWS_DEFAULT_REGION` |
+| AWS | il-central-1 (תל אביב) / eu-west-1 (אירלנד) | כ-3ms / כ-40ms | `AWS_DEFAULT_REGION` |
 | GCP | europe-west1 (בלגיה) / me-west1 (תל אביב) | כ-35ms / כ-5ms | `GOOGLE_CLOUD_REGION` |
 | Cloudflare Workers | אוטומטי (TLV edge) | כ-5ms | לא צריך הגדרת אזור |
 
@@ -269,7 +269,7 @@ privacy-check:
 deploy-vercel:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - name: Deploy to Vercel
       env:
         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -280,6 +280,20 @@ deploy-vercel:
         npx vercel build --token=$VERCEL_TOKEN
         npx vercel deploy --prebuilt --token=$VERCEL_TOKEN --regions fra1
 ```
+
+**הרשאות טוקן והקשחת אבטחה.** מאז פברואר 2023 ברירת המחדל של `GITHUB_TOKEN` היא **קריאה בלבד**, אז כל job שכותב (תגובה ל-PR, דחיפת commit, יצירת release) חייב להגדיר בלוק `permissions:` מפורש, ואימות OIDC לענן דורש `id-token: write`. הגדירו הרשאות מינימליות לכל job:
+
+```yaml
+permissions:
+  contents: read          # בסיס בטוח
+# הוסיפו רק מה שה-job צריך, למשל:
+# pull-requests: write    # לתגובות github-script על PR
+# id-token: write         # ל-OIDC ל-AWS/GCP (בלי מפתחות סוד ארוכי-חיים)
+```
+
+הקשחות נוספות לריפו של צוות ישראלי:
+- **נעצו פעולות צד-שלישי ל-SHA מלא** (`uses: owner/action@<sha>`), לא לתג נייד. תג נייד היה הווקטור בפריצת שרשרת האספקה של tj-actions/changed-files ב-2025. פעולות `actions/*` רשמיות בסיכון נמוך יותר, אבל נעיצה ל-SHA היא הסטנדרט.
+- **הפעילו Dependabot לפעולות** (`.github/dependabot.yml` עם `package-ecosystem: "github-actions"`) כדי שהגרסאות הנעוצות יתעדכנו אוטומטית. זו התשובה התחזוקתית להתיישנות.
 
 ### שלב 6: תזמון שבוע עבודה ישראלי
 
@@ -371,7 +385,19 @@ runs:
 
 תוצאה: כל PR נבדק לתאימות IS-5568, תקינות RTL ונוכחות privacy policy. כישלון חוסם merge.
 
-### דוגמה 3: סטארטאפ ישראלי, הגדרת CI/CD מלאה
+### דוגמה 3: הגדרת התראות Slack בעברית עם סנכרון Monday.com
+
+המשתמש אומר: "תקים התראות פריסה בעברית ב-Slack ועדכון כרטיסי Monday.com"
+
+פעולות:
+1. הוסיפו `SLACK_WEBHOOK_URL` ו-`MONDAY_API_TOKEN` כ-secrets בריפו
+2. הוסיפו את שלב התראת ה-Slack בעברית משלב 3
+3. הוסיפו את שלב עדכון הסטטוס ב-Monday.com, לפי מוסכמת שמות ענפים `feat/MON-{id}-description`
+4. הגדירו את שתי ההתראות בבלוק `if: always()` כך שירוצו גם בהצלחה וגם בכישלון
+
+תוצאה: סטטוס הפריסה מופיע ב-Slack עם טקסט עברי RTL, והפריט המתאים ב-Monday.com עובר לסטטוס "Deployed" או "Failed".
+
+### דוגמה 4: סטארטאפ ישראלי, הגדרת CI/CD מלאה
 
 המשתמש אומר: "אנחנו סטארטאפ ישראלי עם Next.js + Supabase + Vercel. תקים לנו את כל ה-CI/CD"
 
@@ -432,7 +458,7 @@ runs:
 פתרון: הפחיתו 2 שעות (חורף) או 3 שעות (קיץ) מהשעה הרצויה בישראל. השתמשו ב-`date -u` לאימות.
 
 ### שגיאה: "axe-core scan finds no violations but site is not accessible"
-סיבה: סריקה אוטומטית מזהה רק כ-30% מבעיות הנגישות. IS-5568 דורש בדיקה ידנית לסדר קריאה, התנהגות קורא מסך וזרימת תוכן דו-לשוני.
+סיבה: סריקה אוטומטית מזהה רק חלק קטן מבעיות הנגישות (לרוב מצוטט כשליש בערך). IS-5568 דורש בדיקה ידנית לסדר קריאה, התנהגות קורא מסך וזרימת תוכן דו-לשוני.
 פתרון: השתמשו ב-axe-core כבסיס, לא כבדיקה מלאה. הוסיפו סקירת נגישות ידנית כפריט checklist ב-PR.
 
 ### שגיאה: "Monday.com mutation returns 'unauthorized'"

@@ -18,7 +18,7 @@ CREATE COLLATION IF NOT EXISTS hebrew_icu (
 );
 ```
 
-**Why non-deterministic?** Hebrew has characters that should sort equivalently in some contexts (e.g., final forms of letters: ם/מ, ן/נ, ץ/צ, ף/פ, ך/כ). Non-deterministic collation handles these correctly.
+**Why non-deterministic?** A non-deterministic ICU collation can compare strings while ignoring differences below a chosen strength. At a reduced strength (a collation built with `u-ks-level1`) it treats strings as equal ignoring BOTH nikud AND final-vs-base (sofit) letter forms, so `'שָׁלוֹם' = 'שלום'` and `'מ' = 'ם'` both compare equal. At the DEFAULT (tertiary) strength, nikud and sofit are both significant, so `'שָׁלוֹם'` does NOT equal `'שלום'`. There is no strength that ignores nikud while keeping sofit distinct. Consequences: (1) for reliable nikud-insensitive matching prefer the `strip_nikud()` function (collation-based folding also collapses sofit and case, which you usually do not want); (2) a non-deterministic collation cannot back a `UNIQUE` constraint, a plain `btree` index, or `LIKE`/pattern matching, so use it only in `ORDER BY` or explicit comparisons.
 
 ### Deterministic vs Non-Deterministic
 
@@ -64,12 +64,17 @@ ICU collation handles sorting these correctly. Without ICU, they may sort in une
 
 ### Nikud (Vowel Points)
 
-Hebrew text can include nikud (vowel diacritical marks). ICU collation handles comparison with and without nikud:
+Hebrew text can include nikud (vowel diacritical marks). A default `he-IL-x-icu` collation keeps nikud significant, so it does NOT make pointed and unpointed text compare equal:
 
 ```sql
--- These should match with non-deterministic Hebrew collation
-SELECT 'שָׁלוֹם' = 'שלום' COLLATE hebrew_icu;  -- true (if non-deterministic)
+-- FALSE at default strength: the default ICU collation treats nikud as significant
+SELECT 'שָׁלוֹם' = 'שלום' COLLATE hebrew_icu;  -- false
+
+-- For reliable nikud-insensitive matching, strip nikud explicitly (see strip_nikud() in the skill body):
+SELECT strip_nikud('שָׁלוֹם') = strip_nikud('שלום');  -- true
 ```
+
+A reduced-strength collation (`u-ks-level1`) would make them equal, but it also folds final (sofit) letters and case, which is rarely what you want. Use `strip_nikud()` for nikud-insensitivity and reserve the collation for sort order.
 
 For most applications, strip nikud before storage:
 

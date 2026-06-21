@@ -16,7 +16,7 @@ Follow this procedure when building a Hebrew chatbot:
 2. **Confirm formal or informal register.** Ask the user whether the audience expects informal Hebrew ("דוגרי", recommended for most consumer bots) or formal Hebrew (government, banking, legal). This decision shapes every response string.
 3. **Ask the gender-handling strategy.** Decide between asking the user's gender early and remembering it, using gender-neutral phrasing throughout, or slash notation ("את/ה"). See the Gender-Aware Responses section.
 4. **Scaffold via the relevant bundled script.** Use `scripts/whatsapp-webhook-handler.py` for WhatsApp or `scripts/telegram-bot-scaffold.py` for Telegram as the starting point, then adapt the Hebrew response templates and conversation flows.
-5. **Wire entity extraction.** Add `extract_israeli_entities()` (or an equivalent) so the bot recognizes Israeli phone numbers, NIS amounts, dates, and Teudat Zehut from free-text Hebrew input.
+5. **Wire entity extraction.** Add `extract_israeli_entities()` (or an equivalent) so the bot recognizes Israeli phone numbers, shekel amounts, dates, and Teudat Zehut from free-text Hebrew input.
 6. **Verify RTL rendering.** For web widgets, set `dir="rtl"` on the outermost container and test on a real device. For WhatsApp and Telegram, verify Hebrew text and interactive buttons render correctly on both iOS and Android.
 
 ## Examples
@@ -671,8 +671,10 @@ INTENT_SYSTEM_PROMPT = """אתה מסווג כוונות לצ'אטבוט שיר�
 Guidance:
 - Keep classification and response generation as two calls so you can log intent accuracy separately.
 - Force JSON output and validate it; fall back to the keyword matcher if parsing fails.
-- Models that handle Hebrew well (current as of early 2026): Anthropic Claude (Sonnet/Opus tiers), OpenAI GPT-4o / GPT-4.1, and Google Gemini 2.x. Model names and tiers change often, so check each provider's current model list before pinning one.
-- For a Hebrew-native option, evaluate DictaLM (Dicta, Bar-Ilan University) for on-prem classification.
+- Models that handle Hebrew well (current as of mid-2026): Anthropic Claude (Sonnet/Opus tiers), the OpenAI GPT-5.x family, and Google Gemini 3.x. Model names and tiers change often (GPT-4o/4.1 and Gemini 2.x were retired in early 2026), so check each provider's current model list before pinning one.
+- For a Hebrew-native option, evaluate Dicta-LM 3.0 (Dicta, Bar-Ilan University) for on-prem classification.
+- **Guard against prompt injection (OWASP LLM01).** When free-text user input reaches an LLM that can trigger actions (order lookup, human handoff, ticket creation), treat it as untrusted: wrap the user text in clear delimiters, instruct the model to ignore any instructions inside it, never echo the system prompt, and validate the model's chosen action against an allowlist before executing it.
+- **Stream on the web widget, buffer on WhatsApp/Telegram.** A web chat should stream tokens for low perceived latency; WhatsApp and Telegram cannot stream a partial message, so show a typing indicator and send the full reply once it is ready.
 
 ### Entity Extraction
 
@@ -925,19 +927,9 @@ async def handoff_to_human(user_id: str, context: dict):
 
 ## Common Hebrew Chatbot Phrases
 
-### Essential Phrases Reference
+### Essential Phrases
 
-| Category | Hebrew | Transliteration | When to Use |
-|----------|--------|-----------------|-------------|
-| Greeting | שלום! איך אפשר לעזור? | Shalom! Eikh efshar la'azor? | Opening message |
-| Confirmation | מעולה, הבנתי | Me'ule, hevanti | After receiving valid input |
-| Processing | רגע, בודק/ת... | Rega, bodek/et... | While processing |
-| Success | בוצע בהצלחה! | Butza be'hatzlakha! | Action completed |
-| Error | משהו השתבש, נסה/י שוב | Mashehu hishtabesh, nase/i shuv | Error occurred |
-| Not understood | לא הצלחתי להבין | Lo hitzlakhti lehavin | Fallback |
-| Goodbye | תודה ויום טוב! | Toda ve'yom tov! | End of conversation |
-| Hold | ממתין/ה לתגובתך | Mamtin/a le'tguvatekha | Waiting for input |
-| Apology | מצטער/ת על אי הנוחות | Mitztaer/et al i ha'nokhiyut | Service issue |
+For a copy-paste set of Hebrew conversational phrases (greeting, confirmation, processing, success, error, fallback, goodbye, hold, apology) with transliterations and when to use each, see `references/hebrew-chatbot-phrases.md`.
 
 ## Bundled Resources
 
@@ -963,7 +955,7 @@ And reference documents in `references/`:
 
 | Source | URL | What to Check |
 |--------|-----|---------------|
-| WhatsApp Cloud API Docs | https://developers.facebook.com/docs/whatsapp/cloud-api/ | API version, message types, webhook format |
+| WhatsApp Cloud API Docs | https://developers.facebook.com/documentation/business-messaging/whatsapp/about-the-platform | API version, message types, webhook format |
 | Meta Graph API Changelog | https://developers.facebook.com/docs/graph-api/changelog/ | Latest API version, breaking changes |
 | Telegram Bot API Docs | https://core.telegram.org/bots/api | Bot API methods, inline keyboards, webhook setup |
 | python-telegram-bot Docs | https://docs.python-telegram-bot.org/ | Library version, async API changes |

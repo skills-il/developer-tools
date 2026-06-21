@@ -22,7 +22,7 @@ license: MIT
 
 1. **קודם כל בדקו קידוד ואזור זמן.** הריצו `SHOW server_encoding;` (חייב להיות `UTF8`, לעולם לא `SQL_ASCII` או `LATIN1`) ו-`SHOW timezone;`. הגדירו את אזור הזמן עם `ALTER DATABASE your_db SET timezone = 'Asia/Jerusalem';`. טעות בשניים האלה משחיתה עברית ומסיטה כל timestamp, ותיקון מאוחר מחייב מיגרציית נתונים.
 2. **בחרו אסטרטגיית collation.** החליטו לכל עמודה אם צריך מיון תצוגה עברי (ICU לא דטרמיניסטי, `he-IL-x-icu`) או ייחודיות ואינדקס `btree` (collation דטרמיניסטי). בדרך כלל צריך את שניהם, על עמודות שונות או באמצעות אינדקסים נפרדים, כי collation לא דטרמיניסטי לא יכול לגבות אילוץ `UNIQUE` או אינדקס `btree` רגיל.
-3. **בחרו גישת חיפוש.** להתאמה מדויקת ולתחילית השתמשו ב-`btree`. לחיפוש מטושטש וסובלני לשגיאות בעברית השתמשו ב-`pg_trgm`. לחיפוש מדורג רב-שדות השתמשו בחיפוש טקסט מלא עם הקונפיגורציה `simple` (ראו "חיפוש טקסט מלא בעברית" למטה). שלבו את `unaccent` כשצריך התאמה שמתעלמת מניקוד.
+3. **בחרו גישת חיפוש.** להתאמה מדויקת ולתחילית השתמשו ב-`btree`. לחיפוש מטושטש וסובלני לשגיאות בעברית השתמשו ב-`pg_trgm`. לחיפוש מדורג רב-שדות השתמשו בחיפוש טקסט מלא עם הקונפיגורציה `simple` (ראו "חיפוש טקסט מלא בעברית" למטה). להתאמה שמתעלמת מניקוד השתמשו בפונקציה `strip_nikud()` שלמטה; `unaccent` מסיר רק דיאקריטיקה לטינית, לא ניקוד עברי.
 4. **החילו אילוצים על טיפוסי נתונים ישראליים.** השתמשו באילוצי ה-`CHECK` ובפונקציות העזר מ-`scripts/israeli-data-types.sql` (תעודת זהות, טלפון, מיקוד, מספר עוסק, IBAN) וקראו ל-`validate_teudat_zehut()` לבדיקת ספרת הביקורת של תעודת הזהות במקום לממש אותה מחדש בקוד האפליקציה.
 
 ## אינדוקס טקסט בעברית
@@ -98,29 +98,31 @@ WHERE search_vector @@ plainto_tsquery('simple', 'חשבונית')
 ORDER BY ts_rank(search_vector, plainto_tsquery('simple', 'חשבונית')) DESC;
 ```
 
-### התאמה ללא ניקוד עם unaccent
+### התאמה ללא ניקוד
 
-טקסט עברי לפעמים נושא ניקוד שמשתמשים לא יקלידו בתיבת חיפוש. התוסף `unaccent` מסיר ניקוד (וגם דיאקריטיקה לטינית) כך ש"שָׁלוֹם" ו"שלום" מתאימים:
+טקסט עברי לפעמים נושא ניקוד שמשתמשים לא יקלידו בתיבת חיפוש, אז "שָׁלוֹם" חייב עדיין להתאים ל"שלום". **התוסף `unaccent` לא מסיר ניקוד עברי.** כללי ברירת המחדל שלו מכסים רק דיאקריטיקה לטינית/יוונית (סימנים משולבים ב-U+0300-U+0362); בטווח הניקוד העברי (U+0591-U+05C7) הוא לא נוגע, אז `unaccent('שָׁלוֹם')` מחזיר את המחרוזת ללא שינוי. הסירו ניקוד במפורש עם `regexp_replace` על טווח הניקוד העברי, עטוף בפונקציית `IMMUTABLE` כדי שיוכל לגבות עמודה מחושבת ואינדקס:
 
 ```sql
--- הפעלת unaccent
-CREATE EXTENSION IF NOT EXISTS unaccent;
+-- הסרת ניקוד עברי + טעמים (U+0591-U+05C7). IMMUTABLE כדי שניתן יהיה לאנדקס.
+CREATE FUNCTION strip_nikud(text) RETURNS text
+  AS $$ SELECT regexp_replace($1, '[֑-ׇ]', '', 'g') $$
+  LANGUAGE sql IMMUTABLE;
 
--- unaccent מסיר ניקוד עברי
-SELECT unaccent('שָׁלוֹם');  -- מחזיר 'שלום'
+-- אימות שהפונקציה באמת מסירה (מחזיר true; unaccent() היה מחזיר false כאן):
+SELECT strip_nikud('שָׁלוֹם') = 'שלום';
 
 -- שימוש בו ב-search vector כדי שניקוד שמור לא יחסום התאמות
 ALTER TABLE products ADD COLUMN search_vector tsvector
   GENERATED ALWAYS AS (
-    to_tsvector('simple', unaccent(coalesce(name_he, '')))
+    to_tsvector('simple', strip_nikud(coalesce(name_he, '')))
   ) STORED;
 
--- ומפעילים unaccent על השאילתה באותו אופן
+-- מסירים ניקוד מהשאילתה באותו אופן
 SELECT * FROM products
-WHERE search_vector @@ plainto_tsquery('simple', unaccent('שָׁלוֹם'));
+WHERE search_vector @@ plainto_tsquery('simple', strip_nikud('שָׁלוֹם'));
 ```
 
-הערה: `unaccent()` הוא `STABLE` ולא `IMMUTABLE`, לכן עטיפה ישירה שלו בעמודה מחושבת דורשת פונקציית עטיפה `IMMUTABLE` או מילון חיפוש טקסט מותאם. הגישה הפשוטה והיציבה ביותר היא פונקציית SQL קטנה `IMMUTABLE` בשם `f_unaccent(text)` שקוראת ל-`unaccent('unaccent', $1)`, ושימוש בה בעמודה המחושבת ובאינדקס ה-trigram.
+הערה: `unaccent` עדיין שימושי לדיאקריטיקה לטינית בעמודות האנגלית, רק לא לעברית. אם בכל זאת משתמשים ב-`unaccent()` (שהוא `STABLE`), עטפו אותו ב-`f_unaccent(text)` מסוג `IMMUTABLE` שקורא ל-`unaccent('unaccent', $1)` לפני שימוש בעמודה מחושבת.
 
 ## טיפול במטבע (שקל / NIS)
 
@@ -243,7 +245,9 @@ BEGIN
   -- ראשון(0) עד חמישי(4), 9:00-17:00
   RETURN dow BETWEEN 0 AND 4 AND hour BETWEEN 9 AND 16;
 END;
-$$ LANGUAGE plpgsql IMMUTABLE;
+-- STABLE ולא IMMUTABLE: AT TIME ZONE על timestamptz תלוי במסד נתוני אזורי הזמן,
+-- כך שעדכון tzdata יכול לשנות את התוצאה. סימון IMMUTABLE היה מסכן ערכים שמורים/מאונדקסים שגויים.
+$$ LANGUAGE plpgsql STABLE;
 ```
 
 ## תאריכים ישראליים
@@ -335,7 +339,35 @@ CREATE TABLE businesses (
 );
 ```
 
+### חיבור Edge Function למסד הנתונים
+
+ל-Supabase Edge Functions שמתחברות למסד הנתונים:
+
+```typescript
+// ב-Supabase Edge Functions, תמיד השתמשו בחיבור ה-pooler
+// חיבור ישיר: postgresql://postgres:password@db.xxx.supabase.co:5432/postgres
+// חיבור מאוגם: postgresql://postgres:password@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+// השתמשו בלקוח service role ל-Edge Functions
+const supabase = createClient(
+  Deno.env.get('SUPABASE_URL')!,
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+)
+
+// לשאילתות SQL ישירות ב-Edge Functions, השתמשו ב-pooler כדי למנוע מיצוי חיבורים תחת עומס
+```
+
 ## ביצועים ואופטימיזציה
+
+### איגום חיבורים (Connection Pooling)
+
+לאפליקציות SaaS ישראליות על Supabase, איגום חיבורים הוא קריטי:
+
+- **Supavisor** (ה-pooler המובנה של Supabase): השתמשו בפורט 6543 למצב transaction
+- **PgBouncer**: אם מארחים עצמית, הגדירו ל-transaction pooling
+- קבעו את `pool_size` לפי תוכנית ה-Supabase שלכם (Free: 60, Pro: 200)
 
 ### אסטרטגיות אינדוקס לטקסט עברי
 
@@ -402,10 +434,14 @@ ALTER TABLE customers ADD CONSTRAINT chk_teudat_zehut_valid
 ### מספרי טלפון ישראליים
 
 ```sql
+-- שמרו על אילוץ ה-CHECK מקל: אילוץ נוקשה מדי זורק על מספרים תקינים (קווי שירות 1-700/1-800,
+-- מספרי VoIP בקידומת 07X) וחוסם הכנסות בפרודקשן. עשו פורמט/נירמול מדויק בשכבת האפליקציה.
 ALTER TABLE customers ADD COLUMN phone text CHECK (
-  phone ~ '^05\d{8}$'           -- נייד: 05X-XXXXXXX (10 ספרות)
-  OR phone ~ '^0[2-9]\d{7}$'    -- קווי: 0X-XXXXXXX (9 ספרות)
-  OR phone ~ '^\*\d{4}$'        -- מספרים קצרים: *XXXX
+  phone ~ '^05\d{8}$'           -- נייד: 05X + 8 ספרות (10 בסך הכל)
+  OR phone ~ '^07\d{8}$'        -- VoIP / לא-גאוגרפי: 07X + 7 ספרות (10 בסך הכל)
+  OR phone ~ '^0[23489]\d{7}$'  -- קווי: אזור חיוג + 7 ספרות (9 בסך הכל)
+  OR phone ~ '^1[78]00\d{6}$'   -- שירות: 1-700 / 1-800 + 6 ספרות
+  OR phone ~ '^\*\d{3,4}$'      -- מספרים קצרים: *XXX או *XXXX
 );
 ```
 
@@ -431,10 +467,10 @@ CREATE TABLE addresses (
 המשתמש אומר: "אני צריך טבלת מוצרים שתומכת בחיפוש סובלני לשגיאות בעברית ובאנגלית."
 
 פעולות:
-1. `CREATE EXTENSION IF NOT EXISTS pg_trgm;` ו-`unaccent;`
-2. יוצרים `products` עם `name_he`, `name_en`, `description_he`, `description_en`, ועמודה מחושבת `search_vector` שמשתמשת ב-`to_tsvector('simple', unaccent(...))` לעמודות עבריות וב-`'english'` לעמודות אנגליות.
+1. `CREATE EXTENSION IF NOT EXISTS pg_trgm;` (ו-`unaccent` לעמודות האנגלית), ואז מגדירים את הפונקציה `strip_nikud(text)` מסוג `IMMUTABLE` לעברית.
+2. יוצרים `products` עם `name_he`, `name_en`, `description_he`, `description_en`, ועמודה מחושבת `search_vector` שמשתמשת ב-`to_tsvector('simple', strip_nikud(...))` לעמודות עבריות וב-`'english'` לעמודות אנגליות.
 3. מוסיפים אינדקס GIN על `search_vector` ואינדקסי GIN `gin_trgm_ops` על `name_he` ו-`name_en`.
-4. שואלים עם `plainto_tsquery('simple', unaccent($1))` לתוצאות מדורגות, ונופלים חזרה להתאמת trigram `name_he % $1` לסובלנות שגיאות.
+4. שואלים עם `plainto_tsquery('simple', strip_nikud($1))` לתוצאות מדורגות, ונופלים חזרה להתאמת trigram `name_he % $1` לסובלנות שגיאות.
 
 תוצאה: משתמשים מוצאים "חשבונית" גם אם הם מקלידים "חשבונ" או כוללים ניקוד, ושאילתות באנגלית עדיין עובדות דרך אותה עמודה.
 
@@ -475,7 +511,7 @@ CREATE TABLE addresses (
 |------|-------|----------|
 | תיעוד Collation של PostgreSQL | https://www.postgresql.org/docs/current/collation.html | ICU collations, דטרמיניסטי מול לא דטרמיניסטי |
 | pg_trgm של PostgreSQL | https://www.postgresql.org/docs/current/pgtrgm.html | אופרטורי trigram, סף דמיון, אינדקסי GIN |
-| unaccent של PostgreSQL | https://www.postgresql.org/docs/current/unaccent.html | הסרת ניקוד ודיאקריטיקה, עטיפת IMMUTABLE |
+| unaccent של PostgreSQL | https://www.postgresql.org/docs/current/unaccent.html | הסרת דיאקריטיקה לטינית (לא ניקוד עברי), עטיפת IMMUTABLE |
 | Row Level Security של Supabase | https://supabase.com/docs/guides/database/postgres/row-level-security | מדיניות RLS, auth.jwt(), תבניות רב-דיירים |
 | שערי חליפין של בנק ישראל | https://www.boi.org.il/en/economic-roles/financial-markets/exchange-rates/ | שערים יציגים לטבלת exchange_rates |
 | מזהי Locale של ICU | https://www.postgresql.org/docs/current/collation.html#ICU-CUSTOM-COLLATIONS | תחביר ה-locale he-IL-x-icu |
@@ -494,5 +530,5 @@ CREATE TABLE addresses (
 
 - טקסט בעברית ב-PostgreSQL דורש קידוד UTF-8. בסיסי נתונים שנוצרו עם SQL_ASCII או LATIN1 ישחיתו תווים עבריים. תמיד יש לוודא קידוד עם SHOW server_encoding.
 - מיון עברית ב-PostgreSQL (he_IL.UTF-8) שונה מאנגלית. סוכנים עלולים להחיל collation ברירת מחדל שממיין טקסט עברי בצורה שגויה בשאילתות ORDER BY.
-- ל-PostgreSQL אין מילון חיפוש טקסט מלא לעברית, ולכן `simple` היא הקונפיגורציה הנכונה לעמודות tsvector בעברית. סוכנים נוטים בטעות לבחור `'english'` (שמסיר מילות עצירה באנגלית וגוזע מילים לטיניות, מה שלא עוזר לעברית) או להמציא קונפיגורציית `'hebrew'` שלא קיימת (וזורקת שגיאה). השתמשו ב-`'simple'` לעמודות עבריות ושלבו עם `pg_trgm` ו-`unaccent` לכיסוי טוב יותר.
+- ל-PostgreSQL אין מילון חיפוש טקסט מלא לעברית, ולכן `simple` היא הקונפיגורציה הנכונה לעמודות tsvector בעברית. סוכנים נוטים בטעות לבחור `'english'` (שמסיר מילות עצירה באנגלית וגוזע מילים לטיניות, מה שלא עוזר לעברית) או להמציא קונפיגורציית `'hebrew'` שלא קיימת (וזורקת שגיאה). השתמשו ב-`'simple'` לעמודות עבריות ושלבו עם `pg_trgm` ו-`strip_nikud()` לכיסוי טוב יותר (`unaccent` לא עוזר לכיסוי בעברית, הוא משאיר את הניקוד). שימו לב ש-`'simple'` לא עושה גזירת שורשים, אז קידומות עבריות (ו/ב/כ/ל/ה/מ/ש) וצורות רבים/נסמך הופכות ללקסמות נפרדות; הישענו על נפילה ל-`pg_trgm` לכיסוי צורות מוטות.
 - עמודות תאריך ישראליות צריכות לאחסן תאריכים כ-DATE או TIMESTAMPTZ (עם אזור זמן Asia/Jerusalem), לא כ-TEXT בפורמט DD/MM/YYYY. סוכנים עלולים ליצור עמודות טקסט לתאריכים מה ששובר השוואות ומיון.

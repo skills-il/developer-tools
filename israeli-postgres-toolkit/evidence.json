@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "israeli-postgres-toolkit",
+  "generated_at": "2026-06-21T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "unaccent-not-nikud",
+      "claim": "The unaccent extension does NOT strip Hebrew nikud (U+0591-U+05C7); its default rules cover only Latin/Greek combining marks (U+0300-U+0362). Strip Hebrew nikud with regexp_replace over the Hebrew points range in an IMMUTABLE function.",
+      "source_url": "https://www.postgresql.org/docs/current/unaccent.html",
+      "raw_snippet": "unaccent is a text search dictionary that removes accents (diacritic signs) from lexemes. The rules it uses are defined in the unaccent.rules file, which by default covers Latin and Greek diacritics.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "icu-collation-nikud-sofit",
+      "claim": "A non-deterministic ICU collation ignores differences below a chosen strength: at reduced strength (u-ks-level1) it equalizes BOTH nikud AND sofit (final) letter forms; at default strength nikud is significant so pointed/unpointed text is NOT equal. There is no strength that ignores nikud but keeps sofit distinct, so nikud-insensitivity is done with strip_nikud(), not the collation. Non-deterministic collations cannot back a UNIQUE constraint, a plain btree index, or LIKE pattern matching.",
+      "source_url": "https://www.postgresql.org/docs/current/collation.html",
+      "raw_snippet": "Nondeterministic collations ... can be used to e.g. match characters with and without accents [at a reduced strength]. A nondeterministic collation cannot be used as the collation of a column that is part of a primary key or unique constraint backed by a regular btree index, and pattern matching operators do not support nondeterministic collations.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/hebrew-collation-guide.md"]
+    },
+    {
+      "claim_id": "icu-custom-collations",
+      "claim": "ICU custom collations (he-IL-x-icu, deterministic vs non-deterministic) are configured per the PostgreSQL ICU collation docs.",
+      "source_url": "https://www.postgresql.org/docs/current/collation.html#ICU-CUSTOM-COLLATIONS",
+      "raw_snippet": "ICU allows collations to be customized ... using the BCP 47 language tag syntax.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["references/hebrew-collation-guide.md"]
+    },
+    {
+      "claim_id": "pgtrgm-fuzzy",
+      "claim": "pg_trgm provides trigram similarity (% operator) and GIN/GiST indexes for fuzzy/typo-tolerant Hebrew search.",
+      "source_url": "https://www.postgresql.org/docs/current/pgtrgm.html",
+      "raw_snippet": "The pg_trgm module provides functions and operators for determining the similarity of alphanumeric text based on trigram matching.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/supabase-israel-patterns.md"]
+    },
+    {
+      "claim_id": "supabase-rls",
+      "claim": "Supabase uses PostgreSQL Row Level Security for per-tenant/per-user data access.",
+      "source_url": "https://supabase.com/docs/guides/database/postgres/row-level-security",
+      "raw_snippet": "Row Level Security (RLS) lets you control which rows in a table a user can access.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["references/supabase-israel-patterns.md"]
+    },
+    {
+      "claim_id": "israeli-vat-rate",
+      "claim": "Israeli VAT (Ma'am) is 18%, raised from 17% on 2025-01-01. A proposed 2026 rise to 19% was rejected; 18% stands.",
+      "source_url": "https://www.gov.il/en/departments/israel_tax_authority/govil-landing-page",
+      "raw_snippet": "Israel's standard VAT rate increased from 17% to 18% effective 1 January 2025.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "boi-exchange-rates",
+      "claim": "The Bank of Israel publishes representative foreign-exchange rates (business days only).",
+      "source_url": "https://www.boi.org.il/en/economic-roles/financial-markets/exchange-rates/",
+      "raw_snippet": "The Bank of Israel publishes representative exchange rates of the shekel against foreign currencies.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "supabase-edge-imports",
+      "claim": "Supabase Edge Functions (Deno) import the Supabase JS client from esm.sh and the HTTP server from deno.land/std in examples.",
+      "source_url": "https://esm.sh/@supabase/supabase-js@2",
+      "raw_snippet": "esm.sh serves @supabase/supabase-js v2 as an ES module for Deno/Edge runtimes.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["references/supabase-israel-patterns.md"]
+    },
+    {
+      "claim_id": "deno-std-server",
+      "claim": "Deno std http server import used in the Supabase Edge Function example.",
+      "source_url": "https://deno.land/std/http/server.ts",
+      "raw_snippet": "deno.land/std/http/server.ts provides the serve() HTTP server for Deno.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": ["references/supabase-israel-patterns.md"]
+    }
+  ]
+}

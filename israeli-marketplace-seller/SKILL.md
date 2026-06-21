@@ -1,6 +1,6 @@
 ---
 name: israeli-marketplace-seller
-description: Manage online selling across Israeli marketplaces (Zap, KSP, Facebook Marketplace, and Instagram Shopping). Use when user asks about "sell on Zap", "Facebook Marketplace Israel", "Instagram Shopping Israel", "online selling Israel", "price comparison KSP", "product listing Hebrew", or "מכירה אונליין". Covers product listing creation, competitor price monitoring, inventory sync, review management, sales analytics, business-registration (osek murshe/patur) and consumer-protection obligations across Israeli marketplaces. Do NOT use for international marketplaces (Amazon, eBay) or physical store operations.
+description: Manage online selling across Israeli marketplaces (Zap, Yad2, Facebook Marketplace, and Instagram Shopping). Use when user asks about "sell on Zap", "sell on Yad2", "Facebook Marketplace Israel", "Instagram Shopping Israel", "online selling Israel", "product listing Hebrew", or "מכירה אונליין". Covers product listing creation, competitor price monitoring (including against retailers like KSP), inventory sync, review management, sales analytics, business registration (osek murshe/patur), tax-invoice and Israel-Invoice (allocation-number) obligations, and consumer-protection rules across Israeli marketplaces. Do NOT use for international marketplaces (Amazon, eBay) or physical store operations.
 license: MIT
 allowed-tools: Bash(python:*) WebFetch
 compatibility: Works with Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex, OpenClaw, Antigravity, Gemini CLI. OpenClaw recommended for scheduled price monitoring and multi-platform inventory sync.
@@ -17,9 +17,11 @@ Help the user create Hebrew product listings with the required fields: title, de
 | Platform | Format | Listing Style | Key Requirements |
 |----------|--------|---------------|------------------|
 | Zap (זאפ) | Structured specs | Manufacturer, model, features, price comparison format | Full product specifications table, category-compliant |
-| KSP | Specs table | Comparison-ready product data | Technical specs, model numbers, feature highlights |
+| Yad2 (יד2) | Title + photos + price | Israel's dominant general marketplace (C2C and business); category-driven, location-based Hebrew listing | Clear photos, accurate category, Hebrew title with model/condition |
 | Facebook Marketplace (פייסבוק מרקטפלייס) | Casual | Photo-first, location-based Hebrew description | Clear photos, local area targeting, conversational tone |
 | Instagram Shopping (אינסטגרם שופינג) | Visual-first | Short description, hashtags, story-friendly | High-quality images, Hebrew + English hashtags, shopping tags |
+
+Note: **KSP is a first-party electronics retailer ("the Israeli Amazon"), not a third-party seller marketplace.** You cannot list your own products on KSP; treat it only as a competitor whose retail prices you compare against (Step 2). KSP runs an affiliate/referral program, not a vendor-selling program.
 
 SEO optimization:
 - Use common Israeli search terms in both Hebrew and transliterated English (e.g., "סמסונג גלקסי" and "Samsung Galaxy")
@@ -29,8 +31,8 @@ SEO optimization:
 See references/platform-guides.md for detailed listing format specifications per platform.
 
 ### Step 2: Monitor Competitor Prices
-Track competitor pricing across Zap and KSP to maintain competitive positioning:
-- Read publicly listed prices from Zap and KSP product pages. Prefer an official partner API where one is available (KSP offers a partner API for approved vendors); otherwise read the public product pages with a clearly identified client.
+Track competitor pricing across Zap (the price-comparison aggregator) and KSP (a large first-party retailer) to maintain competitive positioning:
+- Read publicly listed prices from Zap and KSP product pages with a clearly identified client. Neither offers a public third-party "seller" API for this (KSP is first-party retail and runs only an affiliate program), so use the official store/feed integrations where they exist (e.g. Zap's store dashboard / XML feed) and otherwise read public pages within each site's Terms of Service.
 - Track top 5 competitors per product, store price, seller name, shipping cost, and rating
 - Alert when a competitor drops price below yours (configurable threshold, default: 5%)
 - Generate weekly price comparison report with trends and recommendations
@@ -49,13 +51,13 @@ Maintain a single source of truth for inventory across all connected platforms:
 - Alert when stock reaches configurable low threshold (default: 2 units)
 - Handle platform-specific inventory management:
   - **Zap:** Update listing status (in stock / out of stock)
-  - **KSP:** Update availability flag
+  - **Yad2:** Mark the listing sold / remove it, or update quantity
   - **Facebook Marketplace:** Mark post as sold or update quantity
   - **Instagram Shopping:** Update product catalog availability
 
 Use optimistic locking to prevent overselling on simultaneous purchases.
 
-**Where the sale actually closes (2025 change):** Meta removed native checkout from Facebook and Instagram Shops (phase-out began June 2025, fully deprecated September 4, 2025). Facebook/Instagram now only drive discovery; the buyer is redirected to the merchant's own website to pay. If the user runs a Facebook or Instagram Shop, the real inventory source of truth, order management, and payment all live on their own e-commerce site, and the Meta catalog is just a mirror for product tags. Facebook Marketplace C2C personal listings were never a native-checkout flow and are unaffected (buyer and seller arrange payment directly).
+**Where the sale actually closes:** Facebook and Instagram Shops drive discovery; the buyer is redirected to the merchant's own website to pay. (In-app native checkout was always US-only, so Israeli Shops never had it; Meta also wound down US native checkout in 2025. Either way, for an Israeli seller the checkout lives on your own site.) If the user runs a Facebook or Instagram Shop, the real inventory source of truth, order management, and payment all live on their own e-commerce site, and the Meta catalog is just a mirror for product tags. Facebook Marketplace C2C personal listings were never a native-checkout flow and are unaffected (buyer and seller arrange payment directly).
 
 ### Step 4: Manage Customer Inquiries
 Centralize and manage incoming messages from all platforms:
@@ -105,7 +107,9 @@ Before helping someone sell regularly online, confirm they are set up legally. S
 - **Osek patur (עוסק פטור):** for low annual turnover (the threshold is set yearly by the Tax Authority). Does not charge or remit VAT, but still must register and report.
 - **Osek murshe (עוסק מורשה):** required above the osek-patur turnover threshold, or by default for certain professions. Charges 18% VAT on sales, files periodic VAT returns, and can deduct input VAT.
 - **The exception:** genuinely occasional, personal C2C sales (selling your own used phone on Facebook Marketplace) are not a business and do not require registration. The line is "regular, profit-seeking activity" vs "clearing out personal items".
-- A registered osek is also what platforms like Zap and KSP require for a seller account, and it is what makes the consumer-protection obligations in Step 8 enforceable against the seller.
+- A registered osek is also what a business seller account on platforms like Zap requires, and it is what makes the consumer-protection obligations in Step 8 enforceable against the seller.
+- **Issue a tax invoice (חשבונית מס / קבלה) for every sale.** A registered osek must give the buyer a tax invoice or receipt; for an osek murshe it shows the 18% VAT. This is the single most common operational obligation and applies to marketplace sales, not only sales on the seller's own site.
+- **Israel Invoice (חשבוניות ישראל) allocation number.** Since the 2024 reform, a tax invoice above a threshold needs a real-time allocation number (מספר הקצאה) from the Tax Authority, or the buyer cannot deduct the input VAT. The threshold is dropping over time (roughly NIS 20,000 in 2025, NIS 10,000 from January 2026, NIS 5,000 from mid-2026), so confirm the current figure with the Tax Authority before relying on it.
 
 If the user is unsure which status applies or where their turnover lands, tell them to confirm with an accountant or the Israel Tax Authority. Do not guess the current thresholds, they change yearly.
 
@@ -115,7 +119,8 @@ Israeli online selling is governed by the Consumer Protection Law (חוק הגנ
 
 - **14-day cooling-off period:** for most remote purchases the buyer may cancel within 14 days of receiving the product (or of receiving the disclosure document, whichever is later). Some categories are exempt (perishables, custom-made goods, opened software/media). Refund timelines and a possible cancellation fee are capped by law.
 - **Mandatory disclosure:** the seller must give the buyer, in writing, the business details, the main product characteristics, the full price including VAT, shipping costs, and the cancellation-right terms. Publish a clear return policy on every listing.
-- **Refund timeline:** once a valid cancellation is made, the refund must be issued within the period set by law, and the seller may only deduct the limited cancellation fee the law allows.
+- **Refund timeline and fee cap:** once a valid cancellation is made, the refund must be issued within the period set by law, and the cancellation fee the seller may deduct is capped at **5% of the price or NIS 100, whichever is lower**.
+- **Extended cancellation populations:** people with disabilities, senior citizens (אזרח ותיק), and new immigrants get an extended remote-purchase cancellation window of **up to 4 months** (subject to the law's conditions).
 - Draft return policies and cancellation responses that state these rights plainly in Hebrew. Do not write a return policy that is more restrictive than the law allows, it is unenforceable and exposes the seller.
 - For specifics (current cooling-off exemptions, fee caps, exact timelines), point the user to the Consumer Protection Law text and the Consumer Protection and Fair Trade Authority. Do not invent numbers.
 
@@ -155,16 +160,16 @@ Result: Total monthly revenue: 38,500 NIS across 26 sales. Zap has highest avera
 ## Bundled Resources
 
 ### References
-- `references/platform-guides.md`, Integration guides for Zap, KSP, Facebook Marketplace Israel, and Instagram Shopping. Covers listing formats, pricing structures, seller dashboards, the 2025 Meta native-checkout removal, and API/automation capabilities per platform. Consult when creating listings in Step 1 or monitoring prices in Step 2.
+- `references/platform-guides.md`, Integration guides for Zap, Yad2, Facebook Marketplace Israel, and Instagram Shopping (plus KSP as a price-comparison reference). Covers listing formats, pricing structures, seller dashboards, the Meta external-checkout reality, and API/automation capabilities per platform. Consult when creating listings in Step 1 or monitoring prices in Step 2.
 
 ## Gotchas
 
 - Israeli marketplace platforms use NIS pricing that must include 18% VAT (raised from 17% on 2025-01-01) for any seller registered as osek murshe. Agents may list prices excluding VAT or using the outdated 17% rate, which is illegal for consumer-facing listings.
-- Israeli classifieds and local selling happen on Israeli platforms (Zap, KSP, Facebook Marketplace, Yad2), not Craigslist or eBay. This skill covers Zap, KSP, Facebook Marketplace, and Instagram Shopping. Yad2 is a large Israeli classifieds site but is out of scope here; do not assume its listing format matches the platforms above, and do not recommend international platforms for Israeli local selling.
-- Israeli marketplace shipping typically uses Israel Post or courier services (Mahirpak, ShipBob IL), not FedEx/UPS for domestic orders. Agents may recommend international carriers with higher costs.
+- Israeli classifieds and local selling happen on Israeli platforms (Zap, Yad2, Facebook Marketplace), not Craigslist or eBay. This skill covers Zap, Yad2, Facebook Marketplace, and Instagram Shopping. KSP is a first-party electronics retailer ("the Israeli Amazon"), NOT a third-party seller marketplace, so you compare prices against it (Step 2) but cannot list your own products on it. Do not recommend international platforms for Israeli local selling.
+- Israeli marketplace shipping typically uses Israel Post or domestic couriers (HFD, Cheetah/צ'יטה, Baldar) and pickup-locker networks, not FedEx/UPS for domestic orders. Agents may recommend international carriers with higher costs.
 - Product descriptions on Israeli marketplaces should be in Hebrew first, with English optional. Agents may default to English-first content that gets less visibility.
 - Israeli consumer protection law applies to all marketplace sales, including the 14-day cooling-off period for remote purchases. Agents may not mention this legal obligation for sellers. See Step 8.
-- **Meta removed native checkout in 2025.** Facebook and Instagram Shops no longer process payments in-app (deprecated September 4, 2025). Since Meta no longer collects money for the seller, plan a separate payment-collection path: an external e-commerce site checkout for Shops, or, for Facebook Marketplace C2C, a direct Israeli payment method between buyer and seller (Bit, PayBox, bank transfer, or credit-card clearing via the seller's own provider). Agents may still assume an in-app Instagram/Facebook checkout that no longer exists.
+- **Plan a payment path outside Meta.** Facebook and Instagram Shops do not process payments in-app for Israeli sellers (in-app native checkout was always US-only, so Israeli Shops never had it; Meta also wound down US native checkout in 2025). Plan a separate payment-collection path: an external e-commerce checkout for Shops, or, for Facebook Marketplace C2C, a direct Israeli method between buyer and seller (Bit, PayBox, bank transfer, or card clearing via the seller's own provider such as Tranzila, Cardcom, Meshulam, or Grow/PayPlus). Agents may wrongly assume an in-app Instagram/Facebook checkout.
 
 ## Troubleshooting
 
@@ -182,19 +187,21 @@ Solution: Use optimistic locking. If a conflict is detected, fetch latest state 
 
 ### Error: "Price monitoring blocked"
 Cause: Reading marketplace pages too frequently triggers rate limiting or CAPTCHA.
-Solution: Reduce polling frequency (minimum 4 hours between checks) and keep requests well-spaced. Respect `robots.txt` and each site's Terms of Service. Do not attempt to evade the block (no user-agent spoofing, no CAPTCHA bypass). Prefer an official partner data feed where one exists (KSP offers a partner API for approved vendors). If automated access stays blocked, fall back to a manual periodic check.
+Solution: Reduce polling frequency (minimum 4 hours between checks) and keep requests well-spaced. Respect `robots.txt` and each site's Terms of Service. Do not attempt to evade the block (no user-agent spoofing, no CAPTCHA bypass). Use an official store/feed integration where one exists (e.g. Zap's store XML feed). KSP is first-party retail with no third-party seller API, so read only its public pages. If automated access stays blocked, fall back to a manual periodic check.
 
 ## Reference Links
 
 | Source | URL | What to Check |
 |--------|-----|---------------|
 | Zap, add a store | https://www.zap.co.il/joinzap.aspx | Seller onboarding, commission model, management dashboard |
+| Yad2 | https://www.yad2.co.il | Israel's dominant general marketplace: posting a listing, categories, business accounts |
 | Meta, changes to Shops and Checkout | https://www.facebook.com/business/help/1314349509894768 | Native checkout deprecation, external-checkout migration |
-| Instagram Shopping for business | https://business.instagram.com/shopping | Catalog setup, product tags, eligibility |
+| Instagram Shopping for business | https://www.facebook.com/business/instagram | Catalog setup, product tags, eligibility |
+| Israel Invoice (allocation number) | https://www.gov.il/en/service/issuing-allocation-number-for-an-invoice | Allocation-number thresholds and how to obtain one |
 | Israel Tax Authority | https://www.gov.il/he/departments/israel_tax_authority | Osek patur vs murshe, current turnover thresholds, VAT |
 | Consumer Protection and Fair Trade Authority | https://www.gov.il/he/departments/consumer_protection_and_fair_trade_authority | Remote-sale rules, 14-day cooling-off, mandatory disclosure |
 | Israel Post business shipping | https://www.israelpost.co.il | Domestic shipping options and rates for marketplace orders |
 
 ## Recommended MCP Servers
 
-There is no MCP server specific to Israeli marketplaces (Zap, KSP, Facebook Marketplace, Instagram Shopping). None of these platforms publishes an MCP integration, and no community MCP wraps them. Do not invent or recommend one. Use this skill's guidance directly, the official partner APIs where they exist (KSP partner API, Meta Graph API for catalog management), and a general browser-automation tool for reading public listing pages within each site's Terms of Service.
+There is no MCP server specific to Israeli marketplaces (Zap, Yad2, Facebook Marketplace, Instagram Shopping). None of these platforms publishes an MCP integration, and no community MCP wraps them. Do not invent or recommend one. Use this skill's guidance directly, the official integrations where they exist (Zap store/XML feed, Meta Graph API for catalog management), and a general browser-automation tool for reading public listing pages within each site's Terms of Service.

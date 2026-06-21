@@ -55,7 +55,7 @@ runs:
       shell: bash
       run: |
         # Fetch Shabbat times for Israel (Jerusalem)
-        SHABBAT_JSON=$(curl -s "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on")
+        SHABBAT_JSON=$(curl -sf --max-time 10 "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on" || echo "")
 
         # Extract candle lighting and havdalah times
         CANDLE=$(echo "$SHABBAT_JSON" | jq -r '.items[] | select(.category=="candles") | .date')
@@ -63,13 +63,17 @@ runs:
 
         NOW=$(date -u +%Y-%m-%dT%H:%M:%S)
 
-        if [[ "$NOW" > "$CANDLE" && "$NOW" < "$HAVDALAH" ]]; then
+        # Fail CLOSED: if hebcal is unreachable, freeze rather than risk a Shabbat deploy (override with force_deploy)
+        if [ -z "$CANDLE" ]; then
+          echo "frozen=true" >> $GITHUB_OUTPUT
+          echo "reason=Could not verify Shabbat window (hebcal unreachable); failing closed" >> $GITHUB_OUTPUT
+        elif [[ "$NOW" > "$CANDLE" && "$NOW" < "$HAVDALAH" ]]; then
           echo "frozen=true" >> $GITHUB_OUTPUT
           echo "reason=Shabbat (candle lighting: $CANDLE)" >> $GITHUB_OUTPUT
         else
           # Check holidays
           MONTH=$(date +%Y-%m)
-          HOLIDAYS=$(curl -s "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&maj=on")
+          HOLIDAYS=$(curl -sf --max-time 10 "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&maj=on" || echo "")
           HOLIDAY_TODAY=$(echo "$HOLIDAYS" | jq -r ".items[] | select(.date | startswith(\"$(date +%Y-%m-%d)\")) | .title" | head -1)
 
           if [[ -n "$HOLIDAY_TODAY" ]]; then
@@ -92,7 +96,7 @@ jobs:
       is_frozen: ${{ steps.shabbat.outputs.is_frozen }}
       reason: ${{ steps.shabbat.outputs.reason }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - id: shabbat
         uses: ./.github/actions/shabbat-check
 
@@ -282,8 +286,8 @@ Add to your CI pipeline:
 accessibility-check:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v5
-    - uses: actions/setup-node@v5
+    - uses: actions/checkout@v7
+    - uses: actions/setup-node@v6
       with:
         node-version: '22'
 
@@ -329,7 +333,7 @@ The Israeli Privacy Protection Authority (Rashut HaHagana al HaPratiut) requires
 privacy-check:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
 
     - name: Scan for exposed PII patterns
       run: |
@@ -362,7 +366,7 @@ Israeli projects should deploy to regions with low latency to Israel. Here are t
 | Cloud Provider | Recommended Region | Latency to IL | GitHub Actions Setup |
 |---------------|-------------------|---------------|---------------------|
 | Vercel | fra1 (Frankfurt) | ~30ms | `vercel --regions fra1` |
-| AWS | eu-west-1 (Ireland) or me-south-1 (Bahrain) | ~40ms / ~20ms | Set `AWS_DEFAULT_REGION` |
+| AWS | il-central-1 (Tel Aviv) or eu-west-1 (Ireland) | ~3ms / ~40ms | Set `AWS_DEFAULT_REGION` |
 | GCP | europe-west1 (Belgium) or me-west1 (Tel Aviv) | ~35ms / ~5ms | Set `GOOGLE_CLOUD_REGION` |
 | Cloudflare Workers | Automatic (TLV edge) | ~5ms | No region config needed |
 | DigitalOcean | fra1 (Frankfurt) | ~30ms | `doctl apps create --region fra` |
@@ -373,7 +377,7 @@ Israeli projects should deploy to regions with low latency to Israel. Here are t
 deploy-vercel:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - name: Deploy to Vercel
       env:
         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -390,15 +394,32 @@ deploy-vercel:
 ```yaml
 deploy-aws:
   runs-on: ubuntu-latest
+  permissions:
+    id-token: write   # REQUIRED for OIDC role assumption; without it the action fails with "Unable to get OIDC token"
+    contents: read
   env:
-    AWS_DEFAULT_REGION: eu-west-1  # Or me-south-1 for Bahrain
+    AWS_DEFAULT_REGION: il-central-1  # AWS Tel Aviv (lowest latency to Israel); eu-west-1 is an alternative
   steps:
-    - uses: aws-actions/configure-aws-credentials@v5
+    - uses: aws-actions/configure-aws-credentials@v6
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     # ... deployment steps
 ```
+
+**Token permissions and security hardening.** Since February 2023 the default `GITHUB_TOKEN` is **read-only**, so any job that writes (commenting on a PR, pushing a commit, creating a release) must declare an explicit `permissions:` block, and OIDC cloud auth (above) requires `id-token: write`. Set least-privilege permissions per job:
+
+```yaml
+permissions:
+  contents: read          # safe baseline
+# add only what a job needs, for example:
+# pull-requests: write    # for github-script PR comments
+# id-token: write         # for OIDC to AWS/GCP (no long-lived secret keys)
+```
+
+Additional hardening for an Israeli team's repos:
+- **Pin third-party actions to a full commit SHA** (`uses: owner/action@<40-char-sha>`), not a moving tag. A moving tag was the vector in the 2025 tj-actions/changed-files supply-chain compromise. First-party `actions/*` are lower risk, but SHA-pinning is the standard.
+- **Enable Dependabot for actions** (`.github/dependabot.yml` with `package-ecosystem: "github-actions"`) so pinned versions stay current automatically. This is the maintenance answer to action staleness.
 
 ### Step 6: Configure Israeli Work Week Scheduling
 
@@ -578,7 +599,7 @@ Cause: Schedule written in Israel time instead of UTC.
 Solution: Subtract 2 hours (winter) or 3 hours (summer) from the desired Israel time. Use `date -u` to verify current UTC time. For DST-proof scheduling, accept the 1-hour drift or add a runtime check.
 
 ### Error: "axe-core scan finds no violations but site is not accessible"
-Cause: Automated scanning catches only ~30% of accessibility issues. IS-5568 requires manual testing for reading order, screen reader behavior, and bilingual content flow.
+Cause: Automated scanning catches only a minority of accessibility issues (commonly cited as roughly a third). IS-5568 requires manual testing for reading order, screen reader behavior, and bilingual content flow.
 Solution: Use axe-core as a baseline, not a complete check. Add manual accessibility review as a PR checklist item alongside the automated scan.
 
 ### Error: "Monday.com mutation returns 'unauthorized'"

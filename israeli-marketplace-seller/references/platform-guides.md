@@ -20,42 +20,42 @@
 - Response to customer inquiries within 24 hours
 
 ### Fee Structure
-- Monthly listing fee per product (varies by category)
-- Click-through fee (cost per lead directed to seller)
-- No commission on actual sale, Zap redirects to seller's site/contact
+Zap runs two seller models with different fees, so confirm which one you are on:
+- **Price-comparison listing:** a monthly listing fee per product plus a click-through (cost-per-lead) fee; Zap redirects the buyer to the seller's own site/contact and takes no commission on the sale.
+- **Zap marketplace (מרקטפלייס):** a variable commission per sale that depends on the category, instead of (or in addition to) the per-click model.
+
+Confirm the current model and rates on the joinzap onboarding page; do not assume only one model applies.
 
 ### Automation
 - No public REST API, use browser automation (CDP/Playwright) for listing management within Zap's Terms of Service
 - Price monitoring: scrape product pages at `zap.co.il/models.aspx?sog={category_id}`
 - Seller dashboard accessible via authenticated browser session
 
-## KSP, Electronics & Price Comparison
+## KSP, First-Party Electronics Retailer (price reference only)
 
 - **URL:** `https://ksp.co.il`
-- **Seller portal:** Direct partnership required
-- **Listing type:** Structured product catalog with technical specifications
+- **What it is:** KSP is a first-party electronics retailer ("the Israeli Amazon") that sells its own inventory. It is NOT a third-party seller marketplace, so you cannot list your products on it.
+- **Seller-facing program:** only an affiliate/referral program (earn commission marketing KSP's products). There is no public third-party "partner API" or "vendor portal" for listing your own goods, do not assume one exists.
+
+### How to use KSP in this skill
+- Treat KSP as a competitor whose retail prices you compare against (see Step 2 price monitoring).
+- Price reference: read public product pages (e.g. `ksp.co.il/?uin={product_id}`) with a clearly identified client, within KSP's Terms of Service. Do not scrape aggressively or evade bot protection.
+
+## Yad2, Israel's Dominant General Marketplace
+
+- **URL:** `https://www.yad2.co.il`
+- **What it is:** Israel's largest general classifieds/marketplace (the de-facto Israeli eBay/Craigslist), for both C2C and business sellers across electronics, second-hand goods, vehicles, real estate, and more.
+- **Seller access:** post a listing on the Yad2 site (free basic listings; paid promotion and business "חנות" store accounts available).
 
 ### Listing Format
-- **Title:** Brand + model + key spec (e.g., "Samsung Galaxy S24 128GB")
-- **Specifications:** Technical specs table matching KSP category schema
-- **Price:** NIS with VAT, updated in real-time
-- **Photos:** Product images per KSP guidelines, minimum 3 angles
-- **Availability:** In stock / order / out of stock status
-
-### Seller Requirements
-- Approved vendor partnership with KSP
-- Warehouse or fulfillment capability
-- Competitive pricing (KSP monitors price competitiveness)
-
-### Fee Structure
-- Partnership agreement based (varies by vendor volume)
-- Listing included in partnership
-- KSP takes margin on sales through their platform
+- **Title:** Hebrew, with brand/model and condition
+- **Photos:** multiple clear photos
+- **Category:** pick the accurate category (Yad2 is category-driven)
+- **Price + location:** NIS price (including VAT for an osek murshe) and the seller's area
+- **Contact + fulfillment:** in-platform chat/phone; payment and delivery are arranged off-platform (Bit, PayBox, cash, or courier)
 
 ### Automation
-- Partner API available for approved vendors (contact KSP business team)
-- Price scraping: product pages at `ksp.co.il/?uin={product_id}`
-- Stock updates via vendor portal or partner API
+- No public third-party seller API. Manage listings via the site or a business store account; read public pages only within the Terms of Service.
 
 ## Facebook Marketplace (פייסבוק מרקטפלייס), Israel
 
@@ -76,7 +76,7 @@
 
 ### Seller Requirements
 - Personal Facebook account in good standing (no business license required)
-- For shops: Facebook Commerce Manager setup with payment processing
+- For shops: Facebook Commerce Manager setup; payment is collected on the merchant's own external checkout, not in-app (Israeli Shops have no native checkout)
 - Comply with Facebook Commerce Policies (no prohibited items)
 - Identity verification may be required for high-volume sellers
 
@@ -128,12 +128,14 @@
 
 ## Cross-Platform Comparison
 
-| Feature | Zap | KSP | Facebook | Instagram |
-|---------|-----|-----|----------|-----------|
-| Listing cost | Commission on sale (by category), no upfront fee | Partnership | Free (C2C) / catalog free | Free |
-| Audience | Price-conscious tech buyers | Electronics shoppers | Local community | Visual / lifestyle |
-| Best for | Electronics, appliances | Electronics, computers | General items, local | Fashion, lifestyle, visual |
+| Feature | Zap | Yad2 | Facebook | Instagram |
+|---------|-----|------|----------|-----------|
+| Listing cost | Per-product monthly + per-click (comparison) OR per-sale commission by category (marketplace) | Free basic listing; paid promotion / business store | Free (C2C) / catalog free | Free |
+| Audience | Price-conscious tech buyers | Broad general buyers (all categories) | Local community | Visual / lifestyle |
+| Best for | Electronics, appliances | Second-hand goods, vehicles, general items | General items, local | Fashion, lifestyle, visual |
 | Hebrew support | Full | Full | Full | Full |
-| API available | No (scrape) | Partner only | Graph API (catalog only) | Graph API (catalog only) |
-| Payment processing | Zap checkout / external | KSP checkout | Merchant's own site (no native checkout since 2025) | Merchant's own site (no native checkout since 2025) |
-| Shipping integration | External | KSP logistics | Seller managed | Seller managed |
+| API available | No (store XML feed) | No (site only) | Graph API (catalog only) | Graph API (catalog only) |
+| Payment processing | Zap checkout / external | Off-platform (Bit / PayBox / cash) | Merchant's own site (no native checkout for Israeli sellers) | Merchant's own site (no native checkout for Israeli sellers) |
+| Shipping integration | External | Seller managed / courier | Seller managed | Seller managed |
+
+(KSP is omitted from this table: it is a first-party retailer, not a third-party seller platform, so use it only as a price-comparison reference.)
