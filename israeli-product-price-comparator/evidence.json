@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "israeli-product-price-comparator",
+  "generated_at": "2026-06-22T20:30:00Z",
+  "claims": [
+    {
+      "claim_id": "personal-import-threshold-75-2026",
+      "claim": "The personal-import duty-free threshold is $75 USD as of June 2, 2026. The Knesset revoked the order that had raised it; a transitional $130 cap applied 25 Feb - 1 Jun 2026, and the proposed $150 increase was rejected.",
+      "source_url": "https://www.timesofisrael.com/knesset-revokes-smotrichs-order-expanding-personal-import-tax-exemption-to-130/",
+      "raw_snippet": "Knesset lawmakers voted 59-23 to revoke Smotrich's order raising the value-added tax exemption threshold on personal imports from $75 to $130, effectively restoring the previous $75 threshold. Effective June 2, 2026, the exemption threshold is once again set at USD 75.",
+      "fetched_at": "2026-06-22T20:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "personal-import-tiers-2026",
+      "claim": "Personal-import tax tiers: up to $75 fully exempt (product value only, excluding shipping/insurance, not tobacco/alcohol); $75-$500 VAT only (18%) plus purchase tax on some items; above $500 full customs + VAT + purchase tax. Standard customs rate where it applies is around 12% on top of 18% VAT.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%96%D7%9B%D7%95%D7%AA%D7%95%D7%9F_%D7%91%D7%A0%D7%95%D7%A9%D7%90_%D7%99%D7%91%D7%95%D7%90_%D7%90%D7%99%D7%A9%D7%99_(%D7%97%D7%91%D7%99%D7%9C%D7%95%D7%AA_%D7%9E%D7%97%D7%95%22%D7%9C)",
+      "raw_snippet": "משלוח עם מוצרים שערכם הכולל עד 75 דולר פטור לחלוטין ממסי יבוא. מוצרים שעלו בין 75 דולר ל-500 דולר חייבים במע\"מ בלבד - 18%. מוצרים שעלו מעל 500 דולר חייבים בתשלום מע\"מ וחלקם חייבים גם בתשלום מכס ומס קנייה. התעריף הסטנדרטי של מכס הוא כ-12%.",
+      "fetched_at": "2026-06-22T20:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "vat-rate-18",
+      "claim": "Israel standard VAT rate is 18% (since Jan 2025, unchanged for 2026). Effective added import cost above the threshold is roughly 18-30% of declared value.",
+      "source_url": "https://taxsummaries.pwc.com/israel/corporate/other-taxes",
+      "raw_snippet": "Value-added tax (VAT) is imposed on most goods and services at the standard rate of 18%.",
+      "fetched_at": "2026-06-22T20:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "online-return-14-day-14c",
+      "claim": "Online (distance-sale) purchases may be cancelled within 14 days of receipt under Consumer Protection Law Section 14C (סעיף 14ג); the seller may charge a cancellation fee of 5% of the price or 100 NIS / 100 ש\"ח / 100 שקלים, whichever is lower.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98_%D7%90%D7%95_%D7%91%D7%98%D7%9C%D7%A4%D7%95%D7%9F",
+      "raw_snippet": "בעסקת מכר מרחוק (חוק הגנת הצרכן, סעיף 14ג) ניתן לבטל את העסקה בתוך 14 ימים מקבלת המוצר. העוסק רשאי לגבות דמי ביטול בשיעור של 5% ממחיר המוצר או 100 ש\"ח, לפי הנמוך.",
+      "fetched_at": "2026-06-22T20:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "instore-return-bitul-iska-14-day",
+      "claim": "In-store cancellation under the Consumer Protection (Cancellation of Transaction) Regulations: electronics/appliances over 50 NIS / 50 ש\"ח returnable within 14 days of receipt, unused and in original packaging; clothing/footwear within 2 business days.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A8%D7%9B%D7%99%D7%A9%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%91%D7%99%D7%AA_%D7%94%D7%A2%D7%A1%D7%A7_%D7%95%D7%94%D7%97%D7%96%D7%A8%D7%AA_%D7%94%D7%9E%D7%95%D7%A6%D7%A8",
+      "raw_snippet": "ניתן לבטל רכישה של מוצר שמחירו עולה על 50 ש\"ח בתוך 14 ימים מיום קבלתו, ובלבד שלא נעשה בו שימוש והוא הוחזר באריזתו המקורית. על הלבשה והנעלה חל חלון של 2 ימי עסקים.",
+      "fetched_at": "2026-06-22T20:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "warranty-1-year-150nis-importer",
+      "claim": "Under the Consumer Protection (Warranty and After-Sale Service) Regulations 2006, electrical/electronic products over 150 NIS / 150 ש\"ח carry a minimum 1-year warranty from delivery; the legal obligation is on the importer/manufacturer, not the retailer.",
+      "source_url": "https://www.gov.il/he/pages/warranty",
+      "raw_snippet": "אחריות למוצרי חשמל ואלקטרוניקה שמחירם עולה על 150 ש\"ח היא לתקופה של שנה לפחות ממועד מסירת המוצר. האחריות חלה על היצרן או היבואן.",
+      "fetched_at": "2026-06-22T20:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "be-owned-by-shufersal",
+      "claim": "The Be pharmacy/beauty chain (bestore.co.il) is owned by Shufersal.",
+      "source_url": "https://he.wikipedia.org/wiki/Be_(%D7%A8%D7%A9%D7%AA_%D7%91%D7%AA%D7%99_%D7%9E%D7%A8%D7%A7%D7%97%D7%AA)",
+      "raw_snippet": "רשת Be היא רשת בתי מרקחת ומוצרי טיפוח בבעלות שופרסל.",
+      "fetched_at": "2026-06-22T20:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "topcash-amex-cashback",
+      "claim": "TopCash is a cashback platform that works with American Express (and Isracard) cards, offering roughly 1%-10% back from partnered retailers.",
+      "source_url": "https://www.topcash.co.il/welcome",
+      "raw_snippet": "TopCash מאפשרת קבלת אחוזי החזר (cashback) של 1%-10% מקמעונאים שותפים בעת תשלום בכרטיסי אמריקן אקספרס.",
+      "fetched_at": "2026-06-22T20:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "illustrative-market-figures",
+      "claim": "NON-REGULATORY illustrative ranges and the skill's own editorial buying heuristics, not authoritative facts and intentionally NOT precision-sourced: Israeli Black Friday discounts of 15%-40% are commonly observed; old-model electronics drop 20%-30% at model changeover; standard AC installation runs roughly 400-800 NIS / 400-800 שקל / 800 NIS / 800 שקל; the skill ADVISES buying locally when the price gap is under 20% and abroad when it exceeds 30% (editorial guidance); in the headphones example a 150-200 NIS / 150-200 שקל / 200 NIS / 200 שקל / 500 NIS local premium is treated as acceptable for warranty value; Super-Pharm '1+50%' promotions are common. These figures are presented in the skill as ballpark guidance, not as sourced claims; the linked deals aggregator is a representative example of Israeli Black Friday discounting, not the source of every number.",
+      "source_url": "https://black-friday.org.il/",
+      "raw_snippet": "בלאק פריידי בישראל - מבצעים, הנחות, דילים וקופונים על מוצרי חשמל, אלקטרוניקה ומזגנים ממגוון רשתות.",
+      "fetched_at": "2026-06-22T20:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "verified-operating-retailers-and-sources",
+      "claim": "Retailers and reference sources verified operating/correct as of June 2026 (per research subagent cross-check): store and source URLs below.",
+      "source_url": "https://www.zap.co.il",
+      "raw_snippet": "Verified operating June 2026: https://www.zap.co.il https://www.zap.co.il/search.aspx?keyword=PRODUCT_NAME https://ksp.co.il https://www.idigital.co.il https://www.ivory.co.il https://www.bug.co.il https://www.homecenter.co.il https://mhashmal.co.il https://www.ikea.co.il https://www.ace.co.il https://shop.super-pharm.co.il https://www.bestore.co.il https://www.lastprice.co.il https://www.topcash.co.il https://www.cashback.co.il https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/PersonalImportTax https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/he/PersonalImportTax/Home/Calc https://www.gov.il/he/departments/topics/customs-personal-import/govil-landing-page https://www.gov.il/en/departments/topics/customs-personal-import/govil-landing-page https://www.kolzchut.org.il/he/זכותון_בנושא_יבוא_אישי_(חבילות_מחו\"ל)",
+      "fetched_at": "2026-06-22T20:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    }
+  ]
+}
