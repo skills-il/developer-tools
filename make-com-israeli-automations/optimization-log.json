@@ -1,0 +1,18 @@
+{
+  "cycles": [
+    {
+      "version": "2.2.1",
+      "date": "2026-06-22",
+      "lessons": [
+        "CRITICAL fixed: billing-cycle-patterns.md payroll table had a fabricated employer health-insurance (Bituach Briut) column (health is employee-only in Israel) and wrong 2026 reduced rates. Corrected vs btl.gov.il: Bituach Leumi employer 4.51%/7.60%, employee 1.04%/7.00%; Bituach Briut employee-only 3.23%/5.17%; reduced/full threshold 7,703 NIS, ceiling 51,910 NIS. These rates change annually, re-verify each cycle.",
+        "Fixed STALE: make-israeli-modules.md said allocation-number threshold was 10,000 NIS since Jan 2026; synced to the SKILL.md step-down (5,000 NIS from June 1 2026, in force). Threshold is scheduled to keep dropping, re-verify.",
+        "Fixed: Cardcom section claimed 'API v11' but listed v10/LowProfile field names (OperationResponse/CardOwnerID) and 'form-encoded'. v11 is POST JSON (ResponseCode/Description/TranzactionId). Relabeled the table as legacy LowProfile v10 and pointed to the v11 docs rather than fabricating the v11 nested field names.",
+        "Verified correct (no change): Morning rebrand + greeninvoice.co.il API domain + Callbox Best-plan community module + decimal-shekels + API-key->JWT auth; Grow by Meshulam (not Bank Leumi); Make Free plan 1,000 ops; Make MCP server + April-2025 AI Agents; VAT 18%.",
+        "Deferred (MINOR, unverified against vendor docs): Monday.com API v1 sunset date (May 1 2026) and Tranzila npay semantics (npay+1 total) could not be confirmed against developer.monday.com / Tranzila docs, and the Make MCP scenario-run timeout seconds (25s/40s) are precise but unverified. Confirm or soften next cycle.",
+        "Deferred (MINOR): the 2027 allocation-number row ('5,000 NIS planned to continue') is plausible but unconfirmed by any published source; kept as 'planned' wording.",
+        "CRITICAL fixed (Expert): mandatory-pension row omitted the employer 6% severance (pitzuim). Corrected to employer 6.5% benefits + 6% severance = 12.5% (total 18.5% with the employee 6%). Also fixed MINOR: replaced the non-existent 'Shaam calculator' with the madregot-mas income-tax brackets.",
+        "Deferred (MINOR, Expert): add the 126 employer wage-reconciliation report (semi-annual, due mid-Jul / mid-Jan) to the annual payroll-deadlines table in billing-cycle-patterns.md. Revisit next cycle."
+      ]
+    }
+  ]
+}

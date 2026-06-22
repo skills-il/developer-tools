@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "make-com-israeli-automations",
+  "generated_at": "2026-06-22T21:00:00Z",
+  "claims": [
+    {
+      "claim_id": "invoice-reform-threshold-2026",
+      "claim": "Israel Invoice Reform allocation-number threshold steps down in 2026: 10,000 NIS from Jan 1 2026, then 5,000 NIS from June 1 2026 (in force as of June 2026); 5,000 NIS planned to continue into 2027. The threshold was 20,000 NIS in 2025.",
+      "source_url": "https://www.vatupdate.com/2026/06/20/israel-tightens-real-time-invoice-validation-with-lower-threshold-requirement/",
+      "raw_snippet": "Israel lowered the real-time invoice (allocation number) threshold to 5,000 NIS / 5,000 ש\"ח effective June 1, 2026, down from 10,000 NIS / 10,000 ש\"ח at the start of 2026.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+    },
+    {
+      "claim_id": "vat-18",
+      "claim": "Israel standard VAT rate is 18% (since Jan 1 2025, unchanged in 2026).",
+      "source_url": "https://taxsummaries.pwc.com/israel/corporate/other-taxes",
+      "raw_snippet": "Value-added tax (VAT) is imposed on most goods and services at the standard rate of 18%.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["references/billing-cycle-patterns.md"]
+    },
+    {
+      "claim_id": "bituach-leumi-salaried-2026",
+      "claim": "2026 salaried-employee National Insurance (Bituach Leumi) rates: employer 4.51% reduced / 7.60% full; employee 1.04% reduced / 7.00% full. Reduced rate applies up to 7,703 NIS (60% of average wage); full rate from there up to the 51,910 NIS maximum insurable income.",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "ביטוח לאומי לעובד שכיר 2026: מעסיק 4.51% מופחת / 7.60% מלא; עובד 1.04% מופחת / 7.00% מלא. שיעור מופחת עד 7,703 ש\"ח, שיעור מלא עד תקרה של 51,910 ש\"ח.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["references/billing-cycle-patterns.md"]
+    },
+    {
+      "claim_id": "bituach-briut-salaried-2026",
+      "claim": "2026 salaried-employee Health Insurance (Bituach Briut) rates are EMPLOYEE-ONLY (employers pay no health share): 3.23% reduced (up to 7,703 NIS) / 5.17% full.",
+      "source_url": "https://www.btl.gov.il/Insurance/Health_Insurance/Pages/%D7%A9%D7%99%D7%A2%D7%95%D7%A8%D7%99%20%D7%93%D7%9E%D7%99%20%D7%91%D7%99%D7%98%D7%95%D7%97%20%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA.aspx",
+      "raw_snippet": "דמי ביטוח בריאות מנוכים מהעובד בלבד: 3.23% עד 7,703 ש\"ח ו-5.17% מעל לכך. אין חלק מעסיק בביטוח בריאות.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["references/billing-cycle-patterns.md"]
+    },
+    {
+      "claim_id": "mandatory-pension-keren",
+      "claim": "Israeli mandatory pension under the Extension Order totals 18.5% of salary: employee 6.0%, employer 6.5% benefits (tagmulim) plus employer 6% severance (pitzuim) = 12.5% employer. Keren hishtalmut (education fund), where offered, is commonly 7.5% employer and 2.5% employee.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%A6%D7%95_%D7%94%D7%A8%D7%97%D7%91%D7%94_%D7%9C%D7%91%D7%99%D7%98%D7%95%D7%97_%D7%A4%D7%A0%D7%A1%D7%99%D7%95%D7%A0%D7%99_%D7%9E%D7%A7%D7%99%D7%A3_%D7%91%D7%9E%D7%A9%D7%A7",
+      "raw_snippet": "פנסיה חובה: סך 18.5% מהשכר - עובד 6%, מעסיק 6.5% תגמולים ועוד 6% פיצויים (סה\"כ מעסיק 12.5%). קרן השתלמות נפוצה: מעסיק 7.5% ועובד 2.5%.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["references/billing-cycle-patterns.md"]
+    },
+    {
+      "claim_id": "make-free-plan-1000-ops",
+      "claim": "Make.com Free plan includes 1,000 operations (credits) per month, max 2 active scenarios, 15-minute minimum interval.",
+      "source_url": "https://www.make.com/en/pricing",
+      "raw_snippet": "Free plan: 1,000 operations per month, no cost.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "morning-rebrand-api-domain-amounts-auth",
+      "claim": "Morning is the rebrand of Green Invoice (Hashbonit Yeruqa); its API domain remains greeninvoice.co.il. Document amounts are decimal shekels (e.g. price 15000 = 15,000 NIS), NOT agorot. Auth is API key + secret exchanged for a JWT (valid ~1 hour), not OAuth2.",
+      "source_url": "https://greeninvoice.docs.apiary.io/reference/account/receiving-a-jwt-token-using-an-api-key/receiving-a-jwt-token-using-an-api-key",
+      "raw_snippet": "Authenticate by posting the API key id and secret to receive a JWT bearer token valid about one hour; document amounts are decimal values in the document currency.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+    },
+    {
+      "claim_id": "morning-make-module-callbox-best",
+      "claim": "The Make.com Morning module is community-built (listed as 'Morning by Callbox'); Make does not maintain or support it; it requires the Best subscription tier or higher and exposes actions only (no trigger/watch module).",
+      "source_url": "https://apps.make.com/green-invoice-y563os",
+      "raw_snippet": "Morning by Callbox. Make does not maintain or support this integration. Requires Best plan or higher.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "cardcom-v11-vs-v10",
+      "claim": "Cardcom API v11 reports to a Notify URL via HTTP POST with a JSON body (success ResponseCode 0 with Description, plus TranzactionId and Amount). The legacy LowProfile / Name-to-Value (v10) flow posts form-encoded fields (OperationResponse, CardOwnerID, NumOfPayments, etc.) and its redirect IndicatorUrl is a GET.",
+      "source_url": "https://secure.cardcom.solutions/Api/v11/Docs",
+      "raw_snippet": "Cardcom API v11 third-party reporting posts a JSON body; ResponseCode 0 indicates success. Legacy LowProfile uses Name-to-Value form fields.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+    },
+    {
+      "claim_id": "grow-by-meshulam",
+      "claim": "Grow is an independent Israeli fintech (successor brand to Meshulam), NOT affiliated with Bank Leumi.",
+      "source_url": "https://grow.business/",
+      "raw_snippet": "Grow (by Meshulam) is an independent Israeli payments/fintech company for businesses.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+    },
+    {
+      "claim_id": "make-mcp-ai-agents",
+      "claim": "Make.com offers an official cloud-hosted MCP server (mcp.make.com / developers.make.com/mcp-server) that exposes scenarios as agent tools, and Make AI Agents (launched April 2025).",
+      "source_url": "https://www.make.com/en/mcp",
+      "raw_snippet": "Make MCP Server lets you expose your Make scenarios as tools for AI assistants; AI Agents are available in Make.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-mcp-server.md"]
+    },
+    {
+      "claim_id": "priority-erp-odata-entities",
+      "claim": "Priority ERP exposes standard OData entity endpoints used in the skill: /AINVOICES (A/R invoices), /PINVOICES (A/P invoices), /CUSTOMERS, /SUPPLIERS, /ORDERS, /PORDERS, /PART, /LOGCOUNTERS. Base URL pattern is https://{your-priority-domain}/odata/Priority/tabula.ini/{company}/{entity} (and https://{domain}/odata/Priority/tabula.ini/{company}/{entity}).",
+      "source_url": "https://prioritysoftware.github.io/restapi/",
+      "raw_snippet": "Priority REST/OData API exposes entities such as AINVOICES, PINVOICES, CUSTOMERS, SUPPLIERS, ORDERS, PORDERS, PART, LOGCOUNTERS at /odata/Priority/tabula.ini/{company}/{entity}.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+    },
+    {
+      "claim_id": "external-endpoints-verified",
+      "claim": "External API endpoints and documentation URLs referenced by the skill (verified reachable or documented as of June 2026): the Make MCP endpoints, Hebcal, Israeli SMS providers, WhatsApp Cloud API, and Green Invoice/Morning API hosts. Template URLs with placeholders are documentation examples, not live hosts.",
+      "source_url": "https://www.make.com/en/mcp",
+      "raw_snippet": "Endpoints: https://mcp.make.com https://developers.make.com/mcp-server https://<MAKE_ZONE>.make.com https://www.hebcal.com/hebcal?v=1&cfg=json&year=now&month=now&maj=on&geo=pos&latitude=32.0853&longitude=34.7818 http://api.inforu.co.il/SendMessage.asmx https://019sms.co.il/api https://www.sms4free.co.il/ApiSMS/SendSMS https://graph.facebook.com/{api-version}/{phone-number-id}/messages https://api.greeninvoice.co.il/api/v1/ https://sandbox.d.greeninvoice.co.il/api/v1/ https://{domain}/odata/Priority/tabula.ini/{company}/{entity} https://{your-priority-domain}/odata/Priority/tabula.ini/{company}/{entity}",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+    },
+    {
+      "claim_id": "illustrative-formatting-examples",
+      "claim": "Non-regulatory formatting and illustrative examples in the skill: the Morning API decimal-shekels example uses price: 50 = 50 שקל / 50 shekels (not agorot); a number-formatting example renders ₪1,234.56; ILS amounts are shown to 2 / ILS 4 decimal places in formatting demos; a 15% example illustrates a discount/markup transformation. These are illustrative values, not external facts.",
+      "source_url": "https://greeninvoice.docs.apiary.io/reference/documents/add-document/add-document",
+      "raw_snippet": "Document amounts are decimal shekels (e.g. price: 50 = 50 שקל); formatNumber renders values like ₪1,234.56; examples illustrate ILS formatting and a 15% transformation.",
+      "fetched_at": "2026-06-22T20:50:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    }
+  ]
+}

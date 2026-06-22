@@ -299,11 +299,13 @@ Israeli business hours are typically Sunday through Thursday, 09:00-18:00. For B
 
 **Cardcom Webhook**
 
-Cardcom sends POST requests to your webhook URL after payment events:
+Cardcom has two webhook generations with different field names, confirm which your terminal uses:
+- **API v11 (current)**: posts a JSON body. Success is `ResponseCode` = 0 (with `Description`), plus `TranzactionId` and `Amount`; card-owner/token data are nested. Verify exact field names against the v11 docs (`https://secure.cardcom.solutions/Api/v11/Docs`), do not assume the legacy names below.
+- **Legacy LowProfile (v10)**: posts form-encoded Name-to-Value fields (redirect IndicatorUrl is a GET). The table below is this v10 set.
 
 1. Create a Custom Webhook trigger in Make.com
-2. Set Cardcom's "Notify URL" to the Make.com webhook URL (Cardcom API v11 supports modern webhook configuration)
-3. Key fields in the Cardcom callback:
+2. Set Cardcom's "Notify URL" to the Make.com webhook URL
+3. Legacy LowProfile (v10) callback fields:
 
 | Field | Description | Example |
 |---|---|---|
@@ -504,17 +506,17 @@ For a worked example of exposing a Morning invoice scenario as an MCP tool calla
 - Agents default to monthly VAT reporting (US/EU pattern). Israeli VAT reporting is bimonthly for most businesses. Always confirm the reporting frequency before building period filters.
 - Morning (Green Invoice) amounts in the API are in **decimal shekels** (e.g., `price: 50` means 50 shekels). Do NOT multiply by 100 or convert to agorot. This is different from some payment gateway APIs.
 - The Morning Make.com module is **community-built by Callbox**, not maintained by Make.com. It has no trigger/watch modules, only actions. Plan for scheduled polling instead of event-driven triggers.
-- Morning document type codes: 10 = Price Quote, 305 = Tax Invoice, 320 = Tax Invoice/Receipt, 330 = Credit Note/Refund, 400 = Receipt. These are NOT the same as the HTTP status-code-like numbers agents sometimes assume.
-- Tranzila's `npay` field means the number of **additional** payments, not total payments. If you set `npay=3`, the customer pays 4 installments total (1 first payment + 3 additional). Always use `npay = total_installments - 1`.
+- Morning document type codes: 10 = Price Quote, 305 = Tax Invoice, 320 = Tax Invoice/Receipt, 330 = Credit Note/Refund, 400 = Receipt.
+- Tranzila's `npay` field means the number of **additional** payments, not total payments. Always use `npay = total_installments - 1`.
 - Make.com's date functions use US-style day-of-week numbering (0 = Sunday). Agents often assume Monday = 0 (ISO 8601). Sunday is 0, Saturday is 6 in Make.com.
 - Agents tend to schedule Friday runs at 17:00 or later. Shabbat can start as early as 16:00 in winter. Use 14:00 as the safe Friday cutoff, or better, use the Hebcal community module for precise times.
 - Hebrew column names in Monday.com should be referenced by column ID, not by the display title. Agents often try to use the Hebrew title directly, which breaks when users rename columns.
 - Make.com filters use a **visual UI** with dropdown operators, not code syntax. There is no `=` vs `==` distinction since you select "equal to" from a dropdown.
 - The Israeli tax year is January-December (same as calendar year), but agents sometimes assume April-March (UK pattern) or October-September (US fiscal year).
-- **Invoice Reform 2026 affects automation, threshold drops June 1, 2026.** Tax invoices over the threshold (10,000 NIS through May 31, 2026, then 5,000 NIS from June 1, 2026) require Tax Authority allocation numbers. Scenarios that create invoices must check the amount and include the allocation number for qualifying documents. Make the threshold a scenario variable, not a hardcoded literal.
+- **Invoice Reform 2026 affects automation, threshold drops June 1, 2026.** Tax invoices over the threshold (10,000 NIS through May 31, 2026, then 5,000 NIS from June 1, 2026) require Tax Authority allocation numbers. Make the threshold a scenario variable, not a hardcoded literal.
 - Monday.com API v1 is maintained only until May 1, 2026. New scenarios must use v2. The Make.com native module defaults to v2.
-- A Make scenario only appears as an MCP tool when it is both **active** AND set to **on-demand** scheduling. Agents often satisfy only one condition. A scheduled or instant-trigger scenario will never show up in the MCP tool list, no matter how the inputs and outputs are configured.
-- MCP scenario-run tools time out at 25s (OAuth) or 40s (token). A bimonthly VAT aggregation scenario can run longer, in which case the call returns an `executionId` instead of the result. Poll with `executions_get` using that ID. Do not treat the timeout as a failure.
+- A Make scenario only appears as an MCP tool when it is both **active** AND set to **on-demand** scheduling. Agents often satisfy only one condition; a scheduled or instant-trigger scenario will never show up in the MCP tool list.
+- MCP scenario-run tools time out at 25s (OAuth) or 40s (token). A longer scenario returns an `executionId` instead of the result, poll with `executions_get` using that ID rather than treating the timeout as a failure.
 
 ## Troubleshooting
 

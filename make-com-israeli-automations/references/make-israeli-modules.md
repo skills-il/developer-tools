@@ -82,7 +82,7 @@ Note: The API domain remains `greeninvoice.co.il` despite the Morning rebrand.
 
 ### Israel Invoice Reform 2026
 
-Since January 2026, invoices exceeding 10,000 NIS require a Tax Authority allocation number (mispar hiktzava). Include the `allocationNumber` field for qualifying documents:
+Tax invoices over the Tax Authority allocation-number threshold require an allocation number (mispar hiktzava). The threshold steps down during 2026: 10,000 NIS from January 1, 2026, then 5,000 NIS from June 1, 2026 (the value in force now). Treat the threshold as a configurable scenario variable, not a hardcoded number, since it is scheduled to keep dropping. Include the `allocationNumber` field for qualifying documents:
 
 ```json
 {
@@ -371,9 +371,11 @@ SMS4Free requires three credentials: `key`, `user`, and `pass`:
 ### Cardcom
 
 **Webhook URL Setup:**
-In the Cardcom dashboard, go to Settings > Notification URL > set your Make.com Custom Webhook URL. Cardcom API v11 supports modern webhook configuration.
+In the Cardcom dashboard, go to Settings > Notification URL > set your Make.com Custom Webhook URL.
 
-**Callback Fields (POST body, form-encoded):**
+Cardcom has two webhook generations. The **current API v11** reports via HTTP POST with a JSON body (success is `ResponseCode` = 0 with `Description`, plus `TranzactionId` and `Amount`; card-owner/token data are nested objects). Verify the exact v11 field names against the official docs at https://secure.cardcom.solutions/Api/v11/Docs before mapping them. The table below is the **legacy LowProfile / Name-to-Value (v10)** field set, which posts form-encoded fields (its redirect IndicatorUrl is a GET). Confirm which generation your terminal uses.
+
+**Legacy LowProfile (v10) callback fields (POST body, form-encoded):**
 
 | Field | Type | Description |
 |---|---|---|

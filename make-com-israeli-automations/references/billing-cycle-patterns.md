@@ -193,13 +193,13 @@ Israeli payroll runs monthly, with several recurring obligations:
 
 | Component | Employer Rate | Employee Rate | Notes |
 |---|---|---|---|
-| Bituach Leumi | 3.55% (up to threshold) / 7.60% (above) | 0.40% / 7.00% | Thresholds change annually |
-| Bituach Briut | 3.35% (up to threshold) / 5.20% (above) | 3.10% / 5.00% | Combined with Bituach Leumi |
-| Pension (mandatory) | 6.5% of salary | 6.0% of salary | Up to insurable salary ceiling |
+| Bituach Leumi (national insurance) | 4.51% (up to threshold) / 7.60% (above) | 1.04% (up to threshold) / 7.00% (above) | 2026: reduced rate up to 7,703 NIS, full rate from there to the 51,910 NIS ceiling |
+| Bituach Briut (health insurance) | N/A (employee only) | 3.23% (up to threshold) / 5.17% (above) | Health insurance is deducted from the employee ONLY, employers pay no health share. Same 7,703 NIS reduced/full threshold |
+| Pension (mandatory) | 6.5% benefits + 6% severance (pitzuim) = 12.5% | 6.0% | Mandatory pension Extension Order: total 18.5% of salary (employee 6% + employer 6.5% benefits + employer 6% severance), up to the insurable ceiling |
 | Education Fund (keren hishtalmut) | 7.5% of salary | 2.5% of salary | Optional, common benefit |
-| Income Tax | N/A | Progressive brackets | Use Shaam calculator |
+| Income Tax | N/A | Progressive brackets | Use the annual income-tax brackets (madregot mas) from the Tax Authority |
 
-Note: Bituach Leumi thresholds and tax brackets change annually. Always verify against the Bituach Leumi and Tax Authority websites for the current year's values.
+Note: these are the 2026 salaried-employee rates (verified against btl.gov.il). Bituach Leumi / Briut rates, the reduced-rate threshold (7,703 NIS in 2026), and the income ceiling (51,910 NIS in 2026) change annually. Always verify against the Bituach Leumi and Tax Authority websites for the current year's values.
 
 ## Shabbat and Holiday Scheduling
 

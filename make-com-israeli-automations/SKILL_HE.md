@@ -297,11 +297,13 @@ https://www.hebcal.com/hebcal?v=1&cfg=json&year=now&month=now&maj=on&geo=pos&lat
 
 **Webhook של Cardcom**
 
-Cardcom שולח בקשות POST ל-webhook URL שלכם אחרי אירועי תשלום:
+ל-Cardcom יש שני דורות של webhook, ודאו באיזה מהם הטרמינל שלכם משתמש לפני מיפוי השדות, כי שמות השדות שונים:
+- **API v11 (הנוכחי)**: שולח גוף JSON ב-POST ל-Notify URL. ההצלחה היא `ResponseCode` = 0 (יחד עם `Description`), לצד `TranzactionId` ו-`Amount`; נתוני בעל הכרטיס והטוקן יושבים באובייקטים מקוננים. אמתו את שמות השדות המדויקים מול התיעוד הרשמי של v11 בכתובת `https://secure.cardcom.solutions/Api/v11/Docs` לפני שתסתמכו עליהם, אל תניחו שהשמות הישנים שלמטה תקפים.
+- **LowProfile / Name-to-Value ישן (v10)**: הזרימה הישנה שולחת שדות form-encoded (וה-IndicatorUrl בהפניה הוא GET). הטבלה שלמטה היא ערכת השדות הישנה של v10.
 
 1. צרו טריגר Custom Webhook ב-Make.com
-2. הגדירו את "Notify URL" של Cardcom ל-URL של ה-webhook ב-Make.com (Cardcom API v11 תומך בהגדרת webhooks מודרנית)
-3. שדות עיקריים ב-callback של Cardcom:
+2. הגדירו את "Notify URL" של Cardcom ל-URL של ה-webhook ב-Make.com
+3. שדות ה-callback של LowProfile (v10) הישן:
 
 | שדה | תיאור | דוגמה |
 |---|---|---|
