@@ -19,7 +19,7 @@ Run `npx remotion render` with no composition id to get an interactive picker.
 
 Common flags (verify against https://www.remotion.dev/docs/cli/render for the version you use):
 
-- `--codec` -- output codec: `h264` (default), `h265`, `vp8`, `vp9`, `av1`, `prores`, plus audio-only `mp3`, `aac`, `wav`.
+- `--codec` -- output codec: `h264` (default), `h265`, `vp8`, `vp9`, `av1`, `prores`, `h264-mkv`, image-sequence `png`, plus audio-only `mp3`, `aac`, `wav`.
 - `--concurrency` -- how many frames render in parallel. Higher uses more CPU/RAM; tune it down on memory-constrained machines, up on many-core machines.
 - `--scale` -- scales output frames by the factor passed (greater than 0, up to 16, default 1). Use `--scale=2` for a 4K render of a 1080p composition; use a small value like `--scale=0.25` for a fast low-res preview render.
 - `--frames` -- render only a frame range instead of the whole composition.
@@ -48,6 +48,6 @@ Rendering, in Studio or in the cloud, is covered by the Remotion license. Remoti
 
 - Lower `--concurrency` if a render runs out of memory; raise it on many-core machines for faster renders.
 - `--scale` below 1 gives a fast draft render; above 1 gives a higher-resolution master at higher cost.
-- Prefer `<OffthreadVideo>` over `<Video>` for embedded video during rendering. `<OffthreadVideo>` extracts frames off the main thread and renders them deterministically; `<Video>` can drop or duplicate frames during export.
+- For embedded video, prefer the new `<Video>` from `@remotion/media` -- it extracts the exact frame off the main thread via Mediabunny and is frame-exact during rendering, so it is the current recommended tag. The old "prefer `<OffthreadVideo>` over `<Video>`" advice applies only to the LEGACY `<Video>` from the `remotion` package, which can drop or duplicate frames during export; `<OffthreadVideo>` was the deterministic alternative to that legacy tag.
 - Keep `calculateMetadata` cheap and lazy. It runs before every render, so avoid heavy synchronous work; fetch only what is needed to compute duration, dimensions, and props.
 - A single still or low-`--scale` render is the cheapest way to sanity-check layout before committing to a full render.

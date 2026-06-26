@@ -35,9 +35,9 @@ import fs from "fs";
 const to = path.join(process.cwd(), "whisper.cpp");
 
 // whisper.cpp 1.5.5 is the documented minimum; pin to a current release.
-// As of 2026 the whisper.cpp project is on the 1.8.x line (latest v1.8.4).
+// As of 2026 the whisper.cpp project is on the 1.9.x line (latest v1.9.1).
 // Check https://github.com/ggml-org/whisper.cpp/releases for the latest tag.
-const WHISPER_CPP_VERSION = "1.8.4";
+const WHISPER_CPP_VERSION = "1.9.1";
 
 await installWhisperCpp({
   to,

@@ -177,7 +177,7 @@ Ready-to-use TSX component examples referenced by the rule files: `charts-bar-ch
 
 10. **Remotion is not unconditionally free.** It is free for individuals, non-profits, and for-profit organizations with 3 or fewer employees. Organizations of 4 or more employees must buy a paid Company License from remotion.pro. This applies to using Remotion at all (Studio, rendering, CI), not just to a specific feature. Check https://www.remotion.dev/docs/license and the bundled `LICENSE` file before shipping a commercial project.
 
-11. **Tune render performance, do not just accept defaults.** Lower `--concurrency` if a render runs out of memory; raise it on many-core machines for faster renders. Use `--scale` below 1 for fast draft renders and above 1 for high-resolution masters. Prefer `<OffthreadVideo>` over `<Video>` for embedded video during rendering (it extracts frames deterministically off the main thread). Keep `calculateMetadata` cheap and lazy since it runs before every render. See `rules/rendering.md`.
+11. **Tune render performance, do not just accept defaults.** Lower `--concurrency` if a render runs out of memory; raise it on many-core machines for faster renders. Use `--scale` below 1 for fast draft renders and above 1 for high-resolution masters. For embedded video, prefer the new `<Video>` from `@remotion/media` (frame-exact, off the main thread via Mediabunny); the older "prefer `<OffthreadVideo>` over `<Video>`" advice applies only to the legacy `<Video>` from the `remotion` package. Keep `calculateMetadata` cheap and lazy since it runs before every render. See `rules/rendering.md`.
 
 ## Reference Links
 

@@ -15,6 +15,8 @@ By default this guide uses **ElevenLabs** as the TTS provider (`ELEVENLABS_API_K
 
 If the user has not specified a TTS provider, recommend ElevenLabs and ask for their API key.
 
+For voiceover (which renders ahead of time, not live), `eleven_multilingual_v2` is the safe default and supports Hebrew. If you need broader language coverage or more expressive delivery, the newer `eleven_v3` model covers 70+ languages, but it is a non-realtime model -- use it for pre-rendered voiceover, not for live/conversational audio (ElevenLabs recommends the Flash or `eleven_multilingual_v2` models for real-time).
+
 Ensure the environment variable is available when running the generation script:
 
 ```bash

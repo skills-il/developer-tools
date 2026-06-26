@@ -1,0 +1,13 @@
+{
+  "cycles": [
+    {
+      "version": "1.7.1",
+      "date": "2026-06-25",
+      "lessons": [
+        "Remotion 4.1.0-alpha exists; watch for 4.1 stable next cycle.",
+        "ElevenLabs v3 (74 langs, non-realtime) as broader-language voiceover option - expand next cycle.",
+        "Re-pin whisper.cpp each cycle (fast-moving)."
+      ]
+    }
+  ]
+}
