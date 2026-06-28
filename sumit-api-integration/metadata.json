@@ -1,0 +1,26 @@
+{
+  "author": "SHLOMO NAHON",
+  "version": "1.0.0",
+  "category": "developer-tools",
+  "tags": {
+    "he": ["SUMIT", "API", "חשבוניות", "סליקה", "ישראל"],
+    "en": ["SUMIT", "API", "invoicing", "payments", "israel"]
+  },
+  "display_name": {
+    "he": "אינטגרציית SUMIT API",
+    "en": "SUMIT API Integration"
+  },
+  "display_description": {
+    "he": "חיבור ה-API של SUMIT (OfficeGuy) לאפליקציות: הפקת חשבוניות וקבלות, סליקת אשראי, הוראות קבע, קליטת הוצאות, שאיבת דוחות ו-webhooks לעסקים בישראל.",
+    "en": "Integrate the SUMIT (OfficeGuy) REST API: invoicing, receipts, card charging, recurring billing, expense capture, data retrieval, and webhooks for Israeli businesses."
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "gemini-cli"
+  ]
+}
