@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "hyperframes-best-practices",
+  "generated_at": "2026-06-28T23:30:00Z",
+  "claims": [
+    {
+      "claim_id": "gsap-version-3-15-0",
+      "claim": "GSAP latest stable v3 is 3.15.0 (published 2026-04-13), loaded via jsDelivr CDN at https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js. All former paid Club GreenSock plugins are now free for commercial use.",
+      "source_url": "https://registry.npmjs.org/gsap/latest",
+      "raw_snippet": "\"version\":\"3.15.0\" https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["SKILL.md", "references/transitions/catalog.md"]
+    },
+    {
+      "claim_id": "gsap-docs-v3",
+      "claim": "Official GSAP v3 documentation",
+      "source_url": "https://gsap.com/docs/v3/",
+      "raw_snippet": "https://gsap.com/docs/v3/",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["SKILL.md"]
+    },
+    {
+      "claim_id": "hyperframes-repo",
+      "claim": "HyperFrames is an open-source HeyGen project (public repo, default branch main, latest release v0.7.x)",
+      "source_url": "https://github.com/heygen-com/hyperframes",
+      "raw_snippet": "https://github.com/heygen-com/hyperframes",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "hyperframes-font-logic",
+      "claim": "HyperFrames compiler deterministic font resolution logic (canonical font list, Google Fonts fallback, cache path)",
+      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/packages/producer/src/services/deterministicFonts.ts",
+      "raw_snippet": "https://github.com/heygen-com/hyperframes/blob/main/packages/producer/src/services/deterministicFonts.ts",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "kokoro-no-hebrew-8-langs",
+      "claim": "The local Kokoro-82M TTS fallback supports 8 language codes (en-us, en-gb, es, fr-fr, hi, it, pt-br, ja, zh) and does NOT support Hebrew",
+      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-media/references/tts.md",
+      "raw_snippet": "Valid `--lang` codes (only needed to override the voice's auto-detected language): `en-us`, `en-gb`, `es`, `fr-fr`, `hi`, `it`, `pt-br`, `ja`, `zh`.",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "hyperframes-tts-providers",
+      "claim": "hyperframes tts routes to HeyGen (Starfish) or ElevenLabs via env keys ($HEYGEN_API_KEY / $ELEVENLABS_API_KEY) and falls back to local Kokoro; ElevenLabs has Hebrew voices",
+      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-media/references/tts.md",
+      "raw_snippet": "ElevenLabs        | `$ELEVENLABS_API_KEY`",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "hyperframes-render-command",
+      "claim": "npx hyperframes render is the CLI command that encodes the composition HTML to MP4 (distinct from lint/validate which check the HTML)",
+      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/SKILL.md",
+      "raw_snippet": "init, lint, validate, inspect, preview, render, publish, doctor",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["SKILL.md"]
+    },
+    {
+      "claim_id": "groq-whisper-endpoint",
+      "claim": "Groq Whisper transcription endpoint, current model whisper-large-v3-turbo",
+      "source_url": "https://console.groq.com/docs/speech-to-text",
+      "raw_snippet": "https://api.groq.com/openai/v1/audio/transcriptions",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["references/transcript-guide.md"]
+    },
+    {
+      "claim_id": "openai-whisper-endpoint",
+      "claim": "OpenAI audio transcription endpoint with whisper-1 model",
+      "source_url": "https://developers.openai.com/api/docs/guides/speech-to-text",
+      "raw_snippet": "https://api.openai.com/v1/audio/transcriptions",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["references/transcript-guide.md"]
+    },
+    {
+      "claim_id": "hyperframes-quickstart",
+      "claim": "HyperFrames CLI quickstart (requires Node 22+ and FFmpeg)",
+      "source_url": "https://hyperframes.heygen.com/quickstart",
+      "raw_snippet": "https://hyperframes.heygen.com/quickstart Node 22",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "hebrew-google-fonts",
+      "claim": "Hebrew fonts Heebo, Rubik, Assistant available via Google Fonts Hebrew subset and the fonts metadata + css2 endpoints",
+      "source_url": "https://fonts.google.com/?subset=hebrew",
+      "raw_snippet": "Heebo https://fonts.google.com/metadata/fonts https://fonts.googleapis.com/css2?family=Heebo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "metadata.json", "references/typography.md"]
+    },
+    {
+      "claim_id": "mdn-unicode-bidi",
+      "claim": "MDN reference for CSS unicode-bidi / bidirectional text handling",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-bidi",
+      "raw_snippet": "https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-bidi",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["SKILL.md"]
+    },
+    {
+      "claim_id": "internal-design-and-example-values",
+      "claim": "Self-referential design-system and illustrative example values internal to this skill, NOT external regulatory/financial claims. Transition/animation conventions: 35% overlay opacity, 60-70% primary-transition share, 90% burn fade-in point, 30-70% breathe phase, and stylistic values 3%, 6%, 8%, 10%, 20%, 30%, 50%, 70%, 80%, 100% used for opacity/scale/contrast/timing. Bidi-wrapping teaching examples: <bdi>15%</bdi>, <bdi>199</bdi> (₪199) demonstrate isolating Latin digit/currency runs inside Hebrew text. Code references: the /marker-highlight and /hyperframes-cli HyperFrames sub-skill names and the /tmp/fontquery.py helper script path.",
+      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-creative/references/house-style.md",
+      "raw_snippet": "3% 6% 8% 10% 15% 20% 30% 35% 50% 60-70% 70% 80% 90% 100% 30-70% 199 /marker-highlight /hyperframes-cli /tmp/fontquery.py",
+      "fetched_at": "2026-06-28T23:30:00Z",
+      "appears_in": ["references/transitions.md", "references/transitions/catalog.md", "references/motion-principles.md", "references/dynamic-techniques.md", "references/typography.md", "SKILL.md", "SKILL_HE.md"]
+    }
+  ]
+}

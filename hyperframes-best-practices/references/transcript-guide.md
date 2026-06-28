@@ -131,7 +131,7 @@ npx hyperframes transcribe transcript-openai.json
 ```bash
 curl https://api.groq.com/openai/v1/audio/transcriptions \
   -H "Authorization: Bearer $GROQ_API_KEY" \
-  -F file=@audio.mp3 -F model=whisper-large-v3 \
+  -F file=@audio.mp3 -F model=whisper-large-v3-turbo \
   -F response_format=verbose_json \
   -F "timestamp_granularities[]=word" \
   -o transcript-groq.json

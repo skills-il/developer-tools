@@ -6,13 +6,13 @@ license: Apache-2.0
 
 # HyperFrames, שיטות עבודה מומלצות
 
-> עיבוד של סקיל HyperFrames גרסה 1.0.x מ-[heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) (Apache-2.0). שכבת העברית וה-RTL נוספה על ידי [skills-il](https://agentskills.co.il).
+> עיבוד של סקיל HyperFrames מ-[heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) (Apache-2.0). שכבת העברית וה-RTL נוספה על ידי [skills-il](https://agentskills.co.il).
 
 ב-HyperFrames, ה-HTML הוא מה שקובע איך הוידאו נראה. קומפוזיציה זה פשוט קובץ HTML עם מאפייני `data-*` לתזמון, Timeline של GSAP לאנימציה, ו-CSS לעיצוב. המנוע לוקח מפה, דואג להצגת הקליפים, ניגון המדיה והסנכרון של ה-Timeline.
 
 ## בעיה
 
-שלוש בעיות עיקריות מחכות למי שבונה סרטון בעברית ב-HyperFrames. ראשית, טעינת פונטים עבריים (Heebo, Rubik, Assistant) עובדת מצוין, אבל רק אם כותבים את זה נכון, בלי `<link>` או `@import` כמו שרוב האנשים רגילים. שנית, `dir="rtl"` לא מתפשט לבד לכל המקומות הנכונים, ו-GSAP לא הופך כיווני אנימציה בשבילכם. שלישית, הקריינות המובנית של HyperFrames (Kokoro-82M) תומכת ב-8 שפות בלבד (en-us, en-gb, es, fr-fr, hi, it, pt-br, ja, zh), ועברית לא ברשימה, אז קריינות עברית חייבת לבוא משירות חיצוני. הסקיל הזה מרכז את כל הפתרונות.
+שלוש בעיות עיקריות מחכות למי שבונה סרטון בעברית ב-HyperFrames. ראשית, טעינת פונטים עבריים (Heebo, Rubik, Assistant) עובדת מצוין, אבל רק אם כותבים את זה נכון, בלי `<link>` או `@import` כמו שרוב האנשים רגילים. שנית, `dir="rtl"` לא מתפשט לבד לכל המקומות הנכונים, ו-GSAP לא הופך כיווני אנימציה בשבילכם. שלישית, הקריינות המובנית של HyperFrames (Kokoro-82M) תומכת ב-8 שפות בלבד (en-us, en-gb, es, fr-fr, hi, it, pt-br, ja, zh), ועברית לא ברשימה, אז קריינות עברית חייבת לבוא מספק TTS בענן: או בהפניית `hyperframes tts` ל-ElevenLabs בעזרת `$ELEVENLABS_API_KEY`, או בהפקת הקובץ בשירות חיצוני וטעינתו כאלמנט `<audio>`. הסקיל הזה מרכז את כל הפתרונות.
 
 ## עברית ו-RTL
 
@@ -76,8 +76,8 @@ license: Apache-2.0
 אלו הטעויות הספציפיות של עבודה בעברית. המלכודות הכלליות של HyperFrames (ראו ה-upstream) חלות גם הן.
 
 - **לא להוסיף `<link>` של Google Fonts ולא `@import` ב-CSS לפונטים עבריים.** המהדר של HyperFrames כבר מוריד את Google Fonts מצד השרת דרך `fetchGoogleFont()` (בקובץ `packages/producer/src/services/deterministicFonts.ts`), שומר את ה-WOFF2 ב-`~/.cache/hyperframes/fonts/<slug>/`, ומטמיע אותו כ-base64 data URI ישירות ב-HTML הסופי. stylesheet חיצוני שובר דטרמיניסטיות (פתאום יש תלות ברשת ברנדר) וגם כופל את הטעינה. פשוט כתבו `font-family: 'Heebo', sans-serif;` וזהו.
-- **לא להיעזר ב-`hyperframes tts` המובנה לעברית.** Kokoro-82M תומך בדיוק ב-8 שפות: `a`=אנגלית אמריקאית, `b`=אנגלית בריטית, `e`=ספרדית, `f`=צרפתית, `h`=הינדי, `i`=איטלקית, `j`=יפנית, `p`=פורטוגזית ברזילאית, `z`=מנדרינית. האות הראשונה של ה-voice ID קובעת את השפה. עברית לא ברשימה. צריך לייצר את הקריינות במקום חיצוני (ElevenLabs, OpenAI TTS, Google Cloud TTS עם קולות `he-IL-*`) ולהטעין את קובץ ה-WAV/MP3 כאלמנט `<audio>` רגיל בקומפוזיציה.
-- **לא להשתמש במודלי `.en` של Whisper על אודיו בעברית.** גרסאות `.en` **מתרגמות** כל שפה שהיא לא אנגלית, לאנגלית, במקום לתמלל. לכתוביות עברית תריצו `npx hyperframes transcribe audio.wav --model small --language he` (או `medium` / `large-v3` כשהאודיו רועש יותר). הסיומת `.en` נכונה רק כשהמשתמש אמר במפורש שהאודיו באנגלית.
+- **לא להיעזר ב-`hyperframes tts` המובנה לעברית.** Kokoro-82M תומך בדיוק ב-8 שפות: `a`=אנגלית אמריקאית, `b`=אנגלית בריטית, `e`=ספרדית, `f`=צרפתית, `h`=הינדי, `i`=איטלקית, `j`=יפנית, `p`=פורטוגזית ברזילאית, `z`=מנדרינית. האות הראשונה של ה-voice ID קובעת את השפה. עברית לא ברשימה, אז ה-fallback המקומי לא יכול להקריא עברית. שתי דרכים: או להגדיר `$ELEVENLABS_API_KEY` כך ש-`hyperframes tts` ינתב ל-ElevenLabs (שיש לו קולות עברית) במקום ל-Kokoro, אם בניית ה-CLI שלכם תומכת בספקי ענן; או לייצר את ה-WAV/MP3 בשירות חיצוני (ElevenLabs, OpenAI TTS, Google Cloud TTS עם קולות `he-IL-*`) ולהטעין כאלמנט `<audio>` רגיל. ה-`hyperframes tts` המפורסם עשוי לסנתז מקומית עם Kokoro בלבד, אז בדקו מול הגרסה שמותקנת אצלכם.
+- **לא להשתמש במודלי `.en` של Whisper על אודיו בעברית.** גרסאות `.en` **מתרגמות** כל שפה שהיא לא אנגלית, לאנגלית, במקום לתמלל. לכתוביות עברית תריצו `npx hyperframes transcribe audio.wav --model medium --language he` (המודל `small` חלש לעברית; עלו ל-`large-v3` כשהאודיו רועש יותר). הסיומת `.en` נכונה רק כשהמשתמש אמר במפורש שהאודיו באנגלית.
 - **`dir="rtl"` לא נרשם לבד.** גם אם הקומפוזיציה ברירת המחדל שלה RTL, תת-קומפוזיציות קובעות הקשר כיווני בעצמן. גם tweens של GSAP לא הופכים את הכיוון אוטומטית. כותרת עם `gsap.from({x: -80})` נכנסת משמאל ב-LTR וב-RTL כאחד. לעברית, הפכו לערך חיובי `x: 80` כדי שהכותרת תיכנס מצד ימין, בהתאם לכיוון הקריאה.
 - **שמות מותג באנגלית צריכים `<bdi>` או `unicode-bidi: isolate`.** בלי בידוד, האלגוריתם הדו-כיווני של Unicode מסדר מחדש את ה-runs ולעתים ממקם פיסוק בצד הלא נכון, או הופך את המותג ויזואלית. פשוט עוטפים: `הצטרפו ל־<bdi>HyperFrames</bdi> עכשיו`.
 
@@ -86,7 +86,7 @@ license: Apache-2.0
 הכלל של `<bdi>` למעלה מכסה שמות מותג. קומפוזיציות עברית עם כיוון מעורב צריכות עוד שלושה הרגלי bidi:
 
 - **שבירת שורות לכותרות עברית ארוכות.** עברית לא עוברת מיקוף. כותרת עברית ארוכה שגולשת חייבת להישבר בגבולות מילים, לעולם לא באמצע מילה. הגדירו `max-width` כדי שהיא תישבר באופן טבעי, והוסיפו `word-break: keep-all` (או `overflow-wrap: normal`) כדי שהמהדר לא ישבור בתוך מילה עברית. אל תשתמשו ב-`<br>` כדי לכפות שבירה. לכותרות תצוגה שבהן כל מילה בכוונה בשורה משלה, תנו לכל מילה אלמנט נפרד.
-- **ספרות ואחוזים בתוך runs של RTL.** ספרות לטיניות (שנים, אחוזים, מחירים) שמוטמעות במשפט עברי הן באג bidi נפוץ: `2025` ליד מילה עברית יכול להתרנדר כ-`5202` או לקפוץ לצד הלא נכון. עטפו כל רצף ספרות ב-`<bdi>` או ב-`⁦...⁩` (LTR isolate): `בשנת <bdi>2025</bdi>`, `<bdi>15%</bdi> הנחה`, `<bdi>₪199</bdi>`. ככה סימן המטבע נשאר צמוד למספר.
+- **ספרות עם סימנים צמודים בתוך runs של RTL.** רצף ספרות בודד מטופל נכון על ידי האלגוריתם הדו-כיווני של Unicode: `2025` ליד מילה עברית נשאר משמאל-לימין בתוך פסקת RTL בעצמו, הוא לא מתהפך ל-`5202`, אז מספר שלם פשוט לא צריך עטיפה. הסכנה האמיתית היא ספרה שנוגעת בסימן, בטווח, או באסימון לטיני: סימן אחוז, סימן מטבע, או מקף-טווח יכולים להתנתק ולנחות בצד הלא נכון. עטפו את אלה ב-`<bdi>` או ב-`⁦...⁩` (LTR isolate): `<bdi>15%</bdi> הנחה`, `<bdi>₪199</bdi>`, `<bdi>10-20</bdi>`. ככה הסימן נשאר צמוד למספר. ראו references/hebrew-rtl.md.
 - **שיקוף סימני פיסוק.** סוגריים, סוגריים מרובעים ומרכאות הם תווים משוקפים: `(` הופך ויזואלית ל-`)` בתוך run של RTL. בכתוביות ובפסקאות עברית תנו לדפדפן לשקף אותם בזה שתשמרו את הטקסט בתוך קונטיינר `dir="rtl"` תקין. אל תחליפו ידנית `(` ו-`)` כדי "לתקן" את זה, וכשבתוך הסוגריים יש תוכן LTR (מותג, URL, מספר) עטפו את התוכן הפנימי ב-`<bdi>` כך שרק ה-run הפנימי יהיה LTR והסוגריים יישארו משוקפים נכון.
 
 ## פתרון בעיות
@@ -113,8 +113,8 @@ tweens של `x:` ב-GSAP לא מתהפכים אוטומטית ל-RTL. `gsap.from
 | HyperFrames GitHub | https://github.com/heygen-com/hyperframes | ה-repo המקורי, issues, releases |
 | HyperFrames docs | https://hyperframes.heygen.com/quickstart | ה-CLI, דרישות Node 22+ ו-FFmpeg |
 | לוגיקת הפונטים של המהדר | https://github.com/heygen-com/hyperframes/blob/main/packages/producer/src/services/deterministicFonts.ts | רשימת הפונטים הקנוניים, ה-fallback ל-Google Fonts, נתיב ה-cache |
-| קולות Kokoro TTS | https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/references/narration.md | קולות Kokoro, 8 שפות, בלי עברית |
-| מדריך מודלים של Whisper | https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/references/transcript-guide.md | `.en` מול רב-לשוני, הדגל `--language` |
+| קולות Kokoro TTS | https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-media/references/tts.md | קולות Kokoro, 8 שפות, בלי עברית |
+| מדריך מודלים של Whisper | https://github.com/skills-il/developer-tools/blob/master/hyperframes-best-practices/references/transcript-guide.md | `.en` מול רב-לשוני, הדגל `--language` |
 | Google Fonts עם תמיכה בעברית | https://fonts.google.com/?subset=hebrew | Heebo, Rubik, Assistant, Alef, Frank Ruhl Libre, Noto Sans Hebrew |
 | מפרט unicode-bidi | https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-bidi | `isolate`, `<bdi>`, טקסט דו-כיווני |
 
