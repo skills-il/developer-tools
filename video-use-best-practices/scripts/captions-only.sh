@@ -8,7 +8,7 @@
 #   captions-only.sh <video.mp4> [options]
 #
 # Options:
-#   --strip-fillers       Remove ALWAYS-FILLER tokens (אה, אהה, אם, אממ...) by
+#   --strip-fillers       Remove ALWAYS-FILLER tokens (אֶה, אה, אֶמ, אממ...) by
 #                         omitting them from the SRT. Speech timing preserved
 #                         (no audio cuts, just words you don't see).
 #   --output PATH         Output path (default: <video>.captioned.<ext>)
@@ -40,7 +40,7 @@ VIDEO=""
 OUTPUT=""
 STRIP_FILLERS=0
 FONT="Heebo"
-# Default FontSize is in absolute pixels (good for 720p); bump for higher resolutions.
+# Default FontSize is in absolute pixels, 52 suits ~1080p; lower to ~26-36 for 720p, raise to 56-72 for 4K.
 FONTSIZE=52
 FFMPEG="ffmpeg"
 KEEP_WORK=0
@@ -276,7 +276,9 @@ for w in words:
 if clipped > 0:
     print(f"  Clipped {clipped} pathologically long word duration(s) at {MAX_WORD_DUR}s (Scribe artifact)")
 
-ALWAYS_FILLER = {"אֶה","אה","אם","אֶמ","אממ","אמממ","אהמ","המ","ממ"}
+# NOTE: do NOT add bare "אם" here, it is the everyday word "if/whether", not a hesitation.
+# The "umm" hesitation is the separate forms אֶמ / אממ / אמממ.
+ALWAYS_FILLER = {"אֶה","אה","אֶמ","אממ","אמממ","אהמ","המ","ממ"}
 
 chunks = []
 current = []

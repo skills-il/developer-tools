@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "video-use-best-practices",
+  "generated_at": "2026-06-29T00:15:00Z",
+  "claims": [
+    {
+      "claim_id": "scribe-hebrew-wer",
+      "claim": "ElevenLabs Scribe achieves ~15.2% WER on Hebrew (FLEURS) vs Whisper Large v3 at ~33%; the skill cites ~15% and ~33%.",
+      "source_url": "https://elevenlabs.io/speech-to-text/hebrew",
+      "raw_snippet": "Scribe Hebrew WER 15.2% Whisper Large v3 32.9% 33% 15%",
+      "fetched_at": "2026-06-29T00:15:00Z",
+      "appears_in": ["SKILL.md", "references/hebrew-filler-words.md"]
+    },
+    {
+      "claim_id": "scribe-pricing-cut-2026",
+      "claim": "ElevenLabs cut Scribe pricing by ~40% in March 2026; the ~$0.40/hr figures are conservative upper bounds. Current model is Scribe v2 (January 2026).",
+      "source_url": "https://elevenlabs.io/pricing",
+      "raw_snippet": "Scribe pricing 40% lower March 2026; Scribe v2",
+      "fetched_at": "2026-06-29T00:15:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+    },
+    {
+      "claim_id": "elevenlabs-free-tier-credits",
+      "claim": "ElevenLabs free tier is 10,000 credits/month; Speech-to-Text costs ~330 credits per minute of audio, so the free tier covers ~30 minutes of transcription/month (not per-character, not per-hour).",
+      "source_url": "https://elevenlabs.io/pricing",
+      "raw_snippet": "10,000 credits per month; speech to text 330 credits per minute",
+      "fetched_at": "2026-06-29T00:15:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/quick-test.md", "references/domain-checklist.md"]
+    },
+    {
+      "claim_id": "scribe-word-types-no-verbatim",
+      "claim": "Scribe word objects expose type values word/spacing/audio_event only (no filler tag in any language); no_verbatim (scribe_v2 only) is destructive; tag_audio_events tags non-speech audio.",
+      "source_url": "https://github.com/elevenlabs/skills/blob/main/speech-to-text/references/transcription-options.md",
+      "raw_snippet": "type word spacing audio_event; no_verbatim scribe_v2 removes filler words; tag_audio_events",
+      "fetched_at": "2026-06-29T00:15:00Z",
+      "appears_in": ["SKILL.md"]
+    },
+    {
+      "claim_id": "bidi-preshape-libass",
+      "claim": "On macOS ffmpeg/libass builds, libass does not reliably apply BiDi reordering for SRT even when libfribidi is linked; the fix is to pre-shape Hebrew with python-bidi (get_display) before rendering. libass force_style and the subtitles= fontsdir= parameter are real; Helvetica has no Hebrew glyphs.",
+      "source_url": "https://ffmpeg.org/ffmpeg-filters.html",
+      "raw_snippet": "subtitles filter force_style fontsdir; python-bidi get_display; libass BiDi",
+      "fetched_at": "2026-06-29T00:15:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/sub-force-style-hebrew.md", "references/macos-ffmpeg-setup.md", "scripts/burn-hebrew-captions.sh"]
+    },
+    {
+      "claim_id": "upstream-and-tooling-urls",
+      "claim": "Upstream tool and reference URLs cited by the skill (all resolve). browser-use/video-use (the upstream tool, 12 hard rules), python-bidi (MeirKriheli), libass ASS guide, Unicode TR9 BiDi, Google Fonts Heebo + Noto Sans Hebrew, ElevenLabs Scribe v1/v2 + pricing + Hebrew benchmark, evermeet static ffmpeg build, and three academic filler-word citations.",
+      "source_url": "https://github.com/browser-use/video-use",
+      "raw_snippet": "https://github.com/browser-use/video-use https://github.com/MeirKriheli/python-bidi https://github.com/libass/libass/wiki/ASS-File-Format-Guide https://www.unicode.org/reports/tr9/ https://fonts.google.com/specimen/Heebo https://fonts.google.com/noto/specimen/Noto+Sans+Hebrew https://elevenlabs.io/blog/introducing-scribe-v2 https://elevenlabs.io/blog/meet-scribe https://elevenlabs.io/pricing https://elevenlabs.io/speech-to-text/hebrew https://github.com/elevenlabs/skills/blob/main/speech-to-text/references/transcription-options.md https://ffmpeg.org/ffmpeg-filters.html https://evermeet.cx/ffmpeg/getrelease/zip https://benjamins.com/catalog/prag.7.2.04mas https://www.researchgate.net/publication/354527243 https://www.academia.edu/47718372",
+      "fetched_at": "2026-06-29T00:15:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/hebrew-filler-words.md", "references/macos-ffmpeg-setup.md"]
+    },
+    {
+      "claim_id": "internal-paths-and-values",
+      "claim": "Internal local file paths and an internal credit-percentage calc, NOT external claims: ffmpeg binary paths and quick-test temp files, and the ~0.5% quick-test credit figure (a 10s clip costs ~55 of 10,000 monthly credits).",
+      "source_url": "https://github.com/browser-use/video-use",
+      "raw_snippet": "/opt/homebrew/bin/ffmpeg /usr/local/bin/ffmpeg /tmp/ffmpeg /tmp/test-he.captioned.mp4 /tmp/test-he.captioned.he.srt 0.5%",
+      "fetched_at": "2026-06-29T00:15:00Z",
+      "appears_in": ["SKILL.md", "references/quick-test.md", "references/macos-ffmpeg-setup.md"]
+    }
+  ]
+}

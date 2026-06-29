@@ -42,4 +42,4 @@ If any of those fail, see Troubleshooting in the main SKILL.md.
 
 ## Why use this instead of real footage
 
-The ElevenLabs free tier is 10,000 characters/month. A 10-minute Hebrew talking-head burns ~7-8K characters, so one real-video test eats nearly the whole month. A 10-second synthetic clip transcribes to ~30 characters, ~0.3% of the monthly quota. Use this for pipeline-correctness validation; save the real-footage quota for production runs.
+The ElevenLabs free tier is 10,000 credits/month, and Speech-to-Text costs ~330 credits per minute of audio (so roughly 30 minutes of transcription per month). A 10-minute Hebrew talking-head uses ~3,300 credits (about a third of the month). A 10-second synthetic clip costs ~55 credits, ~0.5% of the monthly quota. Use this for pipeline-correctness validation; save the real-footage quota for production runs.

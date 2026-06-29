@@ -18,13 +18,14 @@ Pure verbal tics with no semantic content. Safe to cut whenever a better take ex
 |------|------|
 | אֶה | The most common Hebrew filler, equivalent to English "uh" |
 | אה | Bare alef-heh, often Scribe's transcription of the same sound |
-| אם | Single em, equivalent to "umm" |
-| אֶמ | Em with segol mark, same sound |
+| אֶמ | Em with segol mark, the "umm" sound |
 | אממ | Doubled mem, sustained "ummm" |
 | אמממ | Tripled mem, even longer hesitation |
 | אהמ | Combined ah-em |
 | המ | Closed-mouth humming hesitation |
 | ממ | Closed-mouth humming variant (distinct from the affirmative "הממ" used as "mm-hm") |
+
+**Do NOT add bare `אם` to this ALWAYS-FILLER set.** `אם` (alef-mem) is the everyday word "if/whether" (also "mother"); auto-cutting it silently changes caption meaning. The "umm" hesitation is the separate forms `אֶמ` / `אממ` / `אמממ`.
 
 ## CONTEXT-DEPENDENT (flag, do not auto-cut)
 

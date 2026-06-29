@@ -21,9 +21,9 @@ video-use is free; underlying services are paid. Mode determines cost.
 | **A. Captions-only** (`scripts/captions-only.sh`) | Transcribe + burn Hebrew captions on original. No cuts. | Lectures, webinars, podcast videos. | **~$1-3 total** |
 | **B. Full cut** (default video-use flow) | Inventory → strategy → cut → render → self-eval. | Teaser from raw footage; multi-take selection. | **~$25-60** (1hr); **$120-300** (3hr). Scales super-linearly. |
 
-Per-unit: Scribe ~$0.40/hr (paid). Claude tokens depend on mode (above). Local FFmpeg/libass rendering is $0.
+Per-unit: Scribe ~$0.40/hr (paid) is an upper bound, ElevenLabs cut Scribe pricing ~40% in March 2026 (verify at the pricing page); current model is Scribe v2 (Jan 2026). Claude tokens depend on mode. Local FFmpeg/libass rendering is $0.
 
-**Free-tier reality check (the "$1-3" number assumes paid Starter, $5/mo).** ElevenLabs free tier is **10,000 characters/month**, not hours. A 10-minute Hebrew talking-head burns ~7,000-8,000 characters in one transcription. Gap-recovery (see Step 8) re-transcribes the dropped window, which counts again. So on free tier you realistically get **~1 long Hebrew video/month** before the quota wall. If the user is non-technical and "just wants captions on this one lecture", warn them upfront.
+**Free-tier reality check (the "$1-3" assumes paid Starter, $5/mo).** ElevenLabs free tier is **10,000 credits/month**, and Speech-to-Text bills ~330 credits/minute (the per-character figure is for text-to-speech, not STT), so it covers only **~30 minutes of transcription/month**. A 10-minute Hebrew talking-head uses ~3,300 credits; gap-recovery (Step 8) re-transcribes dropped windows, counting again. So free tier yields **two or three short videos/month** before the quota wall. Warn non-technical users upfront.
 
 **Validated test (May 2026, 11:29 source → 75s teaser via Full cut):** Scribe $0.08 + Claude $9.50 = **~$9.60 first pass**, ~$1-3 per iteration.
 
@@ -110,7 +110,7 @@ Apply the Hebrew filler lexicon at `references/hebrew-filler-words.md`. The full
 
 ```
 ALWAYS-FILLER:
-אֶה, אה, אם, אֶמ, אממ, אמממ, אהמ, המ, ממ
+אֶה, אה, אֶמ, אממ, אמממ, אהמ, המ, ממ
 
 CONTEXT-DEPENDENT (flag, don't auto-cut):
 כאילו, יעני, אז, אז ככה, בעצם, טוב, טוב נו, אוקיי, סבבה,
@@ -170,14 +170,14 @@ Then **open each PNG and verify with your own eyes**:
 
 Keep the 3-pass cap from upstream. After 3 failed renders, stop iterating and flag to the user, the problem is environmental (font install, ffmpeg build, missing python-bidi), not editorial.
 
-**An honest example from the field:** during the first validated run of this skill (May 2026), self-eval initially passed because the agent only checked for "no boxes" and didn't compare pixel order to source byte order. The output had perfect Heebo rendering but every Hebrew line was visually reversed because libass skipped BiDi. The fix landed in Step 7 below.
+**Honest example:** the first validated run (May 2026) passed self-eval because the agent only checked for "no boxes", not pixel-vs-source order. Output had perfect Heebo glyphs but every Hebrew line was reversed (libass skipped BiDi). Step 7 fixes it.
 
 ### Step 7: Caption burn-in recipe (the one that actually works on macOS)
 
 The bundled `scripts/burn-hebrew-captions.sh` does this in one command. The recipe is short:
 
 1. **Sanitize the SRT** for Scribe garbage characters (Devanagari `्स` etc. that Scribe occasionally drops mid-Hebrew). Auto-fixes known patterns, warns on unknown ones.
-2. **Feed the SRT directly to libass** via the FFmpeg `subtitles=` filter with explicit `fontsdir=` and `force_style=FontName=Heebo\,FontSize=26\,Bold=1\,Spacing=2\,Encoding=1\,...`. libass + SRT handles Hebrew BiDi correctly out of the box. Do NOT convert to ASS first; do NOT pre-shape with python-bidi (both interfere with libass's native BiDi).
+2. **Pre-shape the Hebrew with python-bidi** (logical to display order), convert to ASS, patch the ASS `Style: Default` line (FontName=Heebo, size, Bold, Spacing, Encoding=1), and burn via the FFmpeg `subtitles=` filter with explicit `fontsdir=` (the style lives in the patched ASS, so no `force_style` is needed). On macOS, libass does NOT reliably reorder SRT BiDi (Hebrew comes out left-to-right in source byte order); pre-shaping with `python-bidi` (`get_display`) makes libass draw what it sees. Do NOT remove the pre-shape step.
 3. **Sample verification frames** (1 per minute, capped at 30).
 
 One-line invocation:
@@ -190,9 +190,9 @@ bash scripts/burn-hebrew-captions.sh \
   --ffmpeg /tmp/ffmpeg
 ```
 
-**Important correction (v1.2.3):** earlier versions of this skill (v1.1.0 through v1.2.2) claimed libass+SRT was silently broken for Hebrew BiDi on macOS and recommended a python-bidi pre-shape + SRT→ASS chain to work around it. **That diagnosis was wrong.** libass+SRT actually handles BiDi correctly. The pre-shape chain was double-reversing back to source byte order, producing the exact symptom (period on right, first word on left) the workaround was meant to fix. Renders produced with v1.1.0-v1.2.2 that look broken will render correctly with v1.2.3+ unchanged.
+**Why (macOS):** `ffmpeg -i master.srt master.ass` alone does not fix BiDi; the python-bidi pre-shape converts logical to display order before libass sees it. Always verify rendered frames by comparing pixel order to source byte order, not just "no boxes" (a line can render with perfect glyphs yet be fully reversed).
 
-**FontSize is in absolute pixels** when using libass+SRT directly (no PlayRes scaling). Defaults: 26 for 720p, 36-42 for 1080p, 56-72 for 4K.
+**FontSize is absolute pixels** (no PlayRes scaling). The script defaults to `FONTSIZE=52` with no auto-scaling, override per resolution (~26-36 720p, 40-52 1080p, 56-72 4K). Note: the script rewrites the input SRT in place (Step 0: strips sentence-end punctuation, char fixes, adds BOM), pass a copy to keep the original.
 
 ### Step 8: Long video, captions-only mode (cheap path for non-editors)
 
@@ -204,7 +204,7 @@ The bundled `scripts/captions-only.sh` collapses the full workflow into one comm
 # Basic: just add captions
 bash scripts/captions-only.sh ~/Movies/my-lecture.mp4
 
-# Add captions AND remove "אה / אהה / אם" filler words from the on-screen text
+# Add captions AND remove "אה / אהה / אממ" filler words from the on-screen text
 # (audio stays untouched, words just won't appear in captions):
 bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 --strip-fillers
 
@@ -282,7 +282,7 @@ video-use is a standalone Claude Code skill and does not require any MCP server.
 | Noto Sans Hebrew | https://fonts.google.com/noto/specimen/Noto+Sans+Hebrew | Hebrew script coverage |
 | Unicode BiDi algorithm | https://www.unicode.org/reports/tr9/ | UAX #9, directional isolation rules for mixed Hebrew+Latin |
 | python-bidi | https://github.com/MeirKriheli/python-bidi | `get_display()` for the macOS BiDi workaround |
-| ElevenLabs Scribe | https://elevenlabs.io/blog/meet-scribe | Multi-language transcription (Hebrew supported via 99-language model) |
+| ElevenLabs Scribe v2 | https://elevenlabs.io/blog/introducing-scribe-v2 | Current Scribe model (v2, January 2026). Multi-language transcription, Hebrew supported. (meet-scribe was the v1 announcement.) |
 | ElevenLabs pricing | https://elevenlabs.io/pricing | Scribe per-hour cost and free tier limits |
 
 ## Bundled Resources
@@ -305,7 +305,7 @@ video-use is a standalone Claude Code skill and does not require any MCP server.
 
 - **Scribe occasionally drops non-Hebrew Unicode characters into Hebrew transcripts.** Most commonly Devanagari (`्` `स`) at the end of words where the speaker's soft `-s` or `-m` ending sounded ambiguous. Classic failure: "סקילים" transcribed as "סקיל्स". These chars render as boxes in the burn. `burn-hebrew-captions.sh` Step 0 auto-fixes the known patterns and warns on unknown ones; extend `auto_fixes` when you find more.
 - **Helvetica is the most common mistake.** The bundled `SUB_FORCE_STYLE` in `render.py` uses `FontName=Helvetica`. Helvetica's Hebrew glyphs do NOT exist in the macOS or Linux Helvetica builds (Apple's "Helvetica" font is Latin-only; Linux usually maps it to a metric-equivalent). libass silently falls back to a tofu box. Always override `FontName` to a known Hebrew font before invoking the caption-burn step.
-- **The python-bidi pre-shape + libass ASS-conversion double-reversal is DELIBERATE, not a bug to fix.** It produces a non-canonical layout where Hebrew characters within each word render in source byte order LTR while word order stays RTL (sometimes called the "VSFilter-era" look). This is the user-validated rendering for this skill, not a workaround for a temporary libass bug. If you read older notes that say "feed SRT directly, don't pre-shape" they describe a *different* rendering target (canonical Hebrew BiDi). Both are technically correct; this skill ships the pre-shape recipe because that's what real users preferred during field validation (May 2026). Do NOT "clean up" the python-bidi step or skip the SRT->ASS conversion , doing so silently flips the entire caption layout and will look broken to anyone who validated the current output.
+- **The python-bidi pre-shape is required on macOS, do NOT skip it or feed a raw SRT.** macOS libass does not reliably apply BiDi reordering to a raw SRT even when libfribidi is linked, so feeding the source SRT directly to `subtitles=` renders Hebrew reversed (characters drawn left-to-right in source byte order, period on the right). Pre-shaping with python-bidi (`get_display`) before the SRT->ASS burn is what makes the on-screen result RTL-correct. Do NOT remove the python-bidi step or feed a raw SRT, either one silently flips the layout back to reversed/broken. Any older note claiming libass handles SRT BiDi without the pre-shape is wrong for macOS.
 - **Homebrew's default ffmpeg lacks libass and fontconfig.** As of 2026-05, a fresh `brew install ffmpeg` produces a binary that cannot burn captions at all. See `references/macos-ffmpeg-setup.md` for the static-build or homebrew-tap fixes.
 - **2-word UPPERCASE chunks do not translate to Hebrew.** Hebrew has no uppercase. Do not try to fake it with `\fnHeebo Bold`, the result looks the same as regular Heebo. The Hebrew kinetic-typography equivalent is bold weight + larger size + tighter line breaks (4-6 Hebrew words per chunk, since Hebrew words are shorter than English on average).
 - **`fontsdir=` is more reliable than fontconfig.** Even when `fc-match Heebo` resolves correctly, the `subtitles` filter sometimes ignores fontconfig and falls back to libass's built-in font, producing the wrong typeface in the burned-in output. Always pass `subtitles=foo.ass:fontsdir=$HOME/Library/Fonts` (or wherever Heebo lives per `fc-list :family=Heebo file`).
@@ -338,8 +338,8 @@ Solution: scan the SRT for non-Hebrew/Latin characters and fix them. `burn-hebre
 ### Captions render as `□□□` boxes
 Cause: libass cannot find a Hebrew font, or ffmpeg lacks libass. Fix: `ffmpeg -version | grep enable-libass` (if empty, see `references/macos-ffmpeg-setup.md`); `fc-list :lang=he` (if empty, run `install-hebrew-fonts.sh`); always pass `fontsdir=$HOME/Library/Fonts` explicitly.
 
-### Captions look "different than expected" , chars within words read LTR not RTL
-Deliberate (see the Gotchas double-reversal note). To switch to canonical Hebrew BiDi: skip the python-bidi pre-shape (Step 1 of `burn-hebrew-captions.sh`) AND skip the SRT->ASS conversion (Step 2), feeding the source SRT directly to `subtitles=`. Both layouts render valid Hebrew, pick by audience preference.
+### Captions render reversed (period on the right, words/chars in source byte order)
+This means the python-bidi pre-shape did not run. macOS libass does not reorder a raw SRT (see the Gotchas note), so the pre-shape is mandatory, do NOT feed a raw SRT to `subtitles=`. Re-run `burn-hebrew-captions.sh` (which performs the pre-shape in Step 1) and confirm python-bidi is installed. Verify by comparing rendered pixel order to source byte order, not just "no boxes".
 
 ### Captions have no periods or question marks
 Default behavior since v1.2.6: `burn-hebrew-captions.sh` Step 0 strips trailing `.`/`?`/`!` from any caption line containing Hebrew. BBC/Netflix caption style guides recommend this because line breaks and timing already signal end-of-thought. To restore punctuation, comment out the `SENTENCE_END` block in the Step 0 Python heredoc of `burn-hebrew-captions.sh`. Full rationale + alternatives in `references/captions-only-tuning.md`.
