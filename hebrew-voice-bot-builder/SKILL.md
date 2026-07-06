@@ -1,6 +1,6 @@
 ---
 name: hebrew-voice-bot-builder
-description: Build Hebrew voice bots and IVR (Interactive Voice Response) systems with speech-to-text, text-to-speech, and telephony integration for Israeli businesses. Use when user asks to "build a Hebrew voice bot", "create an IVR in Hebrew", "Hebrew speech-to-text", "binui bot koli b'ivrit", "maarechet maane koli", "zihui dibur b'ivrit", or "Twilio Israel". Covers OpenAI Whisper Hebrew, Google Cloud STT/TTS he-IL, Azure Speech Services, Amazon Polly Hebrew, IVR menu design for Sunday-Thursday business hours, voicemail transcription, Hebrew accent handling, and +972 phone integration via Twilio and Vonage. Do NOT use for text-based chatbots (use hebrew-chatbot-builder), Hebrew NLP without voice (use hebrew-nlp-toolkit), or SMS messaging (use israeli-sms-gateway).
+description: Build Hebrew voice bots and IVR (Interactive Voice Response) systems with speech-to-text, text-to-speech, and telephony integration for Israeli businesses. Use when user asks to "build a Hebrew voice bot", "create an IVR in Hebrew", "Hebrew speech-to-text", "binui bot koli b'ivrit", "maarechet maane koli", "zihui dibur b'ivrit", or "Twilio Israel". Covers OpenAI Whisper Hebrew, Google Cloud STT/TTS he-IL, Azure Speech Services, IVR menu design for Sunday-Thursday business hours, voicemail transcription, Hebrew accent handling, and +972 phone integration via Twilio and Vonage. Do NOT use for text-based chatbots (use hebrew-chatbot-builder), Hebrew NLP without voice (use hebrew-nlp-toolkit), or SMS messaging (use israeli-sms-gateway).
 license: MIT
 allowed-tools: Bash(python:*)
 compatibility: Requires API keys for speech services (OpenAI, Google Cloud, Azure, or AWS). Requires Twilio or Vonage account for telephony. Works with Claude Code, Cursor, Windsurf.
@@ -25,10 +25,10 @@ Before building, decide on the voice bot architecture based on the use case:
 
 **Key decisions:**
 - **STT provider**: OpenAI `gpt-4o-transcribe` or `gpt-4o-mini-transcribe` (best Hebrew WER and lower latency than `whisper-1`, available via the OpenAI Realtime API for streaming), `whisper-large-v3-turbo` for self-host, ivrit-ai's Hebrew-tuned variants (`ivrit-ai/whisper-large-v3-turbo-ct2`) for the best open Hebrew WER, Google Cloud STT (low latency), Azure Speech (enterprise features). The legacy `whisper-1` API is still supported but `gpt-4o-transcribe` is the current default for Hebrew.
-- **TTS provider — split by use case**:
-  - **Real-time / streaming (voice agents, IVR, live conversation)**: OpenAI Realtime API (`gpt-4o-realtime`) — native multilingual speech-to-speech including Hebrew, the 2026 default for sub-500ms turn-taking. Inworld TTS-1.5 / Realtime TTS-2 — explicitly lists Hebrew, sub-130ms P90 latency, designed for live conversation. Deepdub Phantom X 3.2 — Israeli company, real-time Hebrew with emotive eTTS, launched March 2026. ElevenLabs `eleven_flash_v2_5` — WebSocket-capable but Hebrew quality is weak, use only when latency dominates over quality.
-  - **Offline / max quality (audiobooks, voicemail playback, batch generation)**: ElevenLabs `eleven_v3` — best Hebrew quality ElevenLabs offers, supports Hebrew (heb) among 70+ languages but **NO WebSocket / streaming API**, REST only. Deepdub Phantom X 3.2 also serves this track with emotional control.
-  - **Fallbacks**: Azure Neural TTS (`he-IL-HilaNeural`, `he-IL-AvriNeural`), Google Cloud TTS Wavenet (`he-IL-Wavenet-A/B`), Amazon Polly Hebrew (Avri only, no neural Hebrew voice as of Apr 2026, verify before relying on it). ElevenLabs Multilingual v2 lists Hebrew in its 29-language table but real-world Hebrew quality is mediocre; Turbo v2.5 was not designed with Hebrew in mind.
+- **TTS provider, split by use case**:
+  - **Real-time / streaming (voice agents, IVR, live conversation)**: OpenAI Realtime API (`gpt-realtime` / `gpt-realtime-1.5`, GA; the older `gpt-4o-realtime-preview` was REMOVED from the API on 2026-05-07, do not use it), native multilingual speech-to-speech including Hebrew over WebRTC/WebSocket/SIP, the 2026 default for sub-500ms turn-taking. Inworld TTS-1.5 / Realtime TTS-2, explicitly lists Hebrew, sub-130ms P90 latency, designed for live conversation. Deepdub Phantom X 3.2, Israeli company, real-time Hebrew with emotive eTTS, launched March 2026. ElevenLabs `eleven_flash_v2_5`, WebSocket-capable but Hebrew quality is weak, use only when latency dominates over quality.
+  - **Offline / max quality (audiobooks, voicemail playback, batch generation)**: ElevenLabs `eleven_v3`, best Hebrew quality ElevenLabs offers, supports Hebrew (heb) among 70+ languages but **NO WebSocket / streaming API**, REST only. Deepdub Phantom X 3.2 also serves this track with emotional control.
+  - **Fallbacks**: Azure Neural TTS (`he-IL-HilaNeural`, `he-IL-AvriNeural`), Google Cloud TTS Wavenet (`he-IL-Wavenet-A/B`). **Amazon Polly does NOT support Hebrew** (no he-IL locale, no Hebrew voice of any engine, the "Avri" voice belongs to Azure, not Polly), so do not route Hebrew through Polly. ElevenLabs Multilingual v2 lists Hebrew in its 29-language table but real-world Hebrew quality is mediocre; Turbo v2.5 was not designed with Hebrew in mind.
 - **Telephony**: Twilio (largest Israeli number inventory), Vonage (competitive pricing for Israel).
 - **Hosting**: Cloud functions for low-volume, dedicated servers for high-volume.
 - **Recording-consent disclosure**: Israeli outbound automated calls must disclose recording at the start of the call (`השיחה מוקלטת`). Privacy Protection Law Amendment 13 (in force Aug 2025) tightens consent requirements for biometric voice data.
@@ -214,28 +214,9 @@ def synthesize_hebrew(text: str, output_path: str, voice_gender: str = "female")
         out.write(response.audio_content)
 ```
 
-#### Amazon Polly Hebrew
+#### Amazon Polly Hebrew: NOT available
 
-Cost-effective for high-volume TTS needs.
-
-```python
-import boto3
-
-def synthesize_hebrew_polly(text: str, output_path: str) -> None:
-    """Convert Hebrew text to speech using Amazon Polly."""
-    polly = boto3.client("polly", region_name="eu-west-1")
-
-    response = polly.synthesize_speech(
-        Text=text,
-        OutputFormat="mp3",
-        VoiceId="Avri",  # Hebrew male standard voice (no neural Hebrew voice exists)
-        Engine="standard",   # Standard engine (neural not available for Hebrew)
-        LanguageCode="he-IL",
-    )
-
-    with open(output_path, "wb") as out:
-        out.write(response["AudioStream"].read())
-```
+Amazon Polly does **not** support Hebrew. There is no `he-IL` locale in Polly's supported-languages list and no Hebrew voice of any engine (standard or neural). The "Avri" voice some guides attribute to Polly is actually the **Azure** voice `he-IL-AvriNeural`, not a Polly voice. For a low-cost cloud TTS fallback in Hebrew, use Google Cloud TTS (`he-IL-Wavenet-A/B`) or Azure Neural TTS below instead of Polly.
 
 #### Azure Neural TTS
 
@@ -775,7 +756,7 @@ Result: Voice bot that correctly transcribes mixed Hebrew-English speech common 
 | Azure AI Speech (Hebrew) | https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support | Hebrew STT/TTS voices, neural voice list |
 | HuggingFace Hebrew models | https://huggingface.co/models?language=he | Open Hebrew ASR/TTS models (ivrit.ai, etc.) |
 | ivrit.ai (Hebrew voice corpus) | https://www.ivrit.ai | Open-source Hebrew speech corpus, pre-trained ASR models |
-| ElevenLabs WebSocket docs | https://elevenlabs.io/docs/developers/websockets | Which models support streaming (v3 does NOT, Flash v2.5 does) |
+| ElevenLabs streaming / WebSocket docs | https://elevenlabs.io/docs/api-reference/streaming | Which models support streaming (v3 does NOT, Flash v2.5 does) |
 | Deepdub (Israeli) | https://deepdub.ai | Phantom X 3.2 real-time AI voice with native Hebrew, emotive eTTS |
 | Inworld TTS | https://inworld.ai/tts | TTS-1.5 (15 languages incl. Hebrew) + Realtime TTS-2 (100+ languages, sub-130ms) |
 
@@ -787,7 +768,7 @@ Solution: Explicitly set the language to "he-IL" (Google/Azure) or `language="he
 
 ### Error: "TTS voice sounds robotic for Hebrew"
 Cause: Using Standard-tier voices instead of Neural/Wavenet voices.
-Solution: Switch to neural voices: Google Wavenet (he-IL-Wavenet-A/B) or Azure Neural (he-IL-HilaNeural). Amazon Polly Hebrew only offers a standard voice (Avri, male) with no neural option. Neural voices are more expensive but significantly more natural.
+Solution: Switch to neural voices: Google Wavenet (he-IL-Wavenet-A/B) or Azure Neural (he-IL-HilaNeural). (Amazon Polly does not support Hebrew at all, so it is not an option.) Neural voices are more expensive but significantly more natural.
 
 ### Error: "IVR menu times out before caller responds"
 Cause: Timeout too short, especially for elderly callers or long Hebrew prompts.

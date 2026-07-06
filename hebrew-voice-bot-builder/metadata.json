@@ -1,6 +1,6 @@
 {
   "author": "skills-il",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "category": "developer-tools",
   "tags": {
     "he": [
@@ -25,8 +25,8 @@
     "en": "Hebrew Voice Bot Builder"
   },
   "display_description": {
-    "he": "בונים בוטים קוליים ומערכות IVR בעברית. מכסה זיהוי דיבור (Whisper, Google, Azure), סינתזת דיבור (Google TTS, Amazon Polly, Azure), עיצוב תפריטי IVR לעסקים ישראליים, תמלול הודעות קוליות, טיפול במבטאים שונים ואינטגרציה טלפונית עם מספרי +972.",
-    "en": "Build Hebrew voice bots and IVR systems with speech-to-text, text-to-speech, and telephony integration for Israeli businesses. Covers OpenAI Whisper Hebrew, Google Cloud STT/TTS, Azure Speech, Amazon Polly, IVR menu design for Sunday-Thursday hours, voicemail transcription, accent handling, and +972 phone integration. Do NOT use for text-based chatbots (use hebrew-chatbot-builder) or Hebrew NLP without voice (use hebrew-nlp-toolkit)."
+    "he": "בונים בוטים קוליים ומערכות IVR בעברית. מכסה זיהוי דיבור (Whisper, Google, Azure), סינתזת דיבור (Google TTS, Azure, ElevenLabs), עיצוב תפריטי IVR לעסקים ישראליים, תמלול הודעות קוליות, טיפול במבטאים שונים ואינטגרציה טלפונית עם מספרי +972.",
+    "en": "Build Hebrew voice bots and IVR systems with speech-to-text, text-to-speech, and telephony integration for Israeli businesses. Covers OpenAI Whisper Hebrew, Google Cloud STT/TTS, Azure Speech, ElevenLabs, IVR menu design for Sunday-Thursday hours, voicemail transcription, accent handling, and +972 phone integration. Do NOT use for text-based chatbots (use hebrew-chatbot-builder) or Hebrew NLP without voice (use hebrew-nlp-toolkit)."
   },
   "supported_agents": [
     "claude-code",

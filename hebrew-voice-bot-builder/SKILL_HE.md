@@ -6,8 +6,8 @@ description: >-
   businesses. Use when user asks to "build a Hebrew voice bot", "create an IVR
   in Hebrew", "Hebrew speech-to-text", "binui bot koli b'ivrit", "maarechet
   maane koli", "zihui dibur b'ivrit", or "Twilio Israel". Covers OpenAI
-  Whisper Hebrew, Google Cloud STT/TTS he-IL, Azure Speech Services, Amazon
-  Polly Hebrew, IVR menu design for Sunday-Thursday business hours, voicemail
+  Whisper Hebrew, Google Cloud STT/TTS he-IL, Azure Speech Services,
+  IVR menu design for Sunday-Thursday business hours, voicemail
   transcription, Hebrew accent handling, and +972 phone integration via Twilio
   and Vonage. Do NOT use for text-based chatbots (use hebrew-chatbot-builder),
   Hebrew NLP without voice (use hebrew-nlp-toolkit), or SMS messaging (use
@@ -36,9 +36,9 @@ license: MIT
 - **ספק STT**: OpenAI Whisper (הדיוק הכי טוב לעברית), Google Cloud STT (זמן תגובה נמוך), Azure Speech (פיצ'רים ארגוניים)
 - **ספק STT**: OpenAI `gpt-4o-transcribe` או `gpt-4o-mini-transcribe` (WER הכי טוב לעברית והשהיה נמוכה יותר מ-`whisper-1`, זמין דרך OpenAI Realtime API לסטרימינג), `whisper-large-v3-turbo` ל-self-host, וריאציות מותאמות-עברית של ivrit-ai (`ivrit-ai/whisper-large-v3-turbo-ct2`) ל-WER הפתוח הטוב ביותר בעברית, Google Cloud STT (השהיה נמוכה), Azure Speech (תכונות ארגוניות). ה-API הישן `whisper-1` עדיין נתמך אבל `gpt-4o-transcribe` הוא ברירת המחדל הנוכחית לעברית.
 - **ספק TTS, פיצול לפי תרחיש שימוש**:
-  - **זמן אמת / streaming (סוכן קולי, IVR, שיחה חיה)**: OpenAI Realtime API (`gpt-4o-realtime`) — speech-to-speech רב-לשוני שתומך בעברית באופן טבעי, ברירת המחדל של 2026 ל-turn-taking של פחות מ-500ms. Inworld TTS-1.5 / Realtime TTS-2 — מציינים תמיכה בעברית במפורש, P90 latency מתחת ל-130ms, תוכנן לשיחה חיה. Deepdub Phantom X 3.2 — חברה ישראלית, עברית בזמן אמת עם eTTS רגשי, יצא במרץ 2026. ElevenLabs `eleven_flash_v2_5` — תומך WebSocket אבל איכות העברית חלשה, להשתמש רק כשהשהיה דומיננטית על איכות.
-  - **Offline / איכות מקסימלית (אודיובוקים, השמעת הודעות, יצירה בבאטץ׳)**: ElevenLabs `eleven_v3` — איכות העברית הכי טובה ש-ElevenLabs מציעה, תומך בעברית בין 70+ שפות, אבל **אין WebSocket / streaming API**, REST בלבד. Deepdub Phantom X 3.2 משרת גם את המסלול הזה עם שליטה ברגש.
-  - **חלופות וגיבוי**: Azure Neural TTS (`he-IL-HilaNeural`, `he-IL-AvriNeural`), Google Cloud TTS Wavenet (`he-IL-Wavenet-A/B`), Amazon Polly Hebrew (Avri בלבד, אין קול עברי neural נכון לאפריל 2026, יש לוודא לפני הסתמכות). ElevenLabs Multilingual v2 רשום בתיעוד כתומך בעברית (אחת מ-29 שפות) אבל איכות העברית בפועל בינונית; Turbo v2.5 לא תוכנן עם עברית בראש.
+  - **זמן אמת / streaming (סוכן קולי, IVR, שיחה חיה)**: OpenAI Realtime API (`gpt-realtime` / `gpt-realtime-1.5`, GA; הגרסה הישנה `gpt-4o-realtime-preview` הוסרה מה-API ב-07.05.2026, אין להשתמש בה), speech-to-speech רב-לשוני שתומך בעברית באופן טבעי דרך WebRTC/WebSocket/SIP, ברירת המחדל של 2026 ל-turn-taking של פחות מ-500ms. Inworld TTS-1.5 / Realtime TTS-2, מציינים תמיכה בעברית במפורש, P90 latency מתחת ל-130ms, תוכנן לשיחה חיה. Deepdub Phantom X 3.2, חברה ישראלית, עברית בזמן אמת עם eTTS רגשי, יצא במרץ 2026. ElevenLabs `eleven_flash_v2_5`, תומך WebSocket אבל איכות העברית חלשה, להשתמש רק כשהשהיה דומיננטית על איכות.
+  - **Offline / איכות מקסימלית (אודיובוקים, השמעת הודעות, יצירה בבאטץ׳)**: ElevenLabs `eleven_v3`, איכות העברית הכי טובה ש-ElevenLabs מציעה, תומך בעברית בין 70+ שפות, אבל **אין WebSocket / streaming API**, REST בלבד. Deepdub Phantom X 3.2 משרת גם את המסלול הזה עם שליטה ברגש.
+  - **חלופות וגיבוי**: Azure Neural TTS (`he-IL-HilaNeural`, `he-IL-AvriNeural`), Google Cloud TTS Wavenet (`he-IL-Wavenet-A/B`). **Amazon Polly אינו תומך בעברית** (אין locale בשם he-IL, אין קול עברי מכל מנוע, הקול "Avri" שייך ל-Azure ולא ל-Polly), לכן אין לנתב עברית דרך Polly. ElevenLabs Multilingual v2 רשום בתיעוד כתומך בעברית (אחת מ-29 שפות) אבל איכות העברית בפועל בינונית; Turbo v2.5 לא תוכנן עם עברית בראש.
 - **טלפוניה**: Twilio (מלאי המספרים הישראלי הגדול ביותר), Vonage (תמחור תחרותי לישראל)
 - **אירוח**: פונקציות ענן לנפח נמוך, שרתים ייעודיים לנפח גבוה
 
@@ -163,28 +163,9 @@ def synthesize_hebrew(text: str, output_path: str, voice_gender: str = "female")
         out.write(response.audio_content)
 ```
 
-#### Amazon Polly Hebrew
+#### Amazon Polly עברית: לא זמין
 
-משתלם מבחינת עלות לנפחי TTS גבוהים.
-
-```python
-import boto3
-
-def synthesize_hebrew_polly(text: str, output_path: str) -> None:
-    """המרת טקסט עברי לדיבור באמצעות Amazon Polly."""
-    polly = boto3.client("polly", region_name="eu-west-1")
-
-    response = polly.synthesize_speech(
-        Text=text,
-        OutputFormat="mp3",
-        VoiceId="Avri",   # קול גברי עברי סטנדרטי (אין קול neural בעברית)
-        Engine="standard",  # מנוע סטנדרטי (neural לא זמין לעברית)
-        LanguageCode="he-IL",
-    )
-
-    with open(output_path, "wb") as out:
-        out.write(response["AudioStream"].read())
-```
+Amazon Polly **אינו** תומך בעברית. אין locale בשם `he-IL` ברשימת השפות הנתמכות של Polly ואין קול עברי מכל מנוע (סטנדרטי או neural). הקול "Avri" שחלק מהמדריכים מייחסים ל-Polly הוא למעשה הקול של **Azure** `he-IL-AvriNeural`, ולא קול של Polly. לגיבוי TTS ענני זול בעברית, השתמשו ב-Google Cloud TTS (`he-IL-Wavenet-A/B`) או ב-Azure Neural TTS למטה במקום Polly.
 
 #### Azure Neural TTS
 
@@ -480,6 +461,19 @@ python scripts/hebrew-stt-demo.py --help
 
 תוצאה: צינור אוטומטי מהודעה קולית לטקסט שמתמלל הודעות בעברית ומנתב לפי כוונה.
 
+### דוגמה 4: טיפול בדיבור מעורב עברית-אנגלית
+
+המשתמש אומר: "המתקשרים שלנו מערבבים לעיתים קרובות עברית ואנגלית, במיוחד מונחים טכניים. איך מטפלים בזה?"
+
+פעולות:
+1. להגדיר את Whisper ללא פרמטר שפה קבוע (הזיהוי האוטומטי מטפל בהחלפת קוד)
+2. לממש עיבוד-לאחר לנרמול מונחים טכניים באנגלית במבטא עברי
+3. לבנות אוצר מילים מותאם של מונחי טכנולוגיה עברית-אנגלית (deploy, push, server, bug)
+4. לבדוק עם אודיו מעורב לדוגמה באמצעות סקריפט הדמו
+5. להגדיר ספי ביטחון ולבקש מהמתקשר לחזור על עצמו כשהביטחון נמוך
+
+תוצאה: בוט קולי שמתמלל נכון דיבור מעורב עברית-אנגלית הנפוץ בסביבות הייטק בישראל.
+
 ## משאבים מצורפים
 
 ### סקריפטים
@@ -509,7 +503,7 @@ python scripts/hebrew-stt-demo.py --help
 | Azure AI Speech (עברית) | https://learn.microsoft.com/he-il/azure/ai-services/speech-service/language-support | קולות STT/TTS בעברית, רשימת קולות נוירליים |
 | מודלים בעברית ב-HuggingFace | https://huggingface.co/models?language=he | מודלים פתוחים לזיהוי דיבור/המרה לדיבור בעברית |
 | ivrit.ai (קורפוס דיבור בעברית) | https://www.ivrit.ai | קורפוס דיבור עברי פתוח, מודלי ASR מאומנים מראש |
-| תיעוד WebSocket של ElevenLabs | https://elevenlabs.io/docs/developers/websockets | אילו מודלים תומכים ב-streaming (v3 לא, Flash v2.5 כן) |
+| תיעוד streaming / WebSocket של ElevenLabs | https://elevenlabs.io/docs/api-reference/streaming | אילו מודלים תומכים ב-streaming (v3 לא, Flash v2.5 כן) |
 | Deepdub (ישראלי) | https://deepdub.ai | Phantom X 3.2, קול AI בזמן אמת עם תמיכה ילידית בעברית ו-eTTS רגשי |
 | Inworld TTS | https://inworld.ai/tts | TTS-1.5 (15 שפות כולל עברית) + Realtime TTS-2 (100+ שפות, מתחת ל-130ms) |
 
@@ -521,7 +515,7 @@ python scripts/hebrew-stt-demo.py --help
 
 ### בעיה: "קול ה-TTS נשמע רובוטי בעברית"
 סיבה: שימוש בקולות Standard ולא Neural/Wavenet.
-פתרון: לעבור לקולות neural: Google Wavenet (he-IL-Wavenet-A/B) או Azure Neural (he-IL-HilaNeural). Amazon Polly Hebrew מציע רק קול סטנדרטי (Avri, גברי) ללא אפשרות neural. קולות neural יקרים יותר אבל טבעיים בהרבה.
+פתרון: לעבור לקולות neural: Google Wavenet (he-IL-Wavenet-A/B) או Azure Neural (he-IL-HilaNeural). (Amazon Polly אינו תומך בעברית כלל, ולכן אינו אפשרות.) קולות neural יקרים יותר אבל טבעיים בהרבה.
 
 ### בעיה: "תפריט IVR עושה timeout לפני שהמתקשר מגיב"
 סיבה: timeout קצר מדי, במיוחד למתקשרים מבוגרים או פרומפטים ארוכים בעברית.

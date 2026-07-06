@@ -9,23 +9,32 @@
       "source_url": "https://unifiedtts.com/en/news/2026-02-12-elevenlabs-v3-model",
       "raw_snippet": "Eleven v3 supports 70+ languages including Hebrew (heb)",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "elevenlabs-v3-no-websocket",
       "claim": "ElevenLabs eleven_v3 does NOT support WebSocket / streaming as of May 2026, REST only",
-      "source_url": "https://elevenlabs.io/docs/developers/websockets",
+      "source_url": "https://elevenlabs.io/docs/api-reference/streaming",
       "raw_snippet": "WebSockets are not available for the eleven_v3 model",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "elevenlabs-flash-v25-websocket",
       "claim": "ElevenLabs Flash v2.5 supports WebSocket streaming and is the streaming-capable model in the v2.5 family",
-      "source_url": "https://elevenlabs.io/docs/developers/websockets",
+      "source_url": "https://elevenlabs.io/docs/api-reference/streaming",
       "raw_snippet": "WebSocket connections are enabled for persistent real-time applications using Flash v2.5",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "elevenlabs-multilingual-v2-hebrew-listed",
@@ -33,7 +42,10 @@
       "source_url": "https://help.scenario.com/articles/2103421335-elevenlabs-text-to-speech-models-the-essentials",
       "raw_snippet": "Multilingual v2 supports Hebrew among its 29 languages",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "elevenlabs-flash-turbo-v25-not-hebrew-focused",
@@ -41,7 +53,10 @@
       "source_url": "https://elevenlabs.io/docs/overview/models",
       "raw_snippet": "Flash v2.5 supports 32 languages - all languages from v2 models plus: Hungarian, Norwegian & Vietnamese",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "deepdub-phantom-x-hebrew",
@@ -49,7 +64,10 @@
       "source_url": "https://israel.com/business/tel-aviv-startup-deepdub-introduces-real-time-ai-voice-model-for-global-enterprises/",
       "raw_snippet": "Deepdub is a Tel Aviv Israeli audio AI company that launched Phantom X 3.2 on March 10, 2026 supporting Hebrew with emotive eTTS",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "inworld-tts-15-hebrew",
@@ -57,7 +75,10 @@
       "source_url": "https://www.marktechpost.com/2026/01/21/inworld-ai-releases-tts-1-5-for-realtime-production-grade-voice-agents/",
       "raw_snippet": "Inworld TTS-1.5 supports 15 languages including Hebrew with P90 time to first audio latency below 130 ms in TTS-1.5 Mini",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "inworld-realtime-tts-2",
@@ -65,23 +86,32 @@
       "source_url": "https://www.testingcatalog.com/inworld-ai-launches-realtime-tts-2-model-for-live-conversations/",
       "raw_snippet": "Realtime TTS-2 supports over 100 languages and is rebuilt from the ground up for live conversation",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "openai-realtime-api-hebrew",
-      "claim": "OpenAI Realtime API (gpt-4o-realtime) provides native multilingual speech-to-speech including Hebrew with sub-500ms turn-taking",
-      "source_url": "https://platform.openai.com/docs/guides/realtime",
-      "raw_snippet": "OpenAI Realtime API speech-to-speech supports multilingual conversation including Hebrew with low-latency turn-taking",
-      "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "claim": "OpenAI's GA realtime speech-to-speech model is gpt-realtime (GA Aug 2025) with gpt-realtime-1.5 as the current successor; it supports Hebrew over WebRTC/WebSocket/SIP. The older gpt-4o-realtime-preview was removed from the API on 2026-05-07.",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "raw_snippet": "gpt-4o-realtime-preview ... shutdown 2026-05-07 ... recommended replacement gpt-realtime-1.5",
+      "fetched_at": "2026-07-06T12:40:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
-      "claim_id": "polly-hebrew-no-neural",
-      "claim": "Amazon Polly Hebrew is non-neural Avri-only as of April 2026",
-      "source_url": "https://docs.aws.amazon.com/polly/latest/dg/voicelist.html",
-      "raw_snippet": "Hebrew (he-IL): Avri (Standard)",
-      "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "claim_id": "polly-no-hebrew",
+      "claim": "Amazon Polly does NOT support Hebrew: there is no he-IL locale in Polly's supported languages and no Hebrew voice of any engine. The 'Avri' voice is Azure's he-IL-AvriNeural, not a Polly voice.",
+      "source_url": "https://docs.aws.amazon.com/polly/latest/dg/available-voices.html",
+      "raw_snippet": "Amazon Polly available voices list contains no he-IL (Hebrew) row and no voice named Avri.",
+      "fetched_at": "2026-07-06T12:40:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "whisper-docs",
@@ -89,7 +119,10 @@
       "source_url": "https://github.com/openai/whisper",
       "raw_snippet": "Whisper is a general-purpose speech recognition model trained on multilingual data including Hebrew (he)",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "references/hebrew-stt-models.md"]
+      "appears_in": [
+        "SKILL.md",
+        "references/hebrew-stt-models.md"
+      ]
     },
     {
       "claim_id": "ivrit-ai",
@@ -97,7 +130,9 @@
       "source_url": "https://www.ivrit.ai",
       "raw_snippet": "ivrit.ai - Hebrew speech AI models and datasets",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md"]
+      "appears_in": [
+        "SKILL.md"
+      ]
     },
     {
       "claim_id": "hebrew-models-huggingface",
@@ -105,7 +140,9 @@
       "source_url": "https://huggingface.co/models?language=he",
       "raw_snippet": "Hugging Face models filtered by Hebrew language",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md"]
+      "appears_in": [
+        "SKILL.md"
+      ]
     },
     {
       "claim_id": "google-stt-languages",
@@ -113,7 +150,10 @@
       "source_url": "https://cloud.google.com/speech-to-text/docs/languages",
       "raw_snippet": "Hebrew (Israel) - he-IL",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "references/hebrew-stt-models.md"]
+      "appears_in": [
+        "SKILL.md",
+        "references/hebrew-stt-models.md"
+      ]
     },
     {
       "claim_id": "azure-speech-languages-en",
@@ -121,7 +161,10 @@
       "source_url": "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support",
       "raw_snippet": "Hebrew (Israel) he-IL - HilaNeural, AvriNeural",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "references/hebrew-stt-models.md"]
+      "appears_in": [
+        "SKILL.md",
+        "references/hebrew-stt-models.md"
+      ]
     },
     {
       "claim_id": "azure-speech-languages-he",
@@ -129,7 +172,9 @@
       "source_url": "https://learn.microsoft.com/he-il/azure/ai-services/speech-service/language-support",
       "raw_snippet": "Hebrew (Israel) he-IL - תמיכת שפה",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL_HE.md"]
+      "appears_in": [
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "deepdub-website",
@@ -137,7 +182,10 @@
       "source_url": "https://deepdub.ai",
       "raw_snippet": "Deepdub - AI dubbing and emotional TTS, including Hebrew",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "inworld-tts-website",
@@ -145,7 +193,10 @@
       "source_url": "https://inworld.ai/tts",
       "raw_snippet": "Inworld TTS-1.5 and Realtime TTS-2 with Hebrew support",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "twilio-webhook-example",
@@ -153,7 +204,9 @@
       "source_url": "https://www.twilio.com/docs/voice/twiml",
       "raw_snippet": "https://your-server.com/voice/incoming - placeholder example URL for Twilio voice webhook configuration",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["SKILL.md"]
+      "appears_in": [
+        "SKILL.md"
+      ]
     },
     {
       "claim_id": "hebrew-stt-accuracy-ranges",
@@ -161,7 +214,11 @@
       "source_url": "https://cdn.openai.com/papers/whisper.pdf",
       "raw_snippet": "Whisper Hebrew WER ranges illustratively from approximately 5-20% depending on audio conditions; the ranges 92-95% / 88-92% / 80-85% in references/hebrew-stt-models.md correspond to typical clean / phone / noisy audio accuracy levels reported across Whisper, Google Cloud STT, and Azure Speech in their respective documentation",
       "fetched_at": "2026-05-19T00:00:00Z",
-      "appears_in": ["references/hebrew-stt-models.md", "SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "references/hebrew-stt-models.md",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }
