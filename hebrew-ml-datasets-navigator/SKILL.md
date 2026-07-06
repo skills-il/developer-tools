@@ -1,6 +1,6 @@
 ---
 name: hebrew-ml-datasets-navigator
-description: "Navigate the fragmented landscape of Hebrew and Yiddish ML datasets and models. Covers ivrit.ai (22K+ hours of Hebrew audio, whisper-large-v3 ASR variants, Yiddish models), Dicta (DictaLM 3.0 LLM family, DictaBERT variants, HeQ reading comprehension), the Israeli National NLP Program / NNLP-IL (HebrewSentiment, HebNLI), AlephBERT, and Knesset Plenums. Helps researchers and ML engineers pick the right dataset for a task by use case, license (commercial vs research), Hebrew register coverage, and model-dataset pairing. Use when choosing training data for a Hebrew NLP or ASR project, verifying license compatibility for a commercial product, finding a baseline model for a Hebrew downstream task, or exploring Yiddish ML resources. Do NOT use for Arabic NLP datasets (a separate ecosystem), general HuggingFace dataset discovery (use HuggingFace Hub search), or Hebrew OCR dataset selection (use hebrew-ocr-forms)."
+description: "Navigate the fragmented landscape of Hebrew and Yiddish ML datasets and models. Covers ivrit.ai (20K+ hours of Hebrew audio, whisper-large-v3 ASR variants, Yiddish models), Dicta (DictaLM 3.0 LLM family, DictaBERT variants, HeQ reading comprehension), the Israeli National NLP Program / NNLP-IL (HebrewSentiment, HebNLI), AlephBERT, and Knesset Plenums. Helps researchers and ML engineers pick the right dataset for a task by use case, license (commercial vs research), Hebrew register coverage, and model-dataset pairing. Use when choosing training data for a Hebrew NLP or ASR project, verifying license compatibility for a commercial product, finding a baseline model for a Hebrew downstream task, or exploring Yiddish ML resources. Do NOT use for Arabic NLP datasets (a separate ecosystem), general HuggingFace dataset discovery (use HuggingFace Hub search), or Hebrew OCR dataset selection (use hebrew-ocr-forms)."
 license: MIT
 ---
 
@@ -41,7 +41,7 @@ Bookmark and subscribe to updates from these organizations. They are the authori
 
 #### ivrit.ai (`huggingface.co/ivrit-ai`)
 
-Non-profit focused on Hebrew speech resources. As of 2025-2026 they host the world's largest public Hebrew audio corpus (22,000+ hours) under permissive licenses that explicitly allow commercial training.
+Non-profit focused on Hebrew speech resources. As of 2025-2026 they host the world's largest public Hebrew audio corpus (20,000+ hours) under permissive licenses that explicitly allow commercial training.
 
 Key artifacts:
 - `ivrit-ai/crowd-transcribe-v5` ,  latest crowd-sourced Hebrew ASR dataset
@@ -105,7 +105,7 @@ Use these for LLM pre-training when you need scale that no Hebrew-only corpus ca
 - `uonlp/CulturaX` ,  6.3T tokens across 167 languages, combining mC4 v3.1.0 with OSCAR releases through 2023-01. Heavy cleaning and deduplication. Pull the Hebrew subset by language code. Apache 2.0 (terms tied to the underlying mC4/OSCAR licenses; check before commercial training).
 - `HuggingFaceFW/fineweb-2` ,  ~20TB across 1,868 language-script pairs. Hebrew available as `heb_Hebr`. Higher-quality filtering than CulturaX. Sourced from CommonCrawl 2013 to April 2024.
 - `allenai/MADLAD-400` ,  document-level multilingual corpus across 419 languages. Two variants: noisy (LangID only) and clean (filtered). Hebrew is included; pull by language code.
-- `oscar-corpus/OSCAR-2301` ,  CommonCrawl-derived multilingual corpus, Hebrew slice available. Note `OSCAR-2301` is gated behind a HuggingFace agreement; request access on the dataset page before using.
+- `oscar-corpus/OSCAR-2301` ,  CommonCrawl-derived multilingual corpus, Hebrew slice available. Note `OSCAR-2301` is gated behind a HuggingFace agreement, and as of mid-2026 access is **temporarily SUSPENDED** (the maintainers paused new access grants pending a legal clarification). Use `uonlp/CulturaX` (also gated, but grantable) or `HuggingFaceFW/fineweb-2` for the same Hebrew web-scale need until OSCAR access reopens.
 - `mC4` (Hebrew slice) ,  not deprecated, but the Hebrew partition has been criticized for noisier text and weaker filtering than newer corpora. Prefer FineWeb-2 or CulturaX where you can.
 
 Always re-tokenize and re-deduplicate when combining corpora; CulturaX already incorporates mC4 + OSCAR through 2023, so layering them on top creates substantial duplication.
@@ -270,7 +270,7 @@ No MCP server is required for navigating datasets. Pair with the HuggingFace Hub
 - mC4 is NOT deprecated, but its Hebrew slice has weaker filtering than FineWeb-2 or CulturaX. If you need pre-2024 web Hebrew, prefer CulturaX over raw mC4.
 - HEBREW-MMLU references float around with multiple community translations and forks. Verify the active dataset ID before publishing benchmark results; numbers from different translations are not directly comparable. `openai/MMMLU` covers 14 languages but Hebrew is not included in that official set.
 - DictaLM 3.0 release naming includes both base/thinking/instruct families AND quantization variants (FP8, W4A16, GGUF). When citing benchmark results, log the exact model ID from the HF page including any quantization suffix; numbers do not transfer across quantizations.
-- `oscar-corpus/OSCAR-2301` is gated on HuggingFace. Plan for access approval before training pipelines that depend on it.
+- `oscar-corpus/OSCAR-2301` is gated on HuggingFace, and as of mid-2026 access is **temporarily suspended** (no new grants). Do not build a pipeline that depends on it right now; use CulturaX or FineWeb-2 instead. `uonlp/CulturaX` is also gated (contact-info agreement) but grants are being processed.
 
 ## Troubleshooting
 

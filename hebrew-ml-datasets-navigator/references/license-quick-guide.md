@@ -127,7 +127,7 @@ Plain-English summary of the most common licenses in the Hebrew ML ecosystem and
 
 ## Attribution templates
 
-For CC-BY datasets, include attribution in your model card or product docs. Verify the exact license string on the dataset card itself — the HebArabNlpProject/HebrewSentiment card, for example, has shifted between license labels and currently reads "other"; treat the templates below as a structure, not a guarantee of the live license:
+For CC-BY datasets, include attribution in your model card or product docs. Verify the exact license string on the dataset card itself, the HebArabNlpProject/HebrewSentiment card, for example, has shifted between license labels and currently reads "other"; treat the templates below as a structure, not a guarantee of the live license:
 
 ```
 This product uses the {DatasetName} dataset by {Author}, licensed under {LicenseFromTheDatasetCard}. {DatasetURL}

@@ -23,7 +23,7 @@ CATALOG = [
         "task": "sentiment",
         "language": "hebrew",
         "register": ["mixed"],
-        "size": "train + validation + test splits — verify current totals on the dataset card",
+        "size": "train + validation + test splits, verify current totals on the dataset card",
         "license": "check dataset card",
         "commercial_ok": None,
         "paired_model": "dicta-il/dictabert-sentiment",

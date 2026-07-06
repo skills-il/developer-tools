@@ -10,7 +10,7 @@ Organization: `huggingface.co/ivrit-ai`
 
 | Dataset | HuggingFace ID | Language | Size | Use case |
 |---------|---------------|----------|------|----------|
-| crowd-transcribe-v5 | `ivrit-ai/crowd-transcribe-v5` | Hebrew | Large-scale (part of 22K+ hours total) | ASR training, latest crowd-sourced |
+| crowd-transcribe-v5 | `ivrit-ai/crowd-transcribe-v5` | Hebrew | Large-scale (part of 20K+ hours total) | ASR training, latest crowd-sourced |
 | crowd-transcribe-v4 | `ivrit-ai/crowd-transcribe-v4` | Hebrew | Previous version | Backward compatibility |
 | crowd-recital | `ivrit-ai/crowd-recital` | Hebrew | Crowd recital audio | High-quality Hebrew audio |
 | audio-v2 | `ivrit-ai/audio-v2` | Hebrew | Bulk Hebrew audio | Pre-training or large-scale fine-tuning |
