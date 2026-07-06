@@ -20,8 +20,8 @@ PATTERNS = {
     "mobile": r"^0(5[012345689])\d{7}$",
     # Landline: 9 digits, area code 02-04, 08, 09
     "landline": r"^0([2-4]|[89])\d{7}$",
-    # Non-geographic / VoIP: 10 digits, prefix 072-079 (077 is Hot, 078 is shared, 079 is Widely et al.)
-    "voip": r"^07[2-9]\d{7}$",
+    # Non-geographic / VoIP: 10 digits, prefix 071-079 (077 is Hot, 078 is shared, 079 is Widely et al.)
+    "voip": r"^07[1-9]\d{7}$",
     "toll_free": r"^1800\d{6}$",
     "premium": r"^1700\d{6}$",
     "star": r"^\*\d{4,6}$",

@@ -1,10 +1,9 @@
 ---
 name: israeli-phone-formatter
-description: Validate, format, and convert Israeli phone numbers between local and international (+972) formats. Use when user asks to validate Israeli phone number, format phone for SMS or WhatsApp, convert to +972, check phone prefix, or implement Israeli phone input validation in code. Handles mobile (050-058), landline (02-09), non-geographic / VoIP (072-079), toll-free (1-800), and star-service numbers, and emits strict E.164 output for libphonenumber and WhatsApp Business API. Do NOT use for non-Israeli phone systems or general telecom questions.
+description: Validate, format, and convert Israeli phone numbers between local and international (+972) formats. Use when user asks to validate Israeli phone number, format phone for SMS or WhatsApp, convert to +972, check phone prefix, or implement Israeli phone input validation in code. Handles mobile (050-058), landline (02-09), non-geographic / VoIP (071-079), toll-free (1-800), and star-service numbers, and emits strict E.164 output for libphonenumber and WhatsApp Business API. Do NOT use for non-Israeli phone systems or general telecom questions.
 license: MIT
 allowed-tools: Bash(python:*)
 compatibility: No network required. Works with Claude Code, Claude.ai, Cursor.
-version: 1.2.0
 ---
 
 # Israeli Phone Formatter
@@ -16,9 +15,9 @@ version: 1.2.0
 | Type | Prefixes | Total Digits | Example (local) |
 |------|----------|-------------|-----------------|
 | Mobile | 050, 051, 052, 053, 054, 055, 058 | 10 | 052-1234567 |
-| Mobile (Palestinian, flag) | 056 (Wataniya), 059 (Jawwal) | 10 | 059-1234567 |
+| Mobile (Palestinian, flag) | 056 (Ooredoo Palestine, formerly Wataniya), 059 (Jawwal) | 10 | 059-1234567 |
 | Landline | 02-04, 08-09 | 9 | 02-6251111 |
-| Non-geographic / VoIP | 072, 073, 074, 076, 077, 078, 079 | 10 | 077-1234567 |
+| Non-geographic / VoIP | 071, 072, 073, 074, 076, 077, 078, 079 | 10 | 077-1234567 |
 | Toll-free | 1-800 | 10 | 1-800-123456 |
 | Premium | 1-700 | 10 | 1-700-123456 |
 | Star service | *XXXX | 5-7 | *2421 |
@@ -37,8 +36,8 @@ If validating manually, apply these rules:
 
 Common validation errors:
 - **Wrong digit count**: Mobile numbers must be exactly 10 digits with the `0` prefix
-- **Palestinian carriers slipping through**: 056 (Wataniya) and 059 (Jawwal) match the Israeli mobile shape but are Palestinian territories carriers. Flag them when business logic requires an Israeli SIM.
-- **078 or 079 rejected as invalid**: Older regex patterns like `0(7[2-7])` reject both 078 (multiple VoIP providers) and 079 (Widely, 019 Mobile, Annatel). Use `07[2-9]` instead.
+- **Palestinian carriers slipping through**: 056 (Ooredoo Palestine, formerly Wataniya) and 059 (Jawwal) match the Israeli mobile shape but are Palestinian territories carriers. Flag them when business logic requires an Israeli SIM.
+- **071, 078, or 079 rejected as invalid**: Older regex patterns like `0(7[2-7])` reject 071 and 078 (multiple VoIP providers) and 079 (Widely, 019 Mobile, Annatel), all of which are allocated non-geographic prefixes. Use `07[1-9]` instead (the class runs 071-079).
 - **Missing leading zero**: Local numbers always start with `0` (except toll-free and star)
 
 ### Step 3: Format or Convert
@@ -102,7 +101,7 @@ Result: Summary table with validation status per number
 - `scripts/validate_phone.py` -- Validates, formats, and converts Israeli phone numbers. Supports single number validation, batch CSV processing, format conversion between local and international, and strict E.164 output. Run: `python scripts/validate_phone.py --help`
 
 ### References
-- `references/prefix-allocation.md` -- Complete Israeli phone prefix allocation table per Ministry of Communications, including issuing-carrier attribution for mobile prefixes (050-058 plus Palestinian 056 / 059), area codes for landlines, non-geographic ranges (072-079), MNP disclaimer, and E.164 / libphonenumber compatibility guidance.
+- `references/prefix-allocation.md` -- Complete Israeli phone prefix allocation table per Ministry of Communications, including issuing-carrier attribution for mobile prefixes (050-058 plus Palestinian 056 / 059), area codes for landlines, non-geographic ranges (071-079), MNP disclaimer, and E.164 / libphonenumber compatibility guidance.
 
 ## Recommended MCP Servers
 
@@ -123,7 +122,7 @@ No Israeli-telecom-specific MCP server is currently in the directory. For genera
 - When converting to international format (+972), the leading zero must be dropped: 052-1234567 becomes +972521234567, not +9720521234567. Agents frequently include the extra zero.
 - WhatsApp Business API, Twilio, and libphonenumber require strict E.164 (digits only, no hyphens). The display form `+972-52-123-4567` will fail validation. Store digits-only and render hyphens only for humans.
 - Mobile Number Portability has been live since 2007. The prefix indicates the original issuer, not the current carrier. Do not infer the active SIM from `052`, `054`, etc.
-- 056 and 059 match the Israeli mobile shape but are Palestinian carriers (Wataniya, Jawwal). For Israeli-resident business logic, flag them separately rather than treating them as Israeli mobile numbers.
+- 056 and 059 match the Israeli mobile shape but are Palestinian carriers (Ooredoo Palestine, Jawwal). For Israeli-resident business logic, flag them separately rather than treating them as Israeli mobile numbers.
 - 055 is a multi-MVNO range (Cellcom, 019 Mobile, Widely, Rami Levy, Cellact, Pelephone all issue 055 numbers); do not pin it to a single carrier.
 - Israeli special numbers (police 100, ambulance 101, fire 102) are short codes that should not be formatted with country codes or area codes.
 - 077 is a Hot Telecom non-geographic range (not a generic VoIP catch-all). 078 and 079 are commonly used by other VoIP / non-geographic providers (Widely, 019 Mobile, Annatel) and are both frequently missed by older `0(7[2-7])` regexes.
@@ -138,7 +137,7 @@ Solution: Mobile / non-geographic numbers always have 10 digits including the `0
 
 ### Error: "078 or 079 rejected as invalid"
 Cause: The regex `0(7[2-7])` excludes both 078 and 079, which are real allocations (Widely, 019 Mobile, Annatel and others).
-Solution: Use `07[2-9]` for the non-geographic class. The bundled `validate_phone.py` already has this fix.
+Solution: Use `07[1-9]` for the non-geographic class. The bundled `validate_phone.py` already has this fix.
 
 ### Error: "Number starts with 05 but prefix not recognized"
 Cause: Not all 05X prefixes are allocated to Israeli consumer mobile (057 is unused; 056 / 059 are Palestinian).

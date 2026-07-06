@@ -16,7 +16,7 @@ Since 2007 Israel has full mobile number portability. The prefix in a mobile num
 | 053 | Hot Mobile (Altice) | |
 | 054 | Partner Communications | Major carrier |
 | 055 | Multi-MVNO | Cellcom, 019 Mobile, Widely, Rami Levy, Cellact, Pelephone all issue 055 ranges |
-| 056 | Wataniya Mobile | Palestinian territories carrier; **not an Israeli consumer mobile** -- flag separately |
+| 056 | Ooredoo Palestine (formerly Wataniya Mobile) | Palestinian territories carrier; **not an Israeli consumer mobile** -- flag separately |
 | 058 | Golan (acquired by Cellcom) | Operates as a Cellcom brand |
 | 059 | Jawwal | Palestinian territories carrier; **not an Israeli consumer mobile** -- flag separately |
 
@@ -34,6 +34,7 @@ Since 2007 Israel has full mobile number portability. The prefix in a mobile num
 
 | Prefix | Carrier / Notes |
 |--------|-----------------|
+| 071 | Various VoIP and non-geographic providers (allocated; older `07[2-9]` regexes miss it) |
 | 072 | Various VoIP and non-geographic providers |
 | 073 | Various VoIP and non-geographic providers |
 | 074 | Various VoIP and non-geographic providers |
@@ -80,16 +81,16 @@ phonenumbers.format_number(num, phonenumbers.PhoneNumberFormat.E164)  # "+972521
 
 ```python
 PATTERNS = {
-    # Mobile: 10 digits, prefix 050-056, 058, 059 (057 unallocated; 056 = Wataniya, 059 = Jawwal -- Palestinian, flag separately)
+    # Mobile: 10 digits, prefix 050-056, 058, 059 (057 unallocated; 056 = Ooredoo Palestine, 059 = Jawwal -- Palestinian, flag separately)
     "mobile": r"^0(5[012345689])\d{7}$",
     # Landline: 9 digits, area code 02-04, 08, 09
     "landline": r"^0([2-4]|[89])\d{7}$",
-    # Non-geographic / VoIP: 10 digits, prefix 072-079
-    "voip": r"^07[2-9]\d{7}$",
+    # Non-geographic / VoIP: 10 digits, prefix 071-079
+    "voip": r"^07[1-9]\d{7}$",
     "toll_free": r"^1800\d{6}$",
     "premium": r"^1700\d{6}$",
     "star": r"^\*\d{4,6}$",
 }
 ```
 
-Note: 059 (Jawwal) and 056 (Wataniya) match the mobile shape but should be flagged as Palestinian carriers, not Israeli consumer mobile numbers, when business logic depends on Israeli SIM ownership.
+Note: 059 (Jawwal) and 056 (Ooredoo Palestine) match the mobile shape but should be flagged as Palestinian carriers, not Israeli consumer mobile numbers, when business logic depends on Israeli SIM ownership.
