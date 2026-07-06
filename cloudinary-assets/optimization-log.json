@@ -1,0 +1,16 @@
+{
+  "cycles": [
+    {
+      "version": "1.1.2",
+      "date": "2026-07-06",
+      "lessons": [
+        "Fixed: gen_fill was lumped with the e_gen_* effects; generative fill is actually the background qualifier b_gen_fill:prompt_(...), and e_gen_fill returns a 400. Corrected in SKILL.md, SKILL_HE, cheatsheet.",
+        "Fixed: background removal was described as 'no longer a paid add-on' without the billing nuance; e_background_removal is a built-in transformation (legacy add-on closed to new accounts from 2026-02-01) but is NOT free, it bills via special transformation counting.",
+        "Added: note that SHA-256 signatures are available (signature_algorithm=sha256); SHA-1 remains the default and the existing code is correct.",
+        "Removed the stray 'version:' key from SKILL.md frontmatter (version lives in metadata.json only; it was stale at 1.1.0 vs 1.1.1).",
+        "Verified current (no change): @cloudinary/url-gen v1.22.0 (still v1.x), all Step 7 import paths exact, pricing Free 25 credits / Plus $89-99, Admin API 500/hr free, endpoints, SHA-1 default, company facts (2012, Petah Tikva R&D, San Jose HQ), all reference URLs resolve.",
+        "[CARRY] UNVERIFIED against live docs (kept with existing hedges, long-standing published values): free upload cap 10MB image; the 1-credit = 1000 transformations / 1GB definition; the ~25,000 transformations/month derived figure; the built-in Hebrew font list (Heebo/Assistant/Rubik/etc). Re-confirm from live docs next cycle if a source surfaces."
+      ]
+    }
+  ]
+}

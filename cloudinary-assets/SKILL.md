@@ -4,7 +4,6 @@ description: Manage media assets through Cloudinary's REST API -- upload, transf
 license: MIT
 allowed-tools: Bash(python:*) Bash(curl:*) WebFetch
 compatibility: Requires Cloudinary account (free tier available). Needs CLOUDINARY_URL or API key/secret/cloud name environment variables.
-version: 1.1.0
 ---
 
 # Cloudinary Assets
@@ -105,14 +104,14 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 
 ### Step 4b: AI-Powered Transformations (2024-2025)
 
-Cloudinary's generative AI effects (gen_remove, gen_replace, gen_background_replace, gen_recolor, gen_fill, gen_restore) are available as URL params. Some variants may still be flagged as Beta on the docs page, so check the current status before relying on a specific effect in production:
+Cloudinary's generative AI effects (gen_remove, gen_replace, gen_background_replace, gen_recolor, gen_restore) are available as `e_gen_*` URL params. Generative fill is the exception: it is a **background qualifier** `b_gen_fill:prompt_(...)` that fills a padded area, NOT an `e_gen_fill` effect (constructing `e_gen_fill:...` returns a 400). Some variants may still be flagged as Beta on the docs page, so check the current status before relying on a specific effect in production:
 
 | Param | What it does |
 |-------|--------------|
 | `e_gen_remove:prompt_(person)` | AI removes the matched object from the image |
 | `e_gen_replace:from_(car);to_(bicycle)` | AI replaces one object with another |
 | `e_gen_background_replace:prompt_(beach at sunset)` | Generative background swap |
-| `e_background_removal` | Background removal (now in core, no longer a paid add-on) |
+| `e_background_removal` | Background removal, a built-in transformation (no separate add-on subscription; the legacy add-on is closed to new accounts from Feb 1 2026). It is NOT free, it bills via special transformation counting. |
 | `e_gen_restore` | AI restoration for old, blurry, or damaged photos |
 | `auto_tagging:0.7` | Auto-tag uploads via AI (confidence threshold 0.0-1.0); pass at upload time |
 | `f_auto:image` | Restrict auto format selection to image candidates (AVIF, WebP, JPEG) |
@@ -316,7 +315,7 @@ Solution: Verify public_id with Admin API list. Check folder paths are included 
 
 ### Error: "Invalid Signature" or signature mismatch on upload
 Cause: Wrong parameter order, wrong API secret, or the timestamp drifted (Cloudinary rejects timestamps more than 1 hour off).
-Solution: Sign the alphabetically sorted, ampersand-joined params (excluding `file`, `cloud_name`, `api_key`, `signature`), append the API secret, then SHA-1 the result. Sync your clock (NTP). When in doubt, log the exact `params_to_sign` string and compare to the docs.
+Solution: Sign the alphabetically sorted, ampersand-joined params (excluding `file`, `cloud_name`, `api_key`, `signature`), append the API secret, then SHA-1 the result. Sync your clock (NTP). When in doubt, log the exact `params_to_sign` string and compare to the docs. Cloudinary defaults to SHA-1 and also supports SHA-256 (pass `signature_algorithm=sha256`); the SHA-1 code above still works.
 
 ### Error: "Rate limit exceeded" / 420 / 429
 Cause: Free tier caps Admin API calls at 500/hour and total transformations at ~25,000/month.

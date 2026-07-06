@@ -105,14 +105,14 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 
 ### שלב 4ב: טרנספורמציות מבוססות AI (2024-2025)
 
-האפקטים הגנרטיביים של Cloudinary (gen_remove, gen_replace, gen_background_replace, gen_recolor, gen_fill, gen_restore) זמינים כפרמטרי URL. חלק מהווריאנטים עדיין מסומנים כ-Beta בתיעוד, אז כדאי לבדוק את הסטטוס העדכני לפני שמסתמכים על אפקט ספציפי בפרודקשן:
+האפקטים הגנרטיביים של Cloudinary (gen_remove, gen_replace, gen_background_replace, gen_recolor, gen_restore) זמינים כפרמטרי `e_gen_*` ב-URL. מילוי גנרטיבי הוא היוצא מן הכלל: הוא מבדל רקע `b_gen_fill:prompt_(...)` שממלא אזור מרופד, ולא אפקט `e_gen_fill` (בנייה של `e_gen_fill:...` מחזירה 400). חלק מהווריאנטים עדיין מסומנים כ-Beta בתיעוד, אז כדאי לבדוק את הסטטוס העדכני לפני שמסתמכים על אפקט ספציפי בפרודקשן:
 
 | פרמטר | מה הוא עושה |
 |--------|--------------|
 | `e_gen_remove:prompt_(person)` | מוחק עם AI את האובייקט שמתאים לתיאור |
 | `e_gen_replace:from_(car);to_(bicycle)` | מחליף עם AI אובייקט אחד באחר |
 | `e_gen_background_replace:prompt_(beach at sunset)` | מחליף את הרקע באופן גנרטיבי |
-| `e_background_removal` | הסרת רקע (כיום חלק מהליבה, כבר לא תוסף בתשלום) |
+| `e_background_removal` | הסרת רקע, טרנספורמציה מובנית (ללא מנוי תוסף נפרד; התוסף הישן סגור לחשבונות חדשים מ-1.2.2026). לא בחינם, מחויב לפי ספירת טרנספורמציות מיוחדת. |
 | `e_gen_restore` | שחזור AI לתמונות ישנות, מטושטשות או פגומות |
 | `auto_tagging:0.7` | תיוג אוטומטי של העלאות עם AI (סף ביטחון 0.0-1.0); מעבירים בזמן ההעלאה |
 | `f_auto:image` | מגביל את `f_auto` לפורמטים של תמונה (AVIF, WebP, JPEG) |
@@ -316,7 +316,7 @@ https://res.cloudinary.com/{cloud_name}/image/upload/w_800,c_fill/l_text:Heebo_4
 
 ### שגיאה: "Invalid Signature" או חוסר התאמה בחתימה בהעלאה
 סיבה: סדר פרמטרים לא נכון, API secret שגוי, או חותמת זמן שסטתה (Cloudinary דוחה חותמות זמן עם פער של מעל שעה).
-פתרון: חותמים על הפרמטרים ממויינים אלפביתית ומחוברים ב-`&` (ללא `file`, `cloud_name`, `api_key`, `signature`), מצרפים את ה-API secret בסוף ומריצים SHA-1. מסנכרנים את שעון השרת (NTP). במקרה של ספק, מדפיסים את `params_to_sign` המדויק ומשווים לתיעוד.
+פתרון: חותמים על הפרמטרים ממויינים אלפביתית ומחוברים ב-`&` (ללא `file`, `cloud_name`, `api_key`, `signature`), מצרפים את ה-API secret בסוף ומריצים SHA-1. מסנכרנים את שעון השרת (NTP). במקרה של ספק, מדפיסים את `params_to_sign` המדויק ומשווים לתיעוד. ברירת המחדל של Cloudinary היא SHA-1, ויש גם תמיכה ב-SHA-256 (מעבירים `signature_algorithm=sha256`); הקוד עם SHA-1 עדיין עובד.
 
 ### שגיאה: "Rate limit exceeded" / 420 / 429
 סיבה: המסלול החינמי מוגבל ל-500 קריאות Admin API בשעה ול-25,000 טרנספורמציות בחודש.

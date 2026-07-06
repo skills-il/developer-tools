@@ -63,7 +63,7 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 | e_brightness:{level} | Adjust brightness |
 | e_contrast:{level} | Adjust contrast |
 | e_saturation:{level} | Adjust saturation |
-| e_background_removal | Background removal (in core, GA) |
+| e_background_removal | Background removal, built-in (no add-on subscription; not free, bills via special transformation counting) |
 | e_gen_remove:prompt_(text) | AI generative remove |
 | e_gen_replace:from_(a);to_(b) | AI generative replace |
 | e_gen_background_replace:prompt_(text) | AI generative background swap |
