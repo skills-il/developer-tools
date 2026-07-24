@@ -1,0 +1,22 @@
+{
+  "cycles": [
+    {
+      "version": "1.7.0",
+      "date": "2026-07-24",
+      "lessons": [
+        "Expert CRITICAL deferred: third-person description rule is a Must-cover in domain-checklist.md but is taught nowhere. Add a bullet to Step 6 'Description rules' in EN + HE and a good/bad pair in references/skill-spec.md.",
+        "Expert CRITICAL deferred: 'Gotchas = agent failure modes, not user errors' is never taught in English prose, is absent from both scaffold-skill.py templates, and has no line in any of the three quality checklists. Teach it in Step 7, emit the section in both templates, add a checklist item.",
+        "Expert MAJOR deferred: Step 6.5 principle 1 (baseline) is inert. It produces no artifact and has no checklist line. Give it a capture format (task attempted, agent used, observed failures) plus a Step 10 checklist item. Consider moving it to a new Step 3.5 right after 'Define Use Cases', since its punchline is 'do not write this skill at all' and it currently lands after the contributor has already scaffolded and written frontmatter.",
+        "Expert MAJOR deferred: Step 7 'Best practices' and 'Progressive disclosure' blocks now duplicate Step 6.5 principles 2 and 3. Delete the three overlapping bullets and leave a pointer back to Step 6.5, in both languages.",
+        "Expert MAJOR deferred: four 'Should cover' items exist only in domain-checklist.md and in no instruction file: avoid time-sensitive phrasing, keep reference links one level deep, add a TOC to reference files over ~100 lines, use consistent terminology. Add to Step 6.5/Step 7 and Step 8.",
+        "Expert MAJOR deferred: SKILL_HE.md drops five substantive blocks present in SKILL.md (repo-README-must-be-English rule in Step 5; the use-case extraction closer in Step 3; the English-source bullet and 'Why this matters' block in Step 8.5; the HTTP-status action table in Step 9.5; three Step 10 checklist items). Hebrew readers currently get a laxer guide.",
+        "Expert MAJOR deferred: SKILL.md and SKILL_HE.md are both over the 500-line heuristic this cycle introduced (~576 / ~600). Apply the guide's own remedy: move the mechanical tables in Step 8, Step 9.5, and Step 10.5 into references/ and leave pointers. Deferred because it is a large restructuring better done as its own cycle.",
+        "Expert MAJOR deferred: scripts/scaffold-skill.py templates emit no '## Gotchas' and no '## Reference Links' section despite Step 8.5 calling Reference Links mandatory, and hardcode an empty allowed-tools line that Step 6 says to omit entirely.",
+        "Expert MAJOR deferred: 'Recommended MCP Servers' pairing is only a positional landmark. No step says when to add it, what it contains, or names the Hebrew heading '## שרתי MCP מומלצים'.",
+        "Expert MINOR deferred: references/domain-checklist.md is not listed in Bundled Resources in either language; references/skill-spec.md needs a TOC; SKILL.md line 5 allowed-tools is unquoted while the guide teaches quoting; SKILL_HE.md frontmatter description text has drifted from SKILL.md's.",
+        "Process lesson: an expert-review agent reported validate-skill.sh as 'not bundled and unrunnable' (CRITICAL). This was WRONG. The script lives at the category-repo root (scripts/validate-skill.sh) and runs correctly from there; the agent conflated it with the skill's own scripts/ dir. Verify agent CRITICALs against the filesystem before acting. Worth adding a one-line note to Step 10 stating the command runs from the repo root, to remove the ambiguity that misled the reviewer.",
+        "Process lesson: the Judge and the Expert contradicted each other on the fifth Critical scorecard signal name. Ground truth from the monorepo (10 refs vs 1) is `license_spdx`; the Hebrew file was the wrong one. Always resolve inter-agent disagreement against the codebase, never by majority."
+      ]
+    }
+  ]
+}

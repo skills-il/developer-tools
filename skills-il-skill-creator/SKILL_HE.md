@@ -16,51 +16,6 @@ allowed-tools: 'Bash(python:*) Bash(./scripts/*) WebFetch'
 compatibility: >-
   No network required for scaffolding. WebFetch optional for pulling latest
   conventions. Works with Claude Code, Claude.ai, Cursor.
-metadata:
-  author: skills-il
-  version: 1.2.0
-  category: developer-tools
-  tags:
-    he:
-      - יוצר-סקילים
-      - פיגומים
-      - תבנית
-      - מפתחים
-      - תהליך-עבודה
-      - ישראל
-    en:
-      - skill-creator
-      - scaffolding
-      - template
-      - developer
-      - workflow
-      - israel
-  display_name:
-    he: יוצר סקילים skills-il
-    en: Skills-IL Skill Creator
-  display_description:
-    he: >-
-      תהליך אינטראקטיבי ליצירת סקילים חדשים לארגון skills-il -- הנחיה לבחירת
-      קטגוריה, הגדרת מקרי שימוש, יצירת תיקייה, כתיבת frontmatter דו-לשוני,
-      הוראות, קובץ עברי נלווה ואימות. השתמש כשמשתמש מבקש "ליצור skill חדש",
-      "תבנית skill", "לתרום skill" או "scaffold skill".
-    en: >-
-      Interactive workflow for creating new skills for the skills-il organization --
-      guides through category selection, use case definition, folder scaffolding,
-      YAML frontmatter generation with bilingual metadata, instruction writing, Hebrew
-      companion creation, and validation. Use when user asks to "create a new skill",
-      "scaffold a skill for skills-il", "write a SKILL.md", "contribute a skill",
-      "new skill template", or "liztor skill chadash". Do NOT use for editing
-      existing skills or creating skills for non-skills-il platforms.
-  supported_agents:
-    - claude-code
-    - cursor
-    - github-copilot
-    - windsurf
-    - opencode
-    - codex
-    - openclaw
-    - gemini-cli
 ---
 
 # יוצר סקילים skills-il
@@ -91,8 +46,9 @@ metadata:
 | חינוך | education | פלטפורמות למידה, שיעורים פרטיים, כלים אקדמיים |
 | שירותי בריאות | health-services | קופות חולים, בתי מרקחת, רשומות רפואיות, תורים |
 | חשבונאות | accounting | הנהלת חשבונות, דוחות פיננסיים, ביקורת, כלי רואי חשבון |
+| תיירות ונסיעות | travel | תכנון טיולים, טיסות, יעדים, זכויות נוסעים |
 
-כל 12 ריפו הקטגוריה משתמשים ב-`master` כענף הברירת מחדל (לא `main`). הפורמט המלא של `github_url` הוא `https://github.com/skills-il/<repo>/tree/master/<slug>`.
+כל 13 ריפו הקטגוריה משתמשים ב-`master` כענף הברירת מחדל (לא `main`). הפורמט המלא של `github_url` הוא `https://github.com/skills-il/<repo>/tree/master/<slug>`.
 
 אם הסקיל לא מתאים לאף קטגוריה, דון עם המשתמש אם הוא שייך לקטגוריה קיימת או מצדיק ריפו חדש.
 
@@ -242,7 +198,7 @@ compatibility: >-                       # אופציונלי
 **כללי סגנון של הפרויקט (חלים על כל קובץ סקיל):**
 
 - **אין em dashes (U+2014) או en dashes (U+2013)** בשום מקום ב-SKILL.md, SKILL_HE.md, metadata.json, references או scripts. החלף בפסיקים, סוגריים, נקודות או "to" עבור טווחים. השתמש במקף ASCII רגיל.
-- **כל 12 ריפו הקטגוריה משתמשים ב-`master`**, לא `main`, כענף הברירת מחדל.
+- **כל 13 ריפו הקטגוריה משתמשים ב-`master`**, לא `main`, כענף הברירת מחדל.
 - **`github_url` חייב לכלול את הנתיב המלא לתיקיית הסקיל**: `https://github.com/skills-il/<repo>/tree/master/<slug>`.
 
 **תגיות דו-לשוניות (חובה לשאול):** אחרי הגדרת התגיות באנגלית, שאל:
@@ -268,6 +224,26 @@ compatibility: >-                       # אופציונלי
 - Python + רשת: `'Bash(python:*) WebFetch'`
 - כלי CLI מרובים: `'Bash(python:*) Bash(curl:*) WebFetch'`
 - התקנות pip: `'Bash(python:*) Bash(pip:*)'`
+
+### שלב 6.5: עקרונות כתיבה (יישמו תוך כדי שלבים 7-8)
+
+ארבעת העקרונות האלה קובעים אם הסקיל באמת משפר את התנהגות הסוכן או רק מוסיף טוקנים. יישמו אותם תוך כדי הכתיבה, לא כמעבר ניקיון בסוף.
+
+**1. קבעו בסיס השוואה לפני שאתם מתעדים משהו.** הריצו את המשימה מול סוכן שאין לו את הסקיל שלכם, ורשמו איפה בדיוק הוא נכשל. כתבו רק את מה שמתקן את הכשלים שראיתם. אם הסוכן כבר מבצע את המשימה נכון בלי עזרה, הסקיל הוא עומס מיותר ואין לכתוב אותו בכלל. זו הדרך המהירה ביותר להימנע מסקיל שחוזר על מה שהמודל כבר יודע.
+
+**2. קצרו: חלון הקונטקסט משותף.** כל מילה מתחרה בשיחה ובכל סקיל אחר שנטען. הניחו שהסוכן כבר מיומן, ולכן אל תסבירו לו מה זה JSON, איך עובד HTTP או איך כותבים לולאה. שאלו על כל פסקה "האם היא מצדיקה את מקומה?" וחתכו אותה אם התשובה שלילית. התקרה הנאכפת היא 5,000 מילים (נבדקת בשלב 10); התייחסו ל-500 שורות כאל כלל אצבע רך שמעליה. כל מה שחורג מאחת מהן שייך ל-`references/` (שלב 8).
+
+**3. התאימו את מידת החופש לשבירות המשימה.** כמה ספציפיים להיות תלוי בכמה המשימה נשברת כשמבצעים אותה אחרת.
+
+| אופי המשימה | מידת חופש | איך לכתוב |
+|---|---|---|
+| הרבה דרכים תקפות (בדיקת תוכן, כתיבת קופי) | גבוהה | הגדירו את המטרה ואת קריטריוני ההחלטה, ותנו לסוכן לבחור את הדרך |
+| קיימת תבנית מועדפת (פורמט דוח, עיצוב נתונים) | בינונית | תנו תבנית או דוגמה עם פרמטרים להתאמה |
+| שברירית, תלוית סדר או בלתי הפיכה (מיגרציות, הגשות, תשלומים) | נמוכה | תנו את הפקודה או הרצף המדויק, ואמרו במפורש לא לסטות |
+
+הגבלת יתר של משימה גמישה הופכת את הסקיל לשביר. הגבלת חסר של משימה שברירית הופכת אותו למסוכן.
+
+**4. עומק חשוב יותר מכמות בדוגמאות.** שלב 7 דורש לפחות שתי דוגמאות; בתוך המכסה הזאת העדיפו דוגמאות שלמות, מציאותיות ורצות על פני תבניות עם מקומות למילוי. העדיפו ערכים ישראליים אמיתיים (מספר טופס אמיתי, עירייה אמיתית, שכר מציאותי) על פני `<placeholder>`.
 
 ### שלב 7: כתיבת הוראות
 
@@ -299,6 +275,12 @@ Result: <תוצאה>
 
 ### References
 - `references/<name>.md` -- <מה מכיל>. Consult when <מתי>.
+
+## Gotchas
+
+- <כשל שהסוכן נופל בו, לא טעות של המשתמש>
+- <הנחה שגויה נפוצה לגבי הדומיין>
+- <שדה או פורמט שסוכנים נוטים לפספס>
 
 ## Troubleshooting
 
@@ -466,7 +448,7 @@ done < /tmp/<skill-name>-urls.txt
 | 2 | `secret_scanning` | בריפו: Settings ← Code security and analysis ← הפעילו **Secret scanning** וגם **Push protection** |
 | 3 | `code_scanning` | באותו עמוד, תחת **Code scanning** לחצו **Set up** ← **Default** |
 | 4 | `signed_release` | הוסיפו קובץ `.github/workflows/release.yml` שמשתמש ב-`actions/attest-build-provenance@v4` על `tags: ['v*']` (או השתמשו ב-`skills-il/release-workflow@v1` כ-reusable workflow), ואז דחפו תג `v1.0.0` |
-| 5 | `license_declared` | הוסיפו קובץ `LICENSE` בשורש הריפו (השתמשו ב-"Choose a license template" של GitHub; MIT היא הבחירה המקובלת) |
+| 5 | `license_spdx` | הוסיפו קובץ `LICENSE` בשורש הריפו (השתמשו ב-"Choose a license template" של GitHub; MIT היא הבחירה המקובלת) |
 
 **ב-MCP האות `spec_compliant` לא רלוונטי** (פקודת `gh skill` בודקת SKILL.md בלבד, לא שרתי MCP). 4 האותות האחרים בכל זאת חלים.
 
@@ -533,7 +515,7 @@ done < /tmp/<skill-name>-urls.txt
 3. מקרי שימוש: סיווג תנועות, זיהוי חיובים חוזרים, סיכום חודשי
 4. בדיקת עובדות: אמת דפוסי API של בנקים ישראליים, תקני סיווג תנועות
 5. Scaffold: `python scripts/scaffold-skill.py --name israeli-bank-analyzer --category tax-and-finance`
-6. Frontmatter: הוסף `mcp-server: israeli-bank-mcp` למטאדאטה, טריגרים כוללים "ניתוח תנועות בנק"
+6. גוף ה-SKILL.md: הוסיפו חלק `## שרתי MCP מומלצים` המפנה ל-israeli-bank-mcp, טריגרים כוללים "ניתוח תנועות בנק"
 7. הוראות: קריאות כלי MCP לשליפת תנועות, לוגיקת סיווג, יצירת סיכום
 8. מסמכי עזר: `references/bank-api-reference.md`; סקריפטים: `scripts/transaction-categorizer.py`
 9. עברית: SKILL_HE.md עם מינוח בנקאי

@@ -34,8 +34,9 @@ Ask the user which category repo this skill belongs to:
 | Education | education | Learning platforms, tutoring, academic tools |
 | Health Services | health-services | HMOs, pharmacy, medical records, appointments |
 | Accounting | accounting | Bookkeeping, financial reporting, audit, accountant tooling |
+| Travel | travel | Trip planning, flights, destinations, travel rights |
 
-All 12 category repos use `master` as their default branch (not `main`). The full path format for `github_url` is `https://github.com/skills-il/<repo>/tree/master/<slug>`.
+All 13 category repos use `master` as their default branch (not `main`). The full path format for `github_url` is `https://github.com/skills-il/<repo>/tree/master/<slug>`.
 
 If the skill doesn't fit any category, discuss with the user whether it belongs in an existing category or warrants a new repo.
 
@@ -189,7 +190,7 @@ Do NOT add `metadata:`, `version:`, `tags:`, `display_name:`, `display_descripti
 **Project style rules (apply to every skill file):**
 
 - **No em dashes (U+2014) or en dashes (U+2013)** anywhere in SKILL.md, SKILL_HE.md, metadata.json, references, or scripts. Replace with commas, parentheses, periods, or "to" for ranges. Use the regular ASCII hyphen-minus instead.
-- **All 12 category repos use `master`**, not `main`, as the default branch.
+- **All 13 category repos use `master`**, not `main`, as the default branch.
 - **`github_url` format must include the full path to the skill folder**, not just the repo root: `https://github.com/skills-il/<repo>/tree/master/<slug>`.
 
 **Bilingual tags (MUST ASK):** After defining the English tags, ask the user:
@@ -215,6 +216,26 @@ Do NOT add `metadata:`, `version:`, `tags:`, `display_name:`, `display_descripti
 - Python + web: `'Bash(python:*) WebFetch'`
 - Multiple CLI tools: `'Bash(python:*) Bash(curl:*) WebFetch'`
 - pip installs: `'Bash(python:*) Bash(pip:*)'`
+
+### Step 6.5: Authoring Principles (apply while writing Steps 7-8)
+
+These four principles decide whether a skill actually improves agent behavior or just adds tokens. Apply them while writing the body, not as a cleanup pass afterwards.
+
+**1. Establish a baseline before you document anything.** Run the target task against an agent that does NOT have your skill, and note exactly where it fails. Write only what fixes those observed failures. If the agent already completes the task correctly without help, the skill is bloat and should not be written at all. This is the fastest way to avoid a skill that restates what the model already knows.
+
+**2. Be concise: the context window is shared.** Every word competes with the conversation and with every other loaded skill. Assume the agent is already competent, so do not explain what JSON is, how HTTP works, or how to write a loop. Challenge each paragraph with "does this earn its place?" and cut it if the answer is no. The enforced ceiling is 5,000 words (checked in Step 10); treat 500 lines as a softer heuristic on top of it. Anything beyond either belongs in `references/` (Step 8).
+
+**3. Match freedom to fragility.** How specific you should be depends on how badly the task breaks when done differently.
+
+| Task shape | Freedom | How to write it |
+|---|---|---|
+| Many valid approaches (reviewing content, drafting copy) | High | State the goal and the decision criteria, let the agent pick the route |
+| A preferred pattern exists (report formatting, data shaping) | Medium | Give a template or a parameterized example to adapt |
+| Fragile, order-dependent, or irreversible (migrations, filings, payments) | Low | Give the exact command or sequence, and say explicitly not to deviate |
+
+Over-constraining a high-freedom task makes the skill brittle. Under-constraining a fragile one makes it dangerous.
+
+**4. Depth over count in examples.** Step 7 requires at least two examples; within that budget prefer complete, realistic, runnable ones over fill-in-the-blank templates. Prefer real Israeli values (an actual form number, a real municipality, a realistic salary) over `<placeholder>` tokens.
 
 ### Step 7: Write the Instructions Body
 
@@ -249,10 +270,9 @@ Result: ...
 
 ## Gotchas
 
-- SKILL.md frontmatter uses YAML with specific nested structure (metadata.tags.he/en arrays). Agents may flatten the tags into a single array instead of using the bilingual he/en structure.
-- Hebrew content in SKILL_HE.md must never appear inside code blocks (```) because code blocks do not support RTL rendering. Use plain text or bullet lists for Hebrew content.
-- The skill description field has a dual purpose: it serves as both the YAML frontmatter description and the trigger text for agent matching. Agents may write a generic description that fails to trigger on relevant user queries.
-- Skills must validate with the skills-il schema (name, description, license, metadata with version/category/tags). Agents may omit required fields like supported_agents or display_name.
+- <Agent failure mode, not a user error: something an agent following this skill gets wrong>
+- <A domain assumption that looks reasonable but is false>
+- <A field, format, or edge case agents routinely miss>
 
 ## Troubleshooting
 

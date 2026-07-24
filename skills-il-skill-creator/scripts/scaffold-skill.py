@@ -35,6 +35,7 @@ VALID_CATEGORIES = [
     "health-services",
     "marketing-growth",
     "accounting",
+    "travel",
 ]
 
 KEBAB_CASE_PATTERN = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
