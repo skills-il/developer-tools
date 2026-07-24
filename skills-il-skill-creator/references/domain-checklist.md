@@ -1,6 +1,6 @@
 # Domain Checklist: Agent Skill Authoring
 
-Canonical coverage list for a skill that teaches contributors how to author agent skills for skills-il. Used as the anchor for expert review.
+Canonical coverage list for a skill that teaches contributors how to author agent skills for skills-il. Use it as the coverage anchor when reviewing or extending this guide.
 
 ## Must cover (core)
 
@@ -40,10 +40,10 @@ Canonical coverage list for a skill that teaches contributors how to author agen
 
 | Item | Rationale |
 |---|---|
-| Automated eval harness / benchmark tooling (grading subagents, holdout scoring) | Contributor-facing skill. The eval loop, independent judge, and holdout gate run in the internal `update-skill` / `skills-il-admin-creator` pipeline, not in a community contributor's workflow. Contributors are told to establish a baseline manually (Step 6.5) rather than operate the harness. |
-| `evidence.json` authoring | Built and verified by the internal pipeline during onboarding of a merged PR. Contributors satisfy the grounding requirement through Step 4 fact-checking plus the Reference Links table. |
-| Publishing, DB seeding, ISR revalidation, trust scoring | Admin deployment pipeline, not contributor scope. |
-| Security scanning (Tank, SkillSpector, Snyk) | Runs automatically in category-repo CI. |
+| Automated eval harnesses and benchmark scoring | Contributor-facing skill. Contributors establish a baseline manually (Step 6.5) rather than operating tooling. |
+| `evidence.json` authoring | Generated during directory intake, not by the contributor. The grounding requirement is met through Step 4 fact-checking plus the Reference Links table. |
+| Publishing, database seeding, cache revalidation, trust scoring | Directory operations, not contributor scope. |
+| Security scanning | Runs automatically in category-repo CI. |
 
 ## Authoritative sources
 
