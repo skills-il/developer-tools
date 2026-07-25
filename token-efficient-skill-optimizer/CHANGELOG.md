@@ -1,5 +1,82 @@
 # Changelog — token-efficient-skill-optimizer
 
+## 1.2.1 — 2026-07-25
+
+Test coverage only. No rule, mode, or output-contract change.
+
+**Six `negative-trigger` cases (`T-31`–`T-36`) added to `tests/cases.jsonl`** — the split
+goes 20 → 26, the pool floor 40 → 46. Every existing case asked *given that the skill fired,
+did it behave?* None asked **should it have fired at all?** That is this package's own R-09
+defect class: `T-07` flags a missing negative boundary in *other people's* frontmatter while
+carrying no case for its own. Each new row names a distinct false-fire surface rather than
+rewording one probe — lexical collision on "token" (auth credentials) and on
+"optimize"/"cost" (runtime rendering, infrastructure spend), the two exclusions named in the
+description (one-off wording help, authoring a new skill), and subject-matter overlap with no
+artifact to audit.
+
+**Deliberately no harmful-target row.** `H-07` owns that behaviour in the sealed holdout;
+authoring a development twin after reading it would convert the holdout into training data.
+
+**Two mechanical guards, because the six cases alone would be theatre.** Model-graded cases
+cannot see the thing they depend on: the frontmatter clause that makes not-firing possible.
+`description states a negative boundary (R-09)` and `description names positive triggers
+(R-09)` fail the build if an optimization deletes `Do NOT use for…` or the quoted trigger
+phrases to save ~40 tokens — exactly the edit G-08 exists to flag, now enforced on this
+package rather than only on its targets. Without them all six cases would stay green while
+the behaviour silently broke.
+
+All four new assertions were **mutation-verified**: deleting a case, duplicating a prompt,
+stripping `Do NOT use`, and stripping the quoted triggers each produced the specific expected
+FAIL. Suite 100 → 104. The three load-bearing names are pinned in `REQUIRED_TESTS`.
+
+**Honest limit, stated in `tests/README.md` and not papered over:** these cases test the
+skill's behaviour once it is already in context. Whether the *host* loads it at all is decided
+upstream from the description, and nothing inside the package can observe that — it needs the
+agent in the loop. The guards cover the precondition, not the routing decision.
+
+Prompted by the Skills IL catalog submission ([skills-il/developer-tools#27]
+(https://github.com/skills-il/developer-tools/pull/27)), whose checklist item "verified
+doesn't trigger on unrelated topics" was the first reviewer to ask for evidence rather than a
+claim — and could not be ticked honestly.
+
+## 1.2.0 — 2026-07-25
+
+Round-2 research applied. Full evidence base and reasoning:
+`research-2026-07-25/DOSSIER.md` (31 academic works + 8 institutional resources, all
+verified against primary pages).
+
+**Two behaviour changes, each in its own commit so it can be reverted alone:**
+
+- **R-02 progressive-disclosure demoted from Tier 1 to Tier 2.** It no longer fires
+  automatically under the `conservative` profile. Its only quantitative vendor support
+  turned out to state 98.7% with no model, no benchmark, no methodology and no trial
+  count, while this project's own measurement found relocated material read 8/8 times
+  against a 74% break-even — turning a correctly measured −17.2% into +2.3% *more*
+  expensive. It now requires a stated read-rate estimate and reports
+  `[behavior-dependent]`.
+- **`[reported]`, a sixth label**, for a number a cited source reports about its own
+  experiment. The other five are all claims about the target; none could express
+  someone else's measurement, and the old convention of calling those `[projected]`
+  conflated a third party's result with our inference. Requires a source id.
+
+**Evidence corrections.** Three rules cited sources that resolved but did not support
+them (R-01, R-10, R-S4), and two safety rules rested on rationales nothing supported.
+R-S1's "redundancy is defense in depth" is replaced by measured unpredictability —
+shortening a safety prompt raised harmful compliance 20%→55% on one model while on two
+others the same prompt bought 0pp and quintupled false refusals. R-S2's warrant moves
+from instructional to architectural: under adaptive attack all eight published defenses
+exceed 50% ASR, including the two that amount to telling a model "this is data".
+
+**11 new rules** (R-24…R-34) covering structural-edit validation, evaluation sizing and
+judge hygiene, example-pruning conditioned on model capability, the R-14↔R-05 cache
+conflict, a cache-minimum guard, tokenizer portability, and output-side cost.
+
+**Two new gates.** G-11 citation-support (coverage reported at 15/37, not asserted) and
+G-12 constraint rules. New `layer:`, `source_claims:`, `conflicts_with:` fields.
+
+97 tests (was 89), 6 of them mutations. 10/10 package checks.
+
+
 ## 1.0.0 — 2026-07-24
 
 Initial release.

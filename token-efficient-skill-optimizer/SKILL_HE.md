@@ -14,7 +14,7 @@ description: >-
 license: MIT
 metadata:
   author: yosishe
-  version: 1.2.0
+  version: 1.2.1
   category: developer-tools
 ---
 
@@ -157,8 +157,9 @@ semantic-diff לכל שינוי, שמציינת אילו מזהי חוזה נג�
 - התיקייה `templates/` — `audit-report.md` · `benchmark-report.md` · `semantic-diff.md`.
 - התיקייה `examples/` — `example-input-skill.md` · `example-optimized-skill.md` ·
   `example-diff.md` (לקרוא רק כשהמשתמש שואל איך נראית הרצה).
-- התיקייה `tests/` — `testing-guide.md` (לקרוא לפני כל הרצת הערכה), `cases.jsonl` (30 מקרים
-  ומעלה, כולל בטיחות והזרקה), `holdout.jsonl`, `safety.jsonl`, `injection.jsonl`,
+- התיקייה `tests/` — `testing-guide.md` (לקרוא לפני כל הרצת הערכה), `cases.jsonl` (26 מקרי
+  פיתוח, מהם 6 שורות `negative-trigger` — מתי **לא** להידלק), `safety.jsonl` (8),
+  `injection.jsonl` (12, כל אחת עם וקטור נקוב), `holdout.jsonl` (8, אטום),
   `evaluation-rubric.md`.
 
 ## דוגמאות

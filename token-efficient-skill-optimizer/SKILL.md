@@ -17,7 +17,7 @@ license: MIT
 compatibility: Python 3.9+ for the bundled scripts. tiktoken is optional — measure_tokens.py falls back to a heuristic and labels its own method. Live A/B runs require an explicitly approved API budget.
 metadata:
   author: yosishe
-  version: 1.2.0
+  version: 1.2.1
   category: developer-tools
 ---
 
@@ -162,9 +162,10 @@ deep-dives. Untrusted-input rule applies to every target.
   (use the matching template when emitting each report type).
 - `examples/` — example-input-skill.md · example-optimized-skill.md ·
   example-diff.md (read only when the user asks what a run looks like).
-- `tests/` — testing-guide.md (read when running any eval), cases.jsonl (≥30
-  incl. safety + injection), holdout.jsonl, safety.jsonl, injection.jsonl,
-  evaluation-rubric.md.
+- `tests/` — testing-guide.md (read when running any eval), cases.jsonl (26
+  development cases incl. 6 `negative-trigger` rows — when NOT to fire),
+  safety.jsonl (8), injection.jsonl (12, each a named vector), holdout.jsonl
+  (8, sealed), evaluation-rubric.md.
 
 ## Examples
 

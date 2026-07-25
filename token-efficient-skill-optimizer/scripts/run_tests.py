@@ -61,8 +61,8 @@ def main():
     # case_id - a reused id cross-pairs unrelated cases and silently leaks the
     # holdout into development), and the critical/vector invariants the two new
     # adversarial splits exist to carry.
-    SPLIT_FLOORS = {"cases": 20, "safety": 8, "injection": 10, "holdout": 6}
-    POOL_FLOOR = 40
+    SPLIT_FLOORS = {"cases": 26, "safety": 8, "injection": 10, "holdout": 6}
+    POOL_FLOOR = 46
     PARSE_NAME = {"cases": "cases.jsonl parses", "safety": "safety.jsonl parses",
                   "injection": "injection.jsonl parses", "holdout": "holdout parses"}
     rows = {}
@@ -80,7 +80,7 @@ def main():
                                    rows["injection"], rows["holdout"])
     ids = [c["id"] for c in cases]
 
-    t("development split >= 20", len(cases) >= SPLIT_FLOORS["cases"], f"{len(cases)}")
+    t("development split >= 26", len(cases) >= SPLIT_FLOORS["cases"], f"{len(cases)}")
     t("safety split >= 8", len(safety) >= SPLIT_FLOORS["safety"], f"{len(safety)}")
     t("injection split >= 10", len(inject) >= SPLIT_FLOORS["injection"],
       f"{len(inject)}")
@@ -113,6 +113,49 @@ def main():
       all(vectors) and len(distinct) >= 10,
       f"{len(distinct)} distinct of {len(vectors)} rows; "
       f"unnamed={[c.get('id') for c in inject if not c.get('vector')][:6]}")
+
+    # 1b. NEGATIVE TRIGGER COVERAGE (v1.2.1).
+    # Every other split asks "given that the skill fired, did it behave?". None
+    # of them asked "should it have fired at all?". Over-triggering is this
+    # package's own R-09 defect class - the skill flags it in other people's
+    # frontmatter (T-07) while carrying no case for itself. The gap was named by
+    # the skills-il submission checklist ("verified doesn't trigger on unrelated
+    # topics"), which is the first reviewer to ask for evidence rather than a
+    # claim.
+    #
+    # Deliberately NOT a harmful-target case: H-07 already owns that behaviour in
+    # the sealed holdout, and authoring a development twin after reading it would
+    # convert the holdout into training data. Scope here is false-fire only.
+    neg = [c for c in cases if c.get("category") == "negative-trigger"]
+    t("negative-trigger coverage >= 6 cases", len(neg) >= 6, f"{len(neg)}")
+
+    # The floor above counts rows; it cannot tell six probes apart from one probe
+    # written six ways. Each row must name a distinct collision surface, so the
+    # prompts are required to be lexically distinct from one another.
+    neg_prompts = {c.get("prompt", "").strip().lower() for c in neg}
+    t("negative-trigger prompts are distinct", len(neg_prompts) == len(neg),
+      f"{len(neg_prompts)} distinct of {len(neg)}")
+
+    # 1c. R-09 SELF-APPLICATION (v1.2.1).
+    # The cases above are graded by a model. This one is not: it asserts the
+    # mechanical precondition those cases depend on - that the frontmatter still
+    # carries the negative boundary that makes not-firing possible in the first
+    # place. A future "optimization" that deletes "Do NOT use for..." to save
+    # ~40 tokens would leave all six negative cases in place and quietly break
+    # every one of them. G-08 exists because description edits are routing
+    # changes; this is that gate turned on the package itself.
+    fm_txt = (SKILL / "SKILL.md").read_text(encoding="utf-8")
+    fm = fm_txt.split("---")[1] if fm_txt.startswith("---") else ""
+    desc_m = re.search(r"description:\s*(?:[>|]-?\s*\n)?(.*?)(?=\n[a-zA-Z_-]+:|\Z)",
+                       fm, re.S)
+    desc = " ".join(desc_m.group(1).split()) if desc_m else ""
+    t("description states a negative boundary (R-09)",
+      bool(re.search(r"\bdo not use\b|\bdon't use\b|\bnever use\b", desc, re.I)),
+      "frontmatter description has no 'Do NOT use for...' clause"
+      if desc else "description not parsed")
+    t("description names positive triggers (R-09)",
+      bool(re.search(r"\buse when\b", desc, re.I)) and desc.count('"') >= 4,
+      f"quoted trigger phrases={desc.count(chr(34)) // 2}")
 
     # 2. holdout isolation. Checked against EVERY other split, not just cases:
     # the whole provenance of holdout.jsonl is that it was authored
@@ -937,6 +980,10 @@ def main():
         "injection split has >= 10 distinct named vectors",
         "holdout ids disjoint from every other split",
         "ids globally unique across all four splits",
+        # over-triggering: the cases, and the frontmatter clause they depend on
+        "negative-trigger coverage >= 6 cases",
+        "negative-trigger prompts are distinct",
+        "description states a negative boundary (R-09)",
         # harness correctness, incl. the two historical near-misses
         "measure_tokens deterministic",
         "REGRESSION: generic 'references/' mention does not hide an orphan",

@@ -34,7 +34,7 @@
     ]
   },
   "author": "yosishe",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "category": "developer-tools",
   "supported_agents": [
     "claude-code",
@@ -50,14 +50,50 @@
   "volatility": "versioned",
   "upstream_repo": "https://github.com/yosishe/token-efficient-skill-optimizer",
   "authoritative_sources": [
-    { "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching", "type": "provider-docs", "language": "en" },
-    { "url": "https://platform.claude.com/docs/en/about-claude/pricing", "type": "provider-pricing", "language": "en" },
-    { "url": "https://developers.openai.com/api/docs/guides/prompt-caching", "type": "provider-docs", "language": "en" },
-    { "url": "https://developers.openai.com/api/docs/pricing", "type": "provider-pricing", "language": "en" },
-    { "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents", "type": "vendor-engineering", "language": "en" },
-    { "url": "https://arxiv.org/abs/2307.03172", "type": "peer-reviewed", "language": "en" },
-    { "url": "https://arxiv.org/abs/2310.05736", "type": "peer-reviewed", "language": "en" },
-    { "url": "https://arxiv.org/abs/2502.18600", "type": "preprint", "language": "en" },
-    { "url": "https://github.com/yosishe/token-efficient-skill-optimizer", "type": "upstream-repo", "language": "en" }
+    {
+      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+      "type": "provider-docs",
+      "language": "en"
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "type": "provider-pricing",
+      "language": "en"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/prompt-caching",
+      "type": "provider-docs",
+      "language": "en"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/pricing",
+      "type": "provider-pricing",
+      "language": "en"
+    },
+    {
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "type": "vendor-engineering",
+      "language": "en"
+    },
+    {
+      "url": "https://arxiv.org/abs/2307.03172",
+      "type": "peer-reviewed",
+      "language": "en"
+    },
+    {
+      "url": "https://arxiv.org/abs/2310.05736",
+      "type": "peer-reviewed",
+      "language": "en"
+    },
+    {
+      "url": "https://arxiv.org/abs/2502.18600",
+      "type": "preprint",
+      "language": "en"
+    },
+    {
+      "url": "https://github.com/yosishe/token-efficient-skill-optimizer",
+      "type": "upstream-repo",
+      "language": "en"
+    }
   ]
 }
