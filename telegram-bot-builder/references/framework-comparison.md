@@ -6,8 +6,8 @@ Detailed comparison of grammY, Telegraf, and python-telegram-bot for building Te
 
 | | grammY | Telegraf | python-telegram-bot |
 |---|---|---|---|
-| **Current version** | v1.42.0 | v4.16.3 | v22.7 |
-| **Bot API support** | v9.6 (latest) | v7.1 | v9.6 (latest) |
+| **Current version** | v1.45.1 | v4.16.3 | v22.8 |
+| **Bot API support** | v10.2 (latest) | v7.1 | v10.0 |
 | **Language** | TypeScript / JavaScript | TypeScript / JavaScript | Python 3.10+ |
 | **Install** | `npm install grammy` | `npm install telegraf` | `pip install python-telegram-bot` |
 | **License** | MIT | MIT | LGPL-3.0 |
@@ -24,12 +24,12 @@ Detailed comparison of grammY, Telegraf, and python-telegram-bot for building Te
 | Callback queries | `bot.callbackQuery()` | `bot.action()` | `CallbackQueryHandler` |
 | Inline mode | `bot.inlineQuery()` | `bot.on("inline_query")` | `InlineQueryHandler` |
 | Middleware | Composer-based (Koa-style) | Composer-based (Koa-style) | Handler groups with priority |
-| Sessions | Plugin (`@grammyjs/session`) | Built-in (`session()`) | `persistence` module |
+| Sessions | Built-in (`session()` from `grammy`) | Built-in (`session()`) | `persistence` module |
 | Conversations | Plugin (`@grammyjs/conversations`) | Scenes / WizardScene | `ConversationHandler` |
 | Payments | Native support | Native support | Native support |
 | Mini Apps | Native support | Native support | Native support |
 | Error handling | `bot.catch()` | `bot.catch()` | `application.add_error_handler()` |
-| Rate limiting | Plugin (`@grammyjs/ratelimiter`) | Community middleware | Manual implementation |
+| Rate limiting | `@grammyjs/auto-retry` (retries on 429) or `@grammyjs/ratelimiter` | Community middleware | Built-in `AIORateLimiter` (needs the `[rate-limiter]` extra) |
 | i18n | Plugin (`@grammyjs/i18n`) | Community packages | Manual implementation |
 | Menu builder | Plugin (`@grammyjs/menu`) | Not built-in | Not built-in |
 | File uploads | `ctx.replyWithDocument()` | `ctx.replyWithDocument()` | `update.message.reply_document()` |
@@ -56,7 +56,7 @@ Detailed comparison of grammY, Telegraf, and python-telegram-bot for building Te
 |--------|---------|
 | `@grammyjs/conversations` | Multi-step conversations with await-style flow |
 | `@grammyjs/menu` | Interactive inline menus with navigation |
-| `@grammyjs/session` | Session storage (memory, Redis, Supabase, etc.) |
+| `@grammyjs/storage-redis`, `-file`, `-free` | Storage adapters for the built-in `session()` (the session middleware itself ships in `grammy`; there is no `@grammyjs/session` package) |
 | `@grammyjs/i18n` | Internationalization with Fluent |
 | `@grammyjs/ratelimiter` | Rate limiting per user |
 | `@grammyjs/hydrate` | Add methods to API response objects |
@@ -125,7 +125,7 @@ Major breaking changes (sync to async):
 ### Choose grammY when:
 - Starting a new TypeScript/JavaScript project
 - Deploying to serverless (Vercel, Cloudflare Workers, Deno Deploy)
-- You need the latest Bot API features (v9.6)
+- You need the latest Bot API surface first (grammY tracks v10.2; python-telegram-bot is at v10.0)
 - You want a rich plugin ecosystem with official support
 - You need concurrent update processing
 - You value auto-generated types from the Bot API spec
@@ -133,15 +133,14 @@ Major breaking changes (sync to async):
 ### Choose Telegraf when:
 - You have an existing Express/Fastify application
 - Your team is already familiar with Telegraf
-- You need a stable, battle-tested framework
+- You are maintaining an existing Telegraf codebase (note: Telegraf is effectively dormant, last release 4.16.3 on 2024-02-29, Bot API 7.1, so it will not gain any 10.x surface)
 - Bot API v7.1 features are sufficient for your use case
 - You prefer scenes/wizards over the conversations plugin model
 
 ### Choose python-telegram-bot when:
 - Your team primarily works in Python
 - You are building ML/AI-powered bots with Python libraries
-- You need the latest Bot API features (v9.6)
-- You want built-in job scheduling (JobQueue)
+- You want built-in job scheduling (JobQueue, via the `[job-queue]` extra)
 - You need Python-native async support
 - Your existing infrastructure is Python-based
 

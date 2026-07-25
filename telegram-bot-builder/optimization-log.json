@@ -1,0 +1,47 @@
+{
+  "cycles": [
+    {
+      "version": "1.3.0",
+      "date": "2026-07-25",
+      "eval_skipped_reason": "The description delta was the version string 'Bot API v10.0' -> 'v10.2' plus removal of two uncovered surfaces (Managed Bots, guest-bot) that the skill advertised and never taught. No trigger phrase or 'Do NOT use for' boundary changed, so routing behavior is unchanged apart from no longer falsely triggering on Managed Bots / guest mode.",
+      "scope_note": "Started as a 6-item fact fix (user reported the Telegram Business Premium-only claim was outdated). The Independent Judge and Expert Review both returned FAIL on PRE-EXISTING defects, escalating this into a 12-CRITICAL correction pass plus a references restructure.",
+      "critical_fixed": [
+        "Telegram Business bot connection wrongly stated as Premium-only (the reported bug). Bot API 10.0 allowed Secretary Bots to manage non-Premium accounts.",
+        "Gifts section claimed the receiver can convert a bot-sent gift back to Stars; sendGift states the exact opposite.",
+        "subscription_period was shown on replyWithInvoice; it exists only on createInvoiceLink.",
+        "Stars invoice constraints (provider_token empty string, prices exactly one item, max_tip_amount unsupported) were entirely absent.",
+        "Mini App section demonstrated tg.sendData() from inline-keyboard and menu-button launches, where sendData does not exist.",
+        "initData validation had no auth_date freshness check (indefinitely replayable) and used a timing-leaky === compare.",
+        "getBusinessAccountChats does not exist in the Bot API.",
+        "BusinessConnection.can_reply moved under rights (BusinessBotRights); the 24-hour reply window was undocumented.",
+        "python-telegram-bot JobQueue and run_webhook examples were broken: bare install omits [job-queue]/[webhooks] extras, and pytz is not a PTB v20+ dependency.",
+        "framework-comparison.md prescribed a nonexistent @grammyjs/session package, contradicting SKILL.md's own import.",
+        "Group privacy mode was entirely absent despite being the most common cause of 'group bot receives nothing'.",
+        "getUpdates/webhook mutual exclusivity, 24h update retention, and allowed_updates opt-in exceptions were never stated.",
+        "Local Bot API server section omitted the mandatory logOut call and its 10-minute cloud lockout, and carried an unsourced 'hard requirement for live audio/video streaming' claim.",
+        "BotFather token rotation cited a nonexistent /revokentoken command; the real command is /token.",
+        "Description and intro advertised Managed Bots and guest-bot mode with zero body coverage."
+      ],
+      "lessons": [
+        "Soft-404 detection: core.telegram.org/bots/business returned HTTP 200 with a 'Page not found' body. A curl status check cannot catch this; core.telegram.org URLs must be checked by page TITLE in a browser.",
+        "core.telegram.org is fully JS-rendered. WebFetch returns an empty shell and falsely reports 'page not found'. Always use Playwright for this host, including inside subagent prompts, or the Judge will mass-report SOURCE_UNREACHABLE.",
+        "Method-existence grep is now mandatory: getBusinessAccountChats and @grammyjs/session were both confidently-worded fabrications that survived prior cycles. Next cycle, grep every Bot API method name and every npm package name mentioned anywhere in the skill against the rendered method list / npm registry and require a hit for each.",
+        "Parameter-placement drift is a distinct failure mode from field-name drift: subscription_period exists in the API, just not on the method the skill used. Verifying 'the parameter is real' is not enough; verify it is real ON THAT METHOD.",
+        "Verify framework call signatures from the shipped .d.ts, not from memory. createInvoiceLink's positional argument order was confirmed against grammy@1.45.1 out/core/api.d.ts before writing the example.",
+        "SKILL.md is permanently at the 5,000-word ceiling. This cycle moved quickstarts, middleware, mini-apps, Telegraf/ptb webhook setups, and worked examples into references/. Any future addition must move an equal amount out. Keep RULES in the body and CODE in references, that split held up well here.",
+        "The EN/HE Examples parity gap flagged last cycle is RESOLVED: EN now has a '## Examples' pointer section and HE's 660-word inline examples were replaced with the same pointer, since references/examples.md already contained that content. Heading structure is now identical at 49 each.",
+        "Enriched DB content drifts independently of the body: the live FAQ still claimed grammY supported 'Bot API v9.5' while SKILL.md said v10.0. Always run the Phase 5.5 enriched-content fact-sync for this skill.",
+        "Two legacy evidence entries had raw_snippets copied from the skill's own markdown link text rather than the source page, passing self-consistency but failing --check-sources, and silently justifying several placeholder URLs. Watch for this pattern in other legacy skills.",
+        "DEFERRED to next cycle (Expert MAJOR findings, not blocking): Telegraf 4.16.3 has had no release since Feb 2024 and is still framed as 'stable, battle-tested' rather than dormant; the rate-limit remedy points at @grammyjs/transformer-throttler (last published 2022-11) instead of @grammyjs/auto-retry; references/conversations.md predates the @grammyjs/conversations 2.x replay model; no setMyCommands / language_code scoping despite this being a bilingual-bot skill; no file-handling section and no file_id bot-scoping gotcha; no deep-linking coverage; no webhook idempotency/redelivery guidance; Bot API 10.1/10.2 surfaces (Ephemeral Messages, Rich Messages) absent despite the skill claiming 10.2; the 10.2 Mini App cross-origin lockdown enforced 2026-07-20 is unmentioned; paid broadcasts not covered.",
+        "DEFERRED (MINOR): Hebrew string literals in quickstart code are written as \"!שלום! אני הבוט שלך\", a source-order artifact that renders a stray leading exclamation mark. Worth a sweep across references/quickstarts.md and examples.md.",
+        "PROPAGATION IS THE DOMINANT FAILURE MODE OF THIS SKILL'S UPDATE CYCLES. Three separate rounds failed because a correction landed in one file and not its siblings: EN fixed but not HE (Gifts, Stars pricing), SKILL files fixed but not references/deployment.md (plan quotas), body fixed but not evidence.json/domain-checklist (/revokentoken). Next cycle: after EVERY factual change, grep the OLD value across SKILL.md + SKILL_HE.md + every references/*.md + evidence.json + metadata.json, and require zero hits. Grep the CONCEPT too, not just the exact string, the Gifts miss happened because the sweep used 'convert it back into Stars' while the surviving copy said 'convert it back to Stars'.",
+        "Beware overcorrection when removing an unsourced number. The per-chat 1 msg/sec limit IS published in bots/faq; relabelling it 'not a published figure' deleted a true fact and contradicted domain-checklist item 9. Before softening a figure, search for it, absence of an evidence entry is not evidence of absence at the source.",
+        "Sanity-check every date you write. 2026-02-29 does not exist (2026 is not a leap year) and shipped into three files before a reviewer caught it. Re-read the raw registry/API response rather than retyping a year from memory.",
+        "evidence.json appears_in must name the file that actually carries the claim. Two entries pointed at the SKILL files for figures that live only in references/, which passes the self-consistency gate but misdirects the next reviewer.",
+        "verified_via must describe how the snippet was ACTUALLY obtained. A snippet found only inside a published npm tarball's .d.ts is 'typescript-declaration', not 'browser'."
+      ],
+      "gate_rounds": 5,
+      "gate_note": "Judge+Expert panel FAILED rounds 1-4 and PASSED round 5. Three of the round-2/3/4 findings were defects introduced BY the fixes: a non-existent date (2026-02-29, wrong year off npm), a fix applied to the SKILL files but not to references/deployment.md, and an overcorrection that relabelled the FAQ-published 1-msg/sec-per-chat limit as unpublished."
+    }
+  ]
+}

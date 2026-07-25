@@ -1,12 +1,12 @@
 ---
 name: telegram-bot-builder
-description: "בנו בוטים לטלגרם עם grammY, Telegraf או python-telegram-bot. מכסה Bot API v10.0, webhooks מול polling, מקלדות אינליין, פקודות, middleware, תשלומים ב-Telegram Stars + Gifts, Mini Apps 2.0, מצב Bot Business וטיפול בהודעות בעברית עם RTL. השתמשו כשבונים בוט טלגרם, מגדירים webhooks, מטפלים בהודעות בעברית בתוך בוט, או משלבים תשלומים דרך טלגרם. אל תשתמשו לבוטים של וואטסאפ (השתמשו ב-israeli-whatsapp-business), בוטים קוליים (השתמשו ב-hebrew-voice-bot-builder), או עיצוב צ'אטבוטים כללי (השתמשו ב-hebrew-chatbot-builder)."
+description: "בנו בוטים לטלגרם עם grammY, Telegraf או python-telegram-bot. מכסה Bot API v10.2, webhooks מול polling, מקלדות אינליין, פקודות, middleware, תשלומים ב-Telegram Stars + Gifts, Mini Apps 2.0, מצב Bot Business וטיפול בהודעות בעברית עם RTL. השתמשו כשבונים בוט טלגרם, מגדירים webhooks, מטפלים בהודעות בעברית בתוך בוט, או משלבים תשלומים דרך טלגרם. אל תשתמשו לבוטים של וואטסאפ (השתמשו ב-israeli-whatsapp-business), בוטים קוליים (השתמשו ב-hebrew-voice-bot-builder), או עיצוב צ'אטבוטים כללי (השתמשו ב-hebrew-chatbot-builder)."
 license: MIT
 ---
 
 # בניית בוט טלגרם
 
-בנו בוטים מוכנים לפרודקשן לשוק הישראלי עם grammY, Telegraf או python-telegram-bot. המדריך מכסה Bot API v10.0 (שוחרר באפריל 2026; אומת ב-20.05.2026), ארכיטקטורות webhook ו-polling, מקלדות אינליין, טיפול בטקסט עברי/RTL, תשלומים ב-Telegram Stars ו-Gifts, Mini Apps 2.0, מצב Bot Business, זרימת Managed Bots מ-v9.6, זרימת guest-bot של v10.0 לאיגנט-טים, ודיפלוי לפלטפורמות serverless.
+בנו בוטים מוכנים לפרודקשן לשוק הישראלי עם grammY, Telegraf או python-telegram-bot. המדריך מכסה Bot API v10.2 (שוחרר ב-14.07.2026), ארכיטקטורות webhook ו-polling, מקלדות אינליין, טיפול בטקסט עברי/RTL, תשלומים ב-Telegram Stars ו-Gifts, Mini Apps 2.0, מצב Bot Business, ודיפלוי לפלטפורמות serverless.
 
 ## בעיה
 
@@ -22,10 +22,10 @@ license: MIT
 
 בחרו פריימוורק לפי השפה, יעד הדיפלוי וגרסת Bot API שאתם צריכים:
 
-| תכונה | grammY v1.42.0 | Telegraf v4.16.3 | python-telegram-bot v22.7 |
+| תכונה | grammY v1.45.1 | Telegraf v4.16.3 | python-telegram-bot v22.8 |
 |--------|----------------|-------------------|---------------------------|
 | שפה | TypeScript/JS | TypeScript/JS | Python 3.10+ |
-| גרסת Bot API | עדכנית (v9.6) | v7.1 | v9.6 |
+| גרסת Bot API | עדכנית (v10.2) | v7.1 | v10.0 |
 | התקנה | `npm install grammy` | `npm install telegraf` | `pip install python-telegram-bot` |
 | פלאגינים | עשיר (sessions, menus, conversations, i18n) | בינוני (scenes, sessions) | הרחבות (JobQueue, persistence) |
 | serverless | Vercel, CF Workers, Deno Deploy, Supabase Edge, Fly.io | Express/Fastify/Lambda adapters | ASGI adapters, webhook ידני |
@@ -35,8 +35,8 @@ license: MIT
 | כדאי ל... | פרויקטים חדשים, serverless, פיצ'רים חדשים | אפליקציות Express/Fastify קיימות | צוותי Python, ML/data pipelines |
 
 **איך בוחרים:**
-- צריכים פיצ'רים של Bot API v10.0 (Stars subscriptions, Gifts API, Bot Business, Mini Apps 2.0)? בחרו **grammY** או **python-telegram-bot**.
-- כבר יש לכם שרת Express/Fastify? **Telegraf** משתלב חלק.
+- צריכים פיצ'רים של Bot API v10.x (Stars subscriptions, Gifts API, Bot Business, Mini Apps 2.0)? בחרו **grammY** או **python-telegram-bot**.
+- כבר יש לכם שרת Express/Fastify? **Telegraf** משתלב חלק, אבל שימו לב שהוא כמעט לא מתוחזק: הגרסה האחרונה 4.16.3 שוחררה ב-29.02.2024 (Bot API 7.1), והוא לא יקבל שום יכולת מ-10.x. לפרויקט חדש עדיף grammY.
 - צוות Python או פייפליין ML/data? **python-telegram-bot** הבחירה היחידה.
 - דיפלוי ל-Vercel/Cloudflare Workers/Deno? ל-**grammY** יש adapters מובנים.
 
@@ -55,7 +55,7 @@ license: MIT
 ### כללי אבטחת טוקן
 
 - **לעולם אל תעלו טוקנים ל-git.** השתמשו במשתני סביבה: `BOT_TOKEN` או `TELEGRAM_BOT_TOKEN`.
-- אפשר לבטל טוקנים דרך `/revokentoken` ב-BotFather.
+- מחליפים טוקן עם `/token` ב-BotFather (מהתיעוד: אם הטוקן נחשף או אבד, משתמשים בפקודה `/token` כדי לייצר חדש).
 - פורמט הטוקן הוא `{bot_id}:{secret}`. החלק לפני הנקודתיים הוא ה-user ID המספרי של הבוט.
 - שמרו בקובץ `.env` (הוסיפו ל-`.gitignore`) או בניהול סודות של הפלטפורמה.
 
@@ -71,163 +71,31 @@ license: MIT
 /setinlinefeedback - הסתברות לקבלת עדכוני chosen_inline_result
 ```
 
+## מצב פרטיות בקבוצות
+
+הסיבה הנפוצה ביותר ל"הבוט שלי בקבוצה לא מקבל כלום". **מצב פרטיות דלוק כברירת מחדל לכל בוט שמתווסף לקבוצה.** במצב הזה הבוט רואה רק:
+
+- פקודות שמופנות אליו מפורשות (`/command@this_bot`).
+- פקודות כלליות כמו `/start`, אבל רק אם הוא היה הבוט האחרון ששלח הודעה בקבוצה.
+- הודעות שנשלחו דרכו ב-inline.
+- תשובות להודעות שלו עצמו.
+
+ללא קשר למצב הפרטיות, בוט תמיד מקבל הודעות שירות, את כל ההודעות מצ'אטים פרטיים, ואת כל ההודעות מערוצים שהוא חבר בהם.
+
+שתי דרכים לפתור, לפי סדר עדיפות:
+
+1. **מוסיפים את הבוט לקבוצה כאדמין.** אדמינים מקבלים כל הודעה, בלי לשנות שום הגדרה.
+2. **מכבים את מצב הפרטיות** עם `/setprivacy` ב-BotFather. **חייבים אחר כך להסיר את הבוט מהקבוצה ולהוסיף אותו מחדש כדי שהשינוי ייכנס לתוקף**, וזה השלב שרוב האנשים מפספסים. טלגרם ממליצה על זה רק כשאין ברירה; ברוב המקרים force reply פותר את אותה בעיה.
+
+משתמשים יכולים לראות את הגדרת הפרטיות הנוכחית של בוט ברשימת חברי הקבוצה, כך שאפשר לבדוק את זה בלי לגעת בקוד.
+
 ## הקמת פרויקט
 
-### grammY (TypeScript)
+סקלטים מינימליים ורצים לשלושת הפריימוורקים (פקודות התקנה, `bot.ts` / `bot.py`, טיפול בשגיאות, כיבוי מסודר) נמצאים ב-[references/quickstarts.md](references/quickstarts.md).
 
-```bash
-mkdir my-telegram-bot && cd my-telegram-bot
-npm init -y
-npm install grammy dotenv
-npm install -D typescript @types/node
-npx tsc --init
-```
-
-**`src/bot.ts`:**
-
-```typescript
-import { Bot, Context, session, GrammyError, HttpError } from "grammy";
-import "dotenv/config";
-
-const token = process.env.BOT_TOKEN;
-if (!token) throw new Error("BOT_TOKEN environment variable is required");
-
-const bot = new Bot(token);
-
-// טיפול בפקודות
-bot.command("start", async (ctx) => {
-  await ctx.reply("!שלום! אני הבוט שלך");
-});
-
-bot.command("help", async (ctx) => {
-  await ctx.reply(
-    "הפקודות הזמינות:\n" +
-    "/start - התחלה\n" +
-    "/help - עזרה"
-  );
-});
-
-// טיפול בהודעות
-bot.on("message:text", async (ctx) => {
-  await ctx.reply(`קיבלתי: ${ctx.message.text}`);
-});
-
-// טיפול בשגיאות (קריטי - בלי זה שגיאות מפילות את הבוט בשקט)
-bot.catch((err) => {
-  const ctx = err.ctx;
-  console.error(`Error while handling update ${ctx.update.update_id}:`);
-  const e = err.error;
-  if (e instanceof GrammyError) {
-    console.error("Error in request:", e.description);
-  } else if (e instanceof HttpError) {
-    console.error("Could not contact Telegram:", e);
-  } else {
-    console.error("Unknown error:", e);
-  }
-});
-
-// הפעלה עם long polling (פיתוח)
-bot.start();
-console.log("Bot is running...");
-```
-
-### Telegraf (TypeScript)
-
-```bash
-mkdir my-telegram-bot && cd my-telegram-bot
-npm init -y
-npm install telegraf dotenv
-npm install -D typescript @types/node
-npx tsc --init
-```
-
-**`src/bot.ts`:**
-
-```typescript
-import { Telegraf, Context } from "telegraf";
-import "dotenv/config";
-
-const token = process.env.BOT_TOKEN;
-if (!token) throw new Error("BOT_TOKEN environment variable is required");
-
-const bot = new Telegraf(token);
-
-bot.start((ctx) => ctx.reply("!שלום! אני הבוט שלך"));
-
-bot.help((ctx) => ctx.reply(
-  "הפקודות הזמינות:\n" +
-  "/start - התחלה\n" +
-  "/help - עזרה"
-));
-
-bot.on("text", (ctx) => ctx.reply(`קיבלתי: ${ctx.message.text}`));
-
-// כיבוי מסודר
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
-
-// הפעלה עם long polling (פיתוח)
-bot.launch();
-console.log("Bot is running...");
-```
-
-### python-telegram-bot (Python)
-
-```bash
-mkdir my-telegram-bot && cd my-telegram-bot
-python -m venv venv
-source venv/bin/activate
-pip install python-telegram-bot python-dotenv
-```
-
-**`bot.py`:**
-
-```python
-import os
-import logging
-from dotenv import load_dotenv
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
-
-load_dotenv()
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-TOKEN = os.getenv("BOT_TOKEN")
-if not TOKEN:
-    raise ValueError("BOT_TOKEN environment variable is required")
-
-
-async def start(update: Update, context) -> None:
-    await update.message.reply_text("!שלום! אני הבוט שלך")
-
-
-async def help_command(update: Update, context) -> None:
-    await update.message.reply_text(
-        "הפקודות הזמינות:\n"
-        "/start - התחלה\n"
-        "/help - עזרה"
-    )
-
-
-async def echo(update: Update, context) -> None:
-    await update.message.reply_text(f"קיבלתי: {update.message.text}")
-
-
-def main() -> None:
-    application = ApplicationBuilder().token(TOKEN).build()
-
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("help", help_command))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
-
-    # הפעלה עם long polling (פיתוח)
-    application.run_polling()
-
-
-if __name__ == "__main__":
-    main()
-```
+שני דברים שחייבים להיות בכל סקלטון, בכל פריימוורק:
+- **handler לשגיאות.** בלעדיו הבוט קורס בשקט ב-rejection הראשון שלא נתפס (`bot.catch()` ב-grammY וב-Telegraf, `application.add_error_handler()` ב-python-telegram-bot).
+- **קריאת הטוקן מהסביבה**, אף פעם לא כמחרוזת בקוד. נכשלים מהר בעלייה אם `BOT_TOKEN` לא מוגדר.
 
 ## תבניות ליבה
 
@@ -268,7 +136,7 @@ bot.callbackQuery("cancel", async (ctx) => {
 ```
 
 **חוקי callback data קריטיים:**
-- מקסימום 64 בייטים (לא תווים). עברית צורכת 2-3 בייטים לתו ב-UTF-8, אז מקבלים בערך 21-32 תווים בעברית.
+- מקסימום 64 בייטים (לא תווים). כל תו עברי הוא 2 בייטים ב-UTF-8, כלומר 64 בייטים הם לכל היותר 32 תווים בעברית.
 - השתמשו במזהים קצרים באנגלית ל-callback data, הציגו עברית בטקסט הכפתור.
 - כלל אצבע: `טקסט כפתור = עברית למשתמש`, `callback data = מזהה אנגלי לקוד`.
 
@@ -306,43 +174,7 @@ application.add_handler(CallbackQueryHandler(button_handler))
 
 ### תבניות Middleware
 
-Middleware רץ לפני handlers וחיוני ללוגים, אימות, rate limiting ו-i18n.
-
-**middleware ב-grammY:**
-
-```typescript
-// middleware לוגים
-bot.use(async (ctx, next) => {
-  const start = Date.now();
-  await next();
-  const ms = Date.now() - start;
-  console.log(`Update ${ctx.update.update_id} processed in ${ms}ms`);
-});
-
-// middleware הרשאות (הגבלה למשתמשים ספציפיים)
-function adminOnly(ctx: Context, next: () => Promise<void>) {
-  const adminIds = [123456789, 987654321]; // Telegram user IDs
-  if (ctx.from && adminIds.includes(ctx.from.id)) {
-    return next();
-  }
-  return ctx.reply("אין לך הרשאה לפקודה זו.");
-}
-
-bot.command("admin", adminOnly, async (ctx) => {
-  await ctx.reply("פאנל ניהול");
-});
-```
-
-**python-telegram-bot לא משתמש ב-middleware** באותו אופן. במקום זאת, השתמשו ב-handler groups עם עדיפויות:
-
-```python
-# handlers של group 0 (ברירת מחדל) רצים קודם, אחר כך group 1 וכו׳
-# השתמשו ב-group -1 להתנהגות דמוית middleware
-async def log_update(update: Update, context) -> None:
-    logger.info(f"Update from user {update.effective_user.id}")
-
-application.add_handler(MessageHandler(filters.ALL, log_update), group=-1)
-```
+Middleware רץ לפני ה-handlers ונושא לוגים, הרשאות, הגבלת קצב ו-i18n. ב-grammY וב-Telegraf זו שרשרת בסגנון Koa (`bot.use(async (ctx, next) => ...)`); **ל-python-telegram-bot אין middleware** והוא משתמש בקבוצות handlers במקום (`group=-1` רץ לפני קבוצת ברירת המחדל 0). דוגמאות עובדות לשניהם, כולל שער `adminOnly`, נמצאות ב-[references/middleware.md](references/middleware.md).
 
 ### שיחות / תהליכים רב-שלביים
 
@@ -409,6 +241,13 @@ application.add_handler(conv_handler)
 
 ## Webhook מול Polling
 
+שני כללים מה-Bot API שקובעים אם תקבלו עדכונים בכלל:
+
+- **השיטות סותרות זו את זו.** מהתיעוד: יש שתי דרכים מוציאות זו את זו לקבל עדכונים, `getUpdates` מצד אחד ו-webhooks מצד שני. webhook מוגדר מרעיב את ה-polling בשקט, אז קוראים ל-`deleteWebhook` לפני מעבר ל-polling.
+- **עדכונים שלא נמסרו נמחקים אחרי 24 שעות.** מהתיעוד: עדכונים נשמרים בשרת עד שהבוט מקבל אותם, אך לא יותר מ-24 שעות. בוט שהיה מושבת סוף שבוע לא יקבל את הצבר.
+
+**השדה `allowed_updates` הוא opt-out, עם שלושה חריגים שהם opt-in.** השמטה שלו (או רשימה ריקה) מוסרת כל סוגי העדכונים **חוץ מ**-`chat_member`, `message_reaction` ו-`message_reaction_count`. אם אתם מחווטים טיפול בריאקציות או בחברות בקבוצה ולא מקבלים כלום, זו הסיבה: פרטו אותם מפורשות ב-`allowed_updates` ב-`setWebhook` / `getUpdates`.
+
 ### Polling (פיתוח)
 
 Polling גורם לבוט לשאול את טלגרם שוב ושוב "יש עדכונים חדשים?" דרך `getUpdates`. פשוט להגדרה, לא דורש URL ציבורי.
@@ -456,45 +295,11 @@ await bot.api.setWebhook(`https://your-domain.com/webhook/${process.env.WEBHOOK_
 });
 ```
 
-**הגדרת webhook ב-Telegraf:**
+הגדרות webhook ל-Telegraf ול-python-telegram-bot (שרת מובנה, שילוב עם Express, handler ל-Lambda, `run_webhook`) נמצאות ב-[references/deployment.md](references/deployment.md). שימו לב ש-`application.run_webhook()` דורש את התוספת `[webhooks]`, והוא נכשל בזמן ריצה אחרי `pip install python-telegram-bot` רגיל.
 
-```typescript
-// אפשרות 1: שרת webhook מובנה
-bot.launch({
-  webhook: {
-    domain: "https://your-domain.com",
-    port: 443,
-    secretToken: process.env.WEBHOOK_SECRET_TOKEN,
-  },
-});
+### אימות Webhook
 
-// אפשרות 2: אינטגרציה עם Express
-import express from "express";
-const app = express();
-app.use(bot.webhookCallback("/webhook"));
-app.listen(443);
-await bot.telegram.setWebhook("https://your-domain.com/webhook", {
-  secret_token: process.env.WEBHOOK_SECRET_TOKEN,
-});
-
-// אפשרות 3: Lambda/serverless
-export const handler = bot.createWebhook({ domain: "https://your-domain.com" });
-```
-
-**הגדרת webhook ב-python-telegram-bot:**
-
-```python
-application = ApplicationBuilder().token(TOKEN).build()
-# ... הוספת handlers ...
-
-application.run_webhook(
-    listen="0.0.0.0",
-    port=443,
-    url_path="webhook",
-    webhook_url="https://your-domain.com/webhook",
-    secret_token=os.getenv("WEBHOOK_SECRET_TOKEN"),
-)
-```
+תמיד מוודאים שכותרת `X-Telegram-Bot-Api-Secret-Token` תואמת ל-secret token שלכם. שלושת הפריימוורקים תומכים בזה דרך הפרמטר `secret_token` ב-`setWebhook`.
 
 ### מעבר בין מצבים
 
@@ -625,31 +430,35 @@ bot.on("message:contact", async (ctx) => {
 
 **קצב הודעות יוצאות:**
 - **30 הודעות/שנייה** גלובלי, על פני כל הצ'אטים
-- **הודעה אחת לשנייה** לכל צ'אט בודד (DM או קבוצה)
+- **הודעה אחת לשנייה** לכל צ'אט בודד. מה-FAQ: הימנעו משליחת יותר מהודעה אחת בשנייה; ייתכן שיתאפשרו פרצים קצרים מעבר למגבלה, אבל בסופו של דבר תתחילו לקבל שגיאות 429.
 - **20 הודעות/דקה** לקבוצה (שידור לאותה קבוצה)
 
-ל-grammY מומלץ להשתמש ב-[`@grammyjs/transformer-throttler`](https://github.com/grammyjs/transformer-throttler) שיכניס לתור ויכבד את המגבלות אוטומטית. ב-Telegraf וב-python-telegram-bot ממשים token bucket לפי צ'אט או משתמשים בתור חיצוני (BullMQ, Celery).
+ל-grammY מומלץ [`@grammyjs/auto-retry`](https://github.com/grammyjs/auto-retry), שמכבד `retry_after` אוטומטית ב-429 (הפלאגין הישן `transformer-throttler` לא שוחרר מאז 2022). ל-python-telegram-bot יש `AIORateLimiter` מובנה דרך התוספת `[rate-limiter]`. ב-Telegraf ממשים token bucket לפי צ'אט או משתמשים בתור חיצוני (BullMQ, Celery).
+
+**השדה `file_id` קשור למזהה בוט אחד.** מהתיעוד: מופע בדיקה לא יכול להשתמש במאגר `file_id` משותף כדי לשלוח מדיה במהירות, וצריך להעלות כל קובץ מחדש. אל תשמרו ערכי `file_id` ותשתמשו בהם מחדש בין טוקנים של בוטים שונים; העתקה מ-dev ל-prod נכשלת עם "wrong file identifier".
 
 **גדלי קבצים:**
 - **העלאת קובץ מהבוט:** 50 MB (שרת Bot API ברירת מחדל)
 - **הורדת קובץ מהבוט:** 20 MB
-- **בוט פרימיום עם שרת Bot API מקומי:** עד **2 GB**
+- **שרת Bot API מקומי (כל בוט, בלי קשר לפרימיום):** הורדות **ללא הגבלת גודל**, העלאות עד 2000 MB
 
-להעלאה או הורדה מעל 50 MB, מריצים [שרת Bot API](https://github.com/tdlib/telegram-bot-api) משלכם ומפנים את הבוט אליו דרך `apiRoot` (grammY) / `telegram.apiRoot` (Telegraf) / `base_url` (python-telegram-bot). שרת Bot API מקומי הוא גם דרישה קשיחה לשידור עדכוני אודיו/וידאו חיים ולמדיה גדולה במיוחד בקבוצות.
+להעלאה או הורדה מעל 50 MB, מריצים [שרת Bot API](https://github.com/tdlib/telegram-bot-api) משלכם ומפנים את הבוט אליו דרך `apiRoot` (grammY) / `telegram.apiRoot` (Telegraf) / `base_url` (python-telegram-bot).
+
+**קוראים ל-`logOut` קודם, אחרת הבוט פשוט לא יקבל עדכונים.** מהתיעוד: חובה לנתק את הבוט לפני הרצה מקומית, אחרת אין ערובה שהוא יקבל עדכונים; אחרי ניתוק מוצלח אפשר להתחבר מיד לשרת מקומי, אבל אי אפשר לחזור לשרת הענן במשך 10 דקות. קחו בחשבון את חלון 10 הדקות הזה לפני שמנסים בפרודקשן. `close` משמש למעבר בין שרתים מקומיים, אחרי מחיקת ה-webhook.
 
 ## תזמון משימות לפי Asia/Jerusalem
 
 בוטים שצריכים לפעול ב"9 בבוקר שעון ישראל" חייבים להגדיר אזור זמן ישראלי במפורש, לא לפי השרת ולא UTC. בישראל יש מעברי שעון קיץ/חורף שלא תואמים לאזורי ענן (פרנקפורט, us-east-1), אז היסט UTC קבוע יסטה בשעה פעמיים בשנה.
 
-**python-telegram-bot (`JobQueue`):**
+**python-telegram-bot (`JobQueue`):** דורש את התוספת `[job-queue]`. עם `pip install python-telegram-bot` רגיל, `application.job_queue` הוא `None` והקוד הזה זורק `AttributeError`. משתמשים ב-`zoneinfo` מהספרייה הסטנדרטית, לא ב-`pytz`, ש-PTB הפסיקה לדרוש החל מ-v20.
 
 ```python
-import pytz
+from zoneinfo import ZoneInfo
 from datetime import time
 
 application.job_queue.run_daily(
     send_morning_digest,
-    time=time(9, 0, tzinfo=pytz.timezone("Asia/Jerusalem")),
+    time=time(9, 0, tzinfo=ZoneInfo("Asia/Jerusalem")),
     name="morning_digest",
 )
 ```
@@ -668,20 +477,25 @@ cron.schedule("0 9 * * *", sendMorningDigest, {
 
 ## מצב Bot Business
 
-ב-Bot API 7.2 הושק **Telegram Business**, שמאפשר למשתמש פרימיום של טלגרם לחבר בוט לחשבון האישי שלו, כך שהבוט קורא ועונה להודעות אישיות בשמו. משתמשי פרימיום ישראלים יכולים להפעיל את זה בהגדרות > Telegram Business > צ'אטבוטים, ולהדביק את ה-`@username` של בוט מאושר.
+ב-Bot API 7.2 (31.03.2024) הוצג **Telegram Business**, שמאפשר למשתמש לחבר בוט לחשבון האישי שלו, כך שהבוט קורא ועונה להודעות אישיות בשמו. משתמשים ישראלים מפעילים את זה בהגדרות > Telegram Business > צ'אטבוטים, ומדביקים את ה-`@username` של בוט מאושר.
+
+**חיבור בוט לא דורש מנוי פרימיום.** ב-Bot API 10.0 (מאי 2026) טלגרם אפשרה ל-Secretary Bots לנהל חשבונות של משתמשים בלי מנוי פרימיום, והתיעוד הרשמי מציין היום שבוטים מחוברים זמינים גם למשתמשים ללא פרימיום. פרימיום עדיין נדרש לשאר פיצ'רי ה-Business (שעות פעילות, מיקום, תשובות מהירות, הודעות פתיחה והיעדרות, עמוד פתיחה מותאם), ולכן אל תתנו למסך ההצטרפות של הבוט לחסום משתמשים שאין להם פרימיום.
 
 כשהמשתמש מחבר את הבוט, הבוט מקבל עדכון `business_connection` עם `business_connection_id`. כל הודעה שמגיעה לאחד הצ'אטים המחוברים נושאת את אותו `business_connection_id`, וכל קריאה יוצאת (`sendMessage`, `editMessageText` וכו׳) חייבת להחזיר אותו כדי שטלגרם תנתב את התשובה דרך החשבון של המשתמש ולא של הבוט.
 
 מה הבוט יכול לעשות אחרי החיבור:
 - לקרוא ולענות להודעות DM נכנסות בשם משתמש ה-Telegram Business.
-- לקבל את רשימת הצ'אטים שהמשתמש מתכתב איתם (`getBusinessConnection`, אחר כך `getBusinessAccountChats`).
-- לשלוח, לערוך ולמחוק הודעות בשם המשתמש (לפי הרשאות לכל צ'אט שטלגרם חושפת).
+- ההרשאה `rights.can_reply` מוגבלת: היא מתירה לבוט לשלוח ולערוך הודעות **רק בצ'אטים פרטיים שהתקבלה בהם הודעה ב-24 השעות האחרונות**. מענה אוטומטי בזמן אמת בסדר, אבל מעקב מתוזמן או ריקון תור מאוחר יותר ייכשל גם כש-`can_reply` דלוק.
+- לשלוף את פרטי החיבור עצמו עם `getBusinessConnection`. אין מתודה שמחזירה את רשימת הצ'אטים של המשתמש, לומדים על צ'אט רק כשמגיעה בו הודעת `business_message`.
+- לשלוח, לערוך ולמחוק הודעות בשם המשתמש, לפי ההרשאות שהמשתמש נתן בשדה `rights` (מסוג `BusinessBotRights`).
 
 ```typescript
 // תפיסת החיבור (שומרים את business_connection_id לפי המשתמש)
 bot.on("business_connection", async (ctx) => {
   const conn = ctx.businessConnection;
-  console.log(`Connected to business user ${conn.user.id}, can_reply=${conn.can_reply}`);
+  // ההרשאות יושבות תחת conn.rights (BusinessBotRights).
+  // אין שדה conn.can_reply ברמה העליונה.
+  console.log(`Connected to business user ${conn.user.id}, can_reply=${conn.rights?.can_reply}`);
   // לשמור את conn.id לפי conn.user.id
 });
 
@@ -695,19 +509,24 @@ bot.on("business_message", async (ctx) => {
 
 שימושי לבעלי עסקים קטנים בישראל (אופטיקאים, סטודיות יוגה, סוכני ביטוח) שרוצים מענה אוטומטי בטלגרם האישי שלהם בשעות לא-פעילות, בלי להעביר לקוחות לבוט נפרד.
 
-הפניה: [https://core.telegram.org/bots/business](https://core.telegram.org/bots/business)
+הפניה: [Telegram Business, סקירת ה-API](https://core.telegram.org/api/business) ומחלקת [`BusinessConnection`](https://core.telegram.org/bots/api#businessconnection) בתיעוד ה-Bot API.
 
 ## API תשלומים
 
 לטלגרם יש שלושה מסלולי תשלום, בוחרים לפי מה שמוכרים:
 
-- **Telegram Stars (XTR)** - למוצרים דיגיטליים, שירותים ותוכן בתוך Mini App. הושק בערך ב-Bot API 7.4 (2024). לא צריך ספק תשלום חיצוני. משתמשים ישראלים רואים את המחיר בשקלים בחלון הרכישה (טלגרם ממירה אוטומטית לפי האזור של ה-App Store / Google Play של המשתמש), כלומר חשבונית של 100 כוכבים מוצגת כשווה ערך בשקלים בזמן הרכישה.
+- **Telegram Stars (XTR)** - למוצרים דיגיטליים, שירותים ותוכן בתוך Mini App. הושק ב-Bot API 7.4 (28.05.2024). לא צריך ספק תשלום חיצוני. חשבוניות נקובות ב-`XTR`, ומה שמשתמש ישראלי משלם על חבילת כוכבים נקבע בחשבון ה-App Store / Google Play שלו, אז אל תנקבו מחיר קבוע בשקלים לכמות כוכבים בטקסט השיווקי.
 - **Stars subscriptions** - מנויים מתחדשים (התווסף מאוחר יותר ב-2024). אותו מטבע `XTR`, עם `subscription_period` בחשבונית. משתמשים יכולים לבטל דרך הגדרות > Stars.
-- **Gifts API** (`sendGift`, `convertGiftToStars`) - הבוט שולח מתנה למשתמש; המקבל יכול להשאיר אותה על הפרופיל או להמיר חזרה לכוכבים.
+- **Gifts API** (`sendGift`) - הבוט שולח מתנה למשתמש, והמקבל שומר אותה על הפרופיל. הוא **לא יכול** להמיר מתנה שהבוט שלח בחזרה לכוכבים.
 - **paid_media** - מצמידים מחיר בכוכבים לתמונה/וידאו בצ'אטים וערוצים (המקבל משלם כוכבים כדי לפתוח).
 - **ספקי תשלום מסורתיים** (Stripe LIVE/TEST וכו׳) עדיין נתמכים למוצרים פיזיים ושירותים לא-דיגיטליים. מגדירים provider token דרך BotFather תחת `/mybots > Payments`, ומעבירים אותו כ-`provider_token` עם מטבע פיאט (`ILS`, `USD`).
 
 ### יצירת חשבונית
+
+**שלושה כללים נוקשים לחשבוניות כוכבים (`XTR`), שהפרה של כל אחד מהם נכשלת מול ה-API:**
+- `provider_token` חייב להיות **מחרוזת ריקה** (הוא נועד רק לספקי מטבע רגיל).
+- `prices` חייב להכיל **פריט אחד בדיוק**. פירוט מרובה שורות (מוצר + מס + משלוח) נדחה.
+- `max_tip_amount` **לא נתמך** בכוכבים.
 
 **grammY:**
 
@@ -739,68 +558,38 @@ bot.on("pre_checkout_query", async (ctx) => {
 });
 ```
 
-**python-telegram-bot:**
-
-```python
-from telegram import LabeledPrice
-
-async def buy(update: Update, context) -> None:
-    await update.message.reply_invoice(
-        title="מנוי פרימיום",
-        description="גישה לכל התכונות למשך חודש",
-        payload="premium_monthly",
-        currency="XTR",
-        prices=[LabeledPrice("מנוי חודשי", 100)],
-    )
-
-async def precheckout(update: Update, context) -> None:
-    query = update.pre_checkout_query
-    await query.answer(ok=True)
-
-async def successful_payment(update: Update, context) -> None:
-    payment = update.message.successful_payment
-    await update.message.reply_text("!תודה על הרכישה! המנוי הופעל")
-
-application.add_handler(CommandHandler("buy", buy))
-application.add_handler(PreCheckoutQueryHandler(precheckout))
-application.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, successful_payment))
-```
-
-**כללים קריטיים לתשלומים:**
-- חובה לענות ל-`pre_checkout_query` תוך 10 שניות, אחרת התשלום נכשל.
-- סכומי Telegram Stars (XTR) הם במספרים שלמים (ללא עשרוניות).
-- למוצרים פיזיים או שירותים לא-דיגיטליים, צריך ספק תשלום צד שלישי (Stripe וכו׳) שמוגדר דרך BotFather תחת `/mybots > Payments`.
-- החזרים מתבצעים דרך מתודת `refundStarPayment`, לא ידנית.
+מקבילה ב-python-telegram-bot: `references/examples.md`, דוגמה 4.
 
 ### מנויים מתחדשים ב-Stars
 
-מעבירים `subscription_period` (בשניות, כרגע 30 יום בלבד) בחשבונית כדי להפוך תשלום חד-פעמי בכוכבים למנוי מתחדש. טלגרם מטפלת במחזור החיוב, והבוט מקבל עדכון `successful_payment` בכל חידוש.
+**השדה `subscription_period` קיים רק ב-`createInvoiceLink`, ולא ב-`sendInvoice` / `replyWithInvoice`.** העברה שלו ל-`sendInvoice` פשוט לא עושה כלום. במקום זה יוצרים קישור ושולחים אותו. הערך חייב להיות כרגע `2592000` (30 יום).
 
 ```typescript
-await ctx.replyWithInvoice(
+const link = await bot.api.createInvoiceLink(
   "מנוי פרימיום",
   "גישה לכל התכונות, מתחדש מדי חודש",
   "premium_sub_v1",
+  "",                                       // provider_token: ריק בכוכבים
   "XTR",
-  [{ label: "מנוי חודשי", amount: 100 }],
-  {
-    subscription_period: 30 * 24 * 60 * 60, // 30 יום, היחיד שנתמך כרגע
-  },
+  [{ label: "מנוי חודשי", amount: 100 }],   // פריט אחד בדיוק
+  { subscription_period: 2592000 },          // 30 יום, הערך היחיד הנתמך
 );
+await ctx.reply(`להצטרפות: ${link}`);
 ```
 
 משתמשים מנהלים ומבטלים מנויים דרך הגדרות > Stars > המנויים שלי. האזינו ל-`message:successful_payment` בכל חידוש כדי להאריך גישה ב-DB.
 
 ### Gifts API
 
-`sendGift` שולח מדבקת מתנה למשתמש (משלמים בכוכבים מיתרת הבוט). המקבל יכול להציג אותה על הפרופיל או להפעיל `convertGiftToStars` כדי להחזיר אותה לכוכבים. שימושי לתוכניות נאמנות, הגרלות ומבצעים.
+`sendGift` שולח מדבקת מתנה למשתמש (משלמים בכוכבים מיתרת הבוט). **המקבל לא יכול להמיר מתנה שהבוט שלח בחזרה לכוכבים** (לשון התיעוד: המתנה לא ניתנת להמרה לכוכבים על ידי המקבל). `convertGiftToStars` הוא דבר אחר לגמרי: מתודה של בוט עסקי שדורשת `business_connection_id` ואת ההרשאה `can_convert_gifts_to_stars`, ופועלת על מתנות שבבעלות חשבון עסקי מחובר. אל תבטיחו למשתמשים מסלול פדיון. שימושי לתוכניות נאמנות והגרלות כמזכרת, לא כמטבע.
 
 ```typescript
-await bot.api.sendGift({
-  user_id: ctx.from.id,
-  gift_id: "<אחד מה-IDs ש-getAvailableGifts מחזיר>",
-  text: "תודה שאתם איתנו!", // הודעה אופציונלית
-});
+// ב-grammY החתימה של sendGift פוזיציונית: (user_id, gift_id, other?)
+await bot.api.sendGift(
+  ctx.from.id,
+  "<אחד מה-IDs ש-getAvailableGifts מחזיר>",
+  { text: "תודה שאתם איתנו!" }, // הודעה אופציונלית
+);
 ```
 
 תמיד קוראים ל-`getAvailableGifts` קודם כדי לראות את הקטלוג ואת המחירים העדכניים.
@@ -843,7 +632,23 @@ await bot.api.setChatMenuButton({
 
 ### קבלת נתונים מ-Mini App
 
-כשהמשתמש מבצע פעולה ב-Mini App ושולח נתונים בחזרה:
+**בוחרים את ערוץ ההחזרה הנכון, הם לא מתחלפים זה בזה.** המתודה `Telegram.WebApp.sendData()` זמינה, לשון התיעוד, רק ל-Mini Apps שנפתחו מכפתור מקלדת (כפתור `web_app` במקלדת reply, בצ'אטים פרטיים בלבד). **Mini App שנפתח מכפתור אינליין או מכפתור התפריט, כלומר בדיוק שתי הדרכים שהוצגו למעלה, לא יכול לקרוא ל-`sendData` בכלל.**
+
+| דרך הפתיחה | איך הנתונים חוזרים |
+|---|---|
+| כפתור `web_app` במקלדת reply | `sendData()` ואז הודעת שירות `message:web_app_data` (בלי שרת) |
+| כפתור אינליין, כפתור תפריט, קישור ישיר, מצב inline | שליחת POST ל-backend שלכם עם `initData`, עם אימות בצד השרת (למטה) |
+
+בשביל מסלול ה-`sendData` הכפתור חייב להיות מקלדת reply ולא אינליין:
+
+```typescript
+import { Keyboard } from "grammy";
+
+const kb = new Keyboard()
+  .webApp("פתח אפליקציה", "https://your-app.com/mini-app")
+  .resized();
+await ctx.reply("לחצו לפתיחה:", { reply_markup: kb });
+```
 
 **ב-Mini App (JavaScript בצד הדפדפן):**
 
@@ -877,159 +682,36 @@ bot.on("message:web_app_data", async (ctx) => {
 });
 ```
 
-### תכונות Mini Apps 2.0
+### תכונות Mini Apps 2.0 ואימות initData
 
-Bot API 7.x ו-8.x הוסיפו אוסף יכולות "Mini Apps 2.0" שחשופות דרך `window.Telegram.WebApp`. כולן דורשות גרסאות עדכניות של טלגרם, ואין להן אפקט בגרסאות ישנות, אז כדאי לבדוק תמיכה לפני קריאה.
+משטח ה-"Mini Apps 2.0" של Bot API 7.x/8.x (מסך מלא, קיצור למסך הבית, חיישני מכשיר, ביומטריה, מיקום, סטטוס אימוג'י) ומימוש מלא ומוקשח של `validateInitData` נמצאים ב-[references/mini-apps.md](references/mini-apps.md).
 
-**אחסון בענן** (`window.Telegram.WebApp.CloudStorage`) - אחסון key-value לכל משתמש שנשמר בין סשנים ובין מכשירים. עד 1024 מפתחות למשתמש, 4 KB לערך. לא צריך backend בשביל העדפות פשוטות:
+**נעילת cross-origin, בתוקף מ-20.07.2026.** ב-Bot API 10.2 טלגרם הקשיחה את האבטחה של Mini Apps וחסמה שימוש במתודות של Mini App ממקורות (origins) שונים מהדומיין המקורי של האפליקציה. Mini App שמטמיע iframes של צד שלישי או מוגש מדומיין משני נשבר. אפשר לבטל את ההגנה דרך ה-Mini App של @BotFather, ואז האחריות על קישורים לא מהימנים עוברת אליכם.
 
-```javascript
-const tg = window.Telegram.WebApp;
-tg.CloudStorage.setItem("last_order_id", "12345");
-tg.CloudStorage.getItem("last_order_id", (err, value) => {
-  console.log("Restored:", value);
-});
-```
-
-**אימות ביומטרי** (`window.Telegram.WebApp.BiometricManager`) - מבקשים מהמשתמש Face ID / Touch ID / טביעת אצבע כדי לחסום פעולות רגישות בתוך ה-Mini App. שימושי לאישור רכישות גדולות בכוכבים או שחרור טוקני תשלום שמורים:
-
-```javascript
-tg.BiometricManager.init(() => {
-  if (tg.BiometricManager.isBiometricAvailable) {
-    tg.BiometricManager.authenticate({ reason: "אישור תשלום" }, (success) => {
-      if (success) submitOrder();
-    });
-  }
-});
-```
-
-**שירות מיקום** (`window.Telegram.WebApp.LocationManager`) - בקשת קואורדינטות GPS בהרשאה מפורשת. מתאים לזרימות "מצא את הסניף הקרוב" בבוטים של רשתות ישראליות.
-
-**מצב מסך מלא** - `tg.requestFullscreen()` מרחיב את ה-Mini App לכל מסך הנייד. משלימים עם `tg.exitFullscreen()`.
-
-**התקנה למסך הבית** - `tg.addToHomeScreen()` מוסיף קיצור ל-Mini App על המסך הראשי באנדרואיד (ב-iOS מוצגות כרגע הוראות ידניות). עובד אחרי ש-`tg.checkHomeScreenStatus()` מאשר שהאפליקציה זמינה לכך.
-
-**הפניה:** [https://core.telegram.org/bots/webapps](https://core.telegram.org/bots/webapps)
-
-### אימות Mini App
-
-תמיד אמתו את ה-`initData` בשרת כדי לוודא שהבקשה באמת מגיעה מטלגרם:
-
-```typescript
-import crypto from "crypto";
-
-function validateInitData(initData: string, botToken: string): boolean {
-  const params = new URLSearchParams(initData);
-  const hash = params.get("hash");
-  params.delete("hash");
-
-  // מיון פרמטרים אלפביתי
-  const dataCheckString = Array.from(params.entries())
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, value]) => `${key}=${value}`)
-    .join("\n");
-
-  const secretKey = crypto
-    .createHmac("sha256", "WebAppData")
-    .update(botToken)
-    .digest();
-
-  const calculatedHash = crypto
-    .createHmac("sha256", secretKey)
-    .update(dataCheckString)
-    .digest("hex");
-
-  return calculatedHash === hash;
-}
-```
+כללים שאין עליהם ויתור אם אתם מגישים Mini App:
+- **אף פעם לא בוטחים ב-`initData` בצד הלקוח.** מאמתים בשרת עם סכמת HMAC-SHA256 שמפתחה `WebAppData`, לפני שקוראים ממנו שדה משתמש כלשהו.
+- **בודקים את `auth_date`.** בלי חלון טריות, מחרוזת `initData` שנלכדה מאמתת לנצח.
+- **משווים hash בזמן קבוע** (`crypto.timingSafeEqual`), לא עם `===`.
+- כל מתודות 2.0 הן no-op בגרסאות ישנות, אז בודקים תמיכה לפני קריאה.
 
 ## דיפלוי
 
-### Vercel Serverless (grammY)
+שלושה יעדים נפוצים, לכל אחד מלכודות ספציפיות לפריימוורק. קונפיגורציות עובדות מלאות נמצאות ב-[references/deployment.md](references/deployment.md):
 
-**`api/webhook.ts`:**
-
-```typescript
-import { Bot, webhookCallback } from "grammy";
-
-const bot = new Bot(process.env.BOT_TOKEN!);
-
-// רישום כל ה-handlers
-bot.command("start", (ctx) => ctx.reply("!שלום"));
-// ... handlers נוספים
-
-export default webhookCallback(bot, "std/http");
-```
-
-**הגדרת webhook אחרי הדיפלוי:**
-
-```bash
-curl "https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=https://your-app.vercel.app/api/webhook&secret_token=${SECRET}"
-```
-
-**אזהרות Vercel:**
-- לפונקציות Vercel יש timeout של 10 שניות בתוכנית Hobby, 60 שניות ב-Pro. פעולות ארוכות ייכשלו.
-- כל הרצה היא stateless. השתמשו באחסון חיצוני (Redis, database) לנתוני session.
-- `webhookCallback("std/http")` של grammY הוא ה-adapter הנכון ל-Vercel.
-
-### Cloudflare Workers (grammY)
-
-**`src/index.ts`:**
-
-```typescript
-import { Bot, webhookCallback } from "grammy";
-
-export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    const bot = new Bot(env.BOT_TOKEN);
-
-    bot.command("start", (ctx) => ctx.reply("!שלום"));
-    // ... handlers נוספים
-
-    return webhookCallback(bot, "cloudflare-mod")(request);
-  },
-};
-```
-
-**אזהרות Cloudflare:**
-- השתמשו ב-adapter `"cloudflare-mod"` (לא `"cloudflare"`).
-- ל-Workers יש מגבלת זמן CPU של 30 שניות (מספיק לרוב פעולות הבוט).
-- השתמשו ב-KV או D1 לשמירת מצב, לא בזיכרון.
-
-### VPS עם systemd (כל פריימוורק)
-
-לבוטים שצריכים long polling או חיבורים קבועים:
-
-**`/etc/systemd/system/telegram-bot.service`:**
-
-```ini
-[Unit]
-Description=Telegram Bot
-After=network.target
-
-[Service]
-Type=simple
-User=botuser
-WorkingDirectory=/opt/telegram-bot
-ExecStart=/usr/bin/node dist/bot.js
-Restart=always
-RestartSec=10
-Environment=NODE_ENV=production
-EnvironmentFile=/opt/telegram-bot/.env
-
-[Install]
-WantedBy=multi-user.target
-```
-
-```bash
-sudo systemctl enable telegram-bot
-sudo systemctl start telegram-bot
-sudo journalctl -u telegram-bot -f  # צפייה בלוגים
-```
+- **Vercel Serverless (grammY)** - משתמשים ב-`webhookCallback(bot, "std/http")`. חסר מצב, אז צריך אחסון סשנים חיצוני. מגבלות זמן הריצה משתנות לפי תוכנית, בדקו את המגבלות העדכניות של Vercel.
+- **Cloudflare Workers (grammY)** - משתמשים במתאם `"cloudflare-mod"` (לא `"cloudflare"`). מגבלות ה-CPU משתנות לפי תוכנית. KV או D1 לאחסון.
+- **VPS עם systemd** - כל פריימוורק, מתאים במיוחד ל-long polling. `Restart=always` יחד עם `EnvironmentFile=` לקובץ ה-`.env`.
 
 ## משאבים מצורפים
 
-- [השוואת פריימוורקים](references/framework-comparison.md) - מטריצת תכונות מפורטת של grammY מול Telegraf מול python-telegram-bot
+- [סקלטונים להתחלה](references/quickstarts.md) - שלדים רצים לשלושת הפריימוורקים
+- [השוואת פריימוורקים](references/framework-comparison.md) - מטריצת תכונות ופלאגינים
+- [Middleware](references/middleware.md) - תבניות middleware וקבוצות handlers
+- [שיחות](references/conversations.md) - מתכונים לתהליכים רב-שלביים
+- [Mini Apps](references/mini-apps.md) - משטח 2.0 ואימות initData
+- [דיפלוי](references/deployment.md) - Vercel, Cloudflare Workers, systemd, הגדרות webhook
+- [דוגמאות](references/examples.md) - חמישה בוטים עובדים מקצה לקצה
+- [צ'קליסט תחום](references/domain-checklist.md) - חוזה הכיסוי של הסקיל
 
 ## שרתי MCP מומלצים
 
@@ -1053,9 +735,9 @@ sudo journalctl -u telegram-bot -f  # צפייה בלוגים
 
 2. **הגבלת פורט ב-webhook.** טלגרם שולח webhooks רק לפורטים 443, 80, 88 או 8443. סוכנים מגדירים webhooks על פורט 3000 או 8080, שנכשלים בשקט ללא שגיאה מצד טלגרם.
 
-3. **שכחה לענות ל-callback queries.** כל עדכון `callback_query` חייב להיענות עם `answerCallbackQuery()` תוך 30 שניות, גם אם אין מה להציג. אי-מענה גורם לספינר טעינה קבוע על הכפתור של המשתמש. סוכנים מטפלים בלוגיקה אבל שוכחים את קריאת ה-answer.
+3. **שכחה לענות ל-callback queries.** כל עדכון `callback_query` חייב להיענות עם `answerCallbackQuery()`, גם אם אין מה להציג (שדה ה-`text` האופציונלי מוגבל ל-0-200 תווים). אי-מענה גורם לספינר טעינה קבוע על הכפתור של המשתמש. סוכנים מטפלים בלוגיקה אבל שוכחים את קריאת ה-answer.
 
-4. **callback data חורג מ-64 בייטים.** סוכנים שמים מחרוזות בעברית, אובייקטי JSON או מזהים ארוכים ב-callback data. תווי עברית צורכים 2-3 בייטים כל אחד ב-UTF-8. השתמשו במפתחות אנגליים קצרים ושמרו נתונים מלאים ב-session/database.
+4. **callback data חורג מ-64 בייטים.** סוכנים שמים מחרוזות בעברית, אובייקטי JSON או מזהים ארוכים ב-callback data. כל תו עברי הוא 2 בייטים ב-UTF-8, כלומר 64 בייטים הם לכל היותר 32 תווים. השתמשו במפתחות אנגליים קצרים ושמרו נתונים מלאים ב-session/database.
 
 5. **חוסר escaping ב-HTML parse mode.** כשמשתמשים ב-`parse_mode: "HTML"`, התווים `<`, `>` ו-`&` בטקסט שהמשתמש סיפק חייבים escaping. סוכנים מחזירים קלט משתמש במצב HTML בלי escaping, מה שגורם לשגיאות פרסור.
 
@@ -1067,7 +749,7 @@ sudo journalctl -u telegram-bot -f  # צפייה בלוגים
 
 9. **שינויי API בין Telegraf v4 ל-v3.** סוכנים שאומנו על דאטה ישן מייצרים קוד Telegraf v3 (`telegraf.startPolling()`, `telegraf.webhookCallback()`). ב-v4 זה `bot.launch()` ו-`bot.webhookCallback()`.
 
-10. **מיגרציה ל-async ב-python-telegram-bot v20+.** גרסאות לפני v20 השתמשו ב-handlers סינכרוניים. v22.7 הוא async לחלוטין. סוכנים מייצרים קוד סינכרוני (`def handler` במקום `async def handler`) או משתמשים בקלאס `Updater` המיושן.
+10. **מיגרציה ל-async ב-python-telegram-bot v20+.** גרסאות לפני v20 השתמשו ב-handlers סינכרוניים. v22.8 הוא async לחלוטין. סוכנים מייצרים קוד סינכרוני (`def handler` במקום `async def handler`) או משתמשים בקלאס `Updater` המיושן.
 
 11. **סיוט escaping של Markdown בעברית.** MarkdownV2 דורש escaping ל: `_`, `*`, `[`, `]`, `(`, `)`, `~`, `` ` ``, `>`, `#`, `+`, `-`, `=`, `|`, `{`, `}`, `.`, `!`. בטקסט עברי זה גורם לשגיאות בלי סוף. השתמשו ב-HTML parse mode במקום.
 
@@ -1075,248 +757,7 @@ sudo journalctl -u telegram-bot -f  # צפייה בלוגים
 
 ## דוגמאות
 
-### דוגמה 1: בוט תפריט בעברית עם מקלדות אינליין
-
-בוט תפריט מסעדה שמציג קטגוריות ופריטים בעברית:
-
-```typescript
-import { Bot, InlineKeyboard } from "grammy";
-
-const bot = new Bot(process.env.BOT_TOKEN!);
-
-const menu = {
-  starters: {
-    label: "מנות ראשונות",
-    items: [
-      { name: "חומוס", price: 32 },
-      { name: "סלט ירוק", price: 28 },
-      { name: "מרק יום", price: 35 },
-    ],
-  },
-  mains: {
-    label: "מנות עיקריות",
-    items: [
-      { name: "שניצל", price: 52 },
-      { name: "המבורגר", price: 58 },
-      { name: "פסטה", price: 48 },
-    ],
-  },
-};
-
-bot.command("start", async (ctx) => {
-  const keyboard = new InlineKeyboard()
-    .text(menu.starters.label, "cat:starters")
-    .text(menu.mains.label, "cat:mains");
-
-  await ctx.reply("ברוכים הבאים! בחרו קטגוריה:", { reply_markup: keyboard });
-});
-
-bot.callbackQuery(/^cat:(.+)$/, async (ctx) => {
-  const category = ctx.match[1] as keyof typeof menu;
-  const cat = menu[category];
-  if (!cat) return ctx.answerCallbackQuery("קטגוריה לא נמצאה");
-
-  const keyboard = new InlineKeyboard();
-  cat.items.forEach((item) => {
-    keyboard.text(`${item.name} - ₪${item.price}`, `item:${category}:${item.name}`).row();
-  });
-  keyboard.text("חזרה", "back");
-
-  await ctx.answerCallbackQuery();
-  await ctx.editMessageText(`${cat.label}:`, { reply_markup: keyboard });
-});
-
-bot.callbackQuery("back", async (ctx) => {
-  const keyboard = new InlineKeyboard()
-    .text(menu.starters.label, "cat:starters")
-    .text(menu.mains.label, "cat:mains");
-
-  await ctx.answerCallbackQuery();
-  await ctx.editMessageText("בחרו קטגוריה:", { reply_markup: keyboard });
-});
-
-bot.catch((err) => console.error(err));
-bot.start();
-```
-
-### דוגמה 2: בוט Webhook על Vercel עם הודעות שגיאה בעברית
-
-בוט webhook בפרודקשן שמדפלוי על Vercel ומטפל בשגיאות עם הודעות בעברית:
-
-```typescript
-// api/webhook.ts (Vercel serverless function)
-import { Bot, webhookCallback, GrammyError } from "grammy";
-
-const bot = new Bot(process.env.BOT_TOKEN!);
-
-bot.command("start", async (ctx) => {
-  await ctx.reply(
-    "שלום! אני בוט שירות לקוחות.\n\n" +
-    "שלחו לי הודעה ואחזור אליכם בהקדם.\n" +
-    "לתפריט, שלחו /menu",
-    { parse_mode: "HTML" }
-  );
-});
-
-bot.command("menu", async (ctx) => {
-  await ctx.reply(
-    "<b>תפריט ראשי</b>\n\n" +
-    "/status - בדיקת סטטוס הזמנה\n" +
-    "/contact - פרטי התקשרות\n" +
-    "/hours - שעות פעילות",
-    { parse_mode: "HTML" }
-  );
-});
-
-bot.command("hours", async (ctx) => {
-  await ctx.reply(
-    "<b>שעות פעילות</b>\n\n" +
-    "ראשון-חמישי: 09:00-18:00\n" +
-    "שישי: 09:00-14:00\n" +
-    "שבת: סגור",
-    { parse_mode: "HTML" }
-  );
-});
-
-bot.on("message:text", async (ctx) => {
-  const adminChatId = process.env.ADMIN_CHAT_ID;
-  if (adminChatId) {
-    await bot.api.sendMessage(
-      adminChatId,
-      `הודעה מ-${ctx.from.first_name} (${ctx.from.id}):\n\n${ctx.message.text}`
-    );
-  }
-  await ctx.reply("ההודעה התקבלה! נחזור אליכם בהקדם.");
-});
-
-bot.catch((err) => {
-  console.error("Bot error:", err.error);
-  if (err.error instanceof GrammyError) {
-    console.error("Telegram API error:", err.error.description);
-  }
-});
-
-export default webhookCallback(bot, "std/http");
-```
-
-### דוגמה 3: python-telegram-bot עם תהליך שיחה ועברית
-
-בוט Python שמממש טופס הזמנה רב-שלבי:
-
-```python
-import os
-import logging
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import (
-    ApplicationBuilder, CommandHandler, MessageHandler,
-    CallbackQueryHandler, ConversationHandler, filters
-)
-
-logging.basicConfig(level=logging.INFO)
-TOKEN = os.getenv("BOT_TOKEN")
-
-# מצבי שיחה
-CHOOSING_ITEM, CHOOSING_QUANTITY, CONFIRMING = range(3)
-
-ITEMS = {
-    "coffee": {"he": "קפה", "price": 15},
-    "tea": {"he": "תה", "price": 12},
-    "cake": {"he": "עוגה", "price": 25},
-}
-
-
-async def start_order(update: Update, context) -> int:
-    keyboard = [
-        [InlineKeyboardButton(f"{v['he']} - ₪{v['price']}", callback_data=k)]
-        for k, v in ITEMS.items()
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("מה תרצו להזמין?", reply_markup=reply_markup)
-    return CHOOSING_ITEM
-
-
-async def item_chosen(update: Update, context) -> int:
-    query = update.callback_query
-    await query.answer()
-
-    item_key = query.data
-    context.user_data["item"] = item_key
-    item = ITEMS[item_key]
-    await query.edit_message_text(f"בחרתם {item['he']}. כמה יחידות?")
-    return CHOOSING_QUANTITY
-
-
-async def quantity_chosen(update: Update, context) -> int:
-    try:
-        quantity = int(update.message.text)
-        if quantity < 1 or quantity > 10:
-            raise ValueError
-    except ValueError:
-        await update.message.reply_text("אנא הזינו מספר בין 1 ל-10:")
-        return CHOOSING_QUANTITY
-
-    context.user_data["quantity"] = quantity
-    item_key = context.user_data["item"]
-    item = ITEMS[item_key]
-    total = item["price"] * quantity
-
-    keyboard = [
-        [
-            InlineKeyboardButton("אישור", callback_data="confirm"),
-            InlineKeyboardButton("ביטול", callback_data="cancel"),
-        ]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    await update.message.reply_text(
-        f"סיכום הזמנה:\n"
-        f"פריט: {item['he']}\n"
-        f"כמות: {quantity}\n"
-        f"סה\"כ: ₪{total}\n\n"
-        f"לאשר?",
-        reply_markup=reply_markup,
-    )
-    return CONFIRMING
-
-
-async def confirm_order(update: Update, context) -> int:
-    query = update.callback_query
-    await query.answer()
-
-    if query.data == "confirm":
-        await query.edit_message_text("ההזמנה אושרה! תודה רבה 🎉")
-    else:
-        await query.edit_message_text("ההזמנה בוטלה.")
-
-    context.user_data.clear()
-    return ConversationHandler.END
-
-
-async def cancel(update: Update, context) -> int:
-    await update.message.reply_text("ההזמנה בוטלה.")
-    context.user_data.clear()
-    return ConversationHandler.END
-
-
-def main() -> None:
-    application = ApplicationBuilder().token(TOKEN).build()
-
-    conv_handler = ConversationHandler(
-        entry_points=[CommandHandler("order", start_order)],
-        states={
-            CHOOSING_ITEM: [CallbackQueryHandler(item_chosen)],
-            CHOOSING_QUANTITY: [MessageHandler(filters.TEXT & ~filters.COMMAND, quantity_chosen)],
-            CONFIRMING: [CallbackQueryHandler(confirm_order)],
-        },
-        fallbacks=[CommandHandler("cancel", cancel)],
-    )
-    application.add_handler(conv_handler)
-    application.run_polling()
-
-
-if __name__ == "__main__":
-    main()
-```
+חמש דוגמאות מלאות ומקצה לקצה נמצאות ב-[references/examples.md](references/examples.md): בוט תפריט בעברית עם מקלדות אינליין, בוט webhook על Vercel עם הודעות שגיאה בעברית, תהליך שיחה ב-python-telegram-bot, חשבונית כוכבים ב-python, ואימות מספר טלפון ישראלי.
 
 ## פתרון בעיות
 
@@ -1332,7 +773,9 @@ if __name__ == "__main__":
 1. בדקו אם webhook מוגדר: `GET https://api.telegram.org/bot<token>/getWebhookInfo`
 2. אם `url` מוגדר ואתם רוצים polling, קראו ל-`deleteWebhook` קודם.
 3. אם משתמשים ב-webhooks, וודאו שה-URL נגיש ציבורית ועל פורט תקף (443, 80, 88, 8443).
-4. בדקו אם המשתמש חסם את הבוט או הסיר מהקבוצה.
+4. **בקבוצה: בדקו את מצב הפרטיות** (ראו "מצב פרטיות בקבוצות"). זו הסיבה הנפוצה ביותר, והיא נראית בדיוק כמו webhook שבור.
+5. אם אתם מצפים ל-`message_reaction` או ל-`chat_member`, וודאו שהם מפורטים ב-`allowed_updates`, הם לא נמסרים כברירת מחדל.
+6. בדקו אם המשתמש חסם את הבוט או הסיר מהקבוצה.
 
 ### "Bad Request: can't parse entities"
 
@@ -1372,7 +815,7 @@ try {
 ה-handler שלכם לוקח יותר מדי זמן. טלגרם מצפה לתשובה תוך כ-60 שניות ל-webhooks (אבל בפועל כדאי לכוון מתחת ל-30 שניות). פתרונות:
 - העבירו עיבוד כבד לתור משימות ברקע.
 - שלחו תשובה מיידית "מעבד...", ועדכנו כשסיימתם.
-- בפלטפורמות serverless (Vercel Hobby), ה-timeout יכול להיות נמוך כמו 10 שניות.
+- בפלטפורמות serverless זמן הריצה המרבי יכול להיות קצר מאוד (תלוי תוכנית), כך שה-handler נקטע באמצע.
 
 ### טקסט עברי מופיע הפוך בלוגים/קונסול
 

@@ -246,3 +246,138 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 ```
+
+### Example 4: Telegram Stars Invoice (python-telegram-bot)
+
+**python-telegram-bot:**
+
+```python
+from telegram import LabeledPrice
+
+async def buy(update: Update, context) -> None:
+    await update.message.reply_invoice(
+        title="מנוי פרימיום",
+        description="גישה לכל התכונות למשך חודש",
+        payload="premium_monthly",
+        currency="XTR",
+        prices=[LabeledPrice("מנוי חודשי", 100)],
+    )
+
+async def precheckout(update: Update, context) -> None:
+    query = update.pre_checkout_query
+    await query.answer(ok=True)
+
+async def successful_payment(update: Update, context) -> None:
+    payment = update.message.successful_payment
+    await update.message.reply_text("!תודה על הרכישה! המנוי הופעל")
+
+application.add_handler(CommandHandler("buy", buy))
+application.add_handler(PreCheckoutQueryHandler(precheckout))
+application.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, successful_payment))
+```
+
+**Critical payment rules:**
+- `pre_checkout_query` MUST be answered within 10 seconds or the payment fails.
+- Telegram Stars (XTR) amounts are in whole stars (no decimals).
+- For physical goods or non-digital services, you need a third-party payment provider (Stripe, etc.) configured via BotFather under `/mybots > Payments`.
+- Refunds are done via `refundStarPayment` API method, not manually.
+
+
+### Example 5: Israeli phone-number verification via request_contact (grammY)
+
+```typescript
+import { Keyboard } from "grammy";
+
+bot.command("verify", async (ctx) => {
+  const kb = new Keyboard()
+    .requestContact("שתף את מספר הטלפון שלי")
+    .resized()
+    .oneTime();
+  await ctx.reply("כדי להמשיך, שתף את מספר הטלפון שלך:", { reply_markup: kb });
+});
+
+function normalizeIsraeliPhone(raw: string): string | null {
+  // Strip spaces, dashes, parens
+  let p = raw.replace(/[\s\-()]/g, "");
+  // +972XXXXXXXXX, 972XXXXXXXXX, 0XXXXXXXXX -> +972XXXXXXXXX
+  if (p.startsWith("+972")) return p;
+  if (p.startsWith("972")) return "+" + p;
+  if (p.startsWith("0")) return "+972" + p.slice(1);
+  return null;
+}
+
+bot.on("message:contact", async (ctx) => {
+  const contact = ctx.message.contact;
+  // Security: ensure the contact belongs to the sender, not someone they pasted
+  if (contact.user_id !== ctx.from.id) {
+    return ctx.reply("אנא שתף את המספר שלך, לא של אדם אחר.");
+  }
+  const phone = normalizeIsraeliPhone(contact.phone_number);
+  if (!phone) {
+    return ctx.reply("המספר שהתקבל לא נראה כמספר ישראלי תקין.");
+  }
+  await ctx.reply(`תודה! המספר שלך נשמר: ${phone}`);
+});
+```
+
+
+### Example 6: Telegram Stars invoice, successful_payment and pre_checkout (grammY)
+
+```typescript
+bot.command("buy", async (ctx) => {
+  await ctx.replyWithInvoice(
+    "מנוי פרימיום",              // title
+    "גישה לכל התכונות למשך חודש",  // description
+    "premium_monthly",            // payload (your internal ID)
+    "XTR",                        // currency (XTR = Telegram Stars)
+    [{ label: "מנוי חודשי", amount: 100 }], // prices (100 Stars)
+  );
+});
+
+// Handle successful payment
+bot.on("message:successful_payment", async (ctx) => {
+  const payment = ctx.message.successful_payment;
+  console.log(`Payment received: ${payment.total_amount} ${payment.currency}`);
+  console.log(`Payload: ${payment.invoice_payload}`);
+
+  await ctx.reply("!תודה על הרכישה! המנוי הופעל");
+});
+
+// Handle pre-checkout query (MUST answer within 10 seconds)
+bot.on("pre_checkout_query", async (ctx) => {
+  // Validate the order, check stock, etc.
+  await ctx.answerPreCheckoutQuery(true);
+  // Or reject: await ctx.answerPreCheckoutQuery(false, "מוצר אזל מהמלאי");
+});
+```
+
+
+
+### Example 7: Stars subscription via createInvoiceLink (grammY)
+
+```typescript
+const link = await bot.api.createInvoiceLink(
+  "מנוי פרימיום",
+  "גישה לכל התכונות, מתחדש מדי חודש",
+  "premium_sub_v1",
+  "",                                       // provider_token: empty for Stars
+  "XTR",
+  [{ label: "מנוי חודשי", amount: 100 }],   // exactly one item
+  { subscription_period: 2592000 },          // 30 days, the only supported value
+);
+await ctx.reply(`להצטרפות: ${link}`);
+```
+
+
+
+### Example 8: sendGift (grammY, positional signature)
+
+```typescript
+// grammY's sendGift is positional: (user_id, gift_id, other?)
+await bot.api.sendGift(
+  ctx.from.id,
+  "<one of the IDs returned by getAvailableGifts>",
+  { text: "תודה שאתם איתנו!" }, // optional message attached to the gift
+);
+```
+

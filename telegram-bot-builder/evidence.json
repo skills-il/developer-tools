@@ -1,15 +1,21 @@
 {
   "schemaVersion": "1.0",
   "skill": "telegram-bot-builder",
-  "generated_at": "2026-05-20T00:00:00Z",
+  "generated_at": "2026-07-25T19:29:41.664024+00:00",
   "claims": [
     {
       "claim_id": "bot-api-v10",
-      "claim": "Telegram released Bot API v10.0 in April 2026, adding guest-bot multi-agent flows on top of v9.6 features (Managed Bots, Stars subscriptions, Gifts API, Bot Business mode, Mini Apps 2.0).",
-      "source_url": "https://core.telegram.org/bots/api-changelog",
-      "raw_snippet": "Bot API",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "metadata.json"]
+      "claim": "Telegram released Bot API 10.2 on July 14, 2026; Bot API 10.0 was released May 8, 2026.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "July 14, 2026 Bot API 10.2",
+      "fetched_at": "2026-07-25T19:03:45.339871+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "metadata.json"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:03:45.339871+00:00"
     },
     {
       "claim_id": "telegram-botnews",
@@ -17,7 +23,10 @@
       "source_url": "https://t.me/botnews",
       "raw_snippet": "BotNews",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "grammy-docs",
@@ -25,7 +34,10 @@
       "source_url": "https://grammy.dev/",
       "raw_snippet": "grammY",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "python-telegram-bot-docs",
@@ -33,7 +45,10 @@
       "source_url": "https://docs.python-telegram-bot.org/",
       "raw_snippet": "python-telegram-bot",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "telegraf-docs",
@@ -41,31 +56,47 @@
       "source_url": "https://telegraf.js.org/",
       "raw_snippet": "Telegraf",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "bot-file-upload-limit",
-      "claim": "Telegram's default Bot API server limits bot file uploads to 50 MB; running a local Bot API server raises the limit to 2 GB for premium bots.",
+      "claim": "Telegram's default Bot API server limits bot file uploads to 50 MB and downloads to 20 MB; a local Bot API server allows downloads without a size limit and uploads up to 2000 MB, with no Telegram Premium involved.",
       "source_url": "https://core.telegram.org/bots/api",
-      "raw_snippet": "50",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "Download files without a size limit. Upload files up to 2000 MB.",
+      "fetched_at": "2026-07-25T19:03:45.339871+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:03:45.339871+00:00"
     },
     {
       "claim_id": "telegram-bot-api-endpoint",
-      "claim": "Telegram's REST Bot API endpoint pattern is api.telegram.org/bot<token>/<method>; the canonical endpoint for registering webhooks is the setWebhook method. Example webhook URLs in the skill (your-domain.com, your-app.vercel.app, your-app.com, example.com) are placeholders the user must replace with their real deployment host.",
+      "claim": "Telegram's REST Bot API endpoint pattern is api.telegram.org/bot<token>/<method>.",
       "source_url": "https://core.telegram.org/bots/api",
-      "raw_snippet": "api.telegram.org https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=https://your-app.vercel.app/api/webhook&secret_token=${SECRET} https://api.telegram.org/bot<token https://example.com/webhook https://your-app.com/mini-app https://your-domain.com https://your-domain.com/webhook https://your-domain.com/webhook/${process.env.WEBHOOK_SECRET}",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "https://api.telegram.org/bot<token>/METHOD_NAME",
+      "fetched_at": "2026-07-25T19:05:28.420975+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:05:28.420975+00:00"
     },
     {
       "claim_id": "botfather-commands",
-      "claim": "BotFather is Telegram's official bot management bot; the /newbot command creates a new bot and /revokentoken regenerates the token of an existing one.",
+      "claim": "BotFather is Telegram's official bot management bot; the /newbot command creates a new bot.",
       "source_url": "https://core.telegram.org/bots/tutorial",
       "raw_snippet": "/newbot",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "systemd-service-path",
@@ -73,31 +104,48 @@
       "source_url": "https://systemd.io/",
       "raw_snippet": "systemd",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/deployment.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/deployment.md"
+      ]
     },
     {
       "claim_id": "bot-business-docs",
-      "claim": "Telegram Bot Business mode (introduced in 2024) is documented at core.telegram.org/bots/business and Mini Apps / WebApp at core.telegram.org/bots/webapps.",
-      "source_url": "https://core.telegram.org/bots/business",
-      "raw_snippet": "Bot Business https://core.telegram.org/bots/business](https://core.telegram.org/bots/business",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "claim": "Telegram Business is documented at core.telegram.org/api/business; connecting a bot does not require Telegram Premium.",
+      "source_url": "https://core.telegram.org/api/business",
+      "raw_snippet": "Additionally, connected bots » are also available to non-Premium users.",
+      "fetched_at": "2026-07-25T19:03:45.339871+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:03:45.339871+00:00"
     },
     {
       "claim_id": "telegram-webapps-docs",
       "claim": "Telegram Mini Apps (WebApp) documentation is at core.telegram.org/bots/webapps.",
       "source_url": "https://core.telegram.org/bots/webapps",
-      "raw_snippet": "webapps https://core.telegram.org/bots/webapps](https://core.telegram.org/bots/webapps",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "With Mini Apps developers can use JavaScript to create infinitely flexible interfaces that can be launched right inside Telegram",
+      "fetched_at": "2026-07-25T19:05:28.420975+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:05:28.420975+00:00"
     },
     {
       "claim_id": "grammy-transformer-throttler",
-      "claim": "The grammy-transformer-throttler middleware (github.com/grammyjs/transformer-throttler) enforces Telegram's rate limits in grammY-based bots.",
+      "claim": "@grammyjs/transformer-throttler was last published 2022-11-13 and is superseded by @grammyjs/auto-retry for honouring retry_after on HTTP 429.",
       "source_url": "https://github.com/grammyjs/transformer-throttler",
       "raw_snippet": "transformer-throttler",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "telegram-bot-api-local",
@@ -105,7 +153,516 @@
       "source_url": "https://github.com/tdlib/telegram-bot-api",
       "raw_snippet": "telegram-bot-api",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "business-bot-non-premium-10-0",
+      "claim": "Bot API 10.0 (May 8, 2026) allowed Secretary Bots to manage accounts of users without a Telegram Premium subscription.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Allowed Secretary Bots to manage accounts of users without a Telegram Premium subscription.",
+      "fetched_at": "2026-07-25T19:03:45.339871+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:03:45.339871+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "business-bot-rights",
+      "claim": "BusinessConnection exposes an optional rights field of type BusinessBotRights (which contains can_reply); there is no top-level can_reply field and no getBusinessAccountChats method in the Bot API.",
+      "source_url": "https://core.telegram.org/bots/api#businessconnection",
+      "raw_snippet": "rights\tBusinessBotRights\tOptional. Rights of the business bot",
+      "fetched_at": "2026-07-25T19:03:45.339871+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:03:45.339871+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "grammy-bot-api-10-2",
+      "claim": "grammY v1.45.0 (July 16, 2026) added support for Bot API 10.2; python-telegram-bot v22.8 supports up to Bot API 10.0.",
+      "source_url": "https://github.com/grammyjs/grammY/releases",
+      "raw_snippet": "Bot API 10.2",
+      "fetched_at": "2026-07-25T19:03:45.339871+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:03:45.339871+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/framework-comparison.md"
+      ]
+    },
+    {
+      "claim_id": "bot-api-changelog-url",
+      "claim": "Telegram publishes the Bot API changelog at core.telegram.org/bots/api-changelog.",
+      "source_url": "https://core.telegram.org/bots/api-changelog",
+      "raw_snippet": "Bot API changelog",
+      "fetched_at": "2026-07-25T19:03:57.992173+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:03:57.992173+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "placeholder-example-urls",
+      "claim": "Placeholder/example URLs used in code samples (your-domain.com, your-app.com/mini-app, example.com/webhook, api.telegram.org/bot<token>/setWebhook with a templated host) are illustrative placeholders, not factual endpoint claims. The real Bot API host pattern is documented at core.telegram.org/bots/api.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Illustrative placeholders only, not real endpoints: https://your-domain.com , https://your-domain.com/webhook , https://your-domain.com/webhook/${process.env.WEBHOOK_SECRET} , https://your-app.com/mini-app , https://example.com/webhook , https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=https://your-app.vercel.app/api/webhook&secret_token=${SECRET}",
+      "fetched_at": "2026-07-25T19:05:45.430053+00:00",
+      "verified_via": "not-a-source-claim",
+      "verified_at": "2026-07-25T19:06:22.464589+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/deployment.md"
+      ]
+    },
+    {
+      "claim_id": "botfather-token-rotation",
+      "claim": "BotFather rotates a bot token with the /token command; there is no /revokentoken command.",
+      "source_url": "https://core.telegram.org/bots/features",
+      "raw_snippet": "If your existing token is compromised or you lost it for some reason, use the /token command to generate a new one.",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "group-privacy-mode",
+      "claim": "Privacy mode is enabled by default for all bots added to groups except bots added as admins; disabling it requires re-adding the bot to the group.",
+      "source_url": "https://core.telegram.org/bots/features",
+      "raw_snippet": "Privacy mode is enabled by default for all bots, except bots that were added to a group as admins (bot admins always receive all messages). It can be disabled so that the bot receives all messages like an ordinary user (the bot will need to be re-added to the group for this change to take effect).",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "updates-exclusive-24h",
+      "claim": "getUpdates and webhooks are mutually exclusive, and undelivered updates are not kept longer than 24 hours.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "There are two mutually exclusive ways of receiving updates for your bot - the getUpdates method on one hand and webhooks on the other. Incoming updates are stored on the server until the bot receives them either way, but they will not be kept longer than 24 hours.",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "allowed-updates-optin",
+      "claim": "An empty or omitted allowed_updates list delivers all update types except chat_member, message_reaction, and message_reaction_count.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Specify an empty list to receive all update types except chat_member, message_reaction, and message_reaction_count (default).",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "stars-invoice-constraints",
+      "claim": "For Telegram Stars invoices provider_token must be an empty string and prices must contain exactly one item.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Pass an empty string for payments in Telegram Stars.",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "stars-prices-one-item",
+      "claim": "The prices array must contain exactly one item for Telegram Stars payments.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Must contain exactly one item for payments in Telegram Stars.",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "gift-not-convertible",
+      "claim": "A gift sent by a bot via sendGift cannot be converted to Telegram Stars by the receiver; convertGiftToStars is a business-bot method requiring the can_convert_gifts_to_stars right.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "The gift can't be converted to Telegram Stars by the receiver.",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "convert-gift-business-right",
+      "claim": "convertGiftToStars requires the can_convert_gifts_to_stars business bot right and a business_connection_id.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Converts a given regular gift to Telegram Stars. Requires the can_convert_gifts_to_stars business bot right.",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "logout-before-local",
+      "claim": "logOut must be called before running a bot against a local Bot API server, and locks the bot out of the cloud server for 10 minutes.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "You must log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes.",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "senddata-keyboard-only",
+      "claim": "Telegram.WebApp.sendData is only available for Mini Apps launched via a Keyboard button.",
+      "source_url": "https://core.telegram.org/bots/webapps",
+      "raw_snippet": "This method is only available for Mini Apps launched via a Keyboard button.",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "initdata-auth-date",
+      "claim": "Mini App initData should additionally be checked against auth_date to prevent use of outdated data.",
+      "source_url": "https://core.telegram.org/bots/webapps",
+      "raw_snippet": "To prevent the use of outdated data, you can additionally check the auth_date field, which contains a Unix timestamp of when it was received by the Mini App.",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "answercallbackquery-text-cap",
+      "claim": "The optional text of answerCallbackQuery is limited to 0-200 characters; no response deadline is documented.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters.",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "business-can-reply-24h",
+      "claim": "BusinessBotRights.can_reply is scoped to private chats that had incoming messages in the last 24 hours.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "True, if the bot can send and edit messages in the private chats that had incoming messages in the last 24 hours",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "subscription-period-link-only",
+      "claim": "subscription_period is a createInvoiceLink parameter and must currently always be 2592000 (30 days).",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "The number of seconds the subscription will be active for before the next payment. Currently, it must always be 2592000 (30 days).",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "ptb-optional-extras",
+      "claim": "python-telegram-bot ships JobQueue (apscheduler), webhooks (tornado) and AIORateLimiter (aiolimiter) as optional extras, and does not depend on pytz.",
+      "source_url": "https://pypi.org/pypi/python-telegram-bot/json",
+      "raw_snippet": "apscheduler",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "grammy-session-core",
+      "claim": "The grammY session middleware ships in the grammy core package; there is no @grammyjs/session package on npm.",
+      "source_url": "https://grammy.dev/plugins/session",
+      "raw_snippet": "session",
+      "fetched_at": "2026-07-25T19:29:41.664024+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:29:41.664024+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "bots-faq-url",
+      "claim": "Telegram's Bots FAQ (broadcast rate limits, paid broadcasts) is at core.telegram.org/bots/faq.",
+      "source_url": "https://core.telegram.org/bots/faq",
+      "raw_snippet": "Bots FAQ",
+      "fetched_at": "2026-07-25T19:30:12.576742+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:30:12.576742+00:00",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "bots-payments-url",
+      "claim": "The Bot Payments API guide is at core.telegram.org/bots/payments.",
+      "source_url": "https://core.telegram.org/bots/payments",
+      "raw_snippet": "Bot Payments API",
+      "fetched_at": "2026-07-25T19:30:12.576742+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:30:12.576742+00:00",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "botfather-setprivacy",
+      "claim": "/setprivacy is the BotFather command that toggles group privacy mode, and /start is the standard general command a bot receives in a group only when it was the last bot to post.",
+      "source_url": "https://core.telegram.org/bots/features",
+      "raw_snippet": "General commands (e.g. /start) if the bot was the last bot to send a message to the group.",
+      "fetched_at": "2026-07-25T19:30:12.576742+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:30:12.576742+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "miniapp-origin-hardening-10-2",
+      "claim": "Bot API 10.2 disallows Mini App methods from origins other than the original Mini App domain, automatically enabled for all Mini Apps on July 20, 2026, with an opt-out via the BotFather Mini App.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Hardened the security of Mini Apps by disallowing the usage of Mini App methods from origins different from the original Mini App domain. The protection will be automatically enabled for all Mini Apps on July 20, 2026. You can opt-out from the protection through the @BotFather Mini App.",
+      "fetched_at": "2026-07-25T19:45:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:45:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "file-id-bot-scoped",
+      "claim": "A file_id is tied to a single bot id, so a test bot cannot reuse a shared file_id database and files must be reuploaded per bot.",
+      "source_url": "https://core.telegram.org/bots/features",
+      "raw_snippet": "the file_id field is tied to a single bot id, so your test instance cannot use a shared file_id database to quickly send media",
+      "fetched_at": "2026-07-25T19:45:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:45:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "telegraf-dormant",
+      "claim": "Telegraf's latest release is 4.16.3, published 2024-02-29, supporting Bot API 7.1.",
+      "source_url": "https://registry.npmjs.org/telegraf",
+      "raw_snippet": "2024-02-29",
+      "fetched_at": "2026-07-25T19:45:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:45:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/framework-comparison.md"
+      ]
+    },
+    {
+      "claim_id": "grammy-auto-retry",
+      "claim": "@grammyjs/auto-retry (latest 2.0.2) is the current grammY plugin for honouring retry_after on HTTP 429; @grammyjs/transformer-throttler was last published 2022-11-13.",
+      "source_url": "https://github.com/grammyjs/auto-retry",
+      "raw_snippet": "auto-retry",
+      "fetched_at": "2026-07-25T19:45:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T19:45:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "grammy-sendgift-signature",
+      "claim": "grammY's Api.sendGift is positional: sendGift(user_id, gift_id, other?, signal?), not a single options object.",
+      "source_url": "https://registry.npmjs.org/grammy",
+      "raw_snippet": "sendGift(user_id: number, gift_id: string, other?",
+      "fetched_at": "2026-07-25T19:45:00+00:00",
+      "verified_via": "typescript-declaration",
+      "verified_at": "2026-07-25T19:45:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "webhook-ports",
+      "claim": "Telegram delivers webhooks only to ports 443, 80, 88 and 8443.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Ports currently supported for webhooks: 443, 80, 88, 8443.",
+      "fetched_at": "2026-07-25T20:05:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T20:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "precheckout-10s",
+      "claim": "answerPreCheckoutQuery must be answered within 10 seconds of the pre-checkout query.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.",
+      "fetched_at": "2026-07-25T20:05:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T20:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "callback-data-64",
+      "claim": "callback_data is limited to 1-64 bytes.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Data to be sent in a callback query to the bot when the button is pressed, 1-64 bytes",
+      "fetched_at": "2026-07-25T20:05:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T20:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "broadcast-rate-limits",
+      "claim": "Bots cannot broadcast more than about 30 messages per second without paid broadcasts, and no more than 20 messages per minute in a group.",
+      "source_url": "https://core.telegram.org/bots/faq",
+      "raw_snippet": "bots are not able to broadcast more than about 30 messages per second",
+      "fetched_at": "2026-07-25T20:05:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T20:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "group-rate-limit",
+      "claim": "In a group, bots cannot send more than 20 messages per minute.",
+      "source_url": "https://core.telegram.org/bots/faq",
+      "raw_snippet": "In a group, bots are not be able to send more than 20 messages per minute.",
+      "fetched_at": "2026-07-25T20:05:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T20:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "cloudstorage-limits",
+      "claim": "Mini App CloudStorage allows up to 1024 keys, each value 0-4096 characters.",
+      "source_url": "https://core.telegram.org/bots/webapps",
+      "raw_snippet": "You can store up to 1024 keys in the cloud storage",
+      "fetched_at": "2026-07-25T20:05:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T20:05:00+00:00",
+      "appears_in": [
+        "references/mini-apps.md"
+      ]
+    },
+    {
+      "claim_id": "telegraf-createwebhook-type",
+      "claim": "Telegraf's createWebhook() is async and resolves to an Express-style middleware, not a Node RequestListener.",
+      "source_url": "https://registry.npmjs.org/telegraf/-/telegraf-4.16.3.tgz",
+      "raw_snippet": "Returns an Express-style middleware you can pass to app.use()",
+      "fetched_at": "2026-07-25T20:05:00+00:00",
+      "verified_via": "typescript-declaration",
+      "verified_at": "2026-07-25T20:05:00+00:00",
+      "appears_in": [
+        "references/deployment.md"
+      ]
+    },
+    {
+      "claim_id": "per-chat-rate-limit",
+      "claim": "Telegram's FAQ advises avoiding more than one message per second in a single chat, with short bursts tolerated before 429 errors.",
+      "source_url": "https://core.telegram.org/bots/faq",
+      "raw_snippet": "In a single chat, avoid sending more than one message per second.",
+      "fetched_at": "2026-07-25T20:20:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T20:20:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "business-bot-api-7-2",
+      "claim": "Telegram Business integration (BusinessConnection) landed in Bot API 7.2, released March 31, 2024.",
+      "source_url": "https://core.telegram.org/bots/api-changelog",
+      "raw_snippet": "Added the class BusinessConnection",
+      "fetched_at": "2026-07-25T20:20:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T20:20:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "stars-bot-api-7-4",
+      "claim": "Telegram Stars payments (currency XTR) were introduced in Bot API 7.4, released May 28, 2024.",
+      "source_url": "https://core.telegram.org/bots/api-changelog",
+      "raw_snippet": "Added support for payments in Telegram Stars by introducing the new currency",
+      "fetched_at": "2026-07-25T20:20:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-07-25T20:20:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }

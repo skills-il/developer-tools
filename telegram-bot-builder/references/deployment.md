@@ -25,7 +25,7 @@ curl "https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=https://your-app.v
 ```
 
 **Important Vercel caveats:**
-- Vercel functions have a 10-second timeout on Hobby plan, 60 seconds on Pro. Long-running operations will fail.
+- Vercel function timeouts vary by plan; check Vercel's current limits. Long-running operations will fail.
 - Each invocation is stateless. Use external storage (Redis, database) for session data.
 - grammY's `webhookCallback("std/http")` is the correct adapter for Vercel Edge/Serverless.
 
@@ -50,7 +50,7 @@ export default {
 
 **Cloudflare caveats:**
 - Use `"cloudflare-mod"` adapter (not `"cloudflare"`).
-- Workers have a 30-second CPU time limit (enough for most bot operations).
+- Workers CPU time limits vary by plan.
 - Use KV or D1 for persistence, not in-memory state.
 
 ## VPS with systemd (Any Framework)
@@ -83,3 +83,52 @@ sudo systemctl enable telegram-bot
 sudo systemctl start telegram-bot
 sudo journalctl -u telegram-bot -f  # View logs
 ```
+
+## Webhook setup: Telegraf and python-telegram-bot
+
+**Telegraf webhook setup:**
+
+```typescript
+// Option 1: Built-in webhook server
+bot.launch({
+  webhook: {
+    domain: "https://your-domain.com",
+    port: 443,
+    secretToken: process.env.WEBHOOK_SECRET_TOKEN,
+  },
+});
+
+// Option 2: Express integration
+import express from "express";
+const app = express();
+app.use(bot.webhookCallback("/webhook"));
+app.listen(443);
+await bot.telegram.setWebhook("https://your-domain.com/webhook", {
+  secret_token: process.env.WEBHOOK_SECRET_TOKEN,
+});
+
+// Option 3: Lambda/serverless
+// Export the handler
+// createWebhook() is async: it returns a Promise of an Express-style middleware
+export const handler = await bot.createWebhook({ domain: "https://your-domain.com" });
+```
+
+**python-telegram-bot webhook setup:**
+
+```python
+application = ApplicationBuilder().token(TOKEN).build()
+# ... add handlers ...
+
+# Option 1: Built-in webhook server
+application.run_webhook(
+    listen="0.0.0.0",
+    port=443,
+    url_path="webhook",
+    webhook_url="https://your-domain.com/webhook",
+    secret_token=os.getenv("WEBHOOK_SECRET_TOKEN"),
+)
+
+# Option 2: Custom ASGI/WSGI integration
+# Use application.update_queue.put() to feed updates manually
+```
+
