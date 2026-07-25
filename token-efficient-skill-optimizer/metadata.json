@@ -1,0 +1,63 @@
+{
+  "display_name": {
+    "he": "מייעל סקילים חסכוני בטוקנים",
+    "en": "Token-Efficient Skill Optimizer"
+  },
+  "display_description": {
+    "he": "ביקורת וייעול של סקיל, פרומפט מערכת, מערך הוראות לסוכן או תהליך עבודה קיים, לצמצום עלות הטוקנים בלי לפגוע באיכות או בבטיחות. עובד בשבעה מצבים: Analyze (ביקורת בלבד), Recommend (תוכנית), Apply (ייעול עם דיף ניתן לסקירה), Benchmark (השוואת לפני/אחרי), Explain, Refresh Evidence (רענון תמחור ומחקר), ו-Batch Audit על תיקיית סקילים שלמה. שלוש התכונות שמבדילות אותו: כל טענה כמותית חייבת לשאת אחת משש תוויות כנות (measured / estimated / projected / cache-dependent / behavior-dependent / reported) שנאכפות על ידי ולידטור שחוסם מסירה; הסקיל הנבדק מטופל כקלט לא-מהימן, כך שהוראות מוטמעות בתוכו נרשמות כממצא הזרקה ולא מבוצעות; וטקסט בטיחות פטור מכל כלל דחיסה. מכיל טיפול ייעודי בעברית ובסקילים דו-לשוניים: קבצי תרגום מזוהים כאחים דו-לשוניים ולא ככפילות למחיקה, וזיהוי הטריגרים כולל תבניות עבריות. הכללים מבוססים על קורפוס מחקר של 42 מקורות מאומתים. השתמשו כשרוצים לקצץ בעלות טוקנים של סקיל או פרומפט, להבין למה סוכן יקר, או לאמת חיסכון שמישהו טוען לו. אל תשתמשו לכתיבת סקיל חדש מאפס (השתמשו ב-skill-creator) או לייעול סקיל שמטרתו מזיקה.",
+    "en": "Audit and optimize an existing AI skill, system prompt, agent instruction set, or workflow for token and cost efficiency without degrading quality or safety. Seven modes: Analyze (audit only), Recommend (plan), Apply (optimize with a reviewable diff), Benchmark (before/after), Explain, Refresh Evidence (re-fetch pricing and research), and Batch Audit across a whole skills directory. Three things set it apart: every quantitative claim must carry one of six honesty labels (measured / estimated / projected / cache-dependent / behavior-dependent / reported), enforced by a validator that blocks delivery on failure; the skill under audit is treated as untrusted input, so instructions embedded in it are recorded as injection findings rather than followed; and safety text is exempt from every compression rule. Includes dedicated handling for Hebrew and bilingual skills: language-suffixed translation files are reported as bilingual siblings rather than as duplication to delete, and trigger detection includes Hebrew patterns. Rules are grounded in a 42-source verified research corpus. Use when you want to cut a skill's or prompt's token cost, understand why an agent is expensive, or validate a claimed saving. Do NOT use for authoring a brand-new skill from scratch (use skill-creator) or for optimizing a skill whose purpose is harmful."
+  },
+  "tags": {
+    "he": [
+      "טוקנים",
+      "עלויות",
+      "אופטימיזציה",
+      "פרומפטים",
+      "סקילים",
+      "סוכנים",
+      "מדידה",
+      "עברית",
+      "דו-לשוני",
+      "הזרקת-פרומפט"
+    ],
+    "en": [
+      "tokens",
+      "cost-optimization",
+      "prompt-engineering",
+      "skills",
+      "agents",
+      "measurement",
+      "benchmarking",
+      "hebrew",
+      "bilingual",
+      "prompt-injection"
+    ]
+  },
+  "author": "yosishe",
+  "version": "1.2.0",
+  "category": "developer-tools",
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "windsurf",
+    "github-copilot",
+    "opencode",
+    "codex",
+    "claude-desktop",
+    "claude-ai"
+  ],
+  "openclaw": true,
+  "volatility": "versioned",
+  "upstream_repo": "https://github.com/yosishe/token-efficient-skill-optimizer",
+  "authoritative_sources": [
+    { "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching", "type": "provider-docs", "language": "en" },
+    { "url": "https://platform.claude.com/docs/en/about-claude/pricing", "type": "provider-pricing", "language": "en" },
+    { "url": "https://developers.openai.com/api/docs/guides/prompt-caching", "type": "provider-docs", "language": "en" },
+    { "url": "https://developers.openai.com/api/docs/pricing", "type": "provider-pricing", "language": "en" },
+    { "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents", "type": "vendor-engineering", "language": "en" },
+    { "url": "https://arxiv.org/abs/2307.03172", "type": "peer-reviewed", "language": "en" },
+    { "url": "https://arxiv.org/abs/2310.05736", "type": "peer-reviewed", "language": "en" },
+    { "url": "https://arxiv.org/abs/2502.18600", "type": "preprint", "language": "en" },
+    { "url": "https://github.com/yosishe/token-efficient-skill-optimizer", "type": "upstream-repo", "language": "en" }
+  ]
+}
