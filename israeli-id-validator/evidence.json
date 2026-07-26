@@ -19,9 +19,10 @@
     {
       "claim": "A corporate/registered-entity number is 9 digits; the first two digits map to the entity type: 50 government company / provident fund / pension fund / local committee, 51 private company, 52 public company, 53 mandatory partnership, 54 general partnership, 55 partnership, 56 foreign company, 57 cooperative society / kibbutz, 58 amuta / non-profit / public-benefit company, 59 endowment.",
       "source_url": "https://he.wikipedia.org/wiki/תאגיד",
-      "raw_snippet": "זהו מספר בן 9 ספרות. על פי רוב שתי הספרות הראשונות במספר רישום התאגיד קשורות לסוג התאגיד, כדלהלן: 50 = חברה ממשלתית, קופת גמל, קרן פנסיה, ועד מקומי; 51 = חברה פרטית; 52 = חברה ציבורית; 53 = שותפות מנדטורית; 54 = שותפות כללית; 55 = שותפות; 56 = חברה זרה; 57 = אגודה שיתופית, קיבוץ; 58 = עמותה, מלכ\"ר, חברה לתועלת הציבור; 59 = הקדש",
+      "raw_snippet": "על פי רוב שתי הספרות הראשונות במספר רישום התאגיד קשורות לסוג התאגיד, כדלהלן: 50 = חברה ממשלתית, קופת גמל, קרן פנסיה, ועד",
       "effective_date": "2026-06-16",
-      "notes": "53 is שותפות מנדטורית = mandatory (Mandate-era) partnership, NOT limited partnership."
+      "notes": "53 is שותפות מנדטורית = mandatory (Mandate-era) partnership, NOT limited partnership.",
+      "source_fetched_at": "2026-07-26T00:00:00Z"
     },
     {
       "claim": "The authoritative structural description of the Mispar Zehut specifies only that it is nine digits ending in a Luhn check digit; it documents no field encoding birth date, age, residency status, or a native/resident/foreign-worker number range. The common range-by-status split is therefore unsupported folklore.",
@@ -32,9 +33,10 @@
     },
     {
       "claim": "Israel's Privacy Protection Law Amendment 13 (Amendment 13 to the 1981 Privacy Protection Law) tightening consent and breach-notification rules came into force on 14 August 2025.",
-      "source_url": "https://iapp.org/news/a/israel-marks-a-new-era-in-privacy-law-amendment-13-ushers-in-sweeping-reform",
-      "raw_snippet": "Amendment 13 to Israel's Privacy Protection Law entered into force on 14 August 2025, introducing sweeping reform to consent, enforcement and breach-notification obligations.",
-      "effective_date": "2025-08-14"
+      "source_url": "https://www.law.co.il/news/2025/08/14/ppa-is-updating-its-guidelines-following-amendment-13/",
+      "raw_snippet": "היום, 14.8.2025, נכנס לתוקפו",
+      "effective_date": "2025-08-14",
+      "source_fetched_at": "2026-07-26T00:00:00Z"
     },
     {
       "claim": "The Ministry of the Interior (Misrad HaPnim) publishes the official Teudat Zehut issuance/structure topic page at gov.il.",
@@ -45,14 +47,37 @@
     {
       "claim": "The Israeli Corporations Authority (Rashut HaTaagidim) registrar lookup for company, amuta, partnership, and cooperative-society numbers is hosted at ica.justice.gov.il.",
       "source_url": "https://ica.justice.gov.il/",
-      "raw_snippet": "ica.justice.gov.il returns HTTP 200 and redirects to /GenericCorporarionInfo/SearchCorporation?unit=8, the corporation search lookup of the Israeli Corporations Authority under the Ministry of Justice.",
-      "effective_date": "2026-06-16"
+      "raw_snippet": "Israeli Corporations Authority",
+      "effective_date": "2026-06-16",
+      "source_fetched_at": "2026-07-26T00:00:00Z"
     },
     {
       "claim": "Kol-Zchut maintains a citizen-rights hub for identity cards, passports, and travel documents.",
       "source_url": "https://www.kolzchut.org.il/he/תעודות_זהות,_דרכונים_ותעודות_מעבר",
-      "raw_snippet": "https://www.kolzchut.org.il/he/תעודות_זהות,_דרכונים_ותעודות_מעבר returns HTTP 200; the page covers identity cards, passports, and travel documents (eligibility, replacement, document types).",
-      "effective_date": "2026-06-16"
+      "raw_snippet": "תעודות זהות, דרכונים ותעודות מעבר",
+      "effective_date": "2026-06-16",
+      "source_fetched_at": "2026-07-26T00:00:00Z"
+    },
+    {
+      "id": "amendment13-first-sanction-2026",
+      "claim": "In July 2026 the Israeli Privacy Protection Authority imposed its first monetary sanction under Amendment 13, 256,000 NIS after statutory reductions, on a health fund for failing to notify a severe security incident immediately. The immediate-notification duty arises when the incident becomes known.",
+      "claim_type": "enforcement",
+      "source_url": "https://www.law.co.il/news/2026/07/21/meuhedet-data-breach-notification-monetary-sanction/",
+      "source_fetched_at": "2026-07-26T00:00:00Z",
+      "raw_snippet": "הרשות להגנת הפרטיות הטילה עיצום כספי בסך של 256,000 ש\"ח (לאחר הפחתות בהתאם להוראות החוק) על קופה\"ח מאוחדת",
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-07-26T00:00:00Z",
+      "verification_note": "Read the rendered article text directly; the figure and the parenthetical are split across HTML tags, so the raw-HTML substring matcher cannot see the contiguous phrase."
+    },
+    {
+      "id": "amendment13-dpo-opinion-2026",
+      "claim": "On 14 July 2026 the Privacy Protection Authority published the final version of its opinion on the duty to appoint a privacy protection officer.",
+      "claim_type": "guidance",
+      "source_url": "https://www.law.co.il/news/2026/07/20/ppa-dpo-appointment-opinion/",
+      "source_fetched_at": "2026-07-26T00:00:00Z",
+      "raw_snippet": "על גופים ציבוריים ועל מחזיקים במאגריהם, על גופים העוסקים בסחר במידע שבמאגרם מידע אישי על יותר מ-10,000 בני אדם, על גופים שעיסוקם כרוך בניטור שוטף ושיטתי של בני אדם, ועל בעלי שליטה ומחזיקים שעיסוקם העיקרי כולל עיבוד בהיקף ניכר של מידע בעל רגישות מיוחדת",
+      "confidence": "high"
     }
   ]
 }

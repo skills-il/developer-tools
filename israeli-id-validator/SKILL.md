@@ -4,7 +4,7 @@ description: Validate and format Israeli identification numbers including Teudat
 license: MIT
 allowed-tools: Bash(python:*)
 compatibility: No network required. Works with Claude Code, Claude.ai, Cursor.
-version: 1.1.2
+version: 1.2.0
 ---
 
 # Israeli ID Validator
@@ -38,12 +38,17 @@ Prefix-based typing is a heuristic: a 9-digit number starting with 5 is overwhel
 The Israeli ID check digit algorithm (applies to all types):
 
 ```python
+import re
+
+
 def validate_israeli_id(id_number: str) -> bool:
     """Validate Israeli ID number (TZ, company, amuta, etc.)"""
-    # Remove dashes and spaces, pad to 9 digits
-    id_str = id_number.replace('-', '').replace(' ', '').zfill(9)
+    # Strip every non-ASCII-digit character, then pad to 9 digits.
+    # Do NOT gate on str.isdigit(): it is True for Arabic-Indic digits and
+    # superscripts, which either crash int() or validate as a different value.
+    id_str = re.sub(r'[^0-9]', '', id_number).zfill(9)
 
-    if len(id_str) != 9 or not id_str.isdigit():
+    if not re.fullmatch(r'[0-9]{9}', id_str):
         return False
 
     if id_str == '000000000':   # passes Luhn but is never a real ID
@@ -51,8 +56,8 @@ def validate_israeli_id(id_number: str) -> bool:
 
     total = 0
     for i, digit in enumerate(id_str):
-        # Position counting from left: odd positions (0,2,4,6,8) multiply by 1
-        # Even positions (1,3,5,7) multiply by 2
+        # 1-based odd positions (indices 0,2,4,6,8) multiply by 1
+        # 1-based even positions (indices 1,3,5,7) multiply by 2
         weight = 1 if i % 2 == 0 else 2
         val = int(digit) * weight
         if val > 9:
@@ -111,14 +116,14 @@ Result: Generate 10 valid IDs with 51- prefix for testing.
 - `scripts/validate_id.py` , Validates, identifies, formats, and generates Israeli ID numbers (Teudat Zehut, company, amuta, partnership). Supports verbose mode showing step-by-step check digit calculation, batch test ID generation with prefix control, and type identification from any ID number. Run: `python scripts/validate_id.py --help`
 
 ### References
-- `references/id-formats.md` , Specification of all Israeli ID number formats including Teudat Zehut, company (51-prefix), amuta (58-prefix), partnership (55-prefix), and cooperative society (57-prefix) with issuing authorities, format patterns, the Luhn-variant check digit algorithm with a worked example, and common validation errors. Consult when implementing validation logic or debugging check digit failures.
+- `references/id-formats.md` , Specification of all Israeli ID number formats including Teudat Zehut, registered entities (the whole 50-59 block: company, public company, partnership, cooperative society, amuta, endowment) with issuing authorities, format patterns, the Luhn-variant check digit algorithm with a worked example, and common validation errors. Consult when implementing validation logic or debugging check digit failures.
 
 ## Reference Links
 
 - [Misrad HaPnim, ID numbering page (gov.il)](https://www.gov.il/he/departments/topics/identity_card) , Official Ministry of Interior page on Teudat Zehut issuance, structure, and renewal.
-- [ICA Companies Registrar (justice.gov.il)](https://ica.justice.gov.il/) , Lookup for company (51), amuta (58), partnership (55), and cooperative society (57) numbers.
+- [ICA Companies Registrar (justice.gov.il)](https://ica.justice.gov.il/) , Lookup for registered-entity numbers across the 50-59 block (company, public company, partnership, cooperative society, amuta).
 - [Kolzchut, "תעודות זהות, דרכונים ותעודות מעבר"](https://www.kolzchut.org.il/he/תעודות_זהות,_דרכונים_ותעודות_מעבר) , Citizen-rights wiki hub for identity cards, passports, and travel documents, covering eligibility, replacement, and number ranges.
-- [Privacy Protection Law, Amendment 13 (IAPP analysis)](https://iapp.org/news/a/israel-marks-a-new-era-in-privacy-law-amendment-13-ushers-in-sweeping-reform) , 2025 amendment tightening consent, breach-notification, and PII handling rules. In force 14 August 2025.
+- [Privacy Protection Law, Amendment 13 (law.co.il analysis)](https://www.law.co.il/news/2025/08/14/ppa-is-updating-its-guidelines-following-amendment-13/) , 2025 amendment tightening consent, breach-notification, and PII handling rules. In force 14 August 2025.
 
 ## Gotchas
 
@@ -126,8 +131,10 @@ Result: Generate 10 valid IDs with 51- prefix for testing.
 - Israeli ID numbers with fewer than 9 digits must be left-padded with zeros. An ID like "12345678" is actually "012345678". Agents may strip leading zeros and break validation.
 - Israeli ID numbers are NOT date-encoded. They are assigned sequentially; you cannot infer birth date, age, birth year, or residency status from the digits. Agents trained on US SSN-style intuition often invent this assumption.
 - Do not type or reject a personal ID by its leading-digit range. There is no documented citizen-status encoding in the number (the common "native vs resident vs foreign-worker by range" split is folklore). Every personal ID passes the same Luhn check regardless of its first digit; treat them all as plain 9-digit IDs.
-- PII / privacy logging: never log unredacted Israeli IDs in application logs, error messages, telemetry, or analytics events. Israel's Privacy Protection Law Amendment 13 (in force 14 August 2025) tightens consent and breach-notification rules. When displaying an ID to a non-authorized context (debug UI, support tooling, customer-facing receipt), mask the middle digits, e.g. `123****82`. Hash or tokenize before persisting in non-essential stores.
-- Israeli military IDs (mispar ishi) use a different format than civilian IDs and should not be validated with the same algorithm.
+- PII / privacy logging: never log unredacted Israeli IDs in application logs, error messages, telemetry, or analytics events. Israel's Privacy Protection Law Amendment 13 (in force 14 August 2025) tightens consent and breach-notification rules. When displaying an ID to a non-authorized context (debug UI, support tooling, customer-facing receipt), mask down to the last 4 digits at most, e.g. `xxxxx6782`. Before persisting in non-essential stores, use HMAC-SHA256 with a secret pepper held outside the database, or a tokenization vault. A plain unkeyed hash of an ID is not protection: the whole keyspace is under 10^9 and a check digit cuts it further, so the entire table is reversible by brute force in seconds.
+- **Amendment 13 now has teeth, and the clock starts at awareness.** In July 2026 the Privacy Protection Authority imposed its first monetary sanction under the amendment: 256,000 NIS (after the statutory reductions) on a health fund, and the theory was the DELAY in notifying, not the breach itself. The Authority stated the immediate-notification duty arises the moment a severe security incident becomes known. Notification runs to the Privacy Protection Authority, and for a severe incident the affected individuals must be notified as well. Separately, the Authority published its final opinion on the duty to appoint a privacy officer (14 July 2026). The duty is not a bare headcount trigger: it attaches to public bodies and their data holders, to bodies trading in data whose database holds personal data on more than 10,000 people, to bodies whose business involves ongoing systematic monitoring of people, and to controllers and holders whose main business involves large-scale processing of specially sensitive data. Check your product against those conditions rather than against a headcount alone, and confirm with counsel. This is not legal advice.
+- A self-employed person's business number (mispar osek, whether osek murshe or osek patur) IS their personal 9-digit Teudat Zehut, not a 5x registered-entity number. A "business number" field that accepts only 5x numbers rejects every osek patur in the country, which is the most common defect in Israeli invoicing and supplier forms. Accept both shapes wherever you ask for a business number.
+- The IDF personal number (mispar ishi) is a separate, IDF-issued identifier and is out of scope for this skill. Do not run it through the civilian check-digit algorithm: this skill documents no check digit for it, so a pass or fail result would be meaningless.
 - `000000000` passes the Luhn check (its digit sum is 0, divisible by 10) but is never a real ID. It is the most common sentinel / empty-field false positive: an empty string or a numeric-default column zero-pads straight into it. Reject all-zeros explicitly before trusting a "valid" result.
 - Do not reject a personal ID by its leading digit. There is no documented "temporary resident vs permanent" prefix for the 9-digit Luhn-checked Teudat Zehut; validate the format only and pad with `zfill(9)` rather than filtering by range.
 
@@ -147,7 +154,7 @@ Solution: Always store IDs as strings. On read, left-pad to 9 with `zfill(9)` (P
 
 ### Error: "Invalid input, dashes or spaces in ID"
 Cause: User pasted a formatted company or amuta number such as `51-530820-3` or `58 012345 3`.
-Solution: Strip all non-digit characters (`re.sub(r'\D', '', id)`) before length checks. Both human-formatted and raw-digit forms must validate identically.
+Solution: Strip every non-ASCII-digit character (`re.sub(r'[^0-9]', '', id)`) before length checks. Use the explicit `[^0-9]` class, not `\D` or `str.isdigit()`, both of which treat Arabic-Indic digits as digits. Both human-formatted and raw-digit forms must validate identically.
 
 ### Error: "9-digit input but algorithm fails"
 Cause: Common cause is a transposition or single-digit typo in the body of the ID, not the check digit itself. Other causes: copy-paste from a Hebrew RTL source where digit order was reversed, or the value is a military `mispar ishi` (which does not share the civilian Luhn algorithm).

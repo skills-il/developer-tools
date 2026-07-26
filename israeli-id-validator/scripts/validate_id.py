@@ -16,7 +16,18 @@ Usage:
 
 import argparse
 import random
+import re
 import sys
+
+
+def normalize_id(id_number: str) -> str:
+    """Strip every non-ASCII-digit character and left-pad to 9 digits.
+
+    Uses an explicit ASCII class rather than str.isdigit(), which is True for
+    Arabic-Indic digits and superscripts. Those either crash int() or silently
+    validate as a different value than the one stored downstream.
+    """
+    return re.sub(r'[^0-9]', '', id_number).zfill(9)
 
 
 def validate_israeli_id(id_number: str) -> bool:
@@ -35,9 +46,9 @@ def validate_israeli_id(id_number: str) -> bool:
     Returns:
         True if the ID number is valid, False otherwise
     """
-    id_str = id_number.replace('-', '').replace(' ', '').zfill(9)
+    id_str = normalize_id(id_number)
 
-    if len(id_str) != 9 or not id_str.isdigit():
+    if not re.fullmatch(r'[0-9]{9}', id_str):
         return False
 
     # 000000000 passes the Luhn check (digit sum 0) but is never a real ID. It
@@ -88,7 +99,7 @@ def identify_id_type(id_number: str) -> str:
     Returns:
         String describing the ID type
     """
-    id_str = id_number.replace('-', '').replace(' ', '').zfill(9)
+    id_str = normalize_id(id_number)
     return CORPORATE_PREFIXES.get(id_str[:2], "Teudat Zehut (Personal ID)")
 
 
@@ -101,7 +112,15 @@ def generate_test_id(prefix: str = "") -> str:
     Returns:
         A valid 9-digit Israeli ID number
     """
-    base = prefix + ''.join([str(random.randint(0, 9)) for _ in range(8 - len(prefix))])
+    if not re.fullmatch(r'[0-9]{0,8}', prefix):
+        raise ValueError("prefix must be 0-8 ASCII digits")
+
+    while True:
+        base = prefix + ''.join(
+            [str(random.randint(0, 9)) for _ in range(8 - len(prefix))]
+        )
+        if base != '00000000':
+            break
 
     total = 0
     for i, digit in enumerate(base):
@@ -123,7 +142,7 @@ def format_id(id_number: str) -> str:
     Returns:
         Formatted ID string (e.g., '51-530820-3' for company numbers)
     """
-    id_str = id_number.replace('-', '').replace(' ', '').zfill(9)
+    id_str = normalize_id(id_number)
     id_type = identify_id_type(id_str)
 
     if id_type.startswith("Teudat Zehut"):
@@ -144,7 +163,7 @@ def validate_with_details(id_number: str) -> dict:
     Returns:
         Dictionary with validation results and details
     """
-    id_str = id_number.replace('-', '').replace(' ', '').zfill(9)
+    id_str = normalize_id(id_number)
 
     result = {
         "input": id_number,
