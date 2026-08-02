@@ -45,7 +45,7 @@ conversation_log = {
 }
 ```
 
-If your platform does not export in this format, write a transformer to normalize logs before analysis. Common platforms and their export formats:
+If your platform exports a different shape, normalize it first. Common platforms:
 
 | Platform | Export Method | Format |
 |----------|-------------|--------|
@@ -79,7 +79,7 @@ These are general support-chatbot targets with no Israeli sample behind them. Us
 
 ### Step 3: Drop-off Point Detection
 
-Identify where users abandon conversations. This reveals UX problems, confusing prompts, or missing capabilities:
+Identify where users abandon. This reveals UX problems, confusing prompts, or missing capabilities:
 
 `detect_drop_off_points(conversations)` filters to `outcome == "abandoned"` and returns three `Counter.most_common` slices: drop-off by conversation depth (message count), by active intent at drop (walking from the tail to the first message that carries an intent), and by last bot message (first 100 chars, walking from the tail for the last `sender == "bot"`).
 
@@ -424,7 +424,7 @@ When you outgrow `HebrewABTestManager` (in-process bucketing, in-memory results)
 | LaunchDarkly | Mature enterprise teams needing approvals, audit logs, RBAC | The "safe" enterprise choice; pair with your existing analytics for stats. |
 | GrowthBook | Teams with a data warehouse (BigQuery, Snowflake, Postgres) who want stats run against their own data | Open source; does NOT collect event data, so Hebrew transcripts never leave your warehouse, useful for Amendment 13 data-residency posture. |
 
-For Hebrew-specific gotchas, plan on longer test durations (2+ weeks, 200+ impressions per variant), Israeli user bases are smaller and weekly seasonality (Sun-Thu work week) makes 1-week tests unreliable.
+Plan on longer tests (2+ weeks, 200+ impressions per variant): Israeli user bases are smaller and the Sun-Thu work week makes 1-week tests unreliable.
 
 ## Modern analytics stack notes (GA4 + Mixpanel, 2026)
 
@@ -517,5 +517,5 @@ None is required. The skill operates on exported conversation logs (BigQuery exp
 - **Timestamps parse to nothing on older Python**: `datetime.fromisoformat` only handles the full ISO-8601 range, including a trailing `Z`, from Python 3.11. On 3.10 the parse fails and durations and traffic patterns come back empty. Use Python 3.11 or newer.
 - **Hebrew text appears reversed in charts**: matplotlib has no native RTL. Apply `python-bidi` (`bidi.algorithm.get_display()`) before rendering, or switch to Plotly.
 - **Tokenization produces wrong word frequencies**: whitespace splitting ignores Hebrew prefix particles. Use the prefix-stripping tokenizer in Step 9, or the YAP morphological analyzer (https://github.com/OnlpLab/yap) for production.
-- **Sentiment scores unreliable for short messages**: messages of 1-3 words lack context ("סבבה" can be positive or neutral). For under 4 words, rely on behavioral signals (continued / escalated / abandoned) instead, combined with satisfaction signals from Step 6.
-- **A/B test results not statistically significant**: usually insufficient sample size, common for smaller Israeli user bases. Run at least 2 weeks, aim for 200+ impressions per variant, target p < 0.05.
+- **Sentiment scores unreliable for short messages**: 1-3 word messages lack context ("סבבה" can be positive or neutral). Under 4 words, rely on behavioral signals (continued / escalated / abandoned) plus the Step 6 satisfaction signals.
+- **A/B test results not statistically significant**: usually too small a sample, common for Israeli user bases. Run at least 2 weeks, 200+ impressions per variant, target p < 0.05.
