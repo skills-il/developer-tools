@@ -111,10 +111,18 @@ Query Parameters:
   v: 1
   cfg: json
   year: now
-  month: now
+  month: x
   maj: on
   mod: on
+  i: on
 ```
+
+Two parameters are load-bearing and both fail silently if you get them wrong:
+
+- **`month: x`, not `month: now`.** `now` is not a valid value for this parameter. Hebcal returns HTTP 200 with `"items": []`, the `.some(...)` check below evaluates false, and the workflow runs on Yom Kippur with no error raised anywhere. `x` returns the whole year; a numeric month also works.
+- **`i: on` selects the Israel schedule.** Without it Hebcal serves the Diaspora calendar (`"title": "Hebcal Diaspora 2026"`), which reports 13 yomtov days for 2026 against Israel's 8. Passing an Israeli `geonameid` has the same effect.
+
+Verify with the response `title`: it must read `Hebcal Israel <year>` or `Hebcal <city> <year>`, never `Hebcal Diaspora <year>`.
 
 **Workflow structure:**
 ```
@@ -240,18 +248,18 @@ return $input.all();
 
 ## Major Jewish Holidays Reference
 
-Holidays where `yomtov: true` (work restrictions apply, treat like Shabbat):
+Holidays where `yomtov: true` on the **Israel** schedule (work restrictions apply, treat like Shabbat):
 
-| Holiday | Hebrew | Typical Month | Duration (Yom Tov days) |
-|---------|--------|---------------|------------------------|
-| Rosh Hashana | ראש השנה | September-October | 2 days |
-| Yom Kippur | יום כיפור | September-October | 1 day |
-| Sukkot | סוכות | September-October | 2 days (1st and 8th) |
-| Simchat Torah | שמחת תורה | October | 1 day |
-| Pesach | פסח | March-April | 2 days (1st-2nd and 7th) |
-| Shavuot | שבועות | May-June | 1 day |
+| Holiday | Hebrew | Typical Month | Yom Tov days |
+|---------|--------|---------------|--------------|
+| Pesach | פסח | March-April | 2 (Pesach I and Pesach VII) |
+| Shavuot | שבועות | May-June | 1 |
+| Rosh Hashana | ראש השנה | September-October | 2 |
+| Yom Kippur | יום כיפור | September-October | 1 |
+| Sukkot | סוכות | September-October | 1 (Sukkot I) |
+| Shmini Atzeret | שמיני עצרת | September-October | 1 |
 
-Note: Israeli holidays follow Israel schedule (not diaspora), so Sukkot and Pesach have fewer Yom Tov days than outside Israel.
+Eight yomtov days per year. In Israel, Simchat Torah falls on Shmini Atzeret (one day, one row), so do not count it separately; the second days of Pesach, Shavuot and Sukkot are Diaspora-only and are ordinary working days here. If your query returns Pesach II, Pesach VIII, Shavuot II, Sukkot II or a standalone Simchat Torah, you are reading the Diaspora calendar and are missing `i=on`.
 
 ## Common Mistakes
 

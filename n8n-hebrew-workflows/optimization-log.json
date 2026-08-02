@@ -1,0 +1,43 @@
+{
+  "cycles": [
+    {
+      "version": "2.4.0",
+      "date": "2026-08-01",
+      "lessons": [
+        {
+          "id": "deferred-whatsapp-section",
+          "status": "deferred",
+          "summary": "The skill has no WhatsApp coverage despite WhatsApp being the most-requested Israeli business automation channel. The only mention is one table cell listing it as an InforUMobile capability: no endpoint, no template-approval flow, no session-window rules. n8n ships a first-class WhatsApp Business Cloud node and a WhatsApp Trigger that the skill never names. Meta's 24-hour customer-service window and pre-approved message templates are what actually break these workflows in production and neither is documented.",
+          "action": "Add a WhatsApp step in the next cycle covering the WhatsApp Business Cloud node, the WhatsApp Trigger, template approval, and the 24-hour session window. Verify node names and parameter names against current n8n docs before writing.",
+          "why_deferred": "Out of scope for the 2.4.0 correctness-only pass."
+        },
+        {
+          "id": "deferred-n8n-3-coverage",
+          "status": "deferred",
+          "summary": "n8n 3.0 is scheduled for October 2026 and has a published breaking-changes page. Confirmed items relevant to this skill: self-hosted n8n will require Docker (npm / npx n8n unsupported); the Function, Function Item and Item Lists nodes are removed; the $getPairedItem expression helper is removed; Execute Workflow node's older behavior is removed.",
+          "action": "Add a v3.0 readiness subsection to Step 6 before October 2026. Source: https://docs.n8n.io/changelog/v30-breaking-changes.md",
+          "why_deferred": "Out of scope for the 2.4.0 correctness-only pass. Not yet urgent, but this skill is reviewed on roughly a 90-day cadence and 3.0 lands inside the next window."
+        },
+        {
+          "id": "deferred-model-recommendation-rewrite",
+          "status": "deferred",
+          "summary": "Step 7 recommends Claude 3.5 Sonnet and GPT-4o by name for Hebrew tasks. Both are long superseded as of August 2026. NOT corrected in 2.4.0 because the n8n Anthropic node's actual model list could not be verified: the LmChatAnthropic.node.ts path 404s on master (package layout moved), so any replacement model names would have been unverified guesses.",
+          "action": "Verify the node's current model dropdown against n8n docs in a browser, then replace hard-coded model names with a selection principle plus one dated example. Hard-coded model names will go stale every cycle.",
+          "why_deferred": "Could not verify. Writing unverified model names would have introduced exactly the kind of fabrication this cycle removed."
+        }
+      ],
+      "persistent_fail": [
+        {
+          "id": "stale-version-pins",
+          "summary": "v2.3.0 pinned n8n 2.21.4 and cited 2.21.x as stable. By this review the stable line was 2.32.7 and 2.21.4 carried 68 published advisories including three CRITICAL. Notably, those three CRITICAL CVEs were disclosed 2026-05-14, six days BEFORE the v2.3.0 evidence_date of 2026-05-20, so they were already public at the prior review and were missed.",
+          "recurrence_guard": "Every review of this skill must re-query https://registry.npmjs.org/-/package/n8n/dist-tags AND https://api.github.com/advisories?ecosystem=npm&affects=n8n, and must compute which advisories apply to the currently pinned tag rather than trusting the previous cycle's pin. A version-pin claim in evidence.json is only valid for the day it was checked."
+        },
+        {
+          "id": "silent-failure-endpoints",
+          "summary": "Three shipped endpoints returned 404 and one code identifier did not exist, all of them plausible-looking. None would have been caught by reading alone; all four were found by executing the request or reading upstream source.",
+          "recurrence_guard": "Every endpoint in this skill must be probed live each cycle. A 401 confirms the path exists; a 404 means it does not. Every library identifier must be checked against upstream source, not recalled. Note that link checks by HTTP status alone are insufficient: docs.n8n.io/2-0-breaking-changes/ returned 200 with a 404 body."
+        }
+      ]
+    }
+  ]
+}

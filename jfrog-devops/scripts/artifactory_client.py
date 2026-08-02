@@ -9,17 +9,17 @@ Requirements:
     pip install requests
 
 Usage:
-    python artifactory_client.py --url https://mycompany.jfrog.io/artifactory \
+    python artifactory_client.py --url https://acme.jfrog.io/artifactory \
         --token YOUR_TOKEN ping
 
-    python artifactory_client.py --url https://mycompany.jfrog.io/artifactory \
+    python artifactory_client.py --url https://acme.jfrog.io/artifactory \
         --token YOUR_TOKEN list-repos
 
-    python artifactory_client.py --url https://mycompany.jfrog.io/artifactory \
+    python artifactory_client.py --url https://acme.jfrog.io/artifactory \
         --token YOUR_TOKEN upload --repo libs-release-local \
         --path com/myapp/1.0/app.jar --file ./app.jar
 
-    python artifactory_client.py --url https://mycompany.jfrog.io/artifactory \
+    python artifactory_client.py --url https://acme.jfrog.io/artifactory \
         --token YOUR_TOKEN search --aql 'items.find({"repo":"libs-release-local"})'
 
 Environment variables:
@@ -47,7 +47,7 @@ class ArtifactoryClient:
         """Initialize Artifactory client.
 
         Args:
-            base_url: Artifactory base URL (e.g., https://mycompany.jfrog.io/artifactory)
+            base_url: Artifactory base URL (e.g., https://acme.jfrog.io/artifactory)
             access_token: JFrog access token
         """
         self.base_url = base_url.rstrip('/')

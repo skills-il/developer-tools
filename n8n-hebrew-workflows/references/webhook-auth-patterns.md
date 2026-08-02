@@ -11,7 +11,7 @@ This reference covers HMAC signature verification and JWT claim validation patte
 | Header Auth | Header Auth credential (e.g. `X-API-Key: <token>`) | Default for Israeli SMS callbacks and internal webhooks |
 | JWT Auth | JWT credential (HMAC HS256/384/512 or RSA/ECDSA via PEM) | Cross-org integrations where the caller already issues JWTs |
 
-After CVE-2026-21858 (Ni8mare), the "None" mode on a publicly-routable webhook is effectively a vulnerability. Pick one of the other three for every payment-gateway flow.
+Given the 2026 unauthenticated-webhook CVE history (CVE-2026-21858 file access on 1.x, CVE-2026-27493 expression injection on 1.x and early 2.x), the "None" mode on a publicly-routable webhook is effectively a vulnerability. Pick one of the other three for every payment-gateway flow.
 
 ## HMAC signature verification (Cardcom, Grow, custom integrations)
 

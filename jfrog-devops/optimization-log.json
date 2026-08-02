@@ -1,0 +1,104 @@
+{
+  "skill": "jfrog-devops",
+  "created": "2026-08-01",
+  "created_by": "skills-il update-skill phase 3 (v1.2.0 -> v1.3.0)",
+  "lessons": [
+    {
+      "id": "carried-claims-must-be-reverified",
+      "date": "2026-08-01",
+      "severity": "high",
+      "lesson": "Claims marked 'Carried from v1.1.1' in evidence.json survived two audits without re-verification, and two of them were wrong: the SaaS-regions claim (factually inverted) and the api-reference API-key phrasing (understated a completed EOL, and contradicted SKILL.md's own correct text). An inherited medium-high-confidence claim is the HIGHEST-risk category in the file, not the lowest, because its confidence label suppresses scrutiny. Re-verify carried claims against source on every pass.",
+      "applies_to": "all skills"
+    },
+    {
+      "id": "execute-the-cli-dont-reason-about-it",
+      "date": "2026-08-01",
+      "severity": "high",
+      "lesson": "Three defects were only findable by running the binary: `jf scan --format=spdx` (rejected outright), `jf audit --fail --min-severity=High` (evaluates no policy without --watches/--project/--repo-path, so it is a security gate that gates nothing), and `jf docker scan --format` not accepting cyclonedx unlike `jf scan`. All three read as plausible. Download the pinned CLI version and run --help on every flag the skill cites.",
+      "applies_to": "any skill wrapping a CLI"
+    },
+    {
+      "id": "placeholder-hostnames-can-be-live",
+      "date": "2026-08-01",
+      "severity": "high",
+      "lesson": "mycompany.jfrog.io looked like an inert placeholder but resolves to a real deactivated JFrog SaaS tenant that 302s to a reactivation landing page. Any reader pasting a token into the curl examples would send a Bearer token to a third-party reclaimable host. Vendor-suffixed placeholders (*.jfrog.io, *.atlassian.net, *.myshopify.com) are wildcard-routed namespaces; curl and dig them, and prefer the vendor's own documented placeholder (acme.*).",
+      "applies_to": "all skills"
+    },
+    {
+      "id": "date-relative-gotchas-need-recheck",
+      "date": "2026-08-01",
+      "severity": "medium",
+      "lesson": "The Hugging Face 'deprecates in June 2026' gotcha was correct when written and became wrong purely from the passage of time. Any gotcha phrased as a future deadline flips meaning at the deadline. Grep for future-tense dates on every pass and rewrite past-due ones as incident conditions.",
+      "applies_to": "all skills"
+    },
+    {
+      "id": "israeli-angle-must-be-decision-relevant",
+      "date": "2026-08-01",
+      "severity": "medium",
+      "lesson": "Of five Israel-flavored gotchas, one was factually inverted, one fabricated, and two were generic filler that would read identically in any directory skill (Sunday-Thursday deploy cycles, SSO with Azure AD). A real Israeli angle changes a decision. Here the strongest available ones were sitting unused: JFrog is an Israeli company (Netanya, NASDAQ FROG), and JFrog Cloud has three Israeli regions.",
+      "applies_to": "all skills-il skills"
+    }
+  ],
+  "persistent_fail": [],
+  "deferred_to_next_pass": [
+    {
+      "id": "apptrust-and-evidence",
+      "priority": "highest",
+      "note": "JFrog AppTrust launched 2025-09-09 at swampUP, EIGHT MONTHS before the v1.2.0 audit, and was missed entirely. It is now a first-class CLI namespace (`jf apptrust`: app-create, version-create, version-promote, version-distribute, package bindings) plus `jf evd create-evidence` for signed in-toto DSSE attestations (ecdsa/rsa/ed25519, --sigstore-bundle, --integration sonar). This matters for Step 4: the skill teaches `jf rt build-promote` as THE promotion model, which is now the legacy path. Source: https://jfrog.com/press-room/jfrog-unveils-apptrust-devgovops-solution-to-redefine-software-release-governance/"
+    },
+    {
+      "id": "jf-skills-registry",
+      "priority": "high",
+      "note": "`jf skills` (alias of `jf agent skills`): list / publish / install / update / search / delete. Artifactory is now an agent-skill registry. Unusually on-point for a skills-il directory entry and a strong Israeli-angle hook (Israeli-built skill registry). Verbatim: 'Publish a skill to Artifactory', 'Install a skill from Artifactory'."
+    },
+    {
+      "id": "jf-mcp-server",
+      "priority": "high",
+      "note": "`jf mcp install --agent=claude --global` writes the JFrog MCP server entry for Claude Code or Cursor; auth completes via OAuth in the agent so no credentials land in agent config. Endpoint is <platform-url>/mcp (`jf mcp show`). Belongs in a skill whose entire audience is agent users."
+    },
+    {
+      "id": "missing-setup-path",
+      "priority": "high",
+      "note": "Structural gap. The skill starts AFTER setup is done: it never says how to create repositories. All four Examples are 'User says X / Result: <paragraph>' with no commands, no REST bodies, no config JSON. The local/remote/virtual model (the thing every new Artifactory user gets wrong) is buried in an appendix table. Xray indexing appears only as a troubleshooting entry when it is a prerequisite. There is no end-to-end policy -> watch -> CI-gate walkthrough. Fix with `jf setup <pkgmgr> --repo=<virtual>` plus PUT /api/repositories/{key} bodies, or narrow the description to 'reference skill'."
+    },
+    {
+      "id": "missing-cli-commands",
+      "priority": "medium",
+      "note": "Absent from the skill: `jf sbom-enrich` (enrich an external Syft/CDXgen CycloneDX SBOM with Xray data), `jf curation-audit` (diagnose 403s from curation-blocked installs, the most common Curation support question), `jf hugging-face`/`jf hf upload|download` (purpose-built ML path vs the generic `jf rt upload` the skill shows), `jf exchange-oidc-token` (non-GitHub CI OIDC), `jf setup`. Partially added to references/api-reference.md this pass; not yet in SKILL.md prose."
+    },
+    {
+      "id": "scanning-command-decision-table",
+      "priority": "medium",
+      "note": "The skill names four scanning commands across three surfaces with no guidance on which to use when. CLI help is explicit: `jf audit` resolves a dependency graph from source; `jf scan`/`jf xr scan` binary-scan built artifacts; `jf docker scan` targets a local daemon image; `jf build-scan` targets published build-info. A one-line decision table fixes the question most likely to be asked."
+    },
+    {
+      "id": "pipelines-namespace-still-ships",
+      "priority": "low",
+      "note": "Pipelines hit EOL 2026-05-01 but `jf pl` still ships in CLI 2.117.0 (status, trigger, sync, sync-status, version). One clause in the EOL gotcha would stop a reader who finds the namespace from concluding the product is alive."
+    },
+    {
+      "id": "oidc-admin-ui-path",
+      "priority": "low",
+      "note": "Unresolved, low confidence. SKILL.md says 'Administration > Identity and Access > Integrations > OIDC'; `jf exchange-oidc-token --help` says 'Admin > User Management > OIDC'. Verify in-product before changing."
+    },
+    {
+      "id": "self-managed-pricing-unverified",
+      "priority": "low",
+      "note": "The ~$27k/yr Pro X and ~$48k/yr Enterprise X self-managed figures are sourced only to third-party trackers (vendr.com is 403-blocked to automated fetches, checkthat.ai is 200). SaaS tier prices ARE verified against jfrog.com/pricing (Pro $150/mo list, currently promo $50/mo; Enterprise X from $950/mo; Enterprise+ on quote). Keep the self-managed numbers at confidence: medium or drop them."
+    }
+  ],
+  "link_health": {
+    "checked": "2026-08-01",
+    "method": "curl -L --max-time 10 over all 40 URLs in all files",
+    "fixed_this_pass": [
+      "jfrog.com/help/r/jfrog-artifactory-documentation/docker-registry (404) -> docker-registry-overview",
+      "jfrog.com/help/r/jfrog-platform-administration-documentation/jfrog-saas-regions (404) -> what-are-artifactory-cloud-nated-ips",
+      "docs.jfrog.com/releases/docs/pipelines-end-of-life (404, evidence.json only) -> the jfrog.com/help variant, which is 200"
+    ],
+    "needs_browser_recheck": [
+      "https://www.businesswire.com/news/home/20250909916138/... (403 to automated fetch; content independently confirmed via the jfrog.com press-room mirror)",
+      "https://www.vendr.com/marketplace/jfrog (403 to automated fetch)"
+    ],
+    "note": "jfrog.com/help/r/* now 301-redirects cross-host through docs-redirect.jfrog.com to docs.jfrog.com/*. Links resolve but the doc site is mid-migration; expect these paths to churn again next pass."
+  }
+}

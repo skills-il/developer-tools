@@ -1,25 +1,26 @@
 {
   "skill": "n8n-hebrew-workflows",
-  "version": "2.3.0",
-  "evidence_date": "2026-05-20",
-  "previous_version": "2.2.0",
+  "version": "2.4.0",
+  "evidence_date": "2026-08-01",
+  "previous_version": "2.3.0",
   "claims": [
     {
-      "claim": "n8n stable line is 2.21.x as of May 2026, beta on 2.22.0",
-      "source": "https://releasebot.io/updates/n8n",
-      "verified": "2026-05-20",
-      "note": "Releasebot lists 2.22.0 released 2026-05-20 (bug fixes), current stable 2.21.4"
+      "claim": "n8n current stable is 2.32.7 (published 2026-07-31), beta 2.33.3; minimum safe pin is 2.32.1",
+      "source": "https://registry.npmjs.org/-/package/n8n/dist-tags",
+      "verified": "2026-08-01",
+      "note": "Live registry response verbatim: {\"beta\":\"2.33.3\",\"latest\":\"2.32.7\",\"stable\":\"2.32.7\",\"rc\":\"2.33.3\",\"next\":\"2.33.3\"}"
     },
     {
-      "claim": "CVE-2026-21858 (Ni8mare) is unauthenticated RCE via webhook/form, CVSS 10.0, patched in 1.121.0 and 2.10.1",
-      "source": "https://www.aikido.dev/blog/n8n-rce-vulnerability-cve-2026-21858",
-      "verified": "2026-05-20",
-      "note": "Cross-confirmed via The Hacker News and Rapid7"
+      "claim": "CVE-2026-21858 (Ni8mare, CVSS 10.0) is unauthenticated FILE ACCESS, not RCE, and affects only n8n 1.65.0 through 1.120.x; patched in 1.121.0; the 2.x line was never affected",
+      "source": "https://cveawg.mitre.org/api/cve/CVE-2026-21858",
+      "verified": "2026-08-01",
+      "note": "MITRE record verbatim: title 'n8n Vulnerable to Unauthenticated File Access via Improper Webhook Request Handling'; affected version range '>= 1.65.0, < 1.121.0'; CVSS vector CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:N (A:N is inconsistent with RCE). Published 2026-01-07 by assigner GitHub_M. Corrects the v2.3.0 claim that this CVE motivated a 2.10.1 pin."
     },
     {
-      "claim": "CVE-2026-27493 and CVE-2026-27577 chain (March 2026) escalates to host RCE on n8n < 2.10.1 / 2.9.3 / 1.123.22",
-      "source": "https://thehackernews.com/2026/03/critical-n8n-flaws-allow-remote-code.html",
-      "verified": "2026-05-20"
+      "claim": "CVE-2026-27493 (CVSS 9.5, unauthenticated expression injection via Form node) and CVE-2026-27577 (CVSS 9.4, expression sandbox escape to RCE) were published 2026-02-25 and affect <1.123.22, 2.0.0-2.9.2 and 2.10.0; patched in 1.123.22 / 2.9.3 / 2.10.1",
+      "source": "https://cveawg.mitre.org/api/cve/CVE-2026-27493",
+      "verified": "2026-08-01",
+      "note": "MITRE records for both CVEs give datePublished 2026-02-25, not March 2026 as stated in v2.3.0. These are the CVEs behind the 2.10.1 floor."
     },
     {
       "claim": "n8n 2.x ships native LangChain integration (Tools Agent, Conversational Agent, Memory nodes, Vector Stores for RAG)",
@@ -126,6 +127,78 @@
       "claim": "n8n Anthropic Chat Model node added adaptive thinking mode for Claude Opus 4.7+ in recent releases",
       "source": "https://releasebot.io/updates/n8n",
       "verified": "2026-05-20"
+    },
+    {
+      "claim": "n8n 2.21.4 is affected by 68 published GitHub advisories, including three CRITICAL disclosed 2026-05-14 and fixed in 2.22.1: CVE-2026-44789 (HTTP Request node pagination prototype pollution to RCE), CVE-2026-44790 (arbitrary file read via Git node), CVE-2026-44791 (XML node prototype pollution patch bypass)",
+      "source": "https://api.github.com/advisories?ecosystem=npm&affects=n8n&per_page=100",
+      "verified": "2026-08-01",
+      "note": "GHSA ids GHSA-c8xv-5998-g76h, GHSA-57g9-58c2-xjg3, GHSA-wrwr-h859-xh2r. Further HIGH fixes land through 2.31.5 and 2.32.1, so 2.32.1 is the practical minimum pin. These three were public six days before the v2.3.0 evidence_date of 2026-05-20 and were missed at that review."
+    },
+    {
+      "claim": "The Hebcal holiday query requires month=x and i=on; month=now is invalid and returns an empty items array, and omitting i=on returns the Diaspora calendar",
+      "source": "https://www.hebcal.com/hebcal?v=1&cfg=json&year=2026&month=x&maj=on&i=on",
+      "verified": "2026-08-01",
+      "note": "Live comparison. month=now returns verbatim {\"title\":\"Hebcal Diaspora 2026\",\"location\":{\"geo\":\"none\"},\"items\":[]} (HTTP 200, zero items, so a yomtov gate never fires). month=x without i=on returns 'Hebcal Diaspora 2026' with 13 yomtov days; with i=on returns 'Hebcal Israel 2026' with 8. The five extra Diaspora days (Pesach II, Pesach VIII, Shavuot II, Sukkot II, Simchat Torah) are ordinary working days in Israel. An Israeli geonameid has the same effect as i=on."
+    },
+    {
+      "claim": "israeli-bank-scrapers CompanyTypes member is beyahadBishvilha (not beyahadMishkantaot), and the enum also includes union and pagi",
+      "source": "https://raw.githubusercontent.com/eshaham/israeli-bank-scrapers/master/src/definitions.ts",
+      "verified": "2026-08-01",
+      "note": "Source verbatim: export enum CompanyTypes { hapoalim, beinleumi, union, amex, isracard, visaCal, max, otsarHahayal, discount, mercantile, mizrahi, leumi, massad, yahav, behatsdaa, beyahadBishvilha, oneZero, pagi }. CompanyTypes.beyahadMishkantaot is undefined and createScraper throws."
+    },
+    {
+      "claim": "israeli-bank-scrapers credentials key is `password` not `userPassword`, and login fields vary per bank (hapoalim uses userCode)",
+      "source": "https://raw.githubusercontent.com/eshaham/israeli-bank-scrapers/master/README.md",
+      "verified": "2026-08-01",
+      "note": "README verbatim: await scraper.scrape({ username: 'vr29485', password field omitted) }). definitions.ts verbatim: [CompanyTypes.hapoalim]: { name: 'Bank Hapoalim', loginFields: ['userCode', PASSWORD_FIELD] }. discount/mercantile need id+password+num; isracard/amex need id+card6Digits+password."
+    },
+    {
+      "claim": "israeli-bank-scrapers 6.9.0 requires Node.js >= 22.22.2",
+      "source": "https://registry.npmjs.org/israeli-bank-scrapers",
+      "verified": "2026-08-01",
+      "note": "Package 6.9.0 published 2026-07-22, engines field verbatim: {\"node\": \">= 22.22.2\"}. Corrects the v2.3.0 claim of 22.12.0."
+    },
+    {
+      "claim": "n8n 2.x blocks Code-node environment variable access by default (N8N_BLOCK_ENV_ACCESS_IN_NODE=true) and restricts require() unless NODE_FUNCTION_ALLOW_BUILTIN / NODE_FUNCTION_ALLOW_EXTERNAL are set",
+      "source": "https://docs.n8n.io/changelog/v20-breaking-changes.md",
+      "verified": "2026-08-01",
+      "note": "Breaking-changes page verbatim: 'To improve security, n8n will block access to environment variables from the Code node by default. The default value for N8N_BLOCK_ENV_ACCESS_IN_NODE is now set to true.' Module docs verbatim: 'External module support is disabled when an environment variable isn't set' and 'If n8n instance is setup with Task Runners, add the environment variables to the Task Runners instead to the main n8n node.'"
+    },
+    {
+      "claim": "Tranzila v2 endpoints are /v1/transaction/credit_card/create and /v1/transaction/bit/init; /v1/transaction/create and /v1/bit/init do not exist",
+      "source": "https://api.tranzila.com/v1/transaction/credit_card/create",
+      "verified": "2026-08-01",
+      "note": "Live POST probe: the credit_card and bit paths return 401 {\"code\":401,\"message\":\"Unauthorized\"} (endpoint exists, auth required); the two paths cited in v2.3.0 return 404. Legacy secure5.tranzila.com/cgi-bin/tranzila71dl.cgi also returns 404; tranzila31.cgi returns 200."
+    },
+    {
+      "claim": "InforUMobile API host is capi.inforu.co.il, not api.inforu.co.il, and enforces an IP allowlist alongside the token",
+      "source": "https://capi.inforu.co.il/api/v2/SMS/SendSms",
+      "verified": "2026-08-01",
+      "note": "Live POST probe: api.inforu.co.il/api/v2/SMS/SendSms returns 404 (IIS 'File or directory not found'); capi.inforu.co.il returns 401 with body {\"StatusId\": -2, \"StatusDescription\": \"Authentication failed or illegal IP address\", \"FunctionName\": \"api/v2/SMS/SendSms\"}. Request body envelope shape not verified (needs credentials)."
+    },
+    {
+      "claim": "019 SMS returns HTTP 200 on authentication failure with a non-zero status field in the body",
+      "source": "https://019sms.co.il/api",
+      "verified": "2026-08-01",
+      "note": "Live POST probe with a fake bearer token returns HTTP 200 and body verbatim: {\"status\":3,\"message\":\"Username or password is incorrect or Expired  and API token is invalid\"}. Workflows must branch on $json.status, not the HTTP status code."
+    },
+    {
+      "claim": "Cardcom https://secure.cardcom.solutions/api/v11 is a base path that returns 404; concrete v11 operations include /api/v11/LowProfile/Create and /api/v11/Transactions/Transaction",
+      "source": "https://secure.cardcom.solutions/api/v11/DOCS",
+      "verified": "2026-08-01",
+      "note": "Live POST probe: /api/v11 returns 404; /api/v11/LowProfile/Create and /api/v11/Transactions/Transaction both return 401 (exist, auth required). /api/v11/DOCS serves docs on GET."
+    },
+    {
+      "claim": "The Israel Invoice Reform allocation-number threshold is measured before VAT (lifnei maam)",
+      "source": "https://www.greeninvoice.co.il/magazine/israel-invoice/",
+      "verified": "2026-08-01",
+      "note": "Source verbatim: 'הסכום אותו קבעה רשות המיסים לא כולל מע\"מ'. Threshold table: May 2024 25,000; Jan 2025 20,000; Jan 2026 10,000; Jun 2026 onwards 5,000. No further step-down is legislated, so the v2.3.0 'Jan 1 2027' row was speculative and has been removed. Compare against Morning's `amount`, not `totalAmount`."
+    },
+    {
+      "claim": "n8n docs URL https://docs.n8n.io/2-0-breaking-changes/ is a soft 404; the real page is https://docs.n8n.io/changelog/v20-breaking-changes/",
+      "source": "https://docs.n8n.io/sitemap.md",
+      "verified": "2026-08-01",
+      "note": "The old URL returns HTTP 200 with a 404 page body, so status-code link checks pass it. Sitemap lists the v2.0 page at /changelog/v20-breaking-changes.md and also lists a v3.0 breaking-changes page (n8n 3.0 scheduled October 2026, not yet covered by this skill)."
     }
   ]
 }

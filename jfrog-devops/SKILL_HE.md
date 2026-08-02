@@ -14,7 +14,7 @@
 | סריקת CVE | Xray | POST /api/v1/scanArtifact או jf xr scan | כן |
 | יצירת watch/policy | Xray | POST /api/v2/watches | כן (מנהל) |
 | הפקת דוח | Xray | POST /api/v1/reports/vulnerabilities | כן |
-| ייצוא SBOM (SPDX או CycloneDX) | Xray | POST /api/v1/sbom או jf scan --format=cyclonedx | כן |
+| ייצוא SBOM (SPDX או CycloneDX) | Xray | POST /xray/api/v2/component/exportDetails, או jf scan --format=cyclonedx (CycloneDX בלבד) | כן |
 | סינון חבילות OSS לפני הורדה | Curation | מוגדר לכל remote repo | כן (מנהל) |
 | ניהול מודלי ML (Hugging Face, MLflow, NIM) | Artifactory ML repo | jf rt upload או FrogML SDK | כן |
 | ניקוי artifacts ישנים | Artifactory | AQL + מחיקה או מדיניות שמירה | כן (מנהל) |
@@ -25,7 +25,7 @@
 ```bash
 # Configure JFrog CLI with access token (recommended)
 jf config add my-server \
-  --url="https://mycompany.jfrog.io" \
+  --url="https://acme.jfrog.io" \
   --access-token="YOUR_ACCESS_TOKEN" \
   --interactive=false
 
@@ -35,13 +35,17 @@ jf rt ping
 
 **אפשרות ב: REST API עם curl:**
 ```bash
+# Read the host and token from the environment so neither is hardcoded
+# or left in shell history. JF_URL is your platform base URL.
+export JF_URL="https://acme.jfrog.io"
+
 # Using access token (recommended)
-curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  "https://mycompany.jfrog.io/artifactory/api/system/ping"
+curl -H "Authorization: Bearer $JF_ACCESS_TOKEN" \
+  "$JF_URL/artifactory/api/system/ping"
 
 # Using identity token (reference token, also works as Bearer)
-curl -H "Authorization: Bearer YOUR_REFERENCE_TOKEN" \
-  "https://mycompany.jfrog.io/artifactory/api/system/ping"
+curl -H "Authorization: Bearer $JF_REFERENCE_TOKEN" \
+  "$JF_URL/artifactory/api/system/ping"
 ```
 
 > מפתחות API ישנים (header של `X-JFrog-Art-Api`) הגיעו לסוף חיים ברבעון הרביעי של 2024 ומכובים כברירת מחדל מ-Artifactory 7.98 ואילך. השתמשו ב-access tokens או reference tokens (שניהם נשלחים כ-`Authorization: Bearer`).
@@ -49,12 +53,13 @@ curl -H "Authorization: Bearer YOUR_REFERENCE_TOKEN" \
 **אפשרות ג: OIDC ל-CI (בלי סודות ארוכי-טווח):**
 ```yaml
 # דוגמת GitHub Actions עם jfrog/setup-jfrog-cli
-- uses: jfrog/setup-jfrog-cli@v4
+- uses: jfrog/setup-jfrog-cli@v5
   with:
     oidc-provider-name: my-github-oidc-provider
   env:
-    JF_URL: https://mycompany.jfrog.io
+    JF_URL: https://acme.jfrog.io
 ```
+> גרסה v5 רצה על runtime של node24. גרסה v4 נשארת על node20 ועדיין נתמכת, אז הצמידו `@v4` רק אם ה-runner שלכם תקוע על גרסה ישנה. אחרת השתמשו ב-`@v5`.
 מגדירים את ה-OIDC integration פעם אחת ב-JFrog (Administration > Identity and Access > Integrations > OIDC), ואז ה-CI מחליף JWT קצר-טווח ל-access token בזמן ריצה. זה הנתיב המומלץ של JFrog ל-GitHub Actions, GitLab, Buildkite ו-Jenkins.
 
 **אפשרות ד: לקוח Python:**
@@ -136,24 +141,24 @@ class ArtifactoryClient:
 **הגדרת Docker לעבודה עם Artifactory:**
 ```bash
 # Login to Artifactory Docker registry
-docker login mycompany.jfrog.io
+docker login acme.jfrog.io
 
 # Push image through Artifactory
-docker tag myapp:latest mycompany.jfrog.io/docker-local/myapp:1.0.0
-docker push mycompany.jfrog.io/docker-local/myapp:1.0.0
+docker tag myapp:latest acme.jfrog.io/docker-local/myapp:1.0.0
+docker push acme.jfrog.io/docker-local/myapp:1.0.0
 
 # Pull image through Artifactory (also caches remote images)
-docker pull mycompany.jfrog.io/docker-remote/nginx:latest
+docker pull acme.jfrog.io/docker-remote/nginx:latest
 ```
 
 **שימוש ב-JFrog CLI עבור Docker (מוסיף מידע build):**
 ```bash
 # Push with build info collection
-jf docker push mycompany.jfrog.io/docker-local/myapp:1.0.0 \
+jf docker push acme.jfrog.io/docker-local/myapp:1.0.0 \
   --build-name=myapp-build --build-number=42
 
 # Pull with build info collection
-jf docker pull mycompany.jfrog.io/docker-remote/nginx:latest \
+jf docker pull acme.jfrog.io/docker-remote/nginx:latest \
   --build-name=myapp-build --build-number=42
 ```
 
@@ -165,7 +170,7 @@ jf docker pull mycompany.jfrog.io/docker-remote/nginx:latest \
 jf rt build-collect-env myapp-build 42
 
 # Upload artifacts with build info
-jf rt upload "target/*.jar" libs-release-local/com/mycompany/myapp/1.0.0/ \
+jf rt upload "target/*.jar" libs-release-local/com/acme/myapp/1.0.0/ \
   --build-name=myapp-build --build-number=42
 
 # Publish build info
@@ -191,30 +196,34 @@ jf rt build-promote myapp-build 42 libs-release-local \
 jf audit --watches "prod-security-watch"
 
 # Scan a specific Docker image
-jf docker scan mycompany.jfrog.io/docker-local/myapp:1.0.0
+jf docker scan acme.jfrog.io/docker-local/myapp:1.0.0
 
-# Scan with fail threshold (for CI)
-jf audit --fail --min-severity=High
+# Real CI gate: the policy comes from an Xray watch, not from --min-severity
+jf audit --watches=prod-security-watch --fail=true   # exit code 3 when a Fail Build rule matches
+
+# --min-severity only filters what is DISPLAYED. Without --watches, --project or
+# --repo-path no policy violations are evaluated at all, so this gates nothing:
+jf audit --min-severity=High
 
 # Generate SBOM in CycloneDX (with VEX data from Xray 3.67+)
-jf scan --format=cyclonedx mycompany.jfrog.io/docker-local/myapp:1.0.0 > sbom.json
-
-# Generate SBOM in SPDX (ISO/IEC standard, OSS-friendly)
-jf scan --format=spdx mycompany.jfrog.io/docker-local/myapp:1.0.0 > sbom.spdx.json
+jf scan --format=cyclonedx --sbom "build/libs/*.jar" > sbom.cdx.json
 ```
+
+> הדגל `--fail` הוא ברירת המחדל ממילא, אז העברה שלו לבדה לא משנה כלום. מה שהופך את השער לאמיתי זה `--watches`, `--project` או `--repo-path`.
+> פורמט CycloneDX הוא ה-SBOM היחיד ש-JFrog CLI מפיק. אין `jf scan --format=spdx` וה-CLI פשוט דוחה אותו. SPDX מגיע רק מממשק ה-Xray (Scans List, ואז More Options, ואז Export Scan Data) או מ-`POST /xray/api/v2/component/exportDetails` עם `"spdx": true`. שימו לב גם ש-`jf docker scan` תומך רק ב-table, json, simple-json ו-sarif, אז הפיקו SBOM של image דרך `jf scan`.
 
 מ-Xray 3.131 ואילך, ה-CycloneDX כולל גם CBOM (Cryptography Bill of Materials, ממצאי תעודות וסודות) כשמפעילים את JFrog Advanced Security עם סריקת secrets. Xray גם יודע לקלוט SBOM חיצוניים בפורמט SPDX או CycloneDX (כולל VEX לניתוח קונטקסטואלי) כדי לבדוק artifacts של ספקים.
 
 **Frogbot לסריקת pull requests (חינם עם חשבון free-tier של JFrog):**
 ```yaml
 # .github/workflows/frogbot-scan-pr.yml
-- uses: jfrog/frogbot@v2
+- uses: jfrog/frogbot@v3
   env:
     JF_URL: ${{ secrets.JF_URL }}
     JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
     JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
-הבוט Frogbot סורק PRs עם SCA, SAST ו-IaC, מגיב על ממצאים, ויודע לפתוח PRs לתיקונים. נקודת התחלה טובה לפרויקטי OSS ישראליים שעדיין לא משלמים ל-JFrog.
+הבוט Frogbot סורק PRs עם SCA, SAST ו-IaC, מגיב על ממצאים, ויודע לפתוח PRs לתיקונים. נקודת התחלה טובה לפרויקטי OSS ישראליים שעדיין לא משלמים ל-JFrog. הצמידו `@v3`: גרסה V3 סורקת סטטית בלי להריץ את מנהלי החבילות שלכם, אז היא מחזירה ממצאים גם כשה-build נכשל, והיא מזהה לבד repos מקוננים ורב-חבילתיים. גרסה V2 נמצאת בסאנסט (רק תיקוני באגים ואבטחה קריטיים, בלי פיצ'רים חדשים).
 
 ### שלב 5b: ניהול מודלי AI ו-ML (JFrog ML + AI Catalog)
 
@@ -228,9 +237,14 @@ jf scan --format=spdx mycompany.jfrog.io/docker-local/myapp:1.0.0 > sbom.spdx.js
 jf rt upload "model.onnx" ml-local/myapp/v1.0.0/ \
   --build-name=ml-build --build-number=42
 
-# Xray סורק מודלים בדיוק כמו שסורק Docker images
-jf docker scan mycompany.jfrog.io/ml-local/myapp:v1.0.0
+# Scan model files for embedded code-execution payloads (needs JFrog Advanced Security)
+jf malicious-scan --working-dirs=./models
+
+# Binary-scan a model artifact you already have on disk
+jf scan ./model.onnx --format=sarif
 ```
+
+> סריקת מודלים היא לא המסלול של Docker. הפקודה `jf docker scan` מאתרת images דרך ה-daemon המקומי, ולכן הפניה שלה לנתיב של repo מסוג ML פשוט נכשלת. הפקודה `jf malicious-scan` (בבטא) מכוונת למשפחת ההתקפות של pickle deserialization, שסריקת קונטיינרים לא מכסה.
 
 **AI Catalog** מאפשר לצוותי פלטפורמה לנהל באופן מרכזי גישה ל-OpenAI, Anthropic, NVIDIA NIM (כולל מודלי Nemotron עם משקלות פתוחים) ו-Hugging Face, מאחורי שכבת governance אחת: סריקה, lineage, model cards ופריסה ב-click אחד.
 
@@ -298,31 +312,31 @@ items.find({
 ## מלכודות נפוצות
 
 - **JFrog Pipelines הגיע לסוף חיים ב-1 במאי 2026.** לקוחות חדשים כבר לא יכולים להקצות Pipelines, ולקוחות קיימים חייבים להיות אחרי ההגירה. JFrog ממליצים על GitHub Actions, GitLab CI, Jenkins או Azure DevOps עם `jfrog/setup-jfrog-cli`. אם צוות ישראלי עדיין על Pipelines, ההגירה כבר באיחור: אין יותר feature updates ואין תמיכה.
-- **רפוזיטוריות Hugging Face הישנות מוצאות משימוש ביוני 2026.** סוג ה-repo המקורי של Artifactory בשם "Hugging Face" (מ-7.77.x) מאבד פונקציונליות מלאה ויש לעבור ל-layout החדש "Machine Learning" (הוצג ב-Artifactory 7.111.1). ההגירה היא חד-כיוונית בפועל (ה-API של `restore_layout` מוחק חבילות שנוספו אחרי השדרוג), repos של federation לא יכולים לערבב layouts, ומכסות ה-rate limit של Hugging Face Hub עולות בזמן ה-cache warming. צוותי ML ישראליים שמשתמשים ב-Artifactory כפרוקסי ל-Hugging Face צריכים למפות ולהגר, רצוי אחרי שדרוג ה-identity ב-Hub ל-Enterprise.
+- **המועד האחרון להגירת רפוזיטוריות Hugging Face הישנות חלף ביוני 2026.** כל repo מסוג Hugging Face שנוצר לפני Artifactory 7.111.1 ולא הועבר ל-layout של "Machine Learning" רץ היום ללא תמיכה, ואין יותר התחייבות לפונקציונליות מלאה. התייחסו ל-repo שלא הוגר כאל תקלה פתוחה, לא כאל משימה שממתינה בתור. ההגירה היא חד-כיוונית בפועל (ה-API של `restore_layout` מוחק חבילות שנוספו אחרי השדרוג), repos של federation לא יכולים לערבב layouts, ומכסות ה-rate limit של Hugging Face Hub עולות בזמן ה-cache warming, אז תכננו את החיתוך מראש ולא תוך כדי תנועה.
 - **מפתחות API הגיעו לסוף חיים ברבעון הרביעי של 2024.** מפתחות ישנים עוד עובדים על מופעים ישנים, אבל אי אפשר ליצור חדשים. הגרו כל שימוש ב-`X-JFrog-Art-Api` ל-access tokens או reference tokens (שניהם נשלחים כ-`Authorization: Bearer ...`).
 - **OIDC הוא היום שיטת האימות המומלצת של JFrog ל-GitHub Actions.** דורש JFrog CLI 2.75.0+ וה-workflow צריך `permissions: id-token: write`. טוקני access ארוכי טווח ב-GitHub secrets עדיין נתמכים, אבל לא מומלצים ל-pipelines חדשים.
-- אזורי SaaS של JFrog הם רשימה קבועה (us-east, us-west, eu-frankfurt, eu-west, ap-southeast). לדרישות אחסון מידע בישראל, פריסות BYOL על AWS `il-central-1` הן אפשרות, אבל JFrog SaaS עצמו לא מארח בישראל. בדקו את אזור המופע ב-jfrog.com/help/r/jfrog-platform-administration-documentation/jfrog-saas-regions.
+- **ל-JFrog Cloud יש שלושה אזורים בישראל.** השירות רץ ביותר מ-40 אזורים על AWS, Azure ו-GCP, וביניהם AWS "Israel (Tel Aviv)", Azure "Israel Central" ו-GCP "Middle East West1 (Tel Aviv)". צוות ישראלי עם דרישת שמירת מידע בישראל יכול לעמוד בה ישירות על JFrog SaaS, ולא צריך פריסת BYOL עצמאית רק בשביל הדרישה הזאת. האזור נקבע בזמן פתיחת המנוי ואי אפשר לשנות אותו אחר כך בלי הגירה, אז בחרו אותו לפני ה-onboarding. הרשימה המעודכנת: https://jfrog.com/help/r/what-are-artifactory-cloud-nated-ips/what-are-artifactory-cloud-nated-ips
 - **שקיפות תמחור משתנה לפי tier.** JFrog מפרסמים בפומבי Pro בערך 150 דולר לחודש ו-Enterprise X בערך 950 דולר לחודש ל-SaaS, כשה-Enterprise+ ב-quote. תמחור self-managed (סביב 27,000 דולר לשנה ל-Pro X ו-48,000 דולר לשנה ל-Enterprise X) כמעט אף פעם לא פומבי. קונים ישראלים צריכים לאמת את המחירים מול JFrog ישראל לפני התכנון.
-- טוקני אימות JFrog CLI לפריסות ארגוניות ישראליות דורשים לעיתים קרובות אינטגרציית SSO עם Azure AD או Okta שמוגדרים לטננטים ישראליים. סוכנים עלולים ליצור קונפיגורציות basic auth שלא עובדות.
-- צוותי פיתוח ישראליים עובדים במחזורי פריסה ראשון-חמישי. Pipelines של CI/CD שמוגדרים לשני-שישי עלולים לפספס את יום העבודה הראשון או לרוץ מיותר ביום שישי.
-- סריקת אבטחה של JFrog Xray עלולה לסמן תלויות שעומדות ברגולציה הישראלית אך מסומנות על ידי בקרות יצוא אמריקאיות. צוותים ישראליים צריכים לבדוק התראות Xray בהקשר הרגולטורי המקומי.
+- **JFrog היא חברה ישראלית**, שהוקמה ויושבת בנתניה (נסחרת בנאסד"ק תחת FROG) עם מרכז הפיתוח הגדול שלה בישראל. לצוות ישראלי זה אומר תמיכה ארגונית באזור הזמן שלכם, ארגון מכירות ו-solution architects מקומי, אנשי SE דוברי עברית, ואזורי הענן בישראל שמפורטים למעלה. זה שיקול רכש אמיתי, לא רק טריוויה.
+- **מדיניות רישוי ב-Xray מוגדרת מול רשימות רישיונות של SPDX, לא לפי מדינה.** צוות עם מדיניות פנימית מתירנית עדיין עלול לראות הפרות שמגיעות מרשימת רישיונות חסומים שהתקבלה בירושה מתבנית מדיניות של חברת אם. בדקו אם ה-watch שלכם יורש מדיניות שאתם לא כתבתם, לפני שאתם מתייחסים להפרת רישוי כאל חסם אמיתי.
 
 ## קישורי עזר
 
 | מקור | כתובת | מה לבדוק |
 |------|-------|----------|
-| תיעוד פלטפורמת JFrog | https://jfrog.com/help/r/jfrog-platform-administration-documentation | ניהול רפוזיטוריות, הרשאות, הגדרות HA |
 | Artifactory REST API | https://jfrog.com/help/r/jfrog-rest-apis/artifactory-rest-apis | נקודות קצה, תחביר שאילתות, AQL |
 | תיעוד Xray | https://jfrog.com/xray/ | סריקת פגיעויות, ציות רישוי, מדיניות, SBOM ו-VEX |
-| JFrog CLI Releases | https://github.com/jfrog/jfrog-cli/releases | גרסה אחרונה של ה-CLI (2.103.0 נכון לאפריל 2026), changelog |
-| JFrog Docker Registry | https://jfrog.com/help/r/jfrog-artifactory-documentation/docker-registry | ניהול אימג'י Docker, פרוקסי Docker Hub |
+| JFrog CLI Releases | https://github.com/jfrog/jfrog-cli/releases | גרסה אחרונה של ה-CLI (2.117.0 נכון ליולי 2026), changelog |
+| JFrog Docker Registry | https://jfrog.com/help/r/jfrog-artifactory-documentation/docker-repositories | ניהול אימג'י Docker, פרוקסי Docker Hub |
 | JFrog ML | https://jfrog.com/jfrog-ml/ | פלטפורמת MLOps (מרכישת Qwak), model registry, FrogML SDK |
 | JFrog AI Catalog | https://jfrog.com/press-room/jfrog-launches-ai-catalog-to-secure-and-govern-ai-model-delivery/ | Governance ל-OpenAI, Anthropic, NVIDIA NIM ו-Hugging Face |
 | Machine Learning Repositories | https://jfrog.com/help/r/jfrog-artifactory-documentation/log-hugging-face-models | סוג ה-repo החדש, הגירת HF ביוני 2026 |
 | JFrog Curation | https://jfrog.com/curation/ | סינון חבילות OSS, Compliant Version Selection, תווית MCP Servers |
-| Frogbot | https://github.com/jfrog/frogbot | בוט סריקת PR חינמי, SCA + SAST + IaC |
+| Frogbot | https://github.com/jfrog/frogbot | בוט סריקת PR חינמי, SCA + SAST + IaC. V3 היא הנוכחית, V2 בסאנסט |
 | OIDC עם GitHub Actions | https://jfrog.com/help/r/jfrog-platform-administration-documentation/configure-jfrog-platform-oidc-integration-with-github-actions | האימות המומלץ ל-CI, דורש CLI 2.75.0+ |
-| Pipelines End of Life | https://jfrog.com/help/r/jfrog-release-information/pipelines-end-of-life | EOL ב-1 במאי 2026, הנחיות הגירה |
+| Pipelines End of Life | https://docs.jfrog.com/releases/docs/pipeline-deprecation-end-of-life | EOL ב-1 במאי 2026, הנחיות הגירה |
+| JFrog Cloud Regions | https://jfrog.com/help/r/what-are-artifactory-cloud-nated-ips/what-are-artifactory-cloud-nated-ips | רשימת האזורים המוסמכת לכל ענן, כולל 3 האזורים בישראל |
+| Xray SBOM Export API | https://docs.jfrog.com/security/reference/export-component-details-v1-deprecated_components-v2-openapi | POST /xray/api/v2/component/exportDetails, המסלול התוכנתי היחיד ל-SPDX |
 
 ## פתרון בעיות
 

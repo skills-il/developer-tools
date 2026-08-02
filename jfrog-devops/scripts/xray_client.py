@@ -9,10 +9,10 @@ Requirements:
     pip install requests
 
 Usage:
-    python xray_client.py --url https://mycompany.jfrog.io/xray \
+    python xray_client.py --url https://acme.jfrog.io/xray \
         --token YOUR_TOKEN scan --path "libs-release-local/com/myapp/1.0/app.jar"
 
-    python xray_client.py --url https://mycompany.jfrog.io/xray \
+    python xray_client.py --url https://acme.jfrog.io/xray \
         --token YOUR_TOKEN violations --watch prod-security-watch
 
 Environment variables:
@@ -40,7 +40,7 @@ class XrayClient:
         """Initialize Xray client.
 
         Args:
-            base_url: Xray base URL (e.g., https://mycompany.jfrog.io/xray)
+            base_url: Xray base URL (e.g., https://acme.jfrog.io/xray)
             access_token: JFrog access token
         """
         self.base_url = base_url.rstrip('/')

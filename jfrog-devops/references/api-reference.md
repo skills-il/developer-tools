@@ -5,7 +5,7 @@
 | Method | Header | Notes |
 |--------|--------|-------|
 | Access Token (recommended) | Authorization: Bearer TOKEN | Platform-wide, scoped |
-| API Key (deprecated) | X-JFrog-Art-Api: KEY | Being phased out |
+| API Key (end of life) | X-JFrog-Art-Api: KEY | Creation disabled in Artifactory 7.98; usage disabled since Q4 2024. Migrate to access or reference tokens |
 | Basic Auth | Authorization: Basic base64(user:pass) | Least preferred |
 
 ## Artifactory API Endpoints
@@ -65,6 +65,7 @@
 | POST | /api/v1/scanArtifact | Scan artifact |
 | GET | /api/v1/scan/status/{id} | Scan status |
 | POST | /api/v2/summary/artifact | Vulnerability summary |
+| POST | /api/v2/component/exportDetails | Export SBOM (SPDX or CycloneDX). The only programmatic SPDX path |
 
 ### Policies and Watches
 | Method | Endpoint | Description |
@@ -115,8 +116,16 @@ jf rt build-promote BUILD_NAME BUILD_NUMBER target-repo --status=released
 ### Security
 ```bash
 jf audit
-jf audit --fail --min-severity=High
+
+# Real CI gate: policy comes from a watch. --fail already defaults to true, and
+# --min-severity only filters displayed output, so it gates nothing on its own.
+jf audit --watches=prod-security-watch --fail=true
+
 jf xr scan path/to/artifact
+jf scan --format=cyclonedx --sbom "build/libs/*.jar"   # CycloneDX only; no spdx value
+jf sbom-enrich ./sbom.cdx.json                          # enrich an external CycloneDX SBOM
+jf curation-audit                                       # why did this package install 403?
+jf malicious-scan --working-dirs=./models               # malicious ML model files (beta)
 ```
 
 ## AQL Query Patterns

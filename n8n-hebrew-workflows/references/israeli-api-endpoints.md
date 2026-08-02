@@ -44,9 +44,12 @@ Tax invoices (type 305, 320) over the threshold require an allocation number (mi
 
 | Effective | Threshold |
 |-----------|-----------|
+| May 2024 | 25,000 NIS |
+| Jan 2025 | 20,000 NIS |
 | Jan 1, 2026 | 10,000 NIS |
-| **Jun 1, 2026** | **5,000 NIS** |
-| Jan 1, 2027 | 5,000 NIS (planned to continue) |
+| **Jun 1, 2026 onwards** | **5,000 NIS** |
+
+**Thresholds are before VAT** (lifnei maam). Compare against the `amount` field, NOT `totalAmount`. No further step-down is legislated beyond June 2026.
 
 When creating documents via API, check Morning's documentation for the allocation workflow applicable to API-created documents. Build the threshold as a workflow variable rather than a hardcoded literal.
 
@@ -201,16 +204,20 @@ Body:
 
 ### InforUMobile
 
-Base URL: `https://api.inforu.co.il`
+Base URL: `https://capi.inforu.co.il`
+
+Note: `api.inforu.co.il` returns 404 for the v2 paths. The API host is `capi.inforu.co.il`.
 
 InforUMobile has a legacy XML API and newer JSON API:
 
-JSON API endpoint: `https://api.inforu.co.il/api/v2/SMS/SendSms`
+JSON API endpoint: `https://capi.inforu.co.il/api/v2/SMS/SendSms`
 
 | Endpoint | Method | Description | Auth |
 |----------|--------|-------------|------|
-| `/api/v2/SMS/SendSms` | POST | Send SMS | Bearer token in header |
+| `/api/v2/SMS/SendSms` | POST | Send SMS | Bearer token in header + IP allowlist |
 | `/api/v2/SMS/GetSmsStatus` | GET | Check status | Bearer token + message ID |
+
+Auth failures return HTTP 401 with `{"StatusId": -2, "StatusDescription": "Authentication failed or illegal IP address"}`. The same status covers a bad token and an unlisted source IP, so whitelist your n8n egress IP in the InforU dashboard before debugging the token.
 
 Send SMS body (JSON API):
 ```json
@@ -246,9 +253,13 @@ Documentation: `https://www.cardcom.solutions/`
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `https://secure.cardcom.solutions/Interface/ChargeToken.aspx` | POST | Charge a stored token |
-| `https://secure.cardcom.solutions/Interface/CreateInvoice.aspx` | POST | Create invoice after charge |
+| `https://secure.cardcom.solutions/api/v11/LowProfile/Create` | POST | v11 hosted payment page |
+| `https://secure.cardcom.solutions/api/v11/Transactions/Transaction` | POST | v11 direct charge |
+| `https://secure.cardcom.solutions/Interface/ChargeToken.aspx` | POST | Charge a stored token (legacy) |
+| `https://secure.cardcom.solutions/Interface/CreateInvoice.aspx` | POST | Create invoice after charge (legacy) |
 | Callback URL (configured via API v11 or merchant dashboard) | POST | Payment result notification |
+
+`https://secure.cardcom.solutions/api/v11` is a base path and returns 404 on its own. Always append the operation.
 
 Callback fields:
 
@@ -270,10 +281,12 @@ Tranzila API v2 authenticates via the `X-tranzila-api-app-key` HTTP header (not 
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `https://secure5.tranzila.com/cgi-bin/tranzila71dl.cgi` | GET/POST | Process payment (legacy CGI, avoid for new integrations) |
-| `https://api.tranzila.com/v1/transaction/create` | POST | v2 server-to-server charge (auth: `X-tranzila-api-app-key`) |
-| `https://api.tranzila.com/v1/bit/init` | POST | v2 Bit init, response contains iframe URL with QR code |
+| `https://secure5.tranzila.com/cgi-bin/tranzila31.cgi` | GET/POST | Process payment (legacy CGI, avoid for new integrations) |
+| `https://api.tranzila.com/v1/transaction/credit_card/create` | POST | v2 server-to-server charge (auth: `X-tranzila-api-app-key`) |
+| `https://api.tranzila.com/v1/transaction/bit/init` | POST | v2 Bit init, response contains iframe URL with QR code |
 | Callback URL (configured in terminal settings) | GET | Payment result via query params |
+
+Note the `credit_card` and `bit` segments in the v2 paths. `/v1/transaction/create` and `/v1/bit/init` do not exist and return 404. Unauthenticated calls to the correct paths return `401 {"code":401,"message":"Unauthorized"}`, which is the quickest way to confirm a path before wiring credentials. The legacy `tranzila71dl.cgi` endpoint also 404s; `tranzila31.cgi` is the surviving CGI entry point.
 
 Callback query parameters:
 
@@ -391,3 +404,30 @@ Base URL: `https://www.hebcal.com`
 | category | string | "holiday", "candles", "havdalah" |
 | yomtov | boolean | True if work restrictions apply |
 | memo | string | Additional info (Torah portion, etc.) |
+
+
+## israeli-bank-scrapers login fields (per bank)
+
+**Login fields vary per bank.** There is no universal credential shape. Read `SCRAPERS[companyId].loginFields` before wiring credentials:
+
+| Bank | Required fields |
+|------|----------------|
+| hapoalim | `userCode`, `password` |
+| leumi, mizrahi, otsarHahayal, max, visaCal, union, beinleumi, massad, yahav | `username`, `password` |
+| discount, mercantile | `id`, `password`, `num` |
+| isracard, amex | `id`, `card6Digits`, `password` |
+
+
+
+## Gateway field reference (relocated from SKILL.md)
+
+| Business Need | n8n Pattern | Key Nodes | Israeli API |
+|--------------|-------------|-----------|-------------|
+| Invoice reconciliation | Schedule -> HTTP -> Compare -> Update | Schedule, HTTP, IF, Code | Morning (Green Invoice) |
+| Bank transaction categorization | Schedule -> Code -> Spreadsheet | Schedule, Code, Sheets | israeli-bank-scrapers |
+| Government data sync | Schedule -> HTTP -> Transform -> DB | Schedule, HTTP, Code, Postgres | data.gov.il CKAN |
+| SMS notifications | Trigger -> Code -> HTTP | Webhook, Code, HTTP | 019 Telzar / InforUMobile |
+| Payment webhook handling | Webhook -> Validate -> Process | Webhook, IF, Code, HTTP | Cardcom / Tranzila / Grow |
+| Holiday-aware scheduling | Schedule -> HTTP -> IF -> Execute | Schedule, HTTP, IF, Code | Hebcal |
+| AI-powered categorization | Schedule -> Code -> AI Agent -> DB | Schedule, Code, AI Agent, Postgres | israeli-bank-scrapers + LLM |
+| Invoice Reform compliance | Webhook -> Code -> HTTP -> HTTP | Webhook, Code, HTTP | Morning + Tax Authority allocation |
