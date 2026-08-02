@@ -19,53 +19,44 @@
       "claim_id": "jfrog-acquired-qwak-in-june-2024-for-approximately-230m-to-a",
       "claim": "JFrog acquired Qwak in June 2024 for approximately $230M to add MLOps to its platform",
       "source_url": "https://jfrog.com/press-room/jfrog-to-acquire-qwak-to-streamline-ai-models-from-development-to-production/",
-      "raw_snippet": "Press release + Ctech reporting confirm $230M Qwak acquisition. (RunAI was acquired by NVIDIA, not JFrog, contrary to the prompt's hypothesis.)",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "JFrog to Acquire Qwak to Streamline AI Models from Development to Production PRESS RELEASE, June 25, 2024",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://www.calcalistech.com/ctechnews/article/s1hitsd8c"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "jfrog-ml-launched-march-2025-as-the-first-product-from-the-q",
       "claim": "JFrog ML launched March 2025 as the first product from the Qwak acquisition",
       "source_url": "https://jfrog.com/press-room/jfrog-launches-jfrog-ml-a-revolutionary-mlops-solution/",
-      "raw_snippet": "BusinessWire/JFrog press release dated March 4 2025 announces JFrog ML",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "PRESS RELEASE, March 4, 2025 JFrog ML Drives MLOps practices coupled with AI Security",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://www.devopsdigest.com/jfrog-ml-released"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "jfrog-ai-catalog-launched-september-2025-for-governing-opena",
       "claim": "JFrog AI Catalog launched September 2025 for governing OpenAI, Anthropic, NVIDIA NIM, and Hugging Face access",
       "source_url": "https://jfrog.com/press-room/jfrog-launches-ai-catalog-to-secure-and-govern-ai-model-delivery/",
-      "raw_snippet": "Sept 9 2025 BusinessWire / JFrog press release explicitly names OpenAI, Anthropic, NVIDIA NIM, Hugging Face integrations + Nemotron access",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "September 9, 2025 New AI Catalog Extends the JFrog Platform to Discover, Govern, and Deploy AI Models",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://www.businesswire.com/news/home/20250909916138/en/JFrog-Launches-AI-Catalog-to-Secure-and-Govern-AI-Model-Delivery"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "jfrog-pipelines-reached-end-of-life-on-may-1-2026",
       "claim": "JFrog Pipelines reached end of life on May 1, 2026",
-      "source_url": "https://jfrog.com/help/r/jfrog-release-information/pipelines-end-of-life",
-      "raw_snippet": "Multiple JFrog help-center pages and third-party trackers (invgate.com itdb) confirm May 1 2026 EOL. Today is 2026-05-20, so EOL is in the past.",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "source_url": "https://docs.jfrog.com/releases/docs/pipeline-deprecation-end-of-life",
+      "raw_snippet": "JFrog Pipelines reached end of life on May 1, 2026, and no longer receives updates, bug fixes, or security patches",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -76,84 +67,68 @@
       "claim_id": "legacy-hugging-face-repository-type-in-artifactory-deprecate",
       "claim": "Legacy Hugging Face repository type in Artifactory deprecates June 2026; migration to new Machine Learning layout required",
       "source_url": "https://huggingface.co/blog/jeffboudier/jfrog-artifactory-june-2026",
-      "raw_snippet": "Hugging Face engineering blog (jeffboudier) details June 2026 migration deadline, one-way nature, restore_layout caveat, and federation constraints",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "must be migrated by June 2026 to the new Machine Learning repository layout",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://docs.jfrog.com/artifactory/docs/hugging-face-repositories"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "new-machine-learning-repository-type-introduced-in-artifacto",
       "claim": "New Machine Learning repository type introduced in Artifactory 7.111.1+ supports Hugging Face + PyTorch + ONNX + .pkl + .joblib + .pth + .cbm with FrogML SDK and Xet protocol",
       "source_url": "https://docs.jfrog.com/artifactory/docs/hugging-face-repositories",
-      "raw_snippet": "Both Hugging Face blog and JFrog docs list the file types, version, FrogML SDK, and Xet support",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "7.111.1, all new local and remote Hugging Face repositories use the",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://jfrog.com/help/r/jfrog-artifactory-documentation/log-hugging-face-models"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "xray-exports-sboms-in-spdx-and-cyclonedx-but-only-cyclonedx-",
       "claim": "Xray exports SBOMs in SPDX and CycloneDX, but ONLY CycloneDX is reachable from JFrog CLI",
       "source_url": "https://docs.jfrog.com/security/docs/export-scan-results",
-      "raw_snippet": "https://docs.jfrog.com/security/docs/export-scan-results lists \"SPDX (Software Package Data Exchange)\" and \"CycloneDX\" with outputs \"Tag:Value\", \"JSON\", \"XLSX (Excel format)\", reached via Scans List > [...] (More Options) > \"Export Scan Data\". The page documents no CLI path. Executed check: `jf scan --format=spdx` returns \"[Error] only the following output formats are supported: table, json, simple-json, sarif, cyclonedx\". Programmatic SPDX is POST /xray/api/v2/component/exportDetails.",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "SPDX Export Formats: Tag:Value JSON XLSX (Excel format)",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://docs.jfrog.com/security/docs/sbom-import"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "xray-3-131-embeds-cbom-cryptography-bill-of-materials-into-c",
-      "claim": "Xray 3.131+ embeds CBOM (Cryptography Bill of Materials) into CycloneDX exports when JFrog Advanced Security secrets scanning is enabled",
+      "claim": "Xray exports Secrets scan results in CycloneDX (CBOM) format. The release notes do NOT say 'Cryptography Bill of Materials', do not mention certificates, and the entry could not be pinned to 3.131.",
       "source_url": "https://docs.jfrog.com/releases/docs/xray",
-      "raw_snippet": "Release notes confirm 3.131 CBOM addition; documentation describes the CycloneDX + secrets payload",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "Added support for exporting Secrets scan results in CycloneDX (CBOM) format.",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://docs.jfrog.com/security/docs/export-scan-results"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "oidc-is-the-jfrog-recommended-github-actions-auth-method-req",
       "claim": "OIDC is the JFrog-recommended GitHub Actions auth method; requires JFrog CLI 2.75.0+ and id-token: write permission",
       "source_url": "https://github.com/jfrog/setup-jfrog-cli",
-      "raw_snippet": "setup-jfrog-cli README and JFrog OIDC docs both call out CLI 2.75.0+ requirement and id-token: write permission",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "If you are using JFrog CLI version 2.75.0 or above and not downloading the CLI from Artifactory",
+      "fetched_at": "2026-08-02T02:30:45.061420+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://jfrog.com/help/r/jfrog-platform-administration-documentation/configure-jfrog-platform-oidc-integration-with-github-actions",
-        "https://docs.github.com/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-jfrog"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "legacy-x-jfrog-art-api-api-keys-reached-end-of-life-q4-2024-",
       "claim": "Legacy X-JFrog-Art-Api API keys reached end of life Q4 2024; disabled by default in Artifactory 7.98+",
-      "source_url": "https://jfrog.com/help/r/jfrog-release-information/jfrog-platform-deprecations",
-      "raw_snippet": "Carried over from v1.1.1 of this skill; still consistent with current JFrog deprecation pages",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "source_url": "https://docs.jfrog.com/releases/docs/jfrog-platform-deprecations",
+      "raw_snippet": "API Keys will be disabled at the end of Q4 2024",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -164,47 +139,37 @@
       "claim_id": "frogbot-is-a-free-git-scanner-that-runs-sca-sast-iac-on-prs-",
       "claim": "Frogbot is a free Git scanner that runs SCA + SAST + IaC on PRs; latest releases through Dec 2025",
       "source_url": "https://github.com/jfrog/frogbot",
-      "raw_snippet": "GitHub repo and JFrog docs describe SCA+SAST+IaC, PR commenting, fix-PR opening, and free-tier compatibility",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "JFrog Frogbot is a Git bot that scans your Git repositories for security vulnerabilities",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://docs.jfrog.com/security/docs/frogbot"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "jfrog-curation-added-compliant-version-selection-cvs-waiver-",
       "claim": "JFrog Curation added Compliant Version Selection (CVS), waiver requests, MCP Servers public label, and VS Code integration in 2025-2026",
       "source_url": "https://docs.jfrog.com/releases/docs/security-self-managed-releases",
-      "raw_snippet": "Security self-managed releases page details CVS expansion (Conda/NuGet/RubyGems/Pub/Composer/Debian/Ubuntu), waiver requests, MCP Servers label, VS Code remote-repo curation",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "Compliant Version Selection support for Composer packages",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://docs.jfrog.com/security/docs/compliant-version-selection"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "jfrog-saas-pro-tier-published-at-150-month-enterprise-x-at-9",
       "claim": "JFrog SaaS Pro tier published at $150/month, Enterprise X at $950/month, Enterprise+ on quote; self-managed Pro X ~$27k/yr, Enterprise X ~$48k/yr",
       "source_url": "https://jfrog.com/pricing/",
-      "raw_snippet": "Pricing page + third-party trackers cite these tier prices for 2026; quotes vary by consumption. Marked medium because pricing changes more often than docs.",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "Enterprise X Starting at: $950 / Month",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "medium",
-      "supporting_urls": [
-        "https://www.vendr.com/marketplace/jfrog",
-        "https://checkthat.ai/brands/jfrog/pricing"
-      ]
+      "confidence": "medium"
     },
     {
       "claim_id": "jfrog-integrated-its-platform-with-nvidia-enterprise-ai-fact",
@@ -222,28 +187,27 @@
       "claim_id": "conan-2-v2-package-support-is-available-in-artifactory",
       "claim": "Conan 2 (V2) package support is available in Artifactory",
       "source_url": "https://jfrog.com/help/r/jfrog-artifactory-documentation/conan-v2-package-support",
-      "raw_snippet": "JFrog docs page dedicated to Conan V2 support; CLI 2.101.0 release notes call out Conan additions",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://github.com/jfrog/jfrog-cli/releases/tag/v2.101.0"
-      ]
-    },
-    {
-      "claim_id": "jfrog-cloud-offers-three-israeli-regions-aws-israel-tel-aviv",
-      "claim": "JFrog Cloud offers three Israeli regions: AWS Israel (Tel Aviv), Azure Israel Central, and GCP Middle East West1 (Tel Aviv)",
-      "source_url": "https://jfrog.com/help/r/what-are-artifactory-cloud-nated-ips/what-are-artifactory-cloud-nated-ips",
-      "raw_snippet": "JFrog Cloud region table lists verbatim, under AWS: \"Israel (Tel Aviv)\"; under Azure: \"Israel Central\"; under GCP: \"Middle East West1 (Tel Aviv)\". Full list is 17 AWS + 13 Azure + 10 GCP regions, not the five the skill previously claimed. REPLACES the retired fixed-list claim.",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "Artifactory recommends using Conan V2. Conan V1 is supported as a legacy tool.",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
       "confidence": "high"
+    },
+    {
+      "claim_id": "jfrog-cloud-offers-three-israeli-regions-aws-israel-tel-aviv",
+      "claim": "JFrog Cloud offers three Israeli regions: AWS Israel (Tel Aviv), Azure Israel Central, and GCP Middle East West1 (Tel Aviv)",
+      "source_url": "https://jfrog.com/help/r/what-are-artifactory-cloud-nated-ips/what-are-artifactory-cloud-nated-ips",
+      "raw_snippet": "Read in-browser (Playwright) from the page's own Fluid Topics content API /help/api/khub/maps/wpeEbdna7R_ozUsqlk7HFQ/pages, because the page body is JS-rendered and curl sees only nav chrome. Verbatim TOC entries with their parent cloud heading: AWS > {\"title\":\"Israel (Tel Aviv)\",\"prettyUrl\":\"/r/what-are-artifactory-cloud-nated-ips/israel-tel-aviv\"}; Azure > {\"title\":\"Israel Central\",\"prettyUrl\":\"/r/what-are-artifactory-cloud-nated-ips/israel-central\"}; GCP > {\"title\":\"Middle East West1 (Tel Aviv)\",\"prettyUrl\":\"/r/what-are-artifactory-cloud-nated-ips/middle-east-west1-tel-aviv\"}. Full enumeration counted 17 unique AWS + 13 Azure + 10 GCP = 40 regions.",
+      "fetched_at": "2026-08-02T02:33:42.564137+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-02T02:33:42.564137+00:00"
     },
     {
       "claim_id": "post-api-v1-sbom-is-not-a-jfrog-xray-endpoint-sbom-export-is",
@@ -272,17 +236,14 @@
     {
       "claim_id": "frogbot-v3-is-current-v2-is-in-sunset-mode",
       "claim": "Frogbot V3 is current; V2 is in sunset mode",
-      "source_url": "https://docs.jfrog.com/security/docs/frogbot",
-      "raw_snippet": "Docs page is titled \"Frogbot V3\". Verbatim: \"Frogbot V2 is in sunset mode and is not accepting new features or general contributions, only critical bug and security fixes until its official end-of-life, with all active development happening on main (V3).\" V3 adds \"Static, Build-Independent Scanning\" and \"Zero-Configuration Project Detection\". Latest tags: v3.3.2 (2026-07-22) and v2.35.1 (2026-07-22).",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "source_url": "https://github.com/jfrog/frogbot",
+      "raw_snippet": "v2_main branch) is in sunset mode. It is not accepting new features or general contributions",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://github.com/jfrog/frogbot/releases"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "setup-jfrog-cli-v5-exists-and-moves-the-actions-runtime-to-n",
@@ -336,16 +297,13 @@
       "claim_id": "artifactory-and-xray-rest-endpoints-used-in-scripts-are-all-",
       "claim": "Artifactory and Xray REST endpoints used in scripts/ are all still current",
       "source_url": "https://docs.jfrog.com/security/reference/scan-artifact",
-      "raw_snippet": "Re-verified /api/v2/summary/artifact, /api/v1/scanArtifact, /api/v2/policies, /api/v2/watches, /api/v1/violations, /api/v1/reports/vulnerabilities, /api/v1/reports/{id}. scanArtifact is NOT deprecated; it recently gained an optional background mode for bulk rescans. Both scripts py_compile clean and their --help surfaces run.",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "raw_snippet": "scanArtifact Invokes scanning of an artifact",
+      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high",
-      "supporting_urls": [
-        "https://jfrog.com/help/r/jfrog-rest-apis/artifactory-rest-apis"
-      ]
+      "confidence": "high"
     },
     {
       "claim_id": "frogbot-git-bot-scans-repos",

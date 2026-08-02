@@ -37,6 +37,41 @@
       "severity": "medium",
       "lesson": "Of five Israel-flavored gotchas, one was factually inverted, one fabricated, and two were generic filler that would read identically in any directory skill (Sunday-Thursday deploy cycles, SSO with Azure AD). A real Israeli angle changes a decision. Here the strongest available ones were sitting unused: JFrog is an Israeli company (Netanya, NASDAQ FROG), and JFrog Cloud has three Israeli regions.",
       "applies_to": "all skills-il skills"
+    },
+    {
+      "id": "evidence-gate-never-ran-schema-mismatch",
+      "date": "2026-08-02",
+      "severity": "high",
+      "lesson": "evidence.json used a legacy schema (claim/source/confidence/evidence) that the gate does not read; the canonical fields are claim_id/claim/source_url/raw_snippet/fetched_at/appears_in. Because the field names never matched, verify-evidence.py had NEVER actually run on this skill, which is the most likely reason three fabrications reached production. A gate that silently no-ops is worse than no gate: it produces the confidence of verification without the fact. Check that the gate reports a non-zero extracted-claim count, not just that it exits 0.",
+      "applies_to": "all skills"
+    },
+    {
+      "id": "http-200-is-not-a-live-link",
+      "date": "2026-08-02",
+      "severity": "high",
+      "lesson": "jfrog.com/help/r/jfrog-release-information/pipelines-end-of-life returns HTTP 200 but serves a legacydocs DIRECTORY INDEX listing PDFs, not an EOL page. A status-code-only link check passes it forever. Soft-404s need a content assertion: fetch the page and confirm it contains a term from the claim it is cited for. Found only because --check-sources reads the body.",
+      "applies_to": "all skills"
+    },
+    {
+      "id": "never-quote-a-search-summary-as-verbatim",
+      "date": "2026-08-02",
+      "severity": "high",
+      "lesson": "I put a 'verbatim' Frogbot V2 sunset quote in evidence.json that I had taken from a WebSearch result summary, not from reading the page. --check-sources caught it: the sentence is not on docs.jfrog.com/security/docs/frogbot at all. The real text is on the GitHub README ('V2 (v2_main branch) is in sunset mode...'). The claim was right and the attribution was wrong, which is exactly the failure mode that makes a fabricated snippet dangerous: it passes the gate while asserting something false. Only ever paste raw_snippet from bytes you fetched yourself.",
+      "applies_to": "all skills"
+    },
+    {
+      "id": "source-says-less-than-the-skill-claimed",
+      "date": "2026-08-02",
+      "severity": "medium",
+      "lesson": "Chasing a real snippet for the CBOM claim disproved part of it. The Xray release notes say only 'Added support for exporting Secrets scan results in CycloneDX (CBOM) format.' The words 'Cryptography Bill of Materials' appear nowhere on the page, certificates are not mentioned, and the entry could not be pinned to 3.131. The skill had asserted all three. Forcing yourself to find a verbatim snippet is itself a fact-check: if you cannot find text that says what you wrote, you did not have the fact.",
+      "applies_to": "all skills"
+    },
+    {
+      "id": "js-rendered-docs-need-the-content-api",
+      "date": "2026-08-02",
+      "severity": "medium",
+      "lesson": "jfrog.com/help/r/* is a Fluid Topics SPA: curl and even document.body see only nav chrome, and the doc content is not in the iframe DOM either. The readable path is the page's own content API (/help/api/khub/maps/<mapId>/pages), discoverable from performance.getEntriesByType('resource'). This is how the three Israeli cloud regions were confirmed with their AWS/Azure/GCP parents. Mark such entries verified_via=browser with verified_at.",
+      "applies_to": "any skill citing jfrog.com/help or another Fluid Topics doc site"
     }
   ],
   "persistent_fail": [],
