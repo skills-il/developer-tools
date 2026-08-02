@@ -26,14 +26,37 @@ These apps have official Zapier integrations with full trigger/action support.
 | Supported actions | Create Contact, Update Contact |
 | Notes | Israeli-founded. Commonly used for e-commerce sites that need invoicing integration. |
 
-### Elementor
+### SUMIT
 
 | Property | Value |
 |----------|-------|
-| Zapier search name | "Elementor" |
-| Auth type | API Key |
-| Supported triggers | New Form Submission |
-| Notes | Israeli-founded WordPress page builder. Form submissions can trigger Zaps for lead capture and invoicing. |
+| Zapier search name | "SUMIT" |
+| Auth type | Managed by Zapier |
+| Supported triggers | Card Updated |
+| Supported actions | Create Document, Create Card, Update Card, Get Card, Send SMS, Add Recipient to Email Mailing List, Add Recipient to SMS Mailing List |
+| Notes | Israeli invoicing and business-management platform, described on Zapier as "A comprehensive system for planning, management and execution for the self-employed, non-profit organizations and business organizations." Use `Create Document` rather than hand-building invoice HTTP calls. |
+
+### Priority ERP
+
+| Property | Value |
+|----------|-------|
+| Zapier search name | "Priority" |
+| Auth type | Managed by Zapier |
+| Supported triggers | Catch Changed Customer Order Status Webhook, Catch Changed Purchase Order Status Webhook, Catch Contacts Webhook |
+| Supported actions | Create Sales Orders (existing or new customers), Create Sales Opportunity, Create New Lead, Create Potential Customer, Create Job Candidate, Find Customer by Email, Update Sales Opportunity/Order Status, Add Shipping Charges to Orders |
+| Notes | Israeli ERP widely used in the local mid-market. A native Zapier app exists, so the OData-over-webhook approach is no longer the default path. On-premise installations may still require IP whitelisting. |
+
+### InforUMobile
+
+| Property | Value |
+|----------|-------|
+| Zapier search name | "InforUMobile" |
+| Auth type | Managed by Zapier |
+| Supported triggers | New Lead From Landing Page, Contact Unsubscribe |
+| Supported actions | Send SMS, Send Whatsapp Template Message, Send SMS Voice Hybrid, Send IVR Campaign, Send IVR Message, Create and Send Newsletter, Send Newsletter Campaign, Add Contact to Group, Remove Contact From Group, Unsubscribe Contact, Reactivate Unsubscribe, Start Automation |
+| Notes | Israeli SMS and multichannel marketing gateway, described on Zapier as "Multi channel marketing software offering SMS, email marketing, landing pages, surveys and Facebook advertising." Hebrew supported. `Send Whatsapp Template Message` is a native Israeli WhatsApp path that avoids adding a separate BSP. |
+
+**Note on Elementor:** earlier versions of this reference listed Elementor as a native Zapier app. It has no app in the Zapier directory. Elementor Pro Forms integrates with Zapier through a webhook configured on the WordPress side, so treat it as a webhook source, not a Zapier app.
 
 ## Webhook-Based Connections (No Native Integration)
 
@@ -47,6 +70,7 @@ These apps do not have native Zapier integrations. Connect them via "Webhooks by
 | Auth | JWT token in Authorization header (`Bearer <token>`) |
 | API base URL | `https://api.greeninvoice.co.il` |
 | Dashboard | `https://app.greeninvoice.co.il` |
+| API documentation | `https://developers.morning.co/` (the old `greeninvoice.co.il/api-docs/` URL now redirects here) |
 | API key location | Dashboard > Settings > API Integration |
 | Amount unit | **Decimal shekels** (e.g., 150.50 = 150.50 ILS) |
 | Document type codes | 10=Price Quote, 305=Tax Invoice, 320=Tax Invoice/Receipt, 330=Credit Note/Refund, 400=Receipt |
@@ -71,34 +95,28 @@ These apps do not have native Zapier integrations. Connect them via "Webhooks by
 | Property | Value |
 |----------|-------|
 | Connection method | Webhooks by Zapier > Catch Hook |
-| Webhook configuration | Cardcom terminal dashboard > IndicatorUrl setting |
-| Callback method | **GET request with query parameters** (not JSON POST) |
-| Amount unit | **Decimal shekels** (e.g., 150.50 = 150.50 ILS). Do NOT divide by 100. |
-| Key fields | `InternalDealNumber` (transaction ID), `Amount` (decimal ILS), `CardOwnerName`, `CardOwnerEmail`, `CardOwnerPhone`, `NumOfPayments`, `CardNum` (last 4), `DealResponse` (0=success) |
-| Installments (tashlumim) | `NumOfPayments` indicates installment count. `FirstPayment` is the first installment amount (in decimal shekels). |
-| Test mode | Cardcom sandbox sends test webhooks. Verify `DealResponse` = `0` for successful transactions. |
+| Webhook configuration | Pass the Catch Hook URL as the `WebHookUrl` field on each `CreateLowProfile` API request. `WebHookUrl` is a required field on that request. |
+| Callback method | **JSON POST** carrying a `LowProfileResult` object (not a GET with query parameters) |
+| API docs | `https://secure.cardcom.solutions/swagger/index.html`, spec at `https://secure.cardcom.solutions/swagger/v11/swagger.json` |
+| Amount unit | **Decimal shekels** (e.g., 150.50 = 150.50 ILS). Do NOT divide by 100. The v11 spec describes `Amount` as "Amount of tranzaction (12.36)" with format `decimal`. |
+| Key fields | `ResponseCode` (0 = success), `Description` (text for the response code), `TranzactionId` (credit-card transaction ID), `LowProfileId`, `ReturnValue` (echo of what you sent, typically your order ID), `Amount` (decimal ILS), and cardholder details nested under `UIValues` |
+| `UIValues` sub-fields | `CardOwnerName`, `CardOwnerEmail`, `CardOwnerPhone`, `CardOwnerIdentityNumber`, `NumOfPayments`, `CardYear`, `CardMonth`, `IsAbroadCard`, `CustomFields` |
+| Installments (tashlumim) | `UIValues.NumOfPayments` indicates installment count. |
+| Test mode | Cardcom sandbox sends test webhooks. Verify `ResponseCode` = `0` for successful transactions. |
 
-**Cardcom response codes (DealResponse):**
-
-| Code | Meaning |
-|------|---------|
-| `0` | Success |
-| `1` | Transaction declined |
-| `2` | Contact credit card company |
-| `3` | Terminal not found |
-| `4` | Transaction error |
+**Legacy note:** older Cardcom integrations configured an `IndicatorUrl` in terminal settings that fired a GET with query parameters including `InternalDealNumber` and `DealResponse`. Neither `IndicatorUrl` nor `DealResponse` appears in the v11 API. In v11, `InternalDealNumber` survives only as a lookup key on `TransactionInfoRequest`, not as a webhook field. Migrate legacy Zaps to `WebHookUrl` and `ResponseCode`.
 
 ### Tranzila
 
 | Property | Value |
 |----------|-------|
 | Connection method | Webhooks by Zapier > Catch Hook |
-| Webhook configuration | Tranzila merchant panel > Notification URL |
+| Webhook configuration | **UNVERIFIED, confirm in the merchant panel before building** |
 | Payment integration | API V2 with iframe-based hosted fields (PCI compliant) |
-| Callback method | POST with form-encoded data |
+| API docs | `https://docs.tranzila.com/` |
 | Amount unit | **Decimal ILS** (e.g., 250.00 = 250.00 ILS) |
-| Key fields | `index` (transaction ID), `sum` (amount in decimal ILS), `ccno` (last 4 digits), `npay` (installments), `contact`, `email`, `phone` |
-| Notes | Widely used Israeli payment processor. Modern API V2 uses hosted fields. The legacy redirect-based ok_page/fail_page approach still works but is deprecated. Supports Bit payments. |
+| Legacy redirect params | `index` (transaction ID), `sum` (amount in decimal ILS), `ccno` (last 4 digits), `npay` (installments), `contact`, `email`, `phone` |
+| Notes | Widely used Israeli payment processor. Supports Bit payments (Tranzila's docs carry a dedicated Bit API page). **Caveat:** Tranzila's current documentation has no webhook or notification-URL page. Its Payments and Billing section covers Authentication, Hosted Fields, Iframe Integration, Iframe Integration new DirectNG, Apple Pay via Iframe, PayPal Integration and Transaction Response Codes; the APIS section covers Transactions API, 3DS, Bit, Handshake API V2, MASAV API, Payment request and STO API. The field names above are the legacy redirect/handshake response parameters returned to your `ok_page`, not a documented server-to-server callback. If no true webhook exists, forward the redirect parameters to a Zapier Catch Hook from a thin intermediary. |
 
 ### Grow by Meshulam
 
@@ -109,8 +127,8 @@ These apps do not have native Zapier integrations. Connect them via "Webhooks by
 | Callback method | JSON POST |
 | Amount unit | **Decimal ILS** |
 | Payment methods | Credit cards, Bit, Apple Pay, Google Pay |
-| Key fields | `transaction_id`, `amount` (decimal ILS), `payment_method`, `customer_name`, `customer_email`, `customer_phone` |
-| Notes | Israeli payment gateway by Meshulam. Growing adoption among small businesses. One of the few gateways with native Bit support. |
+| Key fields | **UNVERIFIED:** `transaction_id`, `amount` (decimal ILS), `payment_method`, `customer_name`, `customer_email`, `customer_phone`. Meshulam publishes no public spec at a resolvable developer host, so confirm the exact payload against a real test webhook before mapping fields. |
+| Notes | Israeli payment gateway by Meshulam (not by any bank). Growing adoption among small businesses. One of the few gateways with native Bit support. **Do not search Zapier for "Grow":** `zapier.com/apps/grow` is an unrelated US product ("Grow helps publishers build their mailing list"). Grow by Meshulam has no Zapier app. |
 
 ### iCount
 
@@ -132,16 +150,6 @@ These apps do not have native Zapier integrations. Connect them via "Webhooks by
 | Amount unit | Decimal ILS |
 | Notes | Popular Israeli invoicing platform. API supports document creation, customer management, and payment tracking. |
 
-### Sumit
-
-| Property | Value |
-|----------|-------|
-| Connection method | Webhooks by Zapier > Custom Request |
-| Auth | API key |
-| API format | REST API |
-| Amount unit | Decimal ILS |
-| Notes | Israeli invoicing and receipts platform. REST API for document creation and management. |
-
 ### Rivhit (Accounting Software)
 
 | Property | Value |
@@ -149,17 +157,8 @@ These apps do not have native Zapier integrations. Connect them via "Webhooks by
 | Connection method | HTTP request via Zapier (Webhooks by Zapier > Custom Request) |
 | Auth | API key in Authorization header |
 | API base URL | `https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/` |
-| Key endpoints | `Document_New`, `Customer_New`, `Customer_List`, `Document_List` |
+| Key endpoints | `Document_New`, `Customer_New`, `Customer_List`, `Document_List` (**unverified:** the `.svc/` base returns 404 to an unauthenticated request; confirm against the docs portal at `https://rivhit-api.readme.io/`) |
 | Notes | Popular Israeli accounting software. No native Zapier integration. Use outbound HTTP requests from Zapier to create documents. |
-
-### Priority ERP
-
-| Property | Value |
-|----------|-------|
-| Connection method | HTTP request via Zapier (Webhooks by Zapier > Custom Request) |
-| Auth | Basic Authentication or Token-based |
-| API format | OData REST |
-| Notes | Enterprise ERP widely used in Israeli mid-market. REST API available on Priority Cloud. On-premise installations may require VPN or IP whitelisting for Zapier access. |
 
 ### Hashavshevet (Accounting)
 
@@ -173,13 +172,16 @@ These apps do not have native Zapier integrations. Connect them via "Webhooks by
 
 ### InforUMobile (Israeli SMS Gateway)
 
+**Use the native Zapier app.** See the InforUMobile entry under Native Zapier Integrations above: the `Send SMS` and `Send Whatsapp Template Message` actions replace the hand-built XML call for most workflows.
+
 | Property | Value |
 |----------|-------|
-| Connection method | HTTP POST via Zapier |
-| API endpoint | `https://api.inforu.co.il/SendMessageXml.ashx` |
-| Auth | Username/password in XML body |
-| Format | XML payload |
-| Notes | Popular Israeli SMS provider. Send SMS by constructing XML body in a Zapier webhook action. Hebrew text supported natively. |
+| Preferred connection | Native Zapier app ("InforUMobile") |
+| Fallback connection | HTTP POST via Zapier |
+| Fallback API endpoint | `https://api.inforu.co.il/SendMessageXml.ashx` |
+| Fallback auth | Username/password in XML body |
+| Fallback format | XML payload |
+| Notes | Popular Israeli SMS provider. Hebrew text supported natively. Only drop to the raw XML API for cases the native app's actions do not cover, since the fallback puts credentials in the request body. |
 
 ### 019 SMS
 
@@ -189,9 +191,16 @@ These apps do not have native Zapier integrations. Connect them via "Webhooks by
 | Auth | API key |
 | Notes | Bezeq International SMS API. REST-based. Supports Hebrew. |
 
-### WhatsApp Business via Third-Party Providers
+### WhatsApp on Zapier: two different apps
 
-Zapier's native WhatsApp integration can only send messages to yourself (the account holder). It supports 7 prefilled English templates and cannot send custom Hebrew messages to customers. For customer-facing WhatsApp, use one of these third-party providers:
+| Zapier app | Reaches | Capability |
+|------------|---------|------------|
+| WhatsApp Notifications | Only the phone number that authenticated the connection | Single `Send Message` action, restricted to prefilled templates that cannot be customized. Described on Zapier as "Receive notifications on WhatsApp." Internal alerting only. |
+| **WhatsApp Business** | **Customers** | Triggers `New Message Received`, `Message Status Updated`. Actions `Send Template Message`, `Send Freeform Message` (inside the 24-hour customer-service window), `Send Media Message`, `Get Attachment`. Described on Zapier as "a customer messaging app that delivers fast, reliable communication through organized chats, automated responses, and business profiles." |
+
+Use **WhatsApp Business** for customer-facing Hebrew messaging. Outside the 24-hour window a Meta-approved template is required; inside it, freeform Hebrew works. InforUMobile's native app also offers `Send Whatsapp Template Message` if you already use it for SMS.
+
+The BSP providers below are worth adding only for high volume, a shared team inbox, or multi-channel routing beyond what the native app covers:
 
 #### Twilio WhatsApp Business API
 
@@ -216,7 +225,7 @@ Zapier's native WhatsApp integration can only send messages to yourself (the acc
 
 | Property | Value |
 |----------|-------|
-| Zapier search name | "Respond.io" |
+| Zapier search name | "Respond.io" (app slug `respondio`, not `respond-io`) |
 | Auth type | API key |
 | Notes | Omnichannel messaging platform with WhatsApp Business support. Native Zapier integration. Requires Meta Business verification. |
 
@@ -241,20 +250,61 @@ Zapier's native WhatsApp integration can only send messages to yourself (the acc
 | Property | Value |
 |----------|-------|
 | Connection method | No direct API for Zapier. |
-| Notes | The Shaam system (e-invoicing) has APIs for authorized software, but these are not accessible via Zapier. Use Morning or other authorized invoicing platforms as intermediaries. Since January 2026, invoices over 10,000 NIS require Tax Authority allocation numbers (mispar hiktza'a). |
+| Notes | The Shaam system (e-invoicing) has APIs for authorized software, but these are not accessible via Zapier. Use Morning or other authorized invoicing platforms as intermediaries. Since June 2026, invoices over 5,000 NIS **before VAT** require Tax Authority allocation numbers (mispar haktza'a). |
 
 ## Field Mapping Quick Reference
 
 Common fields across Israeli payment processors, mapped to Morning document fields. All amounts are in decimal shekels (no conversion needed for any processor).
 
-| Concept | Cardcom Field | Tranzila Field | Grow Field | Morning API Field |
-|---------|---------------|----------------|------------|-------------------|
-| Transaction ID | `InternalDealNumber` | `index` | `transaction_id` | (auto-generated) |
+Tranzila and Grow columns are marked unverified for the reasons given in their sections above.
+
+| Concept | Cardcom v11 Field | Tranzila Field (unverified) | Grow Field (unverified) | Morning API Field |
+|---------|-------------------|-----------------------------|-------------------------|-------------------|
+| Transaction ID | `TranzactionId` | `index` | `transaction_id` | (auto-generated) |
+| Success flag | `ResponseCode` (0 = success) | (see Transaction Response Codes) | N/A | N/A |
+| Your order ID | `ReturnValue` | N/A | N/A | N/A |
 | Amount (decimal ILS) | `Amount` | `sum` | `amount` | `items[].unitPrice` |
-| Customer name | `CardOwnerName` | `contact` | `customer_name` | `client.name` |
-| Customer email | `CardOwnerEmail` | `email` | `customer_email` | `client.emails[0]` |
-| Customer phone | `CardOwnerPhone` | `phone` | `customer_phone` | `client.phone` |
-| Installments | `NumOfPayments` | `npay` | N/A | `payment.installments` |
-| Last 4 digits | `CardNum` | `ccno` | N/A | (not mapped) |
+| Customer name | `UIValues.CardOwnerName` | `contact` | `customer_name` | `client.name` |
+| Customer email | `UIValues.CardOwnerEmail` | `email` | `customer_email` | `client.emails[0]` |
+| Customer phone | `UIValues.CardOwnerPhone` | `phone` | `customer_phone` | `client.phone` |
+| Installments | `UIValues.NumOfPayments` | `npay` | N/A | `payment.installments` |
+| Last 4 digits | (not on the webhook payload) | `ccno` | N/A | (not mapped) |
 | Payment method | (always credit card) | (always credit card) | `payment_method` | N/A |
 | Currency | (always ILS) | (always ILS) | (always ILS) | `currency: "ILS"` |
+
+
+## Per-vendor connection detail (relocated from SKILL.md)
+
+**Morning (formerly Green Invoice) API setup:**
+1. Log in to Morning dashboard (app.greeninvoice.co.il)
+2. Navigate to Settings > API Integration
+3. Generate a new API key (JWT-based authentication)
+4. In Zapier, use "Webhooks by Zapier" with Custom Request to call Morning's REST API at `api.greeninvoice.co.il`
+5. Set the Authorization header with your JWT token
+
+**Morning document type codes** (use numeric codes in API calls):
+
+| Code | Document Type | Hebrew |
+|------|--------------|--------|
+| 10 | Price Quote | הצעת מחיר |
+| 305 | Tax Invoice | חשבונית מס |
+| 320 | Tax Invoice/Receipt | חשבונית מס קבלה |
+| 330 | Credit Note/Refund | חשבונית זיכוי |
+| 400 | Receipt | קבלה |
+
+**Cardcom `WebHookUrl` setup (API v11):**
+1. In Zapier, create a new Zap with "Webhooks by Zapier" as the trigger
+2. Choose "Catch Hook" as the trigger event
+3. Copy the generated webhook URL
+4. Pass that URL as the `WebHookUrl` field on every `CreateLowProfile` request. It is a required field, alongside `TerminalNumber`, `ApiName`, `Amount`, `SuccessRedirectUrl` and `FailedRedirectUrl`
+5. On payment completion Cardcom sends a **JSON POST** body (a `LowProfileResult` object) to that URL
+6. Key fields: `ResponseCode` (0 = success), `TranzactionId` (credit-card transaction ID), `LowProfileId`, `ReturnValue` (whatever you sent on the request, typically your order ID), `Amount` (decimal shekels, e.g., 150.50), and cardholder details nested under `UIValues`: `UIValues.CardOwnerName`, `UIValues.CardOwnerEmail`, `UIValues.CardOwnerPhone`, `UIValues.NumOfPayments`
+7. Make a test payment to send sample data to Zapier
+
+Older Cardcom integrations used an `IndicatorUrl` configured in terminal settings that fired a GET with query parameters. That mechanism does not appear in the v11 API. If an existing Zap is built on `IndicatorUrl` and `DealResponse`, it is on the legacy path and should be migrated to `WebHookUrl` and `ResponseCode`.
+
+**Tranzila setup (modern API V2):**
+Tranzila has moved to iframe-based API V2 with hosted fields for PCI compliance.
+
+**Unverified, confirm before building:** this skill previously documented a merchant-panel "notification URL" that POSTs `index`, `sum`, `ccno`, `npay`, `contact`, `email` and `phone`. Tranzila's current documentation at `https://docs.tranzila.com/` has no webhook or notification-URL page. Those field names are the legacy redirect/handshake response parameters, i.e. what Tranzila appends when returning the cardholder to your `ok_page`. Before building a Tranzila trigger, confirm in the merchant panel whether a true server-to-server callback exists. If it does not, the workable pattern is a thin intermediary that receives the redirect and forwards its parameters to a Zapier Catch Hook.
+

@@ -1,9 +1,8 @@
 ---
 name: zapier-israeli-integrations
-description: Build Zapier Zaps connecting Israeli business apps (Morning/Green Invoice, Cardcom, Tranzila, iCount, Grow) with global services for billing, payment, and workflow automation. Use when asked to "create a Zap for Israeli invoicing", "automate Morning receipts", "connect Cardcom to my CRM", or set up payment notifications. Covers Hebrew text handling, ILS formatting, bimonthly VAT logic, Invoice Reform 2026, Zapier AI (Copilot, Agents, MCP), and webhooks from Israeli processors. All amounts use decimal shekels, not agorot. Customer WhatsApp requires Twilio/WATI (not Zapier native). Do NOT use for n8n (use n8n-hebrew-workflows), Make.com (use make-com-israeli-automations), or non-Zapier automation.
+description: Build Zapier Zaps connecting Israeli business apps (Morning/Green Invoice, Cardcom, Tranzila, iCount, Grow, SUMIT, Priority, InforUMobile) with global services for billing, payment, and workflow automation. Use when asked to "create a Zap for Israeli invoicing", "automate Morning receipts", "connect Cardcom to my CRM", or set up payment notifications. Covers Hebrew text handling, ILS formatting, bimonthly VAT logic, Invoice Reform allocation numbers, Zapier AI (Copilot, Agents, MCP), and webhooks from Israeli processors. All amounts use decimal shekels, not agorot. Do NOT use for n8n (use n8n-hebrew-workflows), Make.com (use make-com-israeli-automations), or non-Zapier automation.
 license: MIT
-allowed-tools: Bash(curl:*) Bash(node:*) Bash(python:*)
-compatibility: Requires Zapier account. Free plan includes unlimited two-step Zaps, 100 tasks/month, Copilot AI, Tables, and Interfaces. Multi-step Zaps require the Starter plan ($19.99/month annual, $29.99 monthly, 750 tasks); Professional ($49/month annual, 2,000 tasks) adds advanced features like custom logic and conditional steps. Webhook triggers use Webhooks by Zapier (available on all plans). No local dependencies.
+compatibility: Requires Zapier account. Free plan includes unlimited two-step Zaps and 100 tasks/month. Multi-step Zaps require Professional, the entry paid tier at $19.99/month annual ($29.99 monthly) for 750 tasks, scaling by task tier within the same plan; Team is $69/month annual. Webhook triggers use Webhooks by Zapier (available on all plans). No local dependencies.
 ---
 
 # Zapier Israeli Integrations
@@ -27,61 +26,31 @@ Match the Israeli business need to the correct Zap architecture.
 
 **Choosing single-step vs multi-step:**
 - Single-step Zaps (free plan): Direct trigger-to-action, e.g., "New Cardcom payment -> Create Zapier Tables row." Free plan includes unlimited Zaps but only two-step (one trigger, one action), 100 tasks/month, and 15-minute polling.
-- Multi-step Zaps (Starter plan, $19.99/month annual or $29.99/month monthly, 750 tasks): Chain actions with logic, e.g., "New payment -> Create invoice -> Send email -> Update CRM". The Professional plan ($49/month annual, 2,000 tasks) adds advanced features like conditional steps and filters.
-- Use Paths (branching) when the Zap needs to handle different scenarios, e.g., "If payment is over the Invoice Reform threshold (10,000 ILS through May 31, 2026, then 5,000 ILS from June 1, 2026), add Invoice Reform allocation number". Store the threshold in a workflow variable, not a hardcoded number, since it is scheduled to drop again.
+- Multi-step Zaps (Professional plan, the entry paid tier, $19.99/month annual or $29.99/month monthly for 750 tasks): Chain actions with logic, e.g., "New payment -> Create invoice -> Send email -> Update CRM". Professional also carries Paths, filters and advanced Zap settings; higher task volumes are a tier selector inside the same Professional plan, not a separate plan. Team ($69/month annual) adds shared workspaces and up to 25 users.
+- Use Paths (branching) when the Zap needs to handle different scenarios, e.g., "If the pre-VAT amount is over the Invoice Reform threshold (5,000 ILS), add Invoice Reform allocation number". Store the threshold in a workflow variable, not a hardcoded number, so a future change is a one-line edit.
 
 **Use Zapier Copilot** (available on all plans, including free) to describe what you want in plain English or Hebrew. Copilot suggests Zap structures, finds the right apps, and maps fields automatically. Example: "When I get a Cardcom payment, create a Morning receipt and email it to the customer."
 
 ### Step 2: Connect Israeli Apps in Zapier
 
-Israeli apps connect to Zapier through three mechanisms. Choose based on what the app supports.
+Israeli apps connect to Zapier through three mechanisms. **Always check the Zapier app directory first** (`https://zapier.com/apps/<name>/integrations`): several Israeli vendors now ship native Zapier apps, and a native app is always simpler and more reliable than a hand-built Custom Request. Fall back to webhooks only when no native app exists.
 
 | App | Connection Method | Auth Type | Notes |
 |-----|-------------------|-----------|-------|
 | Morning (formerly Green Invoice) | Webhooks by Zapier | API key + Webhook | No native Zapier app for Morning. Connect via webhooks: use Morning's webhook notifications as triggers and their REST API (`api.greeninvoice.co.il`) via Webhooks by Zapier for actions. Generate API key from Morning dashboard under Settings > API. |
-| Cardcom | Webhooks by Zapier | IndicatorUrl (GET callback) | Cardcom calls your Zapier webhook URL with GET query parameters on payment events. Configure the IndicatorUrl in Cardcom terminal settings. |
-| Tranzila | Webhooks by Zapier | Webhook URL | Tranzila V2 uses iframe-based hosted fields for payment. Configure notification URL in Tranzila merchant panel for post-payment callbacks. |
+| Cardcom | Webhooks by Zapier | `WebHookUrl` (JSON POST callback) | Cardcom POSTs a JSON body to the `WebHookUrl` you supply on the `CreateLowProfile` request. `WebHookUrl` is a required field on that request. |
+| Tranzila | Webhooks by Zapier | See caveat below | Tranzila V2 uses iframe-based hosted fields for payment. See the Tranzila section in Step 5 before building: the current documentation does not describe a merchant-panel webhook. |
 | Monday.com | Zapier native integration | OAuth | Full support. Monday.com is a global app with strong Israeli adoption. |
-| iCount | Webhooks by Zapier | API key | Israeli accounting SaaS. Use iCount REST API via Webhooks by Zapier for creating invoices, receipts, and managing contacts. |
-| EZcount | Webhooks by Zapier | API key | Popular Israeli invoicing platform. REST API for document creation and customer management. |
-| Grow by Meshulam | Webhooks by Zapier | Webhook URL | Israeli payment gateway supporting credit cards, Bit, Apple Pay, Google Pay. Sends JSON POST webhooks on payment events. |
-| Sumit | Webhooks by Zapier | API key | Israeli invoicing and receipts platform with REST API. |
+| SUMIT | **Zapier native integration** | Managed by Zapier | Israeli invoicing and business-management platform. Native app with a `Card Updated` trigger and `Create Document`, `Create Card`, `Update Card`, `Get Card`, `Send SMS` actions. Use `Create Document` instead of hand-rolling invoice HTTP calls. |
+| Priority ERP | **Zapier native integration** | Managed by Zapier | Israeli ERP. Native app with `Catch Changed Customer Order Status Webhook` and `Catch Changed Purchase Order Status Webhook` triggers, plus `Create Sales Orders`, `Create Sales Opportunity`, `Create New Lead` and `Find Customer by Email` actions. |
+| InforUMobile | **Zapier native integration** | Managed by Zapier | Israeli SMS and marketing gateway. Native app with `New Lead From Landing Page` trigger and `Send SMS`, `Send Whatsapp Template Message`, `Add Contact to Group` actions. Prefer this over the raw XML API. |
+| iCount | Webhooks by Zapier | API key | Israeli accounting SaaS. No native Zapier app. Use iCount REST API via Webhooks by Zapier for creating invoices, receipts, and managing contacts. |
+| EZcount | Webhooks by Zapier | API key | Popular Israeli invoicing platform. No native Zapier app. REST API for document creation and customer management. |
+| Grow by Meshulam | Webhooks by Zapier | Webhook URL | Israeli payment gateway supporting credit cards, Bit, Apple Pay, Google Pay. Sends JSON POST webhooks on payment events. **Do not search Zapier for "Grow"**: the app at `zapier.com/apps/grow` is an unrelated US mailing-list product ("Grow helps publishers build their mailing list"), not Meshulam. |
 | Rivhit (accounting) | Webhooks by Zapier | API key in header | No native integration. Use webhook + custom API calls. |
-| Priority ERP | Webhooks by Zapier | Basic auth | Use Priority's OData REST API via webhook actions. |
-| SMS providers (019, InforUMobile) | Webhooks by Zapier | API key | Send SMS via HTTP POST action with provider's API. |
+| 019 SMS | Webhooks by Zapier | API key | No native Zapier app. Send SMS via HTTP POST action with the provider's API. |
 
-**Morning (formerly Green Invoice) API setup:**
-1. Log in to Morning dashboard (app.greeninvoice.co.il)
-2. Navigate to Settings > API Integration
-3. Generate a new API key (JWT-based authentication)
-4. In Zapier, use "Webhooks by Zapier" with Custom Request to call Morning's REST API at `api.greeninvoice.co.il`
-5. Set the Authorization header with your JWT token
-
-**Morning document type codes** (use numeric codes in API calls):
-
-| Code | Document Type | Hebrew |
-|------|--------------|--------|
-| 10 | Price Quote | הצעת מחיר |
-| 305 | Tax Invoice | חשבונית מס |
-| 320 | Tax Invoice/Receipt | חשבונית מס קבלה |
-| 330 | Credit Note/Refund | חשבונית זיכוי |
-| 400 | Receipt | קבלה |
-
-**Cardcom IndicatorUrl setup:**
-1. In Zapier, create a new Zap with "Webhooks by Zapier" as the trigger
-2. Choose "Catch Hook" as the trigger event
-3. Copy the generated webhook URL
-4. In Cardcom terminal settings, paste the URL in the IndicatorUrl field
-5. Cardcom sends a GET request with query parameters (not JSON POST) on payment completion
-6. Key parameters: `InternalDealNumber` (transaction ID), `Amount` (decimal shekels, e.g., 150.50), `CardOwnerName`, `CardOwnerEmail`, `CardOwnerPhone`, `NumOfPayments`
-7. Make a test payment to send sample data to Zapier
-
-**Tranzila setup (modern API V2):**
-Tranzila has moved to iframe-based API V2 with hosted fields for PCI compliance. For post-payment webhooks:
-1. Configure the notification URL in your Tranzila merchant panel
-2. Tranzila sends payment confirmation with fields: `index` (transaction ID), `sum` (amount in ILS), `ccno` (last 4 digits), `npay` (installments)
-3. The legacy redirect-based ok_page/fail_page approach still works but is deprecated
-
+Per-vendor connection steps, webhook payload fields and migration notes: `references/israeli-zapier-apps.md`.
 ### Step 3: Handle Hebrew Text in Zap Steps
 
 Hebrew text requires special handling in Zapier to avoid display and encoding issues.
@@ -152,95 +121,53 @@ Self-employed individuals pay advance tax payments (mikdamot) bimonthly (some pa
 | April 30 | Annual tax filing deadline (standard) | Filing reminder |
 | May 31+ | Extended deadline (with accountant representation) | Filing reminder |
 
-**Israel Invoice Reform 2026 (threshold step-down):**
-Tax invoices over the threshold require a Tax Authority allocation number (mispar haktza'a). The threshold drops in 2026:
+**Israel Invoice Reform allocation numbers:**
+Tax invoices over the threshold require a Tax Authority allocation number (mispar haktza'a). **The current threshold is 5,000 NIS, in force since June 2026.** The step-down to date:
 
 | Effective | Threshold |
 |-----------|-----------|
-| Jan 1, 2026 | 10,000 NIS |
-| **Jun 1, 2026** | **5,000 NIS** |
-| Jan 1, 2027 | 5,000 NIS (planned to continue) |
+| May 2024 | 25,000 NIS |
+| Jan 2025 | 20,000 NIS |
+| Jan 2026 | 10,000 NIS |
+| **Jun 2026 onward (current)** | **5,000 NIS** |
+
+**The threshold is measured on the amount BEFORE VAT.** This is the single most common way an Invoice Reform Zap goes wrong: payment gateways send the charged total, which already includes VAT, so comparing a gateway amount directly against 5,000 over-flags every invoice whose pre-VAT base is actually under the threshold. At 18% VAT a 5,900 ILS charge is exactly a 5,000 ILS base.
 
 When building invoice-creation Zaps:
-- Add a Filter step that compares the invoice amount to a workflow variable holding the current threshold, and flag for allocation number when it exceeds it. Build the threshold check as a configurable variable in your workflow, not a hardcoded number, since the threshold is scheduled to drop again.
+- Derive the pre-VAT amount before comparing. Either divide the gateway total by 1.18 in a Code by Zapier or Formatter step, or read Morning's pre-VAT `amount` field rather than `total`.
+- Add a Filter step that compares that pre-VAT amount to a workflow variable holding the current threshold, and flag for allocation number when it exceeds it. Keep the threshold in a variable rather than a hardcoded number so a future change is a one-line edit.
 - The allocation number must be obtained from the Tax Authority system before the invoice is issued
 - Morning and other authorized invoicing platforms handle this automatically through their API, but verify the document response includes the allocation number
 - For manual webhook-based flows, add a Code by Zapier step that calls the Tax Authority allocation API before creating the invoice
 
 ### Step 5: Set Up Webhook-Based Israeli Integrations
 
-Many Israeli payment processors and services do not have native Zapier integrations. Use webhooks to bridge the gap.
+For vendors with no native Zapier app, use Webhooks by Zapier (Catch Hook for inbound, Custom Request for outbound). Cardcom v11 POSTs JSON to `WebHookUrl`; success is `ResponseCode == 0`; cardholder fields nest under `UIValues`. Full payload tables and the Tranzila caveat: `references/israeli-zapier-apps.md`.
 
-**Cardcom payment webhook as Zap trigger:**
+### Step 6: WhatsApp Business Messaging
 
-Cardcom uses an IndicatorUrl callback mechanism. When a transaction completes, Cardcom sends a GET request to your webhook URL with payment details as query parameters. Key parameters:
+Zapier has **two different WhatsApp apps** and they are routinely confused. Pick by who you are messaging.
 
-| Field | Description | Example |
-|-------|-------------|---------|
-| `InternalDealNumber` | Transaction ID | `12345678` |
-| `Amount` | Payment amount in decimal shekels | `150.50` (= 150.50 ILS) |
-| `CardOwnerName` | Cardholder name | `ישראל ישראלי` |
-| `CardOwnerEmail` | Customer email | `israel@example.com` |
-| `CardOwnerPhone` | Customer phone | `0541234567` |
-| `NumOfPayments` | Installment count (tashlumim) | `3` |
-| `DealResponse` | Response code (0 = success) | `0` |
-| `CardNum` | Last 4 digits | `1234` |
+| Zapier app | Who it can message | What it does |
+|------------|--------------------|--------------|
+| **WhatsApp Notifications** | **Only yourself**, the phone number used to authenticate the connection | One action, `Send Message`, restricted to prefilled templates that cannot be customized. Good for "alert me when a payment lands." Not usable for customers. |
+| **WhatsApp Business** | **Your customers** | Triggers `New Message Received` (a customer messages your WhatsApp Business number) and `Message Status Updated` (sent, delivered, read, failed). Actions `Send Template Message`, `Send Freeform Message`, `Send Media Message`, `Get Attachment`. |
 
-Cardcom amounts are in decimal shekels (e.g., 150.50 means 150.50 ILS). No conversion needed. Use the value directly in your invoice creation step.
+**Use WhatsApp Business for customer-facing Hebrew messaging.** It requires a WhatsApp Business account connected to Zapier, and the usual Meta rules apply:
+- Outside the 24-hour customer-service window you must use a Meta-approved template. Templates are submitted for approval in advance (typically 24-48 hours). Hebrew templates are supported but must be submitted with the Hebrew text.
+- Example approved template: "שלום {{1}}, קיבלנו את התשלום שלך בסך {{2}} ש\"ח. מספר אישור: {{3}}. תודה!"
+- **Inside** the 24-hour window, opened when the customer messages you first, `Send Freeform Message` sends arbitrary Hebrew text with no template. This is the path for live support replies and follow-up questions.
+- A payment confirmation sent proactively is outside the window, so it needs a template. A reply to a customer who just asked "did my payment go through?" does not.
 
-**Tranzila payment webhook:**
+**Israeli alternative:** InforUMobile's native Zapier app carries a `Send Whatsapp Template Message` action. If you already use InforUMobile for SMS, this avoids adding a second vendor.
 
-Key fields for Tranzila post-payment notifications:
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| `index` | Transaction ID | `87654321` |
-| `sum` | Amount in decimal ILS | `250.00` |
-| `ccno` | Last 4 digits | `5678` |
-| `npay` | Installments | `1` |
-| `contact` | Customer name | `ישראל ישראלי` |
-| `email` | Customer email | `israel@example.com` |
-| `phone` | Customer phone | `0541234567` |
-
-Both Cardcom and Tranzila send amounts in decimal shekels. No unit conversion is needed for either processor.
-
-**Grow by Meshulam payment webhook:**
-
-Grow supports credit cards, Bit, Apple Pay, and Google Pay. Sends JSON POST webhooks:
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| `transaction_id` | Transaction ID | `GRW-123456` |
-| `amount` | Amount in decimal ILS | `99.90` |
-| `payment_method` | Payment type | `credit_card`, `bit`, `apple_pay`, `google_pay` |
-| `customer_name` | Customer name | `ישראל ישראלי` |
-| `customer_email` | Customer email | `israel@example.com` |
-| `customer_phone` | Customer phone | `0541234567` |
-
-**Bit payments:** Bit is Israel's dominant P2P payment app with growing business adoption. To accept Bit payments and trigger Zaps, use one of these gateways:
-- Grow by Meshulam (native Bit support via their checkout page)
-- Tranzila (Bit integration available)
-- Direct Bit Business API (requires separate merchant agreement)
-
-### Step 6: WhatsApp Business Messaging (Limitations and Alternatives)
-
-**Zapier's native WhatsApp integration cannot send messages to customers.** As of January 2026, Zapier's built-in WhatsApp integration can only send messages to yourself (the account holder). It supports only 7 prefilled English templates and cannot send custom Hebrew messages to clients.
-
-To send WhatsApp messages to customers from Zaps, use one of these third-party providers:
+**BSP providers**, worth adding only if you need high volume, a shared team inbox, or multi-channel routing that the native app does not cover:
 
 | Provider | Zapier Integration | Hebrew Support | Approval Required |
 |----------|-------------------|----------------|-------------------|
 | Twilio WhatsApp Business API | Native Zapier app ("Twilio") | Yes, via pre-approved templates | Meta Business verification + template approval |
 | WATI | Native Zapier app ("WATI") | Yes, via pre-approved templates | Meta Business verification + template approval |
-| Respond.io | Native Zapier app ("Respond.io") | Yes | Meta Business verification |
-
-**Important caveats for WhatsApp Business:**
-- All customer-facing WhatsApp messages require Meta-approved message templates
-- Templates must be submitted for approval in advance (typically 24-48 hours)
-- Hebrew templates are supported but must be submitted with the Hebrew text
-- You cannot send free-form Hebrew messages to customers, only fill in template variables
-- Example approved template: "שלום {{1}}, קיבלנו את התשלום שלך בסך {{2}} ש\"ח. מספר אישור: {{3}}. תודה!"
-- For internal notifications to yourself or your team, Zapier's native WhatsApp works fine
+| Respond.io | Native Zapier app (search "Respond.io", app slug `respondio`) | Yes | Meta Business verification |
 
 ### Step 7: Use Zapier Tables and Interfaces (2026)
 
@@ -277,17 +204,19 @@ Zapier Tables and Interfaces are free on all plans in 2026 and provide a better 
 - Can troubleshoot failing Zaps and suggest fixes
 
 **Zapier Agents** (autonomous AI agents):
-- Create AI agents that work across 8,000+ apps autonomously
+- Create AI agents that work across 9,000+ apps autonomously
+- Lives at `agents.zapier.com`. This product was launched as **Zapier Central** and renamed to Zapier Agents in January 2025, so older tutorials and forum posts will call it Central
 - Example: "Monitor my Morning account for unpaid invoices older than 30 days and send reminder emails in Hebrew"
 - Agents can make decisions based on context without predefined Zap steps
 
-**Zapier Chatbots** (GPT-4o powered):
+**Zapier Chatbots:**
 - Build customer-facing chatbots that connect to your Zaps
-- Potential for Hebrew customer support (GPT-4o handles Hebrew well)
+- Usable for Hebrew customer support
 - Can answer questions about orders, payments, and services by querying your Zapier Tables
+- The underlying model changes as Zapier migrates providers, so do not hardcode a model name into your process docs
 
 **Zapier MCP Server:**
-- Connects AI coding tools (Claude Code, ChatGPT, Cursor) to 30,000+ Zapier actions
+- Connects AI coding tools (Claude Code, ChatGPT, Cursor) to 30,000+ actions across 9,000+ apps
 - Agents can invoke Zapier actions directly from the development environment
 - Useful for building and testing Israeli business automations programmatically
 
@@ -298,45 +227,7 @@ Zapier Tables and Interfaces are free on all plans in 2026 and provide a better 
 
 ### Step 9: Use Common Zap Templates for Israeli Businesses
 
-**Template 1: Freelancer invoice-to-bookkeeping**
-1. Trigger: Morning webhook (new document created)
-2. Filter: Document type = Tax Invoice (305) or Tax Invoice/Receipt (320)
-3. Action: Create record in Zapier Tables with columns: Date, Client Name, Amount (before VAT), VAT Amount, Total, Document Number
-4. Action: If amount exceeds the Invoice Reform threshold variable (10,000 ILS through May 31, 2026, then 5,000 ILS from June 1, 2026), verify Invoice Reform allocation number is present
-5. Action: If amount > 25,000 ILS, send Slack notification to accountant channel
-
-**Template 2: E-commerce order-to-invoice**
-1. Trigger: Shopify/WooCommerce > New Order
-2. Action: Create document in Morning via Webhooks by Zapier (type: 320 Tax Invoice/Receipt or 400 Receipt based on business preference)
-3. Action: Send email confirmation with receipt details (RTL HTML template)
-4. Action: Update Monday.com board with order status
-
-**Template 3: Payment-to-receipt (Cardcom)**
-1. Trigger: Webhooks by Zapier (Cardcom IndicatorUrl GET callback)
-2. Filter: `DealResponse` = 0 (successful payment only)
-3. Action: Morning API > Create Document (type: 400 Receipt). Amount field uses the `Amount` value directly (already in decimal shekels).
-4. Action: Send email with receipt PDF link to customer
-5. Action: Log to Zapier Tables for reconciliation
-
-**Template 4: Lead capture to CRM follow-up**
-1. Trigger: Typeform/Google Forms > New Response
-2. Action: Code by Zapier to clean Hebrew text (strip Unicode directional markers)
-3. Action: Create contact in CRM (Monday.com or HubSpot)
-4. Action: Send welcome email with RTL HTML template
-5. Action: Create follow-up task in Monday.com for 3 days later
-
-**Template 5: Expense receipt categorization**
-1. Trigger: Gmail > New Email with attachment matching "קבלה" or "חשבון"
-2. Action: Code by Zapier to extract amount and categorize by sender
-3. Filter: Only continue if amount is parseable
-4. Action: Create record in Zapier Tables "Tax Deductions" with category column
-
-**Template 6: Multi-gateway payment consolidation**
-Create 3 separate Zaps, all writing to the same Zapier Table:
-- Zap A: Cardcom IndicatorUrl webhook -> Zapier Tables (Amount in decimal ILS)
-- Zap B: Tranzila webhook -> Zapier Tables (sum in decimal ILS)
-- Zap C: Grow by Meshulam webhook -> Zapier Tables (amount in decimal ILS)
-All three processors send amounts in decimal shekels. No conversion needed.
+Ready-made patterns for invoicing, payment reconciliation, VAT-cycle reminders and WhatsApp follow-ups: `references/zap-templates.md`.
 
 ## Examples
 
@@ -346,11 +237,11 @@ User says: "I want to automatically create a Morning receipt when someone pays t
 
 Actions:
 1. Create a Zap with Webhooks by Zapier > Catch Hook as trigger
-2. Configure Cardcom IndicatorUrl to point to the webhook URL
-3. Add a Filter step: only continue if `DealResponse` = 0 (successful payment)
+2. Pass the Catch Hook URL as `WebHookUrl` on your Cardcom `CreateLowProfile` request
+3. Add a Filter step: only continue if `ResponseCode` = 0 (successful payment)
 4. Add Webhooks by Zapier > Custom Request to call Morning API, Create Document type 400 (Receipt). Use the `Amount` field directly as the item price (Cardcom sends decimal shekels, e.g., 150.50 = 150.50 ILS).
-5. Map fields: `CardOwnerName` to client name, `CardOwnerEmail` to client email, `Amount` to item price
-6. If amount exceeds the Invoice Reform threshold variable (10,000 ILS through May 31, 2026, then 5,000 ILS from June 1, 2026), verify the Morning API response includes an Invoice Reform allocation number
+5. Map fields: `UIValues.CardOwnerName` to client name, `UIValues.CardOwnerEmail` to client email, `Amount` to item price
+6. If the pre-VAT amount exceeds the Invoice Reform threshold variable (currently 5,000 ILS), verify the Morning API response includes an Invoice Reform allocation number
 7. Add email action to send receipt link to customer
 
 Result: Every successful Cardcom payment automatically generates a Morning receipt and emails it to the customer.
@@ -368,19 +259,21 @@ Actions:
 
 Result: On the 10th of March, May, July, September, November, and January, an automated email goes to the accountant with the previous bimonthly period's invoice summary, giving 5 days before the 15th deadline (or 9 days before the 19th online deadline).
 
-### Example 3: WhatsApp Payment Confirmation via Twilio
+### Example 3: WhatsApp Payment Confirmation
 
 User says: "Send a Hebrew WhatsApp message to customers when they pay"
 
 Actions:
-1. Set up payment webhook trigger (Cardcom IndicatorUrl or Tranzila notification)
+1. Set up payment webhook trigger (Cardcom `WebHookUrl` JSON POST)
 2. Add Formatter to format amount with " ש\"ח" suffix
 3. Add Code by Zapier to format phone number: replace leading 0 with +972
-4. Add Twilio > Send WhatsApp Message action using a pre-approved Hebrew template
+4. Add **WhatsApp Business > Send Template Message** using a pre-approved Hebrew template
 5. The template must be approved by Meta in advance, e.g.: "שלום {{1}}, קיבלנו תשלום בסך {{2}} ש\"ח. מספר אישור: {{3}}. תודה!"
 6. Map template variables: {{1}} = customer name, {{2}} = formatted amount, {{3}} = transaction ID
 
-Important: This requires a Twilio WhatsApp Business API account with Meta-approved templates. Zapier's native WhatsApp integration cannot send messages to customers.
+A proactive payment confirmation is outside the 24-hour customer-service window, so it must be a template. If instead the customer messaged you first, use the `New Message Received` trigger and `Send Freeform Message`, which sends arbitrary Hebrew with no template.
+
+Do not use the "WhatsApp Notifications" app here. It only messages your own number. Twilio or WATI are alternatives if you need BSP-grade volume or a shared inbox.
 
 Result: Customer receives a Hebrew WhatsApp confirmation within seconds of payment, using a Meta-approved template.
 
@@ -403,9 +296,9 @@ Result: Annual tax preparation data is automatically compiled and sent to the ac
 - `references/israeli-zapier-apps.md` -- Directory of Israeli apps available on Zapier (native integrations and webhook-based connections), including auth methods, API endpoints, and field mappings. Consult when connecting a new Israeli app to Zapier or troubleshooting authentication.
 - `references/zap-templates.md` -- Ready-to-use Zap template configurations for common Israeli business workflows, with step-by-step field mappings and trigger/action details. Consult when building a new Zap and looking for a starting point that fits an Israeli business scenario.
 
-## Recommended MCP Servers
+## Related Skills and MCP Servers
 
-[Green Invoice MCP](https://agentskills.co.il/he/mcps/accounting/green-invoice-mcp) for direct agent access to Morning. Zapier ships its own MCP at `mcp.zapier.com` exposing published Zaps.
+The [green-invoice skill](https://agentskills.co.il/he/skills/accounting/green-invoice) covers Morning/Green Invoice API work directly and is the better starting point for invoice-document logic. Zapier ships its own MCP at `mcp.zapier.com` exposing published Zaps.
 
 ## Reference Links
 
@@ -414,31 +307,36 @@ Result: Annual tax preparation data is automatically compiled and sent to the ac
 | Zapier pricing | https://zapier.com/pricing |
 | Zapier Platform docs | https://platform.zapier.com |
 | Webhooks by Zapier | https://zapier.com/apps/webhook/integrations |
-| Green Invoice API | https://www.greeninvoice.co.il/api-docs/ |
-| Cardcom v11 API | https://kb.cardcom.solutions/category/19-API |
-| Invoice Reform 2026 (ITA) | https://www.gov.il/en/departments/legalInfo/digital_invoice |
+| Morning (Green Invoice) API docs | https://developers.morning.co/ |
+| Cardcom v11 API (ReDoc) | https://secure.cardcom.solutions/swagger/index.html |
+| Cardcom v11 OpenAPI spec | https://secure.cardcom.solutions/swagger/v11/swagger.json |
+| Tranzila developer docs | https://docs.tranzila.com/ |
+| Invoice Reform (ITA) | https://www.gov.il/en/departments/legalInfo/digital_invoice |
 
 ## Gotchas
 
 - **Cardcom amounts are decimal shekels, not agorot**: Cardcom sends `Amount` as decimal shekel values (e.g., 150.50 means 150.50 ILS). Do NOT divide by 100. The Cardcom v11 API Swagger spec confirms `Amount` uses decimal shekel values. Dividing by 100 would create invoices at 1/100th the correct amount.
 - **All Israeli processors use decimal shekels**: Cardcom, Tranzila, Morning (Green Invoice), Grow, iCount, and EZcount all send and receive amounts in decimal shekels (e.g., 10.50 = ten shekels and fifty agorot). There is no agorot-to-shekel conversion needed for any of them.
-- **WhatsApp native integration is self-only**: Zapier's built-in WhatsApp can only send messages to yourself. It has 7 prefilled English templates and cannot send custom Hebrew messages to clients. For customer-facing WhatsApp, use Twilio WhatsApp Business API, WATI, or Respond.io, all of which require Meta Business verification and pre-approved message templates.
-- **Cardcom webhook is GET, not POST**: Cardcom's IndicatorUrl sends a GET request with query parameters (`InternalDealNumber`, `Amount`, `CardOwnerName`, etc.), not a JSON POST body. The field name for the transaction ID is `InternalDealNumber`, not `Transaction`.
-- **No native Morning/Green Invoice Zapier app**: There is no built-in Morning or Green Invoice integration in Zapier's app directory. All Morning connections must go through "Webhooks by Zapier" using Morning's REST API at `api.greeninvoice.co.il`.
+- **Two different WhatsApp apps on Zapier**: "WhatsApp Notifications" only messages your own number and is limited to prefilled templates. "WhatsApp Business" messages customers and offers `Send Template Message`, `Send Freeform Message` (inside the 24-hour window) and `Send Media Message`. Agents routinely pick the first and conclude customer messaging is impossible. It is not.
+- **Cardcom v11 webhook is a JSON POST to `WebHookUrl`**: Not a GET to `IndicatorUrl`. The success field is `ResponseCode` (0 = success), not `DealResponse`, and the transaction ID is `TranzactionId`. `InternalDealNumber` exists in the v11 API only as a lookup key on transaction-info requests, not as a webhook field. Cardholder details are nested under `UIValues`. Zaps written against `IndicatorUrl` / `DealResponse` are on the legacy path and will never fire.
+- **Check the Zapier app directory before hand-rolling**: SUMIT, Priority ERP and InforUMobile all have native Zapier apps, so `Create Document` and `Send SMS` are one click rather than a Custom Request. Morning, Cardcom, Tranzila, iCount, EZcount and Rivhit genuinely have none and do require webhooks.
+- **"Grow" on Zapier is not Meshulam**: `zapier.com/apps/grow` is an unrelated mailing-list product for publishers. Grow by Meshulam has no Zapier app; use its JSON webhook.
+- **Invoice Reform thresholds are pre-VAT**: Gateway amounts include VAT. Divide by 1.18 (or read Morning's pre-VAT `amount`) before comparing to the 5,000 ILS threshold, or the Zap over-flags every invoice between 5,000 and 5,900 gross.
+- **Legacy ChatGPT Zap steps stop working after August 26, 2026**: Zaps built on the deprecated ChatGPT / OpenAI Assistants actions (creating assistants, uploading files) break on that date. If a Hebrew summarization or categorization step uses them, migrate it before then.
 - **Date format mismatch**: Zapier defaults to US date format (MM/DD/YYYY). Israeli documents, invoices, and tax forms use DD/MM/YYYY. Always add an explicit date formatter step.
 - **Hebrew in code steps**: When using "Code by Zapier" (JavaScript or Python), Hebrew string literals work fine, but Hebrew in variable names will break. Keep variable names in English, use Hebrew only in string values.
 - **Morning document types**: Ask the user which document type they need. Receipt (400) is issued after payment, Tax Invoice (305) before or at time of sale, and Tax Invoice/Receipt (320) combines both. Agents often default to the wrong type.
 - **Phone number format for WhatsApp/Twilio**: Israeli mobile numbers must include the +972 prefix and drop the leading 0 (e.g., 0541234567 becomes +972541234567). Use Code by Zapier: `phone.replace(/^0/, '+972')`.
 - **VAT rate**: The current Israeli VAT rate is 18% (since January 2025). Agents sometimes use the outdated 17% rate in calculations.
 - **Formatter does NOT strip Unicode markers**: "Trim Whitespace" removes standard whitespace but not RTL/LTR markers (U+200F, U+200E). Use a Code by Zapier step with regex to clean Hebrew text properly.
-- **Invoice Reform 2026 affects automation, threshold drops June 1, 2026.** Tax invoices over the threshold (10,000 NIS through May 31, 2026, then 5,000 NIS from June 1, 2026) require a Tax Authority allocation number. Verify your invoicing API flow includes this step. Store the threshold in a Zap variable, not a hardcoded literal.
-- **Free plan limitations**: The free plan supports unlimited Zaps but only two-step (trigger + one action) and 100 tasks/month. Most Israeli business automations need multi-step Zaps, which require the Starter plan ($19.99/month annual). Professional ($49/month) is only needed for advanced filters and conditional logic.
+- **Invoice Reform allocation numbers are required above 5,000 NIS pre-VAT** (in force since June 2026). Verify your invoicing API flow includes this step. Store the threshold in a Zap variable, not a hardcoded literal.
+- **Free plan limitations**: The free plan supports unlimited Zaps but only two-step (trigger + one action) and 100 tasks/month. Most Israeli business automations need multi-step Zaps, which require Professional, the entry paid tier at $19.99/month annual ($29.99 monthly) for 750 tasks. There is no Starter plan; it was discontinued on April 2, 2024 and its features folded into Professional. Higher task volumes are a tier selector within Professional, not a separate plan.
 
 ## Troubleshooting
 
 ### Error: "Webhook not receiving data from Cardcom"
-Cause: IndicatorUrl is misconfigured or the terminal is in test mode.
-Solution: Verify the IndicatorUrl in Cardcom terminal settings. Ensure the terminal is in production mode, not sandbox. Make a real small-amount payment (1 ILS) to test. Check Zapier's webhook history for incoming GET requests (not POST). If using Catch Hook, verify it accepts GET requests.
+Cause: most often the Zap is built against the legacy `IndicatorUrl` GET mechanism rather than the v11 `WebHookUrl` JSON POST.
+Solution: Confirm you are passing the Zapier Catch Hook URL as the `WebHookUrl` field on each `CreateLowProfile` request. It is a required field on that request, so if you are not sending it the call itself will fail validation. Check Zapier's webhook history for incoming **POST** requests carrying a JSON body. If your Filter tests `DealResponse`, it will never match: the v11 field is `ResponseCode`. Then confirm the terminal is in production mode, not sandbox, and make a real small-amount payment (1 ILS) to test.
 
 ### Error: "Morning API returns 401 Unauthorized"
 Cause: API key (JWT token) is invalid, expired, or incorrectly formatted in the Authorization header.
@@ -449,12 +347,12 @@ Cause: Email template missing UTF-8 charset or RTL direction.
 Solution: Wrap Hebrew content in a `<div dir="rtl">` tag. Ensure the email HTML includes `<meta charset="UTF-8">` in the head. If using plain text email, Hebrew should display correctly in modern clients but may appear reversed in older ones.
 
 ### Error: "WhatsApp message fails to send to customer"
-Cause: Using Zapier's native WhatsApp integration, which only sends to yourself.
-Solution: Switch to Twilio WhatsApp Business API, WATI, or Respond.io. These require Meta Business verification and pre-approved message templates. You cannot send free-form messages to customers via WhatsApp Business API.
+Cause: Using the "WhatsApp Notifications" app, which only sends to the phone number that authenticated the connection.
+Solution: Switch to the "WhatsApp Business" app, which has `Send Template Message`, `Send Freeform Message` and `Send Media Message` actions for customers. Outside the 24-hour customer-service window the message must use a Meta-approved template; inside it, freeform Hebrew works. Twilio, WATI or Respond.io are alternatives if you need BSP-grade volume or a shared inbox.
 
 ### Error: "Invoice Reform allocation number missing"
-Cause: Invoice over the Invoice Reform threshold created without a Tax Authority allocation number. The threshold is 10,000 NIS through May 31, 2026, then drops to 5,000 NIS on June 1, 2026.
-Solution: Ensure your Morning API call includes the allocation number request. Morning's API handles this automatically for documents created through their system. If using a manual webhook flow, add a step that requests an allocation number from the Tax Authority before creating the invoice. Compare the amount to a workflow variable holding the current threshold rather than a hardcoded number, since the threshold is scheduled to drop again.
+Cause: Invoice over the Invoice Reform threshold created without a Tax Authority allocation number. The threshold is 5,000 NIS measured before VAT.
+Solution: Ensure your Morning API call includes the allocation number request. Morning's API handles this automatically for documents created through their system. If using a manual webhook flow, add a step that requests an allocation number from the Tax Authority before creating the invoice. Compare the **pre-VAT** amount, not the gateway total, to a workflow variable holding the current threshold.
 
 ### Error: "Cardcom amount is wrong in Morning invoice"
 Cause: Incorrectly dividing the Cardcom amount by 100 (legacy advice that is wrong).
@@ -465,8 +363,8 @@ Solution: Do NOT divide Cardcom amounts by 100. Cardcom's `Amount` field is alre
 | Factor | Zapier | Make.com (Integromat) | n8n |
 |--------|--------|----------------------|-----|
 | Ease of use | Simplest, visual builder + Copilot AI | Visual, slightly steeper learning curve | Requires self-hosting or cloud plan, most technical |
-| Native integrations | 7,000+ apps | 2,000+ apps | 400+ built-in nodes, community nodes |
-| Israeli app support | Webhook-based (no native Israeli apps) | Webhook-based + some HTTP modules | Full HTTP/webhook flexibility |
+| Native integrations | 9,000+ apps | 2,000+ apps | 400+ built-in nodes, community nodes |
+| Israeli app support | Native apps for SUMIT, Priority ERP, InforUMobile, Monday.com and Wix; webhook-based for Morning, Cardcom, Tranzila, iCount, EZcount, Rivhit and Grow | Webhook-based + some HTTP modules | Full HTTP/webhook flexibility |
 | AI features | Copilot, Agents, Chatbots, MCP Server | AI modules available | AI nodes (self-configured) |
 | Free tier | Unlimited 2-step Zaps, 100 tasks/month | 1,000 ops/month, limited scenarios | Self-host free, cloud plan has limits |
 | Best for | Non-technical users, quick setup, AI-assisted building | Complex multi-branch workflows, cost-sensitive high-volume | Developers, self-hosted, full control |
