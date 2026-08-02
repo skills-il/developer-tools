@@ -1,152 +1,431 @@
 {
+  "schemaVersion": "1.0",
   "skill": "israeli-chatbot-analytics",
-  "version": "1.2.0",
-  "reviewed_at": "2026-05-20",
-  "reviewer": "skills-il update-skill subagent (Phase 3 audit, Opus 4.7 1M)",
+  "generated_at": "2026-08-02T02:55:00+00:00",
   "claims": [
     {
-      "id": "dialogflow-cx-hebrew-code",
-      "claim": "Dialogflow CX deprecated the `iw` Hebrew language code; new agents must use `he-il`. Existing `iw` agents keep working but will not receive new features.",
-      "source": "https://docs.cloud.google.com/dialogflow/cx/docs/reference/language",
-      "evidence_type": "vendor_docs",
-      "verification": "Google Cloud Dialogflow CX language reference page lists `he-il` as the supported Hebrew code with deprecation notice for `iw`. Confirmed via Google Developer forum thread on the Twilio integration issue (May 2026).",
-      "confidence": "high"
+      "claim_id": "dialogflow-cx-hebrew-code",
+      "claim": "The Dialogflow CX / Conversational Agents language reference lists `he-il` as the Hebrew language code and `iw` as deprecated, with fewer supported features.",
+      "source_url": "https://docs.cloud.google.com/dialogflow/cx/docs/reference/language",
+      "raw_snippet": "Hebrew he-il ✔ ✔ ✔ ✔ ✔ ✔ ✔ ✔ ✔ Hebrew (deprecated) iw ✔ ✔ ✔ ✔",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Rendered the page with Playwright and read the two Hebrew table rows directly. he-il carries 9 feature checkmarks, iw carries 4, and iw is labelled 'Hebrew (deprecated)'."
     },
     {
-      "id": "whatsapp-per-message-pricing-2025",
-      "claim": "Effective July 1, 2025, Meta replaced WhatsApp Business Platform conversation-based pricing with a per-message model across four categories: marketing, utility, authentication, and service.",
-      "source": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
-      "evidence_type": "vendor_docs",
-      "verification": "Multiple independent 2026 pricing guides (engagelab, flowcall, sleekflow, whautomate, twilio) all describe the July 2025 cutover and the four-category split.",
-      "confidence": "high"
+      "claim_id": "dialogflow-cx-console-retired",
+      "claim": "The standalone Dialogflow CX console was deprecated on 2025-10-31 and users are routed to the Conversational Agents console; the API and documentation paths still use dialogflow/cx.",
+      "source_url": "https://kartaca.com/en/from-dialogflow-cx-to-conversational-agents-the-biggest-changes-you-should-know/",
+      "raw_snippet": "From Dialogflow CX to Conversational Agents",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "medium",
+      "verification": "Third-party migration write-up plus the Google Cloud Dialogflow release notes. The rename and console consolidation are corroborated by the live docs still serving under /dialogflow/cx/ while the console redirects to Conversational Agents. Confidence is medium because the exact retirement date comes from the third-party summary, not a quoted Google deprecation notice."
     },
     {
-      "id": "whatsapp-service-window-free",
-      "claim": "Service messages sent in reply to an inbound user message within 24 hours are free with no monthly cap.",
-      "source": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
-      "evidence_type": "vendor_docs",
-      "verification": "Meta WhatsApp Business pricing page explicitly states free 24-hour service window. Same fact restated by sleekflow / engagelab 2026 guides.",
-      "confidence": "high"
+      "claim_id": "whatsapp-per-message-pricing-2025",
+      "claim": "Effective July 1, 2025, Meta charges for WhatsApp Business Platform messages on a per-message basis rather than per 24-hour conversation, and only when a template message is delivered.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "Effective July 1, 2025, Meta charges on a per-message basis for messages businesses deliver to WhatsApp users: You are only charged when a template message is delivered",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Read from the rendered Meta pricing page via Playwright. The page is JS-rendered and returns an error body to plain curl, so browser rendering was required."
     },
     {
-      "id": "whatsapp-ctw-ad-72h-free",
-      "claim": "When a user arrives from a click-to-WhatsApp ad or Facebook Page CTA button, all messages including templates are free for 72 hours.",
-      "source": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
-      "evidence_type": "vendor_docs",
-      "verification": "Meta confirms 72h free entry-point conversation rules; engagelab 2026 pricing guide also explicitly cites this window.",
-      "confidence": "high"
+      "claim_id": "whatsapp-service-window-free",
+      "claim": "Non-template messages sent within an open 24-hour customer service window are free.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "All non-template messages are free within an open customer service window.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Verbatim from the rendered Meta pricing page via Playwright."
     },
     {
-      "id": "dictalm-2-instruct-availability",
-      "claim": "DictaLM 2.0 and DictaLM 2.0-Instruct are open Hebrew LLMs from Dicta, derived from Mistral, with 7B parameters and trained on roughly 200B tokens in Hebrew and English. The tokenizer adds 1,000 Hebrew-specific tokens, raising compression from 5.78 to 2.76 tokens per word.",
-      "source": "https://huggingface.co/dicta-il/dictalm2.0-instruct",
-      "evidence_type": "model_card + paper",
-      "verification": "arXiv 2407.07080 (Adapting LLMs to Hebrew, July 2024) confirms architecture and token-compression numbers. Model card on HuggingFace matches.",
-      "confidence": "high"
+      "claim_id": "whatsapp-utility-free-in-csw",
+      "claim": "As of this review, utility template messages delivered within an open customer service window are free. Meta links a pricing explainer that reflects updates launching October 1, 2026, without stating the content on the page, so the end of this free status is a watch item and not a confirmed fact.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "As of July 1, 2025 - Meta does not charge for utility templates in response to users (delivered within an open customer service window).",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "medium",
+      "verification": "Verbatim from the rendered Meta pricing page. The same page also states: 'The pricing explainer PDF outlines how Meta charges businesses, in PDF form, and reflects updates launching October 1, 2026'. Several BSP guides claim in-window utility templates start being charged on 2026-10-01, but Meta's own page does not say so, so the skill carries it as a watch item."
     },
     {
-      "id": "alephbert-onlplab",
-      "claim": "AlephBERT (`onlplab/alephbert-base`) is a pre-trained Hebrew BERT from BIU's OnlpLab, trained on OSCAR Hebrew + Wikipedia + Twitter Hebrew data.",
-      "source": "https://huggingface.co/onlplab/alephbert-base",
-      "evidence_type": "model_card + ACL paper",
-      "verification": "ACL 2022 long paper (Seker et al., AlephBERT) describes training corpus and benchmark improvements. HuggingFace model card matches.",
-      "confidence": "high"
+      "claim_id": "whatsapp-fep-72h-free",
+      "claim": "Meta's term for the click-to-WhatsApp window is the free entry point (FEP) window. FEP windows stay open for 72 hours and all messages, including templates, are free inside them.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "Free entry point window - All messages, including template messages, are free for 72 hours, if sent within an open free entry point window.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Verbatim from the rendered Meta pricing page. The page also states 'FEP windows remain open for 72 hours.'"
     },
     {
-      "id": "rasa-oss-maintenance-mode",
-      "claim": "Rasa Open Source entered maintenance mode in 2025; active development shifted to Rasa Pro and the CALM dialogue engine.",
-      "source": "https://rasa.com/docs/learn/concepts/calm/",
-      "evidence_type": "vendor_docs + blog",
-      "verification": "Rasa's official docs describe CALM as the dialogue system for Rasa Pro text/voice assistants. The 2026 Conversational AI Predictions blog and intuitionlabs open-source roundup both confirm OSS maintenance status.",
-      "confidence": "high"
+      "claim_id": "whatsapp-quarterly-pricing-calendar",
+      "claim": "Meta may change WhatsApp Business Platform pricing only on the first day of a calendar quarter, up to four times a year.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "Meta may update pricing only on the 1st day of each quarter, thus up to 4 times per year: January 1, April 1, July 1, and/or October 1.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Verbatim from the rendered Meta pricing page, under the 'Pricing calendar' heading."
     },
     {
-      "id": "rasa-calm-dialogue-driven",
-      "claim": "Rasa CALM is dialogue-driven (LLM understanding + deterministic flows) rather than intent-driven, so legacy intent-accuracy KPIs map differently to CALM-based bots.",
-      "source": "https://rasa.com/calm",
-      "evidence_type": "vendor_docs",
-      "verification": "Rasa CALM landing page describes flow-based dialogue with LLM-powered command generation, explicitly contrasting with classic intent classification.",
-      "confidence": "high"
+      "claim_id": "dictalm-3-release",
+      "claim": "Dicta-LM 3.0 (February 2026) is Dicta's current open-weight Hebrew LLM family, released in 24B, 12B and 1.7B sizes adapted from Mistral-Small-3.1, NVIDIA Nemotron Nano V2 and Qwen3-1.7B respectively, each with a 65k native context and a chat variant with tool-calling support.",
+      "source_url": "https://arxiv.org/abs/2602.02104",
+      "raw_snippet": "The model is released in three sizes: 24B - adapted from the Mistral-Small-3.1 base model, 12B - adapted from the NVIDIA Nemotron Nano V2 model, and 1.7B - adapted from the Qwen3-1.7B base model. We are releasing multiple variants of each model, each with a native context length of 65k tokens; base model and chat model with tool-calling support.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched the arXiv abstract page for 2602.02104 and read the abstract text directly. Supersedes the previous DictaLM 2.0 'current state of the art' claim in this skill."
     },
     {
-      "id": "amendment-13-effective-date",
-      "claim": "Israel's Privacy Protection Law Amendment 13 took effect on August 14, 2025, tightening consent, notice, accountability, and data-minimization obligations.",
-      "source": "https://iapp.org/news/a/israel-marks-a-new-era-in-privacy-law-amendment-13-ushers-in-sweeping-reform",
-      "evidence_type": "iapp_article + law_firm_guides",
-      "verification": "IAPP, BigID, and Safetica all cite August 14, 2025 effective date. Existing project memory + skill body already references this; refreshed against 2026 Chambers Israel Data Protection guide.",
-      "confidence": "high"
+      "claim_id": "dictabert-sentiment-label-order",
+      "claim": "The label order of dicta-il/dictabert-sentiment is Positive, Negative, Neutral. Code must read it from model.config.id2label; the alphabetical-looking literal ['negative','neutral','positive'] is wrong at every index.",
+      "source_url": "https://huggingface.co/dicta-il/dictabert-sentiment/raw/main/config.json",
+      "raw_snippet": "\"id2label\": {\"0\": \"Positive\", \"1\": \"Negative\", \"2\": \"Neutral\"}",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched the model's raw config.json over HTTP and read id2label directly. This is the source of the critical correction in this version: the previous instructions hardcoded a label list that inverted every sentiment reading."
     },
     {
-      "id": "section-30a-im-apps-coverage",
-      "claim": "Section 30A of Israel's Communications Law (Telecom and Broadcasts) 5742-1982 requires prior written opt-in consent before sending advertising messages via SMS, email, fax, robocalls, and electronic communication that Israeli courts have interpreted to include IM apps like WhatsApp, Telegram, and Signal.",
-      "source": "https://www.dlapiperdataprotection.com/index.html?t=electronic-marketing&c=IL",
-      "evidence_type": "law_firm_summary + lexology",
-      "verification": "DLA Piper Israel electronic marketing summary + Lexology / Hunton / law.co.il analyses all describe the 2008 amendment language and its broad interpretation reaching IM apps. The maximum NIS 1,000 statutory damages per message without proof of damages is established in court rulings.",
-      "confidence": "high"
+      "claim_id": "dictabert-sentiment-model-card",
+      "claim": "dicta-il/dictabert-sentiment is a fine-tuned BERT classifier for Hebrew sentiment from Dicta, trained on the HebrewSentiment dataset released by the Israeli National Program for Hebrew and Arabic NLP, under CC-BY-4.0.",
+      "source_url": "https://huggingface.co/dicta-il/dictabert-sentiment",
+      "raw_snippet": "This is the fine-tuned BERT-base model for the sentiment-analysis task on the HebrewSetniment dataset release by the Israeli National Program for Hebrew and Arabic NLP.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-sentiment-guide.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched the model card and extracted the description verbatim. The card also shows the license as 'Creative Commons Attribution 4.0 International License' and a pipeline('sentiment-analysis', ...) usage example. Note the typo 'HebrewSetniment' is present in the source."
     },
     {
-      "id": "fallback-rate-benchmark",
-      "claim": "Industry fallback-rate benchmarks for chatbots are below 10% (excellent < 5%), with rates above 20% indicating significant training gaps. Intent recognition accuracy below ~80% causes fallback rates to spike.",
-      "source": "https://omq.ai/lexicon/chatbot-kpi/",
-      "evidence_type": "industry_benchmark",
-      "verification": "OMQ chatbot KPI 2026 lexicon + ChatBench 2026 metrics article + IrisAgent 2026 intent guide all converge on the < 10% target.",
-      "confidence": "medium"
+      "claim_id": "alephbert-onlplab",
+      "claim": "AlephBERT (onlplab/alephbert-base) is a Hebrew BERT from the ONLP Lab, trained on the Hebrew section of OSCAR plus Wikipedia and Twitter data. It is not a Tel Aviv University model.",
+      "source_url": "https://huggingface.co/onlplab/alephbert-base",
+      "raw_snippet": "onlplab / alephbert-base like 21 Follow ONLP Lab",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-sentiment-guide.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched the model card. The org shown on the card is 'ONLP Lab' and the training-data section states 'OSCAR (Ortiz, 2019) Hebrew section (10 GB text, 20 million sentences).' This corrects a reference file that attributed AlephBERT to TAU."
     },
     {
-      "id": "statsig-openai-acquisition",
-      "claim": "OpenAI acquired feature-flagging and experimentation platform Statsig in 2025 for approximately $1.1 billion.",
-      "source": "https://www.statsig.com/perspectives/ab-testing-feature-flags-comparison-tools",
-      "evidence_type": "vendor_blog + press_coverage",
-      "verification": "Statsig's own comparison page references the OpenAI acquisition. Restated across Flagsmith / Amplitude / Kameleoon 2026 roundups.",
-      "confidence": "high"
+      "claim_id": "rasa-calm-dialogue-driven",
+      "claim": "Rasa CALM is the dialogue system for Rasa Pro text and voice assistants, and it is contrasted with classic intent-based NLU bots, so intent-accuracy KPIs map differently to CALM assistants.",
+      "source_url": "https://rasa.com/docs/learn/concepts/calm/",
+      "raw_snippet": "CALM (Conversational AI with Language Models) is the dialogue system that runs Rasa text and voice assistants.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched the Rasa CALM concept page. The same page contains a comparison section described as comparing 'CALM assistants with ReAct-style agents and classic NLU bots', which supports the skill's note that legacy intent metrics do not transfer."
     },
     {
-      "id": "ga4-ai-assistant-channel",
-      "claim": "GA4 added a built-in `Channel Group: AI Assistant` with Medium `ai-assistant` that auto-categorizes traffic from ChatGPT, Gemini, Claude, and Perplexity, removing the need for custom regex referrer filters.",
-      "source": "https://martech.org/ga4-now-tracks-ai-chatbot-traffic-automatically/",
-      "evidence_type": "industry_article",
-      "verification": "MarTech 2026 article documents the auto-tracking behavior. Triple Dart marketing analytics guide and Tripledart how-to corroborate.",
-      "confidence": "high"
+      "claim_id": "amendment-13-effective-date",
+      "claim": "Israel's Privacy Protection Law Amendment 13 took effect on 14 August 2025.",
+      "source_url": "https://iapp.org/news/a/israel-marks-a-new-era-in-privacy-law-amendment-13-ushers-in-sweeping-reform",
+      "raw_snippet": "On 14 Aug., Israel enters a new chapter in its data protection regime. With the enactment of Amendment 13 to the Protection of Privacy Law, 5741-1981, the country has introduced a comprehensive overhaul of its privacy framework.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched the IAPP analysis piece, published 13 Aug. 2025, and read the opening paragraph. The article is member-gated below the fold but the effective-date sentence is in the public portion."
     },
     {
-      "id": "mixpanel-spark-mcp",
-      "claim": "Mixpanel shipped Spark (AI query builder) and an MCP Server in 2025-2026 that lets Claude / ChatGPT / Cursor query Mixpanel data conversationally.",
-      "source": "https://mixpanel.com/ai/info-page",
-      "evidence_type": "vendor_page + review",
-      "verification": "Mixpanel's AI info page lists Spark, Magic Playlists, AI Summaries on replays, and MCP Server. Prettyinsights 2026 review describes the same feature set.",
-      "confidence": "high"
+      "claim_id": "section-30a-optin-scope",
+      "claim": "Israel's Communications Law (Telecommunications and Broadcasting) 1982, the Anti Spam Act, prohibits advertising by automated dialing, fax or text messages without the recipient's prior opt-in consent, and requires an opt-out in every such message. Whether this reaches WhatsApp and Telegram depends on judicial interpretation of 'text messages' rather than explicit statutory text.",
+      "source_url": "https://www.dlapiperdataprotection.com/index.html?t=electronic-marketing&c=IL",
+      "raw_snippet": "The Anti Spam Act prohibits, subject to certain exceptions, advertising by means of automated dialing, fax or text messages without first obtaining the recipient's initial opt-in prior consent; all such communications also must contain an optout / unsubscribe option.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched the DLA Piper Israel electronic-marketing page and quoted its summary verbatim. NOTE: this source does NOT mention WhatsApp, Telegram or IM apps. The previous version of this skill asserted court-extended coverage of IM apps as settled; that assertion could not be verified against any source and has been hedged in the body text."
     },
     {
-      "id": "growthbook-no-event-collection",
-      "claim": "GrowthBook is an open-source experimentation platform that does not collect or store event data itself; it connects to an existing data warehouse (BigQuery, Snowflake, Postgres, etc.) and runs statistical analysis on data that already lives there.",
-      "source": "https://productgrowth.in/tools/experimentation/growthbook/",
-      "evidence_type": "vendor_docs + review",
-      "verification": "GrowthBook architecture is documented across its own docs and multiple 2026 comparison reviews (Flagsmith alternatives roundup, Statsig comparison page). Relevant to Amendment 13 data-residency posture.",
-      "confidence": "high"
+      "claim_id": "fallback-rate-benchmark",
+      "claim": "Industry fallback-rate guidance for chatbots is below 10%, with under 5% considered excellent and above 20% indicating significant training or knowledge-base gaps.",
+      "source_url": "https://omq.ai/lexicon/chatbot-kpi/",
+      "raw_snippet": "Rates above 20% indicate significant gaps in training or the knowledge base.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "medium",
+      "verification": "Rendered the OMQ chatbot-KPI lexicon with Playwright and read the fallback-rate benchmark line, which reads 'Benchmark: < 10%' followed by 'Below 5% is excellent' and the quoted sentence. This is a generic industry benchmark, not an Israeli measurement, and the skill now labels its benchmark tables accordingly."
     },
     {
-      "id": "botpress-hebrew-rtl-gap",
-      "claim": "Botpress lists Hebrew among its supported languages, but full RTL text alignment in the default webchat widget is a community-reported gap as of 2026.",
-      "source": "https://discord.botpress.com/t/13157702/i-ve-been-using-your-platform-and-it-s-really-cool-but-i-ve-",
-      "evidence_type": "community_thread",
-      "verification": "Botpress Discord feature-requests thread documents the open issue about Hebrew + English alignment. Saleshive 2026 review confirms Hebrew is in the language list. Confidence is medium because exact widget version may have shipped fixes after the screenshot date.",
-      "confidence": "medium"
+      "claim_id": "growthbook-no-event-collection",
+      "claim": "GrowthBook does not ingest event data; experiment data stays in the team's own warehouse (BigQuery, Redshift, Snowflake, ClickHouse), which matters for Hebrew transcript residency under Amendment 13.",
+      "source_url": "https://productgrowth.in/tools/experimentation/growthbook/",
+      "raw_snippet": "your experiment data stays in your own data warehouse (BigQuery, Redshift, Snowflake, or even ClickHouse), and you pay nothing to GrowthBook. The architecture is genuinely different from cloud tools: GrowthBook does not ingest your event data.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched the review page and quoted the architecture description verbatim."
     },
     {
-      "id": "dictabert-sentiment-model-card",
-      "claim": "dicta-il/dictabert-sentiment is a fine-tuned BERT classifier for Hebrew sentiment released by Dicta, based on the HebrewSentiment dataset from the Israeli National Program for Hebrew and Arabic NLP.",
-      "source": "https://huggingface.co/dicta-il/dictabert-sentiment",
-      "evidence_type": "model_card",
-      "verification": "Model card on HuggingFace describes training dataset, label set, and CC-BY 4.0 license. DictaBERT base model paper (RANLP 2023) confirms the broader suite.",
-      "confidence": "high"
+      "claim_id": "mixpanel-mcp-server",
+      "claim": "Mixpanel ships AI-powered conversational analytics including a Model Context Protocol (MCP) integration, so an ops team can query Mixpanel conversationally.",
+      "source_url": "https://mixpanel.com/ai/info-page",
+      "raw_snippet": "AI / Conversational Analytics — AI-powered analysis through Model Context Protocol (MCP), Copilot, AI Metric Trees, and automated summaries for conversational data exploration and insight generation.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched Mixpanel's AI info page and quoted the capability line verbatim."
     },
     {
-      "id": "amendment-13-log-retention",
-      "claim": "Under Israel's Privacy Protection (Data Security) Regulations Article 10, controllers of medium/high-security databases must retain database-access log files for a minimum of 24 months.",
-      "source": "https://www.shibolet.com/en/privacy-day-key-development-in-2024-and-what-to-expect-for-2025/",
-      "evidence_type": "law_firm_summary",
-      "verification": "Shibolet privacy summary references Article 10 retention rule. Note: this applies to ACCESS LOGS of regulated databases, not to chat-transcript retention itself, which is governed by data-minimization principles, not a mandated minimum.",
-      "confidence": "medium"
+      "claim_id": "amendment-13-log-retention",
+      "claim": "Under the Privacy Protection (Data Security) Regulations Article 10, controllers of medium and high security databases must retain database-access log files for at least 24 months. This governs access logs, not chat-transcript retention, which is driven by data minimization.",
+      "source_url": "https://www.shibolet.com/en/privacy-day-key-development-in-2024-and-what-to-expect-for-2025/",
+      "raw_snippet": "to retain log files documenting database access (by authorized third parties or software components) for a minimum period of 24 months, in accordance with Article 10 under the Privacy Protection (Data Security) Regulations.",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched the Shibolet privacy summary and quoted the retention rule verbatim. The distinction between access-log retention and transcript retention is the skill's own framing and is stated as such."
+    },
+    {
+      "claim_id": "python-311-fromisoformat",
+      "claim": "datetime.fromisoformat only parses the full ISO-8601 range, including a trailing Z, from Python 3.11 onward, so the bundled analyzer requires Python 3.11+.",
+      "source_url": "https://docs.python.org/3/library/datetime.html",
+      "raw_snippet": "Changed in version 3.11: Previously, this method only supported formats that could be emitted by date.isoformat() or datetime.isoformat().",
+      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/conversation-analyzer.py"
+      ],
+      "confidence": "high",
+      "verification": "Verified behaviourally as well: the bundled script parses Z-suffixed timestamps correctly on Python 3.13.5, and the two former bare except handlers would have swallowed the 3.10 ValueError and silently emptied durations and traffic patterns. Those handlers now warn to stderr."
+    },
+    {
+      "claim_id": "ga4-ai-assistant-channel",
+      "claim": "GA4 ships a dedicated AI Assistant channel that automatically categorizes visits from ChatGPT, Gemini and Claude using Medium `ai-assistant`, removing the need for custom regex referrer filters. Coverage of Perplexity and Copilot is not confirmed by Google.",
+      "source_url": "https://martech.org/ga4-now-tracks-ai-chatbot-traffic-automatically/",
+      "raw_snippet": "GA4 now tracks AI chatbot traffic automatically",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Rendered in a real browser via Playwright, where the article body reads: 'GA4 now includes a dedicated “AI Assistant” channel that automatically tracks visits coming from tools like ChatGPT, Gemini, and Claude', and assigns 'Medium: ai-assistant. Channel Group: AI Assistant.' The raw_snippet recorded here is the headline, which is the portion also present in the plain-fetch body. The same article states Google has not published a full list of supported referrers beyond ChatGPT, Gemini and Claude, leaving Perplexity and Copilot coverage uncertain, which supports the hedge the skill carries."
+    },
+    {
+      "claim_id": "chatbot-benchmark-thresholds-are-conventions",
+      "claim": "The benchmark thresholds this skill carries are conventional industry targets, not measured Israeli figures. Resolution rate good > 70%, average 50-70%, needs work < 50%. First contact resolution good > 65%, average 45-65%, needs work < 45%. Escalation good < 15%, average 15-30%, needs work > 30%. Abandonment good < 20%, average 20-35%, needs work > 35%. CSAT good > 4.0. Intent accuracy good > 85%, average 70-85%, needs work < 70%. Thumbs up ratio good > 80%, average 60-80%, needs work < 60%. Loop rate good < 3%, average 3-5%, needs work > 5%. NPS good > 30. Uptime target 99.9%. Statistical significance standard p < 0.05, that is 95% confidence. P95 response time means 95% of responses are faster. Trend arrows treat a change under 1% as no change, and a rate expressed as a share of a total is 100% at most. Only the fallback-rate row is externally sourced. The default alerting thresholds are operational choices set by this skill, not measured benchmarks: escalation rate above 35% in an hour, CSAT below 3.0 over two hours, abandonment rate above 40% in an hour, fallback rate above 25% in half an hour, P95 response time above 3 seconds in a quarter hour, and more than 20 new unrecognized intents in an hour. Tune them to your own traffic.",
+      "source_url": "https://omq.ai/lexicon/chatbot-kpi/",
+      "raw_snippet": "Rates above 20% indicate significant gaps in training or the knowledge base.",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "low",
+      "verification": "Only the fallback-rate benchmark has an external source (OMQ chatbot KPI lexicon: 'Benchmark: < 10%', 'Below 5% is excellent', plus the quoted sentence, read via Playwright). Every other threshold in the skill's benchmark tables is conventional practice with no measured Israeli sample behind it. The skill body now says so explicitly and instructs readers to replace each row with their own baseline after four weeks of data. Recorded at low confidence deliberately rather than dressed up with a citation that does not support it. The alerting thresholds are stated as operational defaults chosen for this skill rather than sourced benchmarks, so they are recorded here for traceability and not presented as external facts."
+    },
+    {
+      "claim_id": "section-30a-statutory-damages-unverified",
+      "claim": "Israeli law provides statutory damages per unsolicited marketing message without proof of damages under סעיף 30א of the Communications Law. The specific per-message cap could not be verified against a primary source in this review and has been removed from the skill body.",
+      "source_url": "https://www.dlapiperdataprotection.com/index.html?t=electronic-marketing&c=IL",
+      "raw_snippet": "The Anti Spam Act prohibits, subject to certain exceptions, advertising by means of automated dialing, fax or text messages without first obtaining the recipient's initial opt-in prior consent; all such communications also must contain an optout / unsubscribe option.",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "low",
+      "verification": "The DLA Piper Israel page confirms the opt-in regime and the mandatory opt-out but states no damages figure. The previous version of this skill asserted a NIS 1,000 per-message cap; that number could not be traced to a primary source here, so the skill now describes the exposure qualitatively and tells the reader to confirm the figure with a lawyer."
+    },
+    {
+      "claim_id": "ref-dialogflow-cx-analytics",
+      "claim": "Dialogflow CX / Conversational Agents ships built-in conversation analytics.",
+      "source_url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/analytics",
+      "raw_snippet": "Using these analytics views, you can understand your agent performance through different conversation paths and take corrective action to improve performance.",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "cloud.google.com/dialogflow/cx/docs/concept/analytics redirects to docs.cloud.google.com and is devsite-rendered, so a plain fetch returns only the page shell and the content is not in the HTML body. Rendered in a real browser via Playwright and read the sentence from the DOM. The skill's Reference Links table still lists the cloud.google.com URL, which redirects here.",
+      "verified_via": "browser",
+      "verified_at": "2026-08-02T03:07:00+00:00"
+    },
+    {
+      "claim_id": "ref-pytorch-cpu-wheels",
+      "claim": "PyTorch publishes a CPU-only wheel index used by the troubleshooting instructions.",
+      "source_url": "https://download.pytorch.org/whl/cpu",
+      "raw_snippet": "filelock fsspec idna",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched; HTTP 200. The index is a bare package listing with no title, so the snippet is package names from the listing body."
+    },
+    {
+      "claim_id": "ref-yap-parser",
+      "claim": "YAP is a Hebrew morphological analyzer and parser from the ONLP Lab, cited for production-grade Hebrew tokenization.",
+      "source_url": "https://github.com/OnlpLab/yap",
+      "raw_snippet": "GitHub - OnlpLab/yap: Yet Another (natural language) Parser",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-sentiment-guide.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched; HTTP 200, repository title read from the document."
+    },
+    {
+      "claim_id": "ref-dicta-org",
+      "claim": "Dicta is the Israel Center for Text Analysis and publishes its Hebrew models under the dicta-il namespace on HuggingFace.",
+      "source_url": "https://huggingface.co/dicta-il",
+      "raw_snippet": "dicta-il (DICTA: The Israel Center for Text Analysis)",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-sentiment-guide.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched; HTTP 200, organization title read from the document."
+    },
+    {
+      "claim_id": "ref-dictabert-base",
+      "claim": "DictaBERT is Dicta's Hebrew BERT suite, used as the fine-tuning base for Hebrew classification.",
+      "source_url": "https://huggingface.co/dicta-il/dictabert",
+      "raw_snippet": "dicta-il/dictabert · Hugging Face",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-sentiment-guide.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched; HTTP 200, model card title read from the document."
+    },
+    {
+      "claim_id": "ref-dictalm2-instruct",
+      "claim": "DictaLM 2.0-Instruct remains published as the previous-generation Hebrew generative model, superseded by Dicta-LM 3.0.",
+      "source_url": "https://huggingface.co/dicta-il/dictalm2.0-instruct",
+      "raw_snippet": "dicta-il/dictalm2.0-instruct · Hugging Face",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched; HTTP 200, model card title read from the document. Retained only as a labelled previous generation."
+    },
+    {
+      "claim_id": "ref-hf-hebrew-models",
+      "claim": "HuggingFace exposes a filtered catalog of Hebrew-language models.",
+      "source_url": "https://huggingface.co/models?language=he",
+      "raw_snippet": "Models in HE – Hugging Face",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched; HTTP 200, page title read from the document."
+    },
+    {
+      "claim_id": "ref-rasa-oss-legacy-docs",
+      "claim": "Rasa Open Source documentation is served from a legacy docs host, consistent with the skill's note that OSS is no longer the active line.",
+      "source_url": "https://legacy-docs-oss.rasa.com/docs/rasa/",
+      "raw_snippet": "Installing Rasa Open Source",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched; HTTP 200, page title read from the document."
+    },
+    {
+      "claim_id": "ref-matomo-docs",
+      "claim": "Matomo is a self-hosted, privacy-oriented analytics platform cited as an alternative event backend.",
+      "source_url": "https://matomo.org/docs/",
+      "raw_snippet": "Guides - Analytics Platform - Matomo",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched; HTTP 200, page title read from the document."
+    },
+    {
+      "claim_id": "ref-mixpanel-help",
+      "claim": "Mixpanel's help documentation covers funnel and cohort retention analysis referenced for chat flows.",
+      "source_url": "https://mixpanel.com/help",
+      "raw_snippet": "What is Mixpanel? - Mixpanel",
+      "fetched_at": "2026-08-02T03:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Fetched; HTTP 200, page title read from the document."
     }
   ]
 }

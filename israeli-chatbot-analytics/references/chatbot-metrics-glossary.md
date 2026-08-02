@@ -46,7 +46,7 @@ A comprehensive glossary of chatbot analytics metrics with Hebrew translations a
 ### NPS (Net Promoter Score) / ציון NPS
 **Definition:** Measures likelihood of recommending the chatbot. Scale 0-10. Promoters (9-10) minus Detractors (0-6).
 **Hebrew:** מודד סבירות להמליץ על הצ'אטבוט. סקאלה 0-10. מקדמים (9-10) פחות מלעיזים (0-6).
-**Formula:** `(promoters_pct - detractors_pct) * 100`
+**Formula:** `promoters_pct - detractors_pct` (both already expressed as percentages; do not multiply by 100 again)
 **Range:** -100 to +100
 **Benchmark:** Good > 30, Average 0-30, Needs improvement < 0
 
@@ -130,7 +130,7 @@ A comprehensive glossary of chatbot analytics metrics with Hebrew translations a
 ### Channel Distribution / התפלגות ערוצים
 **Definition:** Breakdown of conversations by channel (WhatsApp, Telegram, web, app).
 **Hebrew:** פילוח שיחות לפי ערוץ (וואטסאפ, טלגרם, אתר, אפליקציה).
-**Israeli note:** WhatsApp dominates in Israel with over 90% smartphone penetration.
+**Israeli note:** WhatsApp is the dominant messaging channel in Israel, so expect it to lead your channel split. We have no sourced figure for its share of chatbot conversations; measure your own rather than quoting a number.
 
 ## A/B Testing Metrics / מדדי בדיקות A/B
 
@@ -143,7 +143,7 @@ A comprehensive glossary of chatbot analytics metrics with Hebrew translations a
 ### Minimum Detectable Effect (MDE) / אפקט מינימלי ניתן לגילוי
 **Definition:** Smallest difference between variants that the test can reliably detect.
 **Hebrew:** ההבדל הקטן ביותר בין ווריאנטים שהבדיקה יכולה לזהות באופן אמין.
-**Guideline:** For 200 impressions per variant, MDE is typically 10-15%.
+**Guideline:** State the baseline and whether the effect is absolute or relative. At 200 impressions per variant with a 50% baseline completion rate, the smallest reliably detectable change is roughly 14 percentage points absolute. At a 10% baseline you need roughly ten times that sample for the same relative sensitivity. Treat "200 impressions per variant" as a floor for running a test at all, not as a sample that can detect small effects.
 
 ## Sentiment Metrics / מדדי סנטימנט
 
@@ -159,7 +159,7 @@ A comprehensive glossary of chatbot analytics metrics with Hebrew translations a
 ### Mixed Language Rate / שיעור שפה מעורבת
 **Definition:** Percentage of messages containing both Hebrew and English text.
 **Hebrew:** אחוז ההודעות שמכילות טקסט גם בעברית וגם באנגלית.
-**Israeli note:** Typically 15-30% in Israeli tech-oriented chatbots.
+**Israeli note:** Code-switching is common in Israeli tech-oriented chatbots. We have no sourced baseline for the rate, so measure yours before setting a target.
 
 ## Benchmark Summary Table / טבלת סיכום בנצ'מרקים
 
@@ -175,3 +175,27 @@ A comprehensive glossary of chatbot analytics metrics with Hebrew translations a
 | Avg Response Time / תגובה | < 1s | 1-3s | > 3s |
 | Session Length / אורך | 4-8 msgs | 8-15 msgs | > 15 msgs |
 | Loop Rate / לולאות | < 3% | 3-5% | > 5% |
+
+
+## WhatsApp Business Platform pricing (relocated from SKILL.md)
+
+## WhatsApp Business Platform pricing notes
+
+Many Israeli chatbots run on WhatsApp Cloud API, where send-out cost is a first-class analytics dimension. Pricing changed on July 1, 2025 from a per-conversation model to **per-message billing across 4 categories**:
+
+| Category | Pricing posture | When to use |
+|----------|-----------------|-------------|
+| Marketing | Highest per-message rate, no volume discount | Promotions, broadcasts, re-engagement |
+| Utility | Lower than marketing, eligible for volume discounts. Free when delivered inside an open customer service window. | Order updates, appointment reminders, account notices triggered by user action |
+| Authentication | Lowest non-free tier, eligible for volume discounts | OTP codes for login / payment / 2FA |
+| Service | **Free** | Any reply from the business within the 24-hour customer service window (user-initiated session) |
+
+Two free windows worth tracking explicitly in your analytics:
+
+1. **24-hour service window.** When a user sends an inbound message, you can reply with free-form text (no template, no charge) for the next 24 hours. Optimizing analytics for "did we resolve in the service window?" can eliminate a whole template-cost line item for reactive support flows. See https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing.
+2. **72-hour click-to-WhatsApp / Facebook ad window.** When the user arrives from a click-to-WhatsApp ad or a Facebook Page CTA, all messages (including templates) are free for 72 hours.
+
+Meta may update pricing only on the first day of a quarter (January 1, April 1, July 1, October 1), so re-pull your rate card on that cadence instead of assuming a fixed cost per message. As of this review Meta states that utility templates sent within an open service window are free; several BSP guides say that ends on October 1, 2026, and Meta links a pricing explainer that "reflects updates launching October 1, 2026" without stating the content. Treat that as a watch item to re-check before you budget on it, not as a fact.
+
+Meta's own term for the click-to-WhatsApp window is the free entry point (FEP) window. Add `template_category` (marketing/utility/authentication/service) and `arrived_via_ctw_ad` boolean to your conversation log schema so finance and product can split CSAT/resolution by paid vs. free interaction. Israeli rates are not published per-country in the public docs, pull your specific Israel rate from the Meta Business Manager pricing tool or your BSP (e.g. Twilio, 360dialog, Vonage) when sizing campaigns.
+

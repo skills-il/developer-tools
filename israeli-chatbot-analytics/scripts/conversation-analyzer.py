@@ -11,6 +11,11 @@ Usage:
     python conversation-analyzer.py --input conversations.json --format markdown
     python conversation-analyzer.py --help
 
+Requires Python 3.11 or newer: datetime.fromisoformat only parses the full
+ISO-8601 range (including a trailing "Z") from 3.11 onward. On 3.10 the
+timestamps in the schema below fail to parse, and durations and traffic
+patterns come back empty.
+
 Input Format:
     A JSON file containing a list of conversation objects. Each conversation
     should follow this schema:
@@ -60,7 +65,7 @@ Examples:
   %(prog)s --input conversations.json --top-n 20
 
 Input file should be a JSON array of conversation objects.
-See --help-schema for the expected schema.
+See the module docstring at the top of this file for the expected schema.
         """,
     )
     parser.add_argument(
@@ -137,8 +142,12 @@ def compute_core_metrics(conversations: list[dict]) -> dict:
                 start = datetime.fromisoformat(c["started_at"])
                 end = datetime.fromisoformat(c["ended_at"])
                 session_durations.append((end - start).total_seconds())
-            except (ValueError, TypeError):
-                pass
+            except (ValueError, TypeError) as exc:
+                print(
+                    f"Warning: could not parse session timestamps "
+                    f"({c.get('started_at')!r} .. {c.get('ended_at')!r}): {exc}",
+                    file=sys.stderr,
+                )
 
     csat_scores = [
         c["satisfaction_score"]
@@ -181,13 +190,16 @@ def analyze_drop_offs(conversations: list[dict], top_n: int = 10) -> dict:
         drop_offs_by_depth[len(messages)] += 1
 
         for msg in reversed(messages):
-            if msg["sender"] == "bot":
+            if msg.get("sender") == "bot":
                 truncated = msg.get("text", "")[:100]
                 drop_offs_by_last_bot_msg[truncated] += 1
                 break
 
+        # Keep "fallback" in this bucket. Fallback-then-abandon is the most
+        # common real drop-off pattern, so excluding it empties the report for
+        # exactly the sessions that most need attention.
         for msg in reversed(messages):
-            if msg.get("intent") and msg["intent"] != "fallback":
+            if msg.get("intent"):
                 drop_offs_by_intent[msg["intent"]] += 1
                 break
 
@@ -278,7 +290,7 @@ def analyze_response_times(conversations: list[dict]) -> dict:
 
     for convo in conversations:
         for msg in convo.get("messages", []):
-            if msg.get("sender") == "bot" and msg.get("response_time_ms"):
+            if msg.get("sender") == "bot" and msg.get("response_time_ms") is not None:
                 response_times.append(msg["response_time_ms"])
 
     if not response_times:
@@ -317,8 +329,12 @@ def analyze_traffic_patterns(conversations: list[dict]) -> dict:
                 hour_counts[dt.hour] += 1
                 day_counts[dt.strftime("%A")] += 1
                 daily_volumes[dt.strftime("%Y-%m-%d")] += 1
-            except (ValueError, TypeError):
-                pass
+            except (ValueError, TypeError) as exc:
+                print(
+                    f"Warning: could not parse started_at "
+                    f"({convo.get('started_at')!r}): {exc}",
+                    file=sys.stderr,
+                )
 
     return {
         "by_hour": dict(sorted(hour_counts.items())),

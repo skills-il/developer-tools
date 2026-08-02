@@ -3,7 +3,7 @@ name: israeli-chatbot-analytics
 description: Analyze and optimize Hebrew chatbot performance with conversation flow analytics, Hebrew sentiment analysis, drop-off detection, user satisfaction scoring, A/B testing for response variants, and reporting dashboards. Use when user asks to "analyze chatbot performance", "measure chatbot satisfaction", "track Hebrew bot metrics", "analitika shel tsatbot" (Hebrew transliteration), or needs help with conversation analytics, intent accuracy tracking, or chatbot reporting. Supports Dialogflow, Rasa, and custom bot platforms. Do NOT use for building chatbots (use hebrew-chatbot-builder), Hebrew NLP model training (use hebrew-nlp-toolkit), customer support workflow setup (use israeli-customer-support-automator), or voice bot development (use hebrew-voice-bot-builder).
 license: MIT
 allowed-tools: Bash(python:*), Bash(pip:*)
-compatibility: Requires Python 3.10+. Works with Claude Code, Cursor, Windsurf.
+compatibility: Requires Python 3.11+. Works with Claude Code, Cursor, Windsurf.
 ---
 
 # Israeli Chatbot Analytics
@@ -49,7 +49,7 @@ If your platform does not export in this format, write a transformer to normaliz
 
 | Platform | Export Method | Format |
 |----------|-------------|--------|
-| Dialogflow CX | BigQuery export | JSON rows with session context. Use the `he-il` language code on new agents; `iw` is deprecated and frozen for new features (https://docs.cloud.google.com/dialogflow/cx/docs/reference/language). |
+| Conversational Agents (formerly Dialogflow CX) | BigQuery export | JSON rows with session context. Use the `he-il` language code on new agents; the language reference lists `iw` as `Hebrew (deprecated)` with reduced feature coverage (https://docs.cloud.google.com/dialogflow/cx/docs/reference/language). The standalone Dialogflow CX console was retired on 2025-10-31 and the product is now Conversational Agents; the API and doc paths still use `dialogflow/cx`. |
 | Rasa Pro / CALM | Analytics dashboard + tracker events | Flow-step events (Rasa Pro 3.x with CALM is dialogue-driven, not intent-driven, so legacy intent-accuracy metrics map differently). |
 | Rasa Open Source (legacy) | Tracker Store (SQL/Mongo) | Events list per conversation. Rasa OSS entered maintenance mode in 2025, see https://legacy-docs-oss.rasa.com/docs/rasa/. |
 | Botpress | Conversation export / DB | JSON. Hebrew is listed as a supported language but full RTL alignment in the default web webchat is still a community-reported gap as of 2026, verify message bubble alignment in your widget before reporting on dialect distribution. |
@@ -65,7 +65,9 @@ Build a `ConversationMetrics` dataclass that tracks `total_sessions`, `completed
 
 `compute_flow_metrics(conversations)` iterates the structured logs once, increments the right outcome counter (`resolved` / `escalated` / `abandoned`), appends message count and `(ended_at - started_at).total_seconds()`, and returns the metrics object.
 
-**Key benchmarks for Hebrew chatbots (Israeli market, 2025-2026):**
+**Industry benchmarks for support chatbots (apply with judgment to Hebrew bots):**
+
+These are general support-chatbot targets with no Israeli sample behind them. Use them as a starting bar and replace each row with your own baseline after four weeks of data.
 
 | Metric | Good | Average | Needs Improvement |
 |--------|------|---------|-------------------|
@@ -79,27 +81,40 @@ Build a `ConversationMetrics` dataclass that tracks `total_sessions`, `completed
 
 Identify where users abandon conversations. This reveals UX problems, confusing prompts, or missing capabilities:
 
-`detect_drop_off_points(conversations)` filters to `outcome == "abandoned"` and returns three `Counter.most_common` slices: drop-off by conversation depth (message count), by active intent at drop (walking from the tail to the first message with an intent), and by last bot message (first 80 chars, walking from the tail for the last `sender == "bot"`).
+`detect_drop_off_points(conversations)` filters to `outcome == "abandoned"` and returns three `Counter.most_common` slices: drop-off by conversation depth (message count), by active intent at drop (walking from the tail to the first message that carries an intent), and by last bot message (first 100 chars, walking from the tail for the last `sender == "bot"`).
+
+Keep `fallback` in the by-intent bucket. Fallback-then-abandon is the most common real drop-off pattern, so filtering it out empties the report for exactly the sessions you most need to see.
 
 `detect_conversation_loops(conversations, threshold=3)` flags sessions where the bot repeats the same `text` ≥ `threshold` times in a row by scanning the bot-message stream and tracking a consecutive-repeat counter; emit `{session_id, repeated_message, repeat_count, total_messages}` for each looped session.
 
 ### Step 4: Hebrew Sentiment Analysis
 
-Hebrew sentiment analysis requires special handling due to morphological complexity, negation patterns, and slang. Use DictaBERT (encoder, classification) or DictaLM 2.0-Instruct (generative, 7B parameters, Mistral-based) for production accuracy, AlephBERT (`onlplab/alephbert-base` from BIU's OnlpLab) as an alternative encoder baseline, or a lexicon-based approach for lightweight analysis. DictaLM 2.0 (released July 2024) is the current state-of-the-art Hebrew LLM from Dicta and ships an instruct variant trained on roughly 200B Hebrew+English tokens with a 2.76 tokens-per-word compression rate, useful when you need a single model to classify sentiment AND summarize the conversation in Hebrew prose for the ops team.
+Hebrew sentiment analysis requires special handling due to morphological complexity, negation patterns, and slang. Use DictaBERT (encoder, classification) for production sentiment scoring, AlephBERT (`onlplab/alephbert-base` from the ONLP Lab at Bar-Ilan University) as an alternative encoder baseline, or a lexicon-based approach for lightweight analysis. When you need one model to classify sentiment AND summarize the conversation in Hebrew prose for the ops team, use Dicta-LM 3.0 (February 2026), the current Hebrew model family from Dicta: 24B (adapted from Mistral-Small-3.1), 12B (from NVIDIA Nemotron Nano V2) and 1.7B (from Qwen3-1.7B), each with a 65k native context and a chat variant with tool-calling support. The 1.7B variant is the practical choice for per-message classification at volume; the 24B for offline summarization. DictaLM 2.0 (July 2024, 7B, Mistral-based) is the previous generation and still works, but new builds should start on 3.0.
 
 **Using DictaBERT (recommended for production):**
 
 Build `HebrewSentimentAnalyzer` around the `dicta-il/dictabert-sentiment` model (3-class: negative/neutral/positive).
 
 ```python
+# Simplest path: pipeline() resolves the label names off the model config for you.
+from transformers import pipeline
+oracle = pipeline("sentiment-analysis", model="dicta-il/dictabert-sentiment")
+
+# Driving the model directly, for batching control:
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
 tok = AutoTokenizer.from_pretrained("dicta-il/dictabert-sentiment")
 model = AutoModelForSequenceClassification.from_pretrained("dicta-il/dictabert-sentiment").eval()
+
+# Label order is model metadata, NOT a convention, and NOT alphabetical.
+# Here config.id2label is {0: "Positive", 1: "Negative", 2: "Neutral"}.
+id2label = {int(k): v.lower() for k, v in model.config.id2label.items()}
 ```
 
-Wrap `tok(text, return_tensors="pt", truncation=True, max_length=512, padding=True)` + `torch.softmax(model(**inputs).logits, dim=-1)`, then map each probability row to `{label, score, scores}` (label = argmax over `["negative","neutral","positive"]`). Add an `analyze_batch(texts, batch_size=32)` that loops over slices.
+Wrap `tok(text, return_tensors="pt", truncation=True, max_length=512, padding=True)` + `torch.softmax(model(**inputs).logits, dim=-1)`, then map each probability row to `{label, score, scores}` using `id2label[int(row.argmax())]`. Add an `analyze_batch(texts, batch_size=32)` that loops over slices.
+
+CRITICAL: never hardcode `["negative","neutral","positive"]`. That literal is wrong for this model at every index, and a version of this skill that used it reported every frustration spike as a satisfaction spike.
 
 **Hebrew-specific sentiment challenges (summary):**
 
@@ -212,8 +227,9 @@ class ChatbotDashboard:
     nps_score: float = 0.0              # -100 to 100
     thumbs_up_ratio: float = 0.0        # % positive
 
-    # Intent accuracy
-    intent_accuracy: float = 0.0        # % correctly classified
+    # Intent quality
+    high_confidence_rate: float = 0.0   # % of predictions above the confidence floor
+    intent_accuracy: float | None = None  # % correctly classified; needs labelled data
     fallback_rate: float = 0.0          # % of messages hitting fallback
 
     # Performance
@@ -237,7 +253,8 @@ Implement `build_dashboard(conversations, period_days=7)` to populate the datacl
 - `avg_handle_time_seconds` from `(ended_at - started_at).total_seconds()` per session.
 - `avg_csat` from `satisfaction_score` where present.
 - `avg_response_time_ms` / `p95_response_time_ms` from bot messages with `response_time_ms` (p95 via `sorted_rts[int(len * 0.95)]`).
-- `intent_accuracy` = share of user messages with `intent_confidence > 0.7`. `fallback_rate` = share of user messages with `intent == "fallback"`.
+- `high_confidence_rate` = share of user messages with `intent_confidence > 0.7`. `fallback_rate` = share of user messages with `intent == "fallback"`.
+- `intent_accuracy` stays `None` unless you have ground-truth labels. Populate it only from `IntentAccuracyTracker` (Step 5) and render `n/a` otherwise. Model confidence is not accuracy: a confident but wrong classifier scores 100% on confidence and can be wrong on every prediction, and this is the number most likely to be quoted to management.
 - `conversations_per_day = n / period_days`. `peak_hour` and `busiest_day` from `Counter` over `started_at` hour and weekday.
 
 **Israeli traffic patterns to expect:**
@@ -253,11 +270,8 @@ Session-level metrics tell you how a single conversation went, but not whether t
 For each `user_id`, collect the set of distinct dates with a conversation. Then:
 
 - **D1 return rate** = share whose first-date + 1 day is also in their set.
-- **D7 return rate** = share whose first-date + 2..7 days intersects their set.
-- **Repeat-contact rate** = share with > 1 distinct date.
-
-- **D1 / D7 return rate**: share of users who start a new conversation the day after, or within a week of, their first contact. D7 is more stable than D1 for low-volume Israeli bots.
-- **Repeat-contact rate**: share of users with more than one conversation. On a support bot this can be good (trust) or bad (unresolved issues), so read it with first-contact resolution.
+- **D7 return rate** = share whose first-date + 2..7 days intersects their set. More stable than D1 for low-volume Israeli bots.
+- **Repeat-contact rate** = share with > 1 distinct date. On a support bot this can be good (trust) or bad (unresolved issues), so read it alongside first-contact resolution.
 
 ### Step 9: Hebrew-Specific Analytics Challenges
 
@@ -361,12 +375,12 @@ Generate periodic reports summarizing chatbot performance:
 Implement `generate_weekly_report(dashboard, previous_dashboard=None, period_start, period_end)`:
 
 - Helper `trend_arrow(current, previous, higher_is_better)`: returns `(ללא שינוי)` for < 1% delta; otherwise emits `[v] +X.X%` (good direction) or `[!] +X.X%` (bad direction).
-- Emit a `# דוח ביצועי צ'אטבוט שבועי` header, period subheader, and a `| מדד | ערך | שינוי מהשבוע הקודם |` markdown table over: שיחות, שיעור פתרון, CSAT, שיעור הסלמה (lower-is-better), שיעור נטישה (lower-is-better), דיוק זיהוי כוונות, זמן תגובה ממוצע (lower-is-better).
+- Emit a `# דוח ביצועי צ'אטבוט שבועי` header, period subheader, and a `| מדד | ערך | שינוי מהשבוע הקודם |` markdown table over: שיחות, שיעור פתרון, CSAT, שיעור הסלמה (lower-is-better), שיעור נטישה (lower-is-better), שיעור ניבויים בביטחון גבוה, זמן תגובה ממוצע (lower-is-better). Render a `דיוק זיהוי כוונות` row only when labelled data produced a real `intent_accuracy`.
 - Append a `## תנועה` block with `conversations_per_day`, `peak_hour`, `busiest_day`.
 
 ### Step 12: Integration with Chatbot Platforms
 
-#### Dialogflow CX Analytics
+#### Conversational Agents (Dialogflow CX) Analytics
 
 Implement `parse_dialogflow_cx_logs(bigquery_rows)` to fold a Dialogflow CX BigQuery export into the standard `conversations` shape.
 
@@ -385,25 +399,11 @@ Implement `parse_rasa_tracker_events(tracker_events)` to fold a Rasa tracker-sto
 
 ## WhatsApp Business Platform pricing notes
 
-Many Israeli chatbots run on WhatsApp Cloud API, where send-out cost is a first-class analytics dimension. Pricing changed on July 1, 2025 from a per-conversation model to **per-message billing across 4 categories**:
-
-| Category | Pricing posture | When to use |
-|----------|-----------------|-------------|
-| Marketing | Highest per-message rate, no volume discount | Promotions, broadcasts, re-engagement |
-| Utility | Lower than marketing (typically under $0.03), eligible for volume discounts | Order updates, appointment reminders, account notices triggered by user action |
-| Authentication | Lowest non-free tier, eligible for volume discounts | OTP codes for login / payment / 2FA |
-| Service | **Free** | Any reply from the business within the 24-hour customer service window (user-initiated session) |
-
-Two free windows worth tracking explicitly in your analytics:
-
-1. **24-hour service window.** When a user sends an inbound message, you can reply with free-form text (no template, no charge) for the next 24 hours. Optimizing analytics for "did we resolve in the service window?" can eliminate a whole template-cost line item for reactive support flows. See https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing.
-2. **72-hour click-to-WhatsApp / Facebook ad window.** When the user arrives from a click-to-WhatsApp ad or a Facebook Page CTA, all messages (including templates) are free for 72 hours.
-
-Add `template_category` (marketing/utility/authentication/service) and `arrived_via_ctw_ad` boolean to your conversation log schema so finance and product can split CSAT/resolution by paid vs. free interaction. Israeli rates are not published per-country in the public docs, pull your specific Israel rate from the Meta Business Manager pricing tool or your BSP (e.g. Twilio, 360dialog, Vonage) when sizing campaigns.
+Meta may revise pricing only on the first day of each quarter. Utility templates sent inside an open customer-service window are currently free, and free-entry-point windows stay open 72 hours. Israel rates are not published per country, so do not hardcode a figure: pull the current rate card. Full breakdown and the cost fields to log: `references/chatbot-metrics-glossary.md`.
 
 ## Anti-spam compliance (Israel Communications Law, Section 30A)
 
-If your chatbot sends marketing messages (broadcasts, promotional templates on WhatsApp, Telegram campaigns, SMS retargeting), Section 30A of the Communications Law (Telecom and Broadcasts) 5742-1982 applies. The law requires **prior written opt-in consent** before sending advertising messages via SMS, email, fax, robocalls, and, under the 2008 amendment language as interpreted by Israeli courts, electronic communication that includes WhatsApp, Telegram, and similar IM apps. The term "advertisement" is interpreted broadly: any message not purely service-related can be treated as advertising.
+If your chatbot sends marketing messages (broadcasts, promotional templates on WhatsApp, Telegram campaigns, SMS retargeting), Section 30A of the Communications Law (Telecom and Broadcasts) 5742-1982 applies. The law requires **prior opt-in consent** before sending advertising messages. DLA Piper's Israel summary describes the statute as prohibiting "advertising by means of automated dialing, fax or text messages without first obtaining the recipient's initial opt-in prior consent", with a mandatory opt-out in every message. Whether that reaches WhatsApp and Telegram rests on how Israeli courts read "text messages", not on explicit statutory text, and we could not verify a specific ruling. Treat IM broadcasts as in scope for compliance planning and get a lawyer's read before relying on the opposite. The term "advertisement" is interpreted broadly: any message not purely service-related can be treated as advertising.
 
 Practical analytics tracking:
 
@@ -412,15 +412,15 @@ Practical analytics tracking:
 - **Service vs. marketing split.** Run completion-rate and CSAT separately for opt-in marketing flows vs. user-initiated service flows, they behave very differently and combining them masks both.
 - Cross-reference: `gws-hebrew-email-automation` and `israeli-telegram-business-bot` cover the same opt-in regime for email and Telegram. Use those skills if you also operate those channels.
 
-This is engineering guidance, not legal advice. The maximum statutory damages per unsolicited marketing message are NIS 1,000 without proof of damages, so a misconfigured broadcast to even a few hundred non-consenting users can become a meaningful financial event. Confirm specifics with a privacy lawyer.
+This is engineering guidance, not legal advice. Israeli law provides statutory damages per unsolicited marketing message without proof of damages, so a misconfigured broadcast to even a few hundred non-consenting users can become a meaningful financial event. We could not verify the current per-message cap against a primary source, so confirm the figure and your specific exposure with a privacy lawyer before sizing the risk.
 
 ## Experimentation platforms for Hebrew chatbots
 
-When you outgrow `HebrewABTestManager` (in-process bucketing, in-memory results) and need real statistical analysis with sequential testing and CUPED variance reduction, the mainstream feature-flag + experimentation platforms all work fine for Hebrew chatbots, none of them care what language your `variant_text` is in. Pick by team and infra fit:
+When you outgrow `HebrewABTestManager` (in-process bucketing, in-memory results) and need sequential testing and CUPED variance reduction, the mainstream experimentation platforms all work for Hebrew chatbots; none of them care what language `variant_text` is in. Pick by team and infra fit:
 
 | Platform | Best fit | Notes for Hebrew chatbot teams |
 |----------|----------|--------------------------------|
-| Statsig | Teams wanting flags + experiments + product analytics in one stack | OpenAI acquired Statsig in 2025 for $1.1B; generous free tier still good for small Israeli bots. |
+| Statsig | Teams wanting flags + experiments + product analytics in one stack | Generous free tier, still workable for small Israeli bots. |
 | LaunchDarkly | Mature enterprise teams needing approvals, audit logs, RBAC | The "safe" enterprise choice; pair with your existing analytics for stats. |
 | GrowthBook | Teams with a data warehouse (BigQuery, Snowflake, Postgres) who want stats run against their own data | Open source; does NOT collect event data, so Hebrew transcripts never leave your warehouse, useful for Amendment 13 data-residency posture. |
 
@@ -435,53 +435,27 @@ For Hebrew-specific gotchas, plan on longer test durations (2+ weeks, 200+ impre
 
 ### Example 1: Analyze chatbot performance for the past week
 
-User says: "Analyze my Hebrew chatbot logs from the past week and show me where users are dropping off."
+"Analyze my Hebrew chatbot logs from the past week and show me where users are dropping off."
 
-Actions:
-1. Load conversation logs from the specified time period.
-2. Run `compute_flow_metrics()` to get session-level stats.
-3. Run `detect_drop_off_points()` to find abandonment patterns.
-4. Run `detect_conversation_loops()` to identify stuck users.
-5. Generate a summary with actionable recommendations.
-
-Result: Report with completion rate, top drop-off points, looping conversations, and abandonment patterns.
+Load the period's logs, run `compute_flow_metrics()`, `detect_drop_off_points()` and `detect_conversation_loops()`, then summarize completion rate, top drop-off points and looping sessions with actionable recommendations.
 
 ### Example 2: Set up A/B testing for greeting messages
 
-User says: "I want to test whether a formal or casual Hebrew greeting works better."
+"I want to test whether a formal or casual Hebrew greeting works better."
 
-Actions:
-1. Create an A/B test with `HebrewABTestManager.create_test()`.
-2. Define variants: formal ("כיצד נוכל לסייע לכם היום?") vs. casual ("היי! מה אפשר לעשות בשבילך?").
-3. Configure traffic split (50/50).
-4. Integrate with the bot's greeting handler.
-5. Set up outcome tracking (completion rate, CSAT, escalation).
-
-Result: Running A/B test with deterministic user assignment and statistical outcome tracking.
+Create the test with `HebrewABTestManager.create_test()`, variants formal ("כיצד נוכל לסייע לכם היום?") vs. casual ("היי! מה אפשר לעשות בשבילך?"), 50/50 split, wire it into the greeting handler, and track completion rate, CSAT and escalation per variant.
 
 ### Example 3: Set up anomaly alerting
 
-User says: "Alert me if chatbot satisfaction drops suddenly."
+"Alert me if chatbot satisfaction drops suddenly."
 
-Actions:
-1. Configure `AlertManager` with satisfaction and escalation rules.
-2. Set up rolling window calculations for recent metrics.
-3. Connect alerts to notification channels (Slack, email, PagerDuty).
-4. Add Hebrew-language alert descriptions for the ops team.
-
-Result: Real-time monitoring that triggers alerts when CSAT drops below 3.0, escalation rate exceeds 35%, or abandonment spikes above 40%.
+Configure `AlertManager` with the satisfaction and escalation rules, compute metrics over rolling windows, route alerts to Slack / email / PagerDuty, and keep the Hebrew `description_he` text for the ops team.
 
 ### Example 4: Generate a weekly performance report
 
-User says: "Create a Hebrew weekly report for the chatbot team."
+"Create a Hebrew weekly report for the chatbot team."
 
-Actions:
-1. Run `build_dashboard()` for the current and previous weeks.
-2. Call `generate_weekly_report()` with both dashboards for trend arrows.
-3. Include drop-off analysis and intent accuracy breakdown.
-4. Format output in Hebrew with RTL-compatible tables.
-
-Result: A formatted Hebrew report with week-over-week comparisons, trend indicators, and key metrics ready to share with the team.
+Run `build_dashboard()` for the current and previous week, pass both to `generate_weekly_report()` for trend arrows, and add drop-off and intent breakdowns. Output is RTL-compatible Hebrew markdown.
 
 ## Bundled Resources
 
@@ -509,25 +483,26 @@ Practical rules:
 - **Pseudonymize `user_id`.** Do not analyze raw phone numbers, emails, or Teudat Zehut as the identifier. Hash or tokenize `user_id` before it reaches the analytics pipeline, and keep the mapping table separate and access-controlled. Retention and A/B-test bucketing still work on a stable pseudonymous ID.
 - **Minimize and redact.** Strip or mask entities you do not need for analytics (ID numbers, full names, card numbers) before storing transcripts. You rarely need the raw PII to measure drop-off or sentiment.
 - **Retention limits.** Set an explicit retention window for raw transcripts (for example 90 days) and keep only aggregated metrics long-term. Document the window and delete on schedule.
-- **Access control and location.** Restrict who can read raw conversations, log access, and confirm where the data is stored and processed.
+- **Access control and location.** Restrict who can read raw conversations, log access, and confirm where the data is stored and processed. Note that the Data Security Regulations require access logs for medium and high security databases to be retained for at least 24 months, which is a separate obligation from transcript retention.
 - This is engineering guidance, not legal advice. Confirm your specific obligations with a privacy professional.
 
 ## Recommended MCP Servers
 
-No MCP server is required for this skill. It operates entirely on exported conversation logs (BigQuery exports, Rasa tracker-store dumps, application log files) that you load from disk and analyze locally with the bundled Python script. There is no live API to wrap, so no MCP integration is needed.
+None is required. The skill operates on exported conversation logs (BigQuery exports, Rasa tracker-store dumps, application log files) loaded from disk and analyzed locally with the bundled script. If your metrics already live in Mixpanel, its MCP server lets you query them conversationally from the agent, but that is optional and sits outside this skill's analysis path.
 
 ## Reference Links
 
 | Source | URL | What to Check |
 |--------|-----|---------------|
-| Dialogflow CX language reference | https://docs.cloud.google.com/dialogflow/cx/docs/reference/language | Hebrew language code `he-il` (use this on new agents; `iw` is deprecated) |
-| Dialogflow CX analytics | https://cloud.google.com/dialogflow/cx/docs/concept/analytics | Built-in conversation analytics, intent metrics |
+| Conversational Agents (Dialogflow CX) language reference | https://docs.cloud.google.com/dialogflow/cx/docs/reference/language | Hebrew language code `he-il`; the table lists `Hebrew (deprecated) iw` with fewer supported features |
+| Dialogflow CX analytics | https://docs.cloud.google.com/dialogflow/cx/docs/concept/analytics | Built-in conversation analytics, intent metrics |
 | Rasa CALM docs | https://rasa.com/docs/learn/concepts/calm/ | Dialogue-driven flows for Rasa Pro 3.x, replaces intent-based design for new builds |
 | Rasa OSS documentation (legacy) | https://legacy-docs-oss.rasa.com/docs/rasa/ | Event tracking, tracker stores, custom analytics integrations (maintenance mode) |
 | WhatsApp Business Platform pricing | https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing | Per-message rates by country + category (marketing/utility/auth/service), free 24h window rules |
 | DictaBERT (Hebrew BERT suite) | https://huggingface.co/dicta-il/dictabert | Pre-trained Hebrew BERT for classification fine-tunes |
 | DictaBERT sentiment | https://huggingface.co/dicta-il/dictabert-sentiment | Off-the-shelf Hebrew sentiment classifier (3-class) |
-| DictaLM 2.0 Instruct | https://huggingface.co/dicta-il/dictalm2.0-instruct | Generative Hebrew LLM (7B, Mistral-based) for summaries + classification in one call |
+| Dicta-LM 3.0 (technical report) | https://arxiv.org/abs/2602.02104 | Current Hebrew model family (24B / 12B / 1.7B, 65k context, tool-calling chat variants) |
+| DictaLM 2.0 Instruct (previous generation) | https://huggingface.co/dicta-il/dictalm2.0-instruct | Generative Hebrew LLM (7B, Mistral-based); superseded by Dicta-LM 3.0 |
 | AlephBERT | https://huggingface.co/onlplab/alephbert-base | Alternative Hebrew BERT from BIU OnlpLab |
 | HuggingFace Hebrew models | https://huggingface.co/models?language=he | Browse the full Hebrew model catalog |
 | Mixpanel help | https://mixpanel.com/help | Funnel analysis, cohort retention for chat flows |
@@ -537,7 +512,9 @@ No MCP server is required for this skill. It operates entirely on exported conve
 
 ## Troubleshooting
 
-- **DictaBERT model not loading**: the `dicta-il/dictabert-sentiment` model needs PyTorch + `transformers` (~500MB). Run `pip install torch transformers`; for CPU-only, install torch from `https://download.pytorch.org/whl/cpu`.
+- **DictaBERT model not loading**: the `dicta-il/dictabert-sentiment` model needs PyTorch + `transformers` (~500MB). Run `pip install torch transformers` (tested against transformers 5.x); for CPU-only, install torch from `https://download.pytorch.org/whl/cpu`.
+- **Sentiment labels look inverted**: you hardcoded a label list. Read `model.config.id2label` instead. For `dicta-il/dictabert-sentiment` it is `{0: "Positive", 1: "Negative", 2: "Neutral"}`.
+- **Timestamps parse to nothing on older Python**: `datetime.fromisoformat` only handles the full ISO-8601 range, including a trailing `Z`, from Python 3.11. On 3.10 the parse fails and durations and traffic patterns come back empty. Use Python 3.11 or newer.
 - **Hebrew text appears reversed in charts**: matplotlib has no native RTL. Apply `python-bidi` (`bidi.algorithm.get_display()`) before rendering, or switch to Plotly.
 - **Tokenization produces wrong word frequencies**: whitespace splitting ignores Hebrew prefix particles. Use the prefix-stripping tokenizer in Step 9, or the YAP morphological analyzer (https://github.com/OnlpLab/yap) for production.
 - **Sentiment scores unreliable for short messages**: messages of 1-3 words lack context ("סבבה" can be positive or neutral). For under 4 words, rely on behavioral signals (continued / escalated / abandoned) instead, combined with satisfaction signals from Step 6.

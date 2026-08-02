@@ -47,7 +47,10 @@ Example: "אי אפשר שלא לאהוב את המוצר הזה" = "impossible 
 
 ```python
 # Negation detection patterns for Hebrew sentiment
-NEGATION_WORDS = ["לא", "אין", "בלי", "ללא", "אל"]
+# "אל" is deliberately excluded: it negates only in imperatives ("אל תעשה"),
+# and as a preposition ("פניתי אל הנציג") it appears constantly in support
+# transcripts, where it would flip sentiment on ordinary sentences.
+NEGATION_WORDS = ["לא", "אין", "בלי", "ללא"]
 
 def handle_hebrew_negation(text: str, base_sentiment: float) -> float:
     """Adjust sentiment score based on Hebrew negation patterns."""
@@ -175,9 +178,7 @@ Israeli chat language includes many slang terms, Arabic loanwords, and abbreviat
 | אחלה | Arabic | akhla | great, awesome | High positive |
 | סבבה | Arabic | sababa | cool, alright | Medium positive |
 | בומבה | Slang | bomba | amazing, bomb | Very high positive |
-| חבל על הזמן | Idiom | khaval al hazman | waste of time (but means "incredible") | Very high positive |
 | אש | Slang | esh | fire (means great) | High positive |
-| על הפנים | Idiom | al hapanim | on the face (ironically positive when preceded by "לא") | Context-dependent |
 | מגניב | Slang | magniv | cool | Medium positive |
 | עולמות | Slang | olamot | worlds (means amazing) | High positive |
 | שיגעון | Slang | shiga'on | madness (means incredible) | High positive |
@@ -204,15 +205,14 @@ Israeli chat language includes many slang terms, Arabic loanwords, and abbreviat
 | נו | nu | "well..." / "come on" | Usually impatient / mildly negative |
 | סתם | stam | "just kidding" / "nothing" | Neutralizer |
 | מסתדר | mistader | "managing" / "getting by" | Neutral to mildly positive |
+| על הפנים | al hapanim | "terrible", but "לא על הפנים" is mildly positive | Context-dependent, resolve negation first |
+| חבל על הזמן | khaval al hazman | literally "waste of time", colloquially "incredible" | Context-dependent, do not score without context |
 
 ### Abbreviations and Textspeak
 
 | Abbreviation | Full Form | Meaning |
 |-------------|-----------|---------|
-| תנצ"ל | תודה ניצחת לי | Thanks (slang) |
 | חחח / ההה | Laughter | LOL equivalent |
-| אמא'לה | אמא שלי | OMG equivalent |
-| בלה"ב | בלי הנחה | Without discount |
 | ב"ה | ברוך השם | Thank God |
 | נ"ל | נראה לי | I think / seems to me |
 | תכל'ס | תכלית | Bottom line / practically |
@@ -226,7 +226,6 @@ HEBREW_SLANG_SENTIMENT = {
     "אחלה": 0.85,
     "סבבה": 0.5,
     "בומבה": 0.95,
-    "חבל על הזמן": 0.9,  # Counterintuitively positive
     "אש": 0.8,
     "מגניב": 0.7,
     "עולמות": 0.85,
@@ -237,7 +236,6 @@ HEBREW_SLANG_SENTIMENT = {
     # Negative slang
     "חרא": -0.95,
     "פאדיחה": -0.8,
-    "על הפנים": -0.85,
     "חפרת": -0.6,
     "דפוק": -0.85,
     "מבאס": -0.65,
@@ -246,7 +244,6 @@ HEBREW_SLANG_SENTIMENT = {
     # Chat indicators
     "חחח": 0.4,     # Laughter, mildly positive
     "ההה": 0.3,     # Softer laughter
-    "אמא'לה": 0.0,  # Exclamation, neutral
 
     # Ambiguous (default to neutral, use context)
     "וואלה": 0.0,
@@ -367,20 +364,20 @@ def analyze_mixed_sentiment(text: str, he_analyzer, en_analyzer) -> dict:
 ### DictaBERT (dicta-il/dictabert)
 - **Type**: BERT-based Hebrew language model
 - **Developer**: Dicta, Bar-Ilan University
-- **Training data**: 10B+ Hebrew tokens
-- **Strengths**: Best Hebrew language understanding, good for fine-tuning
-- **Sentiment variant**: `dicta-il/dictabert-sentiment` (if available)
+- **Strengths**: Strong Hebrew language understanding, good for fine-tuning
+- **Sentiment variant**: `dicta-il/dictabert-sentiment`, fine-tuned on the HebrewSentiment dataset released by the Israeli National Program for Hebrew and Arabic NLP, CC-BY-4.0. Read its labels from `model.config.id2label` (`{0: "Positive", 1: "Negative", 2: "Neutral"}`), never from a hardcoded list.
 - **URL**: https://huggingface.co/dicta-il
 
-### DictaLM (dicta-il/dictalm2.0)
-- **Type**: Generative language model for Hebrew
+### Dicta-LM 3.0 (dicta-il/DictaLM-3.0-*)
+- **Type**: Generative language model family for Hebrew, February 2026
 - **Developer**: Dicta, Bar-Ilan University
-- **Strengths**: Can perform zero-shot sentiment classification via prompting
-- **Usage**: Good for nuanced sentiment when fine-tuned models are not available
+- **Sizes**: 24B (from Mistral-Small-3.1), 12B (from NVIDIA Nemotron Nano V2), 1.7B (from Qwen3-1.7B), each with a 65k native context and a chat variant with tool-calling support
+- **Strengths**: Zero-shot sentiment classification via prompting, plus Hebrew summarization in the same call
+- **Usage**: 1.7B for per-message classification at volume, 24B for offline conversation summaries. DictaLM 2.0 (7B, July 2024) is the previous generation.
 
 ### AlephBERT
 - **Type**: BERT model for Hebrew
-- **Developer**: TAU NLP Group (Tel Aviv University)
+- **Developer**: ONLP Lab, Bar-Ilan University
 - **URL**: https://huggingface.co/onlplab/alephbert-base
 - **Strengths**: Solid baseline for Hebrew NLP tasks
 

@@ -11,6 +11,7 @@ description: >-
   (יש hebrew-nlp-toolkit), הקמת מערכת תמיכה (יש israeli-customer-support-automator),
   או פיתוח בוט קולי (יש hebrew-voice-bot-builder).
 license: MIT
+compatibility: Requires Python 3.11+. Works with Claude Code, Cursor, Windsurf.
 ---
 
 # אנליטיקת צ'אטבוטים ישראלית
@@ -56,7 +57,7 @@ conversation_log = {
 
 | פלטפורמה | שיטת ייצוא | פורמט |
 |-----------|------------|-------|
-| Dialogflow CX | ייצוא BigQuery | שורות JSON עם הקשר סשן. השתמשו בקוד שפה `he-il` בסוכנים חדשים, `iw` הוצא משימוש (ראו https://docs.cloud.google.com/dialogflow/cx/docs/reference/language). |
+| Conversational Agents (לשעבר Dialogflow CX) | ייצוא BigQuery | שורות JSON עם הקשר סשן. השתמשו בקוד שפה `he-il` בסוכנים חדשים, בטבלת השפות `iw` מסומן כ-Hebrew (deprecated) עם פחות יכולות נתמכות (ראו https://docs.cloud.google.com/dialogflow/cx/docs/reference/language). קונסולת Dialogflow CX העצמאית הוסרה ב-31 באוקטובר 2025 והמוצר נקרא היום Conversational Agents, אבל ה-API והתיעוד עדיין תחת הנתיב dialogflow/cx. |
 | Rasa Pro / CALM | דשבורד אנליטיקה + אירועי tracker | אירועי שלב-בזרימה (Rasa Pro 3.x עם CALM מבוסס-דיאלוג ולא מבוסס-כוונות, ולכן מדדי דיוק כוונות ממופים שם אחרת). |
 | Rasa Open Source (ישן) | Tracker Store (SQL/Mongo) | רשימת אירועים לכל שיחה. נכנס למצב תחזוקה ב-2025, ראו https://legacy-docs-oss.rasa.com/docs/rasa/. |
 | Botpress | ייצוא שיחות / DB | JSON. עברית מופיעה כשפה נתמכת אבל יישור RTL בווידג'ט ברירת המחדל עדיין לא שלם נכון ל-2026, בדקו את היישור של בועות ההודעות לפני שאתם מדווחים על התפלגות שפה. |
@@ -129,7 +130,9 @@ def compute_flow_metrics(conversations: list[dict]) -> ConversationMetrics:
     return metrics
 ```
 
-**בנצ'מרקים לצ'אטבוטים בעברית (שוק ישראלי, 2025-2026):**
+**בנצ'מרקים כלליים לצ'אטבוטי תמיכה (יש להפעיל שיקול דעת בהתאמה לבוט בעברית):**
+
+אלה בנצ'מרקים כלליים לצ'אטבוטי תמיכה, לא מדידה ישראלית. אין מאחוריהם מדגם ישראלי. השתמשו בהם כרף התחלתי והחליפו כל שורה בבסיס שלכם אחרי ארבעה שבועות של נתונים.
 
 | מדד | טוב | ממוצע | דורש שיפור |
 |------|------|--------|------------|
@@ -167,11 +170,13 @@ def detect_drop_off_points(conversations: list[dict]) -> dict:
 
         # מה הייתה ההודעה האחרונה של הבוט?
         for msg in reversed(messages):
-            if msg["sender"] == "bot":
-                last_bot_messages[msg["text"][:80]] += 1
+            if msg.get("sender") == "bot":
+                last_bot_messages[msg.get("text", "")[:100]] += 1
                 break
 
-        # איזו כוונה הייתה פעילה?
+        # איזו כוונה הייתה פעילה? משאירים fallback בפנים:
+        # נטישה אחרי fallback היא דפוס הנטישה הנפוץ ביותר,
+        # וסינון שלו מרוקן את הדוח בדיוק בסשנים שהכי חשוב לראות.
         for msg in reversed(messages):
             if msg.get("intent"):
                 intent_at_drop[msg["intent"]] += 1
@@ -218,14 +223,17 @@ def detect_conversation_loops(conversations: list[dict], threshold: int = 3) -> 
 
 ### שלב 4: ניתוח רגשות בעברית
 
-ניתוח רגשות בעברית דורש טיפול מיוחד בגלל המורפולוגיה המורכבת, דפוסי שלילה, וסלנג. משתמשים ב-DictaBERT (אנקודר לסיווג), DictaLM 2.0-Instruct (גנרטיבי, 7B פרמטרים, מבוסס Mistral) לדיוק בסביבת ייצור, AlephBERT (`onlplab/alephbert-base` מ-OnlpLab של אוניברסיטת בר-אילן) כאלטרנטיבת אנקודר, או בגישה מבוססת מילון לניתוח קל. DictaLM 2.0 (שוחרר ביולי 2024) הוא ה-LLM הישראלי המוביל היום מ-Dicta, עם וריאנט instruct שאומן על כ-200 מיליארד טוקנים בעברית ואנגלית ויחס דחיסה של 2.76 טוקנים למילה. שימושי כשרוצים מודל אחד שמסווג סנטימנט וגם מסכם את השיחה בפרוזה עברית לצוות התפעול.
+ניתוח רגשות בעברית דורש טיפול מיוחד בגלל המורפולוגיה המורכבת, דפוסי שלילה, וסלנג. משתמשים ב-DictaBERT (אנקודר לסיווג) לניקוד סנטימנט בסביבת ייצור, AlephBERT (`onlplab/alephbert-base` מ-ONLP Lab של אוניברסיטת בר-אילן) כאלטרנטיבת אנקודר, או בגישה מבוססת מילון לניתוח קל. כשצריך מודל אחד שמסווג סנטימנט וגם מסכם את השיחה בפרוזה עברית לצוות התפעול, עוברים ל-Dicta-LM 3.0 (פברואר 2026), משפחת המודלים העדכנית של Dicta: 24B (מבוסס Mistral-Small-3.1), 12B (מבוסס NVIDIA Nemotron Nano V2) ו-1.7B (מבוסס Qwen3-1.7B), כל אחד עם חלון הקשר של 65k וגרסת צ'אט עם תמיכה ב-tool calling. הווריאנט 1.7B מתאים לסיווג הודעה-הודעה בנפח גבוה, ו-24B לסיכומים אופליין. DictaLM 2.0 (יולי 2024, 7B, מבוסס Mistral) הוא הדור הקודם ועדיין עובד, אבל בנייה חדשה מתחילה מ-3.0.
 
 **שימוש ב-DictaBERT (כדאי לייצור):**
 
 ```python
 # DictaBERT: מודל BERT לעברית של דיקטה (אוניברסיטת בר-אילן)
-# אומן מראש על 10+ מיליארד טוקנים בעברית
 # https://huggingface.co/dicta-il/dictabert
+#
+# הדרך הבטוחה ביותר היא pipeline, שקורא את שמות התוויות מקונפיג המודל:
+#     from transformers import pipeline
+#     oracle = pipeline("sentiment-analysis", model="dicta-il/dictabert-sentiment")
 
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
@@ -237,7 +245,12 @@ class HebrewSentimentAnalyzer:
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForSequenceClassification.from_pretrained(model_name)
         self.model.eval()
-        self.labels = ["negative", "neutral", "positive"]
+        # סדר התוויות הוא מטא-דאטה של המודל, לא מוסכמה, והוא לא לפי סדר אלפביתי.
+        # במודל הזה config.id2label הוא {0: "Positive", 1: "Negative", 2: "Neutral"}.
+        self.labels = [
+            self.model.config.id2label[i].lower()
+            for i in range(len(self.model.config.id2label))
+        ]
 
     def analyze(self, text: str) -> dict:
         """ניתוח רגשות של טקסט בעברית."""
@@ -255,6 +268,8 @@ class HebrewSentimentAnalyzer:
         best_label = max(scores, key=scores.get)
         return {"label": best_label, "score": scores[best_label], "scores": scores}
 ```
+
+קריטי: אסור לקבע את הרשימה `["negative","neutral","positive"]`. הליטרל הזה שגוי במודל הזה בכל אינדקס, וסקיל שהשתמש בו דיווח על כל זינוק בתסכול כאילו היה זינוק בשביעות רצון. תמיד קוראים את התוויות דרך `model.config.id2label`.
 
 **אתגרים ייחודיים בניתוח רגשות בעברית:**
 
@@ -517,7 +532,8 @@ class ChatbotDashboard:
     abandonment_rate: float = 0.0
 
     avg_csat: float = 0.0               # סקאלה 1-5
-    intent_accuracy: float = 0.0        # אחוז סיווג נכון
+    high_confidence_rate: float = 0.0   # אחוז ניבויים מעל סף הביטחון
+    intent_accuracy: float | None = None  # אחוז סיווג נכון, דורש תיוג ידני
     fallback_rate: float = 0.0          # אחוז הודעות שהגיעו ל-fallback
 
     avg_response_time_ms: float = 0.0
@@ -538,7 +554,12 @@ class ChatbotDashboard:
                 "CSAT ממוצע": f"{self.avg_csat:.1f}/5",
             },
             "דיוק": {
-                "דיוק זיהוי כוונות": f"{self.intent_accuracy:.1%}",
+                "שיעור ניבויים בביטחון גבוה": f"{self.high_confidence_rate:.1%}",
+                "דיוק זיהוי כוונות": (
+                    f"{self.intent_accuracy:.1%}"
+                    if self.intent_accuracy is not None
+                    else "n/a"
+                ),
                 "שיעור fallback": f"{self.fallback_rate:.1%}",
             },
         }
@@ -792,8 +813,8 @@ def generate_weekly_report(
         f"{trend_arrow(dashboard.escalation_rate, prev.escalation_rate if prev else 0, False)} |",
         f"| שיעור נטישה | {dashboard.abandonment_rate:.1%} | "
         f"{trend_arrow(dashboard.abandonment_rate, prev.abandonment_rate if prev else 0, False)} |",
-        f"| דיוק זיהוי כוונות | {dashboard.intent_accuracy:.1%} | "
-        f"{trend_arrow(dashboard.intent_accuracy, prev.intent_accuracy if prev else 0)} |",
+        f"| שיעור ניבויים בביטחון גבוה | {dashboard.high_confidence_rate:.1%} | "
+        f"{trend_arrow(dashboard.high_confidence_rate, prev.high_confidence_rate if prev else 0)} |",
         "",
         "## תנועה",
         f"- ממוצע שיחות ביום: {dashboard.conversations_per_day:.0f}",
@@ -896,7 +917,7 @@ def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
 | קטגוריה | עמדת תמחור | מתי להשתמש |
 |----------|------------|--------------|
 | שיווק (marketing) | תעריף הגבוה ביותר להודעה, ללא הנחת נפח | מבצעים, broadcast, החזרת לקוחות |
-| תועלת (utility) | נמוך משיווק (בדרך כלל פחות מ-$0.03 להודעה), זכאי להנחת נפח | עדכוני הזמנה, תזכורות לתורים, הודעות חשבון שנשלחות בעקבות פעולת משתמש |
+| תועלת (utility) | נמוך משיווק, זכאי להנחת נפח. חינם כשנשלח בתוך חלון שירות פתוח. | עדכוני הזמנה, תזכורות לתורים, הודעות חשבון שנשלחות בעקבות פעולת משתמש |
 | אימות (authentication) | התעריף הזול ביותר מבין המחויבים, זכאי להנחת נפח | קוד חד-פעמי לכניסה / תשלום / 2FA |
 | שירות (service) | **חינם** | כל תגובה של העסק בתוך חלון השירות של 24 שעות (סשן ביוזמת המשתמש) |
 
@@ -909,7 +930,7 @@ def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
 
 ## תאימות אנטי-ספאם (חוק התקשורת, סעיף 30א)
 
-אם הצ'אטבוט שלכם שולח הודעות שיווקיות (broadcast, תבניות פרסום ב-WhatsApp, קמפיינים בטלגרם, ריטרגטינג ב-SMS), סעיף 30א לחוק התקשורת (בזק ושידורים), התשמ"ב-1982 חל עליכם. החוק דורש **הסכמה מפורשת מראש בכתב** לפני שליחת דברי פרסומת ב-SMS, אימייל, פקס, חיוג רובוטי, וגם, לפי לשון התיקון מ-2008 כפי שפורשה על ידי בתי המשפט בישראל, תקשורת אלקטרונית שכוללת WhatsApp, טלגרם ואפליקציות הודעות דומות. המונח "דבר פרסומת" מפורש בהרחבה, וכל הודעה שאינה תפעולית טהורה עלולה להיחשב לפרסומת.
+אם הצ'אטבוט שלכם שולח הודעות שיווקיות (broadcast, תבניות פרסום ב-WhatsApp, קמפיינים בטלגרם, ריטרגטינג ב-SMS), סעיף 30א לחוק התקשורת (בזק ושידורים), התשמ"ב-1982 חל עליכם. החוק דורש **הסכמה מפורשת מראש** לפני שליחת דברי פרסומת. סיכום DLA Piper לישראל מתאר את החוק כאוסר "advertising by means of automated dialing, fax or text messages" בלי הסכמת opt-in מוקדמת של הנמען, ועם דרך הסרה בכל הודעה. השאלה אם זה חל גם על WhatsApp וטלגרם תלויה באופן שבו בתי המשפט בישראל קוראים את המונח "מסרון", ולא בלשון מפורשת בחוק, ולא הצלחנו לאמת פסיקה ספציפית. התייחסו ל-broadcast באפליקציות הודעות כאל בתחולה לצורכי תכנון ציות, והתייעצו עם עורך דין לפני שתסתמכו על ההפך. המונח "דבר פרסומת" מפורש בהרחבה, וכל הודעה שאינה תפעולית טהורה עלולה להיחשב לפרסומת.
 
 מעקב אנליטיקה מעשי:
 
@@ -918,7 +939,7 @@ def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
 - **פיצול שירות מול שיווק.** הריצו שיעור השלמה ו-CSAT בנפרד לזרימות שיווק עם opt-in מול זרימות שירות ביוזמת משתמש, הן מתנהגות שונה לחלוטין ושילוב שלהן מסתיר את שתיהן.
 - הצלבה: `gws-hebrew-email-automation` ו-`israeli-telegram-business-bot` מכסים את אותו משטר opt-in לאימייל וטלגרם. השתמשו בהם אם אתם מפעילים גם את הערוצים האלה.
 
-זו הנחיה הנדסית, לא ייעוץ משפטי. הפיצוי הסטטוטורי המקסימלי להודעת פרסומת לא רצויה הוא 1,000 ש"ח בלי הוכחת נזק, אז broadcast שגוי אפילו לכמה מאות נמענים שלא הסכימו יכול להפוך לאירוע כספי משמעותי. אמתו עם עו"ד פרטיות.
+זו הנחיה הנדסית, לא ייעוץ משפטי. הדין הישראלי קובע פיצוי סטטוטורי להודעת פרסומת לא רצויה בלי הוכחת נזק, אז broadcast שגוי אפילו לכמה מאות נמענים שלא הסכימו יכול להפוך לאירוע כספי משמעותי. לא הצלחנו לאמת את גובה הסכום העדכני מול מקור ראשוני, אז אמתו את הסכום ואת החשיפה שלכם מול עו"ד פרטיות לפני שאתם מתמחרים את הסיכון.
 
 ## פלטפורמות ניסוי לצ'אטבוטים בעברית
 
@@ -926,7 +947,7 @@ def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
 
 | פלטפורמה | התאמה | הערות לצוותי צ'אטבוט בעברית |
 |----------|--------|---------------------------------|
-| Statsig | צוותים שרוצים flags + ניסויים + אנליטיקת מוצר במחסנית אחת | OpenAI רכשה את Statsig ב-2025 ב-1.1 מיליארד דולר; ה-free tier עדיין נדיב לבוטים ישראליים קטנים. |
+| Statsig | צוותים שרוצים flags + ניסויים + אנליטיקת מוצר במחסנית אחת | ה-free tier נדיב ומספיק לבוטים ישראליים קטנים. |
 | LaunchDarkly | צוותי אנטרפרייז בוגרים שצריכים אישורים, audit logs, RBAC | הבחירה ה"בטוחה" לאנטרפרייז; שלבו עם האנליטיקה הקיימת לחישובים. |
 | GrowthBook | צוותים עם data warehouse (BigQuery, Snowflake, Postgres) שרוצים להריץ סטטיסטיקה על הנתונים שלהם | open source; לא אוסף נתוני אירועים, אז תמלילים בעברית אף פעם לא יוצאים מה-warehouse שלכם, שימושי לעמדה של תיקון 13 לגבי data residency. |
 
@@ -1026,14 +1047,15 @@ def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
 
 | מקור | כתובת | מה לבדוק |
 |------|-------|----------|
-| Dialogflow CX language reference | https://docs.cloud.google.com/dialogflow/cx/docs/reference/language | קוד שפה לעברית `he-il` (`iw` הוצא משימוש לסוכנים חדשים) |
-| Dialogflow CX analytics | https://cloud.google.com/dialogflow/cx/docs/concept/analytics | אנליטיקת שיחות מובנית, מדדי כוונה |
+| Conversational Agents (Dialogflow CX) language reference | https://docs.cloud.google.com/dialogflow/cx/docs/reference/language | קוד שפה לעברית `he-il`, בטבלה `iw` מופיע כ-Hebrew (deprecated) עם פחות יכולות |
+| Dialogflow CX analytics | https://docs.cloud.google.com/dialogflow/cx/docs/concept/analytics | אנליטיקת שיחות מובנית, מדדי כוונה |
 | Rasa CALM docs | https://rasa.com/docs/learn/concepts/calm/ | זרימות מבוססות-דיאלוג ל-Rasa Pro 3.x, מחליף עיצוב מבוסס-כוונות לבנייה חדשה |
 | תיעוד Rasa OSS (ישן) | https://legacy-docs-oss.rasa.com/docs/rasa/ | מעקב אירועים, tracker stores, אינטגרציות אנליטיקה מותאמות (מצב תחזוקה) |
 | תמחור WhatsApp Business Platform | https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing | תעריפים לפי הודעה לפי מדינה + קטגוריה (שיווק/תועלת/אימות/שירות), חוקי חלון 24 שעות חינם |
 | DictaBERT (חבילת BERT לעברית) | https://huggingface.co/dicta-il/dictabert | BERT מאומן מראש בעברית לסיווג fine-tune |
 | DictaBERT sentiment | https://huggingface.co/dicta-il/dictabert-sentiment | מסווג סנטימנט בעברית מן המוכן (3 סיווגים) |
-| DictaLM 2.0 Instruct | https://huggingface.co/dicta-il/dictalm2.0-instruct | LLM גנרטיבי בעברית (7B, מבוסס Mistral) לסיכומים + סיווג בקריאה אחת |
+| דוח טכני Dicta-LM 3.0 | https://arxiv.org/abs/2602.02104 | משפחת המודלים העברית העדכנית (24B / 12B / 1.7B, הקשר 65k, גרסאות צ'אט עם tool calling) |
+| DictaLM 2.0 Instruct (דור קודם) | https://huggingface.co/dicta-il/dictalm2.0-instruct | LLM גנרטיבי בעברית (7B, מבוסס Mistral), הוחלף על ידי Dicta-LM 3.0 |
 | AlephBERT | https://huggingface.co/onlplab/alephbert-base | BERT עברי חלופי מ-OnlpLab של בר-אילן |
 | מודלים בעברית ב-HuggingFace | https://huggingface.co/models?language=he | סקירת קטלוג המודלים המלא בעברית |
 | Mixpanel help | https://mixpanel.com/help | ניתוח משפך, שימור קבוצות לזרימות צ'אט |
