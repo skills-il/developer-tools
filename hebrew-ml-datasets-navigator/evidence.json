@@ -9,15 +9,25 @@
       "source_url": "https://huggingface.co/ivrit-ai",
       "raw_snippet": "ivrit-ai",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/dataset-catalog.md", "references/model-catalog.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/dataset-catalog.md",
+        "references/model-catalog.md"
+      ]
     },
     {
       "claim_id": "ivrit-ai-hours",
-      "claim": "ivrit.ai has aggregated 22,000+ hours of Hebrew audio across its dataset family.",
+      "claim": "ivrit.ai is a non-profit providing favorably-licensed Hebrew datasets; as of July 2025 it hosts the world's largest Hebrew audio dataset, over 22,000 hours, free of charge and licensed for commercial model training.",
       "source_url": "https://www.ivrit.ai/en/ivrit-ai-2/",
-      "raw_snippet": "22,000",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "metadata.json"]
+      "raw_snippet": "As of July 2025, we cater the world’s largest Hebrew audio dataset, over 22,000 hours, for commercial model-training use-cases. It is provided free-of-charge.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "metadata.json"
+      ],
+      "verified_via": "curl (raw README / HuggingFace API / vendor site)"
     },
     {
       "claim_id": "dicta-il-org",
@@ -25,7 +35,11 @@
       "source_url": "https://huggingface.co/dicta-il",
       "raw_snippet": "dicta-il",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/model-catalog.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/model-catalog.md"
+      ]
     },
     {
       "claim_id": "dicta-org-il",
@@ -33,7 +47,10 @@
       "source_url": "https://dicta.org.il",
       "raw_snippet": "Dicta",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "dictalm-3-lineage",
@@ -41,7 +58,9 @@
       "source_url": "https://dicta.org.il/publications/DictaLM_3_0___Techincal_Report.pdf",
       "raw_snippet": "DictaLM 3.0",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["references/model-catalog.md"]
+      "appears_in": [
+        "references/model-catalog.md"
+      ]
     },
     {
       "claim_id": "hebarabnlpproject-org",
@@ -49,31 +68,51 @@
       "source_url": "https://huggingface.co/HebArabNlpProject",
       "raw_snippet": "HebArabNlpProject",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/dataset-catalog.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/dataset-catalog.md"
+      ]
     },
     {
       "claim_id": "hebrew-sentiment-dataset",
-      "claim": "HebrewSentiment is a 3-class Hebrew sentiment dataset published on Hugging Face by the Israeli National NLP Program (HebArabNlpProject). Authors must check the dataset card for the current license posture and exact split sizes before commercial use.",
+      "claim": "HebArabNlpProject/HebrewSentiment is a Hebrew sentiment-analysis dataset with Positive / Negative / Neutral labels.",
       "source_url": "https://huggingface.co/datasets/HebArabNlpProject/HebrewSentiment",
-      "raw_snippet": "HebrewSentiment",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/dataset-catalog.md", "scripts/find_dataset.py", "references/license-quick-guide.md"]
+      "raw_snippet": "# HebrewSentiment\n\nHebrew sentiment analysis — Positive / Negative / Neutral",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/dataset-catalog.md",
+        "scripts/find_dataset.py",
+        "references/license-quick-guide.md"
+      ],
+      "verified_via": "curl (raw README / HuggingFace API / vendor site)"
     },
     {
       "claim_id": "heq-dataset",
-      "claim": "HeQ is an extractive Hebrew question-answering dataset with 30,147 questions (21,784 answerable + 8,363 unanswerable), with paragraphs from Hebrew Wikipedia and Geektime.",
+      "claim": "HeQ is a Modern Hebrew extractive QA dataset of 30,147 questions, following the SQuAD/ParaShoot methodology with paragraphs from Hebrew Wikipedia and Geektime; 21,784 of the questions are answerable.",
       "source_url": "https://github.com/NNLP-IL/Hebrew-Question-Answering-Dataset",
-      "raw_snippet": "HeQ",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/dataset-catalog.md"]
+      "raw_snippet": "HeQ is a question answering dataset in Modern Hebrew, consisting of 30,147 questions.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/dataset-catalog.md"
+      ],
+      "verified_via": "curl (raw README / HuggingFace API / vendor site)"
     },
     {
       "claim_id": "heq-v1-hf-mirror",
-      "claim": "HeQ_v1 is mirrored on Hugging Face by the Etelis user.",
+      "claim": "The Etelis/HeQ_v1 HuggingFace mirror hosts HeQ (30,147 Modern Hebrew questions, SQuAD/ParaShoot format, Hebrew Wikipedia + Geektime paragraphs).",
       "source_url": "https://huggingface.co/datasets/Etelis/HeQ_v1",
-      "raw_snippet": "HeQ",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "HeQ is a question answering dataset in Modern Hebrew, consisting of 30,147 questions. It follows the format and crowdsourcing methodology of SQuAD and ParaShoot, with paragraphs sourced from Hebrew Wikipedia and Geektime.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "curl (raw README / HuggingFace API / vendor site)"
     },
     {
       "claim_id": "nnlp-il-resources",
@@ -81,7 +120,10 @@
       "source_url": "https://github.com/NNLP-IL/Hebrew-Resources",
       "raw_snippet": "Hebrew Resources",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "parashoot-dataset",
@@ -89,7 +131,10 @@
       "source_url": "https://github.com/omrikeren/ParaShoot",
       "raw_snippet": "ParaShoot",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "open-hebrew-llm-leaderboard",
@@ -97,7 +142,10 @@
       "source_url": "https://huggingface.co/blog/leaderboard-hebrew",
       "raw_snippet": "Hebrew LLM Leaderboard",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "hebrew-llm-leaderboard-space",
@@ -105,7 +153,10 @@
       "source_url": "https://huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard",
       "raw_snippet": "hebrew-llm-leaderboard",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "biunlp-hesum",
@@ -113,7 +164,10 @@
       "source_url": "https://huggingface.co/datasets/biunlp/HeSum",
       "raw_snippet": "HeSum",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "biu-nlp",
@@ -121,15 +175,23 @@
       "source_url": "https://nlp.biu.ac.il",
       "raw_snippet": "BIU NLP",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "oscar-corpus",
-      "claim": "OSCAR-2301 is a large multilingual web corpus including a Hebrew subset, published on Hugging Face under oscar-corpus/OSCAR-2301.",
+      "claim": "OSCAR (Open Super-large Crawled Aggregated coRpus) is a multilingual corpus obtained by language classification and filtering of Common Crawl; the OSCAR-2301 HuggingFace dataset is gated (manual approval).",
       "source_url": "https://huggingface.co/datasets/oscar-corpus/OSCAR-2301",
-      "raw_snippet": "OSCAR",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "The Open Super-large Crawled Aggregated coRpus is a huge multilingual corpus obtained by language classification and filtering of the Common Crawl corpus using the Ungoliant architecture.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "Read via https://huggingface.co/api/datasets/oscar-corpus/OSCAR-2301 because the repo README is access-restricted; the API reports \"gated\": \"manual\", which corroborates the skill's statement that access must be requested.",
+      "verified_via": "curl (raw README / HuggingFace API / vendor site)"
     },
     {
       "claim_id": "culturax",
@@ -137,31 +199,47 @@
       "source_url": "https://huggingface.co/datasets/uonlp/CulturaX",
       "raw_snippet": "CulturaX",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "fineweb-2",
-      "claim": "FineWeb-2 is a multilingual web corpus from HuggingFaceFW including Hebrew.",
+      "claim": "HuggingFaceFW/fineweb-2 is the second iteration of FineWeb, providing high-quality pretraining data for over 1000 languages (Hebrew via the heb_Hebr config).",
       "source_url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-2",
-      "raw_snippet": "fineweb-2",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "This is the second iteration of the popular 🍷 [FineWeb](https://huggingface.co/datasets/HuggingFaceFW/fineweb) dataset, bringing high quality pretraining data to over 1000 🗣️ languages.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "curl (raw README / HuggingFace API / vendor site)"
     },
     {
       "claim_id": "madlad-400",
-      "claim": "MADLAD-400 is Google's 400-language multilingual corpus published on Hugging Face by allenai.",
+      "claim": "MADLAD-400 (Multilingual Audited Dataset: Low-resource And Document-level) is a document-level multilingual dataset based on Common Crawl covering 419 languages, using all CommonCrawl snapshots available as of August 1, 2022.",
       "source_url": "https://huggingface.co/datasets/allenai/MADLAD-400",
-      "raw_snippet": "MADLAD-400",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/dataset-catalog.md"]
+      "raw_snippet": "a document-level multilingual dataset based on Common Crawl, covering 419\nlanguages in total. This uses all snapshots of CommonCrawl available as of August\n1, 2022.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/dataset-catalog.md"
+      ],
+      "verified_via": "curl (raw README / HuggingFace API / vendor site)"
     },
     {
       "claim_id": "ivrit-ai-website",
-      "claim": "ivrit.ai's English-language project page is at ivrit.ai/en/ivrit-ai-2/.",
+      "claim": "ivrit.ai aims to make Hebrew a first-class citizen for AI technologies by providing favorably-licensed datasets.",
       "source_url": "https://www.ivrit.ai/en/ivrit-ai-2/",
-      "raw_snippet": "ivrit.ai",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "ivrit.ai is a non-profit effort aiming to make Hebrew a first-class citizen for AI technologies, by providing favorably-licensed datasets.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "curl (raw README / HuggingFace API / vendor site)"
     }
   ]
 }
