@@ -1,7 +1,7 @@
 {
   "name": "wcag-accessibility-widget",
   "author": "Tura2",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "category": "developer-tools",
   "tags": {
     "he": [
@@ -9,6 +9,7 @@
       "wcag",
       "ת״י-5568",
       "ווידג'ט-נגישות",
+      "חוק-נגישות",
       "הצהרת-נגישות",
       "ישראל"
     ],
