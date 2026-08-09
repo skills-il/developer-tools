@@ -11,16 +11,55 @@
       "secondary_source_url": "https://zapier.com/pricing",
       "secondary_raw_snippet": "Free ... 100 tasks/mo ... Two-step Zap workflows | Professional ... Multi-step Zap workflows | Team | Enterprise",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
-      "claim_id": "cardcom-v11-webhook-shape",
-      "claim": "Cardcom API v11 delivers transaction results by POSTing a JSON LowProfileResult body to a WebHookUrl supplied on the CreateLowProfile request, where WebHookUrl is a required field. Success is signalled by ResponseCode = 0; the credit-card transaction id is TranzactionId; cardholder details are nested under UIValues. Neither IndicatorUrl nor DealResponse appears anywhere in the v11 specification.",
+      "claim_id": "cardcom-v11-webhook-shape-a",
+      "claim": "CreateLowProfile requires WebHookUrl (it is listed in the schema's required array) alongside TerminalNumber, ApiName, Amount, SuccessRedirectUrl and FailedRedirectUrl.",
       "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
-      "raw_snippet": "\"CreateLowProfile\": {\"type\": \"object\", \"description\": \"create a new one time, Iframe \\\\ redirect page\", \"additionalProperties\": false, \"required\": [\"TerminalNumber\", \"ApiName\", \"Amount\", \"SuccessRedirectUrl\", \"FailedRedirectUrl\", \"WebHookUrl\"] ... \"WebHookUrl\": {\"type\": \"string\", \"description\": \"A webhook URL is a web address that receives real-time data about the transaction\", \"maxLength\": 500, \"minLength\": 1} ... \"callbacks\": {\"single\": {\"WebHookUrl\": {\"post\": {\"requestBody\": {\"content\": {\"application/json\": {\"schema\": {\"nullable\": true, \"oneOf\": [{\"$ref\": \"#/components/schemas/LowProfileResult\"}]}}}, \"required\": true}}}} ... \"ResponseCode\": {\"type\": \"integer\", \"description\": \"if equel zero then success , else , a develper error see Description for more info\"}",
-      "verification_note": "Downloaded the full spec (393KB) and counted occurrences: 'WebHookUrl' 11, 'InternalDealNumber' 5 (all on TransactionInfoRequest / SuspendedDeal lookup schemas, never on a webhook payload), 'IndicatorUrl' 0, 'DealResponse' 0, 'agorot' 0. info.version = '11.0', info.title = 'CardCom API'.",
-      "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md", "references/zap-templates.md"]
+      "verification_note": "Downloaded the full spec (394KB) on 2026-08-09 and counted occurrences: 'WebHookUrl' 8, 'IndicatorUrl' 0, 'DealResponse' 0, 'TranzactionId' 5, 'UIValues' 3. info.version = '11.0', info.title = 'CardCom API'.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ],
+      "raw_snippet": "\"CreateLowProfile\": {\n        \"type\": \"object\",\n        \"description\": \"create a new one time, Iframe \\\\ redirect page\",\n        \"additionalProperties\": false,\n        \"required\": [\n          \"TerminalNumber\",\n          \"ApiName\",\n          \"Amount\",\n          \"SuccessRedirectUrl\",\n          \"FailedRedirectUrl\",\n          \"WebHookUrl\"",
+      "verified_via": "curl of the live OpenAPI spec (secure.cardcom.solutions/swagger/v11/swagger.json)"
+    },
+    {
+      "claim_id": "cardcom-v11-webhook-shape-b",
+      "claim": "The WebHookUrl callback POSTs a LowProfileResult JSON body.",
+      "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
+      "verification_note": "Downloaded the full spec (394KB) on 2026-08-09 and counted occurrences: 'WebHookUrl' 8, 'IndicatorUrl' 0, 'DealResponse' 0, 'TranzactionId' 5, 'UIValues' 3. info.version = '11.0', info.title = 'CardCom API'.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ],
+      "raw_snippet": "\"callbacks\": {\n          \"single\": {\n            \"WebHookUrl\": {\n              \"post\": {\n                \"requestBody\": {\n                  \"content\": {\n                    \"application/json\": {\n                      \"schema\": {\n                        \"nullable\": true,\n                        \"oneOf\": [\n                          {\n                            \"$ref\": \"#/components/schemas/LowProfileResult\"",
+      "verified_via": "curl of the live OpenAPI spec (secure.cardcom.solutions/swagger/v11/swagger.json)"
+    },
+    {
+      "claim_id": "cardcom-v11-webhook-shape-c",
+      "claim": "ResponseCode equal to zero signals success in the Cardcom v11 API.",
+      "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
+      "verification_note": "Downloaded the full spec (394KB) on 2026-08-09 and counted occurrences: 'WebHookUrl' 8, 'IndicatorUrl' 0, 'DealResponse' 0, 'TranzactionId' 5, 'UIValues' 3. info.version = '11.0', info.title = 'CardCom API'.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ],
+      "raw_snippet": "\"ResponseCode\": {\n            \"type\": \"integer\",\n            \"description\": \"if equel zero then success , else , a develper error see Description for more info \",\n            \"format\": \"int32\"\n          },",
+      "verified_via": "curl of the live OpenAPI spec (secure.cardcom.solutions/swagger/v11/swagger.json)"
     },
     {
       "claim_id": "cardcom-uivalues-fields",
@@ -28,27 +67,71 @@
       "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
       "raw_snippet": "\"LowProfileUIValues\": {\"CardOwnerEmail\": \"Card Owner's email\", \"CardOwnerName\": \"Card Owner name.\", \"CardOwnerPhone\": \"Card Owner Phone.\", \"CardOwnerIdentityNumber\": \"Card Owner identity Number\", \"NumOfPayments\": \"number of payments for the deal\", \"CardYear\": \"Card expiration year.\", \"CardMonth\": \"card expiration month.\", \"IsAbroadCard\": \"boolean - is the card from isreal or is it a tourist card\"}",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md", "references/zap-templates.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ]
     },
     {
       "claim_id": "cardcom-decimal-shekels",
-      "claim": "Cardcom transmits amounts in decimal shekels, not agorot. No division by 100 is required.",
+      "claim": "Cardcom transmits amounts in decimal shekels, not agorot. No division by 100 is required. The skill's worked examples are illustrative amounts, not sourced figures: 150.50 = 150.50 ILS / 150.50 ש\"ח, 250.00 ILS / 250.00 ש\"ח, and a 1 ILS / 1 ש\"ח small-amount production test.",
       "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
       "raw_snippet": "\"Amount\": {\"type\": \"number\", \"description\": \"Amount of tranzaction (12.36)\", \"format\": \"decimal\"}",
       "verification_note": "The substring 'agorot' appears zero times in the v11 specification. Request examples use values such as \"Amount\": 10.5.",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md", "references/zap-templates.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ]
     },
     {
-      "claim_id": "zapier-whatsapp-two-apps",
-      "claim": "Zapier lists two distinct WhatsApp apps. 'WhatsApp Notifications' can only message the phone number that authenticated the connection and is limited to prefilled templates. 'WhatsApp Business' messages customers and offers Send Template Message, Send Freeform Message (inside the 24-hour window), Send Media Message and Get Attachment, plus New Message Received and Message Status Updated triggers.",
+      "claim_id": "zapier-whatsapp-business-app",
+      "claim": "Zapier's 'WhatsApp Business' app is a customer messaging app; its Zapier actions include Send Freeform Message, Send Media Message, Send Template Message and Get Attachment, with Message Status Updated and New Message Received as triggers.",
       "source_url": "https://zapier.com/apps/whatsapp-business/integrations",
-      "raw_snippet": "WhatsApp Business ... a customer messaging app that delivers fast, reliable communication through organized chats, automated responses, and business profiles. ... Send Freeform Message ... Send Media Message ... Send Template Message: sends a template message to a WhatsApp user ... New Message Received ... Message Status Updated",
-      "secondary_source_url": "https://help.zapier.com/hc/en-us/articles/19805639844621-Send-messages-in-Zap-workflows-using-WhatsApp-Notifications",
-      "secondary_raw_snippet": "the WhatsApp Notifications app can only send messages to yourself (the phone number used to authenticate the connection) ... Messages are limited to prefilled templates, and custom templates cannot be created",
       "verification_note": "zapier.com/apps/whatsapp/integrations returns 404; the two live slugs are whatsapp-notifications and whatsapp-business. The previously claimed count of '7 prefilled English templates' could not be sourced and was removed from the skill.",
-      "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md", "references/zap-templates.md"]
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ],
+      "raw_snippet": "WhatsApp Business is a customer messaging app that delivers fast, reliable communication through organized chats, automated responses, and business profiles.",
+      "verified_via": "curl (rendered text / embedded JSON-LD)"
+    },
+    {
+      "claim_id": "zapier-whatsapp-business-actions",
+      "claim": "The WhatsApp Business Zapier app exposes Message Status Updated and New Message Received triggers plus Send Freeform / Send Media / Send Template / Get Attachment actions.",
+      "source_url": "https://zapier.com/apps/whatsapp-business/integrations",
+      "verification_note": "zapier.com/apps/whatsapp/integrations returns 404; the two live slugs are whatsapp-notifications and whatsapp-business. The previously claimed count of '7 prefilled English templates' could not be sourced and was removed from the skill.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ],
+      "raw_snippet": "{ \"@type\": \"ReadAction\", \"name\": \"Message Status Updated\" }, { \"@type\": \"ReadAction\", \"name\": \"New Message Received\" }, { \"@type\": \"WriteAction\", \"name\": \"Send Freeform Message\" }, { \"@type\": \"WriteAction\", \"name\": \"Send Media Message\" }, { \"@type\": \"WriteAction\", \"name\": \"Send Template Message\" }, { \"@type\": \"WriteAction\", \"name\": \"Get Attachment\" }",
+      "verified_via": "curl (rendered text / embedded JSON-LD)"
+    },
+    {
+      "claim_id": "zapier-whatsapp-notifications-self-only",
+      "claim": "The WhatsApp Notifications Zapier app only sends messages to your own WhatsApp account, and its messages are limited to seven prefilled templates (New Lead, New Message, Payment Confirmation, New Order, Shipping Confirmation, Calendar Reminder, Zap Error).",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/19805639844621-Send-messages-in-Zap-workflows-using-WhatsApp-Notifications",
+      "verification_note": "zapier.com/apps/whatsapp/integrations returns 404; the two live slugs are whatsapp-notifications and whatsapp-business. The previously claimed count of '7 prefilled English templates' could not be sourced and was removed from the skill.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ],
+      "raw_snippet": "You can use WhatsApp Notifications in your Zap workflows to send yourself WhatsApp messages to your WhatsApp account. Messages are limited to prefilled templates for: New Lead New Message Payment Confirmation New Order Shipping Confirmation Calendar Reminder Zap Error",
+      "verified_via": "curl (rendered text / embedded JSON-LD)"
     },
     {
       "claim_id": "sumit-native-zapier-app",
@@ -56,7 +139,11 @@
       "source_url": "https://zapier.com/apps/sumit/integrations",
       "raw_snippet": "SUMIT ... A comprehensive system for planning, management and execution for the self-employed, non-profit organizations and business organizations. ... Triggers: Card Updated ... Actions: Add Recipient to Email Mailing List, Add Recipient to SMS Mailing List, Create Card, Create Document, Get Card, Send SMS, Update Card",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ]
     },
     {
       "claim_id": "priority-native-zapier-app",
@@ -64,7 +151,11 @@
       "source_url": "https://zapier.com/apps/priority/integrations",
       "raw_snippet": "Priority ... A comprehensive ERP package empowering hundreds of thousands of end users worldwide in their daily tasks of running the business ... Catch Changed Customer Order Status Webhook ... Catch Changed Purchase Order Status Webhook ... Create Sales Orders ... Create Sales Opportunity ... Find Customer by Email",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ]
     },
     {
       "claim_id": "inforumobile-native-zapier-app",
@@ -72,7 +163,11 @@
       "source_url": "https://zapier.com/apps/inforumobile/integrations",
       "raw_snippet": "InforUMobile ... Multi channel marketing software offering SMS, email marketing, landing pages, surveys and Facebook advertising. ... Triggers: New Lead From Landing Page, Contact Unsubscribe ... Actions: Add Contact to Group, Remove Contact From Group, Unsubscribe Contact, Reactivate Unsubscribe, Create and Send Newsletter, Send IVR Campaign, Send IVR Message, Send Newsletter Campaign, Send SMS, Send SMS Voice Hybrid, Send Whatsapp Template Message, Start Automation",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ]
     },
     {
       "claim_id": "grow-on-zapier-is-not-meshulam",
@@ -81,7 +176,11 @@
       "raw_snippet": "Grow ... Grow helps publishers build their mailing list. ... New Subscription (fires when a visitor subscribes via Grow.me Subscribe) ... New Unsubscriber ... Unsubscribe Email (removes an email from Grow.me Automailer list)",
       "verification_note": "zapier.com/apps/meshulam/integrations returns 404.",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ]
     },
     {
       "claim_id": "no-native-zapier-app-for-israeli-invoicing-and-gateways",
@@ -90,7 +189,11 @@
       "raw_snippet": "HTTP 404",
       "verification_note": "Probed each candidate slug with curl -L and recorded the status code: green-invoice 404, morning 404, icount 404, icount-1 404, icount-2 404, cardcom 404, cardcom-1 404, tranzila 404, tranzila-1 404, meshulam 404, rivhit 404, ezcount 404, hashavshevet 404, invoice4u 404, 019-sms 404, greeninvoice 404, elementor 404, elementor-forms 404, elementor-pro 404. Confirmed live for contrast: sumit 200, priority 200, inforumobile 200, payplus 200, monday 200, wix 200, twilio 200, wati 200, respondio 200.",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ]
     },
     {
       "claim_id": "respondio-zapier-slug",
@@ -99,24 +202,36 @@
       "raw_snippet": "HTTP 200",
       "verification_note": "zapier.com/apps/respond-io/integrations returns 404.",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ]
     },
     {
       "claim_id": "invoice-reform-threshold-schedule",
-      "claim": "The Israeli Invoice Reform allocation-number threshold is 5,000 NIS from June 2026 onward, measured on the amount before VAT. The step-down was 25,000 NIS in May 2024, 20,000 NIS in January 2025, 10,000 NIS in January 2026 and 5,000 NIS from June 2026.",
+      "claim": "The Israeli Invoice Reform allocation-number threshold is 5,000 NIS / 5,000 ש\"ח from June 2026 onward, measured on the amount before VAT. The step-down was 25,000 NIS / 25,000 ILS / 25,000 ש\"ח in May 2024, 20,000 NIS / 20,000 ש\"ח in January 2025, 10,000 NIS / 10,000 ש\"ח in January 2026 and 5,000 NIS from June 2026.",
       "source_url": "https://www.greeninvoice.co.il/magazine/israel-invoice/",
       "raw_snippet": "מאי 2024: 25,000 ₪, ינואר 2025: 20,000 ₪, ינואר 2026: 10,000 ש״ח, יוני 2026 ואילך: 5,000 ש״ח",
       "verification_note": "The same source states the threshold amounts are computed before VAT (לפני מע\"מ). No published source gives a 2027 value, so the previously listed January 2027 row was removed. The official ITA page at gov.il/he/departments/legalInfo/digital_invoice returns 403 to non-browser clients and needs a browser recheck.",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md", "references/zap-templates.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ]
     },
     {
       "claim_id": "israel-vat-rate-2026",
-      "claim": "Israel's VAT rate is 18%, in force since January 1, 2025, with no change during 2026.",
+      "claim": "Israel's VAT rate is 18%, in force since January 1, 2025, with no change during 2026. The outdated rate agents sometimes reach for is 17%. Arithmetic consequence used in the skill: at 18% VAT a 5,900 ILS / 5,900 ש\"ח gross charge is exactly a 5,000 base.",
       "source_url": "https://keep.co.il/blog/nihul-maam-2026.html",
       "raw_snippet": "שיעור המע\"מ הנוכחי בישראל עומד על 18%, ושיעור זה בתוקף מאז ינואר 2025",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "zapier-app-and-action-counts",
@@ -124,16 +239,23 @@
       "source_url": "https://zapier.com/mcp",
       "raw_snippet": "30,000+ actions across 9,000+ apps via the MCP standard",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "zapier-agents-was-central",
-      "claim": "Zapier Agents launched as Zapier Central in March 2024 and was renamed to Zapier Agents in January 2025, moving to agents.zapier.com as a standalone product.",
-      "source_url": "https://zapier.com/blog/best-ai-agents/",
-      "raw_snippet": "Zapier launched Zapier Central in March 2024 ... In January 2025, Central was rebranded as Zapier Agents and moved to agents.zapier.com as a standalone product",
-      "verification_note": "agents.zapier.com returns HTTP 200. zapier.com/chatbots returns 404 (product page relocated; the Chatbots product itself is not sunset).",
-      "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "claim": "Zapier Agents was previously Zapier Central: zapier.com/blog/zapier-central-guide/ now redirects to /blog/zapier-agents-guide/, whose hero image is still titled 'zapier-central-guide-00-hero'. That guide was originally published in March 2024.",
+      "source_url": "https://zapier.com/blog/zapier-agents-guide/",
+      "raw_snippet": "This article was originally published in March 2024 by Elena Alston. It was most recently updated in November 2025.",
+      "verification_note": "The previously cited snippet ('Zapier launched Zapier Central in March 2024 ... In January 2025, Central was rebranded as Zapier Agents') does NOT appear on zapier.com/blog/best-ai-agents/ or on the Agents guide; the January-2025 rename date could not be sourced and was removed from the skill body. Corroborating: the alt text on the same page reads \"Hero image of the Zapier Central logo on a light yellow background.\" and agents.zapier.com returns HTTP 200.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "curl (rendered text + 301 redirect chain from /blog/zapier-central-guide/)"
     },
     {
       "claim_id": "legacy-chatgpt-steps-deadline",
@@ -141,7 +263,10 @@
       "source_url": "https://help.zapier.com/hc/en-us/articles/44865998484365-Important-update-ChatGPT-users-OpenAI-Assistants-API-deprecation",
       "raw_snippet": "Zapier deprecated several legacy ChatGPT steps (such as creating assistants and uploading files) with existing Zaps using those steps set to stop working after August 26, 2026",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "zapier-platform-docs",
@@ -149,7 +274,10 @@
       "source_url": "https://platform.zapier.com",
       "raw_snippet": "HTTP 200",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "zapier-webhooks",
@@ -157,7 +285,10 @@
       "source_url": "https://zapier.com/apps/webhook/integrations",
       "raw_snippet": "HTTP 200",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "morning-api-docs-host",
@@ -166,7 +297,11 @@
       "raw_snippet": "<title>Morning API Documentation",
       "verification_note": "https://www.greeninvoice.co.il/api-docs/ returns 301 to https://developers.morning.co/api, which is itself a 404 page; the working docs root is https://developers.morning.co/ with /docs and /reference both 200. api.greeninvoice.co.il 200, app.greeninvoice.co.il 200, app.morning.co does not resolve.",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ]
     },
     {
       "claim_id": "tranzila-docs-no-webhook-page",
@@ -175,7 +310,11 @@
       "raw_snippet": "Payments and Billing: Authentication, Hosted Fields, Iframe Integration, Iframe Integration new DirectNG, Apple Pay Integration via Iframe, PayPal Integration, Transaction Response Codes | APIS: Tranzila Transactions API, Tranzila Api 3DS, Bit, Handshake API V2, MASAV API, Payment request, STO API for My Billing",
       "verification_note": "The presence of a dedicated Bit API page corroborates the skill's claim that Tranzila supports Bit. The index/sum/ccno/npay field names previously documented as a webhook payload are the legacy redirect-response parameters and are now marked unverified in the skill.",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ]
     },
     {
       "claim_id": "inforu-sms-api-fallback",
@@ -183,16 +322,144 @@
       "source_url": "https://api.inforu.co.il/SendMessageXml.ashx",
       "raw_snippet": "HTTP 200",
       "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/israeli-zapier-apps.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ]
     },
     {
-      "claim_id": "rivhit-api-unverified",
-      "claim": "Rivhit's documentation portal is at rivhit-api.readme.io. The REST base api.rivhit.co.il/online/RivhitOnlineAPI.svc/ returns 404 to an unauthenticated request, so the endpoint names cited in the reference are marked unverified.",
-      "source_url": "https://rivhit-api.readme.io/",
-      "raw_snippet": "HTTP 200",
-      "verification_note": "https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/ returns HTTP 404. A bare .svc/ root 404 is not conclusive proof the service is unavailable, hence 'unverified' rather than 'broken'.",
-      "fetched_at": "2026-08-01T00:00:00Z",
-      "appears_in": ["references/israeli-zapier-apps.md"]
+      "claim_id": "rivhit-api-endpoints",
+      "claim": "Rivhit's REST API is documented at rivhit-api.readme.io; Document.New is POSTed to https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/Document.New and authenticates with an api_token body parameter (not an Authorization header). Document.List, Customer.New and Customer.List exist with the same dot-separated naming.",
+      "source_url": "https://rivhit-api.readme.io/reference/onlinerivhitonlineapisvcdocumentnew",
+      "raw_snippet": "Document.New Copy Page post https://api.rivhit.co.il /online/RivhitOnlineAPI.svc/Document.New Create a New Document (Invoice, Shipping List, Order, ect..)",
+      "verification_note": "Corrects an earlier error: the skill listed underscore-separated endpoint names (Document_New) and header auth. The live reference nav lists Document.Cancel, Document.Close, Document.Details, Document.List, Document.New, Customer.List, Customer.New, Customer.Update among others, and Document.New's Body Params begin with 'api_token uuid required Rivhit Merchant API Identifier'.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "references/israeli-zapier-apps.md"
+      ],
+      "verified_via": "curl (rendered text of the ReadMe reference page)"
+    },
+    {
+      "claim_id": "greeninvoice-app-host-live",
+      "claim": "app.greeninvoice.co.il/login is the live Morning/Green Invoice dashboard sign-in page (HTTP 200).",
+      "source_url": "https://app.greeninvoice.co.il/login",
+      "raw_snippet": "<meta http-equiv=\"Cache-Control\" content=\"no-cache, no-store, must-revalidate, max-age=0\"/>",
+      "verification_note": "curl returns HTTP 200 with an SPA shell (empty <title>).",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl",
+      "appears_in": [
+        "SKILL.md",
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "tranzila-docs-root",
+      "claim": "Tranzila's developer documentation root is docs.tranzila.com.",
+      "source_url": "https://docs.tranzila.com/",
+      "raw_snippet": "<title>Tranzila Developer Guide</title>",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl",
+      "appears_in": [
+        "SKILL.md",
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "rivhit-svc-base",
+      "claim": "The Rivhit REST base https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/ returns a WCF 404 to an unauthenticated GET; individual methods such as Document.New are POST-only and documented.",
+      "source_url": "https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/",
+      "raw_snippet": "#content { margin-left: 30px; font-size: .70em; padding-bottom: 2em; }",
+      "verification_note": "HTTP 404 with the standard IIS/WCF 'Service' error page. Expected for a .svc root, not evidence of an outage.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl",
+      "appears_in": [
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "rivhit-document-new-endpoint",
+      "claim": "Document.New is POSTed to https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/Document.New.",
+      "source_url": "https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/Document.New",
+      "raw_snippet": "Document.New Copy Page post https://api.rivhit.co.il /online/RivhitOnlineAPI.svc/Document.New Create a New Document (Invoice, Shipping List, Order, ect..)",
+      "verification_note": "Quoted from the vendor reference page https://rivhit-api.readme.io/reference/onlinerivhitonlineapisvcdocumentnew (the endpoint itself is POST-only and not fetchable unauthenticated).",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (vendor ReadMe reference page)",
+      "appears_in": [
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "rivhit-api-reference-overview",
+      "claim": "Rivhit publishes an API Reference Overview page listing its REST methods.",
+      "source_url": "https://rivhit-api.readme.io/reference/api-reference-overview",
+      "raw_snippet": "{\"@context\":\"https://schema.org\",\"@type\":\"TechArticle\",\"headline\":\"API Reference Overview\"",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (HTTP 200, <title>API Reference Overview</title>)",
+      "appears_in": [
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "cardcom-swagger-ui",
+      "claim": "Cardcom serves a browsable ReDoc UI for its v11 OpenAPI spec at secure.cardcom.solutions/swagger/index.html.",
+      "source_url": "https://secure.cardcom.solutions/swagger/index.html",
+      "raw_snippet": "<div id=\"redoc-container\"></div>\r\n    <script src=\"https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js\"></script>",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (HTTP 200)",
+      "appears_in": [
+        "SKILL.md",
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "zapier-pricing-page",
+      "claim": "Zapier's plan and pricing page is at zapier.com/pricing.",
+      "source_url": "https://zapier.com/pricing",
+      "raw_snippet": "<title>Plans &amp; Pricing | Zapier</title>",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (HTTP 200)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "zapier-app-directory-url-pattern",
+      "claim": "A Zapier app's directory page follows the pattern zapier.com/apps/<app-slug>/integrations; <app-slug> is a placeholder, not a literal URL.",
+      "source_url": "https://zapier.com/apps/webhook/integrations",
+      "raw_snippet": "Webhooks by Zapier",
+      "verification_note": "The pattern is demonstrated by the concrete slugs already verified in this file (webhook, sumit, priority, inforumobile, grow, green-invoice, respondio, whatsapp-business).",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "ita-digital-invoice-page-cloudflare",
+      "claim": "The Israel Tax Authority's Invoice Reform (digital invoice) page is at gov.il/he|en/departments/legalInfo/digital_invoice. It returns HTTP 403 to non-browser clients (Cloudflare), so it cannot be machine-verified and is cited as a pointer, not as the source of any figure.",
+      "source_url": "https://www.gov.il/he/departments/legalInfo/digital_invoice",
+      "raw_snippet": "<title>Attention Required! | Cloudflare</title>",
+      "verification_note": "HTTP 403 on 2026-08-09 for both the he and en paths. All allocation-number threshold figures in this skill are sourced from the greeninvoice.co.il magazine entry instead.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "ita-digital-invoice-page-en",
+      "claim": "The English mirror of the ITA Invoice Reform page is gov.il/en/departments/legalInfo/digital_invoice; it is also Cloudflare-gated.",
+      "source_url": "https://www.gov.il/en/departments/legalInfo/digital_invoice",
+      "raw_snippet": "<title>Attention Required! | Cloudflare</title>",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (HTTP 403)",
+      "appears_in": [
+        "SKILL.md"
+      ]
     }
   ],
   "removed_claims": [

@@ -68,8 +68,8 @@ These apps do not have native Zapier integrations. Connect them via "Webhooks by
 |----------|-------|
 | Connection method | Webhooks by Zapier > Custom Request |
 | Auth | JWT token in Authorization header (`Bearer <token>`) |
-| API base URL | `https://api.greeninvoice.co.il` |
-| Dashboard | `https://app.greeninvoice.co.il` |
+| API base URL | host `api.greeninvoice.co.il` (exact base path is documented at https://developers.morning.co/ , do not guess it) |
+| Dashboard | `https://app.greeninvoice.co.il/login` |
 | API documentation | `https://developers.morning.co/` (the old `greeninvoice.co.il/api-docs/` URL now redirects here) |
 | API key location | Dashboard > Settings > API Integration |
 | Amount unit | **Decimal shekels** (e.g., 150.50 = 150.50 ILS) |
@@ -155,9 +155,9 @@ These apps do not have native Zapier integrations. Connect them via "Webhooks by
 | Property | Value |
 |----------|-------|
 | Connection method | HTTP request via Zapier (Webhooks by Zapier > Custom Request) |
-| Auth | API key in Authorization header |
+| Auth | `api_token` (Rivhit Merchant API Identifier) sent as a body parameter on each POST, not an Authorization header |
 | API base URL | `https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/` |
-| Key endpoints | `Document_New`, `Customer_New`, `Customer_List`, `Document_List` (**unverified:** the `.svc/` base returns 404 to an unauthenticated request; confirm against the docs portal at `https://rivhit-api.readme.io/`) |
+| Key endpoints | `Document.New`, `Customer.New`, `Customer.List`, `Document.List` (dot-separated, POST, e.g. `https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/Document.New`). Documented at `https://rivhit-api.readme.io/reference/api-reference-overview`. The bare `.svc/` base returns 404 to an unauthenticated request; that is expected, not an outage. |
 | Notes | Popular Israeli accounting software. No native Zapier integration. Use outbound HTTP requests from Zapier to create documents. |
 
 ### Hashavshevet (Accounting)

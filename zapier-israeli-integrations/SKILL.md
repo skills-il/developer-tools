@@ -33,7 +33,7 @@ Match the Israeli business need to the correct Zap architecture.
 
 ### Step 2: Connect Israeli Apps in Zapier
 
-Israeli apps connect to Zapier through three mechanisms. **Always check the Zapier app directory first** (`https://zapier.com/apps/<name>/integrations`): several Israeli vendors now ship native Zapier apps, and a native app is always simpler and more reliable than a hand-built Custom Request. Fall back to webhooks only when no native app exists.
+Israeli apps connect to Zapier through three mechanisms. **Always check the Zapier app directory first** (`zapier.com/apps/<app-slug>/integrations`): several Israeli vendors now ship native Zapier apps, and a native app is always simpler and more reliable than a hand-built Custom Request. Fall back to webhooks only when no native app exists.
 
 | App | Connection Method | Auth Type | Notes |
 |-----|-------------------|-----------|-------|
@@ -205,7 +205,7 @@ Zapier Tables and Interfaces are free on all plans in 2026 and provide a better 
 
 **Zapier Agents** (autonomous AI agents):
 - Create AI agents that work across 9,000+ apps autonomously
-- Lives at `agents.zapier.com`. This product was launched as **Zapier Central** and renamed to Zapier Agents in January 2025, so older tutorials and forum posts will call it Central
+- Lives at `agents.zapier.com`. This product launched as **Zapier Central** (Zapier's guide to it was first published in March 2024) and was later renamed to Zapier Agents, so older tutorials and forum posts will call it Central
 - Example: "Monitor my Morning account for unpaid invoices older than 30 days and send reminder emails in Hebrew"
 - Agents can make decisions based on context without predefined Zap steps
 
