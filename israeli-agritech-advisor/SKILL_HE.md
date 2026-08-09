@@ -15,6 +15,8 @@
 ### שלב 2: התחברות ל-API של אגריטק
 
 **CropX -- שילוב ניטור קרקע:**
+
+> **שימו לב:** כתובת ה-API והנתיבים למטה הם להמחשה בלבד. CropX לא מפרסמת תיעוד API ציבורי (אין דומיין developer או docs, ו-`api.cropx.com` מחזיר 404 בשורש), אז התייחסו לכתובת הבסיס, לנתיב `/auth/token` ולמבני התשובה כשלד להתאמה אחרי שתקבלו תיעוד אמיתי. פנו ל-CropX לגישת שותפים.
 ```python
 import requests
 
@@ -91,11 +93,13 @@ class GrowSphereClient:
 ```
 
 **Taranis -- שילוב מודיעין גידולים:**
+
+> **שימו לב:** כתובת ה-API למטה היא להמחשה בלבד והשרת שלה לא קיים כרגע (ל-`api.taranis.com` אין רשומת DNS נכון ל-2026-08-09). Taranis לא מפרסמת תיעוד API ציבורי. אל תכתבו קוד מול כתובת הבסיס הזו; פנו ל-Taranis לגישת שותפים והשתמשו בכתובת שהם ייתנו.
 ```python
 class TaranisClient:
     """Client for Taranis crop intelligence platform."""
 
-    BASE_URL = "https://api.taranis.com/v1"  # API מבוסס שותפות
+    BASE_URL = "https://api.taranis.com/v1"  # להמחשה בלבד; השרת לא קיים  # API מבוסס שותפות
 
     def __init__(self, api_key):
         self.headers = {"Authorization": f"Bearer {api_key}"}
@@ -153,7 +157,7 @@ def calculate_irrigation_need(soil_data, crop_type, weather_data):
         return {"irrigate": False, "reason": "Soil moisture adequate",
                 "current": current_moisture, "threshold": threshold}
 
-    efficiency = 0.92  # Drip irrigation: 90-95% in Israel
+    efficiency = 0.92  # הנחת יעילות השקיה בטפטוף; כיילו לפי המערכת, זה לא נתון ישראלי מפורסם
     gross_need = net_need / efficiency
     return {
         "irrigate": True,
@@ -187,15 +191,15 @@ def calculate_irrigation_need(soil_data, crop_type, weather_data):
 - **AgroScout:** סיור גידולים דרך רחפנים וזיהוי מחלות
 - **Tevel Aerobotics:** רחפנים אוטונומיים לקטיף פירות, מחוברים בכבל ליחידת קרקע
 - **SupPlant:** השקיה מונחית AI לחקלאים קטנים
-- **Phytech:** חיישני מתח מים מבוססי-צמח (רכשו את Saturas ב-2023)
+- **Phytech:** חיישני מתח מים מבוססי-צמח
 - **Groundwork BioAg:** תרכובות מיקוריזה לשיפור קליטת חומרי הזנה
 - **Agropalette:** ניתוח נתונים בשרשרת האספקה של תוצרת חקלאית
 
 הקשר חקלאי ישראלי:
-- ישראל ממחזרת מעל 85% ממי השפכים לחקלאות (השיעור הגבוה בעולם).
+- ישראל מובילה בעולם בשיעור מיחזור המים, ומטפלת בכ-80% מהשפכים שלה תוך שימוש חוזר בעיקר לחקלאות. אל תצטטו אחוז מיחזור לאומי מדויק יותר בלי נתון עדכני של רשות המים; האחוזים הגבוהים הנפוצים לא ניתנים לאיתור במקור מפורסם.
 - מקורות מים: מקורות (ארצי), מי שפכים ממוחזרים, מים מותפלים, בארות מקומיות.
 - ההתפלה היא חלק מרכזי במערך: מתקני שורק, חדרה ואשקלון (בין היתר) מזרימים מים למקורות בכמויות גדולות, וישראל מובילה בעולם בהתפלת מי-ים בטכנולוגיית RO.
-- חידוש מהקיבוצים נמצא בלב התעשייה: הטפטפת של נטפים פותחה בקיבוץ חצרים ב-1965 והפכה לסמל הייצוא הישראלי.
+- חידוש מהקיבוצים נמצא בלב התעשייה: נטפים הוקמה כששמחה בלאס חבר לקיבוץ חצרים ב-1964, והטפטוף נשאר סמל הייצוא הישראלי.
 - פורמטי נתונים: GeoJSON לגבולות שדות, GeoTIFF לתמונות לוויין, CSV/JSON לחיישנים.
 
 ## דוגמאות
@@ -229,7 +233,7 @@ def calculate_irrigation_need(soil_data, crop_type, weather_data):
 | משרד החקלאות ופיתוח הכפר | https://www.gov.il/he/departments/ministry_of_agriculture_and_rural_development | תוכניות סבסוד, רגולציה ותעודות |
 | רשות המים | https://www.gov.il/he/departments/water_authority | מכסות מים, עדכוני תעריפי חקלאות, וכללי מים מושבים |
 | רשות החדשנות | https://innovationisrael.org.il | מענקי אגריטק ותוכניות פיילוט |
-| Start-Up Nation Central, AgriFoodTech | https://www.startupnationcentral.org | מדריך תעשייה ונתוני שלבי חברות לאקוסיסטם האגריטק הישראלי |
+| Start-Up Nation Central, AgriFoodTech | https://startupnationcentral.org/AgriTech/ | מדריך תעשייה ונתוני שלבי חברות לאקוסיסטם האגריטק הישראלי |
 
 ## מלכודות נפוצות
 

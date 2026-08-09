@@ -9,7 +9,11 @@
       "source_url": "https://www.agri.gov.il",
       "raw_snippet": "Volcani",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/agritech-ecosystem.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/agritech-ecosystem.md"
+      ]
     },
     {
       "claim_id": "moag-israel",
@@ -17,7 +21,9 @@
       "source_url": "https://www.gov.il/en/departments/ministry_of_agriculture_and_rural_development",
       "raw_snippet": "Ministry of Agriculture",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md"]
+      "appears_in": [
+        "SKILL.md"
+      ]
     },
     {
       "claim_id": "moag-israel-he",
@@ -25,7 +31,9 @@
       "source_url": "https://www.gov.il/he/departments/ministry_of_agriculture_and_rural_development",
       "raw_snippet": "משרד החקלאות",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL_HE.md"]
+      "appears_in": [
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "water-authority-en",
@@ -33,7 +41,9 @@
       "source_url": "https://www.gov.il/en/departments/water_authority",
       "raw_snippet": "Water Authority",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md"]
+      "appears_in": [
+        "SKILL.md"
+      ]
     },
     {
       "claim_id": "water-authority-he",
@@ -41,7 +51,9 @@
       "source_url": "https://www.gov.il/he/departments/water_authority",
       "raw_snippet": "רשות המים",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL_HE.md"]
+      "appears_in": [
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "iia-en",
@@ -49,7 +61,9 @@
       "source_url": "https://innovationisrael.org.il/en",
       "raw_snippet": "Innovation Authority",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md"]
+      "appears_in": [
+        "SKILL.md"
+      ]
     },
     {
       "claim_id": "iia-he",
@@ -57,95 +71,164 @@
       "source_url": "https://innovationisrael.org.il",
       "raw_snippet": "רשות החדשנות",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL_HE.md"]
+      "appears_in": [
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "start-up-nation-central",
-      "claim": "Start-Up Nation Central publishes an Israeli AgriFoodTech industry directory tracking approximately 600-750 Israeli agritech companies and their funding stages.",
-      "source_url": "https://www.startupnationcentral.org",
-      "raw_snippet": "Start-Up Nation Central",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "metadata.json"]
+      "claim": "Start-Up Nation Central runs an Agritech sector hub covering the Israeli agritech ecosystem and its companies.",
+      "source_url": "https://startupnationcentral.org/AgriTech/",
+      "raw_snippet": "By analyzing data on weather, soil, and crop health, these tools help farmers proactively adapt to climate challenges like droughts and floods.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "metadata.json"
+      ],
+      "verification_note": "CORRECTION: the previous claim asserted the directory tracks 'approximately 600-750 Israeli agritech companies'. The SNC Finder (finder.startupnationcentral.org) returns HTTP 403 to non-browser clients and no company count is published on the readable sector page, so the figure could not be verified and was removed from SKILL.md and metadata.json.",
+      "verified_via": "curl (rendered page text) + DNS lookup where noted"
     },
     {
       "claim_id": "growsphere-illustrative-url",
-      "claim": "Netafim GrowSphere is a consumer-facing irrigation product without a documented public API; the URL growsphere.netafim.com/api/v1 used in SKILL examples is labeled illustrative-only, and integrators must contact Netafim directly for partnership API access.",
+      "claim": "growsphere.netafim.com/api/v1 serves the GrowSphere web application HTML, not an API. Netafim publishes no public API documentation, so the URL used in the skill examples is illustrative only.",
       "source_url": "https://growsphere.netafim.com/api/v1",
-      "raw_snippet": "illustrative",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "<title>GrowSphere&trade;</title>\n    <base href=\"/\">",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "Requesting https://growsphere.netafim.com/api/v1 returns the Angular SPA shell (the same HTML as the app root), which is what an unmatched client-side route returns. There is no JSON API at that path.",
+      "verified_via": "curl (rendered page text) + DNS lookup where noted"
     },
     {
       "claim_id": "cropx-base-url",
-      "claim": "CropX's published REST API root is documented at api.cropx.com/v2 (illustrative usage in SKILL examples).",
-      "source_url": "https://api.cropx.com/v2",
-      "raw_snippet": "cropx",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "claim": "CropX sells an agronomic farm-management system with soil-sensor data and irrigation planning, but publishes no public API documentation, so the api.cropx.com/v2 base URL in the skill examples is illustrative only.",
+      "source_url": "https://cropx.com/cropx-system/",
+      "raw_snippet": "Agronomic Planning Tools Insights and advice for irrigation, disease, nutrition and effluent management activities.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "api.cropx.com resolves (DNS -> elb-nv-prod-api-402138474.us-east-1.elb.amazonaws.com) but returns HTTP 404 with an empty body at both / and /v2, and developer.cropx.com and docs.cropx.com do not resolve. Checked 2026-08-09. SKILL.md and SKILL_HE.md were amended to label the base URL and routes illustrative.",
+      "verified_via": "curl (rendered page text) + DNS lookup where noted"
     },
     {
       "claim_id": "taranis-base-url",
-      "claim": "Taranis's published REST API root is documented at api.taranis.com/v1 (illustrative usage in SKILL examples).",
-      "source_url": "https://api.taranis.com/v1",
-      "raw_snippet": "taranis",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "claim": "api.taranis.com has no DNS record as of 2026-08-09 and Taranis publishes no readable public API documentation, so the api.taranis.com/v1 base URL in the skill examples is illustrative only and must not be coded against.",
+      "source_url": "https://www.taranis.com/api",
+      "raw_snippet": "Attention Required! | Cloudflare body{margin:0;padding:0}",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "dig +short api.taranis.com returns nothing and curl fails to resolve the host. www.taranis.com and www.taranis.com/api return HTTP 403 behind Cloudflare; docs.taranis.com and developer.taranis.ag do not resolve. SKILL.md and SKILL_HE.md now carry an explicit \"host does not resolve\" warning.",
+      "verified_via": "curl (rendered page text) + DNS lookup where noted"
     },
     {
       "claim_id": "ims-mcp-cross-link",
-      "claim": "The Israel Meteorological Service MCP (ims-mcp) is listed in the skills-il MCP directory under government-services and provides rain, ET0, and station data.",
+      "claim": "The Israel Meteorological Service MCP (ims-mcp) is listed in the skills-il MCP directory under government-services.",
       "source_url": "https://agentskills.co.il/he/mcps/government-services/ims-mcp",
-      "raw_snippet": "ims-mcp",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
-    },
-    {
-      "claim_id": "phytech-saturas-acquisition",
-      "claim": "Phytech, an Israeli plant-based water-stress-sensor company, acquired Saturas (the stem-water-potential sensor company) in 2023.",
-      "source_url": "https://www.phytech.com",
-      "raw_snippet": "Phytech",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "ims-mcp is listed under government-services in the skills-il MCP directory",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "Internal cross-link to our own directory; not an external factual claim.",
+      "verified_via": "curl (rendered page text) + DNS lookup where noted"
     },
     {
       "claim_id": "israel-water-recycling",
-      "claim": "Israel recycles approximately 85% or more of its treated wastewater for agricultural reuse, the highest rate of any country.",
+      "claim": "Israel leads the world in the proportion of water it recycles, treating 80% of its sewage, with reuse for agriculture and public works.",
       "source_url": "https://en.wikipedia.org/wiki/Water_supply_and_sanitation_in_Israel",
-      "raw_snippet": "85",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "Israel treats 80% of its sewage (400 billion liters a year), and 100% of the sewage from the Tel Aviv metropolitan area is treated and reused as irrigation water for agriculture and public works.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "CORRECTION: the skill previously claimed Israel recycles '85%+' of wastewater. No readable source supports 85%; the Wikipedia article states 'As of 2010, Israel leads the world in the proportion of water it recycles' and gives 80% of sewage treated. gov.il Water Authority pages return HTTP 403 to non-browser clients. SKILL.md and SKILL_HE.md were reworded to the sourced figure with an explicit instruction not to quote a more precise number.",
+      "verified_via": "curl (rendered page text) + DNS lookup where noted"
     },
     {
       "claim_id": "drip-irrigation-efficiency",
-      "claim": "Drip irrigation (invented in Israel at Kibbutz Hatzerim by Netafim, 1965) achieves field efficiencies of approximately 90-95% in modern Israeli installations.",
+      "claim": "Modern drip irrigation was invented in Israel in the 1960s; Simcha Blass partnered with Kibbutz Hatzerim in 1964 to create Netafim, and together they patented the first practical surface drip emitter.",
       "source_url": "https://en.wikipedia.org/wiki/Drip_irrigation",
-      "raw_snippet": "drip irrigation",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "who partnered later in 1964 with Kibbutz Hatzerim to create an irrigation company called Netafim . Together, they developed and patented the first practical surface drip irrigation emitter.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "CORRECTION: the skill dated the Hatzerim/Netafim origin to 1965; the source says 1964, and SKILL.md/SKILL_HE.md were corrected. The previously claimed '90-95% field efficiency in modern Israeli installations' appears nowhere in the article and could not be sourced; the code comment was reworded to present 0.92 as a calibration assumption, not a published Israeli figure.",
+      "verified_via": "curl (rendered page text) + DNS lookup where noted"
     },
     {
       "claim_id": "precision-agriculture-water-savings",
-      "claim": "Published precision-agriculture case studies routinely report water savings in the range of 20-40% versus uniform irrigation when sensor-driven scheduling and crop coefficients are used.",
+      "claim": "Precision agriculture aims to optimise returns on inputs while preserving resources, analysing within-field spatial variability including water distribution. The 20-40% water-saving range in this skill is presented as a planning heuristic, not a sourced figure.",
       "source_url": "https://en.wikipedia.org/wiki/Precision_agriculture",
-      "raw_snippet": "water",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "The goal of precision agriculture research is to define a decision support system for whole farm management with the goal of optimizing returns on inputs while preserving resources.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "curl (rendered page text) + DNS lookup where noted"
     },
     {
       "claim_id": "mad-threshold-irrigation",
-      "claim": "Management Allowable Depletion (MAD) is a standard irrigation scheduling parameter; values around 50% are commonly used for moderately drought-sensitive crops.",
+      "claim": "Management allowed depletion (MAD) is the percentage of available soil water that can be depleted before plant stress occurs; standard crops are often set at 50% depletion, sensitive crops around 30%, stress-tolerant 60-70%.",
       "source_url": "https://en.wikipedia.org/wiki/Irrigation_scheduling",
-      "raw_snippet": "Management",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "MAD is the percentage of available soil water that can be depleted before plant stress occurs. Standard Crops: Often set at 50% depletion. Sensitive Crops: (e.g., Vegetables) may require watering at 30% depletion. Stress Tolerant: (e.g., Established trees) may tolerate 60-70% depletion.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "curl (rendered page text) + DNS lookup where noted"
     },
     {
       "claim_id": "water-quota-thresholds",
-      "claim": "Quota-tracking systems for agricultural water typically alert at 80% and 95% of allocation; the specific thresholds are operator-chosen, not regulatory.",
+      "claim": "The 80% and 95% quota alert thresholds in this skill are operator-chosen operational defaults, NOT Israeli Water Authority regulatory thresholds. No regulatory alert percentage is asserted.",
       "source_url": "https://www.gov.il/en/departments/water_authority",
-      "raw_snippet": "quota",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "Attention Required! | Cloudflare body{margin:0;padding:0}",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "The Israel Water Authority page returns HTTP 403 behind Cloudflare to non-browser clients and could not be read on 2026-08-09, so it is cited only as the responsible-body pointer. The 80% / 95% alert thresholds in this skill are explicitly operator-chosen defaults and no regulatory claim is made about them.",
+      "verified_via": "curl (rendered page text) + DNS lookup where noted"
+    },
+    {
+      "claim_id": "cropx-v2-endpoint-illustrative",
+      "claim": "api.cropx.com/v2 and its /auth/token route are illustrative placeholders in this skill's code sample, not documented CropX endpoints.",
+      "source_url": "https://api.cropx.com/v2",
+      "raw_snippet": "(empty response body)",
+      "verification_note": "HTTP 404 with a zero-length body on 2026-08-09. Marked illustrative in SKILL.md and SKILL_HE.md.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "taranis-v1-endpoint-illustrative",
+      "claim": "api.taranis.com/v1 is an illustrative placeholder in this skill's code sample; the host does not resolve.",
+      "source_url": "https://api.taranis.com/v1",
+      "raw_snippet": "(host does not resolve: no DNS record)",
+      "verification_note": "dig +short api.taranis.com returned no records on 2026-08-09 and curl could not resolve the host. Marked illustrative in SKILL.md and SKILL_HE.md.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "dig + curl",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }

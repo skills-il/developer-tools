@@ -1,6 +1,6 @@
 ---
 name: israeli-agritech-advisor
-description: Guide developers in integrating Israeli agritech tools and precision agriculture platforms including CropX (soil monitoring), Netafim GrowSphere (IoT irrigation), Taranis (crop intelligence), and the broader Israeli agritech ecosystem (approximately 600-750 companies per Start-Up Nation Central agrifoodtech). Use when user asks about agritech APIs, precision agriculture, smart irrigation, "hashkaya cham", crop monitoring, pest detection, Israeli agriculture tech, or needs to build farm management software. Covers irrigation optimization, pest detection, climate data integration, and Israeli agricultural context. Do NOT use for general gardening advice or non-agricultural IoT projects.
+description: Guide developers in integrating Israeli agritech tools and precision agriculture platforms including CropX (soil monitoring), Netafim GrowSphere (IoT irrigation), Taranis (crop intelligence), and the broader Israeli agritech ecosystem. Use when user asks about agritech APIs, precision agriculture, smart irrigation, "hashkaya cham", crop monitoring, pest detection, Israeli agriculture tech, or needs to build farm management software. Covers irrigation optimization, pest detection, climate data integration, and Israeli agricultural context. Do NOT use for general gardening advice or non-agricultural IoT projects.
 license: MIT
 allowed-tools: Bash(python:*) Bash(pip:*) Bash(curl:*)
 compatibility: Network required for API calls. Python recommended for data processing. Works with Claude Code, Claude.ai.
@@ -24,13 +24,15 @@ version: 1.1.0
 ### Step 2: Connect to Agritech APIs
 
 **CropX -- Soil Monitoring Integration:**
+
+> **Note:** The CropX API URL and routes below are illustrative. CropX publishes no public API documentation (there is no developer or docs subdomain, and `api.cropx.com` returns 404 at its root), so treat the base URL, the `/auth/token` route and the response shapes as a sketch to adapt once CropX gives you real integration docs. Contact CropX for partner API access.
 ```python
 import requests
 
 class CropXClient:
     """Client for CropX soil monitoring API."""
 
-    BASE_URL = "https://api.cropx.com/v2"
+    BASE_URL = "https://api.cropx.com/v2"  # Unverified, illustrative only
 
     def __init__(self, client_id, client_secret):
         self.token = self._authenticate(client_id, client_secret)
@@ -100,11 +102,13 @@ class GrowSphereClient:
 ```
 
 **Taranis -- Crop Intelligence Integration:**
+
+> **Note:** The Taranis API URL below is illustrative and its host does not currently resolve (`api.taranis.com` has no DNS record as of 2026-08-09). Taranis publishes no public API documentation. Do not code against this base URL; contact Taranis for partner API access and use the base URL they supply.
 ```python
 class TaranisClient:
     """Client for Taranis crop intelligence platform."""
 
-    BASE_URL = "https://api.taranis.com/v1"
+    BASE_URL = "https://api.taranis.com/v1"  # Unverified, illustrative only; host does not resolve
 
     def __init__(self, api_key):
         self.headers = {"Authorization": f"Bearer {api_key}"}
@@ -162,7 +166,7 @@ def calculate_irrigation_need(soil_data, crop_type, weather_data):
         return {"irrigate": False, "reason": "Soil moisture adequate",
                 "current": current_moisture, "threshold": threshold}
 
-    efficiency = 0.92  # Drip irrigation: 90-95% in Israel
+    efficiency = 0.92  # Drip irrigation application efficiency assumption; calibrate per system, this is not a published Israeli figure
     gross_need = net_need / efficiency
     return {
         "irrigate": True,
@@ -193,15 +197,15 @@ Key companies beyond the main platforms:
 - **AgroScout:** Drone-based crop scouting and disease detection
 - **Tevel Aerobotics:** Autonomous fruit-picking drones tethered to ground units
 - **SupPlant:** AI-driven irrigation for smallholder farmers
-- **Phytech:** Plant-based water stress sensors (acquired Saturas in 2023)
+- **Phytech:** Plant-based water stress sensors
 - **Groundwork BioAg:** Mycorrhizal inoculants for nutrient uptake
 - **Agropalette:** Data and analytics for produce supply chains
 
 Israel-specific agricultural context:
-- Israel recycles 85%+ of wastewater for agriculture (highest rate globally)
+- Israel leads the world in the proportion of water it recycles, treating around 80% of its sewage and reusing it largely for agriculture. Do not quote a more precise national reuse percentage without a current Water Authority figure; the widely repeated higher percentages are not traceable to a citable published source.
 - Water sources: Mekorot (national), recycled wastewater, desalinated, local wells
 - Desalination feeds the system at scale: the Sorek, Hadera, and Ashkelon plants (among others) supply Mekorot's potable and agricultural mix, making Israel a global leader in seawater reverse osmosis.
-- Kibbutz innovation underpins much of the sector: Netafim's drip irrigation originated at Kibbutz Hatzerim in 1965 and remains a defining export.
+- Kibbutz innovation underpins much of the sector: Netafim was founded when Simcha Blass partnered with Kibbutz Hatzerim in 1964, and drip irrigation remains a defining Israeli export.
 - Data formats: GeoJSON for field boundaries, GeoTIFF for satellite imagery, CSV/JSON for sensors
 
 ## Examples
@@ -235,7 +239,7 @@ No agritech-specific MCP server is currently in the directory. For weather data 
 | Israel Ministry of Agriculture and Rural Development | https://www.gov.il/en/departments/ministry_of_agriculture_and_rural_development | Subsidy programs, regulations, and certifications |
 | Israel Water Authority | https://www.gov.il/en/departments/water_authority | Water allocation quotas, agricultural-tariff updates, and reclaimed-water rules |
 | Israel Innovation Authority | https://innovationisrael.org.il/en | Agritech grants and pilot funding programs |
-| Start-Up Nation Central -- AgriFoodTech | https://www.startupnationcentral.org | Industry directory and company-stage data for the Israeli agritech ecosystem |
+| Start-Up Nation Central -- AgriFoodTech | https://startupnationcentral.org/AgriTech/ | Industry directory and company-stage data for the Israeli agritech ecosystem |
 
 ## Gotchas
 
