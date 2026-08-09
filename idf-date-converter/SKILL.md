@@ -87,8 +87,8 @@ All projections are calendar-year 2026. Where a Hebrew month spans two Hebrew ye
 | Yom HaAtzmaut | 5 Iyar | Apr 22 | 5786 |
 | Lag BaOmer | 18 Iyar | May 5 | 5786 |
 | Shavuot | 6 Sivan | May 22 | 5786 |
-| Fast of 17 Tammuz (Shiv'a Asar B'Tammuz) | 17 Tammuz | Jul 3 | 5786 |
-| Tisha B'Av (9 Av) | 9 Av | Jul 24 | 5786 |
+| Fast of 17 Tammuz (Shiv'a Asar B'Tammuz) | 17 Tammuz | Jul 2 | 5786 |
+| Tisha B'Av (9 Av) | 9 Av | Jul 23 | 5786 |
 | Rosh Hashana | 1-2 Tishrei | Sep 12-13 | 5787 |
 | Fast of Gedaliah (Tzom Gedaliah) | 3 Tishrei | Sep 14 | 5787 |
 | Yom Kippur | 10 Tishrei | Sep 21 | 5787 |
@@ -105,7 +105,7 @@ Always verify these dates with pyluach before using them in production. The corr
 The Knesset legislated displacement of Yom HaZikaron and Yom HaAtzmaut to avoid Shabbat desecration. Apply these rules before printing dates:
 - If 5 Iyar falls on **Friday or Saturday**, Yom HaAtzmaut moves **earlier** to Thursday (4 Iyar or 3 Iyar). Yom HaZikaron moves with it.
 - If 5 Iyar falls on **Monday**, Yom HaAtzmaut moves **later** to Tuesday (6 Iyar) so Yom HaZikaron does not start on Saturday night ceremonies that border Shabbat.
-- If 5 Iyar falls on Sunday, Tuesday, or Wednesday, no displacement.
+- 5 Iyar can only fall on a Monday, Wednesday, Friday or Saturday. If it falls on a Wednesday, no displacement applies.
 - Yom HaShoah (27 Nisan) is similarly displaced: if it falls on Friday it moves to Thursday (26 Nisan); if it falls on Sunday it moves to Monday (28 Nisan).
 
 In 2026, 5 Iyar falls on Wednesday (Apr 22), so no displacement. Always re-check via `pyluach` or hebcal for other years.
