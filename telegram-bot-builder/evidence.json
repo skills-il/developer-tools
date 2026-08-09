@@ -138,25 +138,27 @@
     },
     {
       "claim_id": "grammy-transformer-throttler",
-      "claim": "@grammyjs/transformer-throttler was last published 2022-11-13 and is superseded by @grammyjs/auto-retry for honouring retry_after on HTTP 429.",
-      "source_url": "https://github.com/grammyjs/transformer-throttler",
-      "raw_snippet": "transformer-throttler",
-      "fetched_at": "2026-05-20T00:00:00Z",
+      "claim": "@grammyjs/transformer-throttler has had no release since v1.2.1 on 2022-11-13; @grammyjs/auto-retry is the current grammY plugin for honouring retry_after on HTTP 429.",
+      "source_url": "https://github.com/grammyjs/transformer-throttler/releases.atom",
+      "raw_snippet": "<title>Release notes from transformer-throttler</title>\n  <updated>2022-11-13T14:24:47Z</updated>",
+      "fetched_at": "2026-08-09T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "curl (GitHub releases Atom feed); cross-checked against registry.npmjs.org dist-tags/time"
     },
     {
       "claim_id": "telegram-bot-api-local",
-      "claim": "Telegram's self-hostable local Bot API server (allowing the 2 GB upload limit) is published at github.com/tdlib/telegram-bot-api.",
-      "source_url": "https://github.com/tdlib/telegram-bot-api",
-      "raw_snippet": "telegram-bot-api",
-      "fetched_at": "2026-05-20T00:00:00Z",
+      "claim": "Telegram's self-hostable local Bot API server raises uploads to 2000 MB and removes the download size limit; its source is published at github.com/tdlib/telegram-bot-api.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "The Bot API server source code is available at telegram-bot-api . You can run it locally and send the requests to your own server instead of https://api.telegram.org . If you switch to a local Bot API server, your bot will be able to: Download files without a size limit. Upload files up to 2000 MB.",
+      "fetched_at": "2026-08-09T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "curl (npm registry JSON / core.telegram.org rendered text)"
     },
     {
       "claim_id": "business-bot-non-premium-10-0",
@@ -498,11 +500,11 @@
     },
     {
       "claim_id": "telegraf-dormant",
-      "claim": "Telegraf's latest release is 4.16.3, published 2024-02-29, supporting Bot API 7.1.",
-      "source_url": "https://registry.npmjs.org/telegraf",
-      "raw_snippet": "2024-02-29",
-      "fetched_at": "2026-07-25T19:45:00+00:00",
-      "verified_via": "browser",
+      "claim": "Telegraf's latest release is v4.16.3, published 2024-02-29 (no release since), supporting Bot API 7.1.",
+      "source_url": "https://github.com/telegraf/telegraf/releases.atom",
+      "raw_snippet": "<id>tag:github.com,2008:Repository/56398352/v4.16.3</id>\n    <updated>2024-02-29T07:50:45Z</updated>",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (GitHub releases Atom feed); cross-checked against registry.npmjs.org dist-tags/time",
       "verified_at": "2026-07-25T19:45:00+00:00",
       "appears_in": [
         "SKILL.md",
@@ -512,11 +514,11 @@
     },
     {
       "claim_id": "grammy-auto-retry",
-      "claim": "@grammyjs/auto-retry (latest 2.0.2) is the current grammY plugin for honouring retry_after on HTTP 429; @grammyjs/transformer-throttler was last published 2022-11-13.",
-      "source_url": "https://github.com/grammyjs/auto-retry",
-      "raw_snippet": "auto-retry",
-      "fetched_at": "2026-07-25T19:45:00+00:00",
-      "verified_via": "browser",
+      "claim": "@grammyjs/auto-retry (latest 2.0.2, published 2024-07-30) automatically detects API requests that fail with a retry_after value and retries them.",
+      "source_url": "https://registry.npmjs.org/@grammyjs%2fauto-retry",
+      "raw_snippet": "This grammY plugin can automatically detect if an API requests fails with a `retry_after` value.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (npm registry JSON / core.telegram.org rendered text)",
       "verified_at": "2026-07-25T19:45:00+00:00",
       "appears_in": [
         "SKILL.md",
@@ -659,6 +661,30 @@
       "fetched_at": "2026-07-25T20:20:00+00:00",
       "verified_via": "browser",
       "verified_at": "2026-07-25T20:20:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "telegram-bot-api-source-repo",
+      "claim": "The local Bot API server source code is published at github.com/tdlib/telegram-bot-api and supports uploads up to 2000 MB.",
+      "source_url": "https://github.com/tdlib/telegram-bot-api",
+      "raw_snippet": "* Upload files up to 2000 MB.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (raw.githubusercontent.com/tdlib/telegram-bot-api/master/README.md line 56)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "grammy-auto-retry-repo",
+      "claim": "@grammyjs/auto-retry intercepts a retry_after error, waits the specified period, and retries the request.",
+      "source_url": "https://github.com/grammyjs/auto-retry",
+      "raw_snippet": "This grammY plugin can automatically detect if an API requests fails with a `retry_after` value.\nIt will then intercept the error, wait the specified period of time, and then retry the request.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (raw.githubusercontent.com/grammyjs/auto-retry/main/README.md)",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
