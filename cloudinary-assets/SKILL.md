@@ -290,7 +290,7 @@ Result: Video URL with optimized delivery and poster image.
 ## Gotchas
 
 - Hebrew text overlays render correctly only when the font supports Hebrew glyphs (Heebo, Assistant, Rubik, David Libre, Frank Ruhl Libre, Suez One, Secular One). Latin-only fonts produce missing glyphs or boxes. The text value must be URL-encoded.
-- Free tier includes 25 credits per month. One credit equals 1,000 transformations OR 1 GB managed storage OR 1 GB net viewing bandwidth (the metric whose consumption you exceed first is the one that bills). Usage is measured on a rolling 30-day window, not a calendar month. The Free → Plus jump is steep (around $89-99/month list price as of 2026), so model your eager-transform variants carefully before launch.
+- Free tier includes 25 credits per month. One credit equals 1,000 transformations OR 1GB managed storage OR 1GB video bandwidth (the metric whose consumption you exceed first is the one that bills). The Free → Plus jump is steep (Plus lists at $99/month billed monthly, $89/month billed yearly, for 225 monthly credits as of 2026), so model your eager-transform variants carefully before launch.
 - Upload and Admin API endpoints require proper authentication. Example URLs in documentation may return 401/404 errors when accessed without valid credentials.
 - Signed URLs and `auth_token`/strict transformation modes: derived URLs may be blocked unless signed. Toggle "Strict transformations" in Settings, Security, then sign delivery URLs with `s--{signature}--` or use `auth_token` for time-bound access.
 - Eager vs lazy transforms: lazy (default) builds the derived asset on first request and caches it (slow first hit). Eager builds at upload time (faster first hit, costs upload credits). Use eager for predictable variants like thumbnails and social cards; let everything else stay lazy.
@@ -306,7 +306,7 @@ Cause: Invalid API key/secret or missing credentials
 Solution: Verify CLOUDINARY_URL or individual env vars. Check API key is active in Cloudinary Dashboard.
 
 ### Error: "File too large"
-Cause: Exceeds plan upload limits (free: 10MB image, 100MB video)
+Cause: Exceeds your plan's upload size limit. Cloudinary does not publish per-plan file-size caps in its public docs, so read the limits for your own plan in Console Settings rather than assuming a number. Any file larger than 100 MB must go through `upload_large` (chunked upload) regardless of plan.
 Solution: Compress before upload, or upgrade Cloudinary plan. Use eager transformations to create smaller versions on upload.
 
 ### Error: "Resource not found"
