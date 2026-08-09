@@ -21,7 +21,7 @@ license: MIT
 עבדו לפי הסדר הזה כשמקימים או סוקרים בסיס נתונים PostgreSQL לאפליקציה ישראלית:
 
 1. **קודם כל בדקו קידוד ואזור זמן.** הריצו `SHOW server_encoding;` (חייב להיות `UTF8`, לעולם לא `SQL_ASCII` או `LATIN1`) ו-`SHOW timezone;`. הגדירו את אזור הזמן עם `ALTER DATABASE your_db SET timezone = 'Asia/Jerusalem';`. טעות בשניים האלה משחיתה עברית ומסיטה כל timestamp, ותיקון מאוחר מחייב מיגרציית נתונים.
-2. **בחרו אסטרטגיית collation.** החליטו לכל עמודה אם צריך מיון תצוגה עברי (ICU לא דטרמיניסטי, `he-IL-x-icu`) או ייחודיות ואינדקס `btree` (collation דטרמיניסטי). בדרך כלל צריך את שניהם, על עמודות שונות או באמצעות אינדקסים נפרדים, כי collation לא דטרמיניסטי לא יכול לגבות אילוץ `UNIQUE` או אינדקס `btree` רגיל.
+2. **בחרו אסטרטגיית collation.** החליטו לכל עמודה אם צריך מיון תצוגה עברי (ICU לא דטרמיניסטי, `he-IL-x-icu`) או ייחודיות ואינדקס `btree` (collation דטרמיניסטי). collation לא דטרמיניסטי כן תומך באילוץ `UNIQUE` ובאינדקס `btree` (נבדק על PostgreSQL 17), אבל הוא לא נתמך עם `LIKE` והתאמת תבניות, ולכן שמרו עמודה או ביטוי דטרמיניסטיים לחיפוש תחילית.
 3. **בחרו גישת חיפוש.** להתאמה מדויקת ולתחילית השתמשו ב-`btree`. לחיפוש מטושטש וסובלני לשגיאות בעברית השתמשו ב-`pg_trgm`. לחיפוש מדורג רב-שדות השתמשו בחיפוש טקסט מלא עם הקונפיגורציה `simple` (ראו "חיפוש טקסט מלא בעברית" למטה). להתאמה שמתעלמת מניקוד השתמשו בפונקציה `strip_nikud()` שלמטה; `unaccent` מסיר רק דיאקריטיקה לטינית, לא ניקוד עברי.
 4. **החילו אילוצים על טיפוסי נתונים ישראליים.** השתמשו באילוצי ה-`CHECK` ובפונקציות העזר מ-`scripts/israeli-data-types.sql` (תעודת זהות, טלפון, מיקוד, מספר עוסק, IBAN) וקראו ל-`validate_teudat_zehut()` לבדיקת ספרת הביקורת של תעודת הזהות במקום לממש אותה מחדש בקוד האפליקציה.
 
@@ -50,7 +50,7 @@ CREATE TABLE products (
 SELECT * FROM products ORDER BY name_he COLLATE hebrew_icu;
 ```
 
-**חשוב:** Collation לא דטרמיניסטי (שנדרש למיון עברי תקין) לא עובד עם אילוצי `UNIQUE` או אינדקסים מסוג `btree` ישירות. השתמשו ב-collation דטרמיניסטי לייחודיות וב-ICU collation להצגה.
+**חשוב:** collation לא דטרמיניסטי כן יכול לגבות אילוץ `UNIQUE` ואינדקס `btree`, אבל PostgreSQL דוחה אותו בהתאמת תבניות `LIKE` (השגיאה: `nondeterministic collations are not supported for LIKE`), וב-B-tree אין דדופליקציה על אינדקס כזה. שמרו עמודה דטרמיניסטית לחיפוש תחילית, והשתמשו ב-ICU collation למיון תצוגה ולהשוואת שוויון לשונית.
 
 ### חיפוש מטושטש בעברית עם Trigram
 
@@ -518,9 +518,9 @@ CREATE TABLE addresses (
 
 ## פתרון בעיות
 
-### שגיאה: "could not create unique index ... because the collation is not deterministic"
-סיבה: עמודה שהוגדרה עם ה-collation הלא דטרמיניסטי `hebrew_icu` משמשת באילוץ `UNIQUE` או באינדקס `btree` רגיל.
-פתרון: השאירו את העמודה ב-collation דטרמיניסטי (ברירת מחדל) לייחודיות, והחילו `COLLATE hebrew_icu` רק בסעיפי `ORDER BY` או על עמודת תצוגה נפרדת. collation לא דטרמיניסטי מיועד למיון, לא לאינדוקס שוויון.
+### שגיאה: "nondeterministic collations are not supported for LIKE"
+סיבה: עמודה שהוגדרה עם ה-collation הלא דטרמיניסטי `hebrew_icu` משמשת עם `LIKE` או אופרטור התאמת תבניות אחר.
+פתרון: בצעו את ההתאמה מול ביטוי דטרמיניסטי, `WHERE name_he COLLATE "default" LIKE 'שלום%'`, או החזיקו עמודה דטרמיניסטית נפרדת (או אינדקס `pg_trgm` מסוג GIN) לחיפוש תחילית ומטושטש. אילוץ `UNIQUE` ואינדקס `btree` רגיל דווקא עובדים על עמודה לא דטרמיניסטית, הם רק מאבדים דדופליקציה של B-tree.
 
 ### שגיאה: "generation expression is not immutable" בעת הוספת עמודת search_vector
 סיבה: `unaccent()` הוא `STABLE` ולא `IMMUTABLE`, לכן אי אפשר להשתמש בו ישירות בתוך ביטוי `GENERATED ALWAYS AS ... STORED`.

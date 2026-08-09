@@ -9,15 +9,34 @@
       "source_url": "https://www.postgresql.org/docs/current/unaccent.html",
       "raw_snippet": "unaccent is a text search dictionary that removes accents (diacritic signs) from lexemes. The rules it uses are defined in the unaccent.rules file, which by default covers Latin and Greek diacritics.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
-      "claim_id": "icu-collation-nikud-sofit",
-      "claim": "A non-deterministic ICU collation ignores differences below a chosen strength: at reduced strength (u-ks-level1) it equalizes BOTH nikud AND sofit (final) letter forms; at default strength nikud is significant so pointed/unpointed text is NOT equal. There is no strength that ignores nikud but keeps sofit distinct, so nikud-insensitivity is done with strip_nikud(), not the collation. Non-deterministic collations cannot back a UNIQUE constraint, a plain btree index, or LIKE pattern matching.",
+      "claim_id": "icu-collation-nondeterministic-a",
+      "claim": "A non-deterministic collation may treat strings as equal even when their bytes differ (accent-insensitive / normalization-insensitive comparison); this is what makes nikud and sofit folding possible at a reduced ICU strength.",
       "source_url": "https://www.postgresql.org/docs/current/collation.html",
-      "raw_snippet": "Nondeterministic collations ... can be used to e.g. match characters with and without accents [at a reduced strength]. A nondeterministic collation cannot be used as the collation of a column that is part of a primary key or unique constraint backed by a regular btree index, and pattern matching operators do not support nondeterministic collations.",
+      "raw_snippet": "Nondeterministic comparison may determine strings to be equal even if they consist of different bytes. Typical situations include case-insensitive comparison, accent-insensitive comparison, as well as comparison of strings in different Unicode normal forms.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/hebrew-collation-guide.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-collation-guide.md"
+      ]
+    },
+    {
+      "claim_id": "icu-collation-nondeterministic-b",
+      "claim": "Non-deterministic collations carry a performance penalty, block B-tree deduplication, and are rejected by some pattern-matching operations (PostgreSQL 17 raises \"nondeterministic collations are not supported for LIKE\"). They do NOT block UNIQUE constraints or plain btree indexes.",
+      "source_url": "https://www.postgresql.org/docs/current/collation.html",
+      "raw_snippet": "Foremost, their use leads to a performance penalty. Note, in particular, that B-tree cannot use deduplication with indexes that use a nondeterministic collation. Also, certain operations are not possible with nondeterministic collations, such as some pattern matching operations.",
+      "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-collation-guide.md"
+      ]
     },
     {
       "claim_id": "icu-custom-collations",
@@ -25,7 +44,9 @@
       "source_url": "https://www.postgresql.org/docs/current/collation.html#ICU-CUSTOM-COLLATIONS",
       "raw_snippet": "ICU allows collations to be customized ... using the BCP 47 language tag syntax.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["references/hebrew-collation-guide.md"]
+      "appears_in": [
+        "references/hebrew-collation-guide.md"
+      ]
     },
     {
       "claim_id": "pgtrgm-fuzzy",
@@ -33,7 +54,11 @@
       "source_url": "https://www.postgresql.org/docs/current/pgtrgm.html",
       "raw_snippet": "The pg_trgm module provides functions and operators for determining the similarity of alphanumeric text based on trigram matching.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/supabase-israel-patterns.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/supabase-israel-patterns.md"
+      ]
     },
     {
       "claim_id": "supabase-rls",
@@ -41,7 +66,9 @@
       "source_url": "https://supabase.com/docs/guides/database/postgres/row-level-security",
       "raw_snippet": "Row Level Security (RLS) lets you control which rows in a table a user can access.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["references/supabase-israel-patterns.md"]
+      "appears_in": [
+        "references/supabase-israel-patterns.md"
+      ]
     },
     {
       "claim_id": "israeli-vat-rate",
@@ -49,7 +76,10 @@
       "source_url": "https://www.gov.il/en/departments/israel_tax_authority/govil-landing-page",
       "raw_snippet": "Israel's standard VAT rate increased from 17% to 18% effective 1 January 2025.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "boi-exchange-rates",
@@ -57,7 +87,10 @@
       "source_url": "https://www.boi.org.il/en/economic-roles/financial-markets/exchange-rates/",
       "raw_snippet": "The Bank of Israel publishes representative exchange rates of the shekel against foreign currencies.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "supabase-edge-imports",
@@ -65,7 +98,9 @@
       "source_url": "https://esm.sh/@supabase/supabase-js@2",
       "raw_snippet": "esm.sh serves @supabase/supabase-js v2 as an ES module for Deno/Edge runtimes.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["references/supabase-israel-patterns.md"]
+      "appears_in": [
+        "references/supabase-israel-patterns.md"
+      ]
     },
     {
       "claim_id": "deno-std-server",
@@ -73,7 +108,9 @@
       "source_url": "https://deno.land/std/http/server.ts",
       "raw_snippet": "deno.land/std/http/server.ts provides the serve() HTTP server for Deno.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["references/supabase-israel-patterns.md"]
+      "appears_in": [
+        "references/supabase-israel-patterns.md"
+      ]
     }
   ]
 }

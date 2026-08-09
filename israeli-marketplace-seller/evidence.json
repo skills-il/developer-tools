@@ -9,15 +9,24 @@
       "source_url": "https://ksp.co.il",
       "raw_snippet": "KSP sells its own electronics inventory online; its only seller-facing program is an affiliate/referral program, not a third-party vendor marketplace.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/platform-guides.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/platform-guides.md"
+      ]
     },
     {
       "claim_id": "yad2-marketplace",
-      "claim": "Yad2 (yad2.co.il) is Israel's dominant general classifieds/marketplace for C2C and business sellers; basic listings are free with paid promotion and business store accounts.",
-      "source_url": "https://www.yad2.co.il",
-      "raw_snippet": "Yad2 is Israel's largest general marketplace and classifieds site, covering second-hand goods, vehicles, real estate and more, for private and business sellers.",
-      "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/platform-guides.md"]
+      "claim": "Yad2 (yad2.co.il) is Israel's largest site for finding second-hand goods, spanning electronics, phones, furniture, bicycles, clothing and more; it is the dominant general classifieds marketplace for C2C and business sellers.",
+      "source_url": "https://www.yad2.co.il/market",
+      "raw_snippet": "האתר הגדול ביותר בישראל לחיפוש מוצרי יד שנייה. ביד2 מחכה לכם מגוון ענק של מוצרי יד שנייה לצד מוצרים חדשים: מוצרי חשמל, טלפונים ניידים, מצלמות דיגיטליות, מחשבים, ריהוט לבית ולגן, אופניים, בגדים, מוצרים ומשחקים לילדים",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/platform-guides.md"
+      ],
+      "verified_via": "Playwright (location.href asserted = https://www.yad2.co.il/market), meta description"
     },
     {
       "claim_id": "vat-18",
@@ -25,7 +34,10 @@
       "source_url": "https://www.gov.il/en/departments/israel_tax_authority/govil-landing-page",
       "raw_snippet": "Israel's standard VAT rate is 18% as of 2025 (raised from 17% on 1 January 2025).",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "israel-invoice-allocation",
@@ -33,7 +45,10 @@
       "source_url": "https://www.gov.il/en/service/issuing-allocation-number-for-an-invoice",
       "raw_snippet": "From 2024 the Israel Invoice model requires an allocation number for tax invoices above a threshold (NIS 20,000 / 20,000 ש\"ח in 2025, lowering to NIS 10,000 / 10,000 ש\"ח in 2026 and NIS 5,000 / 5,000 ש\"ח thereafter) before input VAT may be deducted.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "consumer-cooling-off",
@@ -41,7 +56,10 @@
       "source_url": "https://www.gov.il/he/departments/consumer_protection_and_fair_trade_authority",
       "raw_snippet": "Remote-purchase cancellation: 14 days; cancellation fee up to 5% of the transaction or NIS 100 / 100 ש\"ח, whichever is lower; extended 4-month window for persons with disabilities, senior citizens, and new immigrants.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "zap-onboarding",
@@ -49,7 +67,11 @@
       "source_url": "https://www.zap.co.il/joinzap.aspx",
       "raw_snippet": "Add a store to Zap: sellers join via joinzap; Zap offers price-comparison listings and a marketplace with category-based commission.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/platform-guides.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/platform-guides.md"
+      ]
     },
     {
       "claim_id": "meta-shops-checkout",
@@ -57,7 +79,11 @@
       "source_url": "https://www.facebook.com/business/help/1314349509894768",
       "raw_snippet": "Facebook and Instagram Shops drive discovery; checkout for non-US merchants happens on the merchant's own website. Meta retired US native checkout in 2025.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/platform-guides.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/platform-guides.md"
+      ]
     },
     {
       "claim_id": "fb-marketplace-url",
@@ -65,7 +91,10 @@
       "source_url": "https://www.facebook.com/marketplace",
       "raw_snippet": "Facebook Marketplace lets people list items for local sale; C2C listings arrange payment directly between buyer and seller.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "references/platform-guides.md"]
+      "appears_in": [
+        "SKILL.md",
+        "references/platform-guides.md"
+      ]
     },
     {
       "claim_id": "instagram-url",
@@ -73,7 +102,9 @@
       "source_url": "https://www.instagram.com",
       "raw_snippet": "Instagram shopping tags link products to the merchant's catalog and external website.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["references/platform-guides.md"]
+      "appears_in": [
+        "references/platform-guides.md"
+      ]
     },
     {
       "claim_id": "zap-bare-url",
@@ -81,7 +112,9 @@
       "source_url": "https://www.zap.co.il",
       "raw_snippet": "Zap (zap.co.il) is Israel's main price-comparison and marketplace site.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["references/platform-guides.md"]
+      "appears_in": [
+        "references/platform-guides.md"
+      ]
     },
     {
       "claim_id": "tax-authority-he-url",
@@ -89,7 +122,9 @@
       "source_url": "https://www.gov.il/he/departments/israel_tax_authority",
       "raw_snippet": "רשות המסים: עוסק פטור מול מורשה, ספי מחזור, ומע\"מ.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL_HE.md"]
+      "appears_in": [
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "allocation-he-url",
@@ -97,7 +132,9 @@
       "source_url": "https://www.gov.il/he/service/issuing-allocation-number-for-an-invoice",
       "raw_snippet": "שירות הנפקת מספר הקצאה לחשבונית של רשות המסים.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL_HE.md"]
+      "appears_in": [
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "instagram-shopping-docs",
@@ -105,7 +142,10 @@
       "source_url": "https://www.facebook.com/business/instagram",
       "raw_snippet": "Instagram for business covers shopping, product tags, and catalog setup.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "israel-post-shipping",
@@ -113,7 +153,10 @@
       "source_url": "https://www.israelpost.co.il",
       "raw_snippet": "Israel Post provides domestic shipping options and rates for businesses.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "illustrative-report-figures",
@@ -121,7 +164,10 @@
       "source_url": "https://www.gov.il/en/departments/israel_tax_authority/govil-landing-page",
       "raw_snippet": "Illustrative example data for report formatting (both NIS and ש\"ח forms): revenues 22,000 ש\"ח / 12,000 ש\"ח / 4,500 ש\"ח / 38,500 ש\"ח (12,000 NIS, 22,000 NIS, 4,500 NIS), average orders 2,750 ש\"ח / 2,750 NIS / 800 / 1,500 / 1,481, margins 18% / 22% / 20%, prices 3,200 ש\"ח / 3,350 ש\"ח / 3,100 ש\"ח (3,350 NIS, 3,100 NIS), 200 ש\"ח, 2 units, 5%.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }

@@ -15,7 +15,7 @@ Assumes **PostgreSQL 13+** (the patterns use `gen_random_uuid()` from core, non-
 Follow this workflow when setting up or reviewing a PostgreSQL database for an Israeli app:
 
 1. **Verify encoding and timezone first.** Run `SHOW server_encoding;` (must be `UTF8`, never `SQL_ASCII` or `LATIN1`) and `SHOW timezone;`. Set the database timezone with `ALTER DATABASE your_db SET timezone = 'Asia/Jerusalem';`. Getting these wrong corrupts Hebrew and offsets every timestamp, and fixing it later means a data migration.
-2. **Pick the collation strategy.** Decide per column whether you need Hebrew display ordering (non-deterministic ICU collation `he-IL-x-icu`) or uniqueness/`btree` indexing (deterministic collation). You usually need both, on different columns or via separate indexes, because a non-deterministic collation cannot back a `UNIQUE` constraint or a plain `btree` index.
+2. **Pick the collation strategy.** Decide per column whether you need Hebrew display ordering (non-deterministic ICU collation `he-IL-x-icu`) or uniqueness/`btree` indexing (deterministic collation). A non-deterministic collation does support `UNIQUE` constraints and `btree` indexes (verified on PostgreSQL 17), but it cannot be used with `LIKE`/pattern matching, so keep a deterministic column or expression around for prefix search.
 3. **Choose the search approach.** For exact and prefix matching use `btree`. For fuzzy/typo-tolerant Hebrew search use `pg_trgm`. For multi-field ranked search use full-text search with the `simple` configuration (see "Full-Text Search with Hebrew" below). For nikud-insensitive Hebrew matching use the `strip_nikud()` function shown below; `unaccent` only strips Latin diacritics, not Hebrew nikud.
 4. **Apply Israeli data-type constraints.** Use the `CHECK` constraints and helper functions from `scripts/israeli-data-types.sql` (teudat zehut, phone, postal code, business number, IBAN) and call `validate_teudat_zehut()` for the ID check digit rather than reimplementing it in application code.
 
@@ -44,7 +44,7 @@ CREATE TABLE products (
 SELECT * FROM products ORDER BY name_he COLLATE hebrew_icu;
 ```
 
-**Important:** Non-deterministic collations (required for proper Hebrew sorting) cannot be used with `UNIQUE` constraints or `btree` indexes directly. Use a deterministic collation for uniqueness and the ICU collation for display ordering.
+**Important:** A non-deterministic collation *can* back a `UNIQUE` constraint and a `btree` index, but PostgreSQL rejects it for `LIKE`/pattern matching (`nondeterministic collations are not supported for LIKE`) and B-tree cannot use deduplication on such an index. Keep a deterministic column for prefix search, and apply the ICU collation for display ordering and linguistic equality.
 
 ### Trigram Fuzzy Search for Hebrew
 
@@ -545,9 +545,9 @@ These MCP servers from the directory pair well with this skill when an Israeli d
 
 ## Troubleshooting
 
-### Error: "could not create unique index ... because the collation is not deterministic"
-Cause: A column declared with the non-deterministic `hebrew_icu` collation is being used in a `UNIQUE` constraint or plain `btree` index.
-Solution: Keep the column in a deterministic (default) collation for uniqueness, and apply `COLLATE hebrew_icu` only in `ORDER BY` clauses or on a separate display column. Non-deterministic collations are for sorting, not for indexing equality.
+### Error: "nondeterministic collations are not supported for LIKE"
+Cause: A column declared with the non-deterministic `hebrew_icu` collation is being used with `LIKE` or another pattern-matching operator.
+Solution: Do the pattern match against a deterministic expression, `WHERE name_he COLLATE "default" LIKE 'שלום%'`, or keep a separate deterministic column (or a `pg_trgm` GIN index) for prefix and fuzzy search. `UNIQUE` constraints and plain `btree` indexes are fine on a non-deterministic column, they simply lose B-tree deduplication.
 
 ### Error: "generation expression is not immutable" when adding a search_vector column
 Cause: `unaccent()` is `STABLE`, not `IMMUTABLE`, so it cannot be used directly inside a `GENERATED ALWAYS AS ... STORED` expression.

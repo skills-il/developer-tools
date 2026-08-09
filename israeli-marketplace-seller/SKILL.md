@@ -194,7 +194,7 @@ Solution: Reduce polling frequency (minimum 4 hours between checks) and keep req
 | Source | URL | What to Check |
 |--------|-----|---------------|
 | Zap, add a store | https://www.zap.co.il/joinzap.aspx | Seller onboarding, commission model, management dashboard |
-| Yad2 | https://www.yad2.co.il | Israel's dominant general marketplace: posting a listing, categories, business accounts |
+| Yad2 | https://www.yad2.co.il/market | Israel's dominant general marketplace: posting a listing, categories, business accounts |
 | Meta, changes to Shops and Checkout | https://www.facebook.com/business/help/1314349509894768 | Native checkout deprecation, external-checkout migration |
 | Instagram Shopping for business | https://www.facebook.com/business/instagram | Catalog setup, product tags, eligibility |
 | Israel Invoice (allocation number) | https://www.gov.il/en/service/issuing-allocation-number-for-an-invoice | Allocation-number thresholds and how to obtain one |

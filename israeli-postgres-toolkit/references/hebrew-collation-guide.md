@@ -18,26 +18,26 @@ CREATE COLLATION IF NOT EXISTS hebrew_icu (
 );
 ```
 
-**Why non-deterministic?** A non-deterministic ICU collation can compare strings while ignoring differences below a chosen strength. At a reduced strength (a collation built with `u-ks-level1`) it treats strings as equal ignoring BOTH nikud AND final-vs-base (sofit) letter forms, so `'שָׁלוֹם' = 'שלום'` and `'מ' = 'ם'` both compare equal. At the DEFAULT (tertiary) strength, nikud and sofit are both significant, so `'שָׁלוֹם'` does NOT equal `'שלום'`. There is no strength that ignores nikud while keeping sofit distinct. Consequences: (1) for reliable nikud-insensitive matching prefer the `strip_nikud()` function (collation-based folding also collapses sofit and case, which you usually do not want); (2) a non-deterministic collation cannot back a `UNIQUE` constraint, a plain `btree` index, or `LIKE`/pattern matching, so use it only in `ORDER BY` or explicit comparisons.
+**Why non-deterministic?** A non-deterministic ICU collation can compare strings while ignoring differences below a chosen strength. At a reduced strength (a collation built with `u-ks-level1`) it treats strings as equal ignoring BOTH nikud AND final-vs-base (sofit) letter forms, so `'שָׁלוֹם' = 'שלום'` and `'מ' = 'ם'` both compare equal. At the DEFAULT (tertiary) strength, nikud and sofit are both significant, so `'שָׁלוֹם'` does NOT equal `'שלום'`. There is no strength that ignores nikud while keeping sofit distinct. Consequences: (1) for reliable nikud-insensitive matching prefer the `strip_nikud()` function (collation-based folding also collapses sofit and case, which you usually do not want); (2) a non-deterministic collation cannot be used with `LIKE`/pattern matching (PostgreSQL raises `nondeterministic collations are not supported for LIKE`); `UNIQUE` constraints and plain `btree` indexes do work on such a column, they just lose B-tree deduplication, so keep a deterministic column or expression for prefix search.
 
 ### Deterministic vs Non-Deterministic
 
 | Feature | Deterministic | Non-Deterministic |
 |---------|--------------|-------------------|
 | Hebrew sorting | Incorrect for some cases | Correct |
-| UNIQUE constraints | Supported | NOT supported |
-| btree indexes | Supported | NOT supported |
+| UNIQUE constraints | Supported | Supported |
+| btree indexes | Supported | Supported (no deduplication) |
 | Pattern matching (LIKE) | Supported | NOT supported |
 | Equality comparison | Byte-level | Linguistic |
 
-### Workaround for UNIQUE + Hebrew Sorting
+### Pattern: deterministic column + Hebrew sorting in ORDER BY
 
-Use a deterministic collation for the column (allowing UNIQUE) and apply Hebrew collation in ORDER BY:
+Pattern matching (`LIKE`) is the operation a non-deterministic collation actually blocks. Keep the column deterministic so `LIKE` and prefix search keep working, and apply the Hebrew collation only in `ORDER BY`:
 
 ```sql
 CREATE TABLE products (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  -- Default (deterministic) collation for UNIQUE constraint
+  -- Default (deterministic) collation keeps LIKE/prefix search available
   name_he text NOT NULL UNIQUE,
   name_en text
 );

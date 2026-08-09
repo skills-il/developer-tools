@@ -27,7 +27,7 @@ allowed-tools: WebFetch
 
 ### שלב 2: חיפוש בזאפ כמקור ההשוואה הראשי
 
-זאפ (zap.co.il) הוא מנוע השוואת המחירים המוביל בישראל עם למעלה משני מיליון מבקרים חודשיים ואלפי חנויות שותפות.
+זאפ (zap.co.il) הוא מנוע השוואת המחירים המוביל בישראל, שמרכז הצעות ממגוון רחב של חנויות ישראליות. (זאפ לא מפרסמת נתוני תנועה או מספר חנויות מבוקרים, אז אל תצטטו מספר כזה.)
 
 1. **חפש לפי שם מוצר או מספר דגם** בכתובת `https://www.zap.co.il/search.aspx?keyword=PRODUCT_NAME`
 2. **עיין בטבלת ההשוואה** המציגה:
@@ -182,7 +182,7 @@ allowed-tools: WebFetch
 
 | מקור | כתובת | מה לבדוק |
 |------|-------|----------|
-| השוואת מחירים זאפ | https://www.zap.co.il | מנוע השוואת המחירים המרכזי בישראל |
+| השוואת מחירים זאפ | https://www.zap.co.il/search.aspx?keyword=PRODUCT_NAME | מנוע השוואת המחירים המרכזי בישראל |
 | מחשבון מסי יבוא של רשות המכס | https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/he/PersonalImportTax/Home/Calc | אומדן מס יבוא אישי רשמי לפי מוצר וערך |
 | זכויות יבוא אישי (כל-זכות) | https://www.kolzchut.org.il/he/זכותון_בנושא_יבוא_אישי_(חבילות_מחו"ל) | זכויות צרכן ותנאים ליבוא אישי |
 | מדריך יבוא אישי (gov.il) | https://www.gov.il/he/departments/topics/customs-personal-import/govil-landing-page | כללי מכס רשמיים, ספי פטור |

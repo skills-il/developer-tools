@@ -696,7 +696,7 @@ async def handoff_to_human(user_id: str, context: dict):
 | WhatsApp Cloud API Docs | https://developers.facebook.com/documentation/business-messaging/whatsapp/about-the-platform | גרסת API, סוגי הודעות, פורמט webhook |
 | Meta Graph API Changelog | https://developers.facebook.com/docs/graph-api/changelog/ | גרסת API עדכנית, שינויים שוברים |
 | Telegram Bot API Docs | https://core.telegram.org/bots/api | מתודות Bot API, מקלדות inline, הגדרת webhook |
-| python-telegram-bot Docs | https://docs.python-telegram-bot.org/ | גרסת ספרייה, שינויים ב-API אסינכרוני |
+| python-telegram-bot Docs | https://docs.python-telegram-bot.org/en/stable/ | גרסת ספרייה, שינויים ב-API אסינכרוני |
 | Meta Business Suite | https://business.facebook.com/ | יצירת תבניות, הגדרת מספר טלפון |
 
 ## פתרון בעיות

@@ -92,15 +92,28 @@
       ]
     },
     {
-      "claim_id": "openai-realtime-api-hebrew",
-      "claim": "OpenAI's GA realtime speech-to-speech model is gpt-realtime (GA Aug 2025) with gpt-realtime-1.5 as the current successor; it supports Hebrew over WebRTC/WebSocket/SIP. The older gpt-4o-realtime-preview was removed from the API on 2026-05-07.",
+      "claim_id": "openai-realtime-preview-deprecated-a",
+      "claim": "OpenAI notified developers in September 2025 that gpt-4o-realtime-preview models were deprecated and would be removed from the API.",
       "source_url": "https://developers.openai.com/api/docs/deprecations",
-      "raw_snippet": "gpt-4o-realtime-preview ... shutdown 2026-05-07 ... recommended replacement gpt-realtime-1.5",
-      "fetched_at": "2026-07-06T12:40:00Z",
+      "raw_snippet": "In September, 2025, we notified developers using gpt-4o-realtime-preview models of their deprecation and removal from the API in six months.",
+      "fetched_at": "2026-08-09T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "curl (rendered text)"
+    },
+    {
+      "claim_id": "openai-realtime-preview-deprecated-b",
+      "claim": "gpt-4o-realtime-preview shut down on 2026-05-07 with gpt-realtime-1.5 as the recommended replacement.",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "raw_snippet": "2026-05-07 gpt-4o-realtime-preview gpt-realtime-1.5",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "curl (rendered text)"
     },
     {
       "claim_id": "polly-no-hebrew",

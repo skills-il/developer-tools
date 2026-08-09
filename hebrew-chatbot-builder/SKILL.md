@@ -958,7 +958,7 @@ And reference documents in `references/`:
 | WhatsApp Cloud API Docs | https://developers.facebook.com/documentation/business-messaging/whatsapp/about-the-platform | API version, message types, webhook format |
 | Meta Graph API Changelog | https://developers.facebook.com/docs/graph-api/changelog/ | Latest API version, breaking changes |
 | Telegram Bot API Docs | https://core.telegram.org/bots/api | Bot API methods, inline keyboards, webhook setup |
-| python-telegram-bot Docs | https://docs.python-telegram-bot.org/ | Library version, async API changes |
+| python-telegram-bot Docs | https://docs.python-telegram-bot.org/en/stable/ | Library version, async API changes |
 | Meta Business Suite | https://business.facebook.com/ | Template creation, phone number setup |
 
 ## Troubleshooting

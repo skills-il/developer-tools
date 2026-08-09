@@ -43,7 +43,7 @@ Confirm the current model and rates on the joinzap onboarding page; do not assum
 
 ## Yad2, Israel's Dominant General Marketplace
 
-- **URL:** `https://www.yad2.co.il`
+- **URL:** `https://www.yad2.co.il/market`
 - **What it is:** Israel's largest general classifieds/marketplace (the de-facto Israeli eBay/Craigslist), for both C2C and business sellers across electronics, second-hand goods, vehicles, real estate, and more.
 - **Seller access:** post a listing on the Yad2 site (free basic listings; paid promotion and business "חנות" store accounts available).
 

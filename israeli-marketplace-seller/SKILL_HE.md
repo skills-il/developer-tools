@@ -185,7 +185,7 @@
 | מקור | URL | מה לבדוק |
 |------|-----|----------|
 | זאפ, הוספת חנות | https://www.zap.co.il/joinzap.aspx | הצטרפות מוכרים, מודל העמלות, לוח הבקרה לניהול |
-| יד2 | https://www.yad2.co.il | השוק הכללי הדומיננטי בישראל: פרסום מודעה, קטגוריות, חשבונות עסקיים |
+| יד2 | https://www.yad2.co.il/market | השוק הכללי הדומיננטי בישראל: פרסום מודעה, קטגוריות, חשבונות עסקיים |
 | מטא, שינויים בחנויות ובצ'קאאוט | https://www.facebook.com/business/help/1314349509894768 | ביטול התשלום המובנה, מעבר לצ'קאאוט חיצוני |
 | Instagram Shopping לעסקים | https://www.facebook.com/business/instagram | הקמת קטלוג, תגיות מוצר, זכאות |
 | חשבוניות ישראל (מספר הקצאה) | https://www.gov.il/he/service/issuing-allocation-number-for-an-invoice | ספי מספר ההקצאה ואיך מקבלים אותו |

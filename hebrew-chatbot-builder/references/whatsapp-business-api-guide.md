@@ -111,7 +111,7 @@ Template name: shipping_update_he
 Language: he
 Category: Utility
 Body: הזמנה {{1}} נשלחה! מספר מעקב: {{2}}. צפי הגעה: {{3}}. לעקוב אחר המשלוח:
-Buttons: [URL: "מעקב משלוח" -> https://tracking.example.com/{{1}}]
+Buttons: [URL: "מעקב משלוח" -> tracking.example.com/{{1}}]
 ```
 
 **Template Review Notes:**

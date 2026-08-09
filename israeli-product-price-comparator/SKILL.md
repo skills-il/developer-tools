@@ -24,7 +24,7 @@ Ask clarifying questions if the product is ambiguous. Get the exact model number
 
 ### Step 2: Search Zap.co.il as the Primary Comparison Source
 
-Zap.co.il is Israel's dominant price comparison engine with over 2 million monthly visitors and thousands of partnered retailers.
+Zap.co.il is Israel's dominant price comparison engine, aggregating offers from a large network of Israeli retailers. (Zap publishes no audited traffic or partner-count figure, so do not quote one.)
 
 1. **Search by product name or model number** at the Zap website
 2. **Review the comparison table** which shows:
@@ -179,7 +179,7 @@ Result: Present side-by-side comparison showing Amazon price with customs estima
 
 | Source | URL | What to Check |
 |--------|-----|---------------|
-| Zap price comparison | https://www.zap.co.il | Primary Israeli price comparison engine |
+| Zap price comparison | https://www.zap.co.il/search.aspx?keyword=PRODUCT_NAME | Primary Israeli price comparison engine |
 | Israel Tax Authority customs calculator | https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/he/PersonalImportTax/Home/Calc | Official personal-import tax estimate by product and value |
 | Personal import rights (Kol Zchut) | https://www.kolzchut.org.il/he/זכותון_בנושא_יבוא_אישי_(חבילות_מחו"ל) | Consumer rights and conditions for personal import |
 | Personal import guide (gov.il) | https://www.gov.il/en/departments/topics/customs-personal-import/govil-landing-page | Official customs rules, exemption thresholds |
