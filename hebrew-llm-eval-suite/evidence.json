@@ -9,7 +9,10 @@
       "source_url": "https://huggingface.co/blog/leaderboard-hebrew",
       "raw_snippet": "Hebrew LLM Leaderboard",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "hebrew-llm-leaderboard-space-2",
@@ -17,7 +20,10 @@
       "source_url": "https://huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard",
       "raw_snippet": "hebrew-llm-leaderboard",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "dictalm-3-tech-report",
@@ -25,7 +31,11 @@
       "source_url": "https://dicta.org.il/publications/DictaLM_3_0___Techincal_Report.pdf",
       "raw_snippet": "DictaLM 3.0",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/benchmark-catalog.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/benchmark-catalog.md"
+      ]
     },
     {
       "claim_id": "dicta-il-org-2",
@@ -33,31 +43,48 @@
       "source_url": "https://huggingface.co/dicta-il",
       "raw_snippet": "dicta-il",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "ai21-jamba-family",
-      "claim": "AI21 Labs publishes the Jamba family with Hebrew listed as a core supported language; the 1.6 family superseded the earlier 1.5 family, and Jamba-Reasoning-3B is the most accessible open-weight Jamba variant.",
-      "source_url": "https://www.ai21.com/blog/announcing-jamba-model-family/",
-      "raw_snippet": "Jamba",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "claim": "AI21's Jamba models list Hebrew (he) among their supported languages, alongside English, French, German, Dutch, Spanish, Portuguese, Italian and Arabic.",
+      "source_url": "https://huggingface.co/api/models/ai21labs/AI21-Jamba-Mini-1.5",
+      "raw_snippet": "\"language\": [\"en\", \"fr\", \"de\", \"nl\", \"es\", \"pt\", \"it\", \"ar\", \"he\"]",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "The previously cited ai21.com blog post returns HTTP 403 to non-browser clients and could not be read, so the claim was re-sourced to the model's own card metadata on HuggingFace, where cardData.language includes 'he'. Note the AI21-Jamba model repos are gated ('gated': 'auto'), so the README itself is not fetchable unauthenticated; the API metadata is.",
+      "verified_via": "curl (HuggingFace API / raw README / rendered page)"
     },
     {
       "claim_id": "cohere-aya",
-      "claim": "Cohere Labs publishes the Aya family (aya-expanse-8b, aya-expanse-32b, aya-23-8B, aya-23-35B) on Hugging Face under CohereLabs, with Hebrew listed among supported languages.",
-      "source_url": "https://huggingface.co/CohereLabs",
-      "raw_snippet": "aya",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "claim": "Cohere Labs' Aya models are massively multilingual and list Hebrew (he) among their supported languages.",
+      "source_url": "https://huggingface.co/api/models/CohereLabs/aya-23-8B",
+      "raw_snippet": "\"language\": [\"en\", \"fr\", \"de\", \"es\", \"it\", \"pt\", \"ja\", \"ko\", \"zh\", \"ar\", \"el\", \"fa\", \"pl\", \"id\", \"cs\", \"he\", \"hi\", \"nl\", \"ro\", \"ru\", \"tr\", \"uk\", \"vi\"]",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "curl (HuggingFace API / raw README / rendered page)"
     },
     {
       "claim_id": "yam-peleg-hebrew-models",
-      "claim": "Yam Peleg publishes a series of Hebrew-finetuned open-weight community models on Hugging Face under yam-peleg, including Hebrew-Mistral-7B, Hebrew-Gemma-11B-Instruct, and Hebrew-Mixtral-8x22B.",
-      "source_url": "https://huggingface.co/yam-peleg",
-      "raw_snippet": "yam-peleg",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "claim": "yam-peleg publishes Hebrew community finetunes: Hebrew-Mistral-7B, Hebrew-Gemma-11B-Instruct and Hebrew-Mixtral-8x22B all resolve on HuggingFace.",
+      "source_url": "https://huggingface.co/yam-peleg/Hebrew-Mistral-7B",
+      "raw_snippet": "license: apache-2.0\nlanguage:\n- en\n- he\nlibrary_name: transformers",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "All three model ids return HTTP 200 from the HuggingFace models API (Hebrew-Mistral-7B, Hebrew-Gemma-11B-Instruct, Hebrew-Mixtral-8x22B), checked 2026-08-09.",
+      "verified_via": "curl (HuggingFace API / raw README / rendered page)"
     },
     {
       "claim_id": "lm-eval-harness",
@@ -65,7 +92,10 @@
       "source_url": "https://github.com/EleutherAI/lm-evaluation-harness",
       "raw_snippet": "lm-evaluation-harness",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "inspect-ai",
@@ -73,15 +103,23 @@
       "source_url": "https://github.com/UKGovernmentBEIS/inspect_ai",
       "raw_snippet": "inspect_ai",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "heq-paper",
-      "claim": "HeQ is a Hebrew QA dataset published at ACL Anthology under the Findings-EMNLP 2023 paper aclanthology.org/2023.findings-emnlp.915.pdf with 30,147 questions sourced from Hebrew Wikipedia and Geektime.",
+      "claim": "HeQ is a Hebrew extractive question-answering benchmark of 30,147 question-answer pairs drawn from Hebrew Wikipedia and Israeli tech news.",
       "source_url": "https://aclanthology.org/2023.findings-emnlp.915.pdf",
-      "raw_snippet": "HeQ",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/benchmark-catalog.md"]
+      "raw_snippet": "30,147 diverse question-answer pairs derived from both Hebrew Wikipedia articles and Israeli tech news.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/benchmark-catalog.md"
+      ],
+      "verified_via": "curl + pdftotext (page 1 abstract)"
     },
     {
       "claim_id": "heq-github",
@@ -89,7 +127,10 @@
       "source_url": "https://github.com/NNLP-IL/Hebrew-Question-Answering-Dataset",
       "raw_snippet": "Hebrew-Question-Answering",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "nnlp-il-hebrew-resources-2",
@@ -97,15 +138,22 @@
       "source_url": "https://github.com/NNLP-IL/Hebrew-Resources",
       "raw_snippet": "Hebrew Resources",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "heq-v1-etelis-2",
-      "claim": "HeQ_v1 is mirrored on Hugging Face by the Etelis user at huggingface.co/datasets/Etelis/HeQ_v1.",
+      "claim": "The Etelis/HeQ_v1 HuggingFace mirror hosts HeQ: 30,147 Modern Hebrew questions following the SQuAD/ParaShoot format.",
       "source_url": "https://huggingface.co/datasets/Etelis/HeQ_v1",
-      "raw_snippet": "HeQ_v1",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "raw_snippet": "HeQ is a question answering dataset in Modern Hebrew, consisting of 30,147 questions. It follows the format and crowdsourcing methodology of SQuAD and ParaShoot, with paragraphs sourced from Hebrew Wikipedia and Geektime.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "curl (HuggingFace API / raw README / rendered page)"
     },
     {
       "claim_id": "hebrew-sentiment-dataset-2",
@@ -113,7 +161,10 @@
       "source_url": "https://huggingface.co/datasets/HebArabNlpProject/HebrewSentiment",
       "raw_snippet": "HebrewSentiment",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "hebnli-dataset",
@@ -121,15 +172,62 @@
       "source_url": "https://huggingface.co/datasets/HebArabNlpProject/HebNLI",
       "raw_snippet": "HebNLI",
       "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "current-gen-models-2026",
-      "claim": "As of May 2026, the production LLM lines this skill evaluates include Anthropic Claude 4.7 (Opus, Sonnet, Haiku); Anthropic Claude 4.6 (Opus, Sonnet); OpenAI gpt-5 family; Google Gemini 3 (gemini-3-pro, gemini-3-flash); and Google Gemini 2.5 Pro as the legacy comparison point.",
+      "claim": "The Open Hebrew LLM Leaderboard evaluates models on four Hebrew-specific datasets built for the leaderboard.",
       "source_url": "https://huggingface.co/blog/leaderboard-hebrew",
-      "raw_snippet": "leaderboard",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "scripts/run_eval.py"]
+      "raw_snippet": "We have developed four key datasets, each designed to test language models on their understanding an",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/run_eval.py"
+      ],
+      "verified_via": "curl (HuggingFace API / raw README / rendered page)"
+    },
+    {
+      "claim_id": "cohere-labs-org-page",
+      "claim": "Cohere Labs is a HuggingFace organization publishing the Aya model family.",
+      "source_url": "https://huggingface.co/CohereLabs",
+      "raw_snippet": "\"fullname\":\"Cohere Labs\",\"name\":\"CohereLabs\"",
+      "verification_note": "Quoted from https://huggingface.co/api/organizations/CohereLabs/overview; the org page itself returns HTTP 200.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (HuggingFace org API)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "yam-peleg-org-page",
+      "claim": "yam-peleg is a HuggingFace author page hosting the Hebrew-* community finetunes.",
+      "source_url": "https://huggingface.co/yam-peleg",
+      "raw_snippet": "\"id\": \"yam-peleg/Hebrew-Mistral-7B\"",
+      "verification_note": "https://huggingface.co/yam-peleg returns HTTP 200; the models API filtered by author=yam-peleg lists the Hebrew-* repos.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (HuggingFace models API)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "ai21-jamba-model-card",
+      "claim": "The AI21-Jamba-Mini-1.5 model card is the citable reference for Jamba's Hebrew support.",
+      "source_url": "https://huggingface.co/ai21labs/AI21-Jamba-Mini-1.5",
+      "raw_snippet": "\"language\": [\"en\", \"fr\", \"de\", \"nl\", \"es\", \"pt\", \"it\", \"ar\", \"he\"]",
+      "verification_note": "Repo is gated ('gated': 'auto'); cardData read via https://huggingface.co/api/models/ai21labs/AI21-Jamba-Mini-1.5.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "curl (HuggingFace models API)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }

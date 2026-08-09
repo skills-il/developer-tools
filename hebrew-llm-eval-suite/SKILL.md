@@ -224,7 +224,7 @@ No MCP server is required for running evals. Consider pairing with Hebrew data-s
 | Dicta organization on HuggingFace | https://huggingface.co/dicta-il | Latest DictaLM 3.0 variants (24B-Base, Nemotron-12B-Instruct, 1.7B-Thinking-GGUF, 24B-Thinking) and DictaBERT models |
 | Cohere Aya organization | https://huggingface.co/CohereLabs | Aya-23 (8B/35B) and Aya Expanse (8B/32B) multilingual models with Hebrew support |
 | Yam Peleg Hebrew models | https://huggingface.co/yam-peleg | Hebrew-Mistral-7B, Hebrew-Gemma-11B-Instruct, Hebrew-Mixtral-8x22B community finetunes |
-| AI21 Jamba model family announcement | https://www.ai21.com/blog/announcing-jamba-model-family/ | Jamba Hebrew support and model specs |
+| AI21 Jamba model card (Hebrew in supported languages) | https://huggingface.co/ai21labs/AI21-Jamba-Mini-1.5 | Jamba Hebrew support and model specs |
 | EleutherAI lm-evaluation-harness | https://github.com/EleutherAI/lm-evaluation-harness | Standard base-model eval framework; Hebrew tasks must be added as custom YAMLs |
 | UK AISI Inspect AI | https://github.com/UKGovernmentBEIS/inspect_ai | Chat-model eval framework with agent and graded-scoring primitives |
 | Hebrew NLP Resources index | https://github.com/NNLP-IL/Hebrew-Resources | Comprehensive list of Hebrew NLP datasets and tools |

@@ -201,7 +201,7 @@ API-ים משתנים בשקט. לוגגו את גרסת המודל המדויק
 | Dicta ב-HuggingFace | https://huggingface.co/dicta-il | DictaLM 3.0 (24B-Base, Nemotron-12B-Instruct, 1.7B-Thinking-GGUF, 24B-Thinking) ו-DictaBERT |
 | ארגון Cohere Aya | https://huggingface.co/CohereLabs | Aya-23 (8B/35B) ו-Aya Expanse (8B/32B) רב-לשוניים עם תמיכה בעברית |
 | מודלי עברית של Yam Peleg | https://huggingface.co/yam-peleg | Hebrew-Mistral-7B, Hebrew-Gemma-11B-Instruct, Hebrew-Mixtral-8x22B |
-| הכרזת AI21 Jamba | https://www.ai21.com/blog/announcing-jamba-model-family/ | תמיכה בעברית |
+| כרטיס מודל AI21 Jamba (עברית ברשימת השפות) | https://huggingface.co/ai21labs/AI21-Jamba-Mini-1.5 | תמיכה בעברית |
 | EleutherAI lm-evaluation-harness | https://github.com/EleutherAI/lm-evaluation-harness | פריימוורק סטנדרטי להערכת מודלי בסיס; משימות עברית מתווספות כ-YAML מותאם |
 | UK AISI Inspect AI | https://github.com/UKGovernmentBEIS/inspect_ai | פריימוורק להערכת צ'אטים עם פרימיטיבי סוכן ו-graded scoring |
 | אינדקס משאבי NLP עברי | https://github.com/NNLP-IL/Hebrew-Resources | רשימה מקיפה |
