@@ -52,10 +52,10 @@
     },
     {
       "claim_id": "consumer-cooling-off",
-      "claim": "Under the Consumer Protection Law remote-sale rules, the buyer may cancel within 14 days; the cancellation fee is capped at 5% of the price or NIS 100 (whichever is lower); people with disabilities, senior citizens, and new immigrants get an extended cancellation window of up to 4 months.",
-      "source_url": "https://www.gov.il/he/departments/consumer_protection_and_fair_trade_authority",
-      "raw_snippet": "Remote-purchase cancellation: 14 days; cancellation fee up to 5% of the transaction or NIS 100 / 100 ש\"ח, whichever is lower; extended 4-month window for persons with disabilities, senior citizens, and new immigrants.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "claim": "On a remote-sale cancellation for any reason other than a defect, the consumer returns the product at their own expense and the seller may charge a cancellation fee of 5% of the price of the asset or of the transaction, or 100 NIS, whichever is lower.",
+      "source_url": "https://www.gov.il/he/pages/returns",
+      "raw_snippet": "ביטול עסקה מרחוק מכל סיבה אחרת הצרכן מחויב להחזיר את המוצר לעוסק על חשבונו, והעוסק רשאי לדרוש ממך דמי ביטול בסך 5% ממחיר הנכס או העסקה או 100 ש\"ח לפי הנמוך מבניהם בלבד.",
+      "fetched_at": "2026-08-11T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -118,10 +118,10 @@
     },
     {
       "claim_id": "tax-authority-he-url",
-      "claim": "The Israel Tax Authority (Hebrew gov.il page) documents osek patur vs murshe and VAT.",
+      "claim": "The Israel Tax Authority (Hebrew gov.il department page) unifies the tax branches: income tax, real-estate taxation, VAT, purchase tax, customs and stamp duty. It is cited in this skill as the portal for osek patur vs osek murshe registration and VAT.",
       "source_url": "https://www.gov.il/he/departments/israel_tax_authority",
-      "raw_snippet": "רשות המסים: עוסק פטור מול מורשה, ספי מחזור, ומע\"מ.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "raw_snippet": "רשות המסים בישראל מאחדת את אגפי המס השונים: מס הכנסה, מיסוי מקרקעין, מס ערך מוסף, מס קנייה, מכס ומס בולים.",
+      "fetched_at": "2026-08-11T00:00:00Z",
       "appears_in": [
         "SKILL_HE.md"
       ]
@@ -164,6 +164,28 @@
       "source_url": "https://www.gov.il/en/departments/israel_tax_authority/govil-landing-page",
       "raw_snippet": "Illustrative example data for report formatting (both NIS and ש\"ח forms): revenues 22,000 ש\"ח / 12,000 ש\"ח / 4,500 ש\"ח / 38,500 ש\"ח (12,000 NIS, 22,000 NIS, 4,500 NIS), average orders 2,750 ש\"ח / 2,750 NIS / 800 / 1,500 / 1,481, margins 18% / 22% / 20%, prices 3,200 ש\"ח / 3,350 ש\"ח / 3,100 ש\"ח (3,350 NIS, 3,100 NIS), 200 ש\"ח, 2 units, 5%.",
       "fetched_at": "2026-06-21T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "consumer-cooling-off-extended-4-months",
+      "claim": "A consumer who is a person with a disability, a senior citizen or a new immigrant (the seller may ask for one certificate proving this) may cancel the transaction within 4 months of the agreement, of delivery, or of receiving the statutory disclosure document, whichever is later, PROVIDED a telephone or chat conversation with the seller took place when the transaction was made.",
+      "source_url": "https://www.gov.il/he/pages/returns",
+      "raw_snippet": "צרכן שהוא אדם עם מוגבלות, אזרח ותיק או עולה חדש (העוסק רשאי לבקש תעודה אחת המוכיחה זאת) - רשאי לבטל את העסקה תוך 4 חודשים מיום עשיית ההסכם או מיום מסירת המוצר או מיום קבלת מסמך גילוי הפרטים הנדרשים על פי החוק לפי המאוחר מבניהם, כל עוד בוצעה שיחה טלפונית או בצ'אט עם העוסק במעמד ביצוע העסקה.",
+      "fetched_at": "2026-08-11T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "consumer-authority-url",
+      "claim": "Reference link: the Consumer Protection and Fair Trade Authority gov.il department page, https://www.gov.il/he/departments/consumer_protection_and_fair_trade_authority . It is an independent intra-governmental authority holding exclusive responsibility for binding guidance by its Commissioner, enforcement of the Consumer Protection Law, and consumer-protection regulation.",
+      "source_url": "https://www.gov.il/he/departments/consumer_protection_and_fair_trade_authority",
+      "raw_snippet": "הרשות להגנת הצרכן ולסחר הוגן הינה רשות פנים ממשלתית עצמאית, המשמשת כזרוע אכיפה עצמאית, בעלת מומחיות, המרכזת בלעדית:1. מתן הנחיות מחייבות של הממונה על הרשות להתנהגות נורמטיבית בקשר בין העוסק והצרכן.2. כל תהליכי האכיפה של הוראות חוק הגנת הצרכן.3. רגולציה בתחום הגנת הצרכן.",
+      "fetched_at": "2026-08-11T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"

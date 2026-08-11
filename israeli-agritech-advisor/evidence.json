@@ -193,16 +193,16 @@
     },
     {
       "claim_id": "water-quota-thresholds",
-      "claim": "The 80% and 95% quota alert thresholds in this skill are operator-chosen operational defaults, NOT Israeli Water Authority regulatory thresholds. No regulatory alert percentage is asserted.",
-      "source_url": "https://www.gov.il/en/departments/water_authority",
-      "raw_snippet": "Attention Required! | Cloudflare body{margin:0;padding:0}",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "claim": "Israel's water sector regulator is the Government Water and Sewage Authority (הרשות הממשלתית למים ולביוב). The 80% and 95% quota alert thresholds used in this skill are operator-chosen operational defaults and are NOT regulatory thresholds set by this authority; no regulatory alert percentage is asserted.",
+      "source_url": "https://www.gov.il/he/departments/water_authority",
+      "raw_snippet": "הרשות הממשלתית למים ולביוב",
+      "fetched_at": "2026-08-11",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
       "verification_note": "The Israel Water Authority page returns HTTP 403 behind Cloudflare to non-browser clients and could not be read on 2026-08-09, so it is cited only as the responsible-body pointer. The 80% / 95% alert thresholds in this skill are explicitly operator-chosen defaults and no regulatory claim is made about them.",
-      "verified_via": "curl (rendered page text) + DNS lookup where noted"
+      "source_label": "רשות המים - הרשות הממשלתית למים ולביוב"
     },
     {
       "claim_id": "cropx-v2-endpoint-illustrative",

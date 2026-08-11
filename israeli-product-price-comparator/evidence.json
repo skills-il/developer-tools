@@ -60,14 +60,17 @@
     },
     {
       "claim_id": "warranty-1-year-150nis-importer",
-      "claim": "Under the Consumer Protection (Warranty and After-Sale Service) Regulations 2006, electrical/electronic products over 150 NIS / 150 ש\"ח carry a minimum 1-year warranty from delivery; the legal obligation is on the importer/manufacturer, not the retailer.",
+      "claim": "Under the Consumer Protection (Warranty and After-Sale Service) Regulations 2006, new electrical, electronic and gas products priced above 150 NIS (and mechanical mechanisms in furniture, and water heaters) carry a warranty of one year from actual delivery to the consumer; the manufacturer/importer must repair faults free of charge during that first year.",
       "source_url": "https://www.gov.il/he/pages/warranty",
-      "raw_snippet": "אחריות למוצרי חשמל ואלקטרוניקה שמחירם עולה על 150 ש\"ח היא לתקופה של שנה לפחות ממועד מסירת המוצר. האחריות חלה על היצרן או היבואן.",
-      "fetched_at": "2026-06-22T20:00:00Z",
+      "raw_snippet": "אחריות חלה על מוצרי חשמל, אלקטרוניקה וגז חדשים, שמחירם גבוה מ־150 ₪ וכן על מנגנונים מכניים בריהוט, ועל מחממי מים (דודי שמש / בוילרים). תקופת האחריות היא שנה מיום מסירת המוצר בפועל לצרכן.",
+      "fetched_at": "2026-08-11",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "gov.il content API",
+      "source_fetched_at": "2026-08-11T00:00:00Z",
+      "verified_at": "2026-08-11"
     },
     {
       "claim_id": "be-owned-by-shufersal",
