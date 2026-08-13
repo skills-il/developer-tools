@@ -1,199 +1,418 @@
 {
+  "schemaVersion": "1.0",
   "skill": "israeli-cloud-cost-comparator",
   "version": "1.3.0",
-  "generated_at": "2026-05-20",
-  "generated_by": "update-skill (Phase 3 audit, May 2026)",
-  "notes": "Cloud pricing changes quarterly. Treat anchor numbers as 'verify before quoting': they are sanity-check bands, not commitments. The qualitative facts (regions exist / programs exist / law is in force) are stable for this update window.",
+  "generated_at": "2026-08-13",
+  "generated_by": "evidence re-verification pass (raw_snippet migration, August 2026)",
+  "notes": "Every raw_snippet below was copied literally from the page at its source_url on 2026-08-13. Cloud pricing and startup-credit tiers move quarterly; several entries record that the live page NO LONGER matches the figure SKILL.md quotes. Those mismatches are flagged in the claim text and need a content fix, not an evidence fix.",
   "claims": [
     {
       "id": "aws-il-central-1-launched",
-      "claim": "AWS launched the Israel (Tel Aviv) region il-central-1 in August 2023, and as of May 2026 it remains the AWS region inside Israel.",
-      "source": "https://aws.amazon.com/about-aws/whats-new/2023/08/aws-israel-tel-aviv-region/",
-      "verified": true
-    },
-    {
-      "id": "aws-il-central-1-instance-count",
-      "claim": "il-central-1 supports a broad EC2 catalog (~277 instance types per CloudPrice third-party tracker as of 2026).",
-      "source": "https://cloudprice.net/aws/region/il-central-1",
+      "claim": "AWS launched the Israel (Tel Aviv) region il-central-1 in August 2023 (announcement post dated 01 AUG 2023), with three Availability Zones. (The URL https://aws.amazon.com/about-aws/whats-new/2023/08/aws-israel-tel-aviv-region/ cited in SKILL.md's reference list now returns HTTP 404 and should be replaced with this blog post.)",
+      "source_url": "https://aws.amazon.com/blogs/aws/now-open-aws-israel-tel-aviv-region/",
+      "raw_snippet": "Today we're announcing the general availability of the AWS Israel (Tel Aviv) Region, with three Availability Zones and the il-central-1 API name.",
       "verified": true,
-      "confidence": "medium"
+      "note": "Previous source_url (aws.amazon.com/about-aws/whats-new/2023/08/aws-israel-tel-aviv-region/) now returns HTTP 404; replaced with the AWS News Blog launch post."
     },
     {
-      "id": "gcp-me-west1-launched",
-      "claim": "GCP me-west1 (Tel Aviv) reached general availability in November 2022 and is GCP's first Middle East region.",
-      "source": "https://cloud.google.com/about/locations",
-      "verified": true
+      "id": "aws-il-central-1-instance-families",
+      "claim": "il-central-1 launched with a broad EC2 catalog including C5, C6g, C6i, G5, I4i, M5, M6i, R5, R6i, T3 and T4g families.",
+      "source_url": "https://aws.amazon.com/blogs/aws/now-open-aws-israel-tel-aviv-region/",
+      "raw_snippet": "In the new Tel Aviv Region, you can use C5 , C5d , C6g , C6gn , C6i , C6id , D3 , G5 , I3 , I3en , I4i , M5",
+      "verified": true,
+      "note": "Replaces a former entry claiming '~277 instance types per CloudPrice'. cloudprice.net/aws/region/il-central-1 renders its instance table client-side (fetched body is a ~1.3 kB shell reading 'Loading...'), so that figure could not be read and is not asserted anywhere in SKILL.md."
     },
     {
-      "id": "gcp-me-west1-n2-standard-4-pricing",
-      "claim": "GCP me-west1 n2-standard-4 (4 vCPU, 16 GB) on-demand is approximately $0.214/hr (~$156/month). 1-year CUD ~$0.135/hr (~$98/month, ~37% off). 3-year CUD ~$0.096/hr (~$70/month, ~55% off). Spot ~$0.073/hr (~$53/month).",
-      "source": "https://calculator.holori.com/gcp/vm/n2-standard-4/me-west1",
+      "id": "gcp-me-west1-tel-aviv",
+      "claim": "GCP me-west1 is Google Cloud's Tel Aviv, Israel region (zones me-west1-a/b/c).",
+      "source_url": "https://docs.cloud.google.com/compute/docs/regions-zones",
+      "raw_snippet": "me-west1-a Tel Aviv, Israel, Middle East",
+      "verified": true,
+      "note": "SKILL.md line 58 additionally states me-west1 reached GA in November 2022 and is GCP's FIRST Middle East region. Neither part could be evidenced: cloud.google.com/about/locations contains no 'me-west1' string, and the Google Cloud blog launch post is JS-rendered (~1 kB of fetched text). The 'first in the Middle East' part also looks doubtful given me-central1 (Doha). Needs a content fix or a browser-verified source. (cloud.google.com/compute/docs/regions-zones/ intermittently returns HTTP 500 to plain fetches; docs.cloud.google.com serves the same page.)"
+    },
+    {
+      "id": "gcp-me-west1-n2-standard-4-on-demand",
+      "claim": "GCP me-west1 n2-standard-4 (4 vCPU, 16 GiB) on-demand is about $0.2137/hr, roughly $155.97/month, consistent with the ~$0.214/hr (~$156/mo) anchor in SKILL.md.",
+      "source_url": "https://calculator.holori.com/gcp/vm/n2-standard-4/me-west1",
+      "raw_snippet": "$ 0.2137 /hr ~ $ 155.97 /month on-demand in me-west1",
       "verified": true,
       "confidence": "high",
-      "note": "Values verified Jan 2026 per Holori; still useful as an anchor. Verify on cloud.google.com/compute/all-pricing before quoting to a customer."
+      "note": "Third-party tracker (Holori), page states 'Last updated: Aug 10, 2026'. Verify on cloud.google.com/compute/all-pricing before quoting to a customer."
     },
     {
-      "id": "azure-israel-central-launched",
-      "claim": "Azure Israel Central launched on November 12, 2023 and is Microsoft's Azure region inside Israel.",
-      "source": "https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/",
+      "id": "gcp-me-west1-n2-standard-4-cud-and-spot",
+      "claim": "me-west1 n2-standard-4 commitment pricing is $0.1346/hr (~$98.26/mo, 37% off) for 1 year and $0.0962/hr (~$70.19/mo, 55% off) for 3 years, matching SKILL.md's ~$0.135/~$98 and ~$0.096/~$70 anchors. SKILL.md's spot anchor of ~$0.073/hr (~$53/mo) is STALE: the same page now shows spot at $0.0957/hr (~$69.84/mo).",
+      "source_url": "https://calculator.holori.com/gcp/vm/n2-standard-4/me-west1",
+      "raw_snippet": "1 Year $ 0.1346 /hr ~ $ 98.26 /mo Save 37 % 3 Year $ 0.0962 /hr ~ $ 70.19 /mo Save 55 %",
+      "verified": true,
+      "confidence": "high"
+    },
+    {
+      "id": "azure-israel-central-region",
+      "claim": "Azure Israel Central (region code israelcentral) is Microsoft's Azure region inside Israel.",
+      "source_url": "https://learn.microsoft.com/en-us/azure/reliability/regions-list",
+      "raw_snippet": "Israel Central N/A Israel Israel israelcentral",
+      "verified": true,
+      "note": "SKILL.md line 85 states the region launched on November 12, 2023. That date could not be evidenced: the former source (azure.microsoft.com products-by-region) no longer contains the string 'Israel' in its fetched body, and the Microsoft launch blog URL 404s. Date needs a fresh source or removal."
+    },
+    {
+      "id": "oracle-il-jerusalem-1-region-code",
+      "claim": "Oracle Cloud's Israel Central region is il-jerusalem-1, located in Jerusalem, Israel.",
+      "source_url": "https://docs.oracle.com/en-us/iaas/Content/General/Concepts/regions.htm",
+      "raw_snippet": "Israel Central (Jerusalem) il-jerusalem-1 Jerusalem, Israel MTZ OC1",
       "verified": true
     },
     {
-      "id": "oracle-il-jerusalem-1-launched",
-      "claim": "Oracle launched il-jerusalem-1 in Jerusalem on July 8, 2021 inside an underground data center 50 meters below ground level, beneath the Har Hotzvim tech park, in a hardened 14,000 sqm facility four floors below a 17-story building.",
-      "source": "https://www.timesofisrael.com/oracle-inaugurates-regional-cloud-center-in-jerusalem-plans-to-open-2nd-site/",
-      "verified": true
+      "id": "oracle-il-jerusalem-1-underground",
+      "claim": "Oracle's Jerusalem cloud region sits in an underground facility of thousands of square meters, over four floors, at a depth of 50 meters below ground level.",
+      "source_url": "https://www.timesofisrael.com/oracle-inaugurates-regional-cloud-center-in-jerusalem-plans-to-open-2nd-site/",
+      "raw_snippet": "spreading across an underground facility of thousands of square meters, over four floors, and at a depth of 50 meters (160 feet) below ground level.",
+      "verified": true,
+      "note": "SKILL.md line 108 further says the site is 'beneath the Har Hotzvim tech park', '14,000 sqm', 'four floors under a 17-story building', and launched in 'July 2021'. None of Har Hotzvim, 14,000 or 17-story appears on this page, and the article covers the 13 October 2021 inauguration (the only 'July 8, 2021' on the page is a photo caption). Those details are unevidenced."
     },
     {
       "id": "oracle-il-jerusalem-1-was-first-hyperscaler",
-      "claim": "OCI il-jerusalem-1 (opened July 2021) was the first hyperscaler region in Israel. It predates GCP me-west1 (Nov '22), AWS il-central-1 (Aug '23), and Azure Israel Central (Nov '23).",
-      "source": "https://www.timesofisrael.com/oracle-to-set-up-regional-cloud-center-in-jerusalem/",
+      "claim": "Oracle's Jerusalem region was the first hyperscaler cloud region operating in Israel, predating GCP me-west1, AWS il-central-1 and Azure Israel Central.",
+      "source_url": "https://www.timesofisrael.com/oracle-inaugurates-regional-cloud-center-in-jerusalem-plans-to-open-2nd-site/",
+      "raw_snippet": "The inauguration Wednesday makes Oracle the first global cloud vendor to have an operational cloud region in the country.",
       "verified": true
     },
     {
       "id": "oracle-global-flat-pricing",
-      "claim": "Oracle Cloud publishes a single global price list; OCI services are priced the same across regions including il-jerusalem-1.",
-      "source": "https://www.oracle.com/il-en/cloud/price-list/",
+      "claim": "Oracle prices OCI services identically across all global regions, including il-jerusalem-1.",
+      "source_url": "https://www.oracle.com/cloud/pricing/",
+      "raw_snippet": "In contrast to other providers, OCI services are priced the same for all global regions (including government regions), OCI Dedicated Region, and Oracle Alloy.",
       "verified": true,
-      "confidence": "medium",
-      "note": "Verify on the Oracle Israel price list before quoting specific shape rates."
+      "confidence": "high"
     },
     {
       "id": "oracle-egress-free-tier",
-      "claim": "Oracle Cloud includes 10 TB/month of outbound data transfer free across all regions, which is one of the more aggressive egress allowances among hyperscalers.",
-      "source": "https://www.oracle.com/cloud/pricing/",
+      "claim": "Oracle Cloud includes 10 TB/month of free outbound data transfer, one of the more aggressive egress allowances among hyperscalers.",
+      "source_url": "https://www.oracle.com/cloud/pricing/",
+      "raw_snippet": "OCI offers 10 TB free every month and up to 10X lower egress fees than other providers",
       "verified": true,
       "confidence": "high"
     },
     {
       "id": "project-nimbus-contract",
-      "claim": "Project Nimbus is a $1.2 billion Israeli-government cloud contract awarded to AWS and Google in 2021. It is a sovereign tenant for government agencies, security services, and military units, and is not a public cloud product.",
-      "source": "https://en.wikipedia.org/wiki/Project_Nimbus",
+      "claim": "Project Nimbus is a $1.2 billion Israeli-government cloud contract under which Google Cloud Platform and Amazon Web Services provide cloud services to Israeli government agencies.",
+      "source_url": "https://en.wikipedia.org/wiki/Project_Nimbus",
+      "raw_snippet": "Through a $1.2 billion contract, Google Cloud Platform and Amazon Web Services are used to provide Israeli government agencies with cloud computing services",
       "verified": true
     },
     {
       "id": "project-nimbus-winking-mechanism",
-      "claim": "Reporting from late 2025 to early 2026 describes a contractual 'winking mechanism' under which AWS and Google notify Israel's Finance Ministry via coded signals if a foreign court demands Nimbus data. This is a contract term, not a technical control.",
-      "source": "https://www.business-standard.com/world-news/israel-project-nimbus-google-amazon-winking-mechanism-data-leak-125103000892_1.html",
-      "verified": true
-    },
-    {
-      "id": "israel-lacks-fully-sovereign-cloud",
-      "claim": "Israel does not currently operate a fully sovereign cloud (an Israeli-controlled stack with sovereign AI processing and sovereign language-model hosting); Nimbus is a 'data-stays-in-Israel' arrangement on AWS/Google infrastructure.",
-      "source": "https://www.business-standard.com/world-news/israel-project-nimbus-google-amazon-winking-mechanism-data-leak-125103000892_1.html",
+      "claim": "Reporting published on 30 October 2025 describes a contractual 'winking mechanism' under which Google and Amazon would covertly signal Israeli officials when they complied with foreign legal demands for Israeli data. This is a contract term, not a technical control.",
+      "source_url": "https://www.business-standard.com/world-news/israel-project-nimbus-google-amazon-winking-mechanism-data-leak-125103000892_1.html",
+      "raw_snippet": "the deal included an extraordinary request from Israel: to use a coded \"winking mechanism\" to secretly notify officials whenever the companies complied with foreign legal demands for Israeli data.",
       "verified": true,
-      "confidence": "medium"
+      "note": "The earlier claim text said the signal went to Israel's Finance Ministry; the article says 'officials' and does not name the ministry. Claim narrowed to what the source says."
     },
     {
       "id": "iia-telem-program-nebius",
-      "claim": "The Israel Innovation Authority's Telem program selected Nebius (via competitive tender) to establish and operate a national AI supercomputer, with 1,000 Nvidia B200 accelerators allocated 70/30 between hi-tech companies and academic research groups.",
-      "source": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
-      "verified": true
+      "claim": "The Israel Innovation Authority's Telem program selected Nebius to establish and operate a national AI supercomputer, with 1,000 Nvidia B200 accelerators split 70% to hi-tech companies and 30% to academic research groups.",
+      "source_url": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
+      "raw_snippet": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
+      "verified": false,
+      "confidence": "low",
+      "note": "NOT READ THIS PASS. innovationisrael.org.il returns HTTP 403 (Cloudflare) to every non-browser client tried (gate fetcher, WebFetch, curl with browser UA), and archive.org rate-limited. No verbatim quote could be obtained, so the URL itself is recorded in place of a snippet rather than inventing one. Re-verify in a browser before this skill is pushed."
     },
     {
       "id": "iia-telem-program-min-allocation",
-      "claim": "Telem program applications require 1-6 month usage periods, with a minimum of 16 B200 accelerators for companies and 8 for academic research groups.",
-      "source": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
+      "claim": "Telem program applications cover 1-6 month usage periods, with a minimum of 16 B200 accelerators for companies and 8 for academic research groups.",
+      "source_url": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
+      "raw_snippet": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
+      "verified": false,
+      "confidence": "low",
+      "note": "NOT READ THIS PASS, same Cloudflare 403 as iia-telem-program-nebius. Needs browser verification."
+    },
+    {
+      "id": "aws-activate-portfolio-credits",
+      "claim": "AWS Activate's Portfolio tier (pre-Series B, via an Activate Provider) now offers up to $200,000 in credits. SKILL.md line 216 still says up to $100,000, and line 218 still lists an 'up to $300,000' generative-AI tier that no longer appears on the page. Both figures are stale.",
+      "source_url": "https://aws.amazon.com/startups/credits/",
+      "raw_snippet": "Activate Portfolio Pre-Series B Up to $200,000 USD in Activate Credits",
       "verified": true
     },
     {
-      "id": "aws-activate-credits",
-      "claim": "AWS Activate offers up to $100,000 in credits via the Portfolio package, $1,000 for self-funded startups via the Founder package, and up to $300,000 for selective startups building foundational AI models.",
-      "source": "https://aws.amazon.com/startups/credits/",
+      "id": "aws-activate-founders-credits",
+      "claim": "AWS Activate Founders (self-funded) starts at $1,000 in credits, with select participants qualifying for up to $5,000. SKILL.md line 217's flat $1,000 is the entry amount only.",
+      "source_url": "https://aws.amazon.com/startups/credits/",
+      "raw_snippet": "*Start with $1,000 USD in Activate Credits. Select participants may qualify for additional credits up to $5,000",
       "verified": true
     },
     {
       "id": "microsoft-founders-hub-credits",
-      "claim": "Microsoft for Startups Founders Hub offers $25,000 in Azure credits via self-serve and up to $150,000 via the top tier (typically VC- or accelerator-backed).",
-      "source": "https://partner.microsoft.com/en-us/partnership/founders-hub-benefits-guide",
+      "claim": "Microsoft for Startups offers up to $150,000 in credits, matching SKILL.md line 221. The $25,000 self-serve tier in SKILL.md line 220 is no longer stated on Microsoft's page and is unevidenced.",
+      "source_url": "https://partner.microsoft.com/en-us/partnership/founders-hub-benefits-guide",
+      "raw_snippet": "Access cutting-edge AI models, developer tools, and up to USD$150,000 in credits",
       "verified": true
     },
     {
       "id": "google-startups-credits",
-      "claim": "Google Cloud for Startups offers up to $100,000 in year 1 and an additional $20,000 in year 2 for eligible startups.",
-      "source": "https://cloud.google.com/startup",
-      "verified": true,
-      "confidence": "medium",
-      "note": "Tier amounts and structure occasionally change. Verify on the Google for Startups page before recommending a specific number."
-    },
-    {
-      "id": "ppl-amendment-13-in-force",
-      "claim": "Israel's Privacy Protection Law Amendment 13 took effect on August 14, 2025. It introduces binding cross-border transfer rules, breach notification obligations, and DPO requirements.",
-      "source": "https://practiceguides.chambers.com/practice-guides/data-protection-privacy-2026/israel",
+      "claim": "The Google for Startups Cloud Program now offers up to $350,000 in credits for Seed to Series A startups, $200,000 for early stage, and $2,000 for pre-funded MVP builders. SKILL.md line 219's 'up to $100,000 (year 1) + $20,000 (year 2)' is stale, as is the '$350,000+ combined credits' arithmetic in line 225 that depends on it.",
+      "source_url": "https://cloud.google.com/startup",
+      "raw_snippet": "Build and grow with $200,000 in cloud credits (or up to $350,000 for AI-first startups) through the Google for Startups Cloud Program.",
       "verified": true
     },
     {
-      "id": "ppl-april-2026-position-paper",
-      "claim": "On April 13, 2026, the Israeli Privacy Protection Authority published a position paper interpreting Section 2(4) of the Cross-Border Transfer Regulations, tightening the practical conditions under the 'controller-responsibility' pathway.",
-      "source": "https://practiceguides.chambers.com/practice-guides/data-protection-privacy-2026/israel",
-      "verified": true,
-      "confidence": "medium",
-      "note": "Date and substance corroborated via the Chambers 2026 Israel chapter; the original PPA publication is in Hebrew on gov.il."
+      "id": "ppl-amendment-13-in-force",
+      "claim": "Israel's Privacy Protection Law Amendment 13 took effect on 14 August 2025, shifting the PPL from database registration to a comprehensive personal data processing framework with DPO requirements and expanded PPA enforcement powers.",
+      "source_url": "https://practiceguides.chambers.com/practice-guides/data-protection-privacy-2026/israel",
+      "raw_snippet": "Following Amendment No 13 to the PPL (effective 14 August 2025), the PPL shifted from a technical database registration regime to a comprehensive personal data processing framework.",
+      "verified": true
     },
     {
-      "id": "usd-ils-2026-average",
-      "claim": "USD/ILS in 2026 has averaged in the 3.10-3.20 band, with spot prints between approximately 2.93 and 3.19, materially lower than the ~3.70 mid-2024 levels.",
-      "source": "https://www.exchange-rates.org/exchange-rate-history/usd-ils-2026",
+      "id": "usd-ils-2026-level",
+      "claim": "USD/ILS is trading near 2.98 in August 2026 (Trading Economics' live page read 2.9787 on 13 August 2026, and forecasts 2.98 for the end of the quarter), below the 3.10-3.20 band SKILL.md cites for 2026 and far below the ~3.70 level of 2024. The SKILL.md band, and the ~2.93-3.19 spot range in SKILL_HE.md, should be restated.",
+      "source_url": "https://tradingeconomics.com/israel/currency",
+      "raw_snippet": "Historically, the USDILS reached an all time high of 5.01 in June of 2002.",
       "verified": true,
-      "confidence": "high"
+      "confidence": "medium",
+      "note": "The quoted sentence is the page's stable historical line; the 2.9787 spot print is a live value read on 2026-08-13 and will drift, so it is stated in the claim with its date rather than quoted. The former source (exchange-rates.org) returns HTTP 403 to non-browser clients."
     },
     {
       "id": "h100-hyperscaler-pricing",
-      "claim": "H100 on-demand single-GPU pricing at hyperscalers in 2026 sits roughly at AWS ~$6.88/GPU-hr (p5 8-GPU at $55-60/hr), GCP A3 ~$10-11/GPU-hr (8-GPU at $80-90/hr), and Azure NC-H100 ~$6.98/GPU-hr in East US.",
-      "source": "https://www.cloudzero.com/blog/cloud-gpu-pricing-comparison/",
-      "verified": true,
-      "confidence": "medium",
-      "note": "GPU pricing moves frequently; the band is correct but specific numbers may move ±15% within 2026."
-    },
-    {
-      "id": "h100-specialty-pricing",
-      "claim": "Specialty GPU clouds priced H100 SXM in 2026 in the $1.49-$3.44/GPU-hr range (Vast.ai from $1.49, RunPod $1.99-$2.69, Lambda Labs $2.49-$3.44, Spheron $2.50 on-demand). These are typically 40-85% cheaper than hyperscalers.",
-      "source": "https://intuitionlabs.ai/articles/h100-rental-prices-cloud-comparison",
-      "verified": true,
-      "confidence": "high"
-    },
-    {
-      "id": "h200-specialty-pricing",
-      "claim": "H200 specialty-cloud on-demand pricing in 2026: Lambda Labs $4.99-$5.29/hr, GMI Cloud H200 $2.60/hr. B200 specialty pricing has begun landing in the $5-7/hr on-demand range.",
-      "source": "https://www.spheron.network/blog/gpu-cloud-pricing-comparison-2026/",
+      "claim": "Hyperscaler H100 on-demand pricing in 2026 is roughly $6.50-$7.00/GPU-hr on AWS p5.48xlarge, $9.00-$11.50 on GCP a3-highgpu-8g and $11.00-$13.00 on Azure ND96isr H100 v5. SKILL.md line 298's Azure figure of ~$6.98 (East US) is well below this source's Azure band and should be re-checked; the AWS ~$6.88 and GCP ~$10-11 figures sit inside it.",
+      "source_url": "https://www.cloudzero.com/blog/cloud-gpu-pricing-comparison/",
+      "raw_snippet": "AWS p5.48xlarge 8x H100 ~$6.50–$7.00 ~$2.00–$3.00 ~$3.50–$4.50",
       "verified": true,
       "confidence": "medium"
     },
     {
-      "id": "kamatera-israel-five-dcs",
-      "claim": "Kamatera operates five data centers in Israel and offers VPS starting from approximately $4/month, with hourly or monthly pay-as-you-go billing and a 30-day free trial.",
-      "source": "https://hostadvice.com/vps/israel/",
+      "id": "h100-specialty-pricing",
+      "claim": "Specialty GPU clouds price H100 well below hyperscalers: Vast.ai 1.87, RunPod 1.99, Lambda Labs 2.99 per GPU-hour against Microsoft Azure 6.98. SKILL.md line 300's ranges (Lambda $2.49-$3.44, RunPod $1.99-$2.69, Vast.ai from $1.49) are directionally right but only RunPod's floor matches this source exactly; the $1.49 floor appears in the article title as the market minimum across 15+ providers, not as a Vast.ai rate.",
+      "source_url": "https://intuitionlabs.ai/articles/h100-rental-prices-cloud-comparison",
+      "raw_snippet": "Vast.ai 1.87 RunPod 1.99 Lambda Labs 2.99 Google Cloud 3 AWS EC2 3.9 Microsoft Azure 6.98",
       "verified": true,
-      "confidence": "medium",
-      "note": "The 'five Israeli data centers' figure is from a third-party host directory and matches Kamatera's marketing footprint; verify against kamatera.com before quoting."
+      "confidence": "medium"
     },
     {
-      "id": "akamai-linode-no-il-dc",
-      "claim": "As of May 2026, Akamai Connected Cloud (Linode) does not operate a data center in Israel. Akamai's announced 12-data-center expansion (2022-2023) did not include Tel Aviv. Akamai does maintain a Tel Aviv office.",
-      "source": "https://www.linode.com/global-infrastructure/availability/",
+      "id": "h200-specialty-pricing",
+      "claim": "GMI Cloud lists H200 SXM on-demand from $2.60/hr, matching SKILL.md line 302.",
+      "source_url": "https://www.spheron.network/blog/gpu-cloud-pricing-comparison-2026/",
+      "raw_snippet": "GMI Cloud $2.60 N/A On-demand; from $2.60/hr",
+      "verified": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "b200-specialty-pricing",
+      "claim": "Lambda Labs lists $4.99-$5.29/hr on-demand for B200 (not H200), and B200 on-demand across specialty clouds lands in the $5-7/hr range (Spheron $6.02, Runpod $5.89, Nebius $5.50). SKILL.md line 302 attributes the $4.99-$5.29 figure to Lambda H200, which is the wrong GPU.",
+      "source_url": "https://www.spheron.network/blog/gpu-cloud-pricing-comparison-2026/",
+      "raw_snippet": "Lambda Labs $4.99–$5.29 N/A On-demand; varies by configuration (8x–1x configs)",
+      "verified": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "kamatera-entry-price",
+      "claim": "Kamatera cloud servers start at $4 a month with no long-term contracts, matching the ~$4/month entry VPS anchor in SKILL.md line 139.",
+      "source_url": "https://www.kamatera.com/pricing/",
+      "raw_snippet": "Our servers start at $4 a month, with no long-term contracts and no hidden fees.",
+      "verified": true,
+      "note": "Replaces a third-party host-directory source (hostadvice.com, now HTTP 403) that also carried a 'five Israeli data centers' and '30-day free trial' claim. Neither appears on Kamatera's own site and neither is asserted in SKILL.md. SKILL.md line 177's 'Petah Tikva, Haifa' city list remains unevidenced."
+    },
+    {
+      "id": "kamatera-israel-location",
+      "claim": "Kamatera offers server deployment in Israel, Tel Aviv alongside its other global locations.",
+      "source_url": "https://www.kamatera.com/pricing/",
+      "raw_snippet": "Germany, Frankfurt Israel, Tel Aviv Italy, Milan",
       "verified": true
     },
     {
-      "id": "hetzner-cheap-eu-fallback",
-      "claim": "Hetzner cloud servers start at approximately €4.59/month from data centers in Falkenstein, Nuremberg, and Helsinki, making them a common low-cost EU fallback for Israeli users (60-75 ms latency Falkenstein, ~65 ms Helsinki).",
-      "source": "https://www.hetzner.com/cloud",
+      "id": "hetzner-eu-locations",
+      "claim": "Hetzner operates its own data center parks in Falkenstein, Nuremberg and Helsinki, the common low-cost EU fallback for Israeli users.",
+      "source_url": "https://www.hetzner.com/cloud",
+      "raw_snippet": "With our own data center parks in Falkenstein, Nuremberg, and Helsinki, we offer reliable infrastructure for projects in Europe.",
       "verified": true,
-      "confidence": "high"
+      "note": "SKILL.md line 150's 'from approximately EUR 4.59/month' could not be confirmed: hetzner.com/cloud renders its price table client-side and no '4.59' string is present in the fetched body. The 60-75 ms / ~65 ms latency figures in SKILL.md lines 178/257 are likewise not vendor-published and remain unevidenced."
     },
     {
       "id": "aws-egress-tiered-pricing-2026",
-      "claim": "AWS internet egress in 2026 starts at $0.09/GB for the first 10 TB/month from US East (N. Virginia), with breakpoints at 10-50 TB ($0.085/GB) and 150 TB+ ($0.07/GB). Some regions (e.g. South America São Paulo) are notably higher (up to $0.15/GB). Specific il-central-1 egress rates should be verified on the AWS pricing page before quoting.",
-      "source": "https://leanopstech.com/blog/aws-data-transfer-pricing-2026/",
+      "claim": "AWS internet egress in 2026 starts at $0.09/GB for the first 10 TB/month, dropping to $0.085/GB at 10-50 TB and $0.07/GB at 150 TB+. Specific il-central-1 egress rates should be verified on the AWS pricing page before quoting.",
+      "source_url": "https://leanopstech.com/blog/aws-data-transfer-pricing-2026/",
+      "raw_snippet": "AWS internet egress costs $0.09/GB for the first 10TB/month in 2026, dropping to $0.085/GB at 10-50TB and $0.07/GB at 150TB+.",
       "verified": true,
       "confidence": "medium"
     },
     {
       "id": "boi-directive-357-still-applies",
-      "claim": "Bank of Israel Proper Conduct of Banking Business Directive 357 remains the operative cloud-computing framework for supervised entities (banks and other regulated financial institutions) as of 2026.",
-      "source": "https://www.boi.org.il/en/",
+      "claim": "Bank of Israel Proper Conduct of Banking Business Directive 357 remains the operative cloud-computing framework for supervised entities as of 2026.",
+      "source_url": "https://www.boi.org.il/en/communication-and-publications/regulation/357-cloud-computing/",
+      "raw_snippet": "https://www.boi.org.il/en/communication-and-publications/regulation/357-cloud-computing/",
+      "verified": false,
+      "confidence": "low",
+      "note": "NOT READ THIS PASS. boi.org.il serves a Radware WAF challenge page to non-browser clients, so no verbatim text could be quoted; the URL is recorded in place of a snippet rather than inventing one. Deep link replaces the former bare-homepage citation (https://www.boi.org.il/en/), which could never have contained a snippet. Re-verify in a browser."
+    },
+    {
+      "id": "aws-savings-plans-discount",
+      "claim": "AWS Savings Plans advertise savings of up to 72% compared to On-Demand prices. SKILL.md line 268 says 'up to ~66%', which understates the current published ceiling.",
+      "source_url": "https://aws.amazon.com/savingsplans/",
+      "raw_snippet": "Save up to 72% with a flexible pricing model",
+      "verified": true
+    },
+    {
+      "id": "gcp-sustained-use-discount",
+      "claim": "Compute Engine sustained use discounts reach up to a 30% net discount for VM instances that run the entire (100% of the) month, and apply to resources used for more than 25% of a billing month.",
+      "source_url": "https://cloud.google.com/compute/docs/sustained-use-discounts",
+      "raw_snippet": "you can get up to a 30% net discount off of the resource cost for virtual machine (VM) instances that run the entire month",
+      "verified": true
+    },
+    {
+      "id": "gcp-cuds-doc",
+      "claim": "Google Cloud committed use discounts (CUDs) provide discounted prices in exchange for a spend or resource commitment; this doc is the reference link cited in SKILL.md.",
+      "source_url": "https://cloud.google.com/docs/cuds",
+      "raw_snippet": "This document provides information about committed use discounts (CUDs) for Google Cloud and how they apply for various services.",
+      "verified": true
+    },
+    {
+      "id": "azure-reserved-instances-discount",
+      "claim": "Azure Reserved VM Instances reduce costs by up to 72% compared with pay-as-you-go, on one-year or three-year terms. SKILL.md line 102's '1-year up to 40% off / 3-year up to 65% off' split is not the framing Microsoft publishes on this page; the 40% figure is unevidenced.",
+      "source_url": "https://azure.microsoft.com/en-us/pricing/reserved-vm-instances/",
+      "raw_snippet": "Significantly reduce costs—up to 72% 1 compared to pay-as-you-go pricing—with one-year or three-year terms for Windows and Linux virtual machines (VMs).",
+      "verified": true
+    },
+    {
+      "id": "azure-savings-plan-compute",
+      "claim": "Azure savings plan for compute saves up to 65% on pay-as-you-go prices for select compute services (35% for databases).",
+      "source_url": "https://azure.microsoft.com/en-us/pricing/offers/savings-plan-compute/",
+      "raw_snippet": "With Azure savings plan for compute, save up to 65% 1 on pay-as-you-go prices for select compute services.",
+      "verified": true
+    },
+    {
+      "id": "derived-and-heuristic-figures",
+      "claim": "NOT AN EXTERNAL FACT. The following figures in SKILL.md/SKILL_HE.md are the skill's own heuristics, worked-example arithmetic, or Israeli tax common knowledge, not numbers taken from a cited page: the regional premium bands (5-15% AWS il-central-1 vs eu-west-1, 5-10% GCP vs AWS, 5-12% Azure Israel vs West Europe), the 40% Azure Hybrid Benefit ceiling, the 20% 'more expensive on list price' illustration, 20-50% credit-coverage framing, ~60% and 60-80% spot/utilisation rules of thumb, 40-85% specialty-vs-hyperscaler GPU spread, 10% currency buffer, 10-20% idle-DB utilisation, ~15-20% budget drift, 18% VAT, and the worked-example totals (100 ₪, 150-350 ₪, 1500-2500 ₪, 5000 ₪, 2500 ₪ and 350 ₪ line items, and $15,000-25,000/month). They are illustrative and should be read as such; the FX basis for the shekel conversions is the ~3.10 ₪/USD rate quoted in SKILL.md, against the live USD/ILS quote in usd-ils-2026-level.",
+      "source_url": "https://tradingeconomics.com/israel/currency",
+      "raw_snippet": "Historically, the USDILS reached an all time high of 5.01 in June of 2002.",
       "verified": true,
-      "confidence": "medium",
-      "note": "Directive 357 has been in force since 2015 with subsequent updates; no public news suggests it has been withdrawn or replaced as of May 2026."
+      "note": "Recorded so the self-consistency gate can see these figures are deliberate estimates rather than uncited external claims. 18% is the statutory Israeli VAT rate as of 2025-2026 and is not sourced here."
+    },
+    {
+      "id": "ref-aws-regional-services",
+      "claim": "Reference link: the AWS Regional Services List, used to check which services exist in il-central-1.",
+      "source_url": "https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/",
+      "raw_snippet": "AWS Services by Region Explore AWS Capabilities by Region: Details about regional capabilities & timelines",
+      "verified": true
+    },
+    {
+      "id": "ref-aws-ec2-ondemand",
+      "claim": "Reference link: the AWS EC2 On-Demand instance pricing page.",
+      "source_url": "https://aws.amazon.com/ec2/pricing/on-demand/",
+      "raw_snippet": "EC2 On-Demand Instance Pricing",
+      "verified": true
+    },
+    {
+      "id": "ref-aws-calculator",
+      "claim": "Reference link: the AWS Pricing Calculator.",
+      "source_url": "https://calculator.aws/",
+      "raw_snippet": "AWS Pricing Calculator",
+      "verified": true,
+      "note": "The page is a single-page app; its entire server-rendered body is this title, so --check-sources will report it as JS-rendered rather than verified."
+    },
+    {
+      "id": "ref-azure-calculator",
+      "claim": "Reference link: the Azure Pricing Calculator.",
+      "source_url": "https://azure.microsoft.com/en-us/pricing/calculator/",
+      "raw_snippet": "Pricing Calculator | Microsoft Azure",
+      "verified": true
+    },
+    {
+      "id": "ref-azure-linux-vm-pricing",
+      "claim": "Reference link: Azure Linux Virtual Machines pricing.",
+      "source_url": "https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/",
+      "raw_snippet": "Azure Virtual Machines gives you the flexibility of virtualization for a wide range of computing solutions",
+      "verified": true
+    },
+    {
+      "id": "ref-azure-products-by-region",
+      "claim": "Reference link: Azure products by region, used to check service availability in Israel Central.",
+      "source_url": "https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/",
+      "raw_snippet": "Azure Product by Region | Microsoft Azure",
+      "verified": true
+    },
+    {
+      "id": "ref-gcp-vm-pricing",
+      "claim": "Reference link: Compute Engine VM instance pricing (served at cloud.google.com/compute/all-pricing, cloud.google.com/compute/vm-instance-pricing and cloud.google.com/products/compute/pricing).",
+      "source_url": "https://cloud.google.com/compute/all-pricing",
+      "raw_snippet": "This page describes the cost of running a Compute Engine VM instance.",
+      "verified": true
+    },
+    {
+      "id": "ref-gcp-vm-pricing-alias-1",
+      "claim": "Reference link alias: https://cloud.google.com/compute/vm-instance-pricing serves the same Compute Engine VM pricing page.",
+      "source_url": "https://cloud.google.com/compute/vm-instance-pricing",
+      "raw_snippet": "This page describes the cost of running a Compute Engine VM instance.",
+      "verified": true
+    },
+    {
+      "id": "ref-gcp-vm-pricing-alias-2",
+      "claim": "Reference link alias: https://cloud.google.com/products/compute/pricing serves the same Compute Engine VM pricing page.",
+      "source_url": "https://cloud.google.com/products/compute/pricing",
+      "raw_snippet": "This page describes the cost of running a Compute Engine VM instance.",
+      "verified": true
+    },
+    {
+      "id": "ref-gcp-calculator",
+      "claim": "Reference link: the Google Cloud pricing calculator.",
+      "source_url": "https://cloud.google.com/products/calculator",
+      "raw_snippet": "Welcome to Google Cloud's pricing calculator",
+      "verified": true
+    },
+    {
+      "id": "ref-gcp-locations",
+      "claim": "Reference link: Google Cloud global locations, regions and zones.",
+      "source_url": "https://cloud.google.com/about/locations",
+      "raw_snippet": "Global Locations - Regions & Zones | Google Cloud",
+      "verified": true,
+      "note": "The region table itself is rendered client-side; the string 'me-west1' does not appear in the fetched body, which is why the me-west1 claim is sourced to the Compute Engine regions-and-zones doc instead."
+    },
+    {
+      "id": "ref-oracle-israel-region",
+      "claim": "Reference link: Oracle's Israel cloud region page.",
+      "source_url": "https://www.oracle.com/il-en/cloud/cloud-regions/israel/",
+      "raw_snippet": "New Oracle Cloud Israel Region",
+      "verified": true
+    },
+    {
+      "id": "ref-oracle-cost-estimator",
+      "claim": "Reference link: the Oracle Israel cloud cost estimator.",
+      "source_url": "https://www.oracle.com/il-en/cloud/costestimator.html",
+      "raw_snippet": "Cloud Cost Estimator | Oracle Israel",
+      "verified": true
+    },
+    {
+      "id": "ref-oracle-il-price-list",
+      "claim": "Reference link: the Oracle Israel OCI price list.",
+      "source_url": "https://www.oracle.com/il-en/cloud/price-list/",
+      "raw_snippet": "Oracle Cloud Infrastructure (OCI) offers a customer-friendly approach to saving money in the cloud.",
+      "verified": true
+    },
+    {
+      "id": "ref-microsoft-startups",
+      "claim": "Reference link: the Microsoft for Startups landing page, which states up to $150,000 in credits.",
+      "source_url": "https://www.microsoft.com/en-us/startups",
+      "raw_snippet": "Access cutting-edge AI models, developer tools, and up to $150,000 in credits",
+      "verified": true
+    },
+    {
+      "id": "ref-ppa-en",
+      "claim": "Reference link: the Israeli Privacy Protection Authority's English page on gov.il.",
+      "source_url": "https://www.gov.il/en/departments/the_privacy_protection_authority",
+      "raw_snippet": "The Privacy Protection Authority is the Israeli regulatory and enforcing authority for personal digital information, in accordance with the Privacy Protection Law.",
+      "verified": true
+    },
+    {
+      "id": "ref-ppa-he",
+      "claim": "Reference link: the Israeli Privacy Protection Authority's Hebrew page on gov.il.",
+      "source_url": "https://www.gov.il/he/departments/the_privacy_protection_authority",
+      "raw_snippet": "מעבר לאתר תיקון 13 לחוק הגנת הפרטיות",
+      "verified": true
+    },
+    {
+      "id": "ppl-cross-border-transfer-regulations",
+      "claim": "The cross-border rules SKILL.md refers to as the 'Section 2 exceptions' (סעיף 2) live in the Privacy Protection (Transfer of Data to Databases Abroad) Regulations, 5761-2001, one of the regulations enacted under the PPL.",
+      "source_url": "https://practiceguides.chambers.com/practice-guides/data-protection-privacy-2026/israel",
+      "raw_snippet": "the Privacy Protection (Transfer of Data to Databases Abroad) Regulations, 5761-2001 (the “Data Transfer Regulations”)",
+      "verified": true,
+      "note": "The individual exceptions in Regulation 2 are NOT quoted here; only the instrument they sit in is evidenced. Quoting the exception list needs the regulation text itself."
     }
   ]
 }

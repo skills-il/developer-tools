@@ -1,150 +1,196 @@
 {
+  "schemaVersion": "1.0",
   "skill": "israeli-spreadsheets",
   "version": "1.3.0",
-  "audit_date": "2026-05-20",
-  "audited_by": "skills-il update-skill pipeline (Opus 4.7)",
+  "audit_date": "2026-08-13",
+  "audited_by": "skills-il evidence repair (Opus 5)",
   "claims": [
     {
-      "id": "vat-rate-2026",
-      "claim": "Israel's standard VAT rate is 18% for 2026 (the proposed January 2026 hike to 19% was dropped).",
-      "evidence": "Knesset raised VAT from 17% to 18% effective 2025-01-01. The Ministry of Finance proposed a further hike to 19% for January 2026 but it was opposed by government leaders and did not take effect; PwC, vatcalc, and tradingeconomics list 18% as the active 2026 rate.",
-      "sources": [
-        "https://main.knesset.gov.il/EN/News/PressReleases/Pages/press12324w.aspx",
-        "https://www.vatcalc.com/vat/israel-vat-rise-to-19-jan-2026-proposal/",
-        "https://taxsummaries.pwc.com/israel/corporate/other-taxes"
-      ]
-    },
-    {
-      "id": "income-tax-brackets-2026-amendment-288",
-      "claim": "Effective 1 January 2026, Income Tax Amendment 288 widened the 20% bracket to 228,000 NIS annually and the 31% bracket to 301,200 NIS annually; the 35% floor moved to 301,201.",
-      "evidence": "Globes (2026-03) and CWS Israel describe Amendment 288 widening the 20% band to NIS 19,000/month (228,000/year) and the 31% band to NIS 25,100/month (301,200/year). Top 47% + 3% surtax above 721,560 was not changed.",
-      "sources": [
-        "https://en.globes.co.il/en/article-revised-income-tax-brackets-boost-march-salary-1001539434",
-        "https://www.cwsisrael.com/israeli-tax-changes-2026-complete-guide/",
-        "https://www.jpost.com/business-and-innovation/banking-and-finance/article-892194"
-      ]
-    },
-    {
-      "id": "credit-point-value-2026",
-      "claim": "Credit point value (nekudat zikui) for 2026 is 2,904 NIS/year (242 NIS/month), unchanged from 2025.",
-      "evidence": "CWS Israel 2026 guide states '₪242/month (₪2,904/year). Value increases if tax bracket freeze is lifted.' The credit point value is frozen alongside other thresholds for 2025-2027.",
-      "sources": [
-        "https://www.cwsisrael.com/israeli-tax-changes-2026-complete-guide/"
-      ]
-    },
-    {
-      "id": "bituach-leumi-ceiling-2026",
-      "claim": "Bituach Leumi employee rates are 0.40% up to 7,122 NIS/month and 7.00% from 7,123 up to the 49,030 NIS/month ceiling for 2026.",
-      "evidence": "VOLEH and CWS Israel 2026 references confirm the ~7% rate up to the 49,030 NIS/month ceiling; Bituach Leumi (btl.gov.il) publishes the threshold tables annually with these same figures.",
-      "sources": [
-        "https://voleh.org/the-duty-to-contribute-a-2026-guide-to-israels-national-insurance-bituach-leumi/",
-        "https://www.cwsisrael.com/national-insurance-bituach-leumi-and-health-tax-in-2025/"
-      ]
-    },
-    {
-      "id": "health-tax-2026",
-      "claim": "Health tax (mas briut) for 2026: 3.10% up to 7,122 NIS/month, 5.00% above (employee side).",
-      "evidence": "CWS Israel 2026 confirms health tax was kept at 2025 levels alongside Bituach Leumi for 2026.",
-      "sources": [
-        "https://www.cwsisrael.com/national-insurance-bituach-leumi-and-health-tax-in-2025/"
-      ]
-    },
-    {
-      "id": "minimum-wage-april-2026",
-      "claim": "From 1 April 2026 the Israeli statutory minimum wage is 6,443.85 NIS/month and ~35.40 NIS/hour at the 182-hour basis (34.64 NIS/hour at the 186-hour basis).",
-      "evidence": "Histadrut announced a 3.3% rise from 6,247.67 to 6,443.85 NIS/month effective 1 April 2026. Bituach Leumi confirms the same figures; wageindicator.org reports both hourly bases.",
-      "sources": [
-        "https://global.histadrut.org.il/news/israels-minimum-wage-to-rise-by-3-3/",
-        "https://www.btl.gov.il/English%20Homepage/Mediniyut/GeneralInformation/Pages/MinimumWage.aspx",
-        "https://wageindicator.org/work/minimum-wage/updates/2026/minimum-wage-updated-in-israel-from-01-april-2026-april-02-2026/"
-      ]
+      "id": "vat-rate-18",
+      "claim": "Israel's standard VAT rate is 18% (raised from 17% on 1 January 2025 and still 18%); it drives every VAT line in the invoice template.",
+      "source_url": "https://taxsummaries.pwc.com/israel/corporate/other-taxes",
+      "raw_snippet": "The 2025 current rate of VAT is 18%."
     },
     {
       "id": "vat-formula-inclusive-exclusive",
-      "claim": "For an 18% VAT, gross = net*1.18, net = gross/1.18, VAT-on-gross = gross - gross/1.18 = gross*0.18/1.18.",
-      "evidence": "Standard inclusive/exclusive VAT identities; algebraically: if gross = net*(1+r), then net = gross/(1+r) and vat = gross - net = gross*r/(1+r). At r=0.18, gross*0.18/1.18 yields the same VAT amount as gross - gross/1.18.",
-      "sources": [
-        "https://taxsummaries.pwc.com/israel/corporate/other-taxes"
-      ]
+      "claim": "With VAT at 18%, gross = net*1.18, net = gross/1.18, and VAT on a VAT-inclusive price = gross - gross/1.18 = gross*0.18/1.18. The identities are arithmetic; only the 18% rate is external.",
+      "source_url": "https://taxsummaries.pwc.com/israel/corporate/other-taxes",
+      "raw_snippet": "The 2025 current rate of VAT is 18%.",
+      "note": "The algebra (gross=net*(1+r), vat=gross*r/(1+r)) is definitional and has no external source; the cited snippet establishes r=0.18."
     },
     {
-      "id": "section-45a-pension-credit",
-      "claim": "Employees and self-employed taxpayers who contribute to a recognized pension fund get a 35% tax credit on qualifying pension contributions under Section 45a of the Income Tax Ordinance, subject to annual ceilings.",
-      "evidence": "Carried forward from skill v1.2.0; ITA Section 45a continues to grant 35% credit on the employee-side pension deposit; no change between 2025 and 2026.",
-      "sources": [
-        "https://www.gov.il/en/departments/israel_tax_authority"
-      ]
+      "id": "income-tax-brackets-2026-law",
+      "claim": "The 2026 income tax rates follow the bracket-widening law (Amendment 288, chok rivuach madregot mas hachnasa): 20% from 120,721 to 228,000 NIS, 31% from 228,001 to 301,200 NIS, 35% from 301,201 to 560,280 NIS.",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": ".1על כל שקל חדש מ 120,721 -ש\"ח עד  228,000ש\"ח – יחול שיעור מס . 20% .2על כל שקל חדש מ 228,001 -ש\"ח עד  301,200ש\"ח – יחול שיעור מס . 31% .3על כל שקל חדש מ 301,201 -ש\"ח עד  560,280ש\"ח – יחול שיעור מס .35%"
+    },
+    {
+      "id": "income-tax-brackets-2026-table",
+      "claim": "The Israel Tax Authority 2026 annual bracket table for earned income runs to 84,120 NIS at 10%, 120,720 NIS at 14%, 228,000 NIS at 20%, 301,200 NIS at 31%, 560,280 NIS at 35% and 47% above that.",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "הכנסה שנתית עד- 84,121עד- מ- 120,721עד- מ- 228,001עד- מ- 301,201עד- מ- מכל שקל נוסף  84,120 120,720 228,000 301,200 560,280  שיעור המס 10% 14% 20% 31% 35% 47%"
+    },
+    {
+      "id": "income-tax-2026-heading",
+      "claim": "The 2026 rates published by the Israel Tax Authority are the post-bracket-widening rates for tax year 2026.",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "פרק ב – שיעורי מס הכנסה להלן שיעורי המס לשנת ( 2026לאחר חוק ריווח מדרגות מס הכנסה)"
+    },
+    {
+      "id": "surtax-121b-721560",
+      "claim": "Above 721,560 NIS of annual taxable income (60,130 NIS/month) a 3% surtax applies under section 121B of the Income Tax Ordinance, so the top marginal rate reaches 50% (47% + 3%).",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "על פי סעיף 121ב לפקודה ,יחיד אשר הכנסתו החייבת בשנת המס עלתה על ₪ 721,560 ( ₪ 60,130לחודש) ,יהיה חייב במס נוסף על חלק הכנסתו החייבת העולה על הסכום הנ\"ל ,בשיעור של .3%"
+    },
+    {
+      "id": "credit-point-value-2026",
+      "claim": "The credit point (nekudat zikui) for tax year 2026 is 242 NIS per month, i.e. 2,904 NIS per year.",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "פרק ג  -סכומים מתואמים לשנת המס 2026 א .נקודת זיכוי 242"
+    },
+    {
+      "id": "section-45a-ceiling",
+      "claim": "Section 45a of the Income Tax Ordinance (סעיף 45א) grants a credit for insurance premiums and provident-fund contributions, subject to annual ceilings published each year by the Israel Tax Authority.",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "תקרת הסכום לזיכוי בעד דמי ביטוח ותגמולים 45א(ד)"
+    },
+    {
+      "id": "minimum-wage-april-2026",
+      "claim": "From 1 April 2026 the Israeli monthly minimum wage is 6,443.85 NIS.",
+      "source_url": "https://www.btl.gov.il/English%20Homepage/Mediniyut/GeneralInformation/Pages/MinimumWage.aspx",
+      "raw_snippet": "Monthly wage: NIS 6,443.85 (as of Apr 01, 2026)"
+    },
+    {
+      "id": "minimum-wage-hourly-182",
+      "claim": "At the 182-hour basis the Israeli minimum hourly wage is 35.4 NIS (35.40 NIS) as of 1 April 2026.",
+      "source_url": "https://www.btl.gov.il/English%20Homepage/Mediniyut/GeneralInformation/Pages/MinimumWage.aspx",
+      "raw_snippet": "Hourly wage for a total of 182 hours of work: NIS 35.4 (as of Apr 01, 2026)"
+    },
+    {
+      "id": "minimum-wage-hourly-186",
+      "claim": "At the 186-hour basis the Israeli minimum hourly wage is 34.64 NIS as of 1 April 2026.",
+      "source_url": "https://www.btl.gov.il/English%20Homepage/Mediniyut/GeneralInformation/Pages/MinimumWage.aspx",
+      "raw_snippet": "Hourly wage for a total of 186 hours of work: NIS 34.64 (as of Apr 01, 2026)"
+    },
+    {
+      "id": "bituach-leumi-thresholds-2026",
+      "claim": "From 1 January 2026 the reduced-rate national-insurance threshold is 7,703 NIS/month and the maximum income liable for contributions is 51,910 NIS/month.",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "מחלק השכר שעד מדרגת גביה מופחתת (שיעור מופחת) - 7,703 ש\"ח (החל ב- 01.01.2026)"
+    },
+    {
+      "id": "bituach-leumi-ceiling-2026",
+      "claim": "The maximum monthly income liable for national-insurance contributions is 51,910 NIS from 1 January 2026.",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "מחלק השכר שמעל מדרגת גביה מופחתת ועד ההכנסה המרבית החייבת בדמי ביטוח (שיעור מלא) - 51,910 ש\"ח (החל ב- 01.01.2026)"
     },
     {
       "id": "google-sheets-ai-function",
-      "claim": "Google Sheets ships a native =AI() formula (powered by Gemini) in 2026 that returns text from a natural-language prompt in a cell.",
-      "evidence": "Google Workspace Updates blog announced general availability of Gemini in Sheets including =AI() formula in 2026. DataCamp and ModelMonkey published tutorials in 2026 documenting the =AI() function as a built-in formula.",
-      "sources": [
-        "https://workspaceupdates.googleblog.com/2026/04/build-and-edit-complex-spreadsheets-with-Gemini-in-Google-Sheets.html",
-        "https://workspace.google.com/resources/spreadsheet-ai/",
-        "https://www.datacamp.com/tutorial/google-sheets-ai-function"
-      ]
+      "claim": "Google Sheets ships a native AI() formula (also callable as Gemini()) that generates text, summarizes, categorizes and accesses real-time information from a cell.",
+      "source_url": "https://support.google.com/docs/table/25273?hl=en",
+      "raw_snippet": "AI AI() or Gemini() Generates text, summarizes information, categorizes information, and accesses real-time information."
     },
     {
-      "id": "excel-let-lambda-availability",
-      "claim": "LET and LAMBDA are available in Excel for Microsoft 365, Excel for the Web, and Excel 2021/2024 (and remain available in 2026 builds).",
-      "evidence": "Microsoft Support documents LET as available in Excel 2021 or later and Microsoft 365, and LAMBDA in Microsoft 365 / Excel 2024 / Excel for the web. No deprecation in 2026.",
-      "sources": [
-        "https://support.microsoft.com/en-us/office/lambda-function-bd212d27-1cd1-4321-a34a-ccbf254b8b67"
-      ]
+      "id": "excel-let-availability",
+      "claim": "LET is documented by Microsoft for Excel for Microsoft 365, Excel 2024 and Excel 2021, and it assigns names to calculation results so an expression is computed once instead of repeatedly.",
+      "source_url": "https://support.microsoft.com/en-us/office/let-function-34842dd8-b92b-4d3f-b325-b8b8f9908999",
+      "raw_snippet": "function assigns names to calculation results. This allows storing intermediate calculations, values, or defining names inside a formula."
+    },
+    {
+      "id": "excel-lambda-availability",
+      "claim": "LAMBDA is documented by Microsoft for Excel for Microsoft 365 and Excel 2024, creating reusable custom functions available throughout the workbook.",
+      "source_url": "https://support.microsoft.com/en-us/office/lambda-function-bd212d27-1cd1-4321-a34a-ccbf254b8b67",
+      "raw_snippet": "Use a LAMBDA function to create custom, reusable functions and call them by a friendly name. The new function is available throughout the workbook and called like native Excel functions."
     },
     {
       "id": "excel-hebrew-sort-bug",
-      "claim": "Excel's sort on Hebrew text reliably orders by the first letter but falls back to Unicode codepoint order for subsequent letters in many builds; sorted Hebrew name lists routinely contain ordering errors.",
-      "evidence": "Documented in multiple user threads (MrExcel, Chandoo, ExcelForum) across Excel 2013-2020. Microsoft's own 2003 documentation flagged the shift from Hebrew code-page sort to Unicode collation, which is the root cause: Unicode codepoint order is not Hebrew alphabetical order beyond the first letter in all words.",
-      "sources": [
-        "https://www.mrexcel.com/board/threads/sorting-hebrew-words-correctly.1154571/",
-        "https://chandoo.org/forum/threads/hebrew-sort-order-incorrect.42211/",
-        "https://documentation.help/MS-Office-Excel-2003/acconbidiLearnAboutHeSortOrder1.htm"
-      ]
+      "claim": "Excel sorts Hebrew text correctly on the first letter but the ordering breaks from the second letter onward, so sorted Hebrew name lists contain ordering errors.",
+      "source_url": "https://chandoo.org/forum/threads/hebrew-sort-order-incorrect.42211/",
+      "raw_snippet": "the Hebrew - column E - the 1st letter (for all rows) is sorted correctly, but from the 2nd letter it's unordered"
     },
     {
-      "id": "hebcal-spreadsheet-integration",
-      "claim": "Hebcal has no native spreadsheet function; the supported paths are CSV export from hebcal.com or a REST call (https://www.hebcal.com/hebcal) from Apps Script.",
-      "evidence": "Hebcal's developer-APIs page documents the REST endpoint and CSV/iCal/JSON output formats. The hebcal-rest-api GitHub repo confirms CSV is a first-class export. Apps Script's UrlFetchApp is the standard way to call REST from Google Sheets.",
-      "sources": [
-        "https://www.hebcal.com/home/developer-apis",
-        "https://github.com/hebcal/hebcal-rest-api",
-        "https://www.hebcal.com/home/195/jewish-calendar-rest-api"
-      ]
+      "id": "hebcal-rest-endpoint",
+      "claim": "Hebcal exposes a REST endpoint at https://www.hebcal.com/hebcal that can be called from Apps Script, e.g. https://www.hebcal.com/hebcal?cfg=json&year=2026&maj=on&geo=geoname&geonameid=293397",
+      "source_url": "https://www.hebcal.com/home/195/jewish-calendar-rest-api",
+      "raw_snippet": "The basic URL format is as follows: https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&min=on&mod=on&nx=on&year=now&month=x"
     },
     {
-      "id": "nis-format-string-he-il",
-      "claim": "Excel accepts both `#,##0.00 \"₪\"` and `#,##0.00 [$₪-he-IL]` as Israeli NIS currency formats; the locale-tagged variant survives re-saves by non-Israeli Excel installations more reliably.",
-      "evidence": "Office Watch (2025) discusses how Excel labels currency entries by language tag rather than country, and shows the [$<symbol>-<locale>] convention used for locale-tagged custom formats. The 40D hex code is the legacy LCID for he-IL but modern Excel accepts the BCP-47 form `he-IL` directly inside the [$...] block.",
-      "sources": [
-        "https://office-watch.com/2025/excel-hebrew-shekel-currency-list-facts/"
-      ]
-    },
-    {
-      "id": "rtl-merged-cells-flip",
-      "claim": "Merged cells inside an Excel sheet with rightToLeft=true sometimes render in the wrong direction when opened by an Excel installation with a non-Israeli system locale.",
-      "evidence": "Recurring issue reported on Chandoo and MrExcel threads about RTL + merged-cells interaction. Microsoft Learn documents the Worksheet.DisplayRightToLeft VBA property but does not guarantee merged-span alignment across locales.",
-      "sources": [
-        "https://chandoo.org/forum/threads/combining-hebrew-text-with-left-to-right-numbers.45554/",
-        "https://learn.microsoft.com/en-us/office/vba/api/excel.worksheet.displayrighttoleft"
-      ]
-    },
-    {
-      "id": "googlefinance-usdils",
-      "claim": "Google Sheets `=GOOGLEFINANCE(\"CURRENCY:USDILS\")` returns the current USD to ILS exchange rate.",
-      "evidence": "Carried forward from skill v1.2.0; Google's official Sheets function documentation lists CURRENCY:<from><to> as a valid GOOGLEFINANCE attribute and USDILS continues to work in 2026.",
-      "sources": [
-        "https://support.google.com/docs/answer/3093281"
-      ]
+      "id": "hebcal-csv-output",
+      "claim": "Hebcal's calendar API can return Comma Separated Values (CSV), which is the export path for a VLOOKUP-driven holiday column in a spreadsheet.",
+      "source_url": "https://www.hebcal.com/home/195/jewish-calendar-rest-api",
+      "raw_snippet": "cfg=csv for Comma Separated Values"
     },
     {
       "id": "openpyxl-rtl-property",
-      "claim": "openpyxl exposes `ws.sheet_view.rightToLeft = True` to mark a worksheet as RTL.",
-      "evidence": "openpyxl documentation defines SheetView.rightToLeft as a writable bool that maps to the OOXML <sheetView rightToLeft=\"1\"/> attribute, which Excel honors on open. Verified by inspecting the skill's bundled script which has used this property since v1.0.",
-      "sources": [
-        "https://openpyxl.readthedocs.io/en/stable/api/openpyxl.worksheet.views.html"
-      ]
+      "claim": "openpyxl's SheetView exposes a rightToLeft attribute, which the skill sets via ws.sheet_view.rightToLeft = True to mark a worksheet as RTL.",
+      "source_url": "https://openpyxl.readthedocs.io/en/stable/api/openpyxl.worksheet.views.html",
+      "raw_snippet": "SheetView.pane SheetView.rightToLeft SheetView.selection"
+    },
+    {
+      "id": "excel-displayrighttoleft",
+      "claim": "Excel's Worksheet object exposes a DisplayRightToLeft property that controls whether the sheet is displayed right to left.",
+      "source_url": "https://learn.microsoft.com/en-us/office/vba/api/excel.worksheet.displayrighttoleft",
+      "raw_snippet": "Worksheet.DisplayRightToLeft property (Excel)"
+    },
+    {
+      "id": "keren-hishtalmut-ceiling-2026",
+      "claim": "The 2026 determining salary for education-fund (keren hishtalmut) contributions is 188,544 NIS per year, i.e. 15,712 NIS per month.",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "משכורת קובעת להפרשות לקרן השתלמות (3ה)  188,544"
+    },
+    {
+      "id": "self-employed-bl-full-rate",
+      "claim": "The full-rate national-insurance contribution for a self-employed person is 12.83% on monthly income above 7,703 NIS up to the 51,910 NIS ceiling.",
+      "source_url": "https://www.btl.gov.il/Insurance/National%20Insurance/type_list/Self_Employed/Pages/rates.aspx",
+      "raw_snippet": "על הכנסה חודשית מעל 7,703 ש\"ח ועד ההכנסה המרבית החייבת בדמי ביטוח בסך 51,910 ש\"ח לחודש - (שיעור רגיל)"
+    },
+    {
+      "id": "self-employed-bl-rate-value",
+      "claim": "The self-employed full national-insurance rate is 12.83%.",
+      "source_url": "https://www.btl.gov.il/Insurance/National%20Insurance/type_list/Self_Employed/Pages/rates.aspx",
+      "raw_snippet": "דמי ביטוח לאומי 4.47% 12.83%"
+    },
+    {
+      "id": "minimum-wage-rise-3-3-percent",
+      "claim": "Beginning April 2026 Israel's minimum wage rose by 3.3%, to 6,443.85 NIS per month for full-time positions.",
+      "source_url": "https://global.histadrut.org.il/news/israels-minimum-wage-to-rise-by-3-3/",
+      "raw_snippet": "Beginning April 2026, Israel’s minimum wage will increase by 3.3% , following the Histadrut’s successful campaign to prevent a freeze in the 2025 state budget."
+    },
+    {
+      "id": "minimum-wage-2024-5880",
+      "claim": "The monthly minimum wage was 5,880.02 NIS from April 1, 2024 (a historical figure, not the current one).",
+      "source_url": "https://www.btl.gov.il/English%20Homepage/Mediniyut/GeneralInformation/Pages/MinimumWage.aspx",
+      "raw_snippet": "April 1, 2024 271.38 235.20 31.61 32.30 5,880.02"
+    },
+    {
+      "id": "link-openpyxl-docs",
+      "claim": "The openpyxl documentation root is https://openpyxl.readthedocs.io/en/stable/",
+      "source_url": "https://openpyxl.readthedocs.io/en/stable/",
+      "raw_snippet": "openpyxl - A Python library to read/write Excel 2010 xlsx/xlsm files"
+    },
+    {
+      "id": "link-btl-english-home",
+      "claim": "The National Insurance Institute English homepage is https://www.btl.gov.il/English%20Homepage/Pages/default.aspx",
+      "source_url": "https://www.btl.gov.il/English%20Homepage/Pages/default.aspx",
+      "raw_snippet": "Take-up of rights according to events in life"
+    },
+    {
+      "id": "link-ita-he",
+      "claim": "The Israel Tax Authority department page is https://www.gov.il/he/departments/israel_tax_authority",
+      "source_url": "https://www.gov.il/he/departments/israel_tax_authority",
+      "raw_snippet": "רשות המסים בישראל מאחדת את אגפי המס השונים: מס הכנסה, מיסוי מקרקעין, מס ערך מוסף, מס קנייה, מכס ומס בולים."
+    },
+    {
+      "id": "link-ita-en",
+      "claim": "The Israel Tax Authority English department page is https://www.gov.il/en/departments/israel_tax_authority",
+      "source_url": "https://www.gov.il/en/departments/israel_tax_authority",
+      "raw_snippet": "The Israel Tax Authority consolidates the various tax divisions: income tax, real estate taxation, VAT, purchase tax, customs and stamp duty."
+    },
+    {
+      "id": "employee-bl-full-rate-7pct",
+      "claim": "On the full-rate band the employee side of national insurance is 7% (7.00%); the employee reduced-band rate is 1.04% and the employee health-insurance rates are 3.23% (reduced) and 5.17% (full).",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "דמי ביטוח לאומי 4.51% (החל ב- 01.01.2025) 1.04% (החל ב- 01.01.2025) 5.55% (החל ב- 01.01.2025) 7.6% (החל ב- 01.01.2019) 7% (החל ב- 01.01.2006) 14.6% (החל ב- 01.02.2025)"
     }
   ]
 }

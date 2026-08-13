@@ -1,70 +1,144 @@
 {
+  "schemaVersion": "1.0",
   "version": "1.0",
   "skill": "wcag-accessibility-widget",
-  "verified_date": "2026-05",
+  "verified_date": "2026-08",
   "claims": [
     {
       "id": "claim-001",
       "claim": "WCAG 2.1 Level AA requires normal text contrast ratio of at least 4.5:1",
       "source_url": "https://www.w3.org/TR/WCAG21/#contrast-minimum",
       "source_title": "W3C WCAG 2.1 - Success Criterion 1.4.3 Contrast (Minimum)",
-      "verified": "2026-05"
+      "raw_snippet": "The visual presentation of text and images of text has a contrast ratio of at least 4.5:1",
+      "verified": "2026-08"
     },
     {
       "id": "claim-002",
       "claim": "WCAG 2.1 Level AA requires large text contrast ratio of at least 3:1",
       "source_url": "https://www.w3.org/TR/WCAG21/#contrast-minimum",
       "source_title": "W3C WCAG 2.1 - Success Criterion 1.4.3 Contrast (Minimum)",
-      "verified": "2026-05"
-    },
-    {
-      "id": "claim-003",
-      "claim": "Israeli Standard ת\"י 5568 governs digital accessibility requirements for websites in Israel",
-      "source_url": "https://www.sii.org.il/1772-he/SII.aspx",
-      "source_title": "Israeli Standards Institution (מכון התקנים הישראלי) - ת\"י 5568",
-      "verified": "2026-05"
-    },
-    {
-      "id": "claim-004",
-      "claim": "Israeli accessibility law (חוק שוויון זכויות לאנשים עם מוגבלות) requires an accessibility declaration page (הצהרת נגישות) on websites",
-      "source_url": "https://www.gov.il/he/departments/guides/nigushot_web",
-      "source_title": "Israeli Government - Web Accessibility Requirements",
-      "verified": "2026-05"
+      "raw_snippet": "Large-scale text and images of large-scale text have a contrast ratio of at least 3:1",
+      "verified": "2026-08"
     },
     {
       "id": "claim-005",
-      "claim": "CSS filter property creates a new stacking context, which causes position:fixed children to be positioned relative to the filtered ancestor instead of the viewport",
-      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/filter#formal_definition",
-      "source_title": "MDN Web Docs - CSS filter (stacking context behavior)",
-      "verified": "2026-05"
+      "claim": "CSS filter on an ancestor changes the containing block of a position:fixed element, so the fixed element is positioned relative to that ancestor instead of the viewport",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/position",
+      "source_title": "MDN Web Docs - CSS position (fixed positioning containing block)",
+      "raw_snippet": "unless any ancestor has transform , perspective , or filter property set to something other than none",
+      "verified": "2026-08"
     },
     {
       "id": "claim-006",
-      "claim": "The html element should have lang and dir attributes set (e.g., lang=\"he\" dir=\"rtl\" for Hebrew) for accessibility and correct RTL rendering",
+      "claim": "The default human language of the page must be programmatically determinable, which is what the html lang attribute provides (WCAG 2.1 SC 3.1.1)",
       "source_url": "https://www.w3.org/TR/WCAG21/#language-of-page",
       "source_title": "W3C WCAG 2.1 - Success Criterion 3.1.1 Language of Page",
-      "verified": "2026-05"
+      "raw_snippet": "The default human language of each web page can be programmatically determined",
+      "verified": "2026-08"
     },
     {
       "id": "claim-007",
-      "claim": "All interactive elements must be reachable by keyboard (Tab key) per WCAG 2.1 AA Success Criterion 2.1.1",
+      "claim": "All interactive elements must be operable by keyboard per WCAG 2.1 Success Criterion 2.1.1",
       "source_url": "https://www.w3.org/TR/WCAG21/#keyboard",
       "source_title": "W3C WCAG 2.1 - Success Criterion 2.1.1 Keyboard",
-      "verified": "2026-05"
+      "raw_snippet": "All functionality of the content is operable through a keyboard interface without requiring specific timings for individual keystrokes",
+      "verified": "2026-08"
     },
     {
       "id": "claim-008",
-      "claim": "Decorative images must have empty alt text (alt=\"\") and aria-hidden=\"true\" per WCAG 2.1",
+      "claim": "Purely decorative non-text content must be implemented so assistive technology can ignore it (WCAG 2.1 SC 1.1.1)",
       "source_url": "https://www.w3.org/TR/WCAG21/#non-text-content",
       "source_title": "W3C WCAG 2.1 - Success Criterion 1.1.1 Non-text Content",
-      "verified": "2026-05"
+      "raw_snippet": "is used only for visual formatting, or is not presented to users, then it is implemented in a way that it can be ignored by assistive technology",
+      "verified": "2026-08"
     },
     {
       "id": "claim-009",
-      "claim": "localStorage is available in all modern browsers and can be used to persist user accessibility preferences across sessions",
+      "claim": "localStorage persists data across browser sessions, so it can hold user accessibility preferences",
       "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage",
       "source_title": "MDN Web Docs - Window.localStorage",
-      "verified": "2026-05"
+      "raw_snippet": "the stored data is saved across browser sessions",
+      "verified": "2026-08"
+    },
+    {
+      "id": "ref-001",
+      "claim": "Reference: the full WCAG 2.1 specification is published by W3C at https://www.w3.org/TR/WCAG21/",
+      "source_url": "https://www.w3.org/TR/WCAG21/",
+      "source_title": "W3C - Web Content Accessibility Guidelines (WCAG) 2.1",
+      "raw_snippet": "Web Content Accessibility Guidelines (WCAG) 2.1 covers a wide range of recommendations for making web content more accessible.",
+      "verified": "2026-08"
+    },
+    {
+      "id": "ref-002",
+      "claim": "Reference: W3C WAI publishes a customizable quick reference of WCAG success criteria and techniques",
+      "source_url": "https://www.w3.org/WAI/WCAG21/quickref/",
+      "source_title": "W3C WAI - How to Meet WCAG (Quick Reference)",
+      "raw_snippet": "A customizable quick reference to Web Content Accessibility Guidelines (WCAG) 2 requirements (success criteria) and techniques.",
+      "verified": "2026-08"
+    },
+    {
+      "id": "ref-003",
+      "claim": "Reference: W3C WAI publishes informative Understanding documents that explain each WCAG 2.1 success criterion",
+      "source_url": "https://www.w3.org/WAI/WCAG21/Understanding/",
+      "source_title": "W3C WAI - Understanding WCAG 2.1",
+      "raw_snippet": "Understanding documents provide detailed explanations for Web Content Accessibility Guidelines (WCAG) guidelines and success criteria.",
+      "verified": "2026-08"
+    },
+    {
+      "id": "ref-004",
+      "claim": "Reference: the CSS Filter Effects specification states that filter creates a stacking context the same way opacity does",
+      "source_url": "https://www.w3.org/TR/filter-effects/#FilterProperty",
+      "source_title": "W3C - Filter Effects Module Level 1, the filter property",
+      "raw_snippet": "the same way that CSS opacity does. All the elements descendants are rendered together as a group with the filter effect applied to the group as a whole.",
+      "verified": "2026-08"
+    },
+    {
+      "id": "ref-005",
+      "claim": "Reference: MDN's stacking context page lists filter (with a value other than none) among the properties that create a stacking context",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context",
+      "source_title": "MDN Web Docs - Stacking context",
+      "raw_snippet": "Stacking context is a three-dimensional conceptualization of HTML elements along an imaginary z-axis relative to the user",
+      "verified": "2026-08"
+    },
+    {
+      "id": "ref-006",
+      "claim": "Reference: WAVE (WebAIM) is a suite of web accessibility evaluation tools",
+      "source_url": "https://wave.webaim.org/",
+      "source_title": "WAVE Web Accessibility Evaluation Tools",
+      "raw_snippet": "is a suite of evaluation tools that helps authors make their web content more accessible to individuals with dis",
+      "verified": "2026-08"
+    },
+    {
+      "id": "ref-007",
+      "claim": "Reference: Deque's axe DevTools provides automated accessibility testing for web and mobile",
+      "source_url": "https://www.deque.com/axe/devtools/",
+      "source_title": "Deque - Axe DevTools",
+      "raw_snippet": "Automated accessibility testing for web and mobile",
+      "verified": "2026-08"
+    },
+    {
+      "id": "ref-008",
+      "claim": "Reference: the Colour Contrast Analyser (CCA) is a free color contrast checker for WCAG color checking",
+      "source_url": "https://www.tpgi.com/color-contrast-checker/",
+      "source_title": "Vispero (TPGi) - Colour Contrast Analyser (CCA)",
+      "raw_snippet": "One color contrast tool for all your WCAG color checking needs",
+      "verified": "2026-08"
+    },
+    {
+      "id": "ref-009",
+      "claim": "Reference: NV Access develops the NVDA screen reader for blind and vision impaired computer users",
+      "source_url": "https://www.nvaccess.org/",
+      "source_title": "NV Access - home of the NVDA screen reader",
+      "raw_snippet": "We believe that every Blind + Vision Impaired person Deserves the right to freely & easily access a computer!",
+      "verified": "2026-08"
+    },
+    {
+      "id": "ref-010",
+      "claim": "Reference: the Standards Institution of Israel is the body that publishes Israeli standards, including the web accessibility standard",
+      "source_url": "https://www.sii.org.il/",
+      "source_title": "מכון התקנים הישראלי - Standards Institution of Israel",
+      "raw_snippet": "שירותי מכון התקנים הישראלי הכל תחת קורת גג אחת!",
+      "verified": "2026-08"
     }
   ]
 }

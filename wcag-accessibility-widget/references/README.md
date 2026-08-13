@@ -3,16 +3,13 @@
 ## Israeli Law & Standards
 
 - **חוק שוויון זכויות לאנשים עם מוגבלות, תשנ"ח-1998**
-  https://www.nevo.co.il/law_html/law01/999_429.htm
 
 - **תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), תשע"ג-2013**
-  https://www.nevo.co.il/law_html/law01/999_687.htm
 
 - **ת"י 5568 — נגישות לתכנים באינטרנט (Israeli Standard, mirrors WCAG 2.1)**
   https://www.sii.org.il/
 
-- **נציבות שוויון זכויות לאנשים עם מוגבלות**
-  https://www.justice.gov.il/Units/NetzivutShivionZchuyot/Pages/default.aspx
+- **נציבות שוויון זכויות לאנשים עם מוגבלות** (משרד המשפטים)
 
 ## WCAG Standards
 
