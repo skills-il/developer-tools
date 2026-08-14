@@ -23,17 +23,17 @@ Amendment 288 expanded the middle brackets (20%, 31%, 35%); a taxpayer with 300,
 - New immigrant (year 1.5-2): +2 points
 - New immigrant (year 2-3.5): +1 point
 
-## National Insurance (Bituach Leumi) 2025-2026 (frozen at 2025 levels)
+## National Insurance (Bituach Leumi), bands effective 01.01.2026
 | Income Range | Employee Rate | Self-Employed Rate |
 |-------------|--------------|-------------------|
-| Up to 7,122 NIS/month | 0.40% | 2.87% |
-| 7,123 - 49,030 NIS/month | 7.00% | 12.83% |
+| Up to 7,703 NIS/month | 1.04% | 4.47% |
+| 7,704 - 51,910 NIS/month | 7.00% | 12.83% |
 
-## Health Tax (Mas Briut) 2025-2026 (frozen at 2025 levels)
+## Health Tax (Mas Briut), bands effective 01.01.2026
 | Income Range | Rate |
 |-------------|------|
-| Up to 7,122 NIS/month | 3.10% |
-| Above 7,122 NIS/month | 5.00% |
+| Up to 7,703 NIS/month | 3.23% |
+| Above 7,703 NIS/month | 5.17% |
 
 ## VAT (Ma'am)
 - Standard rate: 18% (raised from 17% on 2025-01-01; the Finance Ministry's January 2026 proposal to raise it again to 19% was dropped during budget negotiations and did not take effect).

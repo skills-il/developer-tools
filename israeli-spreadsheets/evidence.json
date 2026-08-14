@@ -191,6 +191,44 @@
       "claim": "On the full-rate band the employee side of national insurance is 7% (7.00%); the employee reduced-band rate is 1.04% and the employee health-insurance rates are 3.23% (reduced) and 5.17% (full).",
       "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
       "raw_snippet": "דמי ביטוח לאומי 4.51% (החל ב- 01.01.2025) 1.04% (החל ב- 01.01.2025) 5.55% (החל ב- 01.01.2025) 7.6% (החל ב- 01.01.2019) 7% (החל ב- 01.01.2006) 14.6% (החל ב- 01.02.2025)"
+    },
+    {
+      "claim_id": "btl-employee-bands-2026",
+      "claim": "National Insurance collection bands for salaried employees: the reduced-rate band runs to 7,703 NIS and the full-rate band from there to the maximum insurable income of 51,910 NIS, both effective 01.01.2026.",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "מחלק השכר שעד מדרגת גביה מופחתת (שיעור מופחת) - 7,703 ש\"ח (החל ב- 01.01.2026)   מחלק השכר שמעל מדרגת גביה מופחתת ועד ההכנסה המרבית החייבת בדמי ביטוח (שיעור מלא) - 51,910 ש\"ח (החל ב- 01.01.2026)",
+      "fetched_at": "2026-08-13",
+      "verified_via": "curl",
+      "verified_at": "2026-08-13",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "btl-employee-rates-2026",
+      "claim": "Employee-side rates: National Insurance 1.04% on the reduced band and 7% on the full band; health insurance 3.23% reduced and 5.17% full. The employer pays 4.51% and 7.6% respectively for National Insurance and nothing for health.",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "דמי ביטוח לאומי 4.51% (החל ב- 01.01.2025) 1.04% (החל ב- 01.01.2025) 5.55% (החל ב- 01.01.2025) 7.6% (החל ב- 01.01.2019) 7% (החל ב- 01.01.2006) 14.6% (החל ב- 01.02.2025) דמי ביטוח בריאות - 3.23% (החל ב- 01.01.2025) 3.23% (החל ב- 01.01.2025) - 5.17%",
+      "fetched_at": "2026-08-13",
+      "verified_via": "curl",
+      "verified_at": "2026-08-13",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "btl-self-employed-rates-2026",
+      "claim": "Self-employed rates on the same bands: National Insurance 4.47% reduced and 12.83% full; health insurance 3.23% and 5.17%; totals 7.7% and 18%. Thresholds are 7,703 NIS and a maximum insurable income of 51,910 NIS.",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%A6%D7%9E%D7%90%D7%99%D7%9D.aspx",
+      "raw_snippet": "על הכנסה חודשית 7,703 ש\"ח - (שיעור מופחת) על הכנסה חודשית מעל 7,703 ש\"ח ועד ההכנסה המרבית החייבת בדמי ביטוח בסך 51,910 ש\"ח לחודש - (שיעור רגיל) דמי ביטוח לאומי 4.47%  12.83% דמי ביטוח בריאות 3.23% 5.17% סך הכול 7.7% 18%",
+      "fetched_at": "2026-08-13",
+      "verified_via": "curl",
+      "verified_at": "2026-08-13",
+      "appears_in": [
+        "references/israeli-tax-rates.md"
+      ]
     }
   ]
 }

@@ -94,8 +94,8 @@ The `LET` helper keeps the formula readable and runs once instead of repeating `
 **Bituach Leumi + health tax (employee side, monthly salary in A1):**
 
 ```
-Bituach Leumi:  =MIN(A1,7122)*0.004 + MAX(0, MIN(A1,49030)-7122)*0.07
-Health tax:     =MIN(A1,7122)*0.031 + MAX(0, MIN(A1,49030)-7122)*0.05
+Bituach Leumi:  =MIN(A1,7703)*0.0104 + MAX(0, MIN(A1,51910)-7703)*0.07
+Health tax:     =MIN(A1,7703)*0.0323 + MAX(0, MIN(A1,51910)-7703)*0.0517
 ```
 
 Income above the 49,030 NIS/month ceiling is not insurable, so both formulas cap at that figure.
@@ -128,7 +128,7 @@ User says: "Build a payroll Excel sheet for an Israeli employee"
 Actions:
 1. Create RTL workbook with Hebrew headers
 2. Add income tax brackets (2026 rates after Amendment 288: 10%, 14%, 20% to 228K, 31% to 301.2K, 35%, 47%, 50%)
-3. Calculate Bituach Leumi (0.4%/7% employee-side thresholds), health tax (3.1%/5%)
+3. Calculate Bituach Leumi (employee 1.04% up to 7,703 NIS, 7% from there to 51,910), health tax (3.23% / 5.17% on the same bands)
 4. Include pension (6.0% employee + 6.5% employer, plus 6.0% severance by employer) and keren hishtalmut
 5. Apply Section 45a tax credit (35% of employee-side pension deposit) against the income tax line
 6. Format all amounts as NIS with Hebrew labels
