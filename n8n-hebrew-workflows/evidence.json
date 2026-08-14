@@ -15,11 +15,14 @@
     },
     {
       "id": "n8n-dist-tags-now",
-      "claim": "As of 2026-08-13 the current n8n release is 2.34.5 (published 2026-08-12), so 2.32.7 is no longer the current stable.",
-      "source_url": "https://github.com/n8n-io/n8n/releases/latest",
-      "raw_snippet": "n8n-assistant released this 12 Aug 08:04 n8n@2.34.5",
+      "claim": "n8n 2.34.5 was published on 2026-08-12, so the 2.32.7 pin is not the current stable. Cited against the immutable tag rather than /releases/latest, which moves: 2.34.6 shipped 2026-08-14.",
+      "source_url": "https://api.github.com/repos/n8n-io/n8n/releases/tags/n8n%402.34.5",
+      "raw_snippet": "\"tag_name\": \"n8n@2.34.5\"",
       "verified": "2026-08-13",
-      "note": "npm dist-tags at the same moment: latest/stable 2.34.5, beta/next 2.35.1. This CONTRADICTS the body text 'current stable is 2.32.7 as of August 2026' (SKILL.md lines 6, 257, 267, 466). NOTE: /releases/latest is a moving target and will drift again."
+      "note": "npm dist-tags at the same moment: latest/stable 2.34.5, beta/next 2.35.1. This CONTRADICTS the body text 'current stable is 2.32.7 as of August 2026' (SKILL.md lines 6, 257, 267, 466). NOTE: /releases/latest is a moving target and will drift again.",
+      "verified_via": "GitHub releases API (immutable tag endpoint)",
+      "verified_at": "2026-08-14",
+      "fetched_at": "2026-08-14"
     },
     {
       "id": "n8n-2321-published",
@@ -499,6 +502,248 @@
       "raw_snippet": "\"summary\":\"Create a workflow\",\"description\":\"Create a workflow in your instance.\"",
       "verified": "2026-08-13",
       "note": "The embedded OpenAPI fragments on that page declare servers [{\"url\":\"/api/v1\"}] and the /workflows path with both get ('Retrieve all workflows from your instance.') and post operations. The per-id GET is documented on the same Workflow resource page."
+    },
+    {
+      "claim_id": "morning-download-links",
+      "claim": "Morning exposes GET /documents/{id}/download/links: an unauthenticated call returns HTTP 401 (auth required), not 404, which is how this API signals that a route exists.",
+      "source_url": "https://api.greeninvoice.co.il/api/v1/documents/xyz/download/links",
+      "raw_snippet": "{\"errorCode\":401,\"errorMessage\":\"גישה נדחתה, נא להתחבר מחדש\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe against the live API, with 404 on undefined paths as the negative control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "morning-payments-search",
+      "claim": "Morning exposes POST /documents/payments/search: an unauthenticated call returns HTTP 401 (auth required), not 404, which is how this API signals that a route exists.",
+      "source_url": "https://api.greeninvoice.co.il/api/v1/documents/payments/search",
+      "raw_snippet": "{\"errorCode\":401,\"errorMessage\":\"גישה נדחתה, נא להתחבר מחדש\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe against the live API, with 404 on undefined paths as the negative control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "morning-payments-form",
+      "claim": "Morning exposes POST /payments/form: an unauthenticated call returns HTTP 401 (auth required), not 404, which is how this API signals that a route exists.",
+      "source_url": "https://api.greeninvoice.co.il/api/v1/payments/form",
+      "raw_snippet": "{\"errorCode\":401,\"errorMessage\":\"גישה נדחתה, נא להתחבר מחדש\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe against the live API, with 404 on undefined paths as the negative control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "morning-tokens-search",
+      "claim": "Morning exposes POST /payments/tokens/search: an unauthenticated call returns HTTP 401 (auth required), not 404, which is how this API signals that a route exists.",
+      "source_url": "https://api.greeninvoice.co.il/api/v1/payments/tokens/search",
+      "raw_snippet": "{\"errorCode\":401,\"errorMessage\":\"גישה נדחתה, נא להתחבר מחדש\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe against the live API, with 404 on undefined paths as the negative control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "morning-tokens-charge",
+      "claim": "Morning exposes POST /payments/tokens/{id}/charge: an unauthenticated call returns HTTP 401 (auth required), not 404, which is how this API signals that a route exists.",
+      "source_url": "https://api.greeninvoice.co.il/api/v1/payments/tokens/xyz/charge",
+      "raw_snippet": "{\"errorCode\":401,\"errorMessage\":\"גישה נדחתה, נא להתחבר מחדש\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe against the live API, with 404 on undefined paths as the negative control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "morning-create-document",
+      "claim": "Morning exposes POST /documents: an unauthenticated call returns HTTP 401 (auth required), not 404, which is how this API signals that a route exists.",
+      "source_url": "https://api.greeninvoice.co.il/api/v1/documents",
+      "raw_snippet": "{\"errorCode\":401,\"errorMessage\":\"גישה נדחתה, נא להתחבר מחדש\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe against the live API, with 404 on undefined paths as the negative control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "morning-no-payments-collection",
+      "claim": "Morning has no GET /payments collection endpoint: it returns HTTP 404 while every real route returns 401 unauthenticated.",
+      "source_url": "https://api.greeninvoice.co.il/api/v1/payments",
+      "raw_snippet": "HTTP/2 404 content-type: application/json; charset=utf-8 x-api-version: GI-Core-API 2.43.8 {\"errorCode\":404,\"errorMessage\":\"\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl -i probe against the live API (headers included), with 401 on real routes as the positive control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "grow-create",
+      "claim": "Grow/Meshulam exposes POST /api/light/server/1.0/createPaymentProcess/: it returns a field-level validation error, whereas an undefined path returns {\"err\":\"unknown method\"}.",
+      "source_url": "https://secure.meshulam.co.il/api/light/server/1.0/createPaymentProcess/",
+      "raw_snippet": "{\"err\":{\"id\":707,\"message\":\"\\u05d4\\u05e1\\u05db\\u05d5\\u05dd \\u05d0\\u05d9\\u05e0\\u05d5 \\u05ea\\u05e7\\u05d9\\u05df\"},\"status\":\"0\",\"data\":\"\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe with an undefined path as the negative control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "grow-info",
+      "claim": "Grow/Meshulam exposes POST /api/light/server/1.0/getPaymentProcessInfo/: it returns a field-level validation error, whereas an undefined path returns {\"err\":\"unknown method\"}.",
+      "source_url": "https://secure.meshulam.co.il/api/light/server/1.0/getPaymentProcessInfo/",
+      "raw_snippet": "{\"err\":{\"id\":54,\"message\":\"\\u05d7\\u05e1\\u05e8\\u05d9\\u05dd \\u05e0\\u05ea\\u05d5\\u05e0\\u05d9\\u05dd:pageCode\"},\"status\":\"0\",\"data\":\"\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe with an undefined path as the negative control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "grow-approve",
+      "claim": "Grow/Meshulam exposes POST /api/light/server/1.0/approveTransaction/: it returns a field-level validation error, whereas an undefined path returns {\"err\":\"unknown method\"}.",
+      "source_url": "https://secure.meshulam.co.il/api/light/server/1.0/approveTransaction/",
+      "raw_snippet": "{\"err\":{\"id\":54,\"message\":\"\\u05d7\\u05e1\\u05e8\\u05d9\\u05dd \\u05e0\\u05ea\\u05d5\\u05e0\\u05d9\\u05dd:pageCode\"},\"status\":\"0\",\"data\":\"\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe with an undefined path as the negative control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "grow-hosts",
+      "claim": "Grow/Meshulam serves the API on secure.meshulam.co.il with sandbox.meshulam.co.il as the test host; both answer the same paths identically.",
+      "source_url": "https://secure.meshulam.co.il/api/light/server/1.0/getPaymentProcessInfo/",
+      "raw_snippet": "{\"err\":{\"id\":54,\"message\":\"\\u05d7\\u05e1\\u05e8\\u05d9\\u05dd \\u05e0\\u05ea\\u05d5\\u05e0\\u05d9\\u05dd:pageCode\"},\"status\":\"0\",\"data\":\"\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe against both hosts",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "sms019-no-bulk-route",
+      "claim": "019sms has no /api/bulk route: a POST returns the same generic HTTP 500 error page as an undefined path.",
+      "source_url": "https://019sms.co.il/api/bulk",
+      "raw_snippet": "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Error</title></head>",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe with /api/zzz_nonexistent as the negative control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "sms019-no-status-route",
+      "claim": "019sms has no /api/status route: a GET returns a 4,242-byte catch-all HTML page byte-identical to the one served for /api/zzz_nonexistent.",
+      "source_url": "https://019sms.co.il/api/status",
+      "raw_snippet": "<!DOCTYPE html><html lang=\"en\" translate=\"no\" class=\"notrans",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe; byte-length compared against an undefined path",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "ez-search-404",
+      "claim": "EZCount's /searchDocuments is not a live route: it returns a 404 HTML page, while /createDoc returns a JSON API error.",
+      "source_url": "https://api.ezcount.co.il/api/searchDocuments",
+      "raw_snippet": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js lt-ie9",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe against the live API",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "ez-getlast",
+      "claim": "EZCount exposes /getLastAPIRequestData: it returns a JSON API error rather than the host's generic HTML.",
+      "source_url": "https://api.ezcount.co.il/api/getLastAPIRequestData",
+      "raw_snippet": "{ \"errNum\": 1, \"errMsg\": \"no data sent, please send a GET, POST or JSON",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe + EZCount's published Postman collection",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "ez-allocation",
+      "claim": "EZCount exposes /documents/getTaxMinistryAllocationNumber/{DOC_UUID} for the SHAAM allocation number; it is listed in EZCount's published Postman collection and returns a JSON API error.",
+      "source_url": "https://api.ezcount.co.il/api/documents/getTaxMinistryAllocationNumber/xyz",
+      "raw_snippet": "{ \"errNum\": 1, \"errMsg\": \"no data sent, please send a GET, POST or JSON",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe + EZCount's published Postman collection",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "ckan-no-sql-action",
+      "claim": "data.gov.il's CKAN does not implement datastore_search_sql: help_show reports the action as missing, while datastore_search and package_show both return documentation.",
+      "source_url": "https://data.gov.il/api/3/action/help_show?name=datastore_search_sql",
+      "raw_snippet": "לא נמצא: Action function not found",
+      "fetched_at": "2026-08-14",
+      "verified_via": "browser same-origin fetch, with datastore_search and package_show as positive controls",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "morning-decimal-amounts",
+      "claim": "Morning amounts are decimal shekels, not agorot: price is typed number with example values of 4 and 5 alongside a separate 3-letter ISO currency code, so price: 50 is 50.00 NIS and needs no conversion by 100.",
+      "source_url": "https://developers.morning.co/api",
+      "raw_snippet": "price required number The item price. For example: 5. currency required string (Currency) 3-letter ISO currency code. Code Name ILS שקל",
+      "fetched_at": "2026-08-14",
+      "verified_via": "playwright navigation (snippet read off the rendered API docs)",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "grow-sandbox-host",
+      "claim": "sandbox.meshulam.co.il is Grow/Meshulam's test host and answers the same paths as the production host with identical validation errors.",
+      "source_url": "https://sandbox.meshulam.co.il/api/light/server/1.0/getPaymentProcessInfo/",
+      "raw_snippet": "{\"err\":{\"id\":54,\"message\":\"חסרים נתונים:pageCode\"},\"status\":\"0\",",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe against the sandbox host",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "references/israeli-api-endpoints.md"
+      ]
+    },
+    {
+      "claim_id": "morning-payments-search-v1",
+      "claim": "The full path for Morning's payment search is /api/v1/documents/payments/search; an unauthenticated call returns 401 rather than 404.",
+      "source_url": "https://api.greeninvoice.co.il/api/v1/documents/payments/search",
+      "raw_snippet": "{\"errorCode\":401,\"errorMessage\":\"גישה נדחתה, נא להתחבר מחדש\"}",
+      "fetched_at": "2026-08-14",
+      "verified_via": "curl probe against the live API, with 404 on undefined paths as the negative control",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }

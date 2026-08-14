@@ -51,7 +51,7 @@ Common Morning endpoints:
 | `/api/v1/documents/search` | POST | Search invoices by date range, client, status |
 | `/api/v1/documents` | POST | Create new invoice/receipt |
 | `/api/v1/clients/search` | POST | Look up client by name or osek number |
-| `/api/v1/payments` | GET | Fetch payment records for reconciliation |
+| `/api/v1/documents/payments/search` | POST | Fetch payment records for reconciliation |
 | `/api/v1/businesses/me` | GET | Get current business info |
 
 Document type codes: 10 (Price Quote / hatzaat mechir), 305 (Tax Invoice / hashbonit mas), 320 (Tax Invoice + Receipt / hashbonit mas + kabala), 330 (Credit Note / hashbonit zikui), 400 (Receipt / kabala).

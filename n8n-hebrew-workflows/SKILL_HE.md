@@ -82,7 +82,7 @@ Authorization: Bearer {{$json.token}}
 | `/api/v1/documents/search` | POST | חיפוש חשבוניות לפי תאריך, לקוח, סטטוס |
 | `/api/v1/documents` | POST | יצירת חשבונית/קבלה חדשה |
 | `/api/v1/clients/search` | POST | חיפוש לקוח לפי שם או מספר עוסק |
-| `/api/v1/payments` | GET | שליפת רשומות תשלום להתאמה |
+| `/api/v1/documents/payments/search` | POST | שליפת רשומות תשלום להתאמה |
 | `/api/v1/businesses/me` | GET | מידע על העסק הנוכחי |
 
 קודי סוגי מסמכים לשדה `type`:

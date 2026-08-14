@@ -25,8 +25,10 @@ Token TTL: 60 minutes. Refresh proactively before expiry.
 | `/documents/search` | POST | Search invoices/receipts | `fromDate`, `toDate`, `type`, `status`, `client` |
 | `/documents` | POST | Create document | `type`, `client`, `income` (line items array) |
 | `/documents/{id}` | GET | Get document by ID | Path parameter: document UUID |
-| `/documents/{id}/download` | GET | Download PDF | Returns binary PDF |
-| `/documents/{id}/send` | POST | Email document to client | `to` (email address) |
+| `/documents/{id}/download/links` | GET | Get download links for the document | Returns URLs, not the binary itself |
+
+There is no endpoint that emails an existing document. Delivery is a property
+of creation: pass `emailContent` and `attachment` on `POST /documents`.
 
 ### Document Types (type field)
 
@@ -65,8 +67,13 @@ When creating documents via API, check Morning's documentation for the allocatio
 
 | Endpoint | Method | Description | Key Parameters |
 |----------|--------|-------------|----------------|
-| `/payments` | GET | List payments | `fromDate`, `toDate` |
-| `/payments/{id}` | GET | Get payment details | Path parameter: payment UUID |
+| `/documents/payments/search` | POST | Search payments recorded on documents | `fromDate`, `toDate` |
+| `/payments/form` | POST | Create a hosted payment form | |
+| `/payments/tokens/search` | POST | Search stored payment tokens | |
+| `/payments/tokens/{id}/charge` | POST | Charge a stored token | Path parameter: token ID |
+
+Note there is no `GET /payments` collection; reconciliation goes through
+`POST /documents/payments/search`.
 
 ### Common Response Fields
 
@@ -101,9 +108,18 @@ Authentication via `api_key` + `api_email` in the request body (not OAuth, not B
 | Endpoint | Method | Description | Key Parameters |
 |----------|--------|-------------|----------------|
 | `/createDoc` | POST | Create document | `type`, `customer_name`, `item[]`, `api_key`, `api_email` |
-| `/searchDocuments` | POST | Search documents | `fromDate`, `toDate`, `type`, `api_key`, `api_email` |
-| `/getDocPdf` | POST | Download PDF | `docNum` |
-| `/sendDocByEmail` | POST | Email document to client | `docNum`, `to` |
+| `/getLastAPIRequestData` | GET | Inspect the last API request (debugging) | `debug_key`, `api_key` |
+| `/documents/getTaxMinistryAllocationNumber/{DOC_UUID}` | POST | Fetch the SHAAM allocation number | Path parameter: document UUID |
+
+Only the calls above appear in EZCount's published Postman collection
+(linked from ezcount.co.il/api). Endpoint names for searching documents,
+downloading a PDF, or emailing a document are not documented publicly, and
+`/searchDocuments` returns a 404 page. Read the exact names off the API tab
+in your own EZCount account (Settings > API) rather than guessing them.
+
+Note when probing this host: unknown paths return HTTP 200 with a
+`MULTIPE POST PROBLEM` body rather than a 404, so a 200 here is not evidence
+that an endpoint exists.
 
 ### Document Type Codes
 
@@ -137,9 +153,14 @@ Base URL: `https://data.gov.il/api/3`
 | Endpoint | Method | Description | Key Parameters |
 |----------|--------|-------------|----------------|
 | `/action/datastore_search` | GET | Search within a dataset | `resource_id`, `q`, `filters`, `limit`, `offset`, `sort` |
-| `/action/datastore_search_sql` | GET | SQL query on dataset | `sql` (PostgreSQL-compatible) |
 | `/action/package_show` | GET | Get dataset metadata | `id` (dataset name or UUID) |
 | `/action/resource_show` | GET | Get resource details | `id` (resource UUID) |
+
+Unlike a stock CKAN install, data.gov.il does **not** expose
+`datastore_search_sql`: `help_show?name=datastore_search_sql` returns
+`Action function not found`, and the WAF additionally blocks any request
+carrying SQL in the query string. Use `datastore_search` with `filters` and
+`q` instead; there is no SQL path on this instance.
 
 ### Useful Resource IDs
 
@@ -185,9 +206,15 @@ Base URL: `https://019sms.co.il/api`
 
 | Endpoint | Method | Description | Auth |
 |----------|--------|-------------|------|
-| `/api` | POST | Send single SMS | Bearer token in header |
-| `/api/bulk` | POST | Send bulk SMS | Same |
-| `/api/status` | GET | Check message status | Bearer token + message ID |
+| `/api` | POST | All operations, including bulk sends | Bearer token in header |
+
+019 exposes a single `/api` endpoint; the operation is selected in the request
+body, not by the path. There are no `/api/bulk` or `/api/status` routes. A POST
+to either returns the same generic HTTP 500 page as a path that was never
+defined, and a GET returns a byte-identical 4,242-byte catch-all HTML page for
+`/api/bulk`, `/api/status` and `/api/zzz_nonexistent` alike. Only `/api` itself
+answers with JSON (an auth error). On this host, judge a route by whether the
+body is JSON, not by the status code.
 
 Send SMS request:
 ```
@@ -215,7 +242,11 @@ JSON API endpoint: `https://capi.inforu.co.il/api/v2/SMS/SendSms`
 | Endpoint | Method | Description | Auth |
 |----------|--------|-------------|------|
 | `/api/v2/SMS/SendSms` | POST | Send SMS | Bearer token in header + IP allowlist |
-| `/api/v2/SMS/GetSmsStatus` | GET | Check status | Bearer token + message ID |
+
+`SendSms` is the only v2 path confirmed to exist (it answers 401 unauthenticated).
+`GetSmsStatus` returns 404, identical to an undefined path, so it is not the
+delivery-status endpoint. Take the correct path from InforU's own documentation
+for your account rather than guessing a name.
 
 Auth failures return HTTP 401 with `{"StatusId": -2, "StatusDescription": "Authentication failed or illegal IP address"}`. The same status covers a bad token and an unlisted source IP, so whitelist your n8n egress IP in the InforU dashboard before debugging the token.
 
@@ -308,10 +339,18 @@ Documentation: `https://grow-il.readme.io/`
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/v1/payments/create` | POST | Create payment page |
-| `/api/v1/payments/{id}` | GET | Get payment status |
-| `/api/v1/payments/approve` | POST | Approve transaction (required after webhook) |
+Base URL: `https://secure.meshulam.co.il` (sandbox: `https://sandbox.meshulam.co.il`)
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/light/server/1.0/createPaymentProcess/` | POST | Create payment page |
+| `/api/light/server/1.0/getPaymentProcessInfo/` | POST | Get payment status |
+| `/api/light/server/1.0/approveTransaction/` | POST | Approve transaction (required after webhook) |
 | Webhook URL (configured in dashboard) | POST | Payment result |
+
+Every operation is POST, including the status read. The API replies to an
+undefined path with `{"err":"unknown method"}` and HTTP 200, so check the
+`err` field rather than the status code when confirming a path.
 
 **Important:** Grow API requests use `multipart/form-data`, not JSON.
 
