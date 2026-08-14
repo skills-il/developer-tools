@@ -139,6 +139,19 @@
       "source_title": "מכון התקנים הישראלי - Standards Institution of Israel",
       "raw_snippet": "שירותי מכון התקנים הישראלי הכל תחת קורת גג אחת!",
       "verified": "2026-08"
+    },
+    {
+      "claim_id": "equal-rights-commission-page",
+      "claim": "The Equal Rights Commission for People with Disabilities is at gov.il/he/departments/moj_disability_rights; the old justice.gov.il deep link now redirects to the ministry homepage and no longer serves this page.",
+      "source_url": "https://www.gov.il/he/departments/moj_disability_rights",
+      "raw_snippet": "נציבות שוויון זכויות לאנשים עם מוגבלות",
+      "fetched_at": "2026-08-15",
+      "verified_via": "playwright navigation (page load and h1 read, not fetch status)",
+      "verified_at": "2026-08-15",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }

@@ -27,8 +27,8 @@ compatibility: עובד עם React 18+ ו-Next.js 13+ (App Router). אין צו�
 | **אלמנטים דקורטיביים** | אמוג'י, span קו תחתי, אייקוני SVG עם טקסט סמוך → `aria-hidden="true"` |
 | **שפה וכיוון** | `<html lang="he" dir="rtl">` (או השפה שלכם) על אלמנט השורש |
 | **רספונסיביות מובייל** | האתר שמיש במובייל ללא גלילה אופקית |
-| **הצהרת נגישות** | נדרשת לפי חוק שוויון זכויות לאנשים עם מוגבלות — עמוד בכתובת `/accessibility` |
-| **מדיניות פרטיות** | `/privacy-policy` עם רשימה של כל הנתונים שהטופס אוסף |
+| **הצהרת נגישות** | נדרשת לפי חוק שוויון זכויות לאנשים עם מוגבלות — עמוד בכתובת /accessibility |
+| **מדיניות פרטיות** | עמוד /privacy-policy עם רשימה של כל הנתונים שהטופס אוסף |
 
 ---
 
@@ -284,7 +284,7 @@ export default function AccessibilityPage() {
         <h2>פניות ותלונות</h2>
         <p>
           במידה ונתקלתם בבעיית נגישות שלא נפתרה, תוכלו לפנות ל
-          <a href="https://www.justice.gov.il/Units/NetzivutShivionZchuyot/Pages/default.aspx">
+          <a href="https://www.gov.il/he/departments/moj_disability_rights">
             נציב שוויון זכויות לאנשים עם מוגבלות
           </a>.
         </p>

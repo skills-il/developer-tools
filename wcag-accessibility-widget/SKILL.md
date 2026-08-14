@@ -27,8 +27,8 @@ Before touching any component, audit these items first:
 | **Decorative elements** | Emoji, underline spans, SVG icons with adjacent text → `aria-hidden="true"` |
 | **Lang + dir** | `<html lang="he" dir="rtl">` (or your locale) on the root element |
 | **Mobile responsive** | Site usable on mobile without horizontal scroll |
-| **Accessibility declaration** | Required by Israeli law (חוק שוויון זכויות) — page at `/accessibility` |
-| **Privacy policy** | `/privacy-policy` listing exactly what data the form collects |
+| **Accessibility declaration** | Required by Israeli law (חוק שוויון זכויות) — page at /accessibility |
+| **Privacy policy** | a /privacy-policy page listing exactly what data the form collects |
 
 ---
 
