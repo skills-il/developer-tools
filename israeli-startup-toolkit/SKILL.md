@@ -51,7 +51,7 @@ Step-by-step registration:
 
 4. Register online
    - Portal: ica.justice.gov.il
-   - Registration fee 2026: NIS 2,614 (one-time)
+   - Registration fee: one-time, set by regulation and updated annually. Read the current amount off the registration form rather than quoting one from memory.
    - Annual fee: NIS 1,338 if paid by 31 March 2026, NIS 1,777 from 1 April 2026
    - First-year exemption: no annual fee in the calendar year of registration
    - Timeline: 3-7 business days
@@ -325,7 +325,7 @@ Actions:
 2. Recommend standard articles with startup-friendly provisions
 3. Calculate founder allocation (e.g., 50/50 with 4-year vesting)
 4. List post-registration steps (bank, tax, VAT at 18%, Bituach Leumi)
-5. Quote the NIS 2,614 registration fee and the NIS 1,338 / NIS 1,777 annual fee split
+5. Quote the NIS 1,338 / NIS 1,777 annual fee split (sourced); for the one-time registration fee, send them to the form rather than quoting a figure
 Result: Step-by-step registration guide with allocation table.
 
 ### Example 2: IIA Grant Application
@@ -391,14 +391,13 @@ If these MCPs are not installed, fall back to the official portals listed in Ref
 |--------|-----|---------------|
 | Israel Innovation Authority | https://innovationisrael.org.il/en | Grants, R&D programs, eligibility criteria |
 | Israeli Tax Authority | https://www.gov.il/en/departments/israel_tax_authority | Option 102, R&D tax benefits, corporate tax |
-| ICA Companies Registrar | https://www.gov.il/en/departments/israel_corporations_authority | Company formation, annual filings, fees |
+| ICA Companies Registrar | https://www.gov.il/en/departments/israeli_corporations_authority | Company formation, annual filings, fees |
 | Ministry of Justice | https://www.gov.il/en/departments/ministry_of_justice | Corporate law, IP registration |
 | Start-Up Nation Central | https://www.startupnationcentral.org | Ecosystem data, funding trends, Finder DB |
 | Israel Securities Authority | https://www.isa.gov.il/en | Securities law, private placement exemptions |
 | Calcalist Tech | https://www.calcalistech.com | Funding rounds, exits, ecosystem news (EN) |
-| Geektime | https://www.geektime.com | Israeli tech news (EN), startup launches |
-| Globes (Tech) | https://en.globes.co.il/en/section-globestechnology | Funding and exit reporting (EN) |
-| TechAviv / Tech.eu Israel | https://tech.eu/category/israel | Cross-border European deal flow |
+| Geektime | https://www.geektime.co.il | Israeli tech news (EN), startup launches |
+| Globes (Tech) | https://en.globes.co.il/en/startups.tag | Funding and exit reporting (EN) |
 | BIRD Foundation | https://www.birdf.com | US-Israel binational R&D grants |
 
 ## Israeli Ecosystem Context (2024-2026)

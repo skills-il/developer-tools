@@ -7,9 +7,12 @@
     {
       "id": "tnufa-max-2026",
       "claim": "Tnufa (Ideation) grants a conditional grant of up to NIS 200,000 over 12 months, equal to 80% of the approved budget",
-      "source_url": "https://web.archive.org/web/2026/https://innovationisrael.org.il/en/programs/ideation-tnufa-incentive-program/",
+      "source_url": "https://innovationisrael.org.il/en/programs/ideation-tnufa-incentive-program/",
       "raw_snippet": "Entrepreneurs and new Israeli startup companies can receive a conditional grant of up to NIS 200,000 over a period of 12 months (80% of the approved budget).",
-      "verified": "2026-08-13"
+      "verified": "2026-08-13",
+      "verified_via": "playwright navigation (snippet confirmed verbatim on the live page)",
+      "verified_at": "2026-08-14",
+      "fetched_at": "2026-08-14"
     },
     {
       "id": "company-registration-fee",
@@ -140,16 +143,22 @@
     {
       "id": "yozma-2-structure",
       "claim": "Yozma 2.0 co-invests alongside Israeli institutional investors at a ratio of 0.3 government dollars per 1 institutional dollar; the first round combined USD 700 million and was expected to start in Q3 2024",
-      "source_url": "https://web.archive.org/web/2024/https://innovationisrael.org.il/en/press_release/stimulus-to-boost-israeli-high-tech/",
+      "source_url": "https://innovationisrael.org.il/en/press_release/stimulus-to-boost-israeli-high-tech/",
       "raw_snippet": "The investments of the 2.0 Yozma Fund 2.0 are expected to take place in two rounds, with the government commitment towards institutional investors at a ratio of 0.3 government dollars for every 1 institutional dollar. The first round, with a combined institutional and government investment of $700 million, is expected to commence in the third quarter of 2024.",
-      "verified": "2026-08-13"
+      "verified": "2026-08-13",
+      "verified_via": "playwright navigation (snippet confirmed verbatim on the live page)",
+      "verified_at": "2026-08-14",
+      "fetched_at": "2026-08-14"
     },
     {
       "id": "high-tech-stimulus",
       "claim": "The January 2024 stimulus package was expected to inject approximately USD 1 billion into Israeli venture capital funds over 2024-2026",
-      "source_url": "https://web.archive.org/web/2024/https://innovationisrael.org.il/en/press_release/stimulus-to-boost-israeli-high-tech/",
+      "source_url": "https://innovationisrael.org.il/en/press_release/stimulus-to-boost-israeli-high-tech/",
       "raw_snippet": "The plan is expected to inject approximately one billion dollars into Israeli venture capital funds in the years 2024-2026.",
-      "verified": "2026-08-13"
+      "verified": "2026-08-13",
+      "verified_via": "playwright navigation (snippet confirmed verbatim on the live page)",
+      "verified_at": "2026-08-14",
+      "fetched_at": "2026-08-14"
     },
     {
       "id": "delaware-flip-trend",
@@ -168,23 +177,32 @@
     {
       "id": "iia-program-list",
       "claim": "The Israel Innovation Authority incentive-program catalogue includes the Ideation (Tnufa) Incentive Program - Startup Fund, open yearlong",
-      "source_url": "https://web.archive.org/web/2026/https://innovationisrael.org.il/en/programs/",
+      "source_url": "https://innovationisrael.org.il/en/programs/",
       "raw_snippet": "Ideation (Tnufa) Incentive Program – Startup Fund The program is open yearlong Program's Description The Ideation (Tnufa) Incentive Program is designed for fledgling entrepreneurs to develop and validate innovative technological concepts.",
-      "verified": "2026-08-13"
+      "verified": "2026-08-13",
+      "verified_via": "playwright navigation (snippet confirmed verbatim on the live page)",
+      "verified_at": "2026-08-14",
+      "fetched_at": "2026-08-14"
     },
     {
       "id": "iia-ip-restriction",
       "claim": "Sale or transfer of IIA-funded know-how outside Israel requires IIA approval, and the repayment is capped at six times the grants plus interest",
-      "source_url": "https://web.archive.org/web/2025/https://innovationisrael.org.il/en/royalties-intellectual-property/",
+      "source_url": "https://innovationisrael.org.il/en/royalties-intellectual-property/",
       "raw_snippet": "The sale or transfer of know-how outside of Israel is subject to repayment and IIA’s approval. The repayment is determined by a formula that takes into account the grant, the sale price and R&D expenses, minus the royalties paid (see the formula below)*. In any case, the minimum repayment will equal the total amount of the IIA investment + annual interest, minus the royalties paid. Repayment Cap: The repayment for the transfer of know-how outside of Israel is capped and will not exceed x6 the grants + interest.",
-      "verified": "2026-08-13"
+      "verified": "2026-08-13",
+      "verified_via": "playwright navigation (snippet confirmed verbatim on the live page)",
+      "verified_at": "2026-08-14",
+      "fetched_at": "2026-08-14"
     },
     {
       "id": "iia-royalties",
       "claim": "IIA conditional grants are repaid through royalties of 3%-5% of annual revenues until the full grant plus interest is repaid",
-      "source_url": "https://web.archive.org/web/2025/https://innovationisrael.org.il/en/royalties-intellectual-property/",
+      "source_url": "https://innovationisrael.org.il/en/royalties-intellectual-property/",
       "raw_snippet": "Repayment is made through royalties of 3%-5% of annual revenues, continuing until the repayment of the full grant amount, plus annual interest (based on SOFR).",
-      "verified": "2026-08-13"
+      "verified": "2026-08-13",
+      "verified_via": "playwright navigation (snippet confirmed verbatim on the live page)",
+      "verified_at": "2026-08-14",
+      "fetched_at": "2026-08-14"
     },
     {
       "id": "pfe-rate-2026",
@@ -196,16 +214,22 @@
     {
       "id": "rd-fund-support-rates",
       "claim": "R&D Fund support is increased by 10% in Development Zones and 25% around the Gaza Strip, and reaches up to 75% funding in the first year for startups owned by minority, Ultra-Orthodox or women entrepreneurs",
-      "source_url": "https://web.archive.org/web/2026/https://innovationisrael.org.il/en/programs/rd-fund/",
+      "source_url": "https://innovationisrael.org.il/en/programs/rd-fund/",
       "raw_snippet": "Companies operating in Development Zones are eligible for 10% additional support, and those operating in the areas around the Gaza Strip are eligible for 25% additional support. Preferential funding terms for a startup corporation owned by minority population and/or UltraOrthodox and/or women entrepreneurs of amounts up to 75% funding in the first year and 70% in the second year.",
-      "verified": "2026-08-13"
+      "verified": "2026-08-13",
+      "verified_via": "playwright navigation (snippet confirmed verbatim on the live page)",
+      "verified_at": "2026-08-14",
+      "fetched_at": "2026-08-14"
     },
     {
       "id": "incubator-grant-rate",
       "claim": "Technological incubator grants are up to 85% of the approved budget, with a maximum budget of NIS 3.5 million over up to 2 years",
-      "source_url": "https://web.archive.org/web/2026/https://innovationisrael.org.il/en/programs/technological-innovation-incubators-program/",
+      "source_url": "https://innovationisrael.org.il/en/programs/technological-innovation-incubators-program/",
       "raw_snippet": "A grant of up to 85% of the approved budget up to a maximum budget of NIS 3.5 million, for an perative period of up to 2 years (according to the project type and the incubator’s geographical location).",
-      "verified": "2026-08-13"
+      "verified": "2026-08-13",
+      "verified_via": "playwright navigation (snippet confirmed verbatim on the live page)",
+      "verified_at": "2026-08-14",
+      "fetched_at": "2026-08-14"
     },
     {
       "id": "section-102-non-trustee",
@@ -271,6 +295,161 @@
       "verified": "2026-08-13",
       "verified_via": "wayback",
       "verified_at": "2026-08-13"
+    },
+    {
+      "claim_id": "registrar-annual-fee-2026",
+      "claim": "A company or partnership registered with the Corporations Authority owes an annual fee per calendar year. The reduced fee of 1,338 NIS is payable until 31.03.2026; from 01.04.2026 the standard rate of 1,777 NIS applies.",
+      "source_url": "https://www.gov.il/he/service/company_partnership_annual_payment",
+      "raw_snippet": "אגרה שנתית חברות: ניתן לשלם אגרה מופחתת בסך 1,338 ש\"ח עד ל-31.03.2026. החל מה-01.04.2026 התעריף יעודכן לתעריף הרגיל בסך של 1,777 ש\"ח.",
+      "fetched_at": "2026-08-14",
+      "verified_via": "gov.il content API",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "references/"
+      ]
+    },
+    {
+      "claim_id": "tnufa-budget-cap-derived",
+      "claim": "The NIS 250K Tnufa budget ceiling is arithmetic, not a separately published figure: the grant is up to NIS 200,000 at 80% of the approved budget, so the budget it implies is 200,000/0.8 = 250,000.",
+      "source_url": "https://innovationisrael.org.il/en/programs/ideation-tnufa-incentive-program/",
+      "raw_snippet": "Entrepreneurs and new Israeli startup companies can receive a conditional grant of up to NIS 200,000 over a period of 12 months (80% of the approved budget).",
+      "fetched_at": "2026-08-14",
+      "verified_via": "playwright navigation (snippet confirmed verbatim on the live page)",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "registrar-fee-gap-derived",
+      "claim": "The NIS 439 saving from paying the annual fee in Q1 is the difference between the two published rates: 1,777 - 1,338 = 439.",
+      "source_url": "https://www.gov.il/he/service/company_partnership_annual_payment",
+      "raw_snippet": "אגרה שנתית חברות: ניתן לשלם אגרה מופחתת בסך 1,338 ש\"ח עד ל-31.03.2026. החל מה-01.04.2026 התעריף יעודכן לתעריף הרגיל בסך של 1,777 ש\"ח.",
+      "fetched_at": "2026-08-14",
+      "verified_via": "derived from the sourced fee pair",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "claim_id": "media-globes-en",
+      "claim": "The page at https://en.globes.co.il/en/startups.tag loads and is served under the title 'Globes - Israel Business News'. It is cited only as a navigational pointer, not as the source of any figure.",
+      "source_url": "https://en.globes.co.il/en/startups.tag",
+      "raw_snippet": "Globes - Israel Business News",
+      "fetched_at": "2026-08-14",
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "media-globes-he",
+      "claim": "The page at https://www.globes.co.il/news/home.aspx?fid=594 loads and is served under the title 'גלובס - עיתון העסקים של ישראל'. It is cited only as a navigational pointer, not as the source of any figure.",
+      "source_url": "https://www.globes.co.il/news/home.aspx?fid=594",
+      "raw_snippet": "גלובס - עיתון העסקים של ישראל",
+      "fetched_at": "2026-08-14",
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "media-calcalist-he",
+      "claim": "The page at https://www.calcalist.co.il/calcalistech loads and is served under the title 'כלכליסט-טק - חדשות הייטק, סטארטאפים וטכנולוגיה | כלכליסט'. It is cited only as a navigational pointer, not as the source of any figure.",
+      "source_url": "https://www.calcalist.co.il/calcalistech",
+      "raw_snippet": "כלכליסט-טק - חדשות הייטק, סטארטאפים וטכנולוגיה | כלכליסט",
+      "fetched_at": "2026-08-14",
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "media-calcalist-en",
+      "claim": "The page at https://www.calcalistech.com loads and is served under the title 'CTech | Ctech'. It is cited only as a navigational pointer, not as the source of any figure.",
+      "source_url": "https://www.calcalistech.com",
+      "raw_snippet": "CTech | Ctech",
+      "fetched_at": "2026-08-14",
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "media-geektime",
+      "claim": "The page at https://www.geektime.co.il loads and is served under the title 'גיקטיים - אתר הטכנולוגיה וההייטק של ישראל | גיקטיים'. It is cited only as a navigational pointer, not as the source of any figure.",
+      "source_url": "https://www.geektime.co.il",
+      "raw_snippet": "גיקטיים - אתר הטכנולוגיה וההייטק של ישראל | גיקטיים",
+      "fetched_at": "2026-08-14",
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "registry-ica-he",
+      "claim": "The page at https://www.gov.il/he/departments/israeli_corporations_authority loads and is served under the title 'רשות התאגידים'. It is cited only as a navigational pointer, not as the source of any figure.",
+      "source_url": "https://www.gov.il/he/departments/israeli_corporations_authority",
+      "raw_snippet": "רשות התאגידים",
+      "fetched_at": "2026-08-14",
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "registry-ica-en",
+      "claim": "The page at https://www.gov.il/en/departments/israeli_corporations_authority loads and is served under the title 'Israeli Corporations Authority'. It is cited only as a navigational pointer, not as the source of any figure.",
+      "source_url": "https://www.gov.il/en/departments/israeli_corporations_authority",
+      "raw_snippet": "Israeli Corporations Authority",
+      "fetched_at": "2026-08-14",
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "registry-isa",
+      "claim": "The page at https://www.isa.gov.il loads and is served under the title 'רשות ניירות ערך – מפוקחים'. It is cited only as a navigational pointer, not as the source of any figure.",
+      "source_url": "https://www.isa.gov.il",
+      "raw_snippet": "רשות ניירות ערך – מפוקחים",
+      "fetched_at": "2026-08-14",
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "registry-isa-en",
+      "claim": "https://www.isa.gov.il/en redirects to www.new.isa.gov.il/en/ and serves the English ISA site, though the document title on that page is still the Hebrew 'רשות ניירות ערך – מפוקחים'. Cited only as a navigational pointer.",
+      "source_url": "https://www.isa.gov.il/en",
+      "raw_snippet": "רשות ניירות ערך – מפוקחים",
+      "fetched_at": "2026-08-14",
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-14",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }

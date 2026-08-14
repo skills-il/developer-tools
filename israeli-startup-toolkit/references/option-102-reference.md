@@ -54,8 +54,8 @@ Section 102 of the Israeli Income Tax Ordinance provides a tax-efficient framewo
 | Meitav Dash | Investment house trustee |
 
 **Typical fees:**
-- Setup: 5,000-15,000 NIS
-- Annual per participant: 500-1,500 NIS
+- Setup and per-participant annual fees vary by trustee and are not published;
+  ask each trustee for a written quote rather than budgeting off a rule of thumb
 - Transaction fees on exercise/sale
 
 ### Step 3: File with ITA
