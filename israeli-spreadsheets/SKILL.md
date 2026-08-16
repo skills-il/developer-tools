@@ -20,11 +20,11 @@ pip install openpyxl
 
 ### Step 2: Israeli Financial Constants
 
-- VAT rate: 18% (raised from 17% on 2025-01-01, held at 18% through the 2026 budget; the proposed 19% hike was dropped)
+- VAT rate: 18% (raised from 17% on 2025-01-01). A rise to 19% was floated at the Finance Ministry but not enacted: the 2026 state budget contains no such increase.
 - Tax brackets 2026 (post Amendment 288): 10% up to 84,120 NIS, 14% up to 120,720, 20% up to 228,000, 31% up to 301,200, 35% up to 560,280, 47% up to 721,560, 50% above. The 20% and 31% bands were widened on 1 January 2026; the other thresholds were carried over from 2025 (frozen through 2027).
 - Credit point value: 2,904 NIS/year (242 NIS/month), 2.25 points for residents
-- Bituach Leumi (employee): 0.40% up to 7,122 NIS/month, 7.00% from 7,123 up to the 49,030 NIS/month ceiling; income above the ceiling is not insurable
-- Health tax (employee): 3.10% up to 7,122 NIS/month, 5.00% above
+- Bituach Leumi (employee): 1.04% up to the reduced-collection step of 7,703 NIS/month, 7.00% above it up to the 51,910 NIS/month maximum insurable income; income above that is not insurable
+- Health tax (employee): 3.23% up to 7,703 NIS/month, 5.17% above
 
 ### Step 3: Tax Calculation Functions
 
@@ -98,7 +98,7 @@ Bituach Leumi:  =MIN(A1,7703)*0.0104 + MAX(0, MIN(A1,51910)-7703)*0.07
 Health tax:     =MIN(A1,7703)*0.0323 + MAX(0, MIN(A1,51910)-7703)*0.0517
 ```
 
-Income above the 49,030 NIS/month ceiling is not insurable, so both formulas cap at that figure.
+Income above the 51,910 NIS/month maximum insurable income is not insurable, so both formulas cap at that figure.
 
 **Hebrew day of week from a Gregorian date in A1 (locale-aware):**
 

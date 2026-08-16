@@ -36,7 +36,7 @@ Amendment 288 expanded the middle brackets (20%, 31%, 35%); a taxpayer with 300,
 | Above 7,703 NIS/month | 5.17% |
 
 ## VAT (Ma'am)
-- Standard rate: 18% (raised from 17% on 2025-01-01; the Finance Ministry's January 2026 proposal to raise it again to 19% was dropped during budget negotiations and did not take effect).
+- Standard rate: 18% (raised from 17% on 2025-01-01). The Finance Ministry floated a rise to 19%, but it was not enacted and the 2026 state budget contains no such increase.
 - Eilat: 0% (tax-free zone)
 
 ### VAT formula cheat sheet
@@ -50,7 +50,7 @@ Amendment 288 expanded the middle brackets (20%, 31%, 35%); a taxpayer with 300,
 |-----------|----------|----------|
 | Pension savings | 6.0% | 6.5% |
 | Severance fund | - | 6.0% |
-| Disability insurance | - | 0.5% |
+| Disability insurance | - | up to 0.5%, carved out of the employer's 6.5% tagmulim, not added on top |
 
 ### Section 45a Tax Credit on Pension Contributions
 Employees and self-employed who contribute to a recognized pension fund are entitled to a 35% tax credit on qualifying pension contributions under Section 45a of the Income Tax Ordinance. The credit is computed on the employee-side deposit (and the self-employed deposit for the self-employed), subject to annual ceilings set by the Tax Authority. A tlush maskoret (salary slip) spreadsheet that shows "income tax" without subtracting the 45a credit will overstate the actual tax withheld.

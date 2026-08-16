@@ -229,6 +229,132 @@
       "appears_in": [
         "references/israeli-tax-rates.md"
       ]
+    },
+    {
+      "claim_id": "btl-bands-2026",
+      "claim": "מדרגת הגביה המופחתת עומדת על 7,703 ש\"ח מ-01.01.2026, וההכנסה המרבית החייבת בדמי ביטוח על 51,910 ש\"ח מאותו מועד.",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "מחלק השכר שעד מדרגת גביה מופחתת (שיעור מופחת) - 7,703 ש\"ח (החל ב- 01.01.2026)",
+      "fetched_at": "2026-08-17",
+      "verified_via": "Bituach Leumi employee-rates page fetched with a browser user agent; read off the live rate table",
+      "verified_at": "2026-08-17",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "keren-hishtalmut-rates",
+      "claim": "בקרן השתלמות לשכיר, הפרשת העובד עד 2.5% מהשכר והפרשת המעסיק עד 7.5%, עד תקרת שכר שנתי של 188,544 ש\"ח (15,712 ש\"ח לחודש) נכון ל-2026.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%A7%D7%A8%D7%9F_%D7%94%D7%A9%D7%AA%D7%9C%D7%9E%D7%95%D7%AA",
+      "raw_snippet": "הסכום המקסימלי שהפריש העובד אינו עולה על 2.5% מהשכר ולא יותר מ-4,713.6 ₪ לשנה",
+      "fetched_at": "2026-08-17",
+      "verified_via": "kolzchut page text read through the site MediaWiki API in a browser (the host WAF blocks plain fetches)",
+      "verified_at": "2026-08-17",
+      "appears_in": [
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "claim_id": "minimum-wage-2026-and-prior",
+      "claim": "שכר המינימום הוא 6,443.85 ש\"ח לחודש מ-01.04.2026; מאפריל 2025 ועד מרץ 2026 הוא עמד על 6,247.67 ש\"ח.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%A9%D7%9B%D7%A8_%D7%9E%D7%99%D7%A0%D7%99%D7%9E%D7%95%D7%9D",
+      "raw_snippet": "החל מיום 01.04.2026 שכר המינימום הוא 6,443.85 ₪ לחודש למשרה מלאה ו-35.40 ₪ לשעה",
+      "fetched_at": "2026-08-17",
+      "verified_via": "kolzchut page text read through the site MediaWiki API in a browser (the host WAF blocks plain fetches)",
+      "verified_at": "2026-08-17",
+      "appears_in": [
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "claim_id": "minimum-wage-prior-band",
+      "claim": "התעריף הקודם, 6,247.67 ש\"ח לחודש, חל ממשכורת אפריל 2025 ועד משכורת מרץ 2026 ועדיין רלוונטי לחישובים רטרואקטיביים.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%A9%D7%9B%D7%A8_%D7%9E%D7%99%D7%A0%D7%99%D7%9E%D7%95%D7%9D",
+      "raw_snippet": "ממשכורת אפריל 2025 ועד משכורת מרץ 2026 (כולל) 6,247.67 ₪ 34.33 ₪",
+      "fetched_at": "2026-08-17",
+      "verified_via": "kolzchut page text read through the site MediaWiki API in a browser (the host WAF blocks plain fetches)",
+      "verified_at": "2026-08-17",
+      "appears_in": [
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "claim_id": "pension-split-18-5",
+      "claim": "שיעור ההפרשות לפנסיה הוא 18.5% מהשכר: 6% על חשבון העובד, 6.5% תגמולי מעסיק ו-6% רכיב פיצויים. ביטוח אובדן כושר עבודה נגזר מתוך 6.5% התגמולים ואינו נוסף עליהם, ולכן אין לסכם את הטבלה ל-19%. ההפרשה לעצמאי בקרן השתלמות היא עד 4.5%.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%97%D7%95%D7%91%D7%AA_%D7%91%D7%99%D7%98%D7%95%D7%97_%D7%A4%D7%A0%D7%A1%D7%99%D7%95%D7%A0%D7%99_%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D",
+      "raw_snippet": "החל ממשכורת ינואר 2017, שיעור ההפרשות הוא 18.5% מהשכר, מתוכם 6% על חשבון העובד והיתר (12.5%) על חשבון המעסיק (6.5% הפרשות מעסיק לרכיב תגמולים ו-6% הפרשות מעסיק לרכיב פיצויים).",
+      "fetched_at": "2026-08-17",
+      "verified_via": "kolzchut page text read through the site MediaWiki API in a browser",
+      "verified_at": "2026-08-17",
+      "appears_in": [
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "claim_id": "vat-no-2026-increase-spreadsheets",
+      "claim": "The 2026 state budget contains no VAT increase to 19%; the rate remains 18%.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/state-budget-main-2026/he/state-budget_2026_Files_state-budget-main-2026-file.pdf",
+      "raw_snippet": "מע\"מ, כולל מע\"מ על ייבוא בטחוני",
+      "fetched_at": "2026-08-17",
+      "verified_via": "official 2026 state budget PDF read via pdftotext; searched for a 19% VAT provision and found none",
+      "verified_at": "2026-08-17",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "claim_id": "ref-bank-of-israel",
+      "claim": "Bank of Israel is cited as the reference for exchange rates, monetary policy and the CPI used for indexation. Both the English and Hebrew entry points serve the same site.",
+      "source_url": "https://www.boi.org.il/en/",
+      "raw_snippet": "Home Page | בנק ישראל - הבנק המרכזי של ישראל",
+      "fetched_at": "2026-08-17",
+      "verified_via": "playwright navigation (page title read); a plain fetch returns a Radware WAF challenge, not the site",
+      "verified_at": "2026-08-17",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "ref-bank-of-israel-he",
+      "claim": "בנק ישראל הוא המקור לשערי חליפין, מדיניות מוניטרית ומדד המחירים לצרכן לצורכי הצמדה.",
+      "source_url": "https://www.boi.org.il",
+      "raw_snippet": "Home Page | בנק ישראל - הבנק המרכזי של ישראל",
+      "fetched_at": "2026-08-17",
+      "verified_via": "playwright navigation (page title read); a plain fetch returns a Radware WAF challenge",
+      "verified_at": "2026-08-17",
+      "appears_in": [
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "pension-employee-6-percent",
+      "claim": "חלק העובד בהפרשות לפנסיה הוא 6.0%, תגמולי המעסיק 6.5% ורכיב הפיצויים 6.0%; ביטוח אובדן כושר עבודה עד 0.5% נגזר מתוך תגמולי המעסיק.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%97%D7%95%D7%91%D7%AA_%D7%91%D7%99%D7%98%D7%95%D7%97_%D7%A4%D7%A0%D7%A1%D7%99%D7%95%D7%A0%D7%99_%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D",
+      "raw_snippet": "6.5% הפרשות מעסיק לרכיב תגמולים ו-6% הפרשות מעסיק לרכיב פיצויים",
+      "fetched_at": "2026-08-17",
+      "verified_via": "kolzchut page text read through the site MediaWiki API in a browser",
+      "verified_at": "2026-08-17",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "claim_id": "amendment-288-illustration",
+      "claim": "The 300,000 NIS / ~5,000 NIS saving is a worked illustration of the Amendment 288 bracket widening, not a published figure: it is arithmetic on the section 121 brackets, which run 20% to 228,000 and 31% to 301,200.",
+      "source_url": "https://www.nevo.co.il/law_html/law00/84255.htm",
+      "raw_snippet": "(ג) על כל שקל חדש מ-107,041 שקלים חדשים עד 228,000 שקלים חדשים – 20%; (ד) על כל שקל חדש מ-228,001 שקלים חדשים עד 301,200 שקלים חדשים – 31%",
+      "fetched_at": "2026-08-17",
+      "verified_via": "Income Tax Ordinance section 121 read directly on nevo; the saving is arithmetic on those brackets",
+      "verified_at": "2026-08-17",
+      "appears_in": [
+        "references/israeli-tax-rates.md"
+      ]
     }
   ]
 }
