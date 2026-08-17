@@ -6,11 +6,11 @@ Comparison of STT providers for Hebrew voice applications, with accuracy benchma
 
 | Feature | OpenAI Whisper | Google Cloud STT | Azure Speech Services |
 |---------|---------------|-------------------|----------------------|
-| Hebrew Language Code | `he` | `he-IL` | `he-IL` |
+| Hebrew Language Code | `he` | `iw-IL` | `he-IL` |
 | Best Model | whisper-1 | phone_call / latest_long | Standard |
-| Accuracy (clean audio) | 92-95% | 88-92% | 87-91% |
-| Accuracy (phone audio) | 88-92% | 85-90% | 84-89% |
-| Accuracy (noisy) | 80-85% | 75-80% | 74-79% |
+| Accuracy (clean audio) | see note below | see note below | see note below |
+| Accuracy (phone audio) | see note below | see note below | see note below |
+| Accuracy (noisy) | see note below | see note below | see note below |
 | Mixed Hebrew-English | Excellent | Good | Good |
 | Streaming Support | No (batch only) | Yes | Yes |
 | Real-time Factor | ~0.3x (batch) | ~1x (streaming) | ~1x (streaming) |
@@ -19,6 +19,23 @@ Comparison of STT providers for Hebrew voice applications, with accuracy benchma
 | Word Timestamps | Yes | Yes | Yes |
 | Punctuation | Auto (good) | Auto (good) | Auto (moderate) |
 | Max Audio Length | 25MB file | 480 min (async) | 10 min (sync), unlimited (batch) |
+
+### A note on accuracy
+
+Earlier versions of this table carried per-provider Hebrew accuracy percentages
+for clean, phone and noisy audio. Those numbers had no source behind them and
+have been removed rather than re-cited: none of the three vendors publishes a
+Hebrew-specific word error rate, and the Whisper paper reports Hebrew only as
+part of its multilingual evaluation, not as a per-condition breakdown.
+
+Treat provider choice as something to measure on your own audio. A short
+benchmark on 20-30 real recordings from the line you are actually deploying to
+will tell you more than any published figure, because Hebrew WER moves sharply
+with telephony codec, speaker accent and the amount of English mixed in.
+
+What can be said from the vendor documentation is structural rather than
+numeric, and the rest of this table covers it: Whisper is batch-only, Google and
+Azure stream, and only Google and Azure offer diarization.
 
 ## Pricing (as of 2026)
 

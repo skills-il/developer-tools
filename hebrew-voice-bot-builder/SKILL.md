@@ -12,6 +12,12 @@ Build production-ready Hebrew voice bots and IVR systems for Israeli businesses.
 
 ## Instructions
 
+> **Language code: Google STT uses `iw-IL`, Google TTS uses `he-IL`.** Google's
+> Speech-to-Text supported-languages table lists Hebrew as `iw-IL` (the legacy
+> ISO code for Hebrew), while the Text-to-Speech voice list uses `he-IL`
+> (`he-IL-Wavenet-A`, `he-IL-Chirp3-HD-*`). Pass the documented code for each
+> side rather than assuming one code works for both.
+
 ### Step 1: Choose Your Architecture
 
 Before building, decide on the voice bot architecture based on the use case:
@@ -91,7 +97,7 @@ def transcribe_hebrew_google(audio_content: bytes) -> str:
     config = speech_v1.RecognitionConfig(
         encoding=speech_v1.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
-        language_code="he-IL",
+        language_code="iw-IL",  # Google STT documents Hebrew as iw-IL, not he-IL
         # Enable automatic punctuation for Hebrew
         enable_automatic_punctuation=True,
         # Model optimized for phone calls
@@ -117,7 +123,7 @@ def stream_transcribe_hebrew(audio_generator):
         config=speech_v1.RecognitionConfig(
             encoding=speech_v1.RecognitionConfig.AudioEncoding.MULAW,
             sample_rate_hertz=8000,  # Standard phone audio
-            language_code="he-IL",
+            language_code="iw-IL",  # Google STT documents Hebrew as iw-IL
             model="phone_call",
             enable_automatic_punctuation=True,
         ),
@@ -393,7 +399,7 @@ IVR_MENU = {
 | Use formal register (second person plural) | "הקישו 1" not "תקיש 1" | Professional tone, avoids gender |
 | Keep prompts under 15 seconds | 3-4 options max per menu level | Callers lose patience quickly |
 | Announce hours before after-hours message | "שעות הפעילות: א'-ה' 9-17" | Reduces callback attempts |
-| Offer English option | "For English, press 9" | 20% of Israeli calls may prefer English |
+| Offer English option | "For English, press 9" | Some callers will prefer English; measure the take-up on your own line before sizing the branch |
 | Use "כוכבית" for star key | "לחזרה, הקישו כוכבית" | Standard Hebrew term for * |
 | Use "סולמית" for hash/pound key | "לאישור, הקישו סולמית" | Standard Hebrew term for # |
 | Repeat the menu on timeout | After 8 seconds of no input | Callers may need time to listen |
@@ -653,7 +659,7 @@ Hebrew speakers in Israel have diverse accent backgrounds that affect speech rec
 | Accent Type | Characteristics | STT Impact |
 |-------------|----------------|------------|
 | Standard Israeli | Modern Israeli pronunciation, merged alef/ayin, no distinction between chet/chaf | Baseline accuracy, all models handle well |
-| Russian-accented | Hard "r" (guttural to alveolar), softer sibilants, vowel shifts | May reduce accuracy by 5-10%. Add Russian as alternate language hint |
+| Russian-accented | Hard "r" (guttural to alveolar), softer sibilants, vowel shifts | Recognition degrades noticeably. Add Russian as an alternate language hint |
 | Arabic-accented | Preserved pharyngeal sounds (ayin, chet), emphatic consonants | Generally handled well by models trained on Israeli data |
 | Ethiopian-accented | Distinct vowel patterns, different stress patterns | May need custom model training for high accuracy |
 | English-accented | American/British vowel sounds applied to Hebrew, different "r" | Mixed results. Whisper handles best due to multilingual training |
@@ -752,7 +758,7 @@ Result: Voice bot that correctly transcribes mixed Hebrew-English speech common 
 | Source | URL | What to Check |
 |--------|-----|---------------|
 | OpenAI Whisper (Hebrew STT) | https://github.com/openai/whisper | Multilingual speech-to-text including Hebrew, model sizes, accuracy benchmarks |
-| Google Cloud Speech-to-Text | https://cloud.google.com/speech-to-text/docs/languages | Hebrew (he-IL) support, streaming recognition, pricing |
+| Google Cloud Speech-to-Text | https://docs.cloud.google.com/speech-to-text/docs/speech-to-text-supported-languages | Hebrew support (listed as `iw-IL`), streaming recognition, pricing |
 | Azure AI Speech (Hebrew) | https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support | Hebrew STT/TTS voices, neural voice list |
 | HuggingFace Hebrew models | https://huggingface.co/models?language=he | Open Hebrew ASR/TTS models (ivrit.ai, etc.) |
 | ivrit.ai (Hebrew voice corpus) | https://www.ivrit.ai | Open-source Hebrew speech corpus, pre-trained ASR models |

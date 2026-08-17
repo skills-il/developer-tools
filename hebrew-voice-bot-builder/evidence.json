@@ -7,12 +7,14 @@
       "claim_id": "elevenlabs-v3-hebrew",
       "claim": "ElevenLabs eleven_v3 supports Hebrew among 70+ languages and is the production-grade Hebrew model in 2026",
       "source_url": "https://unifiedtts.com/en/news/2026-02-12-elevenlabs-v3-model",
-      "raw_snippet": "Eleven v3 supports 70+ languages including Hebrew (heb)",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "raw_snippet": "[whispers] But there's a little secret I need to tell you... [laughs] Just kidding! 🌍 70+ Language Support eleven_v3 supports 70+ languages , covering the vast majority of global language needs: Asian Languages : Chinese, Japanese, Korean, Thai, Vietnamese, Indonesian, Malay, Filipino, Hindi, and more European Languages : English, French, German, Spanish, Portuguese, Italian, Russian, Dutch, Polish, Swedish, and more Middle Eastern Languages : Arabic, Hebrew, Persian, Turkish, and more And",
+      "fetched_at": "2026-08-17",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim",
+      "verified_at": "2026-08-17"
     },
     {
       "claim_id": "elevenlabs-v3-no-websocket",
@@ -117,25 +119,29 @@
     },
     {
       "claim_id": "polly-no-hebrew",
-      "claim": "Amazon Polly does NOT support Hebrew: there is no he-IL locale in Polly's supported languages and no Hebrew voice of any engine. The 'Avri' voice is Azure's he-IL-AvriNeural, not a Polly voice.",
+      "claim": "טבלת הקולות של Amazon Polly נטענה במלואה ואינה כוללת שורה לעברית, אין בה he-IL ואין קול בשם Avri. הקול Avri שייך ל-Azure.",
       "source_url": "https://docs.aws.amazon.com/polly/latest/dg/available-voices.html",
-      "raw_snippet": "Amazon Polly available voices list contains no he-IL (Hebrew) row and no voice named Avri.",
-      "fetched_at": "2026-07-06T12:40:00Z",
+      "raw_snippet": "Arabic arb Zeina Female No No No Yes 2 Arabic (Gulf) ar-AE Hala* Zayd* Female Male",
+      "fetched_at": "2026-08-17",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "Amazon Polly available-voices table rendered in a browser and searched for Hebrew, he-IL and Avri; all absent",
+      "verified_at": "2026-08-17"
     },
     {
       "claim_id": "whisper-docs",
       "claim": "OpenAI Whisper is an open-source multilingual speech-to-text model supporting Hebrew",
       "source_url": "https://github.com/openai/whisper",
-      "raw_snippet": "Whisper is a general-purpose speech recognition model trained on multilingual data including Hebrew (he)",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "raw_snippet": "View all files Repository files navigation README MIT license More items Whisper [Blog] [Paper] [Model card] [Colab example] Whisper is a general-purpose speech recognition model. It is trained on a large dataset of diverse audio and is also a multitasking model that can perform multilingual speech recognition, speech translation, and language identification.",
+      "fetched_at": "2026-08-17",
       "appears_in": [
         "SKILL.md",
         "references/hebrew-stt-models.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim",
+      "verified_at": "2026-08-17"
     },
     {
       "claim_id": "ivrit-ai",
@@ -159,14 +165,16 @@
     },
     {
       "claim_id": "google-stt-languages",
-      "claim": "Google Cloud Speech-to-Text supports Hebrew (he-IL) per the official language reference",
-      "source_url": "https://cloud.google.com/speech-to-text/docs/languages",
-      "raw_snippet": "Hebrew (Israel) - he-IL",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "claim": "טבלת השפות הנתמכות של Google Speech-to-Text מציגה עברית כ-iw-IL ולא כ-he-IL. זו אינה אותה מוסכמה שבה משתמשת רשימת הקולות של Text-to-Speech.",
+      "source_url": "https://docs.cloud.google.com/speech-to-text/docs/speech-to-text-supported-languages",
+      "raw_snippet": "Hebrew (Israel) iw-IL chirp asia-southeast1 Hebrew (Israel) iw-IL chirp_2 asia-southeast1",
+      "fetched_at": "2026-08-17",
       "appears_in": [
         "SKILL.md",
         "references/hebrew-stt-models.md"
-      ]
+      ],
+      "verified_via": "Google Cloud STT supported-languages table read in a browser; the table renders client-side and is empty to curl",
+      "verified_at": "2026-08-17"
     },
     {
       "claim_id": "azure-speech-languages-en",
@@ -223,12 +231,27 @@
     },
     {
       "claim_id": "hebrew-stt-accuracy-ranges",
-      "claim": "Approximate Hebrew STT accuracy ranges for clean (80-95%), phone (74-92%), and noisy (74-85%) audio across Whisper/Google/Azure, used as illustrative benchmarks. Specific numbers cited: 92-95%, 88-92%, 87-91%, 85-90%, 84-89%, 80-85%, 75-80%, 74-79%, plus illustrative figures 1%, 10%, 20%, 89%, 90%, 91% used elsewhere as rough estimates",
-      "source_url": "https://cdn.openai.com/papers/whisper.pdf",
-      "raw_snippet": "Whisper Hebrew WER ranges illustratively from approximately 5-20% depending on audio conditions; the ranges 92-95% / 88-92% / 80-85% in references/hebrew-stt-models.md correspond to typical clean / phone / noisy audio accuracy levels reported across Whisper, Google Cloud STT, and Azure Speech in their respective documentation",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "claim": "אין אצל אף אחד משלושת הספקים פרסום של שיעור שגיאות מילים בעברית. טבלת האחוזים שהופיעה ב-references/hebrew-stt-models.md הוסרה ולא הוחלפה במקור אחר, משום שהמספרים לא נסמכו על מדידה כלשהי.",
+      "source_url": "https://github.com/openai/whisper",
+      "raw_snippet": "Whisper is a general-purpose speech recognition model.",
+      "fetched_at": "2026-08-17",
       "appears_in": [
         "references/hebrew-stt-models.md",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "the figures were removed from the reference file rather than re-sourced",
+      "verified_at": "2026-08-17"
+    },
+    {
+      "claim_id": "google-tts-he-il-voices",
+      "claim": "רשימת הקולות של Google Text-to-Speech משתמשת ב-he-IL, וכוללת את he-IL-Wavenet-A/B ואת he-IL-Standard-A/B. מכאן האסימטריה מול iw-IL שב-STT.",
+      "source_url": "https://docs.cloud.google.com/text-to-speech/docs/list-voices-and-types",
+      "raw_snippet": "Hebrew (Israel) Premium he-IL he-IL-Chirp3-HD-Achernar FEMALE",
+      "verified_via": "Google Cloud TTS voice list read in a browser; he-IL-Wavenet-A/B and he-IL-Standard-A/B all confirmed present",
+      "verified_at": "2026-08-17",
+      "fetched_at": "2026-08-17",
+      "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ]
