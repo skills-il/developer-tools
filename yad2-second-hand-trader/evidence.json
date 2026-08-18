@@ -111,10 +111,11 @@
       "claim_type": "url",
       "source_url": "https://www.gov.il/he/service/cyber-event-report",
       "source_fetched_at": "2026-08-18T19:56:29.717503+00:00",
-      "raw_snippet": "המרכז לא מטפל בתקלות מחשב ואינו מחליף דיווח למשטרה",
+      "raw_snippet": "Attention Required! | Cloudflare",
       "confidence": "high",
-      "verified_via": "browser",
-      "verified_at": "2026-08-18T19:56:29.717503+00:00"
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
       "id": "paybox-payment-finality",

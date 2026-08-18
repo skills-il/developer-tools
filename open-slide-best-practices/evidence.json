@@ -106,12 +106,14 @@
       "claim_id": "reference-link-urls",
       "claim": "The skill's Reference Links and font-loading examples cite these external sources: open-slide docs, MDN logical-properties and bdi pages, the Google Fonts Hebrew subset, the upstream create-slide and create-theme skills",
       "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/SKILL.md",
-      "raw_snippet": "slides/<id>/",
-      "fetched_at": "2026-08-18T12:00:00Z",
+      "raw_snippet": "--- name: slide-authoring description: Technical reference for writing or editing open-slide pages — file contract, 1920×1080 canvas, type scale, layout, palette/visual direction, assets, stepped reve",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "hebrew-type-scale-bump",

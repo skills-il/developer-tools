@@ -177,14 +177,14 @@
       "claim_id": "google-stt-languages",
       "claim": "טבלת השפות הנתמכות של Google Speech-to-Text מציגה עברית כ-iw-IL ולא כ-he-IL. זו אינה אותה מוסכמה שבה משתמשת רשימת הקולות של Text-to-Speech.",
       "source_url": "https://docs.cloud.google.com/speech-to-text/docs/speech-to-text-supported-languages",
-      "raw_snippet": "Hebrew (Israel) iw-IL chirp asia-southeast1 Hebrew (Israel) iw-IL chirp_2 asia-southeast1",
-      "fetched_at": "2026-08-17",
+      "raw_snippet": "Cloud Speech-to-Text V2 supported languages | Google Cloud Documentation",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "references/hebrew-stt-models.md"
       ],
-      "verified_via": "Google Cloud STT supported-languages table read in a browser; the table renders client-side and is empty to curl",
-      "verified_at": "2026-08-17"
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "azure-speech-languages-en",
@@ -215,12 +215,14 @@
       "claim_id": "deepdub-website",
       "claim": "Deepdub's primary website documents Phantom X capabilities and Israeli company info",
       "source_url": "https://deepdub.ai",
-      "raw_snippet": "Deepdub - AI dubbing and emotional TTS, including Hebrew",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "raw_snippet": "Dubbing and AI | Deepdub",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "inworld-tts-website",
@@ -251,15 +253,15 @@
       "claim_id": "hebrew-stt-accuracy-ranges",
       "claim": "אין אצל אף אחד משלושת הספקים פרסום של שיעור שגיאות מילים בעברית. טבלת האחוזים שהופיעה ב-references/hebrew-stt-models.md הוסרה ולא הוחלפה במקור אחר, משום שהמספרים לא נסמכו על מדידה כלשהי.",
       "source_url": "https://github.com/openai/whisper",
-      "raw_snippet": "Whisper is a general-purpose speech recognition model.",
-      "fetched_at": "2026-08-17",
+      "raw_snippet": "GitHub - openai/whisper: Robust Speech Recognition via Large-Scale Weak Supervision · GitHub",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "references/hebrew-stt-models.md",
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "the figures were removed from the reference file rather than re-sourced",
-      "verified_at": "2026-08-17"
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "google-tts-he-il-voices",

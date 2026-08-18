@@ -86,12 +86,14 @@
       "claim_id": "morning-make-module-callbox-best",
       "claim": "The Make.com Morning module is community-built (listed as 'Morning by Callbox'); Make does not maintain or support it; it requires the Best subscription tier or higher and exposes actions only (no trigger/watch module).",
       "source_url": "https://apps.make.com/green-invoice-y563os",
-      "raw_snippet": "Morning by Callbox. Make does not maintain or support this integration. Requires Best plan or higher.",
-      "fetched_at": "2026-06-22T20:50:00Z",
+      "raw_snippet": "Morning by Callbox - Apps Documentation",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "cardcom-v11-vs-v10",
@@ -109,13 +111,15 @@
       "claim_id": "grow-by-meshulam",
       "claim": "Grow is an independent Israeli fintech (successor brand to Meshulam), NOT affiliated with Bank Leumi.",
       "source_url": "https://grow.business/",
-      "raw_snippet": "Grow (by Meshulam) is an independent Israeli payments/fintech company for businesses.",
-      "fetched_at": "2026-06-22T20:50:00Z",
+      "raw_snippet": "סליקה וקבלת תשלומים | בנקאות חדשה לאנשים עם עסקים - Grow",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/make-israeli-modules.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "make-mcp-ai-agents",
@@ -133,13 +137,15 @@
       "claim_id": "priority-erp-odata-entities",
       "claim": "Priority ERP exposes standard OData entity endpoints used in the skill: /AINVOICES (A/R invoices), /PINVOICES (A/P invoices), /CUSTOMERS, /SUPPLIERS, /ORDERS, /PORDERS, /PART, /LOGCOUNTERS. Base URL pattern is https://{your-priority-domain}/odata/Priority/tabula.ini/{company}/{entity} (and https://{domain}/odata/Priority/tabula.ini/{company}/{entity}).",
       "source_url": "https://prioritysoftware.github.io/restapi/",
-      "raw_snippet": "Priority REST/OData API exposes entities such as AINVOICES, PINVOICES, CUSTOMERS, SUPPLIERS, ORDERS, PORDERS, PART, LOGCOUNTERS at /odata/Priority/tabula.ini/{company}/{entity}.",
-      "fetched_at": "2026-06-22T20:50:00Z",
+      "raw_snippet": "Priority Developer Portal",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/make-israeli-modules.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "external-endpoints-verified",

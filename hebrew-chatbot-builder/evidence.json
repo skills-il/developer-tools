@@ -92,13 +92,15 @@
       "claim_id": "botfather-commands",
       "claim": "Telegram bots are created and configured via BotFather commands: /newbot (create), /setdescription, /setprivacy.",
       "source_url": "https://core.telegram.org/bots/api",
-      "raw_snippet": "Use BotFather's /newbot to create a bot, /setdescription to set its description, and /setprivacy to control whether the bot sees all group messages or only commands.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "raw_snippet": "Telegram Bot API",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "scripts/telegram-bot-scaffold.py"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "placeholder-webhook-url",

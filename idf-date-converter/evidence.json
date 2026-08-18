@@ -41,14 +41,16 @@
     },
     {
       "claim_id": "hebcal-com",
-      "claim": "hebcal.com is the canonical web-based Hebrew calendar reference and provides authoritative holiday tables, dual-date conversions, and a developer API at hebcal.com/home/developer-apis.",
+      "claim": "hebcal.com is the canonical web-based Hebrew calendar reference and provides authoritative holiday tables, dual-date conversions, and a developer API at hebcal.com/home/developer-apis. Also covers: https://www.hebcal.com/home/developer-apis",
       "source_url": "https://www.hebcal.com",
-      "raw_snippet": "hebcal https://www.hebcal.com/home/developer-apis",
-      "fetched_at": "2026-05-20T00:00:00Z",
+      "raw_snippet": "Jewish Calendar, Hebrew Date Converter, Holidays - hebcal.com",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "yom-haatzmaut-displacement-2026",

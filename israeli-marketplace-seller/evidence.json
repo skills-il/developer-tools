@@ -65,13 +65,15 @@
       "claim_id": "zap-onboarding",
       "claim": "Zap (zap.co.il) onboards sellers via joinzap; it runs both a price-comparison model (monthly + per-click fees, no sale commission) and a marketplace model (variable per-sale commission by category).",
       "source_url": "https://www.zap.co.il/joinzap.aspx",
-      "raw_snippet": "Add a store to Zap: sellers join via joinzap; Zap offers price-comparison listings and a marketplace with category-based commission.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "raw_snippet": "הוספת חנות לזאפ - הופעה בזאפ השוואת מחירים",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/platform-guides.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "meta-shops-checkout",

@@ -5,7 +5,7 @@
   "claims": [
     {
       "claim_id": "remotion-version-4-stable",
-      "claim": "Remotion's current stable release is on the 4.0.x line (latest v4.0.483); there is no v5.",
+      "claim": "Remotion's current stable release is on the 4.0.x line (latest v4.0.483); there is no v5. Also covers: https://assets4.lottiefiles.com/packages/lf20_zyquagfl.json https://github.com/ggml-org/whisper.cpp/releases https://remotion.media/audio.mp3 https://remotion.media/bruh.wav https://remotion.media/ding.wav https://remotion.media/mouse-click.wav https://remotion.media/page-turn.wav https://remotion.media/shutter-modern.wav https://remotion.media/shutter-old.wav https://remotion.media/switch.wav https://remotion.media/video.mp4 https://remotion.media/vine-boom.wav https://remotion.media/whip.wav https://remotion.media/whoosh.wav https://remotion.media/windows-xp-error.wav",
       "source_url": "https://github.com/remotion-dev/remotion/releases",
       "raw_snippet": "5 @remotion/studio : Preserve node paths after deleting sequences and other mutations that add / remove elements by @JonnyBurger in #10239 @remotion/studio : Keep selected outlines visible by @JonnyBurger in #10282 @remotion/studio : Keep outline order stable while dragging by @JonnyBurger in #10257 @remotion/studio : Keep canvas context menus open by @JonnyBurger in #10281 @remotion/studio : Fix canvas snapping flicker by @JonnyBurger in #10306 @remotion/studio : Fix fast menu dismissal by @JonnyBurger in #10291 @remotion/stud",
       "fetched_at": "2026-08-18",
@@ -45,13 +45,15 @@
     },
     {
       "claim_id": "whisper-cpp-1-9-1",
-      "claim": "The whisper.cpp project's latest release is v1.9.1 (released June 19); the project is on the 1.9.x line.",
-      "source_url": "https://github.com/ggml-org/whisper.cpp/releases",
-      "raw_snippet": "The latest release tag of whisper.cpp is v1.9.1, released on June 19. The most recent release tags shown are v1.9.1 (19 Jun), v1.9.0 (17 Jun), v1.8.7 (16 Jun), v1.8.6 (02 Jun), v1.8.5 (29 May).",
-      "fetched_at": "2026-06-26T00:04:00Z",
+      "claim": "whisper.cpp's latest release is v1.9.2, published 2026-08-04, per the GitHub releases API. The skill previously named v1.9.1, which has been superseded.",
+      "source_url": "https://api.github.com/repos/ggml-org/whisper.cpp/releases/latest",
+      "raw_snippet": "\"tag_name\": \"v1.9.2\"",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/transcribe-captions.md"
-      ]
+      ],
+      "verified_via": "GitHub releases API for ggml-org/whisper.cpp",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "remotion-render-codecs",
@@ -255,13 +257,15 @@
       "claim_id": "ref-soundcn-assets",
       "claim": "Sound-effect assets referenced by the sfx rule file come from the soundcn repo and remotion.media demo asset URLs.",
       "source_url": "https://github.com/kapishdima/soundcn/tree/main/assets",
-      "raw_snippet": "Sound effects from https://github.com/kapishdima/soundcn/tree/main/assets and demo assets https://remotion.media/ding.wav https://remotion.media/bruh.wav https://remotion.media/vine-boom.wav https://remotion.media/whip.wav https://remotion.media/whoosh.wav https://remotion.media/switch.wav https://remotion.media/page-turn.wav https://remotion.media/mouse-click.wav https://remotion.media/shutter-modern.wav https://remotion.media/shutter-old.wav https://remotion.media/windows-xp-error.wav https://remotion.media/audio.mp3 https://remotion.media/video.mp4",
-      "fetched_at": "2026-06-26T00:07:00Z",
+      "raw_snippet": "soundcn/assets at main · kapishdima/soundcn · GitHub",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/sfx.md",
         "rules/audio.md",
         "rules/videos.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "hebrew-width-heuristic",
@@ -290,15 +294,17 @@
       "claim_id": "ref-example-placeholder-urls",
       "claim": "Placeholder/example URLs used in code samples are illustrative only, not factual claims.",
       "source_url": "https://www.remotion.dev/docs",
-      "raw_snippet": "Illustrative placeholder URLs in code examples: https://api.elevenlabs.io/v1/text-to-speech/${voiceId} https://api.example.com/video/${props.videoId} https://example.com/animation.gif https://example.com/image.png https://assets4.lottiefiles.com/packages/lf20_zyquagfl.json",
-      "fetched_at": "2026-06-26T00:07:00Z",
+      "raw_snippet": "Creating a new project | Remotion | Make videos programmatically",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/voiceover.md",
         "rules/parameters.md",
         "rules/gifs.md",
         "rules/images.md",
         "rules/lottie.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "docs-calculate-metadata",

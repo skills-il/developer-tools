@@ -5,16 +5,18 @@
   "claims": [
     {
       "claim_id": "action-version-pins",
-      "claim": "Current major versions of the GitHub Actions used: actions/checkout v7, actions/setup-node v6, actions/cache v5, actions/github-script v9, aws-actions/configure-aws-credentials v6, pnpm/action-setup v6.",
-      "source_url": "https://github.com/actions/checkout/releases",
-      "raw_snippet": "actions/checkout v7.0.0 is the latest release.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "claim": "actions/checkout's latest release is v7.0.1, published 2026-07-20, per the GitHub releases API, confirming the v7 major line the skill pins to.",
+      "source_url": "https://api.github.com/repos/actions/checkout/releases/latest",
+      "raw_snippet": "\"tag_name\": \"v7.0.1\"",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/workflow-templates.md",
         "references/shabbat-deploy-freeze.md"
-      ]
+      ],
+      "verified_via": "GitHub releases API for actions/checkout",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "github-token-readonly-oidc",
@@ -31,13 +33,15 @@
       "claim_id": "hebcal-api",
       "claim": "The Hebcal REST API provides Jewish-calendar and Shabbat-times JSON (holidays, candle-lighting) used to drive Shabbat/holiday-aware deploy freezes.",
       "source_url": "https://www.hebcal.com/home/developer-apis",
-      "raw_snippet": "Hebcal provides JSON APIs for Jewish holidays (/hebcal) and Shabbat times (/shabbat) with cfg=json.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "raw_snippet": "Developer APIs – Hebcal",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/shabbat-deploy-freeze.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "hebcal-holidays-endpoint-concrete",
