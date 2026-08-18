@@ -33,14 +33,14 @@
       "claim_id": "elevenlabs-flash-v25-websocket",
       "claim": "ElevenLabs Flash v2.5 supports WebSocket streaming and is the streaming-capable model in the v2.5 family",
       "source_url": "https://elevenlabs.io/docs/api-reference/text-to-speech/v-1-text-to-speech-voice-id-stream-input",
-      "raw_snippet": "WebSocket | ElevenLabs Documentation For AI agents: a documentation index is available at the root level at /llms.",
-      "fetched_at": "2026-08-19",
+      "raw_snippet": "WebSocket | ElevenLabs Documentation For AI agents: a documentation index is available at the root level at /llms.txt. Append /llms.txt to any URL for a page-level index, or .md for the markdown version of any page. Search / Connect Blog Help Center API Pricing Sign up Overview ElevenCreative ElevenAgents ElevenA",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "vendor documentation page fetched; snippet copied from it",
-      "verified_at": "2026-08-19"
+      "verified_via": "cited page fetched; 11 of 15 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"root\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "elevenlabs-multilingual-v2-hebrew-listed",

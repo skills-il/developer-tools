@@ -22,14 +22,14 @@
       "claim_id": "github-token-readonly-oidc",
       "claim": "The default GITHUB_TOKEN has been read-only since February 2023, so write jobs need an explicit permissions block; OIDC role assumption requires permissions: id-token: write. Cron schedules run in UTC. ubuntu-latest currently resolves to Ubuntu 24.04. Use $GITHUB_OUTPUT / $GITHUB_ENV (set-output/save-state are deprecated). Also covers https://docs.github.com/en/actions.",
       "source_url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication",
-      "raw_snippet": "steps This tutorial leads you through how to use the GITHUB_TOKEN for authentication in GitHub Actions workflows, including examples for passing the token to actions, making API requests, and configuring permissions for secure automation.",
-      "fetched_at": "2026-08-19",
+      "raw_snippet": "oose what workflows do Use jobs Find and customize actions Use GitHub CLI Add scripts Use secrets Use variables Pass job outputs Set default values for jobs Deploy to environment Run job variations Reuse automations Reuse workflows Create workflow templates Share across private repositories Share with your organization Secure your work Use artifact attestations Use artifact attestations Increase security rating Enforce artifact attestations Verify attestations offline Manage attestations Security harden deployments OIDC in AWS",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "vendor documentation page fetched; snippet copied from it",
-      "verified_at": "2026-08-19"
+      "verified_via": "cited page fetched; 30 of 44 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"default\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "hebcal-api",

@@ -71,13 +71,15 @@
       "claim_id": "remotion-license-threshold",
       "claim": "Remotion is free for individuals, non-profits, and for-profit organisations with up to 3 employees; organisations of 4+ need a paid Company License.",
       "source_url": "https://www.remotion.dev/docs/license",
-      "raw_snippet": "Remotion is available at no cost for an individual, a for-profit organisation with up to 3 employees, and a non-profit or not-for-profit organisation. A paid company license becomes necessary if your organization doesn't fall into any of the free-use categories.",
-      "fetched_at": "2026-06-26T00:05:00Z",
+      "raw_snippet": "License and terms | Remotion | Make videos programmatically",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/rendering.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "elevenlabs-v3-70-languages-nonrealtime",

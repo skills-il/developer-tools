@@ -253,8 +253,11 @@
       "id": "gcp-sustained-use-discount",
       "claim": "Compute Engine sustained use discounts reach up to a 30% net discount for VM instances that run the entire (100% of the) month, and apply to resources used for more than 25% of a billing month.",
       "source_url": "https://cloud.google.com/compute/docs/sustained-use-discounts",
-      "raw_snippet": "you can get up to a 30% net discount off of the resource cost for virtual machine (VM) instances that run the entire month",
-      "verified": true
+      "raw_snippet": "The discount increases incrementally with usage and you can get up to a 30% net discount off of the resource cost for virtual machine (VM) instances that run the entire month. Limitations Sustained use discounts have the following limitations: Only Self-serve (or Online) Cloud Billing accounts are eligible for receiving SUDs. SUDs don't apply to the resource usage that is already covered by committed use discounts (CUDs) .",
+      "verified": true,
+      "verified_via": "cited page fetched and confirmed to contain \"30%\"; snippet replaced with the page's own wording around it",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
       "id": "gcp-cuds-doc",

@@ -20,13 +20,13 @@
       "claim_id": "gsap-docs-v3",
       "claim": "Official GSAP v3 documentation",
       "source_url": "https://gsap.com/docs/v3/",
-      "raw_snippet": "JavaScript animation for the modern web Showcase Community Learn GSAP Docs Demos Notifications Notifications Notification Settings View All Messages Messages Compose new Go to Inbox Login/Create Account Sign In Login Forgot your password?",
-      "fetched_at": "2026-08-19",
+      "raw_snippet": "GSAP GSAP Menu Tools Core Scroll SVG UI Text Installation GSAP & React Video Lessons Professional-grade JavaScript animation for the modern web Showcase Community Learn GSAP Docs Demos Notifications Notifications Notification Settings View All Messages Messages Compose new Go to Inbox Login/Create Account Sign In Login Forgot your password? Why create an account?",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"
       ],
-      "verified_via": "vendor documentation page fetched; snippet copied from it",
-      "verified_at": "2026-08-19"
+      "verified_via": "cited page fetched; 23 of 25 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"modern\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "hyperframes-repo",
@@ -110,12 +110,14 @@
       "claim_id": "hyperframes-quickstart",
       "claim": "HyperFrames CLI quickstart (requires Node 22+ and FFmpeg)",
       "source_url": "https://hyperframes.heygen.com/quickstart",
-      "raw_snippet": "https://hyperframes.heygen.com/quickstart Node 22",
-      "fetched_at": "2026-06-28T23:30:00Z",
+      "raw_snippet": "Make your first video - HyperFrames",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "hebrew-google-fonts",
