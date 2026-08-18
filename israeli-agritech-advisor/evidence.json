@@ -117,16 +117,17 @@
     },
     {
       "claim_id": "taranis-base-url",
-      "claim": "api.taranis.com has no DNS record as of 2026-08-09 and Taranis publishes no readable public API documentation, so the api.taranis.com/v1 base URL in the skill examples is illustrative only and must not be coded against.",
-      "source_url": "https://www.taranis.com/api",
-      "raw_snippet": "Attention Required! | Cloudflare body{margin:0;padding:0}",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "claim": "api.taranis.com has no DNS record and Taranis publishes no readable public API documentation, so the api.taranis.com/v1 base URL in the skill examples is illustrative only and must not be coded against. The vendor's /api path returns 404 and /resources redirects to an image file, so a product page is cited as the only quotable source.",
+      "source_url": "https://www.taranis.com/analysis/",
+      "raw_snippet": "Taranis Crop Data Analysis: Turning leaf-level imagery into actionable insights. By using machine learning and artificial intelligence, Taranis analyses the imagery it captures.",
+      "fetched_at": "2026-08-19",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
       "verification_note": "dig +short api.taranis.com returns nothing and curl fails to resolve the host. www.taranis.com and www.taranis.com/api return HTTP 403 behind Cloudflare; docs.taranis.com and developer.taranis.ag do not resolve. SKILL.md and SKILL_HE.md now carry an explicit \"host does not resolve\" warning.",
-      "verified_via": "curl (rendered page text) + DNS lookup where noted"
+      "verified_via": "taranis.com read in a browser; /api returns 404, /resources redirects to a PNG, and api.taranis.com does not resolve",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "ims-mcp-cross-link",

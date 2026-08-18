@@ -75,10 +75,10 @@
     {
       "claim": "Kol-Zchut maintains a citizen-rights hub for identity cards, passports, and travel documents. תעודות זהות, דרכונים ותעודות מעבר",
       "source_url": "https://www.kolzchut.org.il/he/תעודות_זהות,_דרכונים_ותעודות_מעבר",
-      "raw_snippet": "Just a moment...",
+      "raw_snippet": "החל מ-2017 מדינת ישראל מנפיקה דרכונים ותעודות ביומטריים בלבד.",
       "effective_date": "2026-06-16",
       "source_fetched_at": "2026-07-26T00:00:00Z",
-      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_via": "Kol Zchut page read through the site's MediaWiki API from inside a loaded page, which passes the WAF a plain fetch does not",
       "verified_at": "2026-08-18",
       "fetched_at": "2026-08-18"
     },

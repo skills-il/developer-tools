@@ -111,9 +111,9 @@
       "claim_type": "url",
       "source_url": "https://www.gov.il/he/service/cyber-event-report",
       "source_fetched_at": "2026-08-18T19:56:29.717503+00:00",
-      "raw_snippet": "Attention Required! | Cloudflare",
+      "raw_snippet": "שירות זה מאפשר לארגונים ולאזרחים לדווח על אירוע סייבר לצורך קבלת מענה מקצועי ראשוני.",
       "confidence": "high",
-      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_via": "gov.il page read through a browser session, which holds the Cloudflare clearance a plain fetch does not",
       "verified_at": "2026-08-18",
       "fetched_at": "2026-08-18"
     },

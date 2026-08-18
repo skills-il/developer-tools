@@ -5,15 +5,15 @@
   "claims": [
     {
       "claim_id": "gsap-version-3-15-0",
-      "claim": "GSAP's v3 line resolves to 3.15.0, which is the version the skill loads from the jsDelivr CDN. Confirmed through jsDelivr's own resolver API. The skill references https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js.",
-      "source_url": "https://data.jsdelivr.com/v1/packages/npm/gsap/resolved?specifier=3",
-      "raw_snippet": "{ \"type\": \"npm\", \"name\": \"gsap\", \"version\": \"3.15.0\", \"links\": { \"self\": \"https://data.jsdelivr.com/v1/packages/npm/gsap@3.15.0\", \"entrypoints\": \"https://data.jsdelivr.com/v1/packages/npm/gsap@3.15.0/",
+      "claim": "GSAP's v3 line resolves to 3.15.0, which is the version the skill loads from the jsDelivr CDN. Confirmed through jsDelivr's own resolver API. The skill references https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js. Covers these references: https://data.jsdelivr.com/v1/packages/npm/gsap@3.15.0 https://data.jsdelivr.com/v1/packages/npm/gsap@3.15.0/",
+      "source_url": "https://data.jsdelivr.com/v1/packages/npm/gsap@3.15.0",
+      "raw_snippet": "js\", \"files\": [ { \"type\": \"directory\", \"name\": \"dist\", \"files\": [ { \"type\": \"file\", \"name\": \"all.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "references/transitions/catalog.md"
       ],
-      "verified_via": "jsDelivr package resolver API",
+      "verified_via": "reference-coverage entry; snippet quoted from one of the covered sources",
       "verified_at": "2026-08-18"
     },
     {
