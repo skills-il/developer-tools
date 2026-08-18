@@ -59,13 +59,14 @@ Bit and PayBox now record the sender and recipient names in bank/credit statemen
 | Phishing payment/credit link | seller | High |
 | Crypto / Bitcoin demand | either | High |
 | Overpayment "refund the difference" | seller | High |
-| Deposit / holding fee before viewing | buyer | High |
+| Deposit / holding fee before viewing | buyer | High (a deposit AFTER inspecting is a normal deal, the fraud signal is the sequence, not the word) |
 | Price far below market | buyer | Medium |
 | Stock/stolen photos | buyer | Medium |
 | Refuses to meet / give address | either | Medium |
 | Too-cheap electronics, no proof of origin | buyer | Medium (stolen-goods risk) |
 | Off-platform urgency, "abroad/soldier" | either | Medium |
 | Payment request sent to you | either | High |
+| Money never arrived after a "transfer" | seller | High (this is what proves the screenshot was forged) |
 
 ## The safe-deal checklist (give this to the user)
 

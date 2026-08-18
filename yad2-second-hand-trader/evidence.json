@@ -1,7 +1,7 @@
 {
   "skill_slug": "yad2-second-hand-trader",
   "schemaVersion": "1.0",
-  "generated_at": "2026-06-18",
+  "generated_at": "2026-08-18T19:56:29.717503+00:00",
   "claims": [
     {
       "id": "yad2-market-url",
@@ -10,7 +10,9 @@
       "source_url": "https://www.yad2.co.il/market",
       "source_fetched_at": "2026-06-18T00:00:00Z",
       "raw_snippet": "יד2 | מוצרי יד שנייה - Yad2 Market",
-      "confidence": "high"
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-18T19:57:11.813423+00:00"
     },
     {
       "id": "scam-fake-bank-transfer",
@@ -55,7 +57,9 @@
       "source_url": "https://magazine.yad2.co.il/shopping/קונים-אונליין-ככה-תשמרו-על-עצמכם-מהונא/23647",
       "source_fetched_at": "2026-06-18T00:00:00Z",
       "raw_snippet": "מומלץ מאוד שלא להעביר כסף מראש, ובטח לא לחו\"ל",
-      "confidence": "high"
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-18T19:57:11.813423+00:00"
     },
     {
       "id": "safety-inspect-item",
@@ -64,7 +68,9 @@
       "source_url": "https://magazine.yad2.co.il/shopping/קונים-אונליין-ככה-תשמרו-על-עצמכם-מהונא/23647",
       "source_fetched_at": "2026-06-18T00:00:00Z",
       "raw_snippet": "לוודא שהמוצר הוא אכן כפי שפורסם באתר, ללא שריטות או חבלות",
-      "confidence": "high"
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-18T19:57:11.813423+00:00"
     },
     {
       "id": "safety-cash-or-known-apps",
@@ -73,34 +79,42 @@
       "source_url": "https://magazine.yad2.co.il/shopping/קונים-אונליין-ככה-תשמרו-על-עצמכם-מהונא/23647",
       "source_fetched_at": "2026-06-18T00:00:00Z",
       "raw_snippet": "מומלץ שהתשלום יתבצע במזומן, או דרך אפליקציות תשלומים מוכרות",
-      "confidence": "high"
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-18T19:57:11.813423+00:00"
     },
     {
       "id": "consumer-law-business-only",
-      "claim": "The Consumer Protection Law cancellation right applies to a consumer transaction made with a business (עסקה צרכנית at a business), not to sales between two private individuals",
+      "claim": "The Consumer Protection Law cancellation right is a consumer right against a business, so it does not reach a private peer-to-peer Yad2 sale",
       "claim_type": "law",
-      "source_url": "https://www.kolzchut.org.il/he/ביטול_עסקה_צרכנית",
-      "source_fetched_at": "2026-06-18T00:00:00Z",
-      "raw_snippet": "תקנות הגנת הצרכן מאפשרות לצרכן לבטל עסקה צרכנית שנעשתה בבית העסק באופן חד-צדדי וללא מתן סיבה",
-      "confidence": "high"
+      "source_url": "https://www.kolzchut.org.il/he/ביטול_עסקה_שנעשתה_באינטרנט_או_בטלפון",
+      "source_fetched_at": "2026-08-18T19:56:29.717503+00:00",
+      "raw_snippet": "מי שרכש מוצר או שירות דרך האינטרנט או הטלפון יכול להתחרט, להחזיר את המוצר או לבטל את השירות, ולקבל את כספו בחזרה",
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-18T19:56:29.717503+00:00"
     },
     {
       "id": "police-online-complaint",
-      "claim": "Israel Police accepts online complaints for fraud/scams via its online complaint request channel",
+      "claim": "Israel Police's official online complaint service lists 'עבירת רכוש והונאה' as a subject a citizen can file under",
       "claim_type": "url",
-      "source_url": "https://www.kolzchut.org.il/he/בקשה_להגשת_תלונה_במשטרה_דרך_האינטרנט",
-      "source_fetched_at": "2026-06-18T00:00:00Z",
-      "raw_snippet": "בקשה להגשת תלונה במשטרה דרך האינטרנט",
-      "confidence": "high"
+      "source_url": "https://www.gov.il/he/service/request-file-complaint-online-during-emergency",
+      "source_fetched_at": "2026-08-18T19:56:29.717503+00:00",
+      "raw_snippet": "עבירת רכוש והונאה",
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-18T19:56:29.717503+00:00"
     },
     {
       "id": "cyber-event-report",
-      "claim": "Phishing and cyber incidents can be reported to Israel's National Cyber Directorate",
+      "claim": "Phishing and cyber incidents can be reported to Israel's National Cyber Directorate, which states its service does not replace reporting to the police",
       "claim_type": "url",
       "source_url": "https://www.gov.il/he/service/cyber-event-report",
-      "source_fetched_at": "2026-06-18T00:00:00Z",
-      "raw_snippet": "דיווח על אירוע סייבר | מערך הסייבר הלאומי",
-      "confidence": "high"
+      "source_fetched_at": "2026-08-18T19:56:29.717503+00:00",
+      "raw_snippet": "המרכז לא מטפל בתקלות מחשב ואינו מחליף דיווח למשטרה",
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-18T19:56:29.717503+00:00"
     },
     {
       "id": "paybox-payment-finality",
@@ -122,12 +136,34 @@
     },
     {
       "id": "private-sale-defect-disclosure",
-      "claim": "Even outside the Consumer Protection Law, a seller must disclose known defects in the product",
+      "claim": "Even outside the Consumer Protection Law, a seller who concealed a non-conformity cannot rely on the buyer's contractual acknowledgement: s.16 of the Sales Law is mandatory (kogenti)",
       "claim_type": "law",
       "source_url": "https://taasiri-law.co.il/מדריך-לצרכן-הנבון-120-שאלות-ותשובות-בדינ/",
-      "source_fetched_at": "2026-06-18T00:00:00Z",
-      "raw_snippet": "כל מוכר חייב להודיע לצרכן על פגמים ידועים במוצר",
+      "source_fetched_at": "2026-08-18T19:56:29.717503+00:00",
+      "raw_snippet": "סעיף 16 לחוק המכר, שהוא סעיף קוגנטי, קובע כי אם המוכר העלים אי-התאמה, הקונה זכאי להסתמך עליה",
       "confidence": "medium"
+    },
+    {
+      "id": "police-emergency-100",
+      "claim": "For an emergency, Israel Police directs the public to call 100 rather than filing online",
+      "claim_type": "procedure",
+      "source_url": "https://www.gov.il/he/service/request-file-complaint-online-during-emergency",
+      "source_fetched_at": "2026-08-18T19:56:29.717503+00:00",
+      "raw_snippet": "במקרי חירום יש לדווח למוקד 100.",
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-18T19:56:29.717503+00:00"
+    },
+    {
+      "id": "police-online-form-is-a-request",
+      "claim": "The online police form is a REQUEST to file; it is not an official complaint until police investigators complete the process",
+      "claim_type": "procedure",
+      "source_url": "https://www.kolzchut.org.il/he/בקשה_להגשת_תלונה_במשטרה_דרך_האינטרנט",
+      "source_fetched_at": "2026-08-18T19:56:29.717503+00:00",
+      "raw_snippet": "טופס הבקשה אינו מהווה תלונה רשמית, עד שחוקרי המשטרה ישלימו את התהליך",
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-18T19:56:29.717503+00:00"
     }
   ]
 }

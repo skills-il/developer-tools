@@ -19,6 +19,7 @@ Scope: helping a PRIVATE individual buy and sell second-hand goods on Yad2 (Yad2
 - [ ] Consumer-law boundary: the cooling-off / cancellation right applies to a business-to-consumer sale (עסקה צרכנית), NOT to a private peer-to-peer Yad2 sale. source: kolzchut.org.il. why core: agents routinely tell private buyers they have a return right they do not have.
 - [ ] Legal recourse despite no Consumer Protection Law: a seller must disclose known defects, and a deceived buyer / undisclosed hidden defect (מום נסתר) has remedies under contract + Sales Law in small claims. source: taasiri-law.co.il. why core: do not tell a defrauded private buyer they have "no recourse".
 - [ ] Report + stay on Yad2: keep the chat on-platform (evidence) and report the user/listing to Yad2 itself as a first-line action; then Israel Police online complaint + National Cyber Directorate. source: gov.il + kolzchut.org.il. why core: the user needs the action after a scam.
+- [ ] Post-fraud recovery ORDER and the correct police channel: card block/chargeback first (time-sensitive), then Yad2 report, then the OFFICIAL police online complaint under `עבירת רכוש והונאה` (a request, not yet an official complaint; national identification required; 100 for emergencies; a national unit such as להב 433 is not a public intake channel), then the cyber report which does not replace it. source: gov.il police service + kolzchut procedure page + gov.il cyber-event-report. why core: reviewed 2026-08-18, this is the step a defrauded user actually needs and the launch text named none of it.
 
 ## Should cover (advanced / edge cases)
 - [ ] Negotiation message drafting (buyer counter-offer + seller hold-firm) in natural Hebrew. source: common practice. why: second core deliverable.
@@ -39,5 +40,6 @@ Scope: helping a PRIVATE individual buy and sell second-hand goods on Yad2 (Yad2
 ## Authoritative sources
 - https://block.org.il/news/yad2-shipping-scams/ : the GLS/shipping scam mechanics (Israeli Internet Association).
 - https://www.yad2.co.il/market : the Yad2 Market second-hand platform.
-- https://www.kolzchut.org.il/he/ביטול_עסקה_צרכנית : who the consumer cancellation right applies to (business vs private).
-- https://www.gov.il/he/service/cyber-event-report : National Cyber Directorate phishing/incident reporting.
+- https://www.kolzchut.org.il/he/ביטול_עסקה_שנעשתה_באינטרנט_או_בטלפון : who the consumer cancellation right applies to (business vs private).
+- https://www.gov.il/he/service/cyber-event-report : National Cyber Directorate phishing/incident reporting (states it does NOT replace a police report).
+- https://www.gov.il/he/service/request-file-complaint-online-during-emergency : Israel Police official complaint service; the `עבירת רכוש והונאה` subject and the 100 emergency route.

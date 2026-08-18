@@ -1,0 +1,16 @@
+{
+  "cycles": [
+    {
+      "version": "1.1.0",
+      "date": "2026-08-18",
+      "lessons": [
+        "First review since publication (2026-06-18). Drift type C (external-site dependency): of 9 URLs, 0 were dead, but one silently REDIRECTED to a narrower page. kolzchut ביטול_עסקה_צרכנית now lands on ביטול_רכישה_שנעשתה_בבית_העסק (in-store purchases only), which does not support the private-vs-business point it was cited for. Replaced with the distance-sale page. Lesson: on this skill a 200 is not enough, check the redirect TARGET matches the 'What to Check' column.",
+        "Yad2 and magazine.yad2 serve a WAF challenge to curl and render fine in a browser; kolzchut and gov.il return 403 to curl. All 4 evidence entries on those hosts are marked verified_via=browser. Next cycle: expect the same, do not strip them on a curl 403.",
+        "Panel did not return this cycle: the Independent Judge (5.6), Expert Review (5.8), the domain research agent, and the legal-review subagent were all dispatched (opus) and none delivered output, including after one re-request each. Shipped on deterministic substitutes: verify-evidence.py --check-sources (exit 0, 0 FAILED), verify_legal.py (OK), validate-skill.sh, the YAML frontmatter check, per-URL browser validation with location.href asserted, and hand-run behavioural tests of scam_score.py. NEXT CYCLE MUST run a real Expert read: the coverage questions that went unanswered are (a) whether a scam family is missing (WhatsApp/OTP takeover, fake escrow, 'my son will collect'), (b) whether the non-card recovery rails are complete, (c) personal-safety adequacy of the handover guidance.",
+        "The Playwright MCP returned ANOTHER agent's page under a URL this agent requested (a gov.il police page under a gov.il cyber URL). The location.href assertion caught it; nothing else would have. Keep asserting before every DOM read while sibling agents are active.",
+        "Deferred (Phase 4.1 discretionary cap): no discretionary edits were applied at all this cycle, the whole diff was correctness/coverage. Candidates parked for next cycle: a Gotcha stating the recovery asymmetry in one line, and tightening the seller-side red-flag table wording.",
+        "Unverified this cycle, carry forward: whether Yad2 currently offers an in-app protected payment / escrow and its own delivery option. The skill hedges this correctly ('if it is offered in the user's app') and the /market landing page shows no such feature, but it was not positively confirmed. Do not harden that sentence until it is."
+      ]
+    }
+  ]
+}
