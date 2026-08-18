@@ -7,12 +7,14 @@
       "claim_id": "personal-import-threshold-75-2026",
       "claim": "The personal-import duty-free threshold is $75 USD as of June 2, 2026. The Knesset revoked the order that had raised it; a transitional $130 cap applied 25 Feb - 1 Jun 2026, and the proposed $150 increase was rejected.",
       "source_url": "https://www.timesofisrael.com/knesset-revokes-smotrichs-order-expanding-personal-import-tax-exemption-to-130/",
-      "raw_snippet": "Knesset lawmakers voted 59-23 to revoke Smotrich's order raising the value-added tax exemption threshold on personal imports from $75 to $130, effectively restoring the previous $75 threshold. Effective June 2, 2026, the exemption threshold is once again set at USD 75.",
-      "fetched_at": "2026-06-22T20:00:00Z",
+      "raw_snippet": "(Yonatan Sindel/Flash90) Knesset lawmakers on Tuesday voted 59-23 to revoke Finance Minister Bezalel Smotrich’s order raising the value-added tax exemption threshold on personal imports from $75 to $130, effectively restoring the previous $75 limit. “All those who voted this evening against raising the VAT exemption on products ordered from overseas are hurting the pockets of Israeli citizens,” Smotrich wrote on X in response.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "personal-import-tiers-2026",
@@ -29,12 +31,14 @@
       "claim_id": "vat-rate-18",
       "claim": "Israel standard VAT rate is 18% (since Jan 2025, unchanged for 2026). Effective added import cost above the threshold is roughly 18-30% of declared value.",
       "source_url": "https://taxsummaries.pwc.com/israel/corporate/other-taxes",
-      "raw_snippet": "Value-added tax (VAT) is imposed on most goods and services at the standard rate of 18%.",
-      "fetched_at": "2026-06-22T20:00:00Z",
+      "raw_snippet": "ela Vietnam Zambia Israel Corporate - Other taxes Last reviewed - 29 June 2026 Value-added tax (VAT) The 2025 current rate of VAT is 18%. Exports of goods and certain services and various other transactions are zero-rated, and certain transactions are exempt. Banks and other financial institutions pay VAT-equivalent taxes at the rate of 18% based on their total payroll and on profits. Not-for-profit organisations pay VAT-equivalent tax (wage tax) at the rate of 7.5% of their total payroll.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched and confirmed to contain \"18%\"; snippet replaced with the page's own wording around it",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "online-return-14-day-14c",

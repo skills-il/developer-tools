@@ -9,7 +9,12 @@
       "source_url": "https://github.com/actions/checkout/releases",
       "raw_snippet": "actions/checkout v7.0.0 is the latest release.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/workflow-templates.md", "references/shabbat-deploy-freeze.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/workflow-templates.md",
+        "references/shabbat-deploy-freeze.md"
+      ]
     },
     {
       "claim_id": "github-token-readonly-oidc",
@@ -17,7 +22,10 @@
       "source_url": "https://docs.github.com/en/actions",
       "raw_snippet": "The default permissions for the GITHUB_TOKEN can be set to read-only; to use OIDC you must set permissions with id-token: write. Scheduled workflows use POSIX cron syntax and run on UTC time.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "hebcal-api",
@@ -25,15 +33,24 @@
       "source_url": "https://www.hebcal.com/home/developer-apis",
       "raw_snippet": "Hebcal provides JSON APIs for Jewish holidays (/hebcal) and Shabbat times (/shabbat) with cfg=json.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/shabbat-deploy-freeze.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/shabbat-deploy-freeze.md"
+      ]
     },
     {
       "claim_id": "hebcal-holidays-endpoint-concrete",
       "claim": "The Hebcal holidays JSON endpoint for a given year/month and geonameid (281184 = Jerusalem) returns major holidays.",
       "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&year=2026&month=3&geo=geoname&geonameid=281184",
-      "raw_snippet": "The /hebcal endpoint with cfg=json, maj=on, year, month, geo=geoname and geonameid returns Jewish holiday events as JSON.",
-      "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "references/shabbat-deploy-freeze.md"]
+      "raw_snippet": "tude\":35.21633,\"cc\":\"IL\",\"country\":\"Israel\",\"elevation\":786,\"admin1\":\"Jerusalem\",\"asciiname\":\"Jerusalem\",\"geo\":\"geoname\",\"geonameid\":281184},\"range\":{\"start\":\"2026-03-02\",\"end\":\"2026-03-28\"},\"items\":[{\"title\":\"Erev Purim\",\"date\":\"2026-03-02\",\"hdate\":\"13 Adar 5786\",\"category\":\"holiday\",\"subcat\":\"major\",\"hebrew\":\"ערב פורים\",\"leyning\":{\"torah\":\"Esther 1:1-10:3\"},\"link\":\"https://hebcal.com/h/purim-2026?i=on&us=js&um=api\",\"memo\":\"Celebration of Jewish deliverance as told by Megilat Esther.",
+      "fetched_at": "2026-08-18",
+      "appears_in": [
+        "SKILL.md",
+        "references/shabbat-deploy-freeze.md"
+      ],
+      "verified_via": "cited page fetched and confirmed to contain \"281184\"; snippet replaced with the page's own wording around it",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "hebcal-holidays-endpoint-templated",
@@ -41,7 +58,10 @@
       "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&year={YEAR}&month={MONTH}&geo=geoname&geonameid={ID}",
       "raw_snippet": "The /hebcal endpoint accepts year, month and geonameid parameters; examples show {YEAR}/{MONTH}/{ID} placeholders.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "references/shabbat-deploy-freeze.md"]
+      "appears_in": [
+        "SKILL.md",
+        "references/shabbat-deploy-freeze.md"
+      ]
     },
     {
       "claim_id": "hebcal-holidays-endpoint-shellvars",
@@ -49,7 +69,9 @@
       "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&yto=on&year=$YEAR&month=$MONTH&geo=geoname&geonameid=$GEONAMEID",
       "raw_snippet": "The /hebcal endpoint is called from bash with $YEAR, $MONTH and $GEONAMEID shell variables; yto=on includes Jewish year boundaries.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["references/shabbat-deploy-freeze.md"]
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
+      ]
     },
     {
       "claim_id": "hebcal-holidays-endpoint-datecmd",
@@ -57,7 +79,9 @@
       "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&year=$(date",
       "raw_snippet": "The /hebcal endpoint year parameter can be set from $(date +%Y) in a bash step.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["references/shabbat-deploy-freeze.md"]
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
+      ]
     },
     {
       "claim_id": "hebcal-shabbat-281184",
@@ -65,7 +89,10 @@
       "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184",
       "raw_snippet": "The /shabbat endpoint with cfg=json and geonameid returns Shabbat candle-lighting and havdalah times.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "references/shabbat-deploy-freeze.md"]
+      "appears_in": [
+        "SKILL.md",
+        "references/shabbat-deploy-freeze.md"
+      ]
     },
     {
       "claim_id": "hebcal-shabbat-281184-m",
@@ -73,7 +100,10 @@
       "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on",
       "raw_snippet": "The /shabbat endpoint M=on parameter sets Havdalah to a fixed number of minutes after sunset.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "references/shabbat-deploy-freeze.md"]
+      "appears_in": [
+        "SKILL.md",
+        "references/shabbat-deploy-freeze.md"
+      ]
     },
     {
       "claim_id": "hebcal-shabbat-281184-maj",
@@ -81,7 +111,9 @@
       "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&maj=on",
       "raw_snippet": "The /shabbat endpoint maj=on parameter includes major Jewish holidays.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["references/shabbat-deploy-freeze.md"]
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
+      ]
     },
     {
       "claim_id": "hebcal-shabbat-templated",
@@ -89,7 +121,9 @@
       "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid={ID}&M=on",
       "raw_snippet": "The /shabbat endpoint geonameid is shown as an {ID} placeholder to be substituted per city.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md"]
+      "appears_in": [
+        "SKILL.md"
+      ]
     },
     {
       "claim_id": "hebcal-shabbat-shellvar",
@@ -97,7 +131,9 @@
       "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on",
       "raw_snippet": "The /shabbat endpoint geonameid is set from the $GEONAMEID shell variable inside a workflow step.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["references/shabbat-deploy-freeze.md"]
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
+      ]
     },
     {
       "claim_id": "sii-he",
@@ -105,7 +141,9 @@
       "source_url": "https://www.sii.org.il/he/",
       "raw_snippet": "מכון התקנים הישראלי מפרסם תקנים ישראליים כולל ת\"י 5568 לנגישות אתרי אינטרנט.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL_HE.md"]
+      "appears_in": [
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "monday-api",
@@ -113,7 +151,10 @@
       "source_url": "https://developer.monday.com/api-reference/docs",
       "raw_snippet": "The monday.com API is a GraphQL API available at https://api.monday.com/v2.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "vercel-regions",
@@ -121,7 +162,10 @@
       "source_url": "https://vercel.com/docs/edge-network/regions",
       "raw_snippet": "Vercel regions include fra1 (Frankfurt). Functions and deployments can target specific regions.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "sii-is5568",
@@ -129,7 +173,10 @@
       "source_url": "https://www.sii.org.il/en/",
       "raw_snippet": "The Standards Institution of Israel publishes Israeli standards including IS 5568 on web accessibility.",
       "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }

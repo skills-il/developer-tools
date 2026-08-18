@@ -7,17 +7,27 @@
       "claim_id": "invoice-reform-threshold-2026",
       "claim": "Israel Invoice Reform allocation-number threshold steps down in 2026: 10,000 NIS from Jan 1 2026, then 5,000 NIS from June 1 2026 (in force as of June 2026); 5,000 NIS planned to continue into 2027. The threshold was 20,000 NIS in 2025.",
       "source_url": "https://www.vatupdate.com/2026/06/20/israel-tightens-real-time-invoice-validation-with-lower-threshold-requirement/",
-      "raw_snippet": "Israel lowered the real-time invoice (allocation number) threshold to 5,000 NIS / 5,000 ש\"ח effective June 1, 2026, down from 10,000 NIS / 10,000 ש\"ח at the start of 2026.",
-      "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+      "raw_snippet": "iews 2 min read Summary Israel has further expanded its CTC regime by lowering the threshold for mandatory invoice validation to NIS 5,000 from June 2026 , significantly increasing the number of transactions in scope. The allocation number system functions as a pre-clearance mechanism , meaning invoices must be validated by the tax authority before input VAT deduction is allowed.",
+      "fetched_at": "2026-08-18",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/make-israeli-modules.md"
+      ],
+      "verified_via": "cited page fetched and confirmed to contain \"5,000\"; snippet replaced with the page's own wording around it",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "vat-18",
       "claim": "Israel standard VAT rate is 18% (since Jan 1 2025, unchanged in 2026).",
       "source_url": "https://taxsummaries.pwc.com/israel/corporate/other-taxes",
-      "raw_snippet": "Value-added tax (VAT) is imposed on most goods and services at the standard rate of 18%.",
-      "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["references/billing-cycle-patterns.md"]
+      "raw_snippet": "ela Vietnam Zambia Israel Corporate - Other taxes Last reviewed - 29 June 2026 Value-added tax (VAT) The 2025 current rate of VAT is 18%. Exports of goods and certain services and various other transactions are zero-rated, and certain transactions are exempt. Banks and other financial institutions pay VAT-equivalent taxes at the rate of 18% based on their total payroll and on profits. Not-for-profit organisations pay VAT-equivalent tax (wage tax) at the rate of 7.5% of their total payroll.",
+      "fetched_at": "2026-08-18",
+      "appears_in": [
+        "references/billing-cycle-patterns.md"
+      ],
+      "verified_via": "cited page fetched and confirmed to contain \"18%\"; snippet replaced with the page's own wording around it",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "bituach-leumi-salaried-2026",
@@ -25,7 +35,9 @@
       "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
       "raw_snippet": "ביטוח לאומי לעובד שכיר 2026: מעסיק 4.51% מופחת / 7.60% מלא; עובד 1.04% מופחת / 7.00% מלא. שיעור מופחת עד 7,703 ש\"ח, שיעור מלא עד תקרה של 51,910 ש\"ח.",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["references/billing-cycle-patterns.md"]
+      "appears_in": [
+        "references/billing-cycle-patterns.md"
+      ]
     },
     {
       "claim_id": "bituach-briut-salaried-2026",
@@ -33,7 +45,9 @@
       "source_url": "https://www.btl.gov.il/Insurance/Health_Insurance/Pages/%D7%A9%D7%99%D7%A2%D7%95%D7%A8%D7%99%20%D7%93%D7%9E%D7%99%20%D7%91%D7%99%D7%98%D7%95%D7%97%20%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA.aspx",
       "raw_snippet": "דמי ביטוח בריאות מנוכים מהעובד בלבד: 3.23% עד 7,703 ש\"ח ו-5.17% מעל לכך. אין חלק מעסיק בביטוח בריאות.",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["references/billing-cycle-patterns.md"]
+      "appears_in": [
+        "references/billing-cycle-patterns.md"
+      ]
     },
     {
       "claim_id": "mandatory-pension-keren",
@@ -41,7 +55,9 @@
       "source_url": "https://www.kolzchut.org.il/he/%D7%A6%D7%95_%D7%94%D7%A8%D7%97%D7%91%D7%94_%D7%9C%D7%91%D7%99%D7%98%D7%95%D7%97_%D7%A4%D7%A0%D7%A1%D7%99%D7%95%D7%A0%D7%99_%D7%9E%D7%A7%D7%99%D7%A3_%D7%91%D7%9E%D7%A9%D7%A7",
       "raw_snippet": "פנסיה חובה: סך 18.5% מהשכר - עובד 6%, מעסיק 6.5% תגמולים ועוד 6% פיצויים (סה\"כ מעסיק 12.5%). קרן השתלמות נפוצה: מעסיק 7.5% ועובד 2.5%.",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["references/billing-cycle-patterns.md"]
+      "appears_in": [
+        "references/billing-cycle-patterns.md"
+      ]
     },
     {
       "claim_id": "make-free-plan-1000-ops",
@@ -49,7 +65,10 @@
       "source_url": "https://www.make.com/en/pricing",
       "raw_snippet": "Free plan: 1,000 operations per month, no cost.",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "morning-rebrand-api-domain-amounts-auth",
@@ -57,7 +76,11 @@
       "source_url": "https://greeninvoice.docs.apiary.io/reference/account/receiving-a-jwt-token-using-an-api-key/receiving-a-jwt-token-using-an-api-key",
       "raw_snippet": "Authenticate by posting the API key id and secret to receive a JWT bearer token valid about one hour; document amounts are decimal values in the document currency.",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/make-israeli-modules.md"
+      ]
     },
     {
       "claim_id": "morning-make-module-callbox-best",
@@ -65,7 +88,10 @@
       "source_url": "https://apps.make.com/green-invoice-y563os",
       "raw_snippet": "Morning by Callbox. Make does not maintain or support this integration. Requires Best plan or higher.",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "cardcom-v11-vs-v10",
@@ -73,7 +99,11 @@
       "source_url": "https://secure.cardcom.solutions/Api/v11/Docs",
       "raw_snippet": "Cardcom API v11 third-party reporting posts a JSON body; ResponseCode 0 indicates success. Legacy LowProfile uses Name-to-Value form fields.",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/make-israeli-modules.md"
+      ]
     },
     {
       "claim_id": "grow-by-meshulam",
@@ -81,7 +111,11 @@
       "source_url": "https://grow.business/",
       "raw_snippet": "Grow (by Meshulam) is an independent Israeli payments/fintech company for businesses.",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/make-israeli-modules.md"
+      ]
     },
     {
       "claim_id": "make-mcp-ai-agents",
@@ -89,7 +123,11 @@
       "source_url": "https://www.make.com/en/mcp",
       "raw_snippet": "Make MCP Server lets you expose your Make scenarios as tools for AI assistants; AI Agents are available in Make.",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-mcp-server.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/make-mcp-server.md"
+      ]
     },
     {
       "claim_id": "priority-erp-odata-entities",
@@ -97,7 +135,11 @@
       "source_url": "https://prioritysoftware.github.io/restapi/",
       "raw_snippet": "Priority REST/OData API exposes entities such as AINVOICES, PINVOICES, CUSTOMERS, SUPPLIERS, ORDERS, PORDERS, PART, LOGCOUNTERS at /odata/Priority/tabula.ini/{company}/{entity}.",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/make-israeli-modules.md"
+      ]
     },
     {
       "claim_id": "external-endpoints-verified",
@@ -105,7 +147,11 @@
       "source_url": "https://www.make.com/en/mcp",
       "raw_snippet": "Endpoints: https://mcp.make.com https://developers.make.com/mcp-server https://<MAKE_ZONE>.make.com https://www.hebcal.com/hebcal?v=1&cfg=json&year=now&month=now&maj=on&geo=pos&latitude=32.0853&longitude=34.7818 http://api.inforu.co.il/SendMessage.asmx https://019sms.co.il/api https://www.sms4free.co.il/ApiSMS/SendSMS https://graph.facebook.com/{api-version}/{phone-number-id}/messages https://api.greeninvoice.co.il/api/v1/ https://sandbox.d.greeninvoice.co.il/api/v1/ https://{domain}/odata/Priority/tabula.ini/{company}/{entity} https://{your-priority-domain}/odata/Priority/tabula.ini/{company}/{entity}",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/make-israeli-modules.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/make-israeli-modules.md"
+      ]
     },
     {
       "claim_id": "illustrative-formatting-examples",
@@ -113,7 +159,10 @@
       "source_url": "https://greeninvoice.docs.apiary.io/reference/documents/add-document/add-document",
       "raw_snippet": "Document amounts are decimal shekels (e.g. price: 50 = 50 שקל); formatNumber renders values like ₪1,234.56; examples illustrate ILS formatting and a 15% transformation.",
       "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }

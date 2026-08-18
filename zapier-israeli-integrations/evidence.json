@@ -7,14 +7,16 @@
       "claim_id": "zapier-plans-2026",
       "claim": "Zapier's plans are Free, Professional, Team and Enterprise. The Starter plan was discontinued on April 2, 2024 and Professional became the lowest-cost paid plan. Free is 100 tasks/month and two-step Zap workflows; multi-step Zap workflows require Professional or higher. Professional starts at $19.99/month annual ($29.99 monthly) for 750 tasks and scales by task tier within the same plan. Team starts at $69/month annual ($103.50 monthly).",
       "source_url": "https://help.zapier.com/hc/en-us/articles/25326755478285-Enterprise-Plan-and-Existing-Plan-Updates",
-      "raw_snippet": "As of April 2, 2024, the Starter plan will no longer be offered and the Professional plan will be our lowest-cost plan. Current Starter plan users were upgraded to the Professional plan and receive Professional features at no additional cost",
+      "raw_snippet": "As of April 2, 2024, the Starter plan will no longer be offered and the Professional plan will be our lowest-cost plan. Was this article helpful? Yes No 0 out of 1 found this helpful Zapier Early Access Get access to tomorrow’s no-code automation products and features today.",
       "secondary_source_url": "https://zapier.com/pricing",
       "secondary_raw_snippet": "Free ... 100 tasks/mo ... Two-step Zap workflows | Professional ... Multi-step Zap workflows | Team | Enterprise",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "cardcom-v11-webhook-shape-a",
@@ -65,14 +67,16 @@
       "claim_id": "cardcom-uivalues-fields",
       "claim": "In the Cardcom v11 webhook payload, cardholder details are nested under UIValues (schema LowProfileUIValues) rather than at the top level.",
       "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
-      "raw_snippet": "\"LowProfileUIValues\": {\"CardOwnerEmail\": \"Card Owner's email\", \"CardOwnerName\": \"Card Owner name.\", \"CardOwnerPhone\": \"Card Owner Phone.\", \"CardOwnerIdentityNumber\": \"Card Owner identity Number\", \"NumOfPayments\": \"number of payments for the deal\", \"CardYear\": \"Card expiration year.\", \"CardMonth\": \"card expiration month.\", \"IsAbroadCard\": \"boolean - is the card from isreal or is it a tourist card\"}",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "raw_snippet": ".\", \"nullable\": true, \"items\": { \"$ref\": \"#/components/schemas/CustomField\" } }, \"IsAbroadCard\": { \"type\": \"boolean\", \"description\": \"boolean - is the card from isreal or is it a tourist card\" } } }, \"DocumentInfo\": { \"type\": \"object\", \"description\": \"Document create response\", \"additionalProperties\": false, \"properties\": { \"ResponseCode\": { \"type\": \"integer\", \"description\": \"if equel zero then success , else , a develper error see Description for more info \", \"format\": \"int32\" }, \"Description\": { \"type\": \"string\", \"description",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/israeli-zapier-apps.md",
         "references/zap-templates.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "cardcom-decimal-shekels",
@@ -137,37 +141,43 @@
       "claim_id": "sumit-native-zapier-app",
       "claim": "The Israeli platform SUMIT has a native Zapier app with a Card Updated trigger and Create Document, Create Card, Update Card, Get Card and Send SMS actions.",
       "source_url": "https://zapier.com/apps/sumit/integrations",
-      "raw_snippet": "SUMIT ... A comprehensive system for planning, management and execution for the self-employed, non-profit organizations and business organizations. ... Triggers: Card Updated ... Actions: Add Recipient to Email Mailing List, Add Recipient to SMS Mailing List, Create Card, Create Document, Get Card, Send SMS, Update Card",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "raw_snippet": "o Generate Zaps (Beta) What Should I Do in Zapier If I Change an App Account Password Apps SUMIT Integrations About SUMIT SUMIT is a comprehensive system for planning, management and execution for the self-employed, non-profit organizations and business organizations. Help Help Related categories Project Management Popular SUMIT Integrations monday.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/israeli-zapier-apps.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "priority-native-zapier-app",
       "claim": "Priority ERP has a native Zapier app with order-status webhook triggers and sales-order, opportunity and lead actions.",
       "source_url": "https://zapier.com/apps/priority/integrations",
-      "raw_snippet": "Priority ... A comprehensive ERP package empowering hundreds of thousands of end users worldwide in their daily tasks of running the business ... Catch Changed Customer Order Status Webhook ... Catch Changed Purchase Order Status Webhook ... Create Sales Orders ... Create Sales Opportunity ... Find Customer by Email",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "raw_snippet": "e Zaps (Beta) What Should I Do in Zapier If I Change an App Account Password Apps Priority Integrations About Priority Priority is a comprehensive ERP package empowering hundreds of thousands of end users worldwide in their daily tasks of running the business Help Help Related categories Project Management Popular Priority Integrations Shopify monday.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/israeli-zapier-apps.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "inforumobile-native-zapier-app",
       "claim": "InforUMobile has a native Zapier app whose actions include Send SMS and Send Whatsapp Template Message, so the raw XML API at api.inforu.co.il is no longer the default integration path.",
       "source_url": "https://zapier.com/apps/inforumobile/integrations",
-      "raw_snippet": "InforUMobile ... Multi channel marketing software offering SMS, email marketing, landing pages, surveys and Facebook advertising. ... Triggers: New Lead From Landing Page, Contact Unsubscribe ... Actions: Add Contact to Group, Remove Contact From Group, Unsubscribe Contact, Reactivate Unsubscribe, Create and Send Newsletter, Send IVR Campaign, Send IVR Message, Send Newsletter Campaign, Send SMS, Send SMS Voice Hybrid, Send Whatsapp Template Message, Start Automation",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "raw_snippet": "at Should I Do in Zapier If I Change an App Account Password Apps InforUMobile Integrations About InforUMobile InforUMobile is multi channel marketing software offering SMS, email marketing, landing pages, surveys and Facebook advertising.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/israeli-zapier-apps.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "grow-on-zapier-is-not-meshulam",

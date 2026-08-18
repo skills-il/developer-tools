@@ -7,12 +7,14 @@
       "claim_id": "unaccent-not-nikud",
       "claim": "The unaccent extension does NOT strip Hebrew nikud (U+0591-U+05C7); its default rules cover only Latin/Greek combining marks (U+0300-U+0362). Strip Hebrew nikud with regexp_replace over the Hebrew points range in an IMMUTABLE function.",
       "source_url": "https://www.postgresql.org/docs/current/unaccent.html",
-      "raw_snippet": "unaccent is a text search dictionary that removes accents (diacritic signs) from lexemes. The rules it uses are defined in the unaccent.rules file, which by default covers Latin and Greek diacritics.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "raw_snippet": "unaccent — a text search dictionary which removes diacritics # F.48.1. Configuration F.48.2. Usage F.48.3. Functions unaccent is a text search dictionary that removes accents (diacritic signs) from lexemes. It's a filtering dictionary, which means its output is always passed to the next dictionary (if any), unlike the normal behavior of dictionaries. This allows accent-insensitive processing for full text search.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "icu-collation-nondeterministic-a",
@@ -52,13 +54,15 @@
       "claim_id": "pgtrgm-fuzzy",
       "claim": "pg_trgm provides trigram similarity (% operator) and GIN/GiST indexes for fuzzy/typo-tolerant Hebrew search.",
       "source_url": "https://www.postgresql.org/docs/current/pgtrgm.html",
-      "raw_snippet": "The pg_trgm module provides functions and operators for determining the similarity of alphanumeric text based on trigram matching.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "raw_snippet": "GUC Parameters F.35.4. Index Support F.35.5. Text Search Integration F.35.6. References F.35.7. Authors The pg_trgm module provides functions and operators for determining the similarity of alphanumeric text based on trigram matching, as well as index operator classes that support fast searching for similar strings. This module is considered “ trusted ” , that is, it can be installed by non-superusers who have CREATE privilege on the current database. F.35.1.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/supabase-israel-patterns.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "supabase-rls",

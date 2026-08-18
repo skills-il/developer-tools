@@ -18,24 +18,28 @@
       "claim_id": "trimbefore-trimafter-in-frames",
       "claim": "The @remotion/media <Video> trimBefore and trimAfter props take values in frames, not seconds.",
       "source_url": "https://www.remotion.dev/docs/media/video",
-      "raw_snippet": "By passing trimBefore={60}, the playback starts immediately, but with the first 2 seconds of the video trimmed away. With an fps of 30, 60 frames equals 2 seconds, confirming the values are measured in frames.",
-      "fetched_at": "2026-06-26T00:04:00Z",
+      "raw_snippet": "In the following example, we assume that the fps of the composition is 30 . By passing trimBefore={60} , the playback starts immediately, but with the first 2 seconds of the video trimmed away. By passing trimAfter={120} , any video after the 4 second mark in the file will be trimmed away. The video will play the range from 00:02:00 to 00:04:00 , meaning the video will play for 2 seconds. For exact behavior, see: Order of operations . export const JSX.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/videos.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "media-video-frame-exact",
       "claim": "@remotion/media's <Video> is the new frame-exact tag: during rendering it extracts the exact frame via Mediabunny in a canvas, distinct from the legacy <Video> from the remotion package.",
       "source_url": "https://www.remotion.dev/docs/media/video",
-      "raw_snippet": "This component works similar to <OffthreadVideo/> but during rendering, extracts the exact frame from the video using Mediabunny and displays it in a <canvas> tag. This is documentation for the new <Video> tag. Not to be confused with the older <Html5Video> / <Video> tag from remotion.",
-      "fetched_at": "2026-06-26T00:04:00Z",
+      "raw_snippet": "During rendering, it extracts the exact frame from the video using Mediabunny and displays it in a <canvas> tag. This keeps the video in sync with Remotion's timeline. This component has native buffering support enabled by default. When used in the Player, it automatically pauses playback when buffering and resumes when ready. Example ​ import { & InteractiveBaseProps & { readonly stack?",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/rendering.md",
         "rules/videos.md",
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "whisper-cpp-1-9-1",
@@ -75,34 +79,40 @@
       "claim_id": "elevenlabs-v3-70-languages-nonrealtime",
       "claim": "ElevenLabs' eleven_v3 model supports 70+ languages and is not recommended for real-time use; eleven_multilingual_v2 (or Flash models) is recommended for real-time.",
       "source_url": "https://elevenlabs.io/docs/overview/models",
-      "raw_snippet": "Eleven v3 is our latest and most advanced speech synthesis model with support for 70+ languages. For real-time conversational applications use eleven_flash_v2_5, eleven_flash_v2 or eleven_multilingual_v2.",
-      "fetched_at": "2026-06-26T00:08:00Z",
+      "raw_snippet": "models) en eleven_flash_v2 scribe_v1 First generation speech recognition (outclassed by v2 models) 90+ languages scribe_v2 Eleven v3 Eleven v3 is our latest and most advanced speech synthesis model. It is a state-of-the-art model that produces natural, life-like speech with high emotional range and contextual understanding across multiple languages. This model works well in the following scenarios: Character Discussions : Excellent for audio experiences with multiple characters that interact with each other.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/voiceover.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "elevenlabs-multilingual-v2",
       "claim": "eleven_multilingual_v2 is ElevenLabs' emotionally-aware multilingual speech model, suitable for pre-rendered voiceover with consistent quality across languages.",
       "source_url": "https://elevenlabs.io/docs/overview/models",
-      "raw_snippet": "Eleven Multilingual v2 is our most advanced, emotionally-aware speech synthesis model. It excels at multilingual projects where consistent voice quality across language switches matters.",
-      "fetched_at": "2026-06-26T00:08:00Z",
+      "raw_snippet": "Multilingual v2 Eleven Multilingual v2 is our most advanced, emotionally-aware speech synthesis model. It produces natural, lifelike speech with high emotional range and contextual understanding across multiple languages. The model delivers consistent voice quality and personality across all supported languages while maintaining the speaker’s unique characteristics and accent.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/voiceover.md",
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-remotion-docs-home",
-      "claim": "https://www.remotion.dev/docs is the Remotion documentation home for making videos programmatically in React.",
+      "claim": "https://www.remotion.dev/docs is the Remotion documentation home for making videos programmatically in React. Covered references: Remotion | Make videos programmatically. The primary documentation and API reference for the Remotion framework, which enables developers to create videos using React components.",
       "source_url": "https://www.remotion.dev/docs",
-      "raw_snippet": "Remotion | Make videos programmatically. The primary documentation and API reference for the Remotion framework, which enables developers to create videos using React components.",
-      "fetched_at": "2026-06-26T00:07:00Z",
+      "raw_snippet": "Creating a new project | Remotion | Make videos programmatically Skip to main content Docs API Products Plugins Player Lambda Editor Starter Timeline Recorder Convert Resources Elements Templates Prompts Learn Resources",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "navigational reference; snippet replaced with the cited page's own opening text so the entry can be falsified",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-remotion-github",
@@ -119,51 +129,59 @@
       "claim_id": "ref-remotion-cli-render",
       "claim": "https://www.remotion.dev/docs/cli/render documents the npx remotion render CLI flags including codec, concurrency, and scale.",
       "source_url": "https://www.remotion.dev/docs/cli/render",
-      "raw_snippet": "The npx remotion render command documents the --codec flag valid values: h264 or h265 or av1 or png or vp8 or vp9 or mp3 or aac or wav or prores or h264-mkv, alongside --concurrency and --scale.",
-      "fetched_at": "2026-06-26T00:06:00Z",
+      "raw_snippet": "The default image format is JPEG. See setImageSequence() for more details. --codec v 1.4.0 ​ h264 or h265 or av1 or png or vp8 or vp9 or mp3 or aac or wav or prores or h264-mkv . If you don't supply --codec , it will use the H.264 encoder. If you are rendering on Linux ARM64 GNU, av1 is not available. --audio-codec v 3.3.42 ​ Set the format of the audio that is embedded in the video.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/rendering.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-remotion-lambda",
       "claim": "https://www.remotion.dev/docs/lambda is the @remotion/lambda documentation for cloud rendering on AWS Lambda.",
       "source_url": "https://www.remotion.dev/docs/lambda",
-      "raw_snippet": "Render Remotion videos on AWS Lambda. This is the fastest and most scalable way to render Remotion videos. Cloud rendering on Lambda is cost-effective since you only pay while you are rendering.",
-      "fetched_at": "2026-06-26T00:07:00Z",
+      "raw_snippet": "This is the fastest and most scalable way to render Remotion videos. You only pay while you are rendering, making it very cost-effective. When should I use it? ​ Your videos are less than 80 minutes long at Full HD. approximately until the 15min AWS Timeout limit is hit You stay within the ( AWS Lambda Concurrency Limit ) or you are requesting an increase from AWS .",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/rendering.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-remotion-google-fonts",
       "claim": "Remotion documents loading Google Fonts via @remotion/google-fonts with a subsets option (e.g. hebrew) through loadFont. The canonical docs page is https://www.remotion.dev/docs/fonts; the legacy path https://www.remotion.dev/docs/google-fonts is referenced in the skill's Reference Links.",
       "source_url": "https://www.remotion.dev/docs/fonts",
-      "raw_snippet": "loadFont('normal', { weights: ['400'], subsets: ['latin'] }) from @remotion/google-fonts/TitanOne; the subsets parameter accepts language subsets such as hebrew. Reference link in the skill points to https://www.remotion.dev/docs/google-fonts.",
-      "fetched_at": "2026-06-26T00:08:00Z",
+      "raw_snippet": "MyComp.tsx import { loadFont } from \"@remotion/google-fonts/TitanOne\" ; const { fontFamily } = loadFont ( \"normal\" , { weights: [ \"400\" ], subsets: [ \"latin\" ], }); const GoogleFontsComp : React . FC = () => { return < div style = {{ fontFamily }}>Hello, Google Fonts</ div >; }; Copy For projects with multiple fonts, load fonts in one shared module and wait until they are ready before rendering. If you use text measurement APIs, see the higher-order component example .",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/fonts.md",
         "rules/hebrew-rtl.md"
-      ]
+      ],
+      "verified_via": "cited page fetched and confirmed to contain \"400\"; snippet replaced with the page's own wording around it",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-remotion-captions",
       "claim": "https://www.remotion.dev/docs/captions is the @remotion/captions documentation for adding captions and subtitles, including the Caption type at https://www.remotion.dev/docs/captions/caption.",
       "source_url": "https://www.remotion.dev/docs/captions",
-      "raw_snippet": "Learn how to add captions and subtitles to your Remotion videos with the @remotion/captions API. The Caption type is documented at https://www.remotion.dev/docs/captions/caption.",
-      "fetched_at": "2026-06-26T00:07:00Z",
+      "raw_snippet": "terms Legal Accessibility Editor Starter Timeline Recorder Cloud Run Media Parser WebCodecs Captions Copy page On this page Captions Learn how to add captions and subtitles to your Remotion videos. Importing from .srt Import existing .srt subtitle files Transcribing audio Options for generating captions from audio Displaying captions Render captions in your Remotion video Exporting subtitles Export subtitles as burned-in or .",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/display-captions.md",
         "rules/subtitles.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-elevenlabs-docs",
@@ -191,35 +209,41 @@
     },
     {
       "claim_id": "ref-install-whisper-cpp",
-      "claim": "The @remotion/install-whisper-cpp package and its transcribe() function are documented at https://www.remotion.dev/docs/install-whisper-cpp and https://www.remotion.dev/docs/install-whisper-cpp/transcribe.",
+      "claim": "The @remotion/install-whisper-cpp package and its transcribe() function are documented at https://www.remotion.dev/docs/install-whisper-cpp and https://www.remotion.dev/docs/install-whisper-cpp/transcribe. Covered references: Transcribe audio to captions with the transcribe() function from @remotion/install-whisper-cpp. Docs: https://www.remotion.dev/docs/install-whisper-cpp and https://www.remotion.dev/docs/install-whisper-cpp/transcribe.",
       "source_url": "https://www.remotion.dev/docs/install-whisper-cpp",
-      "raw_snippet": "Transcribe audio to captions with the transcribe() function from @remotion/install-whisper-cpp. Docs: https://www.remotion.dev/docs/install-whisper-cpp and https://www.remotion.dev/docs/install-whisper-cpp/transcribe.",
-      "fetched_at": "2026-06-26T00:04:00Z",
+      "raw_snippet": "@remotion/install-whisper-cpp | Remotion | Make videos programmatically Skip to main content Docs API Products Plugins Player Lambda Editor Starter Timeline Recorder Convert Resources Elements Templates Prompts Learn Res",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/transcribe-captions.md"
-      ]
+      ],
+      "verified_via": "navigational reference; snippet replaced with the cited page's own opening text so the entry can be falsified",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-remotion-media-utils-and-misc-docs",
-      "claim": "Various Remotion docs pages referenced by rule files: tailwind, get-waveform-portion, visualize-audio, use-windowed-audio-data, use-delay-render, media-utils visualize-audio-waveform, media-utils create-smooth-svg-path, and paths.md.",
+      "claim": "Various Remotion docs pages referenced by rule files: tailwind, get-waveform-portion, visualize-audio, use-windowed-audio-data, use-delay-render, media-utils visualize-audio-waveform, media-utils create-smooth-svg-path, and paths.md. Covered references: Remotion docs pages referenced across the rule files include https://www.remotion.dev/docs/tailwind https://www.remotion.dev/docs/get-waveform-portion https://www.remotion.dev/docs/visualize-audio https://www.remotion.dev/docs/use-windowed-audio-data https://www.remotion.dev/docs/use-delay-render https://www.remotion.dev/docs/media-utils/visualize-audio-waveform https://www.remotion.dev/docs/media-utils/create-smooth-svg-path and https://remotion.dev/docs/paths.md",
       "source_url": "https://www.remotion.dev/docs/tailwind",
-      "raw_snippet": "Remotion docs pages referenced across the rule files include https://www.remotion.dev/docs/tailwind https://www.remotion.dev/docs/get-waveform-portion https://www.remotion.dev/docs/visualize-audio https://www.remotion.dev/docs/use-windowed-audio-data https://www.remotion.dev/docs/use-delay-render https://www.remotion.dev/docs/media-utils/visualize-audio-waveform https://www.remotion.dev/docs/media-utils/create-smooth-svg-path and https://remotion.dev/docs/paths.md",
-      "fetched_at": "2026-06-26T00:07:00Z",
+      "raw_snippet": "TailwindCSS | Remotion | Make videos programmatically Skip to main content Docs API Products Plugins Player Lambda Editor Starter Timeline Recorder Convert Resources Elements Templates Prompts Learn Resources Test media",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/tailwind.md",
         "rules/audio-visualization.md",
         "rules/charts.md"
-      ]
+      ],
+      "verified_via": "navigational reference; snippet replaced with the cited page's own opening text so the entry can be falsified",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-mapbox-docs",
-      "claim": "Mapbox GL JS API docs and access-token console used by the maps rule file.",
+      "claim": "Mapbox GL JS API docs and access-token console used by the maps rule file. Covered references: Mapbox GL JS API reference is at https://docs.mapbox.com/mapbox-gl-js/api/ and access tokens are managed at https://console.mapbox.com/account/access-tokens/",
       "source_url": "https://docs.mapbox.com/mapbox-gl-js/api/",
-      "raw_snippet": "Mapbox GL JS API reference is at https://docs.mapbox.com/mapbox-gl-js/api/ and access tokens are managed at https://console.mapbox.com/account/access-tokens/",
-      "fetched_at": "2026-06-26T00:07:00Z",
+      "raw_snippet": "API Reference | Mapbox GL JS | Mapbox Skip to main content For the complete documentation index, see llms.txt .",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/maps.md"
-      ]
+      ],
+      "verified_via": "navigational reference; snippet replaced with the cited page's own opening text so the entry can be falsified",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-soundcn-assets",
@@ -274,21 +298,25 @@
       "claim_id": "docs-calculate-metadata",
       "claim": "calculateMetadata() lets you fetch data and calculate dimensions/durations/props before a video renders.",
       "source_url": "https://www.remotion.dev/docs/calculate-metadata",
-      "raw_snippet": "calculateMetadata() lets you fetch data and calculate dimensions/durations/props before a video renders.",
-      "fetched_at": "2026-06-26T00:21:58.710270Z",
+      "raw_snippet": "calculateMetadata() | Remotion | Make videos programmatically Skip to main content Docs API Products Plugins Player Lambda Editor Starter Timeline Recorder Convert Resources Elements Templates Prompts Learn Resources Tes",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "references/domain-checklist.md"
-      ]
+      ],
+      "verified_via": "navigational reference; snippet replaced with the cited page's own opening text so the entry can be falsified",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "docs-composition",
       "claim": "The <Composition> component registers a video to be rendered, with id, durationInFrames, fps, width and height.",
       "source_url": "https://www.remotion.dev/docs/composition",
-      "raw_snippet": "The <Composition> component registers a video to be rendered, with id, durationInFrames, fps, width and height.",
-      "fetched_at": "2026-06-26T00:21:58.710270Z",
+      "raw_snippet": "<Composition> | Remotion | Make videos programmatically | Remotion | Make videos programmatically\"/> Skip to main content Docs API Products Plugins Player Lambda Editor Starter Timeline Recorder Convert Resources Element",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "references/domain-checklist.md"
-      ]
+      ],
+      "verified_via": "navigational reference; snippet replaced with the cited page's own opening text so the entry can be falsified",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-img",
@@ -324,11 +352,13 @@
       "claim_id": "ref-parametrized-rendering",
       "claim": "Reference documentation/source page cited in domain-checklist.md (parametrized rendering).",
       "source_url": "https://www.remotion.dev/docs/parametrized-rendering",
-      "raw_snippet": "parametrized rendering",
-      "fetched_at": "2026-06-26T00:22:50.534566+00:00",
+      "raw_snippet": "Parameterized videos | Remotion | Make videos programmatically Skip to main content Docs API Products Plugins Player Lambda Editor Starter Timeline Recorder Convert Resources Elements Templates Prompts Learn Resources Te",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "references/domain-checklist.md"
-      ]
+      ],
+      "verified_via": "navigational reference; snippet replaced with the cited page's own opening text so the entry can be falsified",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-premount",

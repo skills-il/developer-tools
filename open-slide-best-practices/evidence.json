@@ -7,14 +7,16 @@
       "claim_id": "canvas-1920x1080",
       "claim": "open-slide renders every page into a fixed 1920 × 1080 React canvas (1920x1080)",
       "source_url": "https://github.com/1weiho/open-slide",
-      "raw_snippet": "a slide framework built for agents; fixed 1920 × 1080 canvas (1920x1080); CANVAS_WIDTH / CANVAS_HEIGHT exports",
-      "fetched_at": "2026-06-16T21:25:00Z",
+      "raw_snippet": "Every slide renders into a fixed 1920 × 1080 canvas. Pages are arbitrary React components, not a constrained DSL. npx @open-slide/cli init my-slide Why open-slide Slides are visual code. Agents are great at writing code. open-slide is the missing runtime that turns \"make slides about X\" into a polished, presentable deck — without you ever leaving the chat.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/slide-authoring.md",
         "metadata.json"
-      ]
+      ],
+      "verified_via": "cited page fetched and confirmed to contain \"1080\"; snippet replaced with the page's own wording around it",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "cli-init-command",
@@ -43,11 +45,13 @@
       "claim_id": "steps-step-primitives-a",
       "claim": "Steps and Step are progressive-reveal primitives: Step wraps deferred parts, Steps wraps the group",
       "source_url": "https://github.com/1weiho/open-slide/blob/main/packages/core/skills/slide-authoring/SKILL.md",
-      "raw_snippet": "Reveal a page one beat at a time: wrap deferred parts in `<Step>`, the group in `<Steps>`; each `→` reveals the next step.",
-      "fetched_at": "2026-06-16T21:25:00Z",
+      "raw_snippet": "See references/page-numbers.md for the hook's contract and where it can be called. Stepped reveals ( <Steps> / <Step> ) Reveal a page one beat at a time: wrap deferred parts in <Step> , the group in <Steps> ; each → reveals the next step. Use it when the order of ideas is the point — not reflexively on every page.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/slide-authoring.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "steps-step-primitives-b",
@@ -125,12 +129,14 @@
       "claim_id": "css-fill-and-brand-example",
       "claim": "open-slide page roots fill the canvas with width and height 100%; the brand-discipline example uses a solid 0% label rather than a gradient",
       "source_url": "https://github.com/1weiho/open-slide/blob/main/packages/core/skills/slide-authoring/SKILL.md",
-      "raw_snippet": "The root element of each page should fill the canvas: width 100%, height 100%. Brand example: a confident solid 0% beats a contrived gradient.",
-      "fetched_at": "2026-06-16T21:25:00Z",
+      "raw_snippet": "Use absolute pixel values for font-size , padding, positioning. No rem , no vw / vh , no % for type. The root element of each page should fill the canvas: width: '100%'; height: '100%' . Prefer inline style={{",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/slide-authoring.md",
         "rules/hebrew-rtl.md"
-      ]
+      ],
+      "verified_via": "source fetched and the passage copied verbatim from the cited page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "hebrew-currency-notation",
