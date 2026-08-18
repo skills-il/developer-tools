@@ -1,0 +1,39 @@
+{
+  "author": "skills-il",
+  "version": "1.3.1",
+  "category": "developer-tools",
+  "tags": {
+    "he": [
+      "אקסל",
+      "מס",
+      "מע\"מ",
+      "שקלים",
+      "חשבונאות"
+    ],
+    "en": [
+      "excel",
+      "tax",
+      "vat",
+      "shekel",
+      "accounting"
+    ]
+  },
+  "display_name": {
+    "he": "גיליונות ישראליים",
+    "en": "Israeli Spreadsheets"
+  },
+  "display_description": {
+    "he": "מייצרים גיליונות Excel ו-Google Sheets עם חישובי מס ישראלי, מע\"מ 18%, עיצוב שקלים וכיוון RTL, ותבניות בעברית לחשבונית מס, תלוש משכורת ומחשבון ארנונה. שימושי כשצריך לבנות גיליון מס ישראלי, חוברת חשבונאות, תלוש או מחשבון ארנונה, או להגדיר RTL ו-locale לעברית בגיליון. אל תשתמשו בו להגשת דוחות מס בפועל, לייעוץ מס משפטי, או לגיליונות ללא הקשר ישראלי.",
+    "en": "Generate Excel and Google Sheets spreadsheets with Israeli tax calculations, VAT, NIS formatting, RTL setup, and Hebrew-labeled financial templates. Use when user asks about Israeli tax spreadsheets, NIS-formatted Excel files, VAT formulas, salary slip templates, arnona estimators, common Hebrew formulas, or Israeli accounting worksheets. Covers 2026 tax brackets (post Amendment 288), Bituach Leumi rates, and openpyxl RTL configuration. Do not use for filing actual tax returns, legal tax advice, or generic spreadsheets without an Israeli context."
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "antigravity",
+    "gemini-cli"
+  ]
+}

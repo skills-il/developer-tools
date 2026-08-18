@@ -1,0 +1,41 @@
+{
+  "author": "skills-il",
+  "version": "1.7.0",
+  "category": "developer-tools",
+  "tags": {
+    "he": [
+      "יוצר-סקילים",
+      "פיגומים",
+      "תבנית",
+      "מפתחים",
+      "תהליך-עבודה",
+      "ישראל"
+    ],
+    "en": [
+      "skill-creator",
+      "scaffolding",
+      "template",
+      "developer",
+      "workflow",
+      "israel"
+    ]
+  },
+  "display_name": {
+    "he": "יוצר סקילים skills-il",
+    "en": "Skills-IL Skill Creator"
+  },
+  "display_description": {
+    "he": "תהליך אינטראקטיבי ליצירת סקילים חדשים ל-skills-il: בחירת קטגוריה, הגדרת מקרי שימוש, יצירת תיקייה, כתיבת frontmatter דו-לשוני, הוראות, קובץ עברי נלווה ואימות. השתמשו כשמבקשים \"ליצור skill חדש\", \"תבנית skill\", \"לתרום skill\" או \"scaffold skill\".",
+    "en": "Interactive workflow for creating new skills for the skills-il organization -- guides through category selection, use case definition, folder scaffolding, YAML frontmatter generation with bilingual metadata, instruction writing, Hebrew companion creation, and validation. Use when user asks to \"create a new skill\", \"scaffold a skill for skills-il\", \"write a SKILL.md\", \"contribute a skill\", \"new skill template\", or \"liztor skill chadash\". Do NOT use for editing existing skills or creating skills for non-skills-il platforms."
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "openclaw",
+    "gemini-cli"
+  ]
+}

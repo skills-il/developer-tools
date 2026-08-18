@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "skills-il-skill-creator",
+  "generated_at": "2026-05-29T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "ita-reference-url",
+      "claim": "The Israeli Tax Authority page is used as an example official Reference Links source for verifying tax rates, forms, and circulars.",
+      "source_url": "https://www.gov.il/he/departments/israel_tax_authority",
+      "raw_snippet": "רשות המסים בישראל",
+      "fetched_at": "2026-05-29T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "references/skill-spec.md"
+      ]
+    },
+    {
+      "claim_id": "kolzchut-reference-url",
+      "claim": "Kol Zchut is used as an example official Reference Links source for rights, entitlements, and eligibility.",
+      "source_url": "https://www.kolzchut.org.il",
+      "raw_snippet": "כל זכות",
+      "fetched_at": "2026-05-29T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "references/skill-spec.md"
+      ]
+    },
+    {
+      "claim_id": "skill-md-500-line-ceiling",
+      "claim": "The SKILL.md body should be kept under 500 lines, with longer content split into separate reference files.",
+      "source_url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+      "raw_snippet": "Keep SKILL.md body under 500 lines for optimal performance",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "context-window-shared-resource",
+      "claim": "A skill's content shares the context window with the system prompt, conversation history, and other skills, so every token competes.",
+      "source_url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+      "raw_snippet": "The context window is a public good. Your Skill shares the context window with everything else",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "degrees-of-freedom-principle",
+      "claim": "The level of instruction specificity should match the task's fragility and variability.",
+      "source_url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+      "raw_snippet": "Set appropriate degrees of freedom ... Match the level of specificity to the task",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "assume-agent-is-capable",
+      "claim": "Skill authors should only add context the agent does not already have, rather than explaining what it already knows.",
+      "source_url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+      "raw_snippet": "Only add context Claude doesn't already have",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "baseline-before-authoring",
+      "claim": "Skill authors should run representative tasks without the skill first and measure that baseline, writing only the minimal instructions needed to close the observed gaps.",
+      "source_url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+      "raw_snippet": "Identify gaps ... without a Skill ... Establish baseline",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "agent-skills-specification",
+      "claim": "The Agent Skills specification defines the SKILL.md frontmatter fields (name, description) that a skill must declare.",
+      "source_url": "https://agentskills.io/specification",
+      "raw_snippet": "frontmatter",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "claude-code-skills-docs",
+      "claim": "Claude Code documents how SKILL.md files are discovered and loaded as skills.",
+      "source_url": "https://code.claude.com/docs/en/skills",
+      "raw_snippet": "SKILL.md",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    }
+  ]
+}

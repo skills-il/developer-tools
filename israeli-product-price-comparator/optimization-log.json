@@ -1,0 +1,20 @@
+{
+  "cycles": [
+    {
+      "version": "1.2.0",
+      "date": "2026-06-22",
+      "lessons": [
+        "CRITICAL fixed: customs core was inverted ($130 'raised via executive order Feb 25 2026'); the Knesset revoked the order and the threshold is back to $75 from June 2 2026. Rewrote Step 4, Gotchas, and Examples to $75. The 2026 history (150 proposed -> 130 transitional 25.02-01.06 -> 75 restored) is volatile; re-verify the active threshold against Tax Authority / kolzchut on every future cycle.",
+        "Fixed: in-store return is 14 days (not 7) under takanot bitul iska for electronics; reframed as statutory.",
+        "Fixed: '3 interest-free payments over 500 NIS' was framed as a law; it is a market norm, corrected.",
+        "Fixed: electronics warranty legal responsibility is on the importer/manufacturer (over 150 NIS), not the retailer.",
+        "Coverage added: Google Shopping IL as a second aggregator; Amazon has no local .co.il store; gray-market/parallel-import warranty caveat.",
+        "Deferred (MINOR, Phase 4.1 batch cap): add Wisebuy as a 'which model' research source and max PayBack / Isracard issuer-cashback cards to the savings workflow. Revisit next cycle.",
+        "Retailer existence re-verified: Bug is OPERATING (no closure), Be/bestore is Shufersal-owned. 'Sham Ze Zol Yoter' extension could not be independently confirmed; softened to 'verify before recommending'.",
+        "Expert CRITICAL fixed: clarified the two bases, the $75 exemption is judged on goods value only, but once over $75 the 18% VAT base is the full CIF (goods+shipping+insurance) from the first dollar.",
+        "Expert MAJOR fixed: in-store return is gated on 'not damaged' (original-packaging is a safe-harbor, not a precondition); added who bears return-shipping cost; added courier customs-clearance/handling fees to the landed-cost model.",
+        "Deferred (MINOR, Phase 4.1 cap): add an import caveat for plug/voltage (Type-H, 110V), Hebrew-UI/local cellular-band compatibility; add a 'last verified' date to fixed numbers (VAT 18%, AC install 400-800 NIS, BTU table); have Step 7 surface a refurbished/open-box and net-of-trade-in price tier. Revisit next cycle."
+      ]
+    }
+  ]
+}

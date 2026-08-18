@@ -1,0 +1,14 @@
+{
+  "cycles": [
+    {
+      "version": "1.2.0",
+      "date": "2026-06-21",
+      "lessons": [
+        "CRITICAL fix: the headline nikud-insensitive search recipe was FALSE -- unaccent does NOT strip Hebrew nikud (only Latin/Greek combining marks U+0300-U+0362; the Hebrew points block U+0591-U+05C7 is untouched, so unaccent('שָׁלוֹם') returns it unchanged). Replaced with an IMMUTABLE strip_nikud() using regexp_replace over [U+0591-U+05C7], plus a verify-it-strips assertion. Fixed in SKILL.md, SKILL_HE.md.",
+        "Correctness: is_israeli_business_hours marked IMMUTABLE but AT TIME ZONE on timestamptz is STABLE (depends on tzdata) -> changed to STABLE (EN+HE). pgcrypto 'for UUID generation' is obsolete since gen_random_uuid() is in core PG13+ -> noted in supabase-israel-patterns.md. Over-strict single-column phone CHECK rejected 1-700/1-800 and 07X VoIP -> loosened + told readers to do exact validation in the app layer (EN+HE). Corrected the collation guide's wrong claim that non-deterministic ICU folds sofit (final) letters -- it does not; it equalizes nikud, not base-letter final forms. Added a PostgreSQL 13+ version baseline note.",
+        "Expert+Judge round 2: PROPAGATED the unaccent->strip_nikud fix everywhere it had leaked through (Example 1 EN+HE, workflow step 3, the no-stemmer gotcha, AND scripts/hebrew-search-setup.sql which had built search_vector/queries with no nikud stripping) -- a fix is not done until every example and shipped script matches the prose. Also CORRECTED my own wrong collation edit: the Judge ran PG 17.6 and showed default he-IL-x-icu does NOT equalize nikud, and sofit is a TERTIARY (not primary) variant -- so there is no strength that folds nikud but keeps sofit; nikud-insensitivity must come from strip_nikud(), not the collation. Rewrote the collation guide + evidence accordingly and noted non-deterministic collations can't back UNIQUE/btree/LIKE. Disclosed the Hebrew no-stemmer recall gap (prefix clitics) and to lean on pg_trgm.",
+        "Deferred (MAJOR, next cycle): Hebrew FTS has no stemming/lemmatization, so prefixes (ו/ב/כ/ל/ה/מ/ש) and plurals make 'ספר'/'הספר'/'ספרים' distinct lexemes -- document the recall workaround (prefix-stripping normalization or trigram fallback as a recall strategy, not just typo tolerance). Deferred (MINOR): single jsonb {he,en} bilingual-content pattern + indexing; ILIKE vs trigram decision guide; BOI no-rate-on-weekend carry-forward guard."
+      ]
+    }
+  ]
+}

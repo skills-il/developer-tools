@@ -1,0 +1,26 @@
+{
+  "cycles": [
+    {
+      "version": "1.7.0",
+      "date": "2026-07-24",
+      "lessons": [
+        "Added Step 6.5 Authoring Principles (baseline before authoring, conciseness, degrees of freedom matched to task fragility, depth over count in examples), sourced to the Anthropic skill-authoring best practices.",
+        "CRITICAL fixed: the travel category was missing from both category tables, references/skill-spec.md, and VALID_CATEGORIES in scaffold-skill.py, where --category travel was a hard argparse rejection. Repo count corrected 12 -> 13.",
+        "CRITICAL fixed: SKILL_HE.md frontmatter carried a metadata: block, the exact structure Step 6 declares fatal, at a stale version 1.2.0. Removed.",
+        "CRITICAL fixed: the Hebrew Example 3 taught the deprecated mcp-server: frontmatter key. Replaced with the Recommended MCP Servers body section, matching English.",
+        "CRITICAL fixed: the Step 7 template shipped this skill's own gotchas instead of placeholders, and one bullet claimed tags live in frontmatter, contradicting Step 6. Replaced with placeholders.",
+        "Fixed: the Hebrew template block had no ## Gotchas section at all, so Hebrew-following contributors would scaffold without it.",
+        "Fixed: Hebrew named the fifth Critical scorecard signal license_declared; the correct identifier is license_spdx.",
+        "Fixed: the kolzchut evidence snippet never matched its source (the site renders the hyphenated form), so it passed self-consistency but failed source verification.",
+        "Deferred: the third-person description rule and the definition of Gotchas as agent failure modes are both Must-cover items still taught nowhere in English prose, absent from both scaffold templates, and missing from all three quality checklists.",
+        "Deferred: Step 6.5 principle 1 produces no artifact and has no checklist item, so it is easy to skim past. Give it a capture format and a Step 10 checklist line, and consider moving it to a new Step 3.5 right after Define Use Cases, since its conclusion can be to not write the skill at all.",
+        "Deferred: Step 7 now duplicates Step 6.5 on size budget and specificity. Remove the overlapping bullets and point back to Step 6.5.",
+        "Deferred: four Should-cover items appear in no instruction file: avoid time-sensitive phrasing, keep reference links one level deep, add a table of contents to reference files over ~100 lines, use consistent terminology.",
+        "Deferred: SKILL_HE.md omits five substantive blocks present in SKILL.md (the repo-README-in-English rule, the use-case extraction closer, the English-source bullet and Why this matters block in Step 8.5, the HTTP-status table in Step 9.5, and three Step 10 checklist items).",
+        "Deferred: both files exceed the 500-line heuristic introduced this cycle. Applying the guide's own remedy means moving the mechanical tables in Steps 8, 9.5 and 10.5 into references/, which is large enough to warrant its own cycle.",
+        "Deferred: scaffold-skill.py templates emit no Gotchas and no Reference Links section despite Step 8.5 calling the latter mandatory, and hardcode an empty allowed-tools line that Step 6 says to omit.",
+        "Deferred: Step 10 should state that validate-skill.sh runs from the category-repo root, since the path is otherwise ambiguous against the skill's own scripts/ directory."
+      ]
+    }
+  ]
+}

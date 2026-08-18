@@ -1,0 +1,21 @@
+{
+  "cycles": [
+    {
+      "version": "1.2.10",
+      "date": "2026-06-29",
+      "lessons": [
+        "CRITICAL self-contradiction FIXED: EN Step 7 (a botched 'v1.2.3 correction') claimed libass+SRT handles Hebrew BiDi and told users NOT to pre-shape with python-bidi, while the prerequisites, the bundled burn-hebrew-captions.sh script, the YAML description, ALL of SKILL_HE, and the references say the python-bidi pre-shape IS required for macOS. The SCRIPT is ground truth and it DOES the pre-shape (its header explains libass doesn't reorder even with libfribidi linked). Aligned EN Step 7 + the 'why' block to the shipped recipe (pre-shape required). Next cycle: if anyone 'corrects' this again, check the script first.",
+        "WRONG free-tier math FIXED (EN said 10,000 characters/month, HE said ~10 hours/month, contradicting each other). Truth: ElevenLabs free tier is 10,000 CREDITS/month; STT bills ~330 credits/min, so ~30 minutes of transcription/month. Fixed SKILL.md, SKILL_HE.md, quick-test.md, domain-checklist.md.",
+        "STALE Scribe FIXED: Scribe v2 shipped Jan 2026 and ElevenLabs cut Scribe pricing ~40% in March 2026. Updated the reference link (meet-scribe v1 -> introducing-scribe-v2) and added a price-freshness note marking the ~$0.40/hr figures as conservative upper bounds. CARRY: the per-example dollar totals ($0.40/hr-derived: ~$1.40 for 1hr, etc.) were NOT individually rewritten (exact post-cut rate uncertain) - rework them once the current rate is confirmed.",
+        "Expert CRITICAL 1 FIXED: the Step-7 contradiction was only HALF fixed at first, Gotchas + Troubleshooting still offered a 'skip the pre-shape, feed raw SRT for canonical BiDi' escape hatch that contradicts the macOS-libass-fails core claim (and HE had no such hatch). Removed the escape hatch; both now say the pre-shape is mandatory and a raw SRT renders reversed. Lesson: when resolving a contradiction, grep ALL of Gotchas/Troubleshooting/refs, not just the named section.",
+        "Expert CRITICAL 2 FIXED: bare \"אם\" (the word 'if/whether') was in the ALWAYS-FILLER auto-cut set (hebrew-filler-words.md + captions-only.sh), so --strip-fillers silently deleted 'if' from captions. Removed it (the 'umm' hesitation is אֶמ/אממ/אמממ), added a do-NOT-re-add caution to both the lexicon and the script, and fixed the example comments that listed אם as a filler.",
+        "Expert MAJORs FIXED: EN Step 7 wrongly said the burn uses force_style (the script actually patches the ASS Style line in-place, no force_style) — corrected to match the script + HE; font-size guidance (26 for 720p) contradicted the script default FONTSIZE=52 (no auto-scaling) — corrected; documented that burn-hebrew-captions.sh rewrites the input SRT in place (pass a copy).",
+        "CARRY: the captions-only script's main batch pass uses scribe_v1 (v2 only for gap recovery). Research suggests scribe_v2 Batch may now be preferable for the main pass; this is a script behavior change requiring a re-test, deferred.",
+        "CARRY (Expert minors): domain-checklist coverage pointers are stale (BOM 'Covered in Gotchas/Step 6' no longer accurate; 'Hebrew prompts table in Step 7' is now Step 9); macos-ffmpeg-setup references a nonexistent 'option C'; install-hebrew-fonts.sh Debian path downloads Heebo via a URL that serves HTML not a zip (hits the WARN fallback). Fix next cycle.",
+        "VERIFIED OK (no change): upstream browser-use/video-use (main branch, 12 hard rules, dormant since review), python-bidi (live, get_display API stable, 0.6.10), libass force_style/fontsdir, Helvetica-no-Hebrew, Hebrew WER 15.2% Scribe vs ~33% Whisper, all URLs resolve.",
+        "Word-count cap: this skill's SKILL.md is near the 5,000-word validate-skill cap; the Step 7 + free-tier rewrites pushed it to 5,112 and had to be condensed back under 5,000. Trim before adding prose next cycle.",
+        "Evidence gate over-extracts: ffmpeg binary paths (/opt/homebrew/bin/ffmpeg etc.), /tmp test files, and an internal 0.5% credit calc are flagged; documented under internal-paths-and-values."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+# יועץ אגריטק ישראלי
+
+## הוראות
+
+### שלב 1: זיהוי תרחיש השימוש באגריטק
+| תרחיש שימוש | פלטפורמות מרכזיות | סוגי נתונים | מטרה |
+|-------------|-------------------|-------------|------|
+| מיטוב השקיה | CropX, נטפים, Manna | לחות קרקע, מזג אוויר, ET0 | הפחתת צריכת מים ב-20-40% |
+| זיהוי מזיקים/מחלות | Taranis, AgroScout | הדמייה אווירית, NDVI | זיהוי מוקדם, טיפול ממוקד |
+| ניטור חממות | Prospera/Valmont | אקלים, הדמייה | תנאי גידול מיטביים |
+| ניהול האבקה | BeeHero | חיישני כוורת, GPS | מיקסום יעילות האבקה |
+| פלטפורמת נתוני חקלאות | מרובות | כל נתוני החיישנים | לוח בקרה אחוד לקבלת החלטות |
+| עמידה בתקני מים | נתוני מקורות, חיישנים | זרימת מים, מכסות | עמידה בתקנות רשות המים |
+
+### שלב 2: התחברות ל-API של אגריטק
+
+**CropX -- שילוב ניטור קרקע:**
+
+> **שימו לב:** כתובת ה-API והנתיבים למטה הם להמחשה בלבד. CropX לא מפרסמת תיעוד API ציבורי (אין דומיין developer או docs, ו-`api.cropx.com` מחזיר 404 בשורש), אז התייחסו לכתובת הבסיס, לנתיב `/auth/token` ולמבני התשובה כשלד להתאמה אחרי שתקבלו תיעוד אמיתי. פנו ל-CropX לגישת שותפים.
+```python
+import requests
+
+class CropXClient:
+    """Client for CropX soil monitoring API."""
+
+    BASE_URL = "https://api.cropx.com/v2"  # API מבוסס שותפות, פנו ל-CropX לגישה
+
+    def __init__(self, client_id, client_secret):
+        self.token = self._authenticate(client_id, client_secret)
+        self.headers = {"Authorization": f"Bearer {self.token}"}
+
+    def _authenticate(self, client_id, client_secret):
+        response = requests.post(f"{self.BASE_URL}/auth/token", json={
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "grant_type": "client_credentials"
+        })
+        return response.json()["access_token"]
+
+    def get_sites(self):
+        """List all monitored field sites."""
+        return requests.get(f"{self.BASE_URL}/sites", headers=self.headers).json()
+
+    def get_soil_readings(self, device_id, start_date, end_date):
+        """Get soil sensor readings for a device."""
+        return requests.get(
+            f"{self.BASE_URL}/devices/{device_id}/measurements",
+            headers=self.headers,
+            params={"from": start_date.isoformat(), "to": end_date.isoformat(),
+                    "metrics": "moisture,temperature,ec"}
+        ).json()
+
+    def get_irrigation_recommendation(self, site_id):
+        """Get AI-driven irrigation recommendation for a site."""
+        return requests.get(
+            f"{self.BASE_URL}/sites/{site_id}/recommendations",
+            headers=self.headers
+        ).json()
+```
+
+**Netafim GrowSphere -- שילוב בקרת השקיה:**
+
+> **הערה:** כתובת ה-API של GrowSphere להמחשה בלבד. GrowSphere היא אפליקציית צרכנים ונטפים לא מפרסמת API ציבורי מתועד. פנו לנטפים ישירות לקבלת גישת API/שותפות.
+
+```python
+class GrowSphereClient:
+    """Client for Netafim GrowSphere irrigation platform.
+    NOTE: No documented public API exists. Contact Netafim for access."""
+
+    BASE_URL = "https://growsphere.netafim.com/api/v1"  # לא מאומת, להמחשה בלבד
+
+    def __init__(self, api_key):
+        self.headers = {"X-API-Key": api_key, "Content-Type": "application/json"}
+
+    def get_controllers(self):
+        """List all irrigation controllers."""
+        return requests.get(f"{self.BASE_URL}/controllers", headers=self.headers).json()
+
+    def create_irrigation_schedule(self, controller_id, zone_id, schedule):
+        """Set irrigation schedule for a zone."""
+        return requests.post(
+            f"{self.BASE_URL}/controllers/{controller_id}/zones/{zone_id}/schedules",
+            headers=self.headers, json=schedule
+        ).json()
+
+    def get_flow_data(self, controller_id, start_date, end_date):
+        """Get water flow data for compliance tracking."""
+        return requests.get(
+            f"{self.BASE_URL}/controllers/{controller_id}/flow",
+            headers=self.headers,
+            params={"from": start_date.isoformat(), "to": end_date.isoformat()}
+        ).json()
+```
+
+**Taranis -- שילוב מודיעין גידולים:**
+
+> **שימו לב:** כתובת ה-API למטה היא להמחשה בלבד והשרת שלה לא קיים כרגע (ל-`api.taranis.com` אין רשומת DNS נכון ל-2026-08-09). Taranis לא מפרסמת תיעוד API ציבורי. אל תכתבו קוד מול כתובת הבסיס הזו; פנו ל-Taranis לגישת שותפים והשתמשו בכתובת שהם ייתנו.
+```python
+class TaranisClient:
+    """Client for Taranis crop intelligence platform."""
+
+    BASE_URL = "https://api.taranis.com/v1"  # להמחשה בלבד; השרת לא קיים  # API מבוסס שותפות
+
+    def __init__(self, api_key):
+        self.headers = {"Authorization": f"Bearer {api_key}"}
+
+    def get_fields(self):
+        """List monitored fields."""
+        return requests.get(f"{self.BASE_URL}/fields", headers=self.headers).json()
+
+    def get_detections(self, field_id, scan_id=None):
+        """Get pest/disease detections for a field."""
+        params = {}
+        if scan_id:
+            params["scan_id"] = scan_id
+        return requests.get(
+            f"{self.BASE_URL}/fields/{field_id}/detections",
+            headers=self.headers, params=params
+        ).json()
+
+    def request_scan(self, field_id, scan_type="full"):
+        """Request a new aerial scan of a field."""
+        return requests.post(
+            f"{self.BASE_URL}/fields/{field_id}/scans",
+            headers=self.headers, json={"type": scan_type}
+        ).json()
+```
+
+### שלב 3: מימוש מיטוב השקיה
+
+```python
+def calculate_irrigation_need(soil_data, crop_type, weather_data):
+    """Calculate irrigation need based on soil, crop, and weather data.
+    Uses water balance approach common in Israeli precision agriculture.
+    """
+    # Crop coefficients (Kc) -- Israeli Volcani Institute values
+    CROP_KC = {
+        "citrus": {"initial": 0.65, "mid": 0.70, "late": 0.65},
+        "avocado": {"initial": 0.60, "mid": 0.85, "late": 0.75},
+        "tomato": {"initial": 0.60, "mid": 1.15, "late": 0.80},
+        "pepper": {"initial": 0.60, "mid": 1.05, "late": 0.90},
+        "date_palm": {"initial": 0.90, "mid": 0.95, "late": 0.95},
+        "table_grape": {"initial": 0.30, "mid": 0.85, "late": 0.45},
+    }
+    kc = CROP_KC.get(crop_type, {"initial": 0.6, "mid": 1.0, "late": 0.8})
+    et_crop = weather_data["et0"] * kc["mid"]
+    effective_rain = max(0, weather_data.get("precipitation", 0) * 0.8)
+    net_need = max(0, et_crop - effective_rain)
+
+    current_moisture = soil_data["moisture_percent"]
+    field_capacity = soil_data.get("field_capacity", 35)
+    wilting_point = soil_data.get("wilting_point", 15)
+    mad = 0.50
+    threshold = field_capacity - (field_capacity - wilting_point) * mad
+
+    if current_moisture > threshold:
+        return {"irrigate": False, "reason": "Soil moisture adequate",
+                "current": current_moisture, "threshold": threshold}
+
+    efficiency = 0.92  # הנחת יעילות השקיה בטפטוף; כיילו לפי המערכת, זה לא נתון ישראלי מפורסם
+    gross_need = net_need / efficiency
+    return {
+        "irrigate": True,
+        "net_need_mm": round(net_need, 1),
+        "gross_need_mm": round(gross_need, 1),
+        "current_moisture": current_moisture,
+        "threshold": threshold,
+        "et_crop": round(et_crop, 1)
+    }
+```
+
+### שלב 4: אזורי אקלים חקלאיים בישראל
+
+| אזור | מיקום | משקעים ממוצעים (מ"מ/שנה) | גידולים עיקריים | צורך בהשקיה |
+|------|-------|--------------------------|----------------|-------------|
+| ים תיכוני | מישור החוף, גליל | 500-700 | הדרים, אבוקדו, ירקות | בינוני (קיץ) |
+| חצי-יבש | צפון הנגב, שפלה | 250-400 | חיטה, זיתים, גפנים | גבוה |
+| יבש | מרכז הנגב | 50-200 | גידולי בעל מוגבלים | גבוה מאוד (השקיה מלאה) |
+| קיצוני-יבש | ערבה | פחות מ-50 | תמרים, פלפלים, עגבניות | השקיה מלאה כל השנה |
+| סובטרופי | בקעת הירדן, בית שאן | 300-400 | תמרים, בננות, בריכות דגים | גבוה (חום קיצוני) |
+
+### שלב 5: סקירת מערכת האגריטק הישראלית
+
+הסביבה הישראלית מונה כ-600 עד 750 חברות אגריטק ואגרי-פוד-טק (לפי הערכות Start-Up Nation Central), חלק נכבד מהן צמח מתוך קיבוצים ומכוני מחקר.
+
+חברות מרכזיות מעבר לפלטפורמות הראשיות:
+- **Phytech:** חיישנים מבוססי צמחים לזיהוי עקות מים
+- **Manna Irrigation:** השקיה מבוססת לוויין, ללא חיישנים בקרקע
+- **BeeHero:** ניטור IoT לכוורות לצורך האבקה
+- **BeeWise:** כוורות רובוטיות מנוהלות ב-AI ("Beehome") לניהול אוטונומי של מושבות דבורים
+- **AgroScout:** סיור גידולים דרך רחפנים וזיהוי מחלות
+- **Tevel Aerobotics:** רחפנים אוטונומיים לקטיף פירות, מחוברים בכבל ליחידת קרקע
+- **SupPlant:** השקיה מונחית AI לחקלאים קטנים
+- **Phytech:** חיישני מתח מים מבוססי-צמח
+- **Groundwork BioAg:** תרכובות מיקוריזה לשיפור קליטת חומרי הזנה
+- **Agropalette:** ניתוח נתונים בשרשרת האספקה של תוצרת חקלאית
+
+הקשר חקלאי ישראלי:
+- ישראל מובילה בעולם בשיעור מיחזור המים, ומטפלת בכ-80% מהשפכים שלה תוך שימוש חוזר בעיקר לחקלאות. אל תצטטו אחוז מיחזור לאומי מדויק יותר בלי נתון עדכני של רשות המים; האחוזים הגבוהים הנפוצים לא ניתנים לאיתור במקור מפורסם.
+- מקורות מים: מקורות (ארצי), מי שפכים ממוחזרים, מים מותפלים, בארות מקומיות.
+- ההתפלה היא חלק מרכזי במערך: מתקני שורק, חדרה ואשקלון (בין היתר) מזרימים מים למקורות בכמויות גדולות, וישראל מובילה בעולם בהתפלת מי-ים בטכנולוגיית RO.
+- חידוש מהקיבוצים נמצא בלב התעשייה: נטפים הוקמה כששמחה בלאס חבר לקיבוץ חצרים ב-1964, והטפטוף נשאר סמל הייצוא הישראלי.
+- פורמטי נתונים: GeoJSON לגבולות שדות, GeoTIFF לתמונות לוויין, CSV/JSON לחיישנים.
+
+## דוגמאות
+
+### דוגמה 1: הקמת מערכת השקיה חכמה
+המשתמש אומר: "אני צריך להקים השקיה חכמה למטע אבוקדו בגליל"
+תוצאה: הנחיית פריסת חיישני CropX (2 לכל אזור ניהול), חיבור לבקר נטפים, הגדרת ערכי Kc לאבוקדו, קביעת MAD על 50%, הטמעת תזמון מותאם מזג אוויר.
+
+### דוגמה 2: צינור זיהוי מזיקים
+המשתמש אומר: "איך אני משלב את Taranis לזיהוי מזיקים בשדות הפלפל שלנו?"
+תוצאה: הגדרת גבולות שדות ב-Taranis, קביעת לוח סריקות (שבועי בעונת הגידול), מימוש webhook handler לזיהויים, יצירת צינור התראות לאיומים בחומרה גבוהה.
+
+### דוגמה 3: לוח בקרה לעמידה בתקנות מים
+המשתמש אומר: "בנו לוח בקרה שעוקב אחרי צריכת המים מול המכסה של רשות המים"
+תוצאה: חיבור מדי זרימה דרך GrowSphere API, צבירת נתונים יומית/שבועית/חודשית, השוואה למכסה שהוקצתה, הפקת דוחות עמידה, התראה ב-80% וב-95%.
+
+## משאבים מצורפים
+
+### חומרי עזר
+- `references/agritech-ecosystem.md`, מדריך לפלטפורמות ו-API של אגריטק ישראלי (CropX, Netafim GrowSphere, Taranis) עם פרטי endpoints, בנוסף לספריית חברות המכסה השקיה, ניטור גידולים, האבקה ומגזרים ביולוגיים. כולל פורמטי נתונים סטנדרטיים (GeoJSON, GeoTIFF, CSV/JSON), נתוני משקעים ומקורות מים לפי אזורים חקלאיים, ומקדמי גידול (Kc) של מכון וולקני לתנאים ישראליים. עיינו בו בעת בחירת פלטפורמות, הגדרת שילובי API, או חיפוש פרמטרי השקיה ספציפיים לגידולים.
+
+## שרתי MCP מומלצים
+
+אין כרגע MCP ייעודי לאגריטק בספרייה. עבור נתוני מזג אוויר שמזינים מודלי השקיה, [שרת ה-MCP של השירות המטאורולוגי הישראלי (`ims-mcp`)](https://agentskills.co.il/he/mcps/government-services/ims-mcp) מספק נתוני גשם, ET0 ותחנות מודדים דרך ה-API הרשמי של ה-IMS.
+
+## קישורי עזר
+
+| מקור | URL | מה לבדוק |
+|------|-----|----------|
+| מכון וולקני / מנהל המחקר החקלאי | https://www.agri.gov.il | טבלאות מקדמי גידול (Kc), מחקר אגרונומי בהקשר ישראלי |
+| משרד החקלאות ופיתוח הכפר | https://www.gov.il/he/departments/ministry_of_agriculture_and_rural_development | תוכניות סבסוד, רגולציה ותעודות |
+| רשות המים | https://www.gov.il/he/departments/water_authority | מכסות מים, עדכוני תעריפי חקלאות, וכללי מים מושבים |
+| רשות החדשנות | https://innovationisrael.org.il | מענקי אגריטק ותוכניות פיילוט |
+| Start-Up Nation Central, AgriFoodTech | https://startupnationcentral.org/AgriTech/ | מדריך תעשייה ונתוני שלבי חברות לאקוסיסטם האגריטק הישראלי |
+
+## מלכודות נפוצות
+
+- עונות החקלאות הישראליות שונות מדפוסי צפון אירופה/ארה"ב בגלל האקלים הים-תיכוני. סוכנים עלולים להמליץ על לוחות זריעה מבוססי אקלים ממוזג.
+- הקצאת מים בחקלאות ישראלית מפוקחת על ידי מקורות (חברת המים הלאומית). סוכנים עלולים לא להתחשב במגבלות מכסות מים כשהם ממליצים על תוכניות השקיה.
+- תעודת אורגני ישראלית ("מקורי") עוקבת אחרי תקנים שונים מ-USDA Organic או EU Organic. סוכנים עלולים לצטט דרישות הסמכה שגויות.
+- סבסוד טכנולוגיות חקלאיות ממשרד החקלאות משתנה מדי שנה. סוכנים עלולים להתייחס לתוכניות סבסוד מיושנות.
+- חוקי שמיטה משפיעים על פעילות חקלאית דתית בישראל כל 7 שנים. סוכנים עלולים לא להכיר את מחזור השמיטה וההשלכות שלו.
+
+## פתרון בעיות
+
+### שגיאה: "קריאות חיישן נראות לא מדויקות"
+סיבה: בעיית כיול חיישן קרקע או אי-התאמה בעומק ההתקנה
+פתרון: חיישני CropX דורשים כיול ספציפי לסוג הקרקע. וודאו שעומק ההתקנה תואם לאזור השורשים של הגידול. סוגי הקרקע בישראל משתנים מאוד -- חול חופי לעומת לס בנגב לעומת בזלת בגולן.
+
+### שגיאה: "המלצת ההשקיה גורמת להשקיית יתר"
+סיבה: חישוב ET0 משתמש באזור אקלים שגוי או ערכי Kc מיושנים
+פתרון: ודאו שתחנת מזג האוויר מקומית (מיקרו-אקלימים בישראל משתנים במרחקים קצרים). השתמשו בערכי Kc של מכון וולקני לתנאים ישראליים. בדקו שסוג הקרקע תואם את כיול החיישן.

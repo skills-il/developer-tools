@@ -1,0 +1,17 @@
+{
+  "cycles": [
+    {
+      "version": "1.2.1",
+      "date": "2026-07-06",
+      "lessons": [
+        "CRITICAL fixed: Amazon Polly does NOT support Hebrew (no he-IL locale, no Hebrew voice of any engine); the working Polly TTS code sample would fail at runtime. The 'Avri' voice is Azure's he-IL-AvriNeural, not Polly. Removed the Polly code sample and the provider from all descriptions; replaced with a not-available note.",
+        "CRITICAL fixed: OpenAI gpt-4o-realtime-preview was REMOVED from the API on 2026-05-07; the GA model is now gpt-realtime / gpt-realtime-1.5 (WebRTC/WebSocket/SIP, Hebrew). Updated the streaming-TTS recommendation.",
+        "Fixed dead ElevenLabs WebSocket reference link (developers/websockets -> api-reference/streaming).",
+        "Stripped em-dashes; added missing HE Example 4 (mixed Hebrew-English) for EN/HE parity.",
+        "Verified current (no change): gpt-4o-transcribe/mini as Hebrew STT default, whisper-1 still supported, ivrit-ai whisper-large-v3-turbo-ct2, ElevenLabs eleven_v3 REST-only/no-streaming, Inworld TTS-1.5 + Realtime TTS-2, Deepdub Phantom X 3.2, Azure/Google he-IL voices, Twilio/Vonage, Amendment 13 biometric-voice consent.",
+        "[CARRY-consideration] STT code samples still use whisper-1 (correct: gpt-4o-transcribe does not support word-level verbose_json timestamps the same way, so whisper-1 is the right choice for the timestamp function). Not a bug; left as-is.",
+        "[CARRY] Minor: gpt-4o-transcribe-diarize (speaker labels) exists as a newer STT option; could be added next cycle."
+      ]
+    }
+  ]
+}

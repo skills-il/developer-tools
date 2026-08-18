@@ -1,0 +1,49 @@
+{
+  "author": "skills-il",
+  "version": "1.3.1",
+  "category": "developer-tools",
+  "tags": {
+    "he": [
+      "JFrog",
+      "Artifactory",
+      "Xray",
+      "DevOps",
+      "Docker",
+      "אבטחה",
+      "חפצים-דיגיטליים",
+      "MLOps",
+      "SBOM",
+      "OIDC"
+    ],
+    "en": [
+      "jfrog",
+      "artifactory",
+      "xray",
+      "devops",
+      "docker",
+      "security",
+      "artifacts",
+      "mlops",
+      "sbom",
+      "oidc"
+    ]
+  },
+  "display_name": {
+    "he": "JFrog DevOps",
+    "en": "JFrog DevOps"
+  },
+  "display_description": {
+    "he": "מנהלים חבילות, מודלי ML ו-SBOM ב-Artifactory, סורקים אבטחה ב-Xray ומריצים OIDC ב-CI.",
+    "en": "Manage JFrog Artifactory repositories, artifacts, Docker registry, ML models (JFrog ML / AI Catalog), build info, and Xray security scanning (with SPDX / CycloneDX / VEX SBOMs) for DevOps and MLOps workflows. Use when user asks about JFrog, Artifactory, Xray, Curation, Frogbot, AI Catalog, artifact management, Hugging Face / MLflow model registry, Docker registry, build promotion, vulnerability scanning, SBOM generation, OIDC with GitHub Actions, or DevOps artifact pipeline. Covers REST API operations, JFrog CLI 2.117 usage, and security scanning patterns. Do NOT use for general Docker or CI/CD questions unrelated to JFrog."
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "antigravity",
+    "gemini-cli"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "author": "skills-il",
+  "version": "2.3.0",
+  "category": "developer-tools",
+  "tags": {
+    "he": [
+      "משלוחים",
+      "לוגיסטיקה",
+      "מסחר-אלקטרוני",
+      "דואר-ישראל",
+      "מעקב-חבילות",
+      "ישראל"
+    ],
+    "en": [
+      "shipping",
+      "logistics",
+      "ecommerce",
+      "israel-post",
+      "package-tracking",
+      "israel"
+    ]
+  },
+  "display_name": {
+    "he": "מנהל משלוחים ישראלי",
+    "en": "Israeli Shipping Manager"
+  },
+  "display_description": {
+    "he": "מדריך למפתחים לאינטגרציית שילוח עם חברות ישראליות (דואר ישראל, צ'יטה, HFD, מהיר לי, UPS ישראל, GetPackage) ושירותי לוקרים (BOX2GO, שלאגר, Done, לוקרי UPS). הסקיל מכסה בחירת חברה, עיצוב כתובות ישראליות, הפקת תוויות, מעקב חוצה-חברות, התראות ללקוחות, והחזרות לפי תקנות הגנת הצרכן (14 יום ביטול עסקת מכר מרחוק). אל תשתמשו לבדיקת סטטוס של חבילה ספציפית (הפנו ל-mypost.israelpost.co.il), משלוחים בינלאומיים מחוץ לישראל או נושאי מכס וייבוא (לרף 130 דולר ראו את הסקיל israeli-customs-duty-calculator).",
+    "en": "Build and manage shipping integrations with Israeli carriers, including Israel Post, Cheetah, HFD, Mahir Li, UPS Israel, and GetPackage, plus locker pickup services (BOX2GO, Shlager, Done, UPS lockers). Use when user asks about \"shipping Israel\", \"Cheetah delivery\", \"meshloach\", \"shipping label\", \"HFD\", \"locker pickup Israel\", \"UPS lockers Israel\", \"GetPackage\", or setting up carrier integrations for an e-commerce store. Covers carrier selection, Israeli address formatting, label generation, cross-carrier tracking, customer delivery notifications, and 14-day consumer-protection returns. Do NOT use for looking up a specific package tracking status (direct users to mypost.israelpost.co.il or hfd.co.il). Do NOT use for international shipping outside Israel or customs/import (see israeli-customs-duty-calculator for the USD 130 personal-import VAT threshold)."
+  },
+  "supported_agents": [
+    "claude-code",
+    "openclaw",
+    "cursor",
+    "windsurf",
+    "github-copilot",
+    "gemini-cli"
+  ],
+  "openclaw": {
+    "requires": {
+      "bins": [],
+      "env": []
+    },
+    "emoji": "📦"
+  }
+}

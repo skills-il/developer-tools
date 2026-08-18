@@ -1,0 +1,13 @@
+{
+  "cycles": [
+    {
+      "version": "1.4.0",
+      "date": "2026-06-21",
+      "lessons": [
+        "STALE fixes: LLM model lineup refreshed (GPT-4o/4.1 retired -> GPT-5.x; Gemini 2.x -> 3.x; DictaLM -> Dicta-LM 3.0). Updated 2 Meta WhatsApp doc URLs from the deprecated /docs/whatsapp/* paths to the current /documentation/business-messaging/whatsapp/* paths. WhatsApp Graph API v25.0 verified current; python-telegram-bot async API current.",
+        "Coverage (CRITICAL) added concisely (file was near the word cap): prompt-injection guardrail (OWASP LLM01) for free-text -> action flows, and stream-on-web / buffer-on-WhatsApp-Telegram. Trimmed the redundant in-body Essential Phrases table to a pointer (it duplicated references/hebrew-chatbot-phrases.md) which also fixed an EN/HE heading-level parity drift.",
+        "Deferred (MAJOR, dedicated next cycle, needs trims to fit cap): RAG over Hebrew docs + Hebrew embedding model guidance (e.g. Cohere multilingual); tool/function-calling pattern to replace the hand-rolled classify-then-respond; voice/STT-TTS for Hebrew (Whisper large-v3 / ivrit.ai) since WhatsApp+Telegram deliver voice notes; an eval harness for Hebrew intent accuracy. Deferred (MINOR): Hebrew tokenization cost note; LRM/RLM bidi controls for embedding LTR runs; don't-log-raw-Teudat-Zehut (Amendment 13)."
+      ]
+    }
+  ]
+}

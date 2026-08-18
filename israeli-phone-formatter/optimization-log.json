@@ -1,0 +1,15 @@
+{
+  "cycles": [
+    {
+      "version": "1.2.1",
+      "date": "2026-07-06",
+      "lessons": [
+        "Fixed: 071 is an allocated non-geographic/VoIP prefix (confirmed via Wikipedia + MoC search) but the skill's 07[2-9] regex rejected it. Widened the non-geographic class to 07[1-9] (071-079) across SKILL.md, SKILL_HE, the validate_phone.py script, and prefix-allocation.md; added a 071 row and updated the prefix table + rejected-prefix note.",
+        "Updated 056 carrier name: Wataniya Mobile rebranded to Ooredoo Palestine (kept 'formerly Wataniya' for recognition). Still a Palestinian-territories carrier flagged separately from Israeli mobile.",
+        "Removed the stray 'version:' key from SKILL.md frontmatter (version lives in metadata.json only).",
+        "Verified current (no change): mobile 050-055/058 Israeli + 056/059 Palestinian + 057 unallocated; landlines 02-04/08-09; 077=Hot; 055 multi-MVNO; MNP since 2007; E.164 strict-output guidance; toll-free 1-800; premium 1-700.",
+        "[CARRY] The 07[1-9] regex over-accepts 075 (currently unallocated). Kept as-is (matches the skill's lightweight-validation philosophy; the skill already recommends libphonenumber for strict validation). Tighten to 07[1-46-9] only if 075 misclassification becomes an issue."
+      ]
+    }
+  ]
+}

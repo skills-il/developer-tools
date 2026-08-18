@@ -1,0 +1,22 @@
+{
+  "cycles": [
+    {
+      "version": "1.1.1",
+      "date": "2026-06-28",
+      "lessons": [
+        "Upstream HyperFrames repo restructured skills/hyperframes/references/ away. narration.md (script-writing guide) moved to skills/hyperframes-creative/references/; the Kokoro voice/language list moved to skills/hyperframes-media/references/tts.md; transcript-guide.md removed upstream (skill ships its own bundled copy). The 'Kokoro TTS voices' reference row + evidence now correctly point at hyperframes-media/references/tts.md. Re-verify every heygen-com/hyperframes blob path each cycle.",
+        "GSAP pin drifts ~monthly; bumped 3.14.2 -> 3.15.0 (check registry.npmjs.org/gsap/latest). All former paid Club GreenSock plugins are now free.",
+        "Fixed factual inaccuracy: SKILL.md claimed a bare Latin digit run (2025) reverses to 5202 in RTL and must be <bdi>-wrapped. That is wrong and contradicted the skill's own references/hebrew-rtl.md. A bare integer is handled LTR by the Unicode bidi algorithm; only digits adjacent to symbols (%, currency, range dash) or Latin tokens need isolation. Reworded EN+HE.",
+        "Freshness: hyperframes tts is no longer Kokoro-only. Upstream tts.md lists HeyGen (Starfish) and ElevenLabs as providers via $HEYGEN_API_KEY / $ELEVENLABS_API_KEY (ElevenLabs has Hebrew). Softened the flat 'external-only' Hebrew-narration claim, version-gated since the published CLI may still synth Kokoro-only.",
+        "Added the missing render step: skill never named the command that produces the MP4. npx hyperframes render confirmed in upstream CLI list (init/lint/validate/inspect/preview/render/publish/doctor). Added to Output Checklist.",
+        "Hebrew transcription default raised from --model small to --model medium (small is weak for Hebrew ASR; aligns SKILL.md with transcript-guide.md decision tree).",
+        "Removed inaccurate 'Adapted from HyperFrames v1.0.x' line: no v1.0.x release exists (latest upstream release is v0.7.18). kokoro-v1.0 is the model version, not the framework.",
+        "CARRY (MAJOR, content-heavy, deferred): no TikTok/Reels UI safe-zone guidance (right action rail + bottom band) despite portrait social video being a headline use case; acute for RTL where Hebrew gravitates to the right edge. Add a safe-zones subsection next cycle.",
+        "CARRY (MAJOR, content-heavy, deferred): no Hebrew-specific Whisper transcription QA (prefix attachment ו/ה/ב/ל/מ/ש, word-boundary splits that break per-word karaoke timing); transcript-guide quality section is English-only. Add a Hebrew QA note next cycle.",
+        "CARRY (MINOR): niqqud/geresh rendering at display sizes, emoji-in-RTL caption isolation, music+voiceover ducking for social video. Deferred over batch discretionary cap.",
+        "CARRY (discretionary): SKILL_HE.md (123 lines) is a condensed companion to SKILL.md (~410 lines); full section parity would be a large rewrite. Reconsider next cycle.",
+        "Evidence gate over-extracts on this creative dev-tools skill: CSS opacity/timing percentages (35%, 60-70%, 90%), bidi-example values (15%, 199), and code/skill-folder paths (/marker-highlight, /hyperframes-cli, /tmp/fontquery.py) are flagged as phantom regulatory claims. Documented under one internal-design-and-example-values evidence entry rather than fabricating sources. Expect the same next cycle."
+      ]
+    }
+  ]
+}

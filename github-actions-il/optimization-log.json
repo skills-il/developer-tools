@@ -1,0 +1,15 @@
+{
+  "cycles": [
+    {
+      "version": "1.3.0",
+      "date": "2026-06-21",
+      "lessons": [
+        "STALE fixes: bumped actions/checkout v5->v7, actions/setup-node v5->v6, aws-actions/configure-aws-credentials v5->v6 across SKILL + both references (actions/cache v5 and github-script v9 verified current, kept).",
+        "CRITICAL coverage: added a Token-permissions + security-hardening section (default GITHUB_TOKEN read-only since Feb 2023; OIDC needs id-token: write -- the AWS deploy example was broken without it; least-privilege permissions; SHA-pinning third-party actions after the 2025 tj-actions compromise; Dependabot for github-actions). Added permissions: pull-requests: write to the deploy-preview template whose github-script PR comment would fail under the read-only default. Added AWS il-central-1 (Tel Aviv) region.",
+        "Parity fix: HE was missing Example 3 (Monday.com Slack sync); added it and renumbered the startup example to 4 so EN/HE both have 4 examples.",
+        "CRITICAL fix (Expert): the Shabbat deploy-freeze failed OPEN (deployed during Shabbat if hebcal unreachable), contradicting the skill's stated purpose. Made it fail CLOSED in the inline action (curl ... || echo \"\"; if [ -z CANDLE ] -> frozen=true) and the canonical reference. Re-review caught that the reference's bare $(curl) aborted under bash -eo pipefail before the fail-closed branch; fixed with CURL_OK=0; VAR=$(curl) || CURL_OK=$? (verified locally that the branch runs and the step exits 0, preserving the force_deploy override). Added --max-time/--retry to the hebcal curls.",
+        "Deferred (MAJOR, next cycle): reusable workflows (on: workflow_call) for org-wide standardization; strategy.matrix multi-version/OS example; actions/upload-artifact + download-artifact (v7) with retention-days. Deferred (MINOR): setup-node v6 built-in cache option vs manual actions/cache; concurrency cancel-in-progress semantics for deploy jobs; self-hosted runners for data-residency; hebcal freeze should fail-closed not open."
+      ]
+    }
+  ]
+}
