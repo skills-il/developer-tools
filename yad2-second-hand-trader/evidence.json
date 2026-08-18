@@ -1,7 +1,7 @@
 {
   "skill_slug": "yad2-second-hand-trader",
   "schemaVersion": "1.0",
-  "generated_at": "2026-08-18T19:56:29.717503+00:00",
+  "generated_at": "2026-08-18T20:17:32.012367+00:00",
   "claims": [
     {
       "id": "yad2-market-url",
@@ -9,10 +9,10 @@
       "claim_type": "url",
       "source_url": "https://www.yad2.co.il/market",
       "source_fetched_at": "2026-06-18T00:00:00Z",
-      "raw_snippet": "יד2 | מוצרי יד שנייה - Yad2 Market",
+      "raw_snippet": "יד2 | מוצרי יד שנייה – Yad2 Market",
       "confidence": "high",
       "verified_via": "browser",
-      "verified_at": "2026-08-18T19:57:11.813423+00:00"
+      "verified_at": "2026-08-18T20:17:32.012367+00:00"
     },
     {
       "id": "scam-fake-bank-transfer",
@@ -118,12 +118,13 @@
     },
     {
       "id": "paybox-payment-finality",
-      "claim": "A PayBox payment to a user can be cancelled only if the recipient has not yet confirmed receipt; once confirmed it is final",
+      "claim": "PayBox publishes its transfer cancellation terms in the FAQ under the transfers category; the exact cancellation window was NOT verifiable at the cited URL, so the skill tells users to treat a sent transfer as final and check the window in the app",
       "claim_type": "feature",
       "source_url": "https://www.payboxapp.com/faq/",
-      "source_fetched_at": "2026-06-18T00:00:00Z",
-      "raw_snippet": "אם שילמתם למשתמש, תוכלו לבטל את התשלום רק בתנאי שהצד השני עוד לא אישר את קבלת התשלום",
-      "confidence": "high"
+      "source_fetched_at": "2026-08-18T20:17:32.012367+00:00",
+      "raw_snippet": "שאלות ותשובות",
+      "confidence": "low",
+      "note": "UNVERIFIED at source as of 2026-08-18: FAQ answers are loaded per category behind an accordion and the cited page exposes only the category index. The skill was reworded to the conservative direction rather than asserting a cancellation window."
     },
     {
       "id": "bit-payment-finality",
@@ -164,6 +165,37 @@
       "confidence": "high",
       "verified_via": "browser",
       "verified_at": "2026-08-18T19:56:29.717503+00:00"
+    },
+    {
+      "id": "consumer-cancellation-14-days",
+      "claim": "The distance-sale (online/phone) cancellation right runs 14 days, and is a consumer right, so it does not reach a private peer-to-peer sale",
+      "claim_type": "statute",
+      "source_url": "https://www.kolzchut.org.il/he/ביטול_עסקה_שנעשתה_באינטרנט_או_בטלפון",
+      "source_fetched_at": "2026-08-18T20:17:32.012367+00:00",
+      "raw_snippet": "אפשר לבטל עסקה שנעשתה מרחוק (באתרי האינטרנט או דרך שיחת טלפון) בתוך 14 ימים (שבועיים)",
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-18T20:17:32.012367+00:00"
+    },
+    {
+      "id": "scam-whatsapp-business-credibility",
+      "claim": "Scammers contacting Yad2 sellers move to WhatsApp, set the account to Business and write in Hebrew (sometimes with errors, not always) to appear credible, so fluent Hebrew is not exculpatory",
+      "claim_type": "procedure",
+      "source_url": "https://block.org.il/news/yad2-shipping-scams/",
+      "source_fetched_at": "2026-08-18T20:17:32.012367+00:00",
+      "raw_snippet": "מגדירים את חשבון הוואטסאפ כעסקי, מתכתבים בעברית (לעיתים עם שגיאות, אבל לא תמיד)",
+      "confidence": "high"
+    },
+    {
+      "id": "cyber-whatsapp-account-hijack",
+      "claim": "WhatsApp account hijacking is a category the National Cyber Directorate accepts reports on, confirming it is a live Israeli attack pattern",
+      "claim_type": "procedure",
+      "source_url": "https://www.gov.il/he/service/cyber-event-report",
+      "source_fetched_at": "2026-08-18T20:17:32.012367+00:00",
+      "raw_snippet": "חטיפת חשבון וואטסאפ",
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-08-18T20:17:32.012367+00:00"
     }
   ]
 }

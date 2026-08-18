@@ -6,7 +6,7 @@ The Israeli second-hand market on Yad2 is targeted by a small set of repeatable 
 
 Step by step:
 
-1. A "buyer" contacts the seller, eager, often willing to pay full price or extra. They often claim to be far away (Eilat, abroad) and offer to pay for shipping. Hebrew is sometimes poor or error-filled.
+1. A "buyer" contacts the seller, eager, often willing to pay full price or extra. Contact typically moves to WhatsApp straight after the listing goes up. They often claim to be far away (Eilat, abroad) and offer to pay for shipping. Do NOT treat fluent Hebrew or a business-looking account as reassurance: "מגדירים את חשבון הוואטסאפ כעסקי, מתכתבים בעברית (לעיתים עם שגיאות, אבל לא תמיד)" is described as a deliberate credibility tactic.
 2. The buyer says they cannot come in person and will arrange a courier (usually GLS) to collect the item.
 3. The buyer sends a screenshot of a bank transfer "already done" so the seller relaxes. Dedicated apps generate fake confirmations.
 4. The buyer (or a fake courier email) then tells the seller they must pay the shipping company first, via a link, to release the transfer / receive the credit.
@@ -44,11 +44,10 @@ The whole scam economy hinges on payment reversibility.
 
 - **Cash:** instant, final, safest.
 - **Bit:** a transfer cannot be cancelled once sent. "לא ניתן לבטל את ההעברה." Good to RECEIVE.
-- **PayBox:** a payment can be undone only before the recipient confirms: "אם שילמתם למשתמש, תוכלו לבטל את התשלום רק בתנאי שהצד השני עוד לא אישר את קבלת התשלום." Good to RECEIVE once confirmed.
+- **PayBox:** treat a sent transfer as final. Any cancellation window is short and app-dependent, so verify it inside the app rather than promising the user one. Good to RECEIVE.
 - **Bank transfer:** a "confirmation" shown at the meeting is NOT cleared money. Wait until it appears in your own balance.
 - **Payment request (בקשת תשלום):** approving an incoming request sends YOUR money out. It is the opposite of being paid. Scammers disguise a request as "I'm paying, just approve."
 
-Bit and PayBox now record the sender and recipient names in bank/credit statements, which adds traceability for a legitimate deal.
 
 ## Red-flag catalog (combined)
 
@@ -66,6 +65,8 @@ Bit and PayBox now record the sender and recipient names in bank/credit statemen
 | Too-cheap electronics, no proof of origin | buyer | Medium (stolen-goods risk) |
 | Off-platform urgency, "abroad/soldier" | either | Medium |
 | Payment request sent to you | either | High |
+| Asked to forward a verification CODE sent to you by SMS | either | High (account takeover, not a purchase) |
+| WhatsApp Business account + fluent Hebrew | either | Not exculpatory, both are deliberate credibility tactics |
 | Money never arrived after a "transfer" | seller | High (this is what proves the screenshot was forged) |
 
 ## The safe-deal checklist (give this to the user)

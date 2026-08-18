@@ -31,7 +31,7 @@ Any listing, negotiation message, or complaint text the tool drafts is an automa
 
 ## Problem
 
-Yad2 is where Israelis buy and sell almost everything second-hand, but a private seller has no protection net: there is no built-in escrow, the Consumer Protection Law's cancellation right does not cover private peer-to-peer sales, and the platform is a constant target for a well-known set of scams. People lose money to forged bank-transfer screenshots and fake "pay the courier first" requests, undersell good items because they do not know the going rate, and write weak listings that sit unanswered for weeks. This skill writes a strong Hebrew listing with a defensible price, drafts the negotiation messages, and screens any suspicious buyer or seller against the current Israeli fraud playbook before money changes hands.
+Yad2 is where Israelis buy and sell almost everything second-hand, but a private seller has no protection net to rely on: do not assume an escrow stands behind your deal, the Consumer Protection Law's cancellation right does not cover private peer-to-peer sales, and the platform is a constant target for a well-known set of scams. People lose money to forged bank-transfer screenshots and fake "pay the courier first" requests, undersell good items because they do not know the going rate, and write weak listings that sit unanswered for weeks. This skill writes a strong Hebrew listing with a defensible price, drafts the negotiation messages, and screens any suspicious buyer or seller against the current Israeli fraud playbook before money changes hands.
 
 ## Instructions
 
@@ -82,7 +82,9 @@ First ask (or infer) which side the user is on, because the scams differ. Score 
 | A "payment" or "credit" link is sent for you to enter card details (often dressed as Israel Post / דואר ישראל) | The link harvests your credit-card details. Couriers never need YOUR card to pay YOU. |
 | Payment demanded in Bitcoin / crypto | Irreversible, untraceable. Legitimate local second-hand deals do not use crypto. |
 | "I overpaid by mistake, refund me the difference" | Overpayment scam. The original payment is fake or will be reversed; your refund is real money out. |
-| Pressure to move off Yad2 chat fast, urgency, "I'm abroad / in Eilat / soldier / relocating" | Classic social-engineering framing to justify shipping and remote payment. Poor or error-filled Hebrew is a common tell. |
+| Pressure to move off Yad2 chat fast, urgency, "I'm abroad / in Eilat / soldier / relocating" | Classic social-engineering framing to justify shipping and remote payment. Contact typically moves to WhatsApp right after the listing goes up. |
+| Buyer asks you to send them a verification CODE you just received by SMS | Account-takeover, not a purchase. That code is the registration code for YOUR WhatsApp (or another account); handing it over hands over the account, which is then used to scam your contacts. Never send a code to anyone, for any reason. |
+| The "buyer" runs a WhatsApp **Business** account and writes fluent Hebrew | Do NOT read either as reassurance. Per the Israeli Internet Association, scammers deliberately set the account to business and write in Hebrew (sometimes with errors, but not always) precisely to look credible. Good Hebrew clears nobody. |
 
 **If the user is the BUYER (they are responding to a listing):**
 
@@ -101,7 +103,7 @@ First ask (or infer) which side the user is on, because the scams differ. Score 
 
 **Payment-rails reality (the part that actually protects a seller).** "Cash or a recognized app" is not all equal:
 - **Cash** is safest, instant and final.
-- **Bit / PayBox** are good to RECEIVE because a transfer between people is immediate and effectively final once confirmed (a Bit transfer cannot be cancelled once sent; a PayBox payment can be undone only if the recipient has not yet confirmed). That finality is exactly why a scammer prefers tricks over really sending one.
+- **Bit / PayBox** are good to RECEIVE because a transfer between people is immediate and effectively final (a Bit transfer cannot be cancelled once sent; treat a PayBox transfer as final too, and check the exact cancellation window in the app itself rather than promising the user one). That finality is exactly why a scammer prefers tricks over really sending one.
 - A **bank transfer "confirmation" shown at the meeting is NOT proof** the money cleared. Do not hand over the item against a screenshot; wait until it actually shows in your balance.
 - Beware a **payment REQUEST (בקשת תשלום)** sent to you: approving a request sends YOUR money out, it is the opposite of receiving a payment. Scammers disguise a request as "I'm paying you, just approve."
 
@@ -111,7 +113,7 @@ First ask (or infer) which side the user is on, because the scams differ. Score 
 |---|---|---|
 | Credit card | Dispute the charge with the card company / bank. Call immediately, it is time-sensitive. | The only rail with a genuine built-in reversal route. This is why a card is the least-bad way to pay a stranger, and why blocking the card is step 2 after a fraud. |
 | Bit | None by cancellation, a sent transfer cannot be cancelled. Getting it back depends on the recipient voluntarily returning it. | Poor. Report to the bank/app and rely on the police complaint. |
-| PayBox | Only if the recipient has not yet confirmed. Once confirmed, none. | Poor, and the window is minutes. |
+| PayBox | Any cancellation window is short and app-dependent, verify it in the app; assume none. | Poor. Do not rely on being able to pull it back. |
 | Bank transfer | No unilateral reversal. The bank may help trace the account, which matters for the police complaint. | Poor for recovery, useful for evidence: you have the beneficiary's account details. |
 | Cash | None. No record, no counterparty identity. | None. Its finality is exactly why it is right at a handover and wrong in advance. |
 
@@ -119,7 +121,7 @@ So the advice is not "use Bit, it is safe": Bit is safe **to be paid with**, and
 
 **Stay on Yad2 chat and report.** Keep the conversation inside Yad2's in-app chat (it preserves evidence and is what lets Yad2 act). If something is a scam, report the user/listing to Yad2 itself (דיווח על משתמש / מודעה) as the first-line action, in addition to the steps below.
 
-**Safe handover.** Meet in a public place in daylight; for large or expensive items bring someone. Do not share your home address until you are committed, and prefer a building lobby or a public spot, especially if meeting alone.
+**Safe handover.** Meet in a public place in daylight. Do not share your home address until you are committed, and prefer a building lobby or a public spot, especially if meeting alone. Furniture and appliances are the awkward case, since you cannot carry a sofa to a cafe: for those, never be alone in the home, agree a fixed time rather than an open window, and hand over at the door or lobby where possible.
 
 **Beyond scams (time-wasters and weird buyers).** Not every odd buyer is a fraud. A buyer who haggles hard then no-shows, asks "still available?" endlessly without committing, or wants to send a "representative" to pick up and pay is usually a time-waster, not a thief. Set a concrete pickup time, do not hold the item without a deposit you trust, and move on if they stall.
 
@@ -185,7 +187,7 @@ No MCP server currently exposes Yad2 second-hand listing data, so this skill is 
 | Yad2 Market | https://www.yad2.co.il/market | The second-hand goods marketplace |
 | Kol-Zchut: cancelling a distance (online/phone) purchase | https://www.kolzchut.org.il/he/ביטול_עסקה_שנעשתה_באינטרנט_או_בטלפון | Confirms the cancellation right is a consumer right against a business, so it does not reach a private Yad2 deal |
 | Smart consumer guide (private sales) | https://taasiri-law.co.il/מדריך-לצרכן-הנבון-120-שאלות-ותשובות-בדינ/ | A seller must disclose known defects even in a private sale; recourse via general law |
-| PayBox FAQ | https://www.payboxapp.com/faq/ | A payment can be undone only before the recipient confirms |
+| PayBox FAQ | https://www.payboxapp.com/faq/ | The cancellation terms for a transfer, under the transfers category |
 | Bit FAQ | https://www.bitpay.co.il/he/private-faq | A Bit transfer cannot be cancelled once sent |
 | Israel Police: file a complaint (official service) | https://www.gov.il/he/service/request-file-complaint-online-during-emergency | The subject list including `עבירת רכוש והונאה`, and that emergencies go to 100 |
 | Kol-Zchut: online police complaint (procedure) | https://www.kolzchut.org.il/he/בקשה_להגשת_תלונה_במשטרה_דרך_האינטרנט | That the online form is a request, not an official complaint until police complete it |
