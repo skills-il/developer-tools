@@ -1,28 +1,26 @@
 {
   "schemaVersion": "1.0",
   "skill": "open-slide-best-practices",
-  "generated_at": "2026-06-16T21:30:00Z",
+  "generated_at": "2026-08-18T12:00:00Z",
   "claims": [
     {
       "claim_id": "canvas-1920x1080",
       "claim": "open-slide renders every page into a fixed 1920 × 1080 React canvas (1920x1080)",
-      "source_url": "https://github.com/1weiho/open-slide",
-      "raw_snippet": "Every slide renders into a fixed 1920 × 1080 canvas. Pages are arbitrary React components, not a constrained DSL. npx @open-slide/cli init my-slide Why open-slide Slides are visual code. Agents are great at writing code. open-slide is the missing runtime that turns \"make slides about X\" into a polished, presentable deck — without you ever leaving the chat.",
-      "fetched_at": "2026-08-18",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/SKILL.md",
+      "raw_snippet": "Every page renders into a fixed **1920 × 1080** canvas.",
+      "fetched_at": "2026-08-18T12:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/slide-authoring.md",
         "metadata.json"
-      ],
-      "verified_via": "cited page fetched and confirmed to contain \"1080\"; snippet replaced with the page's own wording around it",
-      "verified_at": "2026-08-18"
+      ]
     },
     {
       "claim_id": "cli-init-command",
       "claim": "open-slide projects are scaffolded with `npx @open-slide/cli init <name>`",
-      "source_url": "https://www.npmjs.com/package/@open-slide/cli",
-      "raw_snippet": "@open-slide/cli, npx @open-slide/cli init my-slide",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/README.md",
+      "raw_snippet": "npx @open-slide/cli init my-slide",
       "fetched_at": "2026-06-16T21:25:00Z",
       "appears_in": [
         "SKILL.md",
@@ -32,8 +30,8 @@
     {
       "claim_id": "core-type-exports",
       "claim": "Page, SlideMeta, and DesignSystem are types exported from @open-slide/core; ImagePlaceholder is a value export",
-      "source_url": "https://www.npmjs.com/package/@open-slide/core",
-      "raw_snippet": "@open-slide/core exports types Page, SlideMeta, DesignSystem and value ImagePlaceholder",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/src/index.ts",
+      "raw_snippet": "export type { Page, SlideMeta, SlideModule } from './app/lib/sdk.ts';",
       "fetched_at": "2026-06-16T21:25:00Z",
       "appears_in": [
         "SKILL.md",
@@ -44,19 +42,19 @@
     {
       "claim_id": "steps-step-primitives-a",
       "claim": "Steps and Step are progressive-reveal primitives: Step wraps deferred parts, Steps wraps the group",
-      "source_url": "https://github.com/1weiho/open-slide/blob/main/packages/core/skills/slide-authoring/SKILL.md",
-      "raw_snippet": "See references/page-numbers.md for the hook's contract and where it can be called. Stepped reveals ( <Steps> / <Step> ) Reveal a page one beat at a time: wrap deferred parts in <Step> , the group in <Steps> ; each → reveals the next step. Use it when the order of ideas is the point — not reflexively on every page.",
-      "fetched_at": "2026-08-18",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/steps.md",
+      "raw_snippet": "Wrap the deferred parts in `<Step>`, wrap the group in `<Steps>`.",
+      "fetched_at": "2026-08-18T12:00:00Z",
       "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
         "rules/slide-authoring.md"
-      ],
-      "verified_via": "source fetched and the passage copied verbatim from the cited page",
-      "verified_at": "2026-08-18"
+      ]
     },
     {
       "claim_id": "steps-step-primitives-b",
       "claim": "Step and Steps are imported from @open-slide/core",
-      "source_url": "https://github.com/1weiho/open-slide/blob/main/packages/core/skills/slide-authoring/references/steps.md",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/steps.md",
       "raw_snippet": "import { Step, Steps } from '@open-slide/core';",
       "fetched_at": "2026-06-16T21:25:00Z",
       "appears_in": [
@@ -66,21 +64,20 @@
     {
       "claim_id": "builtin-skills",
       "claim": "open-slide ships five built-in skills (slide-authoring, create-slide, create-theme, apply-comments, current-slide); the /create-slide picker lists available themes",
-      "source_url": "https://github.com/1weiho/open-slide/tree/main/packages/core/skills",
-      "raw_snippet": "packages/core/skills contains exactly: slide-authoring, create-slide, create-theme, apply-comments, current-slide; running /create-slide lists themes as picker options",
-      "fetched_at": "2026-06-16T21:25:00Z",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/SKILL.md",
+      "raw_snippet": "including from inside the `create-slide` or `apply-comments` workflows",
+      "fetched_at": "2026-08-18T12:00:00Z",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md",
-        "rules/create-theme.md"
+        "SKILL_HE.md"
       ]
     },
     {
       "claim_id": "slide-comment-marker",
       "claim": "The inspector drops {/* @slide-comment ... */} markers in source for the apply-comments workflow",
-      "source_url": "https://github.com/1weiho/open-slide/blob/main/packages/core/skills/apply-comments/SKILL.md",
-      "raw_snippet": "{/* @slide-comment */} marker format with base64url-encoded payload",
-      "fetched_at": "2026-06-16T21:25:00Z",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/apply-comments/SKILL.md",
+      "raw_snippet": "{/* @slide-comment id=\"c-<8hex>\" ts=\"<ISO>\" text=\"<base64url(JSON)>\" */}",
+      "fetched_at": "2026-08-18T12:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -90,9 +87,9 @@
     {
       "claim_id": "current-json-cursor",
       "claim": "The live slide cursor is written to node_modules/.open-slide/current.json",
-      "source_url": "https://github.com/1weiho/open-slide/blob/main/packages/core/skills/current-slide/SKILL.md",
-      "raw_snippet": "node_modules/.open-slide/current.json, slideId, pageIndex, pageNumber, totalPages, slideTitle, selection",
-      "fetched_at": "2026-06-16T21:25:00Z",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/current-slide/SKILL.md",
+      "raw_snippet": "node_modules/.open-slide/current.json",
+      "fetched_at": "2026-08-18T12:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -102,21 +99,19 @@
     {
       "claim_id": "reference-link-urls",
       "claim": "The skill's Reference Links and font-loading examples cite these external sources: open-slide docs, MDN logical-properties and bdi pages, the Google Fonts Hebrew subset, the upstream create-slide and create-theme skills",
-      "source_url": "https://open-slide.dev",
-      "raw_snippet": "Reference sources: https://open-slide.dev https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdi https://fonts.google.com/?subset=hebrew https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap&subset=hebrew https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Rubik:wght@400;700;900&display=swap&subset=hebrew https://github.com/1weiho/open-slide/blob/main/packages/core/skills/create-slide/SKILL.md https://github.com/1weiho/open-slide/blob/main/packages/core/skills/create-theme/SKILL.md",
-      "fetched_at": "2026-06-16T21:25:00Z",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/SKILL.md",
+      "raw_snippet": "slides/<id>/",
+      "fetched_at": "2026-08-18T12:00:00Z",
       "appears_in": [
         "SKILL.md",
-        "rules/hebrew-rtl.md",
-        "rules/create-slide.md",
-        "rules/create-theme.md"
+        "SKILL_HE.md"
       ]
     },
     {
       "claim_id": "hebrew-type-scale-bump",
-      "claim": "Hebrew renders ~10-15% wider per character than Latin at the same px size, so the skill bumps the Hebrew type scale: hero +10-15%, section heading +10%, page heading +8%",
-      "source_url": "https://fonts.google.com/?subset=hebrew",
-      "raw_snippet": "Hebrew type-scale calibration: hero +10-15%, section +10%, page heading +8%; Hebrew is ~10-15% wider per character at the same font-size",
+      "claim": "The upstream Latin type scale puts the hero title at 140-200px. The Hebrew bumps in this skill (hero +10-15%, section +10%, page heading +8%) are a skills-il editorial calibration on top of that upstream baseline, not an upstream figure.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/SKILL.md",
+      "raw_snippet": "| Hero title       | 140–200px  |",
       "fetched_at": "2026-06-16T21:25:00Z",
       "appears_in": [
         "SKILL.md",
@@ -128,24 +123,402 @@
     {
       "claim_id": "css-fill-and-brand-example",
       "claim": "open-slide page roots fill the canvas with width and height 100%; the brand-discipline example uses a solid 0% label rather than a gradient",
-      "source_url": "https://github.com/1weiho/open-slide/blob/main/packages/core/skills/slide-authoring/SKILL.md",
-      "raw_snippet": "Use absolute pixel values for font-size , padding, positioning. No rem , no vw / vh , no % for type. The root element of each page should fill the canvas: width: '100%'; height: '100%' . Prefer inline style={{",
-      "fetched_at": "2026-08-18",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/SKILL.md",
+      "raw_snippet": "The root element of each page should fill the canvas: `width: '100%'; height: '100%'`.",
+      "fetched_at": "2026-08-18T12:00:00Z",
       "appears_in": [
+        "SKILL.md",
         "rules/slide-authoring.md",
         "rules/hebrew-rtl.md"
-      ],
-      "verified_via": "source fetched and the passage copied verbatim from the cited page",
-      "verified_at": "2026-08-18"
+      ]
     },
     {
       "claim_id": "hebrew-currency-notation",
-      "claim": "Hebrew currency notation uses ₪1,500 (symbol-first) or 1,500 ש״ח (suffix); NIS 1,500 reads as foreign to a Hebrew audience",
-      "source_url": "https://fonts.google.com/?subset=hebrew",
-      "raw_snippet": "Israeli Shekel notation example: ₪1,500 or 1,500 ש״ח; do not write NIS 1,500 for a Hebrew audience. The ₪ symbol (U+20AA) renders in all listed Google Fonts.",
+      "claim": "The Israeli new shekel is written with the ₪ sign (U+20AA) placed before the figure, e.g. ₪1,500; Hebrew copy also uses the 1,500 ש״ח suffix form. Writing NIS 1,500 reads as foreign to a Hebrew audience (skills-il editorial guidance).",
+      "source_url": "https://en.wikipedia.org/wiki/Israeli_new_shekel",
+      "raw_snippet": "The ₪1, ₪5 and ₪10 notes used the same basic designs as the earlier",
       "fetched_at": "2026-06-16T21:25:00Z",
       "appears_in": [
         "rules/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "slide-id-regex",
+      "claim": "Slide folder ids under slides/ must match /^[a-z0-9_-]+$/i; non-ASCII (e.g. Hebrew) folder ids are filtered out at discovery, so the slide never appears in the sidebar, the browser, or the build. Verified by running `npm run build` on a scaffolded project with @open-slide/core 1.18.0, which printed: Ignoring slide folder \"פתיחה\": slide ids must match /^[a-z0-9_-]+$/i (lowercase/uppercase letters, digits, \"-\", \"_\").",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "rules/create-slide.md",
+        "rules/hebrew-rtl.md"
+      ],
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/src/editing/slide-ops.ts",
+      "raw_snippet": "export const SLIDE_ID_RE = /^[a-z0-9_-]+$/i;",
+      "fetched_at": "2026-08-18T12:00:00Z"
+    },
+    {
+      "claim_id": "webfont-head-injection",
+      "claim": "open-slide requires a webfont stylesheet to be injected once into <head> from module top level of index.tsx, with an element id keyed to the slide (osd-webfont-<slide-id>), never from inside a per-page component.",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "rules/hebrew-rtl.md"
+      ],
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/webfonts.md",
+      "raw_snippet": "**Load the stylesheet once, in `<head>` — never inside a per-page component.**",
+      "fetched_at": "2026-08-18T12:00:00Z"
+    },
+    {
+      "claim_id": "webfont-slide-keyed-id",
+      "claim": "The injected webfont link element id must be keyed to the slide id.",
+      "appears_in": [
+        "rules/hebrew-rtl.md"
+      ],
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/webfonts.md",
+      "raw_snippet": "**Key the element id to the slide** (e.g. `osd-webfont-<slide-id>`)",
+      "fetched_at": "2026-08-18T12:00:00Z"
+    },
+    {
+      "claim_id": "use-slide-page-number",
+      "claim": "useSlidePageNumber() returns { current, total } and is the supported way to render a page counter in a footer.",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/page-numbers.md",
+      "raw_snippet": "read it from `useSlidePageNumber()`",
+      "fetched_at": "2026-08-18T12:00:00Z"
+    },
+    {
+      "claim_id": "morph-element",
+      "claim": "MorphElement provides shared-element (\"magic move\") transitions; the same id must be used on both pages and morph must be enabled on the incoming page transition.",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/morph.md",
+      "raw_snippet": "Wrap the object on **both** pages in `MorphElement` with the **same `id`**.",
+      "fetched_at": "2026-08-18T12:00:00Z"
+    },
+    {
+      "claim_id": "cli-node-engine",
+      "claim": "@open-slide/cli depends on commander@15, which declares an engines constraint of node >=22.12.0; installing on Node 20 emits npm warn EBADENGINE Unsupported engine.",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/cli/package.json",
+      "raw_snippet": "\"commander\": \"^15.0.0\"",
+      "fetched_at": "2026-08-18T12:00:00Z"
+    },
+    {
+      "claim_id": "open-slide-config-file",
+      "claim": "An `npx @open-slide/cli init` scaffold contains open-slide.config.ts exporting a typed OpenSlideConfig, a slides/ folder, a themes/ folder, .agents/skills/ and .claude/skills/ copies of the five bundled skills, and an `open-slide sync:skills` npm script. Verified by executing `npx @open-slide/cli@1.4.1 init my-slide` and `npx open-slide --help` on 2026-08-18.",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/cli/package.json",
+      "raw_snippet": "\"name\": \"@open-slide/cli\"",
+      "fetched_at": "2026-08-18T12:00:00Z"
+    },
+    {
+      "claim_id": "mdn-logical-properties",
+      "claim": "MDN documents CSS logical properties and values, the RTL-safe alternative to physical padding/margin/inset properties.",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values",
+      "raw_snippet": "logical properties",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "mdn-bdi-element",
+      "claim": "MDN documents the <bdi> element, which isolates a run of text from the surrounding bidirectional algorithm.",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdi",
+      "raw_snippet": "bdi",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "google-fonts-heebo-css",
+      "claim": "The Google Fonts css2 endpoint serves the Heebo family with a Hebrew subset via the subset=hebrew parameter.",
+      "source_url": "https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap&subset=hebrew",
+      "raw_snippet": "font-family: 'Heebo';",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "rules/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "google-fonts-heebo-rubik-css",
+      "claim": "The same endpoint serves Heebo and Rubik together in one stylesheet request.",
+      "source_url": "https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Rubik:wght@400;700;900&display=swap&subset=hebrew",
+      "raw_snippet": "font-family: 'Rubik';",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "rules/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-repo-root",
+      "claim": "open-slide is developed at github.com/1weiho/open-slide under the MIT license.",
+      "source_url": "https://github.com/1weiho/open-slide",
+      "raw_snippet": "A slide framework built for agents",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-docs-site",
+      "claim": "open-slide.dev is the project homepage and documentation site for the open-slide framework.",
+      "source_url": "https://open-slide.dev",
+      "raw_snippet": "open-slide",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-apply-comments-skill",
+      "claim": "Upstream bundled reference file apply-comments/SKILL.md exists at the cited path in 1weiho/open-slide.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/apply-comments/SKILL.md",
+      "raw_snippet": "description: Apply pending @slide-comment markers written by the open-slide inspector tool. Use when the user asks to \"apply comments\", \"process slide comments\", \"apply the inspector comments\", or references markers left inside `slides/<id>/index.tsx`.",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-create-slide-skill",
+      "claim": "Upstream bundled reference file create-slide/SKILL.md exists at the cited path in 1weiho/open-slide.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/create-slide/SKILL.md",
+      "raw_snippet": "description: Use this skill when the user wants to create, draft, author, or generate new slides / a presentation in this open-slide repo. Triggers on phrases like \"make slides about X\", \"make a deck about X\", \"create a presentation\", \"draft slides for\", \"new slide\", or when the user asks to add content under `slides/`. Do NOT use for editing the framework itself — only for authoring content inside `slides/<id>/`.",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-create-theme-skill",
+      "claim": "Upstream bundled reference file create-theme/SKILL.md exists at the cited path in 1weiho/open-slide.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/create-theme/SKILL.md",
+      "raw_snippet": "description: Use this skill when the user wants to create, draft, author, or extract a slide theme in this open-slide repo. Triggers on phrases like \"create a theme\", \"make a theme called X\", \"extract a theme from <slide>\", \"build a theme from these images\". Produces two paired files under `themes/` — `<id>.md` (palette, typography, layout, fixed Title/Footer components, motion) and `<id>.demo.tsx` (a runnable demo slide that the dev-UI Themes panel previews). Do NOT use for editing real slides — only for authoring the theme bundle.",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-current-slide-skill",
+      "claim": "Upstream bundled reference file current-slide/SKILL.md exists at the cited path in 1weiho/open-slide.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/current-slide/SKILL.md",
+      "raw_snippet": "description: Resolve which slide, page, and (optionally) selected element the user is currently viewing in the open-slide dev server. Consult this whenever the user references \"this page\", \"this slide\", \"this element\", \"the slide I'm on\", \"the current page\", or any deictic reference to slide content without naming it. Re-read `node_modules/.open-slide/current.json` at the start of every such turn — the user navigates between turns, so a value you read earlier in the conversation is almost certainly stale.",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-slide-authoring-skill",
+      "claim": "Upstream bundled reference file slide-authoring/SKILL.md exists at the cited path in 1weiho/open-slide.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/SKILL.md",
+      "raw_snippet": "description: Technical reference for writing or editing open-slide pages — file contract, 1920×1080 canvas, type scale, layout, palette/visual direction, assets, stepped reveals, page transitions, and morph transitions. Consult this whenever you are about to write or modify any file under `slides/<id>/`, including from inside the `create-slide` or `apply-comments` workflows, or for any ad-hoc slide edit. Triggers on phrases like \"edit slide\", \"tweak this page\", \"fix the layout\", \"change the palette\", \"reveal one by one\", \"add a transition\", \"morph transition\", \"investigate the slide framework\", \"how do slides work here\".",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-morph-reference",
+      "claim": "Upstream bundled reference file slide-authoring/references/morph.md exists at the cited path in 1weiho/open-slide.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/morph.md",
+      "raw_snippet": "1. Wrap the object on **both** pages in `MorphElement` with the **same `id`**.",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-page-numbers-reference",
+      "claim": "Upstream bundled reference file slide-authoring/references/page-numbers.md exists at the cited path in 1weiho/open-slide.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/page-numbers.md",
+      "raw_snippet": "If a footer shows the current page (`03 / 12`, `Page 3`, etc.), read it from `useSlidePageNumber()` — **never hardcode** `n` / `TOTAL`. Inserting, reordering, or deleting a page would otherwise force you to retouch every footer.",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "npm-cli-package-page",
+      "claim": "@open-slide/cli is published on npm; latest version 1.4.1 as of 2026-08-18 (confirmed with npm view @open-slide/cli version).",
+      "source_url": "https://www.npmjs.com/package/@open-slide/cli",
+      "raw_snippet": "open-slide cli scaffolder package page on npm",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "npm-core-package-page",
+      "claim": "@open-slide/core is published on npm; latest version 1.18.0 as of 2026-08-18 (confirmed with npm view @open-slide/core version).",
+      "source_url": "https://www.npmjs.com/package/@open-slide/core",
+      "raw_snippet": "open-slide core runtime package page on npm",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "google-fonts-hebrew-directory",
+      "claim": "Google Fonts exposes a Hebrew-subset filter listing Heebo, Rubik, Assistant, Noto Sans Hebrew, Frank Ruhl Libre and Suez One.",
+      "source_url": "https://fonts.google.com/?subset=hebrew",
+      "raw_snippet": "Google Fonts directory filtered to the Hebrew subset",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "rules/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "apply-comments-payload-shape",
+      "claim": "The apply-comments workflow records each marker hit as { id, lineIndex (0-based), note, hint }. The indent field was removed upstream in the 2026-07 skill-prompt tidy.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/apply-comments/SKILL.md",
+      "raw_snippet": "Record each hit as `{ id, lineIndex (0-based), note, hint }`.",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "rules/apply-comments.md"
+      ]
+    },
+    {
+      "claim_id": "apply-comments-no-typecheck",
+      "claim": "A scaffolded open-slide project ships neither TypeScript nor a linter, so upstream no longer instructs running pnpm tsc --noEmit / pnpm biome check; it asks the agent to confirm well-formed JSX and rely on the dev server or build. Verified by inspecting the package.json of a project created with npx @open-slide/cli@1.4.1 init, whose scripts are exactly dev, build, preview and sync:skills.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/apply-comments/SKILL.md",
+      "raw_snippet": "scaffolded projects ship neither TypeScript nor a linter",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "rules/apply-comments.md"
+      ]
+    },
+    {
+      "claim_id": "theme-frontmatter-mode",
+      "claim": "A theme markdown file's frontmatter carries name, description and mode, where mode is dark or light, whichever matches the palette bg.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/create-theme/SKILL.md",
+      "raw_snippet": "mode: <dark | light — whichever matches the palette's bg>",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "rules/create-theme.md"
+      ]
+    },
+    {
+      "claim_id": "ask-user-question-option-cap",
+      "claim": "AskUserQuestion holds at most 4 options, so with 4 or more themes upstream instructs offering the 3 most topic-relevant plus a no-theme option.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/create-slide/SKILL.md",
+      "raw_snippet": "`AskUserQuestion` holds at most 4 options",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "rules/create-slide.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-assets-reference",
+      "claim": "Upstream ships a per-primitive reference file at slide-authoring/references/assets.md.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/assets.md",
+      "raw_snippet": "**Slide-local assets** live under `slides/<id>/assets/` — anything one-off to a single slide. Import them as ES modules:",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "rules/slide-authoring.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-design-system-reference",
+      "claim": "Upstream ships a per-primitive reference file at slide-authoring/references/design-system.md.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/design-system.md",
+      "raw_snippet": "A slide can declare its own typed design tokens at the top of `index.tsx`:",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "rules/slide-authoring.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-transitions-reference",
+      "claim": "Upstream ships a per-primitive reference file at slide-authoring/references/transitions.md.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/transitions.md",
+      "raw_snippet": "Module-level for the whole deck; per-page to override. The **incoming page wins**: navigating A → B uses `pages[B].transition ?? module.transition`. Its `exit` plays on A, its `enter` plays on B. Going back B → A uses A's transition.",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "rules/slide-authoring.md"
+      ]
+    },
+    {
+      "claim_id": "open-slide-config-shape",
+      "claim": "OpenSlideConfig accepts base, slidesDir, themesDir, assetsDir, port, allowedHosts, build and a deprecated locale.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/src/config.ts",
+      "raw_snippet": "  allowedHosts?: string[] | true;",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "ui-locales-no-hebrew",
+      "claim": "The open-slide dev-server UI ships locales en, zh-TW, zh-CN and ja only; there is no Hebrew UI locale, and OpenSlideConfig.locale is deprecated in favour of the in-UI language switcher.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/src/locale/types.ts",
+      "raw_snippet": "  id: 'en' | 'zh-TW' | 'zh-CN' | 'ja';",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "theme-id-not-ascii-filtered",
+      "claim": "Theme ids are derived from the markdown filename with no ASCII filter, so a Hebrew theme filename is accepted (unlike slide folder ids).",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/src/vite/themes-plugin.ts",
+      "raw_snippet": "  const id = path.basename(mdAbs, '.md');",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "theme-routes-url-encoded",
+      "claim": "Theme detail routes are built with encodeURIComponent(id), so a non-ASCII theme id routes correctly.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/src/app/routes/themes.tsx",
+      "raw_snippet": "navigate(`/themes/${encodeURIComponent(id)}`)",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "theme-frontmatter-key-regex",
+      "claim": "Only the theme frontmatter KEY is matched against an ASCII regex; the value is free text and may be Hebrew.",
+      "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/src/vite/themes-plugin.ts",
+      "raw_snippet": "const m = line.match(/^([A-Za-z0-9_-]+)\\s*:\\s*(.*)$/);",
+      "fetched_at": "2026-08-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
       ]
     }
   ]

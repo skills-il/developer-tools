@@ -1,6 +1,6 @@
 # slide-authoring (open-slide reference)
 
-> Adapted from [1weiho/open-slide MIT, packages/core/skills/slide-authoring/SKILL.md](https://github.com/1weiho/open-slide/blob/main/packages/core/skills/slide-authoring/SKILL.md). Hebrew/RTL pointers added by skills-il.
+> Adapted from [1weiho/open-slide MIT, packages/core/skills/slide-authoring/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/SKILL.md). Hebrew/RTL pointers added by skills-il.
 >
 > **For Hebrew or bilingual decks, always pair this with [./hebrew-rtl.md](./hebrew-rtl.md) before writing any code.** The rules below assume Latin text and physical-CSS positioning. The Hebrew companion explains how to translate them to logical properties, Hebrew Google Fonts, and bidi-safe markup.
 
@@ -15,6 +15,22 @@ This skill is the **technical reference** for everything that happens inside `sl
 - Any ad-hoc slide edit (manual tweak, one-off fix) should also consult this skill before touching the file.
 
 When any of those paths reach the point of *writing React code for a page*, this is the source of truth. Do not duplicate the knowledge below into other skills, link here instead.
+
+### Upstream per-primitive references
+
+Upstream split its own `slide-authoring` skill into per-primitive reference files. The ones below are NOT restated here; read them upstream before using the primitive, and treat them as authoritative over anything in this file:
+
+| Primitive | Upstream file |
+| --- | --- |
+| Stepped reveals (`<Steps>` / `<Step>`) | [references/steps.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/steps.md) |
+| Page transitions (`SlideTransition`) | [references/transitions.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/transitions.md) |
+| Shared-element / magic-move (`MorphElement`) | [references/morph.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/morph.md) |
+| Page numbers (`useSlidePageNumber`) | [references/page-numbers.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/page-numbers.md) |
+| Design tokens (`design` const, `var(--osd-X)`) | [references/design-system.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/design-system.md) |
+| Assets | [references/assets.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/assets.md) |
+| Webfonts | [references/webfonts.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/webfonts.md) |
+
+For Hebrew webfont loading specifically, [./hebrew-rtl.md](./hebrew-rtl.md) section 3 applies the webfonts rule to Heebo / Rubik / Assistant with `subset=hebrew`.
 
 ## Hard rules
 

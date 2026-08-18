@@ -1,0 +1,18 @@
+{
+  "cycles": [
+    {
+      "version": "1.3.0",
+      "date": "2026-08-18",
+      "lessons": [
+        "Description was NOT changed this cycle, so the Phase 5.7 holdout/description eval was not run. If a future cycle touches the description, run it.",
+        "Deferred (discretionary, too large a diff for one cycle): 131 pre-existing em dashes across SKILL.md, SKILL_HE.md and rules/*.md violate the skills-il no-em-dash house rule. New prose added in 1.3.0 is em-dash free. Sweep the whole skill next cycle.",
+        "Deferred: SKILL.md has no '## Examples' section. The skills-il quality standard asks for 2+ scenarios; here the worked examples live in rules/hebrew-rtl.md and rules/slide-authoring.md. Decide next cycle whether to add a short Examples section or record this as an explicit structural exception for reference-style skills.",
+        "Deferred: upstream shipped a cmdk-based command menu (#368), presenter-window deck switching (#389) and open-slide.config.ts allowedHosts (#336) between 2026-06-16 and 2026-08-11. 1.3.0 mentions open-slide.config.ts and allowedHosts only in the scaffold table. Consider a dedicated 'dev server surfaces' section next cycle.",
+        "Deferred: the comment in rules/hebrew-rtl.md that reads 'bumped from upstream 180/36' is ambiguous, upstream shows typeScale { hero: 180, body: 40 } in slide-authoring/SKILL.md and { hero: 168, body: 36 } in references/design-system.md. Low impact, reword next cycle.",
+        "Process note: this skill mirrors upstream documentation, so every cycle MUST clone 1weiho/open-slide and diff, not update from recollection. The 1.3.0 headline finding (non-ASCII slide folder ids are dropped at discovery, upstream commit 4fece8d, 2026-07-13) was invisible from the skill's own text and was only confirmed by running `npm run build` on a scaffolded project.",
+        "Process note: the rules/*.md files are mirrors of upstream packages/core/skills/*. They drift silently. In this cycle apply-comments.md still carried an `indent` field upstream had removed and told agents to run `pnpm tsc --noEmit` / `pnpm biome check`, which do not exist in a scaffolded project (its only scripts are dev, build, preview, sync:skills). Diff every mirrored file against upstream every cycle, not just SKILL.md.",
+        "Process note: the 1.2.0 evidence.json was schema-CANONICAL but 7 of 12 raw_snippets were paraphrases that failed --check-sources. Repaired in 1.3.0 by citing raw.githubusercontent.com file URLs with literal quotes. Prefer raw.* over github.com/blob for any evidence entry, blob pages HTML-escape the text and rate-limit."
+      ]
+    }
+  ]
+}

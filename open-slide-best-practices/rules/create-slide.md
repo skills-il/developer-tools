@@ -1,6 +1,6 @@
 # create-slide (open-slide reference)
 
-> Adapted from [1weiho/open-slide MIT, packages/core/skills/create-slide/SKILL.md](https://github.com/1weiho/open-slide/blob/main/packages/core/skills/create-slide/SKILL.md). Hebrew/RTL pointers added by skills-il.
+> Adapted from [1weiho/open-slide MIT, packages/core/skills/create-slide/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/create-slide/SKILL.md). Hebrew/RTL pointers added by skills-il.
 
 # Create a slide in open-slide
 
@@ -10,7 +10,7 @@ You only write files under `slides/<id>/`. Never modify `package.json`, `open-sl
 
 ## Step 1 — Pick a theme
 
-List files under `themes/`. If any theme markdown files exist (anything other than `README.md`), call `AskUserQuestion` with each theme id as an option plus a final **"no theme — design from scratch"** option.
+List files under `themes/`. If any theme markdown files exist (anything other than `README.md`), call `AskUserQuestion` with each theme id as an option plus a final **"no theme — design from scratch"** option. (`AskUserQuestion` holds at most 4 options, so with 4+ themes offer the 3 most topic-relevant plus "no theme"; the auto-added "Other" lets the user name any omitted theme.)
 
 - If the user picks a theme: read `themes/<id>.md` end-to-end. The theme's palette, typography, layout, and Title/Footer components are now authoritative — copy them directly into the slide. In Step 2, skip the **aesthetic direction** question (the theme already commits to one direction); you still need the topic itself, so confirm it before moving on. Page count, text density, and motion are independent of theme — ask those normally.
 - If the user picks "no theme", or `themes/` is empty (or contains only `README.md`): proceed to Step 2 unchanged.
@@ -34,15 +34,17 @@ Then ask these four in a single `AskUserQuestion` call (multi-question form):
 
    Mark the option that best fits the topic and audience as "(Recommended)" so the user has a sensible default. (`AskUserQuestion` already auto-adds "Other" — don't add a generic catch-all yourself.)
 
-2. **Page count** — rough length. Offer brackets: 3–5 (short), 6–10 (standard), 11–20 (deep dive), custom.
+2. **Page count** — rough length. Offer brackets: 3–5 (short), 6–10 (standard), 11–20 (deep dive). The auto-added "Other" covers custom counts.
 3. **Text density per page** — how much copy lives on each page? Offer: minimal (one line / big number), light (heading + 2–3 bullets), standard (heading + 4–5 bullets or short paragraph), dense (multi-column / detailed). This directly drives type scale and layout.
-4. **Motion** — does the user want CSS/React animations and transitions, or a fully static deck? Offer: static (no motion), subtle (fades / entrance only), rich (keyframes, staggered reveals, looping visuals). If animated, plan to use CSS `@keyframes` / inline `style` + `useEffect`; no extra libraries.
+4. **Motion** — does the user want CSS/React animations and transitions, or a fully static deck? Offer: static (no motion), subtle (fades / entrance only), rich (keyframes, staggered reveals, looping visuals). If animated, plan around the framework primitives first (`<Steps>` / `<Step>` for staged reveals, `SlideTransition` for page changes, `MorphElement` for shared-element continuity, see [./slide-authoring.md](./slide-authoring.md)), plus CSS `@keyframes` / inline `style` + `useEffect` for in-page motion; no extra libraries.
 
 After those four, ask follow-ups **only if still unclear**: brand colors, required assets. Don't pad the conversation with questions already answered.
 
 ## Step 3 — Pick a slide id
 
 Use **kebab-case**, short, descriptive. Examples: `rust-intro`, `q2-roadmap`, `team-offsite-2026`. Check `slides/` to avoid collisions.
+
+**The id must be ASCII.** Discovery filters folder names through `SLIDE_ID_RE = /^[a-z0-9_-]+$/i` and skips anything else with a warning only, so a Hebrew folder name (`slides/פתיחה/`) never appears in the sidebar, the browser, or the build, and the build still exits 0. This is the single easiest way to lose a slide on a Hebrew deck. Transliterate the id (`peticha`) or use an English one (`cover`), and put the Hebrew title in `meta.title`.
 
 ## Step 4 — Plan the structure
 

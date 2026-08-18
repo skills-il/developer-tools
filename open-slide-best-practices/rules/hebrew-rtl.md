@@ -8,10 +8,12 @@ For a Hebrew or bilingual `slides/<id>/index.tsx`:
 
 1. Set `dir="rtl"` on the **page component's root `<div>`** only (never on `<html>`, that breaks the dev server chrome).
 2. Use **logical CSS** everywhere: `paddingInline`, `paddingInlineStart`, `marginInlineStart`, `insetInlineStart`, `text-align: 'start'`. Never physical (`paddingLeft`, `marginLeft`, `left`, `text-align: 'left'`) inside the page root.
-3. Load **Hebrew Google Fonts** (Heebo, Rubik, Assistant, Noto Sans Hebrew, Frank Ruhl Libre, Suez One) via the global stylesheet OR `@import` in a `<style>` block at the top of the page. List them first in `DesignSystem.fonts.display` / `fonts.body`, with the system stack as fallback.
+3. Load **Hebrew Google Fonts** (Heebo, Rubik, Assistant, Noto Sans Hebrew, Frank Ruhl Libre, Suez One) by injecting the stylesheet **once into `<head>` from module top level**, with an element id keyed to the slide. Never from inside the page component. List the family first in `DesignSystem.fonts.display` / `fonts.body`, with the system stack as fallback.
 4. **Bump the type scale by ~10–15%** for Hebrew (Hebrew renders wider per character at the same px size).
 5. Wrap any Latin run inside Hebrew copy in `<bdi>` to prevent bidi punctuation glitches: `השתמשו ב-<bdi>React Router</bdi>`.
 6. The 1080px **vertical budget rule still applies**, but recompute it for Hebrew at the larger heading sizes you picked in step 4.
+
+And one rule that is not about styling at all: **name the slide folder in ASCII.** `slides/<id>` ids must match `/^[a-z0-9_-]+$/i`. A Hebrew folder name is silently skipped at discovery, the slide never appears in the browser or the build, and the build still exits 0. Hebrew belongs in `meta.title` and in the page content, not in the folder name.
 
 The remaining sections explain each of these in depth.
 
@@ -125,24 +127,39 @@ Avoid: David Libre (system-y, looks dated at large sizes), VarelaRound (cute but
 
 ### Loading them
 
-There are three options. The first is recommended because it works without modifying anything outside `slides/<id>/`.
+Upstream documents exactly one supported mechanism, in `slide-authoring/references/webfonts.md`, and it is a hard rule:
 
-**Option A: `@import` inside the page (simplest, slide-scoped):**
+> **Load the stylesheet once, in `<head>` (never inside a per-page component).**
+
+The reason is specific to this framework: every page of a slide is mounted live at the same time (the thumbnail rail, the overview grid, and the PDF print root all render them together), so a `<style>@import ...</style>` or a `<link>` returned from a `Page` component registers the whole `@font-face` set once *per page*. Upstream also requires the injected element's id to be **keyed to the slide**, because the home page mounts pages from every slide at once, so a shared id like `osd-webfont` would let the first slide's fonts suppress every other slide's.
+
+**Option A (recommended): idempotent head injection at module top level of `slides/<id>/index.tsx`.**
 
 ```tsx
+const FONT_HREF =
+  'https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap&subset=hebrew';
+const FONT_LINK_ID = 'osd-webfont-hebrew-cover'; // suffix = this slide's folder id
+
+if (typeof document !== 'undefined' && !document.getElementById(FONT_LINK_ID)) {
+  const link = document.createElement('link');
+  link.id = FONT_LINK_ID;
+  link.rel = 'stylesheet';
+  link.href = FONT_HREF;
+  document.head.appendChild(link);
+}
+
 const Cover: Page = () => (
-  <>
-    <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap&subset=hebrew');
-    `}</style>
-    <div dir="rtl" style={{ /* ... */ fontFamily: 'Heebo, system-ui, sans-serif' }}>
-      ...
-    </div>
-  </>
+  <div dir="rtl" style={{ /* ... */ fontFamily: 'Heebo, system-ui, sans-serif' }}>
+    ...
+  </div>
 );
 ```
 
-The `subset=hebrew` URL parameter ships only the Hebrew glyph subset (smaller payload). Drop it if the deck mixes Latin and you want the same font for both.
+Top-level statements, not inside a component and not inside an effect. The `typeof document !== 'undefined'` guard keeps it safe during the static build.
+
+**List only the weights you actually use.** Each extra weight multiplies the number of `@font-face` rules. The `subset=hebrew` URL parameter ships only the Hebrew glyph subset (smaller payload); drop it if the deck mixes Latin and you want the same font for both. Upstream's `&text=<unique chars>` trick works for Hebrew too when a hero uses only a handful of characters.
+
+**The old `<style>@import</style>`-inside-the-page pattern is no longer correct.** Earlier versions of this skill recommended it; it still renders, but it re-registers the font set per mounted page and upstream now explicitly forbids it.
 
 **Option B: Reference in `DesignSystem.fonts` (so the Design panel can tweak it):**
 
@@ -158,9 +175,9 @@ export const design: DesignSystem = {
 };
 ```
 
-Pair this with the `@import` in a `<style>` block at the page top, since `DesignSystem.fonts` only declares the CSS `font-family` value, it does NOT load the font file. (The Design panel reads `DesignSystem.fonts` to render its preview; it does not own font loading.)
+Pair this with the head injection from Option A, since `DesignSystem.fonts` only declares the CSS `font-family` value, it does NOT load the font file. (The Design panel reads `DesignSystem.fonts` to render its preview; it does not own font loading.)
 
-**Option C: Project-level injection.** If you control the project (not just `slides/`), add `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Rubik:wght@400;700;900&display=swap&subset=hebrew">` to the project's `index.html` template once. Per-slide work then just references the family name. The upstream "do not touch package.json or open-slide.config.ts" rule does NOT cover `index.html`, but when in doubt, prefer Option A (slide-scoped), it keeps the slide self-contained.
+**Option C: Project-level injection.** If you control the project (not just `slides/`), add `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Rubik:wght@400;700;900&display=swap&subset=hebrew">` to the project's `index.html` template once. Per-slide work then just references the family name. The upstream "do not touch package.json or open-slide.config.ts" rule does NOT cover `index.html`, but when in doubt, prefer Option A, it keeps the slide self-contained and matches the documented mechanism.
 
 ### Exporting to PDF / PPTX
 

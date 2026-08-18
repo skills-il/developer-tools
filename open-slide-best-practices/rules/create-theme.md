@@ -1,6 +1,6 @@
 # create-theme (open-slide reference)
 
-> Adapted from [1weiho/open-slide MIT, packages/core/skills/create-theme/SKILL.md](https://github.com/1weiho/open-slide/blob/main/packages/core/skills/create-theme/SKILL.md). Hebrew/RTL pointers added by skills-il.
+> Adapted from [1weiho/open-slide MIT, packages/core/skills/create-theme/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/create-theme/SKILL.md). Hebrew/RTL pointers added by skills-il.
 
 # Create a slide theme
 
@@ -25,7 +25,7 @@ If the user's original message already specifies the inputs unambiguously, skip 
 - **Images**: read each path with the `Read` tool (it accepts images). Note dominant colors as hex, type weight/style, layout rhythm, decorative motifs, and any recurring chrome (header bar, footer line, page numbers).
 - **Text**: extract explicit tokens (hex codes, font names, motion verbs) and implicit tone words ("editorial", "playful", "brutalist"). Resolve vague language into concrete decisions before writing.
 - **Existing slide**: read `slides/<id>/index.tsx` and pull:
-  - The `palette` object → Palette section.
+  - The `design.palette` object (or a legacy top-of-file `palette` const) → Palette section.
   - Font constants and any `font-size` patterns → Typography section.
   - Padding / alignment patterns → Layout section.
   - Recurring components (TrafficLights, Eyebrow, Footer-style helpers, WindowShell, …) → Fixed components section.
@@ -46,7 +46,7 @@ Produce a file with this exact section order. Section bodies adapt to the theme;
 ---
 name: <Human title, e.g. "Editorial Noir">
 description: <one-line elevator pitch>
-mode: light | dark | system
+mode: <dark | light, whichever matches the palette's bg>
 ---
 
 # <Theme name>

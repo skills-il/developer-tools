@@ -25,10 +25,46 @@ When in an empty folder or workspace with no existing open-slide project, scaffo
 ```bash
 npx @open-slide/cli init my-slide
 cd my-slide
-pnpm dev
+npm run dev
 ```
 
-Replace `my-slide` with a suitable project name. The scaffolder ships with the upstream agent skills preconfigured; this skill provides Hebrew and RTL adaptations on top.
+Replace `my-slide` with a suitable project name. The scaffolder installs dependencies with npm and prints `npm run dev` as the next step; `pnpm dev` works too if you re-install with pnpm.
+
+**Node version.** `@open-slide/cli` depends on `commander@15`, which declares `"node": ">=22.12.0"`, and on `chalk@6` (`">=22"`). On Node 20 the install still completes but npm prints `EBADENGINE Unsupported engine` for both. Use Node 22.12 or newer.
+
+What the scaffold gives you:
+
+| Path | What it is |
+| --- | --- |
+| `slides/<id>/index.tsx` | One folder per slide. See the id rule below. |
+| `themes/` | Theme markdown files |
+| `open-slide.config.ts` | Typed `OpenSlideConfig` export, empty by default. Framework-level options live here: `base`, `slidesDir`, `themesDir`, `assetsDir`, `port`, `allowedHosts`, `build`, and a deprecated `locale`. |
+| `.agents/skills/` and `.claude/skills/` | The five upstream skills, copied in at init time |
+| `npm run sync:skills` | Re-copies the bundled skills out of `@open-slide/core` after a core upgrade |
+
+Run `npm run sync:skills` after upgrading `@open-slide/core`, otherwise the agent keeps reading the skill copies from the version you scaffolded with.
+
+### Slide folder ids must be ASCII (Hebrew folder names are silently dropped)
+
+**Do not name a slide folder in Hebrew.** Discovery filters every folder under `slides/` through `SLIDE_ID_RE = /^[a-z0-9_-]+$/i` and skips the rest, so a folder like `slides/פתיחה/` never reaches the sidebar, the browser, or the build. Verified on `@open-slide/core@1.18.0`:
+
+```
+[plugin:open-slide] [plugin open-slide] Ignoring slide folder "פתיחה": slide ids must match
+/^[a-z0-9_-]+$/i (lowercase/uppercase letters, digits, "-", "_"). Rename the folder under
+"slides/" to a kebab-case id so it appears in the browser and can be moved into folders.
+```
+
+It is only a warning, not an error, so `npm run build` exits 0 and the missing slide is easy to miss. Use a Latin kebab-case id (`peticha`, `cover`, `q2-roadmap`) and put the Hebrew in `meta.title` and in the page content, where it belongs.
+
+**Do not over-apply this rule.** It is specific to slide folder ids. Verified as NOT affected:
+
+| Surface | Hebrew allowed? | Why |
+| --- | --- | --- |
+| `slides/<id>/` folder name | No | Filtered by `SLIDE_ID_RE` at discovery |
+| `meta.title` | Yes | Free text, never used as an id |
+| `themes/<id>.md` file name | Yes | The theme id is `path.basename(file, '.md')` with no ASCII filter, and theme routes are built with `encodeURIComponent(id)` |
+| Theme frontmatter values (`name:`, `description:`) | Yes | Only the frontmatter KEY is matched against `/^([A-Za-z0-9_-]+)\s*:/`; the value is free text |
+| Slide body copy | Yes | It is just JSX text |
 
 ### Hebrew and RTL
 
@@ -47,6 +83,14 @@ For any Hebrew or bilingual deck, load [./rules/hebrew-rtl.md](./rules/hebrew-rt
 ### Slide authoring (file contract, canvas, type scale, themes, design tokens)
 
 For the technical reference on what goes inside `slides/<id>/index.tsx`, load [./rules/slide-authoring.md](./rules/slide-authoring.md). This is the same content the upstream `slide-authoring` skill exposes, with Hebrew/RTL pointers inline. It covers the file contract, the 1920×1080 canvas math, the type scale, spacing, visual direction, themes, the `DesignSystem` design-tokens object, the starter template, assets, image placeholders, and the repeated-elements rule.
+
+Upstream has since split its own `slide-authoring` skill into per-primitive reference files. Three of them cover primitives this skill does not restate, so read them upstream rather than reimplementing by hand:
+
+| Upstream reference | Primitive | Why it matters in a Hebrew deck |
+| --- | --- | --- |
+| [`references/steps.md`](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/steps.md) | `<Steps>` / `<Step>` stepped reveals | Staged reveals let you keep each Hebrew beat short instead of overflowing one dense page |
+| [`references/page-numbers.md`](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/page-numbers.md) | `useSlidePageNumber()` | Read `{ current, total }` from the hook instead of hardcoding a footer counter; wrap the Latin digits in `<bdi>` inside an RTL footer |
+| [`references/morph.md`](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/morph.md) | `MorphElement` shared-element ("magic move") transitions | Morph interpolates position and size across the cut, so an element that moves between an LTR and an RTL page needs the same `id` on both |
 
 ### Drafting a new deck
 
@@ -87,6 +131,8 @@ For Hebrew text the budget is tighter than it looks: Hebrew renders ~10–15% wi
 | MDN: CSS logical properties | https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values | RTL-aware CSS, `inset-inline-start`, `padding-inline` |
 | MDN: `<bdi>` element | https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdi | Bidi isolation for mixed Hebrew+Latin |
 | Google Fonts (Hebrew subset) | https://fonts.google.com/?subset=hebrew | Hebrew web fonts: Heebo, Rubik, Assistant, Noto Sans Hebrew |
+| Upstream slide-id regex (`slide-ops.ts`) | https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/src/editing/slide-ops.ts | `SLIDE_ID_RE`, whether non-ASCII slide folder ids are still filtered out |
+| Upstream webfont loading rules | https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/webfonts.md | The supported way to load a webfont (head injection, slide-keyed id) |
 
 ## Recommended MCP Servers
 
@@ -98,30 +144,34 @@ These are the failure modes a coding agent hits when authoring an open-slide dec
 
 1. **Using `paddingLeft` and `marginLeft` everywhere.** In LTR these read as "from the start of the line". In RTL they're literally on the wrong side of the canvas. Use `paddingInlineStart` / `paddingInlineEnd` (or shorthand `paddingInline`) so the layout flips automatically when `dir="rtl"` is set on the canvas root. The same applies to `left` / `right` (use `insetInlineStart` / `insetInlineEnd`) and `text-align: left/right` (use `text-align: start/end`).
 
-2. **Setting `direction: 'rtl'` on `<html>` or globally.** open-slide's canvas root is the page component, not the HTML document. The dev server chrome (file rail, navigation arrows) is upstream UI in English; flipping the document direction breaks it. Set `dir="rtl"` on the page component's root `<div>` only. The Inspector and presenter mode keep their LTR layout; only your slide content flips.
+2. **Setting `direction: 'rtl'` on `<html>` or globally.** open-slide's canvas root is the page component, not the HTML document. The dev server chrome (file rail, navigation arrows) is upstream UI in English; flipping the document direction breaks it. Set `dir="rtl"` on the page component's root `<div>` only. The Inspector and presenter mode keep their LTR layout; only your slide content flips. There is no Hebrew option to switch them to either: `OpenSlideConfig.locale` is deprecated in favour of the slide UI's language switcher, and the shipped UI locales are `en`, `zh-TW`, `zh-CN` and `ja` only. Tell the user the authoring chrome stays English; only the deck is Hebrew.
 
-3. **System font stack only.** The upstream starter uses `system-ui, -apple-system, sans-serif` for both `display` and `body`. On macOS that resolves to Helvetica / SF Pro for Hebrew, which is acceptable but not display-quality at 140–200px hero. For decks that ship beyond a dev machine, load Heebo or Rubik via Google Fonts (`?subset=hebrew`) and put them first in the stack with the system stack as fallback. See `hebrew-rtl.md`.
+3. **Naming the slide folder in Hebrew.** It is the natural thing to do on a Hebrew deck and it silently loses the slide: discovery filters folder names through `/^[a-z0-9_-]+$/i` and only warns. Latin kebab-case id, Hebrew in `meta.title`. See "Slide folder ids must be ASCII" above.
 
-4. **Same type scale as English.** 140–200px hero in Inter looks tight at the lower bound (140) for Hebrew, because Hebrew uppercase-equivalent (Hebrew has no case) sits at the cap-height-equivalent of large-x-height Latin fonts. Hebrew at 140px reads like Latin at 120px. Either bump the hero to 160–220px for Hebrew, or drop the line count.
+4. **Loading the Hebrew webfont from inside the page component.** A `<style>@import ...</style>` or a `<link>` rendered inside a `Page` re-registers the whole `@font-face` set once per mounted page, and the home page, the thumbnail rail, the overview grid and the PDF print root all mount every page at the same time. Upstream's rule is to inject the stylesheet once into `<head>` from module top level of `index.tsx`, with an element id keyed to the slide (`osd-webfont-<slide-id>`) so one slide's fonts cannot suppress another's. See `hebrew-rtl.md` section 3.
 
-5. **Mixing Hebrew and English without `<bdi>`.** A bullet like "השתמשו ב-React Router" with mixed Hebrew + Latin tokens often renders the punctuation in the wrong place because the browser's bidi algorithm doesn't always isolate the Latin span. Wrap mixed runs in `<bdi>`: `השתמשו ב-<bdi>React Router</bdi>`. Critical for code identifiers, brand names, and URLs inside Hebrew copy.
+5. **System font stack only.** The upstream starter uses `system-ui, -apple-system, sans-serif` for both `display` and `body`. On macOS that resolves to Helvetica / SF Pro for Hebrew, which is acceptable but not display-quality at 140–200px hero. For decks that ship beyond a dev machine, load Heebo or Rubik via Google Fonts (`?subset=hebrew`) and put them first in the stack with the system stack as fallback. See `hebrew-rtl.md`.
 
-6. **`array.map` for visually repeated cards.** The upstream rule (one component instantiated per item, NOT `map` over a data array) applies in Hebrew too. The reason is the inspector: `map` shares one source location per item, so editing one Hebrew label changes all rendered cards. Define `<Card />` once, instantiate it three times explicitly. See `slide-authoring.md`.
+6. **Same type scale as English.** 140–200px hero in Inter looks tight at the lower bound (140) for Hebrew, because Hebrew uppercase-equivalent (Hebrew has no case) sits at the cap-height-equivalent of large-x-height Latin fonts. Hebrew at 140px reads like Latin at 120px. Either bump the hero to 160–220px for Hebrew, or drop the line count.
 
-7. **Ignoring `node_modules/.open-slide/current.json`.** When the user says "תקן את הכותרת בעמוד הזה" ("fix the heading on this page"), the deictic "הזה" maps exactly the same way the English "this" does — you must read `current.json` to find which slide they're on. Re-read it on every turn. See `current-slide.md`.
+7. **Mixing Hebrew and English without `<bdi>`.** A bullet like "השתמשו ב-React Router" with mixed Hebrew + Latin tokens often renders the punctuation in the wrong place because the browser's bidi algorithm doesn't always isolate the Latin span. Wrap mixed runs in `<bdi>`: `השתמשו ב-<bdi>React Router</bdi>`. Critical for code identifiers, brand names, and URLs inside Hebrew copy.
 
-8. **Same vertical budget at the bumped Hebrew type scale.** A cover that fits a 3-line LTR hero at 200px (3 × 200 × 0.95 = 570px) will overflow if you keep 3 lines AND bump to 232px for Hebrew (3 × 232 × 0.95 = 661px) — once padding and subtitle are added you blow past 1080. Either stay at 1–2 lines for the Hebrew hero, or recompute the full budget with the bumped values before committing. Splitting is always the right answer.
+8. **`array.map` for visually repeated cards.** The upstream rule (one component instantiated per item, NOT `map` over a data array) applies in Hebrew too. The reason is the inspector: `map` shares one source location per item, so editing one Hebrew label changes all rendered cards. Define `<Card />` once, instantiate it three times explicitly. See `slide-authoring.md`.
 
-9. **Mis-translated technical terms inside the slide copy.** Translation services and well-meaning agents render English dev terminology into Hebrew that means something else. Common traps:
+9. **Ignoring `node_modules/.open-slide/current.json`.** When the user says "תקן את הכותרת בעמוד הזה" ("fix the heading on this page"), the deictic "הזה" maps exactly the same way the English "this" does — you must read `current.json` to find which slide they're on. Re-read it on every turn. See `current-slide.md`.
+
+10. **Same vertical budget at the bumped Hebrew type scale.** A cover that fits a 3-line LTR hero at 200px (3 × 200 × 0.95 = 570px) will overflow if you keep 3 lines AND bump to 232px for Hebrew (3 × 232 × 0.95 = 661px) — once padding and subtitle are added you blow past 1080. Either stay at 1–2 lines for the Hebrew hero, or recompute the full budget with the bumped values before committing. Splitting is always the right answer.
+
+11. **Mis-translated technical terms inside the slide copy.** Translation services and well-meaning agents render English dev terminology into Hebrew that means something else. Common traps:
    - **"themes" → "ערכאות"** (literally "court instances" — a legal term). Correct: **"ערכות נושא"** (theme sets) or **"תמות"** (transliteration).
    - **"resolution" (as in "resolving a reference") → "רזולוציית"** (means screen/image resolution). Correct: **"פיענוח"** (decoding) or **"זיהוי"** (identification).
    - **"authoring" → "אוטרינג"** (English transliteration, sounds techy and wrong). Correct: **"כתיבה"** or **"יצירה"**.
    - **"tuned scale" → "סקאלה מכוונת"** (literal but robotic). Better: **"סקאלה מותאמת"** (adapted scale).
    Always verify Hebrew technical terms with a native speaker or a Hebrew dev community reference before shipping.
 
-10. **Pairing brand colors as a gradient can produce an off-brand intermediate hue.** A linear gradient from Israeli Blue (`#003286`) to YooTech Magenta (`#bc46a2`) blends through saturated purple — which is NOT in the agentskills.co.il palette. If a project has a brand palette, audit each combination: hold solid bold marks for primary brand colors, and only gradient between adjacent hues (e.g., Israeli Blue → Israeli Blue Light) or fade to neutral (cream / navy). One confident solid usually beats a contrived gradient.
+12. **Pairing brand colors as a gradient can produce an off-brand intermediate hue.** A linear gradient from Israeli Blue (`#003286`) to YooTech Magenta (`#bc46a2`) blends through saturated purple — which is NOT in the agentskills.co.il palette. If a project has a brand palette, audit each combination: hold solid bold marks for primary brand colors, and only gradient between adjacent hues (e.g., Israeli Blue → Israeli Blue Light) or fade to neutral (cream / navy). One confident solid usually beats a contrived gradient.
 
-11. **Audit your own copy for bidi traps. Recursively.** A skill that warns about missing `<bdi>` will frequently MISS its own `<bdi>` calls inside Hebrew sentences ("השתמשו ב-RTL" needs `<bdi>RTL</bdi>`). When writing prose, slides, or examples, manually scan every Latin token embedded in Hebrew runs and wrap it. Code identifiers, brand names, version numbers, file extensions — all need isolation. The author writing the rule is not exempt from the rule.
+13. **Audit your own copy for bidi traps. Recursively.** A skill that warns about missing `<bdi>` will frequently MISS its own `<bdi>` calls inside Hebrew sentences ("השתמשו ב-RTL" needs `<bdi>RTL</bdi>`). When writing prose, slides, or examples, manually scan every Latin token embedded in Hebrew runs and wrap it. Code identifiers, brand names, version numbers, file extensions — all need isolation. The author writing the rule is not exempt from the rule.
 
 ## Troubleshooting
 
@@ -133,6 +183,9 @@ These are the failure modes a coding agent hits when authoring an open-slide dec
 | Hero heading wraps to a second line in Hebrew but not English | Hebrew is wider per character | Either bump hero size by ~15% or shorten the title |
 | `paddingLeft: 160` puts content against the right edge of an RTL slide | Physical CSS in an RTL container | Replace with `paddingInline: 160` or `paddingInlineStart: 160` |
 | Inspector arrows / file rail flipped | You set `direction: 'rtl'` globally on `<html>` | Move `dir="rtl"` to the page component's root only |
+| A slide you created never appears in the sidebar or the build, but nothing errors | The folder id under `slides/` is not ASCII (a Hebrew name), so discovery skipped it with a warning only | Rename the folder to Latin kebab-case; keep the Hebrew in `meta.title`. Grep the dev/build output for `Ignoring slide folder` |
+| Hebrew webfont loads but the deck feels heavy on the home page or PDF export | The `@font-face` set is registered once per mounted page because the stylesheet is injected inside a `Page` component | Inject it once into `<head>` from module top level with an id keyed to the slide (`osd-webfont-<slide-id>`) |
+| `npm warn EBADENGINE Unsupported engine` on `npx @open-slide/cli init` | Node older than 22.12.0 (`commander@15` requires `>=22.12.0`) | Upgrade Node to 22.12 or newer |
 | `current.json` does not exist | Dev server has not been opened on a slide yet | Run `pnpm dev` and open any slide in the browser, then re-read |
 | Comment markers missing after applying | Did not delete the marker line, only the text | Re-run the regex; remove the entire line including trailing `\n` |
 | `@open-slide/cli init` fails with "package not found" | Network or registry issue | Verify `npm view @open-slide/cli version` returns a version; clear pnpm/npm cache |

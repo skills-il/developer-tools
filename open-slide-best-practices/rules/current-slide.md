@@ -1,6 +1,6 @@
 # current-slide (open-slide reference)
 
-> Adapted from [1weiho/open-slide MIT, packages/core/skills/current-slide/SKILL.md](https://github.com/1weiho/open-slide/blob/main/packages/core/skills/current-slide/SKILL.md). Hebrew/RTL pointers added by skills-il.
+> Adapted from [1weiho/open-slide MIT, packages/core/skills/current-slide/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/current-slide/SKILL.md). Hebrew/RTL pointers added by skills-il.
 
 # Where is the user right now?
 

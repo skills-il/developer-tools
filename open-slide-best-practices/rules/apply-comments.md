@@ -1,6 +1,6 @@
 # apply-comments (open-slide reference)
 
-> Adapted from [1weiho/open-slide MIT, packages/core/skills/apply-comments/SKILL.md](https://github.com/1weiho/open-slide/blob/main/packages/core/skills/apply-comments/SKILL.md). Hebrew/RTL pointers added by skills-il.
+> Adapted from [1weiho/open-slide MIT, packages/core/skills/apply-comments/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/apply-comments/SKILL.md). Hebrew/RTL pointers added by skills-il.
 
 # Apply slide comments
 
@@ -33,7 +33,7 @@ Your job: read those markers, perform the described edits, and delete the marker
 2. **Read the file and find all markers.**
    - Run the regex above against the whole file.
    - For each match, base64url-decode `text` and `JSON.parse` it to get `{ note, hint? }`.
-   - Record each hit as `{ id, lineIndex (0-based), indent, note, hint }`.
+   - Record each hit as `{ id, lineIndex (0-based), note, hint }`.
    - If there are no markers, tell the user and stop.
 
 3. **Understand each comment in context.**
@@ -47,14 +47,14 @@ Your job: read those markers, perform the described edits, and delete the marker
 
 5. **Remove each marker after applying its edit.**
    - Delete the entire marker line including its trailing `\n`.
-   - Never leave a marker behind. An un-removed marker signals a failure.
+   - Never leave a marker behind for an edit you applied, that signals a failure. Markers you deliberately skipped per the edge cases below stay in place.
 
 6. **Verify.**
    - After all edits, re-read the file and confirm zero remaining markers.
-   - Run `pnpm tsc --noEmit` and `pnpm biome check` (or `pnpm lint`). Fix any introduced errors.
+   - Confirm the edited JSX is well-formed (balanced tags, no dangling attributes). If the project's `package.json` has typecheck/lint scripts, run them with the project's package manager. A scaffolded open-slide project ships NEITHER TypeScript nor a linter (its only scripts are `dev`, `build`, `preview`, `sync:skills`), so `pnpm tsc --noEmit` and `pnpm biome check` will simply fail there; rely on the running dev server or `npm run build` to surface compile errors instead. Fix any errors you introduced.
 
 7. **Report.**
-   - Summarise: `N applied, 0 remaining` plus a one-line description of each change (including the slide id).
+   - Summarise: `N applied, M skipped` plus a one-line description of each change (including the slide id).
 
 ## base64url decoding helper
 
