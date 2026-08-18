@@ -149,26 +149,26 @@
       "claim_id": "monday-api",
       "claim": "Monday.com exposes a GraphQL API at api.monday.com/v2 for updating item status from CI.",
       "source_url": "https://developer.monday.com/api-reference/docs",
-      "raw_snippet": "h the monday MCP server Authenticate with an API token Control MCP access with your own OAuth app Make your MCP integration publicly available Platform MCP tools Create Board (Platform MCP) Get Board Info (Platform MCP) Get Board Items (Platform MCP) Get Board Activity (Platform MCP) Board Insights (Platform MCP) Create Group (Platform MCP) Create Column (Platform MCP) Get Column Type Info (Platform MCP) Create Item (Platform MCP) Change Item Column Values (Platform MCP) Create Workspace (Platform MCP) Update Workspace (Platfor",
+      "raw_snippet": "er entity: 2026-04 → 2026-10 Migrating to version 2025-04 Platform MCP overview Compatible MCP clients Integrate with the monday MCP server Authenticate with an API token Control MCP access with your own OAuth app Make your MCP integration publicly available Platform MCP tools Create Board (Platform MCP) Get Board Info (Platform MCP) Get Board Items (Platform MCP) Get Board Activity (Platform MCP) Board Insights (Platform MCP) Create Group (Platform MCP) Create Column (Platform MCP) Get Column Type Info (Platform MCP) Create It",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched; 6 of 8 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"available\"",
+      "verified_via": "cited page fetched; 31 of 33 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"server\"",
       "verified_at": "2026-08-18"
     },
     {
       "claim_id": "vercel-regions",
       "claim": "Vercel supports pinning deployment regions (e.g. fra1 Frankfurt) documented in the Edge Network regions page.",
       "source_url": "https://vercel.com/docs/edge-network/regions",
-      "raw_snippet": "Points of Presence (PoPs) In addition to our 20 compute-capable regions, Vercel's CDN includes 126 PoPs distributed across the globe. These PoPs serve several crucial functions: TCP termination and routing: PoPs terminate TCP and route requests over a private network to the nearest Vercel region with single-digit millisecond latency. DDoS protection: They provide a first line of defense against distributed denial-of-service attacks.",
+      "raw_snippet": "This page details the supported regions and explains our global infrastructure. Our global CDN has 126 Points of Presence in 94 cities across 51 countries. Global infrastructure Vercel's CDN is built on a sophisticated global infrastructure designed to optimize performance and reliability: Points of Presence (PoPs) : We operate over 126 PoPs distributed across the globe. These PoPs serve as the first point of contact for incoming requests, ensuring low-latency access for users worldwide.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched; 10 of 15 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"include\"",
+      "verified_via": "cited page fetched and confirmed to contain \"126\"; snippet replaced with the page's own wording around it",
       "verified_at": "2026-08-18"
     },
     {

@@ -7,14 +7,14 @@
       "claim_id": "latest-jfrog-cli-version-is-v2-117-0-released-july-30-2026",
       "claim": "Latest JFrog CLI version is v2.117.0, released July 30, 2026",
       "source_url": "https://github.com/jfrog/jfrog-cli/releases",
-      "raw_snippet": "s Next Jump to release 2.120.0 2.119.0 2.118.0 2.117.0 2.116.0 2.115.0 2.113.0 2.112.0 2.111.0 2.110.0 Previous Next 2.120.0 2.120.0 Latest Latest Compare Choose a tag to compare Sorry, something went wrong. Filter Loading Sorry, something went wrong. Uh oh! There was an error while loading. Please reload this page . No results found View all tags IL-Automation released this 12 Aug 14:36 v2.120.0 392c307 This commit was created on GitHub.com and signed with GitHub’s verified signature .",
+      "raw_snippet": "Please reload this page . No results found View all tags IL-Automation released this 12 Aug 14:36 v2.120.0 392c307 This commit was created on GitHub.com and signed with GitHub’s verified signature . GPG key ID: B5690EEEBB952194 Verified Learn about vigilant mode . What changed in v2.120.0 Auto-generated from 6 repositories · 2026-08-12 Comparing v2.119.0 → v2.120.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
       "confidence": "high",
-      "verified_via": "cited page fetched; 4 of 5 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"latest\"",
+      "verified_via": "cited page fetched and confirmed to contain \"392\"; snippet replaced with the page's own wording around it",
       "verified_at": "2026-08-18"
     },
     {

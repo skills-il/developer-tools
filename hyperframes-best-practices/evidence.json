@@ -39,12 +39,14 @@
       "claim_id": "hyperframes-font-logic",
       "claim": "HyperFrames compiler deterministic font resolution logic (canonical font list, Google Fonts fallback, cache path)",
       "source_url": "https://github.com/heygen-com/hyperframes/blob/main/packages/producer/src/services/deterministicFonts.ts",
-      "raw_snippet": "https://github.com/heygen-com/hyperframes/blob/main/packages/producer/src/services/deterministicFonts.ts",
-      "fetched_at": "2026-06-28T23:30:00Z",
+      "raw_snippet": "Faces sharing a source can be emitted as * one weight-range rule instead of embedding that blob once per weight. * * Without `text=` the response is ordered weight-major, subset-minor, so those * faces are not adjacent — group by source rather than scanning neighbours. * Insertion order keeps the emitted CSS deterministic. */ function normalizeWeightKey(weight: string): string { const numeric = Number(weight); return Number.isFinite(numeric) ? String(numeric) : weight.trim().",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 17 of 22 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"blob\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "kokoro-no-hebrew-8-langs",
@@ -72,11 +74,13 @@
       "claim_id": "hyperframes-render-command",
       "claim": "npx hyperframes render is the CLI command that encodes the composition HTML to MP4 (distinct from lint/validate which check the HTML)",
       "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/SKILL.md",
-      "raw_snippet": "init, lint, validate, inspect, preview, render, publish, doctor",
-      "fetched_at": "2026-06-28T23:30:00Z",
+      "raw_snippet": "e media | `/media-use` | | Voiceover carve, audio effect chains, or automation envelopes on a track | `/hyperframes-audio` | | Init, lint, check, snapshots, compare, batch render, Studio, render, publish, or diagnostics | `/hyperframes-cli` | | Registry blocks and components | `/hyperframes-registry` | | Figma assets, tokens, components, or storyboard frames as reconstructed motion | `/figma` | Creator edit phrases are cross-domain requests.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 12 of 15 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"lint\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "groq-whisper-endpoint",
@@ -126,12 +130,12 @@
       "claim_id": "mdn-unicode-bidi",
       "claim": "MDN reference for CSS unicode-bidi / bidirectional text handling",
       "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-bidi",
-      "raw_snippet": "chnologies Accessibility HTTP URI Web extensions WebAssembly WebDriver See all… Topics Media Performance Privacy Security Progressive web apps Learn Learn web development Frontend developer course Getting started modules Core modules MDN Curriculum Check out the video course from Scrimba, our partner Learn HTML Structuring content with HTML module Learn CSS CSS styling basics module CSS layout mod",
+      "raw_snippet": "rking with the History API Using the Web speech API Using web workers All All web technology Technologies Accessibility HTTP URI Web extensions WebAssembly WebDriver See all",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"
       ],
-      "verified_via": "cited page fetched; 7 of 10 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"developer\"",
+      "verified_via": "cited page fetched; 39 of 39 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"extensions\"",
       "verified_at": "2026-08-18"
     },
     {

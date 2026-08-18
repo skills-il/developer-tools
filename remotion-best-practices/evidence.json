@@ -7,13 +7,13 @@
       "claim_id": "remotion-version-4-stable",
       "claim": "Remotion's current stable release is on the 4.0.x line (latest v4.0.483); there is no v5.",
       "source_url": "https://github.com/remotion-dev/remotion/releases",
-      "raw_snippet": "nyBurger in #10239 @remotion/studio : Keep selected outlines visible by @JonnyBurger in #10282 @remotion/studio : Keep outline order stable while dragging by @JonnyBurger in #10257 @remotion/studio : Keep canvas context menus open by @JonnyBurger in #10281 @remotion/studio : Fix canvas snapping flicker by @JonnyBurger in #10306 @remotion/studio : Fix fast menu dismissal by @JonnyBurger in #10291 @remotion/studio : Fix stale open-in-editor hover state by @YUHAO-corn in #10270 @remotion/studio : Avoid rerendering playback control",
+      "raw_snippet": "5 @remotion/studio : Preserve node paths after deleting sequences and other mutations that add / remove elements by @JonnyBurger in #10239 @remotion/studio : Keep selected outlines visible by @JonnyBurger in #10282 @remotion/studio : Keep outline order stable while dragging by @JonnyBurger in #10257 @remotion/studio : Keep canvas context menus open by @JonnyBurger in #10281 @remotion/studio : Fix canvas snapping flicker by @JonnyBurger in #10306 @remotion/studio : Fix fast menu dismissal by @JonnyBurger in #10291 @remotion/stud",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/rendering.md",
         "SKILL.md"
       ],
-      "verified_via": "cited page fetched; 14 of 21 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"stable\"",
+      "verified_via": "cited page fetched and confirmed to contain \"10239\"; snippet replaced with the page's own wording around it",
       "verified_at": "2026-08-18"
     },
     {
@@ -198,7 +198,7 @@
         "SKILL_HE.md",
         "rules/voiceover.md"
       ],
-      "verified_via": "cited page fetched; 11 of 16 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"docs\"",
+      "verified_via": "cited page fetched; 36 of 37 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"docs\"",
       "verified_at": "2026-08-18"
     },
     {

@@ -46,12 +46,12 @@
       "claim_id": "scribe-word-types-no-verbatim",
       "claim": "Scribe word objects expose type values word/spacing/audio_event only (no filler tag in any language); no_verbatim (scribe_v2 only) is destructive; tag_audio_events tags non-speech audio.",
       "source_url": "https://github.com/elevenlabs/skills/blob/main/speech-to-text/references/transcription-options.md",
-      "raw_snippet": "Do not expose the API key to the client. TOKEN= $( curl -s -X POST \\ \" https://api.elevenlabs.io/v1/single-use-token/batch_scribe \" \\ -H \" xi-api-key: $ELEVENLABS_API_KEY \" | jq -r ' .token ' ) curl -X POST \" https://api.elevenlabs.io/v1/speech-to-text?token= $TOKEN \" \\ -F \" file=@audio.",
+      "raw_snippet": "Do not expose the API key to the client. ```bash TOKEN=$(curl -s -X POST \\ \"https://api.elevenlabs.io/v1/single-use-token/batch_scribe\" \\ -H \"xi-api-key: $ELEVENLABS_API_KEY\" | jq -r '.token') curl -X POST \"https://api.elevenlabs.io/v1/speech-to-text?token=$TOKEN\" \\ -F \"file=@audio.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"
       ],
-      "verified_via": "cited page fetched; 14 of 18 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"expose\"",
+      "verified_via": "cited page fetched; 23 of 27 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"expose\"",
       "verified_at": "2026-08-18"
     },
     {
@@ -67,7 +67,7 @@
         "references/macos-ffmpeg-setup.md",
         "scripts/burn-hebrew-captions.sh"
       ],
-      "verified_via": "cited page fetched; 20 of 25 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"macos\"",
+      "verified_via": "cited page fetched; 50 of 55 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"macos\"",
       "verified_at": "2026-08-18"
     },
     {

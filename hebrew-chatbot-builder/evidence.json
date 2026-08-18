@@ -53,14 +53,14 @@
       "claim_id": "telegram-bot-api",
       "claim": "The Telegram Bot API is documented at core.telegram.org/bots/api; python-telegram-bot (>=21, async) wraps it.",
       "source_url": "https://core.telegram.org/bots/api",
-      "raw_snippet": "Telegram Bot API Follow on X Home FAQ Apps API Protocol Schema Telegram Bots Telegram Bot API Telegram Bot API The Bot API is an HTTP-based interface created for developers keen on building bots for Telegram. To learn how to create and set up a bot, please consult our Introduction to Bots and Bot FAQ . Recent changes Subscribe to @BotNews to be the first to know about the latest updates and join the discussion in @BotTalk July 14, 2026 Bot API 10.",
+      "raw_snippet": "Telegram Bot API Follow on X Home FAQ Apps API Protocol Schema Telegram Bots Telegram Bot API Telegram Bot API The Bot API is an HTTP-based interface created for developers keen on building bots for Telegram. To learn how to create and set up a bot, please consult our Introduction to Bots and Bot FAQ .",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "scripts/telegram-bot-scaffold.py"
       ],
-      "verified_via": "cited page fetched; 6 of 10 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"http-based\"",
+      "verified_via": "cited page fetched; 31 of 35 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"home\"",
       "verified_at": "2026-08-18"
     },
     {
@@ -79,13 +79,13 @@
       "claim_id": "yap-hebrew-nlp",
       "claim": "YAP (Yet Another Parser, OnlpLab) is a Hebrew morphological analyzer/parser usable for Hebrew NLP.",
       "source_url": "https://github.com/OnlpLab/yap",
-      "raw_snippet": "The parser was written as part Amir More's MSc thesis at IDC Herzliya under the supervision of Dr. Reut Tsarfaty from the Open University of Israel. The models and training regimes have been tuned and improved by Amit Seker from the Open University. A live demo of parsing Hebrew texts is provided here . YAP is currently supported as part of the ONLP lab tool kit.",
+      "raw_snippet": "# <center>YAP - Yet Another (natural language) Parser<br>The building block for Hebrew NLP</center> ![Joint Morph-Syntactic Processing](screenshot.png) YAP was implemented to test the hypothesis on Joint Morpho-Syntactic Processing of Morphologically Rich Languages (MRLs) in a Transition Based Framework. The parser was written as part Amir More's MSc thesis at IDC Herzliya under the supervision of Dr.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "references/whatsapp-business-api-guide.md"
       ],
-      "verified_via": "cited page fetched; 9 of 10 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"university\"",
+      "verified_via": "cited page fetched; 35 of 36 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"another\"",
       "verified_at": "2026-08-18"
     },
     {

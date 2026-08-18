@@ -65,36 +65,42 @@
       "claim_id": "builtin-skills",
       "claim": "open-slide ships five built-in skills (slide-authoring, create-slide, create-theme, apply-comments, current-slide); the /create-slide picker lists available themes",
       "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/SKILL.md",
-      "raw_snippet": "including from inside the `create-slide` or `apply-comments` workflows",
-      "fetched_at": "2026-08-18T12:00:00Z",
+      "raw_snippet": "Do not duplicate the knowledge below into other skills — link here instead. ## Primitive references Each framework primitive has a full reference file under `references/` in this skill — contract, worked examples, and its own anti-patterns. This file keeps only the always-on rules and a short summary per primitive.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 13 of 17 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"skills\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "slide-comment-marker",
       "claim": "The inspector drops {/* @slide-comment ... */} markers in source for the apply-comments workflow",
       "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/apply-comments/SKILL.md",
-      "raw_snippet": "{/* @slide-comment id=\"c-<8hex>\" ts=\"<ISO>\" text=\"<base64url(JSON)>\" */}",
-      "fetched_at": "2026-08-18T12:00:00Z",
+      "raw_snippet": "--- name: apply-comments description: Apply pending @slide-comment markers written by the open-slide inspector tool. Use when the user asks to \"apply comments\", \"process slide comments\", \"apply the inspector comments\", or referenc",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/apply-comments.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 8 of 10 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"apply-comments\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "current-json-cursor",
       "claim": "The live slide cursor is written to node_modules/.open-slide/current.json",
       "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/current-slide/SKILL.md",
-      "raw_snippet": "node_modules/.open-slide/current.json",
-      "fetched_at": "2026-08-18T12:00:00Z",
+      "raw_snippet": "## Re-read on every deictic turn — never reuse a prior read `current.json` is a live cursor, not a fact about the conversation. The user moves between slides, pages, and elements freely between your turns — including while you were doing other work.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/current-slide.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 8 of 9 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"live\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "reference-link-urls",

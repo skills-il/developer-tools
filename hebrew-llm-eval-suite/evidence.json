@@ -136,13 +136,13 @@
       "claim_id": "nnlp-il-hebrew-resources-2",
       "claim": "The Israeli National NLP Program maintains a Hebrew-Resources catalog on GitHub at github.com/NNLP-IL/Hebrew-Resources.",
       "source_url": "https://github.com/NNLP-IL/Hebrew-Resources",
-      "raw_snippet": "GitHub - NNLP-IL/Hebrew-Resources: A comprehensive list of Hebrew NLP resources. · GitHub Skip to content Navigation Menu Sign in Appearance settings Platform AI CODE CREATION GitHub Copilot Write better code with AI GitHub Copilot app D",
+      "raw_snippet": "· GitHub Skip to content Navigation Menu Sign in Appearance settings Platform AI CODE CREATION GitHub Copilot Write better code with AI GitHub Copilot app Direct agents from issue to merge MCP Registry Integrate external tools DEVELOPER WORKFLOWS Actions Automate any workflow Codespaces Instant dev environments Issues Plan and track work Code Review Manage code changes Code Quality Enforce quality at merge",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched; 6 of 10 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"hebrew-resources\"",
+      "verified_via": "cited page fetched; 21 of 25 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"skip\"",
       "verified_at": "2026-08-18"
     },
     {

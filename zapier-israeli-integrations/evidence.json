@@ -191,7 +191,7 @@
         "SKILL_HE.md",
         "references/israeli-zapier-apps.md"
       ],
-      "verified_via": "cited page fetched; 18 of 23 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"publishers\"",
+      "verified_via": "cited page fetched; 47 of 50 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"publishers\"",
       "verified_at": "2026-08-18"
     },
     {
@@ -273,13 +273,13 @@
       "claim_id": "legacy-chatgpt-steps-deadline",
       "claim": "Zaps built on deprecated legacy ChatGPT / OpenAI Assistants steps stop working after August 26, 2026.",
       "source_url": "https://help.zapier.com/hc/en-us/articles/44865998484365-Important-update-ChatGPT-users-OpenAI-Assistants-API-deprecation",
-      "raw_snippet": "reate Assistant Dropdowns used in the actions above: List Assistants List Assistant Files These actions are no longer available when creating new Zaps. Existing Zaps that use them will continue to run until August 26, 2026, after which they will stop working. What Zapier is doing Zapier will automatically migrate Zaps that use Conversation With Assistant (Legacy) to the new Conversation action (powered by the OpenAI Responses API). This automatic migration applies only to Zaps that use Conversation With Assistant (Legacy).",
+      "raw_snippet": "n With Assistant (Legacy) Create Assistant Upload File (when used with assistants) Searches: Find Assistant Find or Create Assistant Dropdowns used in the actions above: List Assistants List Assistant Files These actions are no longer available when creating new Zaps. Existing Zaps that use them will continue to run until August 26, 2026, after which they will stop working.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched; 14 of 17 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"creating\"",
+      "verified_via": "cited page fetched; 37 of 38 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"dropdowns\"",
       "verified_at": "2026-08-18"
     },
     {
@@ -329,7 +329,7 @@
         "SKILL_HE.md",
         "references/israeli-zapier-apps.md"
       ],
-      "verified_via": "cited page fetched; 20 of 30 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"developer\"",
+      "verified_via": "cited page fetched; 45 of 55 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"developer\"",
       "verified_at": "2026-08-18"
     },
     {

@@ -20,13 +20,13 @@
       "claim_id": "elevenlabs-v3-no-websocket",
       "claim": "ElevenLabs eleven_v3 does NOT support WebSocket / streaming as of May 2026, REST only",
       "source_url": "https://elevenlabs.io/docs/api-reference/streaming",
-      "raw_snippet": "e Streaming Copy page Learn how to stream real-time audio from the ElevenLabs API using chunked transfer encoding The ElevenLabs API supports real-time audio streaming for select endpoints, returning raw audio bytes (e.g., MP3 data) directly over HTTP using chunked transfer encoding. This allows clients to process or play audio incrementally as it is generated. Our official Node and Python libraries include utilities to simplify handling this continuous audio stream.",
+      "raw_snippet": "milar voices Migrate segments Get character metrics usage Connect Blog Help Center API Pricing Sign up Light API reference Streaming Copy page Learn how to stream real-time audio from the ElevenLabs API using chunked transfer encoding The ElevenLabs API supports real-time audio streaming for select endpoints, returning raw audio bytes (e.g., MP3 data) directly over HTTP using chunked transfer encoding. This allows clients to process or play audio incrementally as it is generated.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched; 7 of 9 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"support\"",
+      "verified_via": "cited page fetched; 37 of 38 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"copy\"",
       "verified_at": "2026-08-18"
     },
     {
@@ -72,7 +72,7 @@
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched; 12 of 14 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"launched\"",
+      "verified_via": "cited page fetched; 39 of 41 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"launched\"",
       "verified_at": "2026-08-18"
     },
     {
@@ -165,12 +165,12 @@
       "claim_id": "hebrew-models-huggingface",
       "claim": "Hugging Face hosts Hebrew-language speech and language models discoverable via language filter",
       "source_url": "https://huggingface.co/models?language=he",
-      "raw_snippet": "i Thai multilingual Turkish Vietnamese Polish Indonesian Dutch Swedish Ukrainian Romanian Finnish Persian Czech Bengali Danish Greek Hebrew Malay Nepali Hungarian Tamil Urdu Bulgarian Telugu Catalan Norwegian Swahili Marathi Slovenian Slovak Estonian Serbian Gujarati Lithuanian Croatian Latvian Burmese Malayalam Icelandic Panjabi Galician Kannada Tagalog Khmer Basque French Kazakh Afrikaans Amharic Georgian Mongolian Hausa Lao Assamese Armenian Welsh Macedonian Sinhala Belarusian Yoruba Azerbaijani Uzbek Albanian Bosnian Maltes",
+      "raw_snippet": "uages 1 Licenses Other Reset Languages English Chinese French Spanish German Japanese Korean Portuguese Italian Russian Arabic Hindi Thai multilingual Turkish Vietnamese Polish Indonesian Dutch Swedish Ukrainian Romanian Finnish Persian Czech Bengali Danish Greek Hebrew Malay Nepali Hungarian Tamil Urdu Bulgarian Telugu Catalan Norwegian Swahili Marathi Slovenian Slovak Estonian Serbian Gujarati Lithuanian Croatian Latvian Burmese Malayalam Icelandic Panjabi Galician Kannada Tagalog Khmer Basque French Kazakh Afrikaans Amharic",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"
       ],
-      "verified_via": "cited page fetched; 7 of 11 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"hebrew\"",
+      "verified_via": "cited page fetched; 70 of 73 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"thai\"",
       "verified_at": "2026-08-18"
     },
     {
@@ -196,7 +196,7 @@
         "SKILL.md",
         "references/hebrew-stt-models.md"
       ],
-      "verified_via": "cited page fetched; 12 of 12 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"including\"",
+      "verified_via": "cited page fetched; 42 of 42 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"including\"",
       "verified_at": "2026-08-18"
     },
     {
@@ -208,7 +208,7 @@
       "appears_in": [
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched; 10 of 12 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"documentation\"",
+      "verified_via": "cited page fetched; 33 of 33 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"documentation\"",
       "verified_at": "2026-08-18"
     },
     {
@@ -226,25 +226,25 @@
       "claim_id": "inworld-tts-website",
       "claim": "Inworld TTS product page documents language support and latency targets",
       "source_url": "https://inworld.ai/tts",
-      "raw_snippet": "Inworld Voice AI: Top-Rated TTS & Voice Cloning Get started Menu Products Solutions Developers Company Pricing Contact Us Log In Integrate with AI Get started Realtime TTS Engage every user with the #1 realtime, most natural Voice AI Human-like expression at sub-100ms latency, with instant voice cloning and full multilingual support, for a fraction of the cost.",
+      "raw_snippet": "ntegrate with AI Get started Realtime TTS Engage every user with the #1 realtime, most natural Voice AI Human-like expression at sub-100ms latency, with instant voice cloning and full multilingual support, for a fraction of the cost. #1 realtime TTS with human-like expression and realtime sub-100ms latency that feels like a real conversation. Custom voices with instant cloning or text-based voice design. Fully multilingual, built for streaming, and a fraction of the cost of other providers.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched; 7 of 11 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"product\"",
+      "verified_via": "cited page fetched and confirmed to contain \"100\"; snippet replaced with the page's own wording around it",
       "verified_at": "2026-08-18"
     },
     {
       "claim_id": "twilio-webhook-example",
       "claim": "Example webhook endpoint URL placeholder used in code samples (not a live endpoint)",
       "source_url": "https://www.twilio.com/docs/voice/twiml",
-      "raw_snippet": "ants Queues resource Queues Members DialingPermissions Overview Countries HighRiskSpecialPrefixes BulkCountryUpdates Settings Client Configuration resource More APIs Voice Insights: Call Insights API API Overview Call Summary Resource Call Summaries Resource Call Insights Event Resource Call Metric Resource Call Annotation Resource Voice Insights Settings Resource Details: Call Summary Details: Call Tags Details: Voice Insights SDK Events Details: Conversation Relay Insights Events Understanding Twilio Media Edges Voice Insight",
+      "raw_snippet": "gs resource Batch Transcription resource Transcriptions resource OutgoingCallerIds resource Conferences resource Conferences Participants Queues resource Queues Members DialingPermissions Overview Countries HighRiskSpecialPrefixes BulkCountryUpdates Settings Client Configuration resource More APIs Voice Insights: Call Insights API API Overview Call Summary Resource Call Summaries Resource Call Insights Event Resource Call Metric Resource Call Annotation Resource Voice Insights Settings Resource Details: Call Summary Details: Ca",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"
       ],
-      "verified_via": "cited page fetched; 8 of 13 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"configuration\"",
+      "verified_via": "cited page fetched; 34 of 38 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"ants\"",
       "verified_at": "2026-08-18"
     },
     {

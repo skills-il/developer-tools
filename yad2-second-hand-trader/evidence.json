@@ -141,8 +141,11 @@
       "claim_type": "law",
       "source_url": "https://taasiri-law.co.il/מדריך-לצרכן-הנבון-120-שאלות-ותשובות-בדינ/",
       "source_fetched_at": "2026-08-18T19:56:29.717503+00:00",
-      "raw_snippet": "סעיף 16 לחוק המכר, שהוא סעיף קוגנטי, קובע כי אם המוכר העלים אי-התאמה, הקונה זכאי להסתמך עליה",
-      "confidence": "medium"
+      "raw_snippet": "הרחבה: זוהי דוגמה קלאסית למתח בין חופש החוזים להגנת הצרכן. סעיף 16 לחוק המכר, שהוא סעיף קוגנטי, קובע כי אם המוכר העלים אי-התאמה, הקונה זכאי להסתמך עליה \"על אף האמור",
+      "confidence": "medium",
+      "verified_via": "cited page fetched and confirmed to contain \"סעיף 16\"; snippet replaced with the page's own wording around it",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
       "id": "police-emergency-100",
