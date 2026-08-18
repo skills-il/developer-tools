@@ -183,14 +183,16 @@
       "claim_id": "grow-on-zapier-is-not-meshulam",
       "claim": "The Zapier app at zapier.com/apps/grow is an unrelated mailing-list product for publishers, not Grow by Meshulam. Grow by Meshulam has no Zapier app.",
       "source_url": "https://zapier.com/apps/grow/integrations",
-      "raw_snippet": "Grow ... Grow helps publishers build their mailing list. ... New Subscription (fires when a visitor subscribes via Grow.me Subscribe) ... New Unsubscriber ... Unsubscribe Email (removes an email from Grow.me Automailer list)",
+      "raw_snippet": "to Generate Zaps (Beta) What Should I Do in Zapier If I Change an App Account Password Apps Grow Integrations About Grow Grow helps publishers build their mailing list. Learn more Learn more Help Help Related categories Email Newsletters Popular Grow Integrations Flodesk MailerLite Classic Mailchimp ActiveCampaign BirdSend FeedBlitz beehiiv SendFox Brevo AWeber GetResponse MailerLite Kartra Drip Kajabi Formatter by Zapier Kit Filter by Zapier Paths by Zapier HubSpot Sender Acumbamail rasa.",
       "verification_note": "zapier.com/apps/meshulam/integrations returns 404.",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/israeli-zapier-apps.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 18 of 23 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"publishers\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "no-native-zapier-app-for-israeli-invoicing-and-gateways",
@@ -271,12 +273,14 @@
       "claim_id": "legacy-chatgpt-steps-deadline",
       "claim": "Zaps built on deprecated legacy ChatGPT / OpenAI Assistants steps stop working after August 26, 2026.",
       "source_url": "https://help.zapier.com/hc/en-us/articles/44865998484365-Important-update-ChatGPT-users-OpenAI-Assistants-API-deprecation",
-      "raw_snippet": "Zapier deprecated several legacy ChatGPT steps (such as creating assistants and uploading files) with existing Zaps using those steps set to stop working after August 26, 2026",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "raw_snippet": "reate Assistant Dropdowns used in the actions above: List Assistants List Assistant Files These actions are no longer available when creating new Zaps. Existing Zaps that use them will continue to run until August 26, 2026, after which they will stop working. What Zapier is doing Zapier will automatically migrate Zaps that use Conversation With Assistant (Legacy) to the new Conversation action (powered by the OpenAI Responses API). This automatic migration applies only to Zaps that use Conversation With Assistant (Legacy).",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 14 of 17 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"creating\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "zapier-platform-docs",
@@ -317,14 +321,16 @@
       "claim_id": "tranzila-docs-no-webhook-page",
       "claim": "Tranzila's current developer documentation does not describe a merchant-panel webhook or notification URL. Its Payments and Billing section covers Authentication, Hosted Fields, Iframe Integration, Iframe Integration new DirectNG, Apple Pay Integration via Iframe, PayPal Integration and Transaction Response Codes; its APIS section covers Tranzila Transactions API, Tranzila Api 3DS, Bit, Handshake API V2, MASAV API, Payment request and STO API for My Billing.",
       "source_url": "https://docs.tranzila.com/docs/payments-and-billing/authentication",
-      "raw_snippet": "Payments and Billing: Authentication, Hosted Fields, Iframe Integration, Iframe Integration new DirectNG, Apple Pay Integration via Iframe, PayPal Integration, Transaction Response Codes | APIS: Tranzila Transactions API, Tranzila Api 3DS, Bit, Handshake API V2, MASAV API, Payment request, STO API for My Billing",
+      "raw_snippet": "Ask the docs Grounded in the Tranzila Developer Guide Please note: AI Agent is in Beta Ask anything about the Tranzila API. Answers cite the source pages so you can dig deeper. How do I initialize a Bit transaction? What headers does the Tranzila API require? How do I refund a payment? Explain Hosted Fields integration in 3 steps. AI can make mistakes. Verify against the cited pages.",
       "verification_note": "The presence of a dedicated Bit API page corroborates the skill's claim that Tranzila supports Bit. The index/sum/ccno/npay field names previously documented as a webhook payload are the legacy redirect-response parameters and are now marked unverified in the skill.",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/israeli-zapier-apps.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 20 of 30 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"developer\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "inforu-sms-api-fallback",

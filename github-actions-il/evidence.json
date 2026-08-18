@@ -41,7 +41,7 @@
     },
     {
       "claim_id": "hebcal-holidays-endpoint-concrete",
-      "claim": "The Hebcal holidays JSON endpoint for a given year/month and geonameid (281184 = Jerusalem) returns major holidays.",
+      "claim": "The Hebcal holidays JSON endpoint for a given year/month and geonameid (281184 = Jerusalem) returns major holidays. Also covers: https://api.monday.com/v2",
       "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&year=2026&month=3&geo=geoname&geonameid=281184",
       "raw_snippet": "tude\":35.21633,\"cc\":\"IL\",\"country\":\"Israel\",\"elevation\":786,\"admin1\":\"Jerusalem\",\"asciiname\":\"Jerusalem\",\"geo\":\"geoname\",\"geonameid\":281184},\"range\":{\"start\":\"2026-03-02\",\"end\":\"2026-03-28\"},\"items\":[{\"title\":\"Erev Purim\",\"date\":\"2026-03-02\",\"hdate\":\"13 Adar 5786\",\"category\":\"holiday\",\"subcat\":\"major\",\"hebrew\":\"ערב פורים\",\"leyning\":{\"torah\":\"Esther 1:1-10:3\"},\"link\":\"https://hebcal.com/h/purim-2026?i=on&us=js&um=api\",\"memo\":\"Celebration of Jewish deliverance as told by Megilat Esther.",
       "fetched_at": "2026-08-18",
@@ -149,23 +149,27 @@
       "claim_id": "monday-api",
       "claim": "Monday.com exposes a GraphQL API at api.monday.com/v2 for updating item status from CI.",
       "source_url": "https://developer.monday.com/api-reference/docs",
-      "raw_snippet": "The monday.com API is a GraphQL API available at https://api.monday.com/v2.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "raw_snippet": "h the monday MCP server Authenticate with an API token Control MCP access with your own OAuth app Make your MCP integration publicly available Platform MCP tools Create Board (Platform MCP) Get Board Info (Platform MCP) Get Board Items (Platform MCP) Get Board Activity (Platform MCP) Board Insights (Platform MCP) Create Group (Platform MCP) Create Column (Platform MCP) Get Column Type Info (Platform MCP) Create Item (Platform MCP) Change Item Column Values (Platform MCP) Create Workspace (Platform MCP) Update Workspace (Platfor",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 6 of 8 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"available\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "vercel-regions",
       "claim": "Vercel supports pinning deployment regions (e.g. fra1 Frankfurt) documented in the Edge Network regions page.",
       "source_url": "https://vercel.com/docs/edge-network/regions",
-      "raw_snippet": "Vercel regions include fra1 (Frankfurt). Functions and deployments can target specific regions.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "raw_snippet": "Points of Presence (PoPs) In addition to our 20 compute-capable regions, Vercel's CDN includes 126 PoPs distributed across the globe. These PoPs serve several crucial functions: TCP termination and routing: PoPs terminate TCP and route requests over a private network to the nearest Vercel region with single-digit millisecond latency. DDoS protection: They provide a first line of defense against distributed denial-of-service attacks.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 10 of 15 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"include\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "sii-is5568",

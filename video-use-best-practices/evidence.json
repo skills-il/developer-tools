@@ -46,25 +46,29 @@
       "claim_id": "scribe-word-types-no-verbatim",
       "claim": "Scribe word objects expose type values word/spacing/audio_event only (no filler tag in any language); no_verbatim (scribe_v2 only) is destructive; tag_audio_events tags non-speech audio.",
       "source_url": "https://github.com/elevenlabs/skills/blob/main/speech-to-text/references/transcription-options.md",
-      "raw_snippet": "type word spacing audio_event; no_verbatim scribe_v2 removes filler words; tag_audio_events",
-      "fetched_at": "2026-06-29T00:15:00Z",
+      "raw_snippet": "Do not expose the API key to the client. TOKEN= $( curl -s -X POST \\ \" https://api.elevenlabs.io/v1/single-use-token/batch_scribe \" \\ -H \" xi-api-key: $ELEVENLABS_API_KEY \" | jq -r ' .token ' ) curl -X POST \" https://api.elevenlabs.io/v1/speech-to-text?token= $TOKEN \" \\ -F \" file=@audio.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 14 of 18 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"expose\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "bidi-preshape-libass",
       "claim": "On macOS ffmpeg/libass builds, libass does not reliably apply BiDi reordering for SRT even when libfribidi is linked; the fix is to pre-shape Hebrew with python-bidi (get_display) before rendering. libass force_style and the subtitles= fontsdir= parameter are real; Helvetica has no Hebrew glyphs.",
       "source_url": "https://ffmpeg.org/ffmpeg-filters.html",
-      "raw_snippet": "subtitles filter force_style fontsdir; python-bidi get_display; libass BiDi",
-      "fetched_at": "2026-06-29T00:15:00Z",
+      "raw_snippet": "VideoToolbox filter depends on VideoToolbox framework, and is auto detected when building ffmpeg for an Apple platform such as macOS. Add --enable-videotoolbox to configure if autodetect is disabled. 15.1 scale_vt # TOC Scale and convert the color parameters using VTPixelTransferSession. The filter accepts the following options: w h Set the output video dimension expression. Default value is the input dimension. color_matrix Set the output colorspace matrix. color_primaries Set the output color primaries.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/sub-force-style-hebrew.md",
         "references/macos-ffmpeg-setup.md",
         "scripts/burn-hebrew-captions.sh"
-      ]
+      ],
+      "verified_via": "cited page fetched; 20 of 25 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"macos\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "upstream-and-tooling-urls",

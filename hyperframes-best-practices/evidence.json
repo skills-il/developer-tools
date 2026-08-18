@@ -9,7 +9,10 @@
       "source_url": "https://registry.npmjs.org/gsap/latest",
       "raw_snippet": "\"version\":\"3.15.0\" https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["SKILL.md", "references/transitions/catalog.md"]
+      "appears_in": [
+        "SKILL.md",
+        "references/transitions/catalog.md"
+      ]
     },
     {
       "claim_id": "gsap-docs-v3",
@@ -17,7 +20,9 @@
       "source_url": "https://gsap.com/docs/v3/",
       "raw_snippet": "https://gsap.com/docs/v3/",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["SKILL.md"]
+      "appears_in": [
+        "SKILL.md"
+      ]
     },
     {
       "claim_id": "hyperframes-repo",
@@ -25,7 +30,10 @@
       "source_url": "https://github.com/heygen-com/hyperframes",
       "raw_snippet": "https://github.com/heygen-com/hyperframes",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "hyperframes-font-logic",
@@ -33,7 +41,10 @@
       "source_url": "https://github.com/heygen-com/hyperframes/blob/main/packages/producer/src/services/deterministicFonts.ts",
       "raw_snippet": "https://github.com/heygen-com/hyperframes/blob/main/packages/producer/src/services/deterministicFonts.ts",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "kokoro-no-hebrew-8-langs",
@@ -41,7 +52,10 @@
       "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-media/references/tts.md",
       "raw_snippet": "Valid `--lang` codes (only needed to override the voice's auto-detected language): `en-us`, `en-gb`, `es`, `fr-fr`, `hi`, `it`, `pt-br`, `ja`, `zh`.",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "hyperframes-tts-providers",
@@ -49,7 +63,10 @@
       "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-media/references/tts.md",
       "raw_snippet": "ElevenLabs        | `$ELEVENLABS_API_KEY`",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "hyperframes-render-command",
@@ -57,7 +74,9 @@
       "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/SKILL.md",
       "raw_snippet": "init, lint, validate, inspect, preview, render, publish, doctor",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["SKILL.md"]
+      "appears_in": [
+        "SKILL.md"
+      ]
     },
     {
       "claim_id": "groq-whisper-endpoint",
@@ -65,7 +84,9 @@
       "source_url": "https://console.groq.com/docs/speech-to-text",
       "raw_snippet": "https://api.groq.com/openai/v1/audio/transcriptions",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["references/transcript-guide.md"]
+      "appears_in": [
+        "references/transcript-guide.md"
+      ]
     },
     {
       "claim_id": "openai-whisper-endpoint",
@@ -73,7 +94,9 @@
       "source_url": "https://developers.openai.com/api/docs/guides/speech-to-text",
       "raw_snippet": "https://api.openai.com/v1/audio/transcriptions",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["references/transcript-guide.md"]
+      "appears_in": [
+        "references/transcript-guide.md"
+      ]
     },
     {
       "claim_id": "hyperframes-quickstart",
@@ -81,7 +104,10 @@
       "source_url": "https://hyperframes.heygen.com/quickstart",
       "raw_snippet": "https://hyperframes.heygen.com/quickstart Node 22",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
       "claim_id": "hebrew-google-fonts",
@@ -89,15 +115,24 @@
       "source_url": "https://fonts.google.com/?subset=hebrew",
       "raw_snippet": "Heebo https://fonts.google.com/metadata/fonts https://fonts.googleapis.com/css2?family=Heebo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["SKILL.md", "SKILL_HE.md", "metadata.json", "references/typography.md"]
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "metadata.json",
+        "references/typography.md"
+      ]
     },
     {
       "claim_id": "mdn-unicode-bidi",
       "claim": "MDN reference for CSS unicode-bidi / bidirectional text handling",
       "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-bidi",
-      "raw_snippet": "https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-bidi",
-      "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["SKILL.md"]
+      "raw_snippet": "chnologies Accessibility HTTP URI Web extensions WebAssembly WebDriver See all… Topics Media Performance Privacy Security Progressive web apps Learn Learn web development Frontend developer course Getting started modules Core modules MDN Curriculum Check out the video course from Scrimba, our partner Learn HTML Structuring content with HTML module Learn CSS CSS styling basics module CSS layout mod",
+      "fetched_at": "2026-08-18",
+      "appears_in": [
+        "SKILL.md"
+      ],
+      "verified_via": "cited page fetched; 7 of 10 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"developer\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "internal-design-and-example-values",
@@ -105,7 +140,15 @@
       "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-creative/references/house-style.md",
       "raw_snippet": "3% 6% 8% 10% 15% 20% 30% 35% 50% 60-70% 70% 80% 90% 100% 30-70% 199 /marker-highlight /hyperframes-cli /tmp/fontquery.py",
       "fetched_at": "2026-06-28T23:30:00Z",
-      "appears_in": ["references/transitions.md", "references/transitions/catalog.md", "references/motion-principles.md", "references/dynamic-techniques.md", "references/typography.md", "SKILL.md", "SKILL_HE.md"]
+      "appears_in": [
+        "references/transitions.md",
+        "references/transitions/catalog.md",
+        "references/motion-principles.md",
+        "references/dynamic-techniques.md",
+        "references/typography.md",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }

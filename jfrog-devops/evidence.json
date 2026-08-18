@@ -7,13 +7,15 @@
       "claim_id": "latest-jfrog-cli-version-is-v2-117-0-released-july-30-2026",
       "claim": "Latest JFrog CLI version is v2.117.0, released July 30, 2026",
       "source_url": "https://github.com/jfrog/jfrog-cli/releases",
-      "raw_snippet": "2.117.0 2.116.0 2.115.0 2.113.0 2.112.0 2.111.0 2.110.0 2.109.0 2.108.0",
-      "fetched_at": "2026-08-02T02:24:30.660983+00:00",
+      "raw_snippet": "s Next Jump to release 2.120.0 2.119.0 2.118.0 2.117.0 2.116.0 2.115.0 2.113.0 2.112.0 2.111.0 2.110.0 Previous Next 2.120.0 2.120.0 Latest Latest Compare Choose a tag to compare Sorry, something went wrong. Filter Loading Sorry, something went wrong. Uh oh! There was an error while loading. Please reload this page . No results found View all tags IL-Automation released this 12 Aug 14:36 v2.120.0 392c307 This commit was created on GitHub.com and signed with GitHub’s verified signature .",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "confidence": "high"
+      "confidence": "high",
+      "verified_via": "cited page fetched; 4 of 5 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"latest\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "jfrog-acquired-qwak-in-june-2024-for-approximately-230m-to-a",

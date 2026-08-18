@@ -5,7 +5,7 @@
   "claims": [
     {
       "claim_id": "elevenlabs-v3-hebrew",
-      "claim": "ElevenLabs eleven_v3 supports Hebrew among 70+ languages and is the production-grade Hebrew model in 2026",
+      "claim": "ElevenLabs eleven_v3 supports Hebrew among 70+ languages and is the production-grade Hebrew model in 2026. Also covers: https://your-server.com/voice/incoming",
       "source_url": "https://unifiedtts.com/en/news/2026-02-12-elevenlabs-v3-model",
       "raw_snippet": "We've finally completed this project. [whispers] But there's a little secret I need to tell you",
       "fetched_at": "2026-08-18",
@@ -20,12 +20,14 @@
       "claim_id": "elevenlabs-v3-no-websocket",
       "claim": "ElevenLabs eleven_v3 does NOT support WebSocket / streaming as of May 2026, REST only",
       "source_url": "https://elevenlabs.io/docs/api-reference/streaming",
-      "raw_snippet": "WebSockets are not available for the eleven_v3 model",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "raw_snippet": "e Streaming Copy page Learn how to stream real-time audio from the ElevenLabs API using chunked transfer encoding The ElevenLabs API supports real-time audio streaming for select endpoints, returning raw audio bytes (e.g., MP3 data) directly over HTTP using chunked transfer encoding. This allows clients to process or play audio incrementally as it is generated. Our official Node and Python libraries include utilities to simplify handling this continuous audio stream.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 7 of 9 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"support\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "elevenlabs-flash-v25-websocket",
@@ -64,12 +66,14 @@
       "claim_id": "deepdub-phantom-x-hebrew",
       "claim": "Deepdub is an Israeli AI voice company that launched Phantom X 3.2 in March 2026 with real-time Hebrew TTS and emotive eTTS",
       "source_url": "https://israel.com/business/tel-aviv-startup-deepdub-introduces-real-time-ai-voice-model-for-global-enterprises/",
-      "raw_snippet": "Deepdub is a Tel Aviv Israeli audio AI company that launched Phantom X 3.2 on March 10, 2026 supporting Hebrew with emotive eTTS",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "raw_snippet": "Pesach Benson • March 10, 2026, 4:25 pm Source: tps.co.il Jerusalem , 10 March, 2026 (TPS-IL) — Israeli audio AI company Deepdub has launched Phantom X 3.2, a new AI voice model for high-quality dubbing and real-time voice agents. Integrated into Deepdub GO, it supports many languages, including Hebrew, and ensures accurate pronunciation and natural delivery. The model allows fast localization of content for streaming, animation, and documentaries, and can clone voices from just a short audio sample.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 12 of 14 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"launched\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "inworld-tts-15-hebrew",
@@ -161,11 +165,13 @@
       "claim_id": "hebrew-models-huggingface",
       "claim": "Hugging Face hosts Hebrew-language speech and language models discoverable via language filter",
       "source_url": "https://huggingface.co/models?language=he",
-      "raw_snippet": "Hugging Face models filtered by Hebrew language",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "raw_snippet": "i Thai multilingual Turkish Vietnamese Polish Indonesian Dutch Swedish Ukrainian Romanian Finnish Persian Czech Bengali Danish Greek Hebrew Malay Nepali Hungarian Tamil Urdu Bulgarian Telugu Catalan Norwegian Swahili Marathi Slovenian Slovak Estonian Serbian Gujarati Lithuanian Croatian Latvian Burmese Malayalam Icelandic Panjabi Galician Kannada Tagalog Khmer Basque French Kazakh Afrikaans Amharic Georgian Mongolian Hausa Lao Assamese Armenian Welsh Macedonian Sinhala Belarusian Yoruba Azerbaijani Uzbek Albanian Bosnian Maltes",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 7 of 11 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"hebrew\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "google-stt-languages",
@@ -184,22 +190,26 @@
       "claim_id": "azure-speech-languages-en",
       "claim": "Azure Speech Service supports Hebrew (he-IL) including neural voices HilaNeural and AvriNeural",
       "source_url": "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support",
-      "raw_snippet": "Hebrew (Israel) he-IL - HilaNeural, AvriNeural",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "raw_snippet": "The latest update extends support from English to 32 more languages and quality enhancements to existing features, including accuracy, fluency, and miscue assessment. You should specify the language that you're learning or practicing improving pronunciation. The default language is en-US . If you know your target learning language, set the locale accordingly. For example, if you're learning British English, you should specify the language as en-GB .",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "references/hebrew-stt-models.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 12 of 12 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"including\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "azure-speech-languages-he",
       "claim": "Azure Speech Service language support documentation (Hebrew locale)",
       "source_url": "https://learn.microsoft.com/he-il/azure/ai-services/speech-service/language-support",
-      "raw_snippet": "Hebrew (Israel) he-IL - תמיכת שפה",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "raw_snippet": "Note See the speech containers and embedded speech documentation for their supported languages. Choose a feature: Speech to text Text to speech Custom TTS Avatar Pronunciation assessment Speech translation Language identification Custom keyword The following table summarizes locale support for real-time transcription , fast transcription , batch transcription , and post-stream refinement .",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 10 of 12 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"documentation\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "deepdub-website",
@@ -216,22 +226,26 @@
       "claim_id": "inworld-tts-website",
       "claim": "Inworld TTS product page documents language support and latency targets",
       "source_url": "https://inworld.ai/tts",
-      "raw_snippet": "Inworld TTS-1.5 and Realtime TTS-2 with Hebrew support",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "raw_snippet": "Inworld Voice AI: Top-Rated TTS & Voice Cloning Get started Menu Products Solutions Developers Company Pricing Contact Us Log In Integrate with AI Get started Realtime TTS Engage every user with the #1 realtime, most natural Voice AI Human-like expression at sub-100ms latency, with instant voice cloning and full multilingual support, for a fraction of the cost.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 7 of 11 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"product\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "twilio-webhook-example",
       "claim": "Example webhook endpoint URL placeholder used in code samples (not a live endpoint)",
       "source_url": "https://www.twilio.com/docs/voice/twiml",
-      "raw_snippet": "https://your-server.com/voice/incoming - placeholder example URL for Twilio voice webhook configuration",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "raw_snippet": "ants Queues resource Queues Members DialingPermissions Overview Countries HighRiskSpecialPrefixes BulkCountryUpdates Settings Client Configuration resource More APIs Voice Insights: Call Insights API API Overview Call Summary Resource Call Summaries Resource Call Insights Event Resource Call Metric Resource Call Annotation Resource Voice Insights Settings Resource Details: Call Summary Details: Call Tags Details: Voice Insights SDK Events Details: Conversation Relay Insights Events Understanding Twilio Media Edges Voice Insight",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 8 of 13 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"configuration\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "hebrew-stt-accuracy-ranges",

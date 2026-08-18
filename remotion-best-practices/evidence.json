@@ -7,12 +7,14 @@
       "claim_id": "remotion-version-4-stable",
       "claim": "Remotion's current stable release is on the 4.0.x line (latest v4.0.483); there is no v5.",
       "source_url": "https://github.com/remotion-dev/remotion/releases",
-      "raw_snippet": "Based on the GitHub releases page, the latest stable release is v4.0.483, released on June 25. The most recent version tags in descending order are v4.0.483, v4.0.482, v4.0.481, v4.0.479, v4.0.478. There is no v5 release currently available; all releases displayed are within the v4.0.x line.",
-      "fetched_at": "2026-06-26T00:05:00Z",
+      "raw_snippet": "nyBurger in #10239 @remotion/studio : Keep selected outlines visible by @JonnyBurger in #10282 @remotion/studio : Keep outline order stable while dragging by @JonnyBurger in #10257 @remotion/studio : Keep canvas context menus open by @JonnyBurger in #10281 @remotion/studio : Fix canvas snapping flicker by @JonnyBurger in #10306 @remotion/studio : Fix fast menu dismissal by @JonnyBurger in #10291 @remotion/studio : Fix stale open-in-editor hover state by @YUHAO-corn in #10270 @remotion/studio : Avoid rerendering playback control",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "rules/rendering.md",
         "SKILL.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 14 of 21 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"stable\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "trimbefore-trimafter-in-frames",
@@ -118,12 +120,14 @@
       "claim_id": "ref-remotion-github",
       "claim": "https://github.com/remotion-dev/remotion is the Remotion source repository with issues and releases.",
       "source_url": "https://github.com/remotion-dev/remotion",
-      "raw_snippet": "Remotion source code, issues, and releases live at https://github.com/remotion-dev/remotion; the releases page https://github.com/remotion-dev/remotion/releases lists v4.0.x tags.",
-      "fetched_at": "2026-06-26T00:05:00Z",
+      "raw_snippet": "duct Contributing Contributing Activity Custom properties Stars 56.7k stars Watchers 162 watching Forks 4.3k forks Report repository Releases Sponsor this project Used by Contributors Languages Footer © 2026 GitHub, Inc. Footer navigation Terms Privacy Security Status Community Docs Contact Manage cookies Do not share my personal information You can’t perform that action at this time.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 10 of 13 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"releases\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-remotion-cli-render",
@@ -187,13 +191,15 @@
       "claim_id": "ref-elevenlabs-docs",
       "claim": "https://elevenlabs.io/docs is the ElevenLabs developer documentation for multilingual text-to-speech across 70+ languages.",
       "source_url": "https://elevenlabs.io/docs",
-      "raw_snippet": "ElevenLabs offers controllable, expressive speech layered across 70+ languages, with Text to Speech models documented at https://elevenlabs.io/docs.",
-      "fetched_at": "2026-06-26T00:08:00Z",
+      "raw_snippet": "bs works Concepts Choose your path Meet the models Browse by capability Scroll to top ElevenLabs Documentation Copy page Explore our docs and guides to integrate ElevenLabs How ElevenLabs works ElevenLabs provides AI voice infrastructure: text-to-speech, speech-to-text, voice cloning, conversational agents, and generative audio. You can use it in four ways, suited to different audiences.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/voiceover.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 11 of 16 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"docs\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "ref-google-fonts-hebrew-browse",
