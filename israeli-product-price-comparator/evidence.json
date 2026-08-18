@@ -31,7 +31,7 @@
       "claim_id": "vat-rate-18",
       "claim": "Israel standard VAT rate is 18% (since Jan 2025, unchanged for 2026). Effective added import cost above the threshold is roughly 18-30% of declared value.",
       "source_url": "https://taxsummaries.pwc.com/israel/corporate/other-taxes",
-      "raw_snippet": "ela Vietnam Zambia Israel Corporate - Other taxes Last reviewed - 29 June 2026 Value-added tax (VAT) The 2025 current rate of VAT is 18%. Exports of goods and certain services and various other transactions are zero-rated, and certain transactions are exempt. Banks and other financial institutions pay VAT-equivalent taxes at the rate of 18% based on their total payroll and on profits. Not-for-profit organisations pay VAT-equivalent tax (wage tax) at the rate of 7.5% of their total payroll.",
+      "raw_snippet": "Vietnam Zambia Israel Corporate - Other taxes Last reviewed - 29 June 2026 Value-added tax (VAT) The 2025 current rate of VAT is 18%. Exports of goods and certain services and various other transactions are zero-rated, and certain transactions are exempt. Banks and other financial institutions pay VAT-equivalent taxes at the rate of 18% based on their total payroll and on profits. Not-for-profit organisations pay VAT-equivalent tax (wage tax) at the rate of 7.5% of their total payroll.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",

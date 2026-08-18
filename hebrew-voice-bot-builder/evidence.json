@@ -32,13 +32,15 @@
     {
       "claim_id": "elevenlabs-flash-v25-websocket",
       "claim": "ElevenLabs Flash v2.5 supports WebSocket streaming and is the streaming-capable model in the v2.5 family",
-      "source_url": "https://elevenlabs.io/docs/api-reference/streaming",
-      "raw_snippet": "WebSocket connections are enabled for persistent real-time applications using Flash v2.5",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "source_url": "https://elevenlabs.io/docs/api-reference/text-to-speech/v-1-text-to-speech-voice-id-stream-input",
+      "raw_snippet": "WebSocket | ElevenLabs Documentation For AI agents: a documentation index is available at the root level at /llms.",
+      "fetched_at": "2026-08-19",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "vendor documentation page fetched; snippet copied from it",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "elevenlabs-multilingual-v2-hebrew-listed",
@@ -241,7 +243,7 @@
       "claim_id": "twilio-webhook-example",
       "claim": "Example webhook endpoint URL placeholder used in code samples (not a live endpoint)",
       "source_url": "https://www.twilio.com/docs/voice/twiml",
-      "raw_snippet": "gs resource Batch Transcription resource Transcriptions resource OutgoingCallerIds resource Conferences resource Conferences Participants Queues resource Queues Members DialingPermissions Overview Countries HighRiskSpecialPrefixes BulkCountryUpdates Settings Client Configuration resource More APIs Voice Insights: Call Insights API API Overview Call Summary Resource Call Summaries Resource Call Insights Event Resource Call Metric Resource Call Annotation Resource Voice Insights Settings Resource Details: Call Summary Details: Ca",
+      "raw_snippet": "resource Batch Transcription resource Transcriptions resource OutgoingCallerIds resource Conferences resource Conferences Participants Queues resource Queues Members DialingPermissions Overview Countries HighRiskSpecialPrefixes BulkCountryUpdates Settings Client Configuration resource More APIs Voice Insights: Call Insights API API Overview Call Summary Resource Call Summaries Resource Call Insights Event Resource Call Metric Resource Call Annotation Resource Voice Insights Settings Resource Details: Call Summary Details: Ca",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"

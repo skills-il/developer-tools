@@ -20,11 +20,13 @@
       "claim_id": "gsap-docs-v3",
       "claim": "Official GSAP v3 documentation",
       "source_url": "https://gsap.com/docs/v3/",
-      "raw_snippet": "https://gsap.com/docs/v3/",
-      "fetched_at": "2026-06-28T23:30:00Z",
+      "raw_snippet": "JavaScript animation for the modern web Showcase Community Learn GSAP Docs Demos Notifications Notifications Notification Settings View All Messages Messages Compose new Go to Inbox Login/Create Account Sign In Login Forgot your password?",
+      "fetched_at": "2026-08-19",
       "appears_in": [
         "SKILL.md"
-      ]
+      ],
+      "verified_via": "vendor documentation page fetched; snippet copied from it",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "hyperframes-repo",
@@ -76,7 +78,7 @@
       "claim_id": "hyperframes-render-command",
       "claim": "npx hyperframes render is the CLI command that encodes the composition HTML to MP4 (distinct from lint/validate which check the HTML)",
       "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/SKILL.md",
-      "raw_snippet": "e media | `/media-use` | | Voiceover carve, audio effect chains, or automation envelopes on a track | `/hyperframes-audio` | | Init, lint, check, snapshots, compare, batch render, Studio, render, publish, or diagnostics | `/hyperframes-cli` | | Registry blocks and components | `/hyperframes-registry` | | Figma assets, tokens, components, or storyboard frames as reconstructed motion | `/figma` | Creator edit phrases are cross-domain requests.",
+      "raw_snippet": "media | `/media-use` | | Voiceover carve, audio effect chains, or automation envelopes on a track | `/hyperframes-audio` | | Init, lint, check, snapshots, compare, batch render, Studio, render, publish, or diagnostics | `/hyperframes-cli` | | Registry blocks and components | `/hyperframes-registry` | | Figma assets, tokens, components, or storyboard frames as reconstructed motion | `/figma` | Creator edit phrases are cross-domain requests.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"
@@ -144,10 +146,10 @@
     },
     {
       "claim_id": "internal-design-and-example-values",
-      "claim": "Self-referential design-system and illustrative example values internal to this skill, NOT external regulatory/financial claims. Transition/animation conventions: 35% overlay opacity, 60-70% primary-transition share, 90% burn fade-in point, 30-70% breathe phase, and stylistic values 3%, 6%, 8%, 10%, 20%, 30%, 50%, 70%, 80%, 100% used for opacity/scale/contrast/timing. Bidi-wrapping teaching examples: <bdi>15%</bdi>, <bdi>199</bdi> (₪199) demonstrate isolating Latin digit/currency runs inside Hebrew text. Code references: the /marker-highlight and /hyperframes-cli HyperFrames sub-skill names and the /tmp/fontquery.py helper script path.",
-      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-creative/references/house-style.md",
-      "raw_snippet": "3% 6% 8% 10% 15% 20% 30% 35% 50% 60-70% 70% 80% 90% 100% 30-70% 199 /marker-highlight /hyperframes-cli /tmp/fontquery.py",
-      "fetched_at": "2026-06-28T23:30:00Z",
+      "claim": "Self-referential design-system and illustrative example values internal to this skill, NOT external regulatory/financial claims. Transition/animation conventions: 35% overlay opacity, 60-70% primary-transition share, 90% burn fade-in point, 30-70% breathe phase, and stylistic values 3%, 6%, 8%, 10%, 20%, 30%, 50%, 70%, 80%, 100% used for opacity/scale/contrast/timing. Bidi-wrapping teaching examples: <bdi>15%</bdi>, <bdi>199</bdi> (₪199) demonstrate isolating Latin digit/currency runs inside Hebrew text. Code references: the /marker-highlight and /hyperframes-cli HyperFrames sub-skill names and the /tmp/fontquery.py helper script path. These are values the skill itself defines for its worked examples, so the skill file is the source; no external publication states them.",
+      "source_url": "https://raw.githubusercontent.com/skills-il/recover/master/hyperframes-best-practices/SKILL.md",
+      "raw_snippet": "ltaneously visible. This is the layout you build. 2. **Write static CSS** for that frame. The `.scene-content` container MUST fill the full scene using `width: 100%; height: 100%; padding: Npx;` with `display: flex; flex-direction: column; gap: Npx; box-sizing: border-box`. Use padding to push content inward, NEVER `position: absolute; top: Npx` on a content",
+      "fetched_at": "2026-08-19",
       "appears_in": [
         "references/transitions.md",
         "references/transitions/catalog.md",
@@ -156,7 +158,9 @@
         "references/typography.md",
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "the skill's own SKILL.md in its category repository",
+      "verified_at": "2026-08-19"
     }
   ]
 }

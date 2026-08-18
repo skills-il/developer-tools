@@ -122,7 +122,7 @@
       "claim_id": "ref-remotion-github",
       "claim": "https://github.com/remotion-dev/remotion is the Remotion source repository with issues and releases.",
       "source_url": "https://github.com/remotion-dev/remotion",
-      "raw_snippet": "duct Contributing Contributing Activity Custom properties Stars 56.7k stars Watchers 162 watching Forks 4.3k forks Report repository Releases Sponsor this project Used by Contributors Languages Footer © 2026 GitHub, Inc. Footer navigation Terms Privacy Security Status Community Docs Contact Manage cookies Do not share my personal information You can’t perform that action at this time.",
+      "raw_snippet": "Contributing Contributing Activity Custom properties Stars 56.7k stars Watchers 162 watching Forks 4.3k forks Report repository Releases Sponsor this project Used by Contributors Languages Footer © 2026 GitHub, Inc. Footer navigation Terms Privacy Security Status Community Docs Contact Manage cookies Do not share my personal information You can’t perform that action at this time.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
@@ -193,7 +193,7 @@
       "claim_id": "ref-elevenlabs-docs",
       "claim": "https://elevenlabs.io/docs is the ElevenLabs developer documentation for multilingual text-to-speech across 70+ languages.",
       "source_url": "https://elevenlabs.io/docs",
-      "raw_snippet": "bs works Concepts Choose your path Meet the models Browse by capability Scroll to top ElevenLabs Documentation Copy page Explore our docs and guides to integrate ElevenLabs How ElevenLabs works ElevenLabs provides AI voice infrastructure: text-to-speech, speech-to-text, voice cloning, conversational agents, and generative audio. You can use it in four ways, suited to different audiences.",
+      "raw_snippet": "works Concepts Choose your path Meet the models Browse by capability Scroll to top ElevenLabs Documentation Copy page Explore our docs and guides to integrate ElevenLabs How ElevenLabs works ElevenLabs provides AI voice infrastructure: text-to-speech, speech-to-text, voice cloning, conversational agents, and generative audio. You can use it in four ways, suited to different audiences.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",

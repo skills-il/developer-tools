@@ -20,14 +20,16 @@
     },
     {
       "claim_id": "github-token-readonly-oidc",
-      "claim": "The default GITHUB_TOKEN has been read-only since February 2023, so write jobs need an explicit permissions block; OIDC role assumption requires permissions: id-token: write. Cron schedules run in UTC. ubuntu-latest currently resolves to Ubuntu 24.04. Use $GITHUB_OUTPUT / $GITHUB_ENV (set-output/save-state are deprecated).",
-      "source_url": "https://docs.github.com/en/actions",
-      "raw_snippet": "The default permissions for the GITHUB_TOKEN can be set to read-only; to use OIDC you must set permissions with id-token: write. Scheduled workflows use POSIX cron syntax and run on UTC time.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "claim": "The default GITHUB_TOKEN has been read-only since February 2023, so write jobs need an explicit permissions block; OIDC role assumption requires permissions: id-token: write. Cron schedules run in UTC. ubuntu-latest currently resolves to Ubuntu 24.04. Use $GITHUB_OUTPUT / $GITHUB_ENV (set-output/save-state are deprecated). Also covers https://docs.github.com/en/actions.",
+      "source_url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication",
+      "raw_snippet": "steps This tutorial leads you through how to use the GITHUB_TOKEN for authentication in GitHub Actions workflows, including examples for passing the token to actions, making API requests, and configuring permissions for secure automation.",
+      "fetched_at": "2026-08-19",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "vendor documentation page fetched; snippet copied from it",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "hebcal-api",
@@ -153,7 +155,7 @@
       "claim_id": "monday-api",
       "claim": "Monday.com exposes a GraphQL API at api.monday.com/v2 for updating item status from CI.",
       "source_url": "https://developer.monday.com/api-reference/docs",
-      "raw_snippet": "er entity: 2026-04 → 2026-10 Migrating to version 2025-04 Platform MCP overview Compatible MCP clients Integrate with the monday MCP server Authenticate with an API token Control MCP access with your own OAuth app Make your MCP integration publicly available Platform MCP tools Create Board (Platform MCP) Get Board Info (Platform MCP) Get Board Items (Platform MCP) Get Board Activity (Platform MCP) Board Insights (Platform MCP) Create Group (Platform MCP) Create Column (Platform MCP) Get Column Type Info (Platform MCP) Create It",
+      "raw_snippet": "entity: 2026-04 → 2026-10 Migrating to version 2025-04 Platform MCP overview Compatible MCP clients Integrate with the monday MCP server Authenticate with an API token Control MCP access with your own OAuth app Make your MCP integration publicly available Platform MCP tools Create Board (Platform MCP) Get Board Info (Platform MCP) Get Board Items (Platform MCP) Get Board Activity (Platform MCP) Board Insights (Platform MCP) Create Group (Platform MCP) Create Column (Platform MCP) Get Column Type Info (Platform MCP) Create It",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",

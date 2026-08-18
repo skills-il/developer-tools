@@ -7,7 +7,7 @@
       "claim_id": "invoice-reform-threshold-2026",
       "claim": "Israel Invoice Reform allocation-number threshold steps down in 2026: 10,000 NIS from Jan 1 2026, then 5,000 NIS from June 1 2026 (in force as of June 2026); 5,000 NIS planned to continue into 2027. The threshold was 20,000 NIS in 2025.",
       "source_url": "https://www.vatupdate.com/2026/06/20/israel-tightens-real-time-invoice-validation-with-lower-threshold-requirement/",
-      "raw_snippet": "iews 2 min read Summary Israel has further expanded its CTC regime by lowering the threshold for mandatory invoice validation to NIS 5,000 from June 2026 , significantly increasing the number of transactions in scope. The allocation number system functions as a pre-clearance mechanism , meaning invoices must be validated by the tax authority before input VAT deduction is allowed.",
+      "raw_snippet": "2 min read Summary Israel has further expanded its CTC regime by lowering the threshold for mandatory invoice validation to NIS 5,000 from June 2026 , significantly increasing the number of transactions in scope. The allocation number system functions as a pre-clearance mechanism , meaning invoices must be validated by the tax authority before input VAT deduction is allowed.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
@@ -21,7 +21,7 @@
       "claim_id": "vat-18",
       "claim": "Israel standard VAT rate is 18% (since Jan 1 2025, unchanged in 2026).",
       "source_url": "https://taxsummaries.pwc.com/israel/corporate/other-taxes",
-      "raw_snippet": "ela Vietnam Zambia Israel Corporate - Other taxes Last reviewed - 29 June 2026 Value-added tax (VAT) The 2025 current rate of VAT is 18%. Exports of goods and certain services and various other transactions are zero-rated, and certain transactions are exempt. Banks and other financial institutions pay VAT-equivalent taxes at the rate of 18% based on their total payroll and on profits. Not-for-profit organisations pay VAT-equivalent tax (wage tax) at the rate of 7.5% of their total payroll.",
+      "raw_snippet": "Vietnam Zambia Israel Corporate - Other taxes Last reviewed - 29 June 2026 Value-added tax (VAT) The 2025 current rate of VAT is 18%. Exports of goods and certain services and various other transactions are zero-rated, and certain transactions are exempt. Banks and other financial institutions pay VAT-equivalent taxes at the rate of 18% based on their total payroll and on profits. Not-for-profit organisations pay VAT-equivalent tax (wage tax) at the rate of 7.5% of their total payroll.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "references/billing-cycle-patterns.md"
@@ -137,7 +137,7 @@
       "claim_id": "priority-erp-odata-entities",
       "claim": "Priority ERP exposes standard OData entity endpoints used in the skill: /AINVOICES (A/R invoices), /PINVOICES (A/P invoices), /CUSTOMERS, /SUPPLIERS, /ORDERS, /PORDERS, /PART, /LOGCOUNTERS. Base URL pattern is https://{your-priority-domain}/odata/Priority/tabula.ini/{company}/{entity} (and https://{domain}/odata/Priority/tabula.ini/{company}/{entity}).",
       "source_url": "https://prioritysoftware.github.io/restapi/",
-      "raw_snippet": "an Entity Error Handling Refreshing Metadata Removed Forms Priority 23_1 Priority 23_0 Priority 22_1 Priority 22_0 Introduction The Priority REST API is based on the Open Data Protocol (OData), a data access protocol built on HTTP and REST.",
+      "raw_snippet": "Entity Error Handling Refreshing Metadata Removed Forms Priority 23_1 Priority 23_0 Priority 22_1 Priority 22_0 Introduction The Priority REST API is based on the Open Data Protocol (OData), a data access protocol built on HTTP and REST.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",

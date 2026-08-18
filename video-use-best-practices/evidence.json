@@ -7,7 +7,7 @@
       "claim_id": "scribe-hebrew-wer",
       "claim": "ElevenLabs Scribe achieves ~15.2% WER on Hebrew (FLEURS) vs Whisper Large v3 at ~33%; the skill cites ~15% and ~33%.",
       "source_url": "https://elevenlabs.io/speech-to-text/hebrew",
-      "raw_snippet": "rns structured results for seamless integration Start transcribing Hebrew free Hebrew Transcription Benchmark Model FLEURS Scribe v1 15.2% WER Deepgram Nova 2 100.0% WER Gemini Flash 2 20.3% WER Whisper Large v3 32.",
+      "raw_snippet": "structured results for seamless integration Start transcribing Hebrew free Hebrew Transcription Benchmark Model FLEURS Scribe v1 15.2% WER Deepgram Nova 2 100.0% WER Gemini Flash 2 20.3% WER Whisper Large v3 32.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",

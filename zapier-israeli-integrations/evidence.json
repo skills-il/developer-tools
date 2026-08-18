@@ -141,7 +141,7 @@
       "claim_id": "sumit-native-zapier-app",
       "claim": "The Israeli platform SUMIT has a native Zapier app with a Card Updated trigger and Create Document, Create Card, Update Card, Get Card and Send SMS actions.",
       "source_url": "https://zapier.com/apps/sumit/integrations",
-      "raw_snippet": "o Generate Zaps (Beta) What Should I Do in Zapier If I Change an App Account Password Apps SUMIT Integrations About SUMIT SUMIT is a comprehensive system for planning, management and execution for the self-employed, non-profit organizations and business organizations. Help Help Related categories Project Management Popular SUMIT Integrations monday.",
+      "raw_snippet": "Generate Zaps (Beta) What Should I Do in Zapier If I Change an App Account Password Apps SUMIT Integrations About SUMIT SUMIT is a comprehensive system for planning, management and execution for the self-employed, non-profit organizations and business organizations. Help Help Related categories Project Management Popular SUMIT Integrations monday.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
@@ -155,7 +155,7 @@
       "claim_id": "priority-native-zapier-app",
       "claim": "Priority ERP has a native Zapier app with order-status webhook triggers and sales-order, opportunity and lead actions.",
       "source_url": "https://zapier.com/apps/priority/integrations",
-      "raw_snippet": "e Zaps (Beta) What Should I Do in Zapier If I Change an App Account Password Apps Priority Integrations About Priority Priority is a comprehensive ERP package empowering hundreds of thousands of end users worldwide in their daily tasks of running the business Help Help Related categories Project Management Popular Priority Integrations Shopify monday.",
+      "raw_snippet": "Zaps (Beta) What Should I Do in Zapier If I Change an App Account Password Apps Priority Integrations About Priority Priority is a comprehensive ERP package empowering hundreds of thousands of end users worldwide in their daily tasks of running the business Help Help Related categories Project Management Popular Priority Integrations Shopify monday.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
@@ -169,7 +169,7 @@
       "claim_id": "inforumobile-native-zapier-app",
       "claim": "InforUMobile has a native Zapier app whose actions include Send SMS and Send Whatsapp Template Message, so the raw XML API at api.inforu.co.il is no longer the default integration path.",
       "source_url": "https://zapier.com/apps/inforumobile/integrations",
-      "raw_snippet": "at Should I Do in Zapier If I Change an App Account Password Apps InforUMobile Integrations About InforUMobile InforUMobile is multi channel marketing software offering SMS, email marketing, landing pages, surveys and Facebook advertising.",
+      "raw_snippet": "Should I Do in Zapier If I Change an App Account Password Apps InforUMobile Integrations About InforUMobile InforUMobile is multi channel marketing software offering SMS, email marketing, landing pages, surveys and Facebook advertising.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
@@ -183,7 +183,7 @@
       "claim_id": "grow-on-zapier-is-not-meshulam",
       "claim": "The Zapier app at zapier.com/apps/grow is an unrelated mailing-list product for publishers, not Grow by Meshulam. Grow by Meshulam has no Zapier app.",
       "source_url": "https://zapier.com/apps/grow/integrations",
-      "raw_snippet": "to Generate Zaps (Beta) What Should I Do in Zapier If I Change an App Account Password Apps Grow Integrations About Grow Grow helps publishers build their mailing list. Learn more Learn more Help Help Related categories Email Newsletters Popular Grow Integrations Flodesk MailerLite Classic Mailchimp ActiveCampaign BirdSend FeedBlitz beehiiv SendFox Brevo AWeber GetResponse MailerLite Kartra Drip Kajabi Formatter by Zapier Kit Filter by Zapier Paths by Zapier HubSpot Sender Acumbamail rasa.",
+      "raw_snippet": "Generate Zaps (Beta) What Should I Do in Zapier If I Change an App Account Password Apps Grow Integrations About Grow Grow helps publishers build their mailing list. Learn more Learn more Help Help Related categories Email Newsletters Popular Grow Integrations Flodesk MailerLite Classic Mailchimp ActiveCampaign BirdSend FeedBlitz beehiiv SendFox Brevo AWeber GetResponse MailerLite Kartra Drip Kajabi Formatter by Zapier Kit Filter by Zapier Paths by Zapier HubSpot Sender Acumbamail rasa.",
       "verification_note": "zapier.com/apps/meshulam/integrations returns 404.",
       "fetched_at": "2026-08-18",
       "appears_in": [
@@ -274,7 +274,7 @@
       "claim_id": "legacy-chatgpt-steps-deadline",
       "claim": "Zaps built on deprecated legacy ChatGPT / OpenAI Assistants steps stop working after August 26, 2026.",
       "source_url": "https://help.zapier.com/hc/en-us/articles/44865998484365-Important-update-ChatGPT-users-OpenAI-Assistants-API-deprecation",
-      "raw_snippet": "n With Assistant (Legacy) Create Assistant Upload File (when used with assistants) Searches: Find Assistant Find or Create Assistant Dropdowns used in the actions above: List Assistants List Assistant Files These actions are no longer available when creating new Zaps. Existing Zaps that use them will continue to run until August 26, 2026, after which they will stop working.",
+      "raw_snippet": "With Assistant (Legacy) Create Assistant Upload File (when used with assistants) Searches: Find Assistant Find or Create Assistant Dropdowns used in the actions above: List Assistants List Assistant Files These actions are no longer available when creating new Zaps. Existing Zaps that use them will continue to run until August 26, 2026, after which they will stop working.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
