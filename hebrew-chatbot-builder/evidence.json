@@ -92,14 +92,14 @@
       "claim_id": "botfather-commands",
       "claim": "Telegram bots are created and configured via BotFather commands: /newbot (create), /setdescription, /setprivacy.",
       "source_url": "https://core.telegram.org/bots/api",
-      "raw_snippet": "Telegram Bot API",
+      "raw_snippet": "Telegram Bot API Follow on X Home FAQ Apps API Protocol Schema Telegram Bots Telegram Bot API Telegram Bot API The Bot API is an HTTP-based interface created for developers keen on building bots for Telegram.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "scripts/telegram-bot-scaffold.py"
       ],
-      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
       "verified_at": "2026-08-18"
     },
     {

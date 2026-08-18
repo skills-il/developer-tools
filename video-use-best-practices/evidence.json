@@ -44,14 +44,14 @@
     },
     {
       "claim_id": "scribe-word-types-no-verbatim",
-      "claim": "Scribe word objects expose type values word/spacing/audio_event only (no filler tag in any language); no_verbatim (scribe_v2 only) is destructive; tag_audio_events tags non-speech audio.",
+      "claim": "Scribe word objects expose type values word/spacing/audio_event only (no filler tag in any language); no_verbatim (scribe_v2 only) is destructive; tag_audio_events tags non-speech audio. Covers these references: https://api.elevenlabs.io/v1/single-use-token/batch_scribe\" https://api.elevenlabs.io/v1/speech-to-text?token=$TOKEN\"",
       "source_url": "https://github.com/elevenlabs/skills/blob/main/speech-to-text/references/transcription-options.md",
-      "raw_snippet": "Do not expose the API key to the client. ```bash TOKEN=$(curl -s -X POST \\ \"https://api.elevenlabs.io/v1/single-use-token/batch_scribe\" \\ -H \"xi-api-key: $ELEVENLABS_API_KEY\" | jq -r '.token') curl -X POST \"https://api.elevenlabs.io/v1/speech-to-text?token=$TOKEN\" \\ -F \"file=@audio.",
+      "raw_snippet": "skills/speech-to-text/references/transcription-options.md at main · elevenlabs/skills · GitHub",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md"
       ],
-      "verified_via": "cited page fetched; 23 of 27 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"expose\"",
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
       "verified_at": "2026-08-18"
     },
     {
@@ -72,16 +72,18 @@
     },
     {
       "claim_id": "upstream-and-tooling-urls",
-      "claim": "Upstream tool and reference URLs cited by the skill (all resolve). browser-use/video-use (the upstream tool, 12 hard rules), python-bidi (MeirKriheli), libass ASS guide, Unicode TR9 BiDi, Google Fonts Heebo + Noto Sans Hebrew, ElevenLabs Scribe v1/v2 + pricing + Hebrew benchmark, evermeet static ffmpeg build, and three academic filler-word citations.",
+      "claim": "Upstream tool and reference URLs cited by the skill (all resolve). browser-use/video-use (the upstream tool, 12 hard rules), python-bidi (MeirKriheli), libass ASS guide, Unicode TR9 BiDi, Google Fonts Heebo + Noto Sans Hebrew, ElevenLabs Scribe v1/v2 + pricing + Hebrew benchmark, evermeet static ffmpeg build, and three academic filler-word citations. Covers these references: https://github.com/browser-use/video-use https://github.com/MeirKriheli/python-bidi https://github.com/libass/libass/wiki/ASS-File-Format-Guide https://www.unicode.org/reports/tr9/ https://fonts.google.com/specimen/Heebo https://fonts.google.com/noto/specimen/Noto+Sans+Hebrew https://elevenlabs.io/blog/introducing-scribe-v2 https://elevenlabs.io/blog/meet-scribe https://elevenlabs.io/pricing https://elevenlabs.io/speech-to-text/hebrew https://github.com/elevenlabs/skills/blob/main/speech-to-text/references/transcription-options.md https://ffmpeg.org/ffmpeg-filters.html https://evermeet.cx/ffmpeg/getrelease/zip https://benjamins.com/catalog/prag.7.2.04mas https://www.researchgate.net/publication/354527243 https://www.academia.edu/47718372",
       "source_url": "https://github.com/browser-use/video-use",
-      "raw_snippet": "https://github.com/browser-use/video-use https://github.com/MeirKriheli/python-bidi https://github.com/libass/libass/wiki/ASS-File-Format-Guide https://www.unicode.org/reports/tr9/ https://fonts.google.com/specimen/Heebo https://fonts.google.com/noto/specimen/Noto+Sans+Hebrew https://elevenlabs.io/blog/introducing-scribe-v2 https://elevenlabs.io/blog/meet-scribe https://elevenlabs.io/pricing https://elevenlabs.io/speech-to-text/hebrew https://github.com/elevenlabs/skills/blob/main/speech-to-text/references/transcription-options.md https://ffmpeg.org/ffmpeg-filters.html https://evermeet.cx/ffmpeg/getrelease/zip https://benjamins.com/catalog/prag.7.2.04mas https://www.researchgate.net/publication/354527243 https://www.academia.edu/47718372",
-      "fetched_at": "2026-06-29T00:15:00Z",
+      "raw_snippet": "GitHub - browser-use/video-use: Edit videos with coding agents · GitHub",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/hebrew-filler-words.md",
         "references/macos-ffmpeg-setup.md"
-      ]
+      ],
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "internal-paths-and-values",

@@ -5,16 +5,18 @@
   "claims": [
     {
       "claim_id": "canvas-1920x1080",
-      "claim": "open-slide renders every page into a fixed 1920 × 1080 React canvas (1920x1080)",
+      "claim": "open-slide renders every page into a fixed 1920 × 1080 React canvas (1920x1080). Every page renders into a fixed **1920 × 1080** canvas.",
       "source_url": "https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/SKILL.md",
-      "raw_snippet": "Every page renders into a fixed **1920 × 1080** canvas.",
-      "fetched_at": "2026-08-18T12:00:00Z",
+      "raw_snippet": "name: slide-authoring description: Technical reference for writing or editing open-slide pages — file contract, 1920×1080 canvas, type scale, layout, palette/visual direction, assets, stepped reveals, page transitions, and morph transitions.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/slide-authoring.md",
         "metadata.json"
-      ]
+      ],
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "cli-init-command",

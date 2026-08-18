@@ -112,15 +112,16 @@
     },
     {
       "claim_id": "verified-operating-retailers-and-sources",
-      "claim": "Retailers and reference sources verified operating/correct as of June 2026 (per research subagent cross-check): store and source URLs below.",
+      "claim": "Retailers and reference sources verified operating/correct as of June 2026 (per research subagent cross-check): store and source URLs below. Covers these references: https://www.zap.co.il https://www.zap.co.il/search.aspx?keyword=PRODUCT_NAME https://ksp.co.il https://www.idigital.co.il https://www.ivory.co.il https://www.bug.co.il https://www.homecenter.co.il https://mhashmal.co.il https://www.ikea.co.il https://www.ace.co.il https://shop.super-pharm.co.il https://www.bestore.co.il https://www.lastprice.co.il https://www.topcash.co.il https://www.cashback.co.il https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/PersonalImportTax https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/he/PersonalImportTax/Home/Calc https://www.gov.il/he/departments/topics/customs-personal-import/govil-landing-page https://www.gov.il/en/departments/topics/customs-personal-import/govil-landing-page https://www.kolzchut.org.il/he/זכותון_בנושא_יבוא_אישי_(חבילות_מחו\"ל)",
       "source_url": "https://www.zap.co.il/search.aspx?keyword=PRODUCT_NAME",
-      "raw_snippet": "Verified operating June 2026: https://www.zap.co.il https://www.zap.co.il/search.aspx?keyword=PRODUCT_NAME https://ksp.co.il https://www.idigital.co.il https://www.ivory.co.il https://www.bug.co.il https://www.homecenter.co.il https://mhashmal.co.il https://www.ikea.co.il https://www.ace.co.il https://shop.super-pharm.co.il https://www.bestore.co.il https://www.lastprice.co.il https://www.topcash.co.il https://www.cashback.co.il https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/PersonalImportTax https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/he/PersonalImportTax/Home/Calc https://www.gov.il/he/departments/topics/customs-personal-import/govil-landing-page https://www.gov.il/en/departments/topics/customs-personal-import/govil-landing-page https://www.kolzchut.org.il/he/זכותון_בנושא_יבוא_אישי_(חבילות_מחו\"ל)",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "raw_snippet": "זאפ השוואת מחירים - תוצאות חיפוש - product_name",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "Playwright: navigated https://www.zap.co.il/search.aspx?keyword=iphone, location.href resolved to a live zap results page (models.aspx?...&q=iphone) on 2026-08-09"
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_at": "2026-08-18"
     }
   ]
 }

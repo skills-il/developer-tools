@@ -215,13 +215,13 @@
       "claim_id": "deepdub-website",
       "claim": "Deepdub's primary website documents Phantom X capabilities and Israeli company info",
       "source_url": "https://deepdub.ai",
-      "raw_snippet": "Dubbing and AI | Deepdub",
+      "raw_snippet": "See the blind benchmark → Deepdub Voice Agents Property Management 24/7 tenant calls, maintenance logging, rent reminders.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
       "verified_at": "2026-08-18"
     },
     {

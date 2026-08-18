@@ -86,13 +86,13 @@
       "claim_id": "morning-make-module-callbox-best",
       "claim": "The Make.com Morning module is community-built (listed as 'Morning by Callbox'); Make does not maintain or support it; it requires the Best subscription tier or higher and exposes actions only (no trigger/watch module).",
       "source_url": "https://apps.make.com/green-invoice-y563os",
-      "raw_snippet": "Morning by Callbox - Apps Documentation",
+      "raw_snippet": "Morning by Callbox - Apps Documentation Developer Hub Community Academy Contact support Make.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
       "verified_at": "2026-08-18"
     },
     {
@@ -137,27 +137,29 @@
       "claim_id": "priority-erp-odata-entities",
       "claim": "Priority ERP exposes standard OData entity endpoints used in the skill: /AINVOICES (A/R invoices), /PINVOICES (A/P invoices), /CUSTOMERS, /SUPPLIERS, /ORDERS, /PORDERS, /PART, /LOGCOUNTERS. Base URL pattern is https://{your-priority-domain}/odata/Priority/tabula.ini/{company}/{entity} (and https://{domain}/odata/Priority/tabula.ini/{company}/{entity}).",
       "source_url": "https://prioritysoftware.github.io/restapi/",
-      "raw_snippet": "Priority Developer Portal",
+      "raw_snippet": "an Entity Error Handling Refreshing Metadata Removed Forms Priority 23_1 Priority 23_0 Priority 22_1 Priority 22_0 Introduction The Priority REST API is based on the Open Data Protocol (OData), a data access protocol built on HTTP and REST.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/make-israeli-modules.md"
       ],
-      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
       "verified_at": "2026-08-18"
     },
     {
       "claim_id": "external-endpoints-verified",
-      "claim": "External API endpoints and documentation URLs referenced by the skill (verified reachable or documented as of June 2026): the Make MCP endpoints, Hebcal, Israeli SMS providers, WhatsApp Cloud API, and Green Invoice/Morning API hosts. Template URLs with placeholders are documentation examples, not live hosts.",
+      "claim": "External API endpoints and documentation URLs referenced by the skill (verified reachable or documented as of June 2026): the Make MCP endpoints, Hebcal, Israeli SMS providers, WhatsApp Cloud API, and Green Invoice/Morning API hosts. Template URLs with placeholders are documentation examples, not live hosts. Covers these references: https://mcp.make.com https://developers.make.com/mcp-server https://<MAKE_ZONE>.make.com https://www.hebcal.com/hebcal?v=1&cfg=json&year=now&month=now&maj=on&geo=pos&latitude=32.0853&longitude=34.7818 http://api.inforu.co.il/SendMessage.asmx https://019sms.co.il/api https://www.sms4free.co.il/ApiSMS/SendSMS https://graph.facebook.com/{api-version}/{phone-number-id}/messages https://api.greeninvoice.co.il/api/v1/ https://sandbox.d.greeninvoice.co.il/api/v1/ https://{domain}/odata/Priority/tabula.ini/{company}/{entity} https://{your-priority-domain}/odata/Priority/tabula.ini/{company}/{entity}",
       "source_url": "https://www.make.com/en/mcp",
-      "raw_snippet": "Endpoints: https://mcp.make.com https://developers.make.com/mcp-server https://<MAKE_ZONE>.make.com https://www.hebcal.com/hebcal?v=1&cfg=json&year=now&month=now&maj=on&geo=pos&latitude=32.0853&longitude=34.7818 http://api.inforu.co.il/SendMessage.asmx https://019sms.co.il/api https://www.sms4free.co.il/ApiSMS/SendSMS https://graph.facebook.com/{api-version}/{phone-number-id}/messages https://api.greeninvoice.co.il/api/v1/ https://sandbox.d.greeninvoice.co.il/api/v1/ https://{domain}/odata/Priority/tabula.ini/{company}/{entity} https://{your-priority-domain}/odata/Priority/tabula.ini/{company}/{entity}",
-      "fetched_at": "2026-06-22T20:50:00Z",
+      "raw_snippet": "Just a moment...",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/make-israeli-modules.md"
-      ]
+      ],
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "illustrative-formatting-examples",

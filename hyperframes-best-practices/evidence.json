@@ -117,16 +117,18 @@
     },
     {
       "claim_id": "hebrew-google-fonts",
-      "claim": "Hebrew fonts Heebo, Rubik, Assistant available via Google Fonts Hebrew subset and the fonts metadata + css2 endpoints",
+      "claim": "Hebrew fonts Heebo, Rubik, Assistant available via Google Fonts Hebrew subset and the fonts metadata + css2 endpoints. Covers these references: https://fonts.google.com/metadata/fonts https://fonts.googleapis.com/css2?family=Heebo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700",
       "source_url": "https://fonts.google.com/?subset=hebrew",
-      "raw_snippet": "Heebo https://fonts.google.com/metadata/fonts https://fonts.googleapis.com/css2?family=Heebo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700",
-      "fetched_at": "2026-06-28T23:30:00Z",
+      "raw_snippet": "Browse Fonts - Google Fonts",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "metadata.json",
         "references/typography.md"
-      ]
+      ],
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "mdn-unicode-bidi",

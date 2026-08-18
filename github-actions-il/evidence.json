@@ -33,14 +33,14 @@
       "claim_id": "hebcal-api",
       "claim": "The Hebcal REST API provides Jewish-calendar and Shabbat-times JSON (holidays, candle-lighting) used to drive Shabbat/holiday-aware deploy freezes.",
       "source_url": "https://www.hebcal.com/home/developer-apis",
-      "raw_snippet": "Developer APIs – Hebcal",
+      "raw_snippet": "Developer APIs – Hebcal Skip to main content Holidays Date Converter Shabbat Torah Yahrzeit About Help Developer APIs Our mission at Hebcal.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/shabbat-deploy-freeze.md"
       ],
-      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
       "verified_at": "2026-08-18"
     },
     {
@@ -164,15 +164,15 @@
     },
     {
       "claim_id": "vercel-regions",
-      "claim": "Vercel supports pinning deployment regions (e.g. fra1 Frankfurt) documented in the Edge Network regions page.",
+      "claim": "Vercel supports pinning deployment regions (e.g. fra1 Frankfurt) documented in the Edge Network regions page. This page details the supported regions and explains our global infrastructure. Our global CDN has 126 Points of Presence in 94 cities across 51 countries. Global infrastructure Vercel's CDN is built on a sophisticated global infrastructure designed to optimize performance and reliability: Points of Presence (PoPs) : We operate over 126 PoPs distributed across the globe. These PoPs serve as the first point of contact for incoming requests, ensuring low-latency access for users worldwide.",
       "source_url": "https://vercel.com/docs/edge-network/regions",
-      "raw_snippet": "This page details the supported regions and explains our global infrastructure. Our global CDN has 126 Points of Presence in 94 cities across 51 countries. Global infrastructure Vercel's CDN is built on a sophisticated global infrastructure designed to optimize performance and reliability: Points of Presence (PoPs) : We operate over 126 PoPs distributed across the globe. These PoPs serve as the first point of contact for incoming requests, ensuring low-latency access for users worldwide.",
+      "raw_snippet": "Pricing & Usage Copy page Copy page Global network and regions Copy page Copy page Vercel's CDN is a globally distributed platform that stores content and runs compute close to your users and data, reducing latency and improving performance.",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched and confirmed to contain \"126\"; snippet replaced with the page's own wording around it",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
       "verified_at": "2026-08-18"
     },
     {

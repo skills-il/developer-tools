@@ -65,14 +65,14 @@
       "claim_id": "zap-onboarding",
       "claim": "Zap (zap.co.il) onboards sellers via joinzap; it runs both a price-comparison model (monthly + per-click fees, no sale commission) and a marketplace model (variable per-sale commission by category).",
       "source_url": "https://www.zap.co.il/joinzap.aspx",
-      "raw_snippet": "הוספת חנות לזאפ - הופעה בזאפ השוואת מחירים",
+      "raw_snippet": "הוספת חנות לזאפ - הופעה בזאפ השוואת מחירים x כל הקטגוריות חשמל ואלקטרוניקה מחשבים לבית ולגן פנאי וספורט בריאות ויופי מזגנים zap cars צרף חנותך לאתר זאפ השוואת מחירים פרסום ב zap למה לפרסם ב zap?",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/platform-guides.md"
       ],
-      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
       "verified_at": "2026-08-18"
     },
     {

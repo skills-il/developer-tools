@@ -41,14 +41,16 @@
     },
     {
       "claim_id": "cloudinary-docs-home",
-      "claim": "Cloudinary's official documentation home is at cloudinary.com/documentation, and Cloudinary's REST API base path is api.cloudinary.com/v1_1/{cloud_name}/ with resources like /image/upload, /image/destroy, /resources/{resource_type}, and delivery URLs at res.cloudinary.com/{cloud_name}/.",
+      "claim": "Cloudinary's official documentation home is at cloudinary.com/documentation, and Cloudinary's REST API base path is api.cloudinary.com/v1_1/{cloud_name}/ with resources like /image/upload, /image/destroy, /resources/{resource_type}, and delivery URLs at res.cloudinary.com/{cloud_name}/. Covers these references: https://cloudinary.com https://api.cloudinary.com/v1_1/{cloud_name}/image/upload https://api.cloudinary.com/v1_1/{cloud_name}/image/destroy https://api.cloudinary.com/v1_1/{cloud_name}/resources/{resource_type} https://api.cloudinary.com/v1_1/{config[ https://res.cloudinary.com/{cloud_name}/image/upload https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_id}.{format} https://res.cloudinary.com/{cloud_name}/image/upload/f_auto,q_auto/{public_id} https://res.cloudinary.com/{cloud_name}/image/upload/w_800,q_auto,f_auto/{public_id} https://res.cloudinary.com/{cloud_name}/image/upload/w_800,c_fill/l_text:Heebo_40_bold:%D7%A9%D7%9C%D7%95%D7%9D,co_white,g_south,y_30/{public_id} https://res.cloudinary.com/{cloud_name}/image/upload/e_gen_remove:prompt_(person https://res.cloudinary.com/{cloud}/image/upload/f_auto,q_auto/{public_id} https://res.cloudinary.com/{cloud}/video/upload/so_5,w_800,h_450,c_fill,q_auto,f_jpg/{video_id}",
       "source_url": "https://cloudinary.com/documentation",
-      "raw_snippet": "Cloudinary documentation https://cloudinary.com https://api.cloudinary.com/v1_1/{cloud_name}/image/upload https://api.cloudinary.com/v1_1/{cloud_name}/image/destroy https://api.cloudinary.com/v1_1/{cloud_name}/resources/{resource_type} https://api.cloudinary.com/v1_1/{config[ https://res.cloudinary.com/{cloud_name}/image/upload https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_id}.{format} https://res.cloudinary.com/{cloud_name}/image/upload/f_auto,q_auto/{public_id} https://res.cloudinary.com/{cloud_name}/image/upload/w_800,q_auto,f_auto/{public_id} https://res.cloudinary.com/{cloud_name}/image/upload/w_800,c_fill/l_text:Heebo_40_bold:%D7%A9%D7%9C%D7%95%D7%9D,co_white,g_south,y_30/{public_id} https://res.cloudinary.com/{cloud_name}/image/upload/e_gen_remove:prompt_(person https://res.cloudinary.com/{cloud}/image/upload/f_auto,q_auto/{public_id} https://res.cloudinary.com/{cloud}/video/upload/so_5,w_800,h_450,c_fill,q_auto,f_jpg/{video_id}",
-      "fetched_at": "2026-05-20T00:00:00Z",
+      "raw_snippet": "Cloudinary Image & Video API Platform - Docs Home Page | Documentation",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "cloudinary-image-optimization-docs",

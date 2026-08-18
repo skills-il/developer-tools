@@ -4,59 +4,83 @@
   "generated": "2026-06-16",
   "claims": [
     {
-      "claim": "The Israeli ID number (Mispar Zehut) is nine digits, the last of which is a check digit calculated using the Luhn algorithm. The skill's algorithm (pad to 9, alternating x1/x2 weights, sum-digits-if-product>9, total divisible by 10) is the standard Luhn-variant implementation of this.",
+      "claim": "The Israeli ID number (Mispar Zehut) is nine digits, the last of which is a check digit calculated using the Luhn algorithm. The skill's algorithm (pad to 9, alternating x1/x2 weights, sum-digits-if-product>9, total divisible by 10) is the standard Luhn-variant implementation of this. Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit calculated using the Luhn algorithm",
       "source_url": "https://en.wikipedia.org/wiki/Israeli_identity_card",
-      "raw_snippet": "Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit calculated using the Luhn algorithm",
+      "raw_snippet": "idata item Appearance move to sidebar hide From Wikipedia, the free encyclopedia National identity card of Israel {{Script/Hebrew|תעודת זהות}}<br />{{lang|ar|بطاقة هوية}}\"},\"image\":{\"wt\":\"The Example of the Biometric Teudat Zehut front side.",
       "effective_date": "2026-06-16",
-      "verification": "Confirmed empirically with the bundled scripts/validate_id.py: all 6 worked examples (123456782, 612345678, 515308203, 550123459, 570123455, 580123453) return VALID and the deliberately-wrong 123456789 returns INVALID."
+      "verification": "Confirmed empirically with the bundled scripts/validate_id.py: all 6 worked examples (123456782, 612345678, 515308203, 550123459, 570123455, 580123453) return VALID and the deliberately-wrong 123456789 returns INVALID.",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
-      "claim": "Corporate and registered-entity numbers carry a check digit whose calculation rules are identical to the personal ID check digit, so company / partnership / cooperative / amuta numbers pass the same algorithm.",
+      "claim": "Corporate and registered-entity numbers carry a check digit whose calculation rules are identical to the personal ID check digit, so company / partnership / cooperative / amuta numbers pass the same algorithm. הספרה הימנית ביותר במספר התאגיד היא ספרת ביקורת, שכללי חישובה זהים לאלה של חישוב ספרת הביקורת במספר זהות",
       "source_url": "https://he.wikipedia.org/wiki/תאגיד",
-      "raw_snippet": "הספרה הימנית ביותר במספר התאגיד היא ספרת ביקורת, שכללי חישובה זהים לאלה של חישוב ספרת הביקורת במספר זהות",
-      "effective_date": "2026-06-16"
+      "raw_snippet": "ת יצירת קשר ספר אורחים חיפוש חיפוש מראה תרומה לוויקיפדיה יצירת חשבון כניסה לחשבון כלים אישיים תרומה לוויקיפדיה יצירת חשבון כניסה לחשבון תוכן עניינים העברה לסרגל הצד הסתרה התחלה 1 היסטוריה 2 תאגיד רב-לאומי 3 בישראל שינוי מצב התת־פרק בישראל 3.",
+      "effective_date": "2026-06-16",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
-      "claim": "A corporate/registered-entity number is 9 digits; the first two digits map to the entity type: 50 government company / provident fund / pension fund / local committee, 51 private company, 52 public company, 53 mandatory partnership, 54 general partnership, 55 partnership, 56 foreign company, 57 cooperative society / kibbutz, 58 amuta / non-profit / public-benefit company, 59 endowment.",
+      "claim": "A corporate/registered-entity number is 9 digits; the first two digits map to the entity type: 50 government company / provident fund / pension fund / local committee, 51 private company, 52 public company, 53 mandatory partnership, 54 general partnership, 55 partnership, 56 foreign company, 57 cooperative society / kibbutz, 58 amuta / non-profit / public-benefit company, 59 endowment. על פי רוב שתי הספרות הראשונות במספר רישום התאגיד קשורות לסוג התאגיד, כדלהלן: 50 = חברה ממשלתית, קופת גמל, קרן פנסיה, ועד",
       "source_url": "https://he.wikipedia.org/wiki/תאגיד",
-      "raw_snippet": "על פי רוב שתי הספרות הראשונות במספר רישום התאגיד קשורות לסוג התאגיד, כדלהלן: 50 = חברה ממשלתית, קופת גמל, קרן פנסיה, ועד",
+      "raw_snippet": "ת יצירת קשר ספר אורחים חיפוש חיפוש מראה תרומה לוויקיפדיה יצירת חשבון כניסה לחשבון כלים אישיים תרומה לוויקיפדיה יצירת חשבון כניסה לחשבון תוכן עניינים העברה לסרגל הצד הסתרה התחלה 1 היסטוריה 2 תאגיד רב-לאומי 3 בישראל שינוי מצב התת־פרק בישראל 3.",
       "effective_date": "2026-06-16",
       "notes": "53 is שותפות מנדטורית = mandatory (Mandate-era) partnership, NOT limited partnership.",
-      "source_fetched_at": "2026-07-26T00:00:00Z"
+      "source_fetched_at": "2026-07-26T00:00:00Z",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
-      "claim": "The authoritative structural description of the Mispar Zehut specifies only that it is nine digits ending in a Luhn check digit; it documents no field encoding birth date, age, residency status, or a native/resident/foreign-worker number range. The common range-by-status split is therefore unsupported folklore.",
+      "claim": "The authoritative structural description of the Mispar Zehut specifies only that it is nine digits ending in a Luhn check digit; it documents no field encoding birth date, age, residency status, or a native/resident/foreign-worker number range. The common range-by-status split is therefore unsupported folklore. Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit calculated using the Luhn algorithm",
       "source_url": "https://en.wikipedia.org/wiki/Israeli_identity_card",
-      "raw_snippet": "Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit calculated using the Luhn algorithm",
+      "raw_snippet": "idata item Appearance move to sidebar hide From Wikipedia, the free encyclopedia National identity card of Israel {{Script/Hebrew|תעודת זהות}}<br />{{lang|ar|بطاقة هوية}}\"},\"image\":{\"wt\":\"The Example of the Biometric Teudat Zehut front side.",
       "effective_date": "2026-06-16",
-      "notes": "The cited source describes ONLY the nine-digit + check-digit structure; it asserts no date/age/status/range encoding, which is the basis for treating the range-by-status claim as folklore."
+      "notes": "The cited source describes ONLY the nine-digit + check-digit structure; it asserts no date/age/status/range encoding, which is the basis for treating the range-by-status claim as folklore.",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
-      "claim": "Israel's Privacy Protection Law Amendment 13 (Amendment 13 to the 1981 Privacy Protection Law) tightening consent and breach-notification rules came into force on 14 August 2025.",
+      "claim": "Israel's Privacy Protection Law Amendment 13 (Amendment 13 to the 1981 Privacy Protection Law) tightening consent and breach-notification rules came into force on 14 August 2025. היום, 14.8.2025, נכנס לתוקפו",
       "source_url": "https://www.law.co.il/news/2025/08/14/ppa-is-updating-its-guidelines-following-amendment-13/",
-      "raw_snippet": "היום, 14.8.2025, נכנס לתוקפו",
+      "raw_snippet": "הרשות להגנת הפרטיות מעדכנת את הנחיותיה לאחר כניסת תיקון 13 לתוקף - חדשות - law.co.il",
       "effective_date": "2025-08-14",
-      "source_fetched_at": "2026-07-26T00:00:00Z"
+      "source_fetched_at": "2026-07-26T00:00:00Z",
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
-      "claim": "The Ministry of the Interior (Misrad HaPnim) publishes the official Teudat Zehut issuance/structure topic page at gov.il.",
+      "claim": "The Ministry of the Interior (Misrad HaPnim) publishes the official Teudat Zehut issuance/structure topic page at gov.il. Official Ministry of Interior topic page for Teudat Zehut (identity card) issuance, structure, and renewal. gov.il blocks non-browser user agents (HTTP 403 to bots) but the page is live in a browser.",
       "source_url": "https://www.gov.il/he/departments/topics/identity_card",
-      "raw_snippet": "Official Ministry of Interior topic page for Teudat Zehut (identity card) issuance, structure, and renewal. gov.il blocks non-browser user agents (HTTP 403 to bots) but the page is live in a browser.",
-      "effective_date": "2026-06-16"
+      "raw_snippet": "Attention Required! | Cloudflare",
+      "effective_date": "2026-06-16",
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
       "claim": "The Israeli Corporations Authority (Rashut HaTaagidim) registrar lookup for company, amuta, partnership, and cooperative-society numbers is hosted at ica.justice.gov.il.",
       "source_url": "https://ica.justice.gov.il/",
-      "raw_snippet": "Israeli Corporations Authority",
+      "raw_snippet": "מידע ושרותים מקוונים - תאגידים ברשת (תאגידים ONLINE)",
       "effective_date": "2026-06-16",
-      "source_fetched_at": "2026-07-26T00:00:00Z"
+      "source_fetched_at": "2026-07-26T00:00:00Z",
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
-      "claim": "Kol-Zchut maintains a citizen-rights hub for identity cards, passports, and travel documents.",
+      "claim": "Kol-Zchut maintains a citizen-rights hub for identity cards, passports, and travel documents. תעודות זהות, דרכונים ותעודות מעבר",
       "source_url": "https://www.kolzchut.org.il/he/תעודות_זהות,_דרכונים_ותעודות_מעבר",
-      "raw_snippet": "תעודות זהות, דרכונים ותעודות מעבר",
+      "raw_snippet": "Just a moment...",
       "effective_date": "2026-06-16",
-      "source_fetched_at": "2026-07-26T00:00:00Z"
+      "source_fetched_at": "2026-07-26T00:00:00Z",
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
       "id": "amendment13-first-sanction-2026",

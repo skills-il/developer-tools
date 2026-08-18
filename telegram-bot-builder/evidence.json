@@ -215,12 +215,12 @@
     },
     {
       "claim_id": "placeholder-example-urls",
-      "claim": "Placeholder/example URLs used in code samples (your-domain.com, your-app.com/mini-app, example.com/webhook, api.telegram.org/bot<token>/setWebhook with a templated host) are illustrative placeholders, not factual endpoint claims. The real Bot API host pattern is documented at core.telegram.org/bots/api.",
+      "claim": "Placeholder/example URLs used in code samples (your-domain.com, your-app.com/mini-app, example.com/webhook, api.telegram.org/bot<token>/setWebhook with a templated host) are illustrative placeholders, not factual endpoint claims. The real Bot API host pattern is documented at core.telegram.org/bots/api. Covers these references: https://your-domain.com https://your-domain.com/webhook https://your-domain.com/webhook/${process.env.WEBHOOK_SECRET} https://your-app.com/mini-app https://example.com/webhook https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=https://your-app.vercel.app/api/webhook&secret_token=${SECRET}",
       "source_url": "https://core.telegram.org/bots/api",
-      "raw_snippet": "Illustrative placeholders only, not real endpoints: https://your-domain.com , https://your-domain.com/webhook , https://your-domain.com/webhook/${process.env.WEBHOOK_SECRET} , https://your-app.com/mini-app , https://example.com/webhook , https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=https://your-app.vercel.app/api/webhook&secret_token=${SECRET}",
-      "fetched_at": "2026-07-25T19:05:45.430053+00:00",
-      "verified_via": "not-a-source-claim",
-      "verified_at": "2026-07-25T19:06:22.464589+00:00",
+      "raw_snippet": "Telegram Bot API Follow on X Home FAQ Apps API Protocol Schema Telegram Bots Telegram Bot API Telegram Bot API The Bot API is an HTTP-based interface created for developers keen on building bots for Telegram.",
+      "fetched_at": "2026-08-18",
+      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
+      "verified_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",

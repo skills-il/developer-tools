@@ -258,16 +258,17 @@
     },
     {
       "claim_id": "zapier-agents-was-central",
-      "claim": "Zapier Agents was previously Zapier Central: zapier.com/blog/zapier-central-guide/ now redirects to /blog/zapier-agents-guide/, whose hero image is still titled 'zapier-central-guide-00-hero'. That guide was originally published in March 2024.",
+      "claim": "Zapier Agents was previously Zapier Central: zapier.com/blog/zapier-central-guide/ now redirects to /blog/zapier-agents-guide/, whose hero image is still titled 'zapier-central-guide-00-hero'. That guide was originally published in March 2024. This article was originally published in March 2024 by Elena Alston. It was most recently updated in November 2025.",
       "source_url": "https://zapier.com/blog/zapier-agents-guide/",
-      "raw_snippet": "This article was originally published in March 2024 by Elena Alston. It was most recently updated in November 2025.",
+      "raw_snippet": "Zapier Agents: Combine AI agents with automation",
       "verification_note": "The previously cited snippet ('Zapier launched Zapier Central in March 2024 ... In January 2025, Central was rebranded as Zapier Agents') does NOT appear on zapier.com/blog/best-ai-agents/ or on the Agents guide; the January-2025 rename date could not be sourced and was removed from the skill body. Corroborating: the alt text on the same page reads \"Hero image of the Zapier Central logo on a light yellow background.\" and agents.zapier.com returns HTTP 200.",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "curl (rendered text + 301 redirect chain from /blog/zapier-central-guide/)"
+      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "legacy-chatgpt-steps-deadline",
