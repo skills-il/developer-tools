@@ -18,6 +18,17 @@
         "CARRY: reported but unverified 2026 items worth checking next cycle: IIA runway-extension fast-track launched 26.07.2026, Israel Invoices allocation-number threshold dropping to NIS 5,000 from 01.06.2026, Companies Law Amendment 38 commencement.",
         "Deferred over the Phase 4.1 discretionary cap: Section 15A private-placement nuances (equity and non-equity counted in separate baskets, classified investors excluded from the 35 count)."
       ]
+    },
+    {
+      "version": "1.3.1",
+      "date": "2026-08-19",
+      "lessons": [
+        "Legal classification (Phase 5.10, done properly this cycle rather than by template reflex): two axes per ע\"א 4223/12. Axis 2 framing = F1: the name is a coined descriptive term with no reserved title, name_risk=[]. Axis 1 specificity = S2: Steps 4, 6 and 7 reach concrete conclusions on the user's own facts (which cap to take, PTE eligibility, whether to flip). S2 x F1 = Tier B, not A1 or A2.",
+        "The trespass mode is OUTPUT, not NAME. references/investment-term-sheets.md carried fill-in-the-blank skeletons headed SAFE AGREEMENT and CONVERTIBLE PROMISSORY NOTE with placeholders and operative clauses. Drafting a legal instrument for another person is reserved under עו\"ד §20, which is disjunctive on payment, so 'it is free' is no defence. Applied remedy A2's best practice even though the tier is B: removed the instruments, kept the principles as negotiation checklists.",
+        "ייעוץ השקעות exposure is materially lower than it first looks: §3 reserves advising on the כדאיות of an investment, and this skill advises the company RAISING, not the investor deciding. Noted rather than relied on.",
+        "The disclaimer itself was advertising the trespass: the notice said 'any wording this skill drafts, whether a SAFE, a convertible note...' which asserts the skill drafts instruments. After removing the instruments the notice had to be reworded to match, otherwise the notice is the evidence.",
+        "CARRY: the live enriched `avoid` field is EMPTY ({\"en\":[],\"he\":[]}) on prod. For a regulated-domain skill the anti-trigger list is the field most worth having. Flag to Phase 9."
+      ]
     }
   ]
 }

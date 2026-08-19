@@ -15,12 +15,14 @@ formation, Innovation Authority grants, investment instruments, Section 102
 plans and the Encouragement of Capital Investments Law work. It does not
 practise law and it does not represent you before any authority.
 
-Any wording this skill drafts, whether a SAFE, a convertible note, articles of
-association or an ESOP plan, is an automatic draft for your own preparation
-only. It is not a document prepared by a lawyer and it may not be relied on as
-evidence. Before signing anything, filing with the Companies Registrar, the
-Israel Tax Authority, the Israel Innovation Authority or a court, consult a
-licensed Israeli lawyer.
+This skill does not draft legal documents. It explains the terms a SAFE, a
+convertible note, articles of association or an ESOP plan turn on, so that you
+can understand and negotiate them, but preparing the document itself is work
+reserved to a lawyer. Any text it produces is background material for your own
+preparation only. It is not a document prepared by a lawyer and it may not be
+relied on as evidence. Before signing anything, filing with the Companies
+Registrar, the Israel Tax Authority, the Israel Innovation Authority or a court,
+consult a licensed Israeli lawyer.
 
 Any tax figure it produces is an estimate. Responsibility for reporting and
 paying tax is yours, the binding computation is the Tax Authority's, and
@@ -31,7 +33,7 @@ it. Consult a licensed Israeli accountant or tax adviser before acting.
 
 Help Israeli founders execute the legal, tax, and funding mechanics of building a startup in 2026: registering a חברה בע"מ at the Israeli Corporations Authority (Rasham HaChevarot), choosing an Israel Innovation Authority program (Tnufa, R&D Fund, incubator, BIRD, Horizon Europe, Yozma 2.0), structuring SAFE or convertible-note rounds under Israeli law, setting up a Section 102 trustee plan, applying for Preferred Technological Enterprise status, and deciding whether to do a Delaware Flip.
 
-Use when the user asks about any of these mechanics. Do NOT use for non-Israeli company formation, US tax advice, or cap-table modeling of public-company stock; route those elsewhere. For deep coverage of Section 102 employee tax (the employee side), prefer `israeli-stock-options-tax`. Always recommend a licensed Israeli lawyer and רואה חשבון before binding decisions; this skill produces drafts and checklists, not legal opinions.
+Use when the user asks about any of these mechanics. Do NOT use for non-Israeli company formation, US tax advice, or cap-table modeling of public-company stock; route those elsewhere. For deep coverage of Section 102 employee tax (the employee side), prefer `israeli-stock-options-tax`. Always recommend a licensed Israeli lawyer and רואה חשבון before binding decisions; this skill produces explanations and checklists, not legal documents and not legal opinions.
 
 ## Instructions
 
@@ -160,20 +162,19 @@ Review period: 2-4 months typically
 
 ### Step 4: Investment Agreements
 
-**Israeli SAFE template structure (Y Combinator post-money SAFE is the de-facto norm in Israel; Israeli law applies via choice-of-law clause):**
+**Terms an Israeli SAFE turns on. Settle these, then have a licensed Israeli lawyer draft the instrument; do not sign a skeleton.** (The Y Combinator post-money SAFE is the de-facto norm in Israel, with Israeli law applied via a choice-of-law clause.)
 ```
-Israeli SAFE Key Terms:
+Israeli SAFE, terms to settle:
 
-1. Investment Amount: [Amount] NIS or USD
-2. Valuation Cap: [Cap] (post-money standard, pre-money still seen in older templates)
+1. Investment amount, and the currency it is denominated in
+2. Valuation cap, and whether it is post-money (the standard) or pre-money
    Typical 2026 caps: USD 3-8M pre-seed, USD 8-20M seed
-3. Discount Rate: 15-25% typical (20% common)
-4. Governing Law: Laws of the State of Israel (or Delaware if flipped)
-5. Dispute Resolution: Tel Aviv courts / arbitration
-6. Conversion Trigger: Equity Financing of at least [Amount]
-7. MFN Clause: [Yes/No] Most Favored Nation
-8. Pro-rata Rights: [Yes/No] right to participate in next round
-9. Israeli Tax: Subject to Israeli tax withholding on conversion
+3. Discount rate, if any (15-25% typical, 20% common), and how it interacts with the cap
+4. Governing law (Israeli law, or Delaware if flipped) and forum
+5. What size of equity financing triggers conversion
+6. Whether the investor gets MFN (most favoured nation)
+7. Whether the investor gets pro-rata rights in the next round
+8. Whether Israeli tax is withheld on conversion, and on whom the obligation falls
 
 Important Israeli-specific clauses:
 - IIA notification (if company received grants)
@@ -194,7 +195,8 @@ Important Israeli-specific clauses:
 - Anti-money laundering compliance (Hok Issur Halbanat Hon)
 ```
 
-**Convertible note vs SAFE comparison:**
+**Convertible note vs SAFE.** The asymmetry that matters: a SAFE has no interest, no maturity and no repayment obligation, so it cannot put the company into default. A note can.
+
 ```
                     SAFE            Convertible Note
 Interest rate:      None            5-8% annually
@@ -213,7 +215,7 @@ Common in Israel:   Pre-seed/seed   Seed/bridge rounds
 ```
 Option 102 Capital Gains Track Setup Steps:
 
-1. Draft ESOP (Employee Stock Option Plan)
+1. Have an ESOP (Employee Stock Option Plan) drafted
    - Hire Israeli employment/tax lawyer
    - Define: pool size, vesting schedule, exercise price, trustee
 
