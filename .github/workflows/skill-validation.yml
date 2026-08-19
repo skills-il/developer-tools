@@ -82,10 +82,17 @@ jobs:
 
       - name: Validate SKILL.md files
         if: steps.changed.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed.outputs.files }}
         run: |
           chmod +x scripts/validate-skill.sh
-          # shellcheck disable=SC2086
-          ./scripts/validate-skill.sh ${{ steps.changed.outputs.files }}
+          # CHANGED_FILES is newline-separated. Interpolating it directly into
+          # the script body put every path after the first on its own line,
+          # where the shell tried to EXECUTE it ("Permission denied", exit 126).
+          # That only ever fired when a single push touched 2+ SKILL.md files.
+          printf '%s\n' "$CHANGED_FILES" \
+            | grep -v '^[[:space:]]*$' \
+            | xargs -r ./scripts/validate-skill.sh
 
       - name: Check evidence.json present for touched skill folders
         if: steps.changed.outputs.files != ''
