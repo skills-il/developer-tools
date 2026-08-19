@@ -1,12 +1,31 @@
 ---
 name: israeli-startup-toolkit
-description: Guide Israeli startup operations including company formation, Innovation Authority grants, investment agreements, R&D tax benefits, and employee stock options (Option 102). Use when user asks about starting a company in Israel, IIA grants, "Innovation Authority", SAFE agreements (Israeli), convertible notes, Option 102, employee stock options in Israel, R&D tax benefits, preferred enterprise, Yozma 2.0, Delaware flip, or Israeli startup legal/financial setup. Do NOT use for non-Israeli company formation or international tax advice. Always recommend consulting with Israeli lawyer and accountant for binding decisions.
+description: Not legal advice and not tax advice. Guide Israeli startup operations including company formation, Innovation Authority grants, investment agreements, R&D tax benefits, and employee stock options (Option 102). Use when user asks about starting a company in Israel, IIA grants, "Innovation Authority", SAFE agreements (Israeli), convertible notes, Option 102, employee stock options in Israel, R&D tax benefits, preferred enterprise, Yozma 2.0, Delaware flip, or Israeli startup legal/financial setup. Do NOT use for non-Israeli company formation or international tax advice. Always recommend consulting with Israeli lawyer and accountant for binding decisions.
 license: MIT
 allowed-tools: Bash(python:*) WebFetch
 compatibility: No API keys required. Network access helpful for IIA portal reference. Always consult licensed Israeli professionals for legal/tax decisions.
 ---
 
 # Israeli Startup Toolkit
+
+## Legal notice
+
+Not legal advice and not tax advice. This skill explains how Israeli company
+formation, Innovation Authority grants, investment instruments, Section 102
+plans and the Encouragement of Capital Investments Law work. It does not
+practise law and it does not represent you before any authority.
+
+Any wording this skill drafts, whether a SAFE, a convertible note, articles of
+association or an ESOP plan, is an automatic draft for your own preparation
+only. It is not a document prepared by a lawyer and it may not be relied on as
+evidence. Before signing anything, filing with the Companies Registrar, the
+Israel Tax Authority, the Israel Innovation Authority or a court, consult a
+licensed Israeli lawyer.
+
+Any tax figure it produces is an estimate. Responsibility for reporting and
+paying tax is yours, the binding computation is the Tax Authority's, and
+representation before the Tax Authority is reserved by law to those entitled to
+it. Consult a licensed Israeli accountant or tax adviser before acting.
 
 ## Description
 
@@ -51,7 +70,7 @@ Step-by-step registration:
 
 4. Register online
    - Portal: ica.justice.gov.il
-   - Registration fee: one-time, set by regulation and updated annually. Read the current amount off the registration form rather than quoting one from memory.
+   - Registration fee (2026 tariff, one-time): NIS 2,559 online (reduced), NIS 3,123 otherwise, NIS 893 for a chevra le-toelet ha-tzibur (chalatz)
    - Annual fee: NIS 1,338 if paid by 31 March 2026, NIS 1,777 from 1 April 2026
    - First-year exemption: no annual fee in the calendar year of registration
    - Timeline: 3-7 business days
@@ -194,8 +213,9 @@ Option 102 Capital Gains Track Setup Steps:
 
 3. File plan with Israel Tax Authority (ITA)
    - Submit plan document to local pakid shuma
-   - 30-day objection period (ITA can object or modify)
-   - Plan effective after 30 days if no objection
+   - The notice must be filed at least 30 days BEFORE the grant date
+   - The plan and the trustee are deemed approved if the assessing officer
+     does not reply within 90 days of receiving the notice
 
 4. Grant options to employees
    - Board resolution for each grant
@@ -204,15 +224,20 @@ Option 102 Capital Gains Track Setup Steps:
 
 5. Vesting and holding period
    - Standard: 4-year vesting, 1-year cliff
-   - 24-month holding period from the END OF THE TAX YEAR of grant
-     (NOT 24 months from grant date, a common mistake)
+   - 24-month holding period running from the date the shares were allotted
+     and deposited with the trustee (Section 102(a), definition of "tom
+     ha-tkufa"). It is NOT measured from the end of the tax year of grant,
+     which was the pre-2003 rule.
+   - Income track: 12 months from the same date
    - Shares held by trustee during holding period
 
 6. Exercise and sale
    - Employee exercises options (pays exercise price)
    - After holding period: capital gains tax 25% flat
-     (+ 3% surtax above the high-income threshold, indexed annually)
-     (30% if employee holds 10%+ of company as a controlling shareholder)
+     (+ 3% surtax under Section 121B(a) above NIS 721,560 of taxable income,
+      + a further 2% under Section 121B(a1) on capital-source income above the
+      same threshold, so up to 30% effective on a large exit)
+     (a controlling shareholder cannot use Section 102 at all, see below)
    - Trustee handles withholding and reporting
 ```
 
@@ -222,11 +247,13 @@ def compare_option_102_tracks(grant_value, exercise_price, sale_price,
                               high_earner=False):
     """Compare tax outcomes for Option 102 tracks (2026 rates)."""
     gain = sale_price - exercise_price
-    surtax = 0.03 if high_earner else 0.0
+    # Sec. 121B(a) adds 3% and Sec. 121B(a1) adds a further 2% on
+    # capital-source income above NIS 721,560 (2024-2027 threshold).
+    surtax = 0.05 if high_earner else 0.0
 
     capital_gains_track = {
         "track": "Capital Gains (Trustee)",
-        "holding_period": "24 months from end of tax year of grant",
+        "holding_period": "24 months from allotment and deposit with trustee",
         "tax_rate": 0.25 + surtax,
         "tax_amount": gain * (0.25 + surtax),
         "net_to_employee": gain * (0.75 - surtax),
@@ -235,13 +262,15 @@ def compare_option_102_tracks(grant_value, exercise_price, sale_price,
 
     income_track = {
         "track": "Income (Trustee)",
-        "holding_period": "12 months from end of tax year of grant",
+        "holding_period": "12 months from allotment and deposit with trustee",
         "tax_rate": 0.50,
         "tax_amount": gain * 0.50,
         "net_to_employee": gain * 0.50,
         "employer_deduction": True,
     }
 
+    # A controlling shareholder (Sec. 32(9)) is excluded from Sec. 102 entirely;
+    # a "material shareholder" selling outside 102 pays 30% under Sec. 91(b)(2).
     non_trustee = {
         "track": "Non-Trustee 102 (3(i) for non-employees)",
         "holding_period": "None",
@@ -259,16 +288,31 @@ def compare_option_102_tracks(grant_value, exercise_price, sale_price,
 **Tax benefit eligibility check (2026):**
 ```
 Preferred Enterprise (Mafal Mutaaf):
-- Conditions: 25%+ revenue from exports
+- Condition: "competitive enterprise" test in Section 18A(c) of the
+  Encouragement of Capital Investments Law. For industry this is a
+  market-concentration test, not a flat export floor: no more than 75% of
+  income from any one market, or at least 25% of income from sales into a
+  single foreign market of 14 million residents or more.
 - Tax rate: 7.5% (Area A / Negev / Galilee) or 16% (elsewhere)
 - Applies to: Industrial or tech companies
 
 Preferred Technological Enterprise (PTE / Mafal Tehnologi Mutaaf):
-- Conditions: Significant R&D activity, IP ownership in Israel
-  - R&D expenses >= 7% of revenue for 3 prior years, OR
-  - R&D expenses > NIS 75M per year
-  - At least 20% of revenue from IP developed in Israel
-- Tax rate: 12% on qualifying IP income (7.5% in Area A)
+Section 51X of the Encouragement of Capital Investments Law. Conditions (1)
+AND (2) must both hold (or, alternatively, condition (3)), plus (4) and (5):
+  1. R&D expenses averaged >= 7% of the company's revenue over the 3 prior
+     years, OR exceeded NIS 75M per year
+  2. AND at least one of: 20%+ of employees are R&D employees (or 200+ such
+     employees); a venture capital fund invested at least NIS 8M; revenue grew
+     25%+ on average over 3 years with turnover >= NIS 10M in each; headcount
+     grew 25%+ on average over 3 years with at least 50 employees in each
+  3. (alternative) the Chief Scientist certified the enterprise as
+     innovation-promoting and the Innovation Authority approved it
+  4. Group revenue in the tax year below NIS 10 billion
+  5. The enterprise meets the Section 18A(c) competitive-enterprise test
+- Tax rate: 12% on preferred technological income (7.5% in Area A)
+- "Preferred technological income" is the PORTION of technological income
+  arising from R&D performed in Israel, computed as a nexus ratio under the
+  2017 regulations. There is no "20% of revenue from Israeli IP" threshold.
 - Reduced withholding on dividends (4-20%)
 
 Special Preferred Technological Enterprise (SPTE):
@@ -280,11 +324,20 @@ R&D Expense Deduction (Section 20a):
 - Applies to: All R&D conducted in Israel
 - No need for IIA approval (separate from grants)
 
-Angel Law (Section 20c):
-- Individual investors can deduct up to NIS 5M investment
-- Company must be a qualifying R&D company
-- Investment in first 4 years of company life
-- Deduction spread over 3 years
+Angels benefit (Encouragement of Knowledge-Intensive Industry Law
+(Temporary Order), 2023, NOT Section 20c of the Ordinance):
+- Section 2: a TAX CREDIT (zikui), not a deduction, for a cash investment in
+  the shares of a qualifying R&D company. Maximum qualifying investment
+  NIS 4 million, reduced by the investor's and relatives' other investments in
+  the same company. The credit equals the qualifying investment multiplied by
+  the capital gains rate the investor would have paid on a sale.
+- The three-year period is the BENEFIT period (from the start of the tax year
+  of the investment), not a schedule for spreading the deduction. There is no
+  "first 4 years of company life" test; the R&D-company tests are financial.
+- Section 3: a separate rollover DEDUCTION for reinvesting an exit gain,
+  capped at NIS 5.5 million per investment.
+- TEMPORARY ORDER: in force 31.7.2023 to 31.12.2026. Confirm it has been
+  extended before relying on it for an investment made after that date.
 
 OECD Pillar Two QDMTT (effective tax years from 1 Jan 2026):
 - Multinational groups with global revenue >= EUR 750M
@@ -325,7 +378,7 @@ Actions:
 2. Recommend standard articles with startup-friendly provisions
 3. Calculate founder allocation (e.g., 50/50 with 4-year vesting)
 4. List post-registration steps (bank, tax, VAT at 18%, Bituach Leumi)
-5. Quote the NIS 1,338 / NIS 1,777 annual fee split (sourced); for the one-time registration fee, send them to the form rather than quoting a figure
+5. Quote the fees: NIS 2,559 online registration (NIS 3,123 otherwise) one-time, then the NIS 1,338 / NIS 1,777 annual fee split with no annual fee in the year of registration
 Result: Step-by-step registration guide with allocation table.
 
 ### Example 2: IIA Grant Application
@@ -344,9 +397,9 @@ Actions:
 1. Recommend Option 102 Capital Gains Track
 2. Suggest pool size (10-15% of company)
 3. Recommend trustee options (Bank Leumi Trust, ESOP Excellence, IBI, Altshuler Shaham)
-4. Outline filing process with ITA (30-day objection period)
+4. Outline filing process with ITA (notice at least 30 days before grant, deemed approved if no reply within 90 days)
 5. Provide standard vesting terms (4y / 1y cliff)
-6. Explicitly state the holding period is 24 months from the END of the tax year of grant
+6. Explicitly state the holding period is 24 months from allotment and deposit with the trustee, and that a 10%+ founder cannot be in the plan at all
 Result: Complete Option 102 setup plan with trustee comparison.
 
 ### Example 4: Delaware Flip
@@ -364,17 +417,19 @@ Result: Flip decision memo with checklist and next steps.
 ### References
 - `references/iia-programs-guide.md`: Detailed guide to Israel Innovation Authority grant programs including R&D Fund, Tnufa (early stage), Startup Fund, Technological Venture Incubators, BIRD (US-Israel binational), Horizon Europe, and Yozma 2.0 fund-of-funds. Covers funding percentages, maximum amounts, repayment terms, eligibility requirements, application process, and approval rates. Consult when helping users select the right IIA program or prepare grant applications.
 - `references/investment-term-sheets.md`: Israeli investment agreement templates including post-money SAFE and convertible note structures with Israeli-specific clauses (IIA notification, Section 102 interaction, Israeli securities law private-placement exemptions, anti-money laundering). Typical 2026 cap/discount ranges. Consult when drafting or reviewing early-stage investment terms under Israeli law.
-- `references/option-102-reference.md`: Complete reference for Section 102 of the Israeli Income Tax Ordinance covering all three tracks (Capital Gains Trustee, Income Trustee, Non-Trustee / 3(i)), holding periods (24 months from end of tax year of grant for capital gains), tax rates (25% + 3% surtax for high earners, 30% for controlling shareholders), employer deduction rules, ITA-approved trustees, filing procedures, and common pitfalls. Consult when setting up an ESOP or advising on employee equity compensation tax implications.
+- `references/option-102-reference.md`: Complete reference for Section 102 of the Israeli Income Tax Ordinance covering all three tracks (Capital Gains Trustee, Income Trustee, Non-Trustee / 3(i)), holding periods (24 months from allotment and deposit with the trustee for capital gains), tax rates (25%, plus 3% under Section 121B(a) and a further 2% under Section 121B(a1) on capital-source income for high earners), employer deduction rules, ITA-approved trustees, filing procedures, and common pitfalls. Consult when setting up an ESOP or advising on employee equity compensation tax implications.
 
 ## Gotchas
 
 - Israeli startups register as "Chevra Baam" (Ltd) at the Israeli Corporations Authority (Rasham HaChevarot), not at a US Secretary of State. Foreign-trained agents may describe US incorporation processes.
 - Tnufa is capped at NIS 200,000 over 12 months (80% of a NIS 250K budget), NOT 1 million NIS. Skills or articles citing 1M NIS are stale.
-- The Section 102 capital-gains holding period is 24 months from the END of the tax year of grant, not 24 months from the grant date. Grants in late December can effectively extend this by almost a year.
+- The Section 102 capital-gains holding period is 24 months from the date the shares were allotted and deposited with the trustee, per the definition of "tom ha-tkufa" in Section 102(a). It is NOT measured from the end of the tax year of grant; that was the pre-2003 regime and is still widely repeated in older guides.
 - IIA-funded IP must stay in Israel; transfer abroad requires approval and a fee of up to 6x the grant received. This constrains the Delaware Flip and many M&A deals.
 - Israeli VAT rose to 18% on 1 January 2025 (from 17%). Pricing pages, invoices, and accounting templates copied from older sources are stale.
-- Closely-held companies (5 or fewer shareholders) face a new 2026 rule allocating undistributed profits to shareholders and taxing them at marginal rates (up to 50%) instead of the 23% corporate rate. This is a structural shift for solo / small founder companies.
+- Closely-held companies (chevrat me'atim, 5 or fewer shareholders) pay a 2% annual surcharge on undistributed excess profits under Section 81B, added by Amendment 277 and applying from tax year 2025. It is paid BY THE COMPANY at 2%, not allocated to shareholders at marginal rates. It does not apply in a year where losses exceed 10% of opening accumulated profits, or where dividends distributed exceed 50% of excess profits, or where dividends are 6% or more of opening accumulated profits. A separate rule (Section 62A(a1)) does attribute income to an active shareholder at marginal rates, but it is gated on a profitability test, not on non-distribution.
 - Israeli tax year runs January to December (like the US), but corporate filing deadlines differ. Standard corporate tax rate is 23%. PTE rate is 12% (7.5% in Area A), NOT 16%; SPTE is 6%. Older skills citing 7.5% / 16% are using the older Preferred Enterprise tiers, not the PTE tech-specific rates.
+- A controlling shareholder cannot participate in a Section 102 plan at all. The definition of "employee" in Section 102(a) expressly excludes a controlling shareholder, and trustee allotment requires that the employee is not one at grant or as a result of it. Founders holding 10%+ are outside 102; a material shareholder selling securities is taxed at 30% under Section 91(b)(2), which is a different provision entirely.
+- The surtax on a Section 102 exit is not 3%. Section 121B(a) adds 3% above NIS 721,560 of taxable income, and Section 121B(a1) adds a FURTHER 2% on capital-source income above the same threshold, so a large capital-track gain is taxed at up to 30%.
 - Israeli startups that flip to Delaware typically incorporate Delaware C-Corp as parent with the Israeli entity as a subsidiary, not the reverse. Agents may suggest the opposite.
 - The Companies Registrar annual fee has a calendar-quarter cliff: NIS 1,338 if paid by 31 March 2026, NIS 1,777 from 1 April 2026. Pay in Q1 to save NIS 439.
 
@@ -410,7 +465,7 @@ After the October 2023 war, Israeli startup funding contracted in late 2023 then
 - **Accelerators / programs**: MassChallenge Israel (zero-equity, Jerusalem), OurCrowd Pitch (pitch competition plus syndicate), 8200 EISP (alumni-driven), Microsoft for Startups Israel, Google for Startups TLV. Bizzabo is an Israeli scale-up, not an accelerator; correct any agent that says otherwise.
 - **Recent exits / IPOs**: Mobileye (NASDAQ 2022), Wix (NASDAQ 2013), Lemonade (NYSE 2020), Riskified (NYSE 2021), monday.com (NASDAQ 2021); 2024-2025 saw renewed M&A (Wiz reportedly in advanced talks with Google for ~USD 23B in 2024, status confirmed in 2025) and several mid-cap cyber acquisitions.
 - **Delaware Flip trend**: Roughly 45% of new Israeli tech startups incorporated abroad in 2025 (up from ~20% in 2022), almost always Delaware C-Corp parent with Israeli R&D subsidiary. Driver is US VC preference, not Israeli law.
-- **Tax landscape**: Corporate tax 23% (unchanged through 2026). VAT 18% (raised from 17% in January 2025). PTE rate 12% (7.5% Area A); SPTE 6%. Section 102 capital-gains rate 25% (+ 3% surtax for high earners). OECD Pillar Two QDMTT applies for tax years starting after 31 December 2025. New closely-held-company rule (5 or fewer shareholders) re-allocates undistributed profits to shareholders at marginal rates. Always verify current rates with the ITA before quoting.
+- **Tax landscape**: Corporate tax 23% (unchanged through 2026). VAT 18% (raised from 17% in January 2025). PTE rate 12% (7.5% Area A); SPTE 6%. Section 102 capital-gains rate 25%, plus 3% (Section 121B(a)) and a further 2% (Section 121B(a1)) on capital-source income above NIS 721,560. OECD Pillar Two QDMTT applies for tax years starting after 31 December 2025. Closely-held companies pay a 2% company-level surcharge on undistributed excess profits under Section 81B from tax year 2025. Always verify current rates with the ITA before quoting.
 
 ## Troubleshooting
 
@@ -419,7 +474,7 @@ Cause: Insufficient technological innovation, weak R&D plan, or budget issues.
 Solution: Request feedback from IIA reviewer, strengthen innovation component, consider reapplying in next cycle. IIA allows resubmission.
 
 ### Issue: "Option 102 holding period not met"
-Cause: Employee left or shares sold before 24 months from the end of the tax year of grant.
+Cause: Employee left or shares sold before 24 months from the date of allotment and deposit with the trustee.
 Solution: Tax difference applies. Gain taxed as employment income (up to 50%) instead of capital gains (25%). Trustee withholds at the higher rate. Plan for this in employment agreements and grant timing.
 
 ### Issue: "Cannot transfer IP abroad"

@@ -6,14 +6,14 @@ Section 102 of the Israeli Income Tax Ordinance provides a tax-efficient framewo
 ## Three Tracks
 
 ### 1. Capital Gains Track (Trustee) - MOST COMMON
-- **Holding period:** 24 months from grant date
+- **Holding period:** 24 months from the date the shares were allotted and deposited with the trustee (Section 102(a), "tom ha-tkufa"), not from the end of the tax year of grant
 - **Tax rate:** 25% capital gains tax on entire gain
 - **Employer deduction:** None
 - **Trustee:** Required (ITA-approved)
 - **Best for:** Most startups (significant tax savings for employees)
 
 ### 2. Income Track (Trustee)
-- **Holding period:** 12 months from grant date
+- **Holding period:** 12 months from the date the shares were allotted and deposited with the trustee
 - **Tax rate:** Up to 50% (marginal income tax rate)
 - **Employer deduction:** Yes (company deducts the expense)
 - **Trustee:** Required (ITA-approved)
@@ -59,11 +59,14 @@ Section 102 of the Israeli Income Tax Ordinance provides a tax-efficient framewo
 - Transaction fees on exercise/sale
 
 ### Step 3: File with ITA
-1. Submit plan document to local tax office (pakid shuma)
-2. 30-day objection period begins
-3. ITA may request modifications
-4. Plan effective after 30 days if no objection
-5. Keep ITA approval letter
+1. Submit plan document to local tax office (pakid shuma) at least 30 days
+   BEFORE the intended grant date (Section 102(a))
+2. ITA may request modifications
+3. The plan and the trustee are deemed approved if the assessing officer does
+   not reply within 90 days of receiving the notice
+4. Keep ITA approval letter
+5. A controlling shareholder (Section 32(9)) is excluded from Section 102
+   entirely and cannot be granted under the plan
 
 ### Step 4: Grant Options
 1. Board resolution approving each grant
@@ -113,3 +116,12 @@ Difference: $24,750 saved with Capital Gains Track
 4. **Trustee delays:** Allow 2-4 weeks for trustee setup
 5. **Foreign employees:** Section 102 only applies to Israeli tax residents
 6. **102 vs 3(i):** Consultants and advisors cannot use Section 102
+7. **Controlling shareholders:** a controlling shareholder as defined in
+   Section 32(9) is excluded from Section 102 entirely. The definition of
+   "employee" in Section 102(a) expressly excludes one, and trustee allotment
+   requires the employee not to be a controlling shareholder at grant or as a
+   result of it. A material shareholder selling securities outside 102 is taxed
+   at 30% under Section 91(b)(2), which is a separate provision.
+8. **Surtax is not 3%:** Section 121B(a) adds 3% above NIS 721,560 of taxable
+   income and Section 121B(a1) adds a further 2% on capital-source income above
+   the same threshold, so a large capital-track gain reaches 30% effective.

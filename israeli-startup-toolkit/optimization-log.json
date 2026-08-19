@@ -1,0 +1,15 @@
+{
+  "cycles": [
+    {
+      "version": "1.3.0",
+      "date": "2026-08-19",
+      "lessons": [
+        "CARRY: IIA program table (R&D Fund support-rate bands and regional uplift, Technological Incubator budget ceiling and duration, royalty framing as 3% small company / 5% large rather than a 3-5% range, and the 3x know-how-transfer carve-out where R&D stays in Israel) could NOT be independently verified this cycle. innovationisrael.org.il is Cloudflare-blocked to curl and the shared Playwright browser was hijacked mid-session. Figures were left unchanged rather than rewritten on unverified secondary reporting. Verify with a dedicated browser next cycle.",
+        "CARRY: ecosystem numbers in the 2024-2026 context section (2024 funding ~USD 12B across ~600 rounds, Wiz deal value, 45% incorporating abroad attribution) are secondary-source claims that likely need refreshing to FY2025 data and re-attribution (the 45% figure appears to be an IATI survey, not Start-Up Nation Central). Not changed this cycle because no primary source was fetched.",
+        "CARRY: isa.gov.il/en now redirects to new.isa.gov.il and may serve an empty SPA shell; re-check and update the Reference Links row.",
+        "CARRY: reported but unverified 2026 items worth checking next cycle: IIA runway-extension fast-track launched 26.07.2026, Israel Invoices allocation-number threshold dropping to NIS 5,000 from 01.06.2026, Companies Law Amendment 38 commencement.",
+        "Deferred over the Phase 4.1 discretionary cap: Section 15A private-placement nuances (equity and non-equity counted in separate baskets, classified investors excluded from the 35 count)."
+      ]
+    }
+  ]
+}

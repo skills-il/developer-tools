@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "skill": "israeli-startup-toolkit",
   "version": "1.2.0",
-  "generated_at": "2026-08-13",
+  "generated_at": "2026-08-19T14:26:42.162261+00:00",
   "claims": [
     {
       "id": "tnufa-max-2026",
@@ -449,6 +449,319 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "companies-registration-fee-2026",
+      "claim": "Israeli company registration fee 2026: NIS 2,559 online reduced, NIS 3,123 otherwise, NIS 893 for a chalatz",
+      "source_url": "https://www.gov.il/BlobFolder/reports/companies-fee-rates-2020/he/companies-fee-rates-2025.pdf",
+      "raw_snippet": "רישום חברה מקוון (אגרה מופחתת) 2559",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "sec102-holding-period-from-allotment",
+      "claim": "Section 102 / סעיף 102 capital gains track holding period is 24 months from the date the shares were allotted and deposited with the trustee; income track 12 months",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "בחרה החברה במסלול רווח הון – תקופה של 24 חודשים מיום שבו הוקצו המניות והופקדו בידי נאמן",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/option-102-reference.md"
+      ]
+    },
+    {
+      "id": "sec102-excludes-controlling-shareholder",
+      "claim": "A controlling shareholder as defined in Section 32(9) / סעיף 32 is excluded from Section 102 entirely",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "ובלבד שהעובד אינו בעל שליטה בה במועד ההקצאה או בעקבותיה",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/option-102-reference.md"
+      ]
+    },
+    {
+      "id": "sec102-filing-90-day-deemed-approval",
+      "claim": "Section 102 plan notice filed at least 30 days before grant; deemed approved if no reply within 90 days",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "ואולם אם לא השיב פקיד השומה בתוך 90 ימים מיום קבלת ההודעה, יראו את תכנית ההקצאה או את הנאמן לפי הענין, כמאושרים",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/option-102-reference.md"
+      ]
+    },
+    {
+      "id": "surtax-121b-3-plus-2-capital",
+      "claim": "Section 121B(a) / סעיף 121ב imposes 3% surtax above NIS 721,560 and Section 121B(a1) imposes a further 2% on capital-source income above the same threshold",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "יחיד אשר הכנסתו החייבת ממקורות הוניים בשנת המס עלתה על הסכום הקבוע באותו סעיף קטן, יהיה חייב במס נוסף על חלק הכנסתו החייבת ממקורות הוניים העולה על הסכום האמור, בשיעור של 2%",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/option-102-reference.md"
+      ]
+    },
+    {
+      "id": "surtax-threshold-721560",
+      "claim": "Surtax threshold is NIS 721,560 for 2024-2027",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "בשנים 2024–2027, 721,560 ש״ח",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "angels-law-credit-4m-temporary-order",
+      "claim": "Angels benefit is a tax credit under the Encouragement of Knowledge-Intensive Industry Law (Temporary Order) 2023, maximum qualifying investment NIS 4 million",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%AA%D7%A2%D7%A9%D7%99%D7%99%D7%94_%D7%A2%D7%AA%D7%99%D7%A8%D7%AA_%D7%99%D7%93%D7%A2_(%D7%94%D7%95%D7%A8%D7%90%D7%AA_%D7%A9%D7%A2%D7%94)",
+      "raw_snippet": "”סכום ההשקעה המרבי“ – סכום שאינו עולה על 4 מיליון שקלים חדשים",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "angels-law-sunset-2026",
+      "claim": "The Knowledge-Intensive Industry Temporary Order runs from 31.7.2023 to 31 December 2026",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%AA%D7%A2%D7%A9%D7%99%D7%99%D7%94_%D7%A2%D7%AA%D7%99%D7%A8%D7%AA_%D7%99%D7%93%D7%A2_(%D7%94%D7%95%D7%A8%D7%90%D7%AA_%D7%A9%D7%A2%D7%94)",
+      "raw_snippet": "התקופה שמיום תחילתו של חוק זה",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "angels-law-rollover-5-5m",
+      "claim": "Section 3 of the Temporary Order allows a rollover deduction capped at NIS 5.5 million per investment",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%AA%D7%A2%D7%A9%D7%99%D7%99%D7%94_%D7%A2%D7%AA%D7%99%D7%A8%D7%AA_%D7%99%D7%93%D7%A2_(%D7%94%D7%95%D7%A8%D7%90%D7%AA_%D7%A9%D7%A2%D7%94)",
+      "raw_snippet": "5.5 מיליון שקלים חדשים, בהפחתת השקעות אחרות של המשקיע",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "angels-law-benefit-period-3-years",
+      "claim": "The three-year period is the benefit period from the start of the tax year of the investment",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%AA%D7%A2%D7%A9%D7%99%D7%99%D7%94_%D7%A2%D7%AA%D7%99%D7%A8%D7%AA_%D7%99%D7%93%D7%A2_(%D7%94%D7%95%D7%A8%D7%90%D7%AA_%D7%A9%D7%A2%D7%94)",
+      "raw_snippet": "”תקופת ההטבה“ – התקופה שמתחילת שנת המס שבה חל מועד ההשקעה עד תום שלוש שנים",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "pte-rd-7-percent-or-75m",
+      "claim": "PTE first condition: R&D averaged at least 7% of revenue over the 3 prior years, or exceeded NIS 75 million per year",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%94%D7%A9%D7%A7%D7%A2%D7%95%D7%AA_%D7%94%D7%95%D7%9F",
+      "raw_snippet": "היו בשיעור של 7% לפחות בממוצע לשנה מסך הכנסות החברה בעלת המפעל, או עלו על 75 מיליון שקלים חדשים בשנה",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "pte-second-condition-51kd",
+      "claim": "PTE second condition: 20%+ R&D employees or 200+, or VC investment of at least NIS 8 million, or 25% average revenue growth with NIS 10 million turnover, or 25% average headcount growth with 50+ employees",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%94%D7%A9%D7%A7%D7%A2%D7%95%D7%AA_%D7%94%D7%95%D7%9F",
+      "raw_snippet": "20% או יותר מעובדיה הם עובדים אשר מלוא שכרם שולם ונרשם בדוחות הכספיים שלה כהוצאות מחקר ופיתוח או שהיא מעסיקה 200 עובדים כאמור או יותר",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "pte-second-condition-growth",
+      "claim": "PTE alternative growth tests: revenue up 25% on average with turnover of NIS 10 million or more, or headcount up 25% on average with at least 50 employees",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%94%D7%A9%D7%A7%D7%A2%D7%95%D7%AA_%D7%94%D7%95%D7%9F",
+      "raw_snippet": "הכנסותיה בשלוש השנים הקודמות לשנת המס עלו ב־25% או יותר בממוצע",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "pte-vc-investment-8m",
+      "claim": "PTE alternative test: a venture capital fund invested at least NIS 8 million in the company",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%94%D7%A9%D7%A7%D7%A2%D7%95%D7%AA_%D7%94%D7%95%D7%9F",
+      "raw_snippet": "השקיעה בחברה 8 מיליון שקלים חדשים לפחות",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "pte-nexus-preferred-technological-income",
+      "claim": "Preferred technological income is the portion of technological income arising from R&D in Israel per the 2017 regulations",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%94%D7%A9%D7%A7%D7%A2%D7%95%D7%AA_%D7%94%D7%95%D7%9F",
+      "raw_snippet": "”הכנסה טכנולוגית מועדפת“ – חלק ההכנסה הטכנולוגית הנובע ממחקר ופיתוח בישראל",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "pte-group-revenue-10bn",
+      "claim": "PTE requires group revenue below NIS 10 billion; SPTE applies at NIS 10 billion or more",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%94%D7%A9%D7%A7%D7%A2%D7%95%D7%AA_%D7%94%D7%95%D7%9F",
+      "raw_snippet": "סך ההכנסות בשנת המס של הקבוצה שעמה נמנית החברה בעלת המפעל היה נמוך מ־10 מיליארד שקלים חדשים",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "pte-chief-scientist-alternative",
+      "claim": "PTE alternative condition: the Chief Scientist certified the enterprise as innovation-promoting and the Innovation Authority approved it",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%94%D7%A9%D7%A7%D7%A2%D7%95%D7%AA_%D7%94%D7%95%D7%9F",
+      "raw_snippet": "תנאים שקבע המדען הראשי לחדשנות במשרד החדשנות, המדע והטכנולוגיה",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "preferred-enterprise-competitive-test-18a",
+      "claim": "Preferred Enterprise requires the Section 18A(c) competitive-enterprise test: no more than 75% of income from one market, or 25% or more of income from sales into a single market of at least 14 million residents",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9C%D7%A2%D7%99%D7%93%D7%95%D7%93_%D7%94%D7%A9%D7%A7%D7%A2%D7%95%D7%AA_%D7%94%D7%95%D7%9F",
+      "raw_snippet": "25% או יותר מכלל הכנסתו",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "chevrat-meatim-81b-2-percent",
+      "claim": "Section 81B / סעיף 81ב imposes a 2% annual surcharge on a closely-held company undistributed excess profits, added by Amendment 277",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "חברת מעטים תהיה חייבת בתשלום תוספת למס, לכל שנת מס, בשיעור של 2% מסכום הרווחים העודפים של חברת המעטים",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "chevrat-meatim-81b-exemptions",
+      "claim": "Section 81B exemptions: losses exceeding 10% of opening accumulated profits, dividends exceeding 50% of excess profits, or dividends of 6% or more of opening accumulated profits",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "עולה על 10% מסכום הרווחים הנצברים של חברת המעטים בתום שנת המס הקודמת",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "chevrat-meatim-62a-attribution",
+      "claim": "Section 62A(a1) / סעיף 62א attributes income to an active shareholder at marginal rates, gated on a profitability test",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "הכנסה חייבת מפעילות עתירת יגיעה אישית של חברת מעטים בהפחתת סכום השווה למכפלה של 25%",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "sec91b2-material-shareholder-30",
+      "claim": "A material shareholder selling securities is taxed at 30% under Section 91(b)(2) / סעיף 91, separate from Section 102",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "בשיעור של 30%",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:26:42.162261+00:00",
+      "fetched_at": "2026-08-19T14:26:42.162261+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/option-102-reference.md"
       ]
     }
   ]
