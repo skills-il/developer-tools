@@ -12,15 +12,15 @@ allowed-tools: Bash(node:*) Bash(python3:*) WebFetch
 
 ### Step 1: Understand the User's Cloud Requirements
 
-Gather the following information before comparing costs:
+Gather before comparing:
 
-1. **Workload type**: Web application, API backend, data pipeline, ML training, static site, database
-2. **Scale**: Expected traffic (requests/month), data storage (GB/TB), compute needs (vCPU/RAM)
-3. **Compliance requirements**: Does the data need to stay in Israel? Are there regulatory requirements (Privacy Protection Authority, GDPR for EU users)?
-4. **Budget**: Monthly budget in NIS or USD, preference for pay-as-you-go vs. committed use
-5. **Technical stack**: Language/framework, database type, containerized or serverless preference
-6. **Growth trajectory**: Startup (scaling fast), SMB (steady), or enterprise (predictable)
-7. **Existing credits and promotions**: Ask explicitly whether the user has active credits, free-tier benefits, or promotional balances with ANY provider (AWS Free Tier, GCP $300 trial, Azure $200, AWS Activate, GCP for Startups, Founders Hub, GitHub Student Pack, hackathon credits, VC/accelerator partner credits). Existing credits can flip the comparison and must be factored in.
+1. **Workload type**: web app, API backend, data pipeline, ML training, static site, database
+2. **Scale**: traffic (requests/month), storage (GB/TB), compute (vCPU/RAM), and **egress volume**, which is the line item most often forgotten and, in the Israeli region, the largest cost difference
+3. **Compliance**: must the data stay in Israel? Any sector overlay (Bank of Israel supervision, health, government)?
+4. **Budget**: monthly, in NIS or USD, and whether pay-as-you-go or committed spend is preferred
+5. **Technical stack**: language, database, containerized or serverless
+6. **Growth trajectory**: startup scaling fast, SMB steady, or enterprise predictable. This decides whether a commitment is safe at all
+7. **Existing credits and promotions**: ask explicitly whether the user has active credits, free-tier benefits or promotional balances with ANY provider (AWS Activate, Google for Startups, Microsoft Founders Hub, GitHub Student Pack, hackathon or accelerator credits). Credits can flip the comparison and must be factored in
 
 ### Step 2: Compare AWS Israel Region (il-central-1)
 
@@ -34,11 +34,10 @@ AWS launched the Israel (Tel Aviv) region `il-central-1` in August 2023. Key det
 - CloudFront (CDN with Tel Aviv edge), Route 53
 
 **Pricing benchmarks (il-central-1 vs. eu-west-1 Ireland):**
-- EC2 instances are typically 5-15% more expensive than eu-west-1
+- EC2 instances carry a flat **~5%** premium over eu-west-1. Measured August 2026 across all 324 shared Linux instance types present in both regions via the AWS Price List API: median 5.0%, range 4.3-5.9%. It does not vary by family (t3.medium 5.0%, m7i.xlarge 5.0%, r6i.xlarge 5.0%, g5.xlarge 5.0%). Do not model a 5-15% band and take the midpoint; that doubles the real gap.
 - S3 storage is roughly equivalent
-- Data transfer out is the same pricing globally
-- RDS instances carry a similar 5-15% premium
-
+- **Data transfer out is NOT the same globally, and it is the largest Israeli-region cost difference by far.** Internet egress from il-central-1 is **$0.110/GB** for the first 10 TB/month against **$0.090/GB** from eu-west-1 and us-east-1, a 22% premium. Inter-region transfer OUT of Tel Aviv is **$0.08/GB** to every destination checked, against $0.02/GB out of Ireland, and the charge is asymmetric. Full tiers, destination list and the architectural consequence are in `references/cost-mechanics.md`.
+- **The Israeli-region cost story is a network story, not a compute story.** Compute is a flat ~5% premium; network is 22% and 4x. A comparison that models a 10% compute premium and zero egress delta has it backwards on both counts.
 **When to use il-central-1:**
 - Data residency requirements mandate Israeli hosting
 - Latency-sensitive applications serving Israeli users (1-3ms local vs. 40-60ms to eu-west-1)
@@ -54,7 +53,7 @@ AWS launched the Israel (Tel Aviv) region `il-central-1` in August 2023. Key det
 
 ### Step 3: Compare Google Cloud Platform (me-west1)
 
-GCP's `me-west1` region is located in Tel Aviv, opened in 2022 and reached general availability in November 2022. It is GCP's first region in the Middle East.
+GCP's `me-west1` region is located in Tel Aviv and opened in 2022. (An earlier version of this skill dated general availability to November 2022 and called it Google's first Middle East region; neither could be sourced, and me-central1 in Doha complicates the second claim, so both were dropped rather than carried forward.)
 
 **Available services in me-west1:**
 - Compute Engine, Cloud Storage, Cloud SQL
@@ -66,11 +65,11 @@ GCP's `me-west1` region is located in Tel Aviv, opened in 2022 and reached gener
 - Compute Engine is generally 5-10% cheaper than equivalent AWS EC2 in il-central-1
 - Cloud Storage pricing is competitive with S3
 - Sustained use discounts apply automatically (up to 30% for running instances 100% of the month)
-- Committed use discounts: 1-year (37% off) or 3-year (55% off) for predictable workloads
+- Committed use discounts: roughly 37% (1-year) and 55% (3-year) off for predictable workloads, but see the commitment-obligations table in Step 9 first: a GCP resource-based CUD cannot be cancelled and is bound to a region and machine series
 
 **GCP advantages for Israeli developers:**
 - BigQuery is available in me-west1 (important for data analytics with Israeli data)
-- Cloud Run offers a generous free tier (2 million requests/month)
+- Cloud Run has a free tier; check its current monthly request and compute allowances on the Cloud Run pricing page rather than quoting a remembered figure
 - Firebase hosting with me-west1 backend provides low-latency full-stack hosting
 - GCP for Startups program is active in Israel (see Step 7)
 
@@ -81,7 +80,7 @@ GCP's `me-west1` region is located in Tel Aviv, opened in 2022 and reached gener
 Azure serves Israel primarily through the following regions:
 
 **Regions:**
-- **Israel Central** (launched November 12, 2023): Full Azure region in Israel
+- **Israel Central** (launched late 2023): Full Azure region in Israel
 - **West Europe** (Netherlands): Alternative with broader service catalog
 
 **Available services in Israel Central:**
@@ -98,101 +97,70 @@ Azure serves Israel primarily through the following regions:
 - Strong Microsoft enterprise ecosystem integration (Active Directory, Office 365, Teams)
 - Note that **Azure Government is not relevant here**: it is a US-sovereign cloud for US federal, state, local and DoD customers, not something an Israeli government buyer can procure. Microsoft competes for Israeli public-sector work through its commercial Israel Central region and separate government channels
 - Dev/Test pricing: significant discounts for non-production workloads
-- Azure Reserved Instances: 1-year (up to 40% off) or 3-year (up to 65% off)
+- Azure Reservations: Microsoft advertises up to 72% against pay-as-you-go for one-year or three-year terms. See the commitment-obligations table in Step 9 for the cancellation cap and the 1 February 2027 exchange change
 
 **Pricing URL:** `https://azure.microsoft.com/en-us/pricing/calculator/`
 
 ### Step 5: Compare Oracle Cloud Infrastructure (il-jerusalem-1)
 
-Oracle launched its Israel Central region `il-jerusalem-1` in July 2021 in a hardened underground data center beneath the Har Hotzvim tech park in Jerusalem (50 meters below ground level, four floors under a 17-story building). It was the first hyperscaler region in Israel (predating GCP me-west1, AWS il-central-1, and Azure Israel Central) and is positioned for high-security and high-availability workloads.
+Oracle's Israel Central region `il-jerusalem-1` sits in a hardened underground data center beneath the Har Hotzvim tech park in Jerusalem. (The commonly-repeated specifics, a July 2021 launch and a 17-story building above it, trace to press coverage that is not currently fetchable, so treat them as approximate rather than quoting them.) It is a **single-availability-domain** region, which matters if the pitch is high availability.
 
-**Available services in il-jerusalem-1:**
-- Compute (VM, bare-metal), Block Volumes, Object Storage
-- Oracle Autonomous Database (the OCI flagship), MySQL HeatWave, PostgreSQL
-- Container Engine for Kubernetes (OKE), Functions (serverless)
-- Oracle Fusion Cloud Applications
+**Available services:** Compute (VM and bare-metal), Block Volumes, Object Storage, Autonomous Database, MySQL HeatWave, PostgreSQL, OKE (Kubernetes), Functions, Fusion Cloud Applications.
 
 **Pricing posture:**
-- Oracle publishes a single global price list, OCI services are priced the same across regions including il-jerusalem-1 (verify on the Oracle Israel price list before quoting)
-- Egress: Oracle's first 10 TB/month outbound is included free across all regions; this is one of the more aggressive egress policies among hyperscalers
-- Pricing URL: `https://www.oracle.com/il-en/cloud/price-list/`
-- Cost estimator: `https://www.oracle.com/il-en/cloud/costestimator.html`
+- Oracle publishes a single global price list: "OCI services are priced the same for all global regions (including government regions)". This is unusual and genuinely simplifies a comparison, but verify on the Israel price list before quoting
+- Egress: the first 10 TB/month outbound is included free, one of the more aggressive egress policies among the hyperscalers and a real differentiator given AWS's Israeli egress premium
+- Price list: `https://www.oracle.com/il-en/cloud/price-list/` (renders unit prices only under JavaScript). Cost estimator: `https://www.oracle.com/il-en/cloud/costestimator.html`
 
-**When to consider OCI il-jerusalem-1:**
-- Workloads built around Oracle Database / Exadata where Oracle licensing economics already favor OCI
-- High-security or critical-infrastructure deployments where the physical hardening of the underground bunker is a real requirement
-- Predictable egress-heavy workloads where the free 10 TB/month allowance moves the needle
-- Government and regulated industries that need an Israeli region but want a vendor outside the AWS/Google Project Nimbus contract
+**When to consider it:** Oracle Database or Exadata workloads where licensing economics already favour OCI; high-security deployments where the physical hardening is a genuine requirement; egress-heavy predictable workloads where the free 10 TB moves the needle; regulated buyers who want an Israeli region from a vendor outside the AWS/Google Nimbus contract.
 
-**Limitations:**
-- Smaller third-party ecosystem and managed-service catalog than AWS/Azure/GCP
-- Fewer Israeli startup credit programs and accelerator partnerships
-- Some newer OCI services (especially generative-AI features) land in US/EMEA regions first
+**Limitations:** smaller third-party ecosystem and managed-service catalogue than AWS/Azure/GCP, fewer Israeli startup-credit programmes and accelerator partnerships, and some newer OCI services (generative-AI features especially) reach US/EMEA regions first.
 
 ### Step 5b: Evaluate Israeli Cloud Providers
 
-For specific use cases, Israeli cloud providers may offer advantages:
-
 **Kamatera (`https://www.kamatera.com`):**
-- Israeli-founded company with five Israeli data centers (Petah Tikva, Haifa, others)
-- Competitive pricing: starting from approximately $4/month for basic VPS (1 vCPU, 1GB RAM), verify current pricing on the Kamatera pricing page before quoting
-- Pay-as-you-go: pay only for what you use, billed hourly or monthly, no traffic overage surprises
-- 30-day free trial available
-- Good for: Small projects, development environments, Israeli-market applications
-- Limitations: Smaller service catalog than hyperscalers, no managed Kubernetes
-- Native NIS billing was historically advertised; if the user needs guaranteed shekel-denominated invoices, confirm with Kamatera sales directly since billing-currency policies have changed across regional resellers
+- Israeli-founded. Its pricing page lists a single Israeli location, **Tel Aviv**; if a user needs a specific Israeli site, confirm the current footprint with Kamatera rather than assuming several
+- Entry pricing from about **$4/month** for a basic VPS (1 vCPU, 1 GB RAM, 20 GB NVMe, 5 TB traffic), billed hourly or monthly, with a 30-day free trial
+- Good for small projects, dev and staging environments, and Israeli-market applications
+- Limitations: smaller service catalogue than the hyperscalers and no managed Kubernetes, so a side-by-side that includes a managed-database or managed-K8s row should note that you operate those yourself
+- Native NIS billing was historically advertised; confirm with Kamatera sales if shekel-denominated invoices are a requirement, since billing-currency policies have shifted across regional resellers
 
-**Note:** HostIL (`hostil.co.il`) is an Israeli hosting provider that has been referenced in some directories, but its current operational status could not be independently verified. Check the website directly before relying on it.
+**Note:** HostIL (`hostil.co.il`) appears in some directories but its current operational status could not be verified. Check the site directly before relying on it.
 
-**Akamai / Linode**: Akamai has a Tel Aviv office but as of May 2026 there is no Linode Connected Cloud data center in Israel. Israeli users typically route to Linode's Frankfurt or Amsterdam regions, which adds 45-55 ms of latency. Do not recommend Linode as an "Israeli region" option.
+**Akamai / Linode**: Akamai has a Tel Aviv office but there is no Linode Connected Cloud data center in Israel. Israeli users route to Frankfurt or Amsterdam, adding roughly 45-55 ms. Do not present Linode as an "Israeli region" option.
 
-**DigitalOcean, Vultr, Hetzner, OVH**: none operate a data center in Israel. Israeli users on these platforms typically use Frankfurt (Hetzner, DigitalOcean), Strasbourg (OVH), or Amsterdam, with 45-65 ms latency to Tel Aviv. Hetzner is the lowest-cost EU option for non-residency-sensitive workloads, but it is no longer as cheap as older comparisons suggest: its 15 June 2026 price adjustment took the entry CX23 from €3.99 to €5.49/month net, with some CPX and CCX lines rising considerably more. Quote €5.49/month as the current floor, not the €4-ish figure that circulates.
+**DigitalOcean, Vultr, Hetzner, OVH**: none operates a data center in Israel. Israeli users typically use Frankfurt, Strasbourg or Amsterdam at 45-65 ms to Tel Aviv. Hetzner remains the lowest-cost EU option for workloads with no residency requirement, but it is no longer as cheap as older comparisons suggest: its 15 June 2026 price adjustment took the entry CX23 from EUR 3.99 to **EUR 5.49/month net**, with some CPX and CCX lines rising considerably more.
 
 ### Step 6: Compare Data Residency and Compliance
 
-Israeli data protection considerations:
+Israeli data-protection and sector rules decide the shortlist before price does. The full treatment,
+including the per-provider residency table and Project Nimbus, is in `references/compliance.md`.
 
-**Privacy Protection Law Amendment 13 (in force since August 14, 2025):**
-- Establishes binding cross-border transfer rules. Personal data of Israeli residents may be transferred abroad only if the destination jurisdiction provides "adequate" protection (or one of the other Section 2 exceptions applies)
-- The Privacy Protection Authority maintains a list of approved jurisdictions; the EU, UK, and a small set of other GDPR-aligned countries are on it
-- On April 13, 2026, the PPA published a Position Paper interpreting Section 2(4) of the Cross-Border Transfer Regulations, which tightened the practical conditions for the "data controller is responsible" pathway. Treat any cross-border architecture as a documented decision rather than a default
-- A Data Protection Officer (DPO) is now required for many controllers and large data holders
-- Breach notification is mandatory and timelines are tighter than under the prior regime
+The points that change a recommendation:
 
-**Sector-specific overlays still apply:**
-- Financial institutions under Bank of Israel supervision typically require Israeli hosting (Proper Conduct of Banking Business Directive 357 on cloud computing remains the operative cloud framework for supervised entities)
-- Healthcare data (HMO / Kupat Holim, hospitals) has strict locality requirements
-- Government tenders often mandate Israeli data centers; classified workloads route via Project Nimbus (see Step 6b)
-- PCI DSS still applies independently for payment-card data
-
-**Data residency comparison:**
-
-| Provider | Israeli Data Center | Data Sovereignty | Compliance Certs |
-|----------|-------------------|------------------|-----------------|
-| AWS il-central-1 | Yes (Tel Aviv) | AWS retains control | ISO 27001, SOC 2, PCI DSS |
-| GCP me-west1 | Yes (Tel Aviv) | Google retains control | ISO 27001, SOC 2, PCI DSS |
-| Azure Israel Central | Yes (Israel) | Microsoft retains control | ISO 27001, SOC 2, PCI DSS, IL Gov |
-| Oracle il-jerusalem-1 | Yes (Jerusalem, underground) | Oracle retains control | ISO 27001, SOC 2, PCI DSS |
-| Kamatera | Yes (Petah Tikva, Haifa, others) | Israeli company | ISO 27001 |
-| HostIL (verify availability) | Yes (Israel) | Israeli company | Basic |
-
-**Recommendation by compliance level:**
-- **High compliance** (finance, healthcare, government civilian): Azure Israel Central or AWS il-central-1 with the relevant data-processing addendum, or Oracle il-jerusalem-1 if Oracle Database is already the system of record
-- **Standard compliance** (SaaS, e-commerce serving Israeli users): Any hyperscaler with an Israeli region
-- **Low compliance** (personal projects, internal tools, non-Israeli data): Consider eu-west-1 (AWS), europe-west4 (GCP Amsterdam), or Hetzner Falkenstein/Nuremberg for cost savings, make the cross-border decision explicit, not accidental
+- **Privacy Protection Law Amendment 13** has been in force since 14 August 2025. Note what it did
+  and did not do: the cross-border transfer rules live in the 2001 transfer regulations and predate
+  it; Amendment 13 is the enforcement, DPO and breach-notification overhaul. Do not tell a user their
+  pre-2025 architecture was previously unregulated.
+- **Cross-border transfer needs a documented basis**, not a default. Do not silently fall back to
+  eu-west-1 or europe-west4 for an Israeli service handling personal data. The Privacy Protection
+  Authority has tightened the practical conditions for the "controller is responsible" pathway; its
+  site is not fetchable by an agent, so send the user to check the current guidance.
+- **Bank of Israel supervised entities**: the binding constraint is a supervisory process, not a
+  hosting location. Directive 364 (in force 18/05/2026, replacing 357, 361 and 363) governs IT,
+  information-security and cyber risk. What is tested is the outsourcing assessment, materiality,
+  exit and reversibility planning, contractual audit rights and the subcontractor chain. Region
+  choice falls out of that, so engage compliance and the supervisor before shortlisting.
+- **Healthcare and government**: HMO/hospital data and government tenders commonly carry Israeli
+  locality requirements, but they are imposed by specific circulars and tender clauses. Ask for the
+  actual clause before designing to it rather than assuming the strictest reading.
+- **Residency is not sovereignty.** Every hyperscaler Israeli region keeps data in Israel while the
+  operator stays subject to its home jurisdiction.
+- **PCI DSS applies independently** for payment-card data.
 
 ### Step 6b: Project Nimbus (Government Sovereign Cloud)
 
-Project Nimbus is the $1.2 billion Israeli-government cloud contract awarded to AWS and Google in 2021. It is **not a public-tenant service**, it is a sovereign tenant accessible to government ministries, security services, and approved partners. Do not recommend it to general startups or commercial customers.
-
-**When Nimbus is relevant:**
-- The user is a government ministry, a defense-sector vendor, or a contractor working on a classified workload that must run inside the Nimbus tenant
-- The user is evaluating which hyperscaler to align with for future government tenders (AWS and Google have the Nimbus footprint; Azure and Oracle compete via separate government channels)
-
-**What to know:**
-- Nimbus uses dedicated infrastructure inside Israel under contractual sovereignty terms that differ from public AWS/GCP regions
-- Public reporting (late 2025 to early 2026) describes a "winking mechanism" requiring AWS and Google to coded-notify the Israeli Finance Ministry if a foreign court demands Nimbus data. This is not a technical control, it is a contract term, and it has drawn ongoing scrutiny from researchers and employees at both companies
-- Israel does not currently operate a fully sovereign cloud (an Israeli-controlled stack with sovereign AI processing). Nimbus is a "data-stays-in-Israel" arrangement on AWS/Google infrastructure rather than a sovereign-controlled stack
+Project Nimbus is the $1.2 billion Israeli-government cloud contract awarded to AWS and Google in 2021. It is **not a public-tenant service**: it is a sovereign tenant for government ministries, security services and approved partners. **Do not recommend it to startups or commercial customers.** It is relevant only if the user is a ministry, a defence-sector vendor or a contractor on a classified workload, or is deciding which hyperscaler to align with for future government tenders. Full detail, including the contractual sovereignty terms, is in `references/compliance.md`.
 
 ### Step 7: Factor in Credits, Free Tiers, and Promotions
 
@@ -228,35 +196,13 @@ up front:
 
 ### Step 8: Perform Latency Benchmarking
 
-Latency from Tel Aviv to major cloud regions (approximate round-trip time):
+Rough round-trip times from Tel Aviv: **1-3 ms** to any of the three Tel Aviv regions (AWS il-central-1, GCP me-west1, Azure Israel Central), **3-6 ms** to Oracle il-jerusalem-1, **45-65 ms** to Western Europe, **130-160 ms** to US East. The full table is in `references/cost-mechanics.md`, with the caveat that **none of these figures has a published provider source**, so use them to shortlist and measure from the user's own network if a decision turns on latency.
 
-| Region | Provider | Latency from TLV |
-|--------|----------|-----------------|
-| il-central-1 | AWS | 1-3 ms |
-| me-west1 | GCP | 1-3 ms |
-| Israel Central | Azure | 1-3 ms |
-| il-jerusalem-1 | Oracle | 3-6 ms (Jerusalem, slightly higher than Tel Aviv regions for TLV-origin traffic) |
-| me-central-1 (UAE) | AWS | 25-40 ms |
-| eu-west-1 (Ireland) | AWS | 50-65 ms |
-| europe-west1 (Belgium) | GCP | 45-55 ms |
-| europe-west4 (Netherlands) | GCP | 45-55 ms |
-| West Europe (Netherlands) | Azure | 45-55 ms |
-| us-east-1 (Virginia) | AWS | 130-160 ms |
-| eu-south-1 (Milan) | AWS | 25-35 ms |
-| Hetzner Falkenstein (Germany) | Hetzner | 60-75 ms |
-
-**Latency considerations:**
-- For user-facing web applications serving Israeli users, sub-5ms latency (local region) provides noticeably better UX than 50ms+ (European region)
-- For API backends, the difference is amplified by the number of sequential calls
-- For batch processing and data pipelines, latency matters less; optimize for cost
-- CDN (CloudFront, Cloud CDN, Azure CDN) can mitigate latency for static assets regardless of origin region
+For user-facing applications serving Israeli users, a local region's sub-5 ms is noticeably better than 50 ms+, and the difference is amplified by the number of sequential calls an API makes. For batch processing and data pipelines latency matters little; optimize for cost. A CDN mitigates latency for static assets regardless of origin region.
 
 ### Step 9: Calculate Total Cost of Ownership
 
-**Commitment-discount programs (verify rates on provider pages, terms shift):**
-- **AWS Savings Plans** (Compute and EC2 Instance): up to ~66% off on-demand for 1-3 year terms. Compute Savings Plans apply across families and regions. RIs still offered for RDS, ElastiCache, Redshift, OpenSearch.
-- **GCP CUDs**: spend-based, resource-based, and Flexible CUDs (across machine families/regions). Sustained Use Discounts apply automatically to on-demand Compute Engine.
-- **Azure Reservations** (1-3 year) for VMs, SQL DB, Cosmos DB, Cache for Redis, plus **Azure Savings Plan for Compute** for flexibility across regions/series.
+**Commitment discounts** (AWS Savings Plans up to 72%, GCP CUDs, Azure Reservations up to 72%) are covered with their obligations, cancellation terms and the 1 February 2027 Azure exchange change in `references/cost-mechanics.md`. Read it before recommending a term: commit to the trailing-90-day floor rather than the average, never commit mid-migration, and never commit while credits are still covering the bill.
 
 Build a comprehensive comparison including:
 
@@ -306,15 +252,17 @@ The shape of the market, which changes more slowly than the numbers:
 
 ### Step 10: Present Recommendations
 
-Structure the final recommendation:
+Structure the answer as:
 
-1. **Summary table**: Side-by-side cost comparison for the user's specific requirements
-2. **Credit-adjusted comparison**: If the user has credits on any provider, show a separate row or table with effective monthly cost after credits. Also proactively mention comparable promotions on other providers the user may not be aware of.
-3. **Primary recommendation**: Best provider for the user's use case with justification. If credits heavily favor one provider short-term, state this clearly but also recommend the best long-term choice after credits expire.
-4. **Alternative recommendation**: Second-best option explaining tradeoffs
-5. **Cost optimization tips**: Specific actions to reduce costs (reserved instances, spot usage, right-sizing)
-6. **Migration considerations**: If the user is already on a provider, estimate migration effort and any lock-in concerns
-7. **Next steps**: Links to free tier / trial offers for hands-on evaluation
+1. **Summary table** for the user's actual requirements, with every cell labelled by pricing column and date checked, and an **egress line** included
+2. **Credit-adjusted comparison**: effective monthly cost after credits, plus comparable programmes on other providers the user may not know about
+3. **Primary recommendation** with justification. If credits favour one provider short-term, say so, but also name the best long-term choice after they expire
+4. **Alternative** with the tradeoff stated
+5. **Cost optimization**: right-sizing, spot, and commitments only where the workload is genuinely steady (see the obligations table before recommending a term)
+6. **Migration considerations**: effort, lock-in, and the egress cost of leaving
+7. **Next steps**: links to the free tiers and trials for hands-on evaluation
+
+State whether every figure is ex-VAT or inc-VAT, and give the date each price was checked.
 
 ## Examples
 
@@ -338,11 +286,11 @@ User says: "We're a financial services company in Tel Aviv with 50 servers on-pr
 Actions:
 1. Map current infrastructure to cloud equivalents (50 servers with varying specs)
 2. Identify compliance requirements: Bank of Israel regulations, PPA data residency, PCI DSS for payment processing
-3. Compare AWS il-central-1 vs. Azure Israel Central (both have financial services compliance)
-4. Calculate reserved instance pricing for predictable workloads (1-year and 3-year options)
+3. Compare AWS il-central-1 vs. Azure Israel Central, but do the outsourcing assessment and engage the Banking Supervision Department first; for a supervised entity the region shortlist falls out of that process
+4. Calculate commitment pricing for the workloads that are genuinely predictable, and read the commitment-obligations table in Step 9 before recommending a term. A 3-year capacity commitment taken mid-migration, before the instance mix has settled, is the classic way to lock in the wrong shape
 5. Include migration costs: AWS Migration Hub or Azure Migrate tooling, network setup, testing
 
-Result: Recommend Azure Israel Central as primary due to hybrid licensing benefits (bring existing Windows/SQL Server licenses) and strong financial services compliance posture. AWS il-central-1 as alternative if the team has more AWS expertise. Estimated monthly cost: $15,000-25,000/month with 3-year reserved instances. Do NOT pitch Azure Government for future Israeli government contracts: it is a US-sovereign cloud for US government customers. For Israeli public-sector work the relevant conversation is the commercial Israel Central region plus the applicable tender requirements.
+Result: Recommend Azure Israel Central as primary due to hybrid licensing benefits (bring existing Windows/SQL Server licenses) and strong financial services compliance posture. AWS il-central-1 as alternative if the team has more AWS expertise. Estimated monthly cost: $15,000-25,000/month. Do NOT default to 3-year reservations here: this is a migration, so commit only to the trailing steady-state floor once it exists, start with the flexible instrument, and note that Azure reservations bought from 1 February 2027 lose exchange rights for savings-plan-eligible services. Quote whether the figure is ex-VAT or inc-VAT. Do NOT pitch Azure Government for future Israeli government contracts: it is a US-sovereign cloud for US government customers. For Israeli public-sector work the relevant conversation is the commercial Israel Central region plus the applicable tender requirements.
 
 ### Example 3: Developer Choosing Hosting for a Side Project
 
@@ -355,22 +303,18 @@ Actions:
 4. Check if GPU instances are available in Israeli regions (limited availability)
 5. Evaluate alternatives: Kamatera GPU instances, or Lambda Labs / RunPod for inference-only
 
-Result: For an inference-only side project the cheapest path in 2026 is a specialty GPU provider (Lambda Labs, RunPod, or Vast.ai) running an L4 or T4-class instance at roughly $0.40-$1.00/hour, paired with a small managed PostgreSQL anywhere, GCP me-west1 Cloud SQL micro, AWS RDS db.t4g.micro in il-central-1, or even a Kamatera VM for the database. If the side project needs Israeli residency or sub-5 ms latency, use GCP me-west1 with a preemptible/spot GPU instance plus Cloud SQL micro. Estimated cost in the lower-cost specialty-provider path: roughly 150-350 NIS/month at a rate near 3.0 ILS/USD (check the current Bank of Israel rate before quoting). For an Israeli AI startup with actual training (not just inference) workloads, recommend applying to the Israel Innovation Authority Telem program for subsidized Nvidia B200 access via Nebius before locking in a hyperscaler GPU reservation. For ultra-low cost, suggest running inference on CPU with quantized models if latency tolerance allows.
+Result: For inference-only, the cheapest path in 2026 is a specialty GPU provider (Lambda, RunPod or Vast.ai) on an L4 or T4-class instance, paired with a small managed PostgreSQL anywhere: GCP me-west1 Cloud SQL micro, AWS RDS db.t4g.micro in il-central-1, or a Kamatera VM. If the project needs Israeli residency or sub-5 ms latency, use GCP me-west1 with a spot GPU plus Cloud SQL micro, and price the egress rather than assuming it is free. Quote the NIS figure at the current Bank of Israel rate rather than a remembered one. For an Israeli AI startup doing real training rather than inference, apply to the IIA Telem programme before locking in a hyperscaler GPU reservation. For ultra-low cost, CPU inference with quantized models is worth considering if latency allows.
 
 ## Gotchas
 
-- **Every list price in this skill has a shelf life of weeks, and the credit programmes move too.** Between the last review and this one, AWS replaced its whole free tier, renamed all three support plans, doubled Activate Portfolio, and Google restructured its startup programme; Hetzner raised prices and Lambda's H100 rate rose by roughly 60%. Treat every number here as a starting anchor to re-verify on the provider's page, and tell the user the date you checked. An agent quoting these figures as current, months later, is the single most likely failure mode of this skill.
-- **The shekel moved against the dollar far more than most budgets assume.** USD/ILS was about 3.70 in 2024 and 2.985 on 19 August 2026. Any NIS budget, conversion or example carried over from older material is materially wrong, including examples inside this skill.
-- **Credits blind spot**: When a user mentions having credits or promotions on one provider, agents tend to immediately recommend that provider without checking if other providers offer similar or better deals. Always compare credit programs across ALL providers before recommending. A user with $100 AWS credits may not know that GCP offers $300 in trial credits, that Azure Founders Hub offers up to $150,000 for VC-backed startups, or that the Israel Innovation Authority Telem program offers subsidized B200 GPU access for AI training.
-- AWS Israel region (il-central-1) pricing differs from eu-west-1 and other regions. Agents may use global pricing that does not reflect the Israeli region premium.
-- **Oracle il-jerusalem-1 is in Israel even though OCI is sometimes overlooked.** Do not tell users "there is no Oracle Israeli region", there has been one (in an underground Jerusalem bunker) since July 2021.
-- **Do not confuse AWS me-south-1 (Bahrain) with the Israeli region.** AWS launched il-central-1 in Tel Aviv in August 2023; me-south-1 in Bahrain is not the closest Israeli AWS option anymore and should not be recommended as the "closest fallback" for Israeli users.
-- **Akamai/Linode does not have an Israeli data center.** Akamai has a Tel Aviv office, but Linode Connected Cloud does not have an Israel location. Frankfurt is the typical fallback (45-65 ms latency).
-- Israeli cloud costs should be calculated in NIS including 18% VAT for B2C, but excluding VAT for B2B with valid tax invoice. Agents may forget to add VAT for consumer-facing comparisons.
+- **Every list price here has a shelf life of weeks, and the credit programmes move too.** Between the last review and this one AWS replaced its whole free tier, renamed all three support plans and doubled Activate Portfolio, Google restructured its startup programme, Hetzner raised prices and Lambda's H100 rate rose roughly 60%. Treat every number as an anchor to re-verify, and tell the user the date you checked. **If a fetch fails or returns no price table, say the figure is unverified and give the user the URL. Never present an embedded figure as current after a failed fetch.** An agent quoting these figures as current months later is this skill's most likely failure mode.
+- **Credits blind spot**: when a user has credits with one provider, agents tend to recommend that provider without checking the others. Always compare credit programmes across ALL providers first. Note also that credits have expiry dates independent of consumption, unused balances are forfeited, and buying a committed-spend instrument while credits are covering the bill wastes both.
+- **Get the region roster right.** Israel has four hyperscaler regions: AWS il-central-1, GCP me-west1, Azure Israel Central and Oracle il-jerusalem-1. Do not tell a user Oracle has no Israeli region, and do not offer AWS me-south-1 (Bahrain) as the "closest fallback"; it stopped being that when il-central-1 opened. Akamai/Linode has a Tel Aviv office but no Israeli data center, so Frankfurt is the usual fallback there. Note also that il-central-1 pricing differs from eu-west-1, so global list prices understate it.
+- **Israeli VAT: get the mechanism right and say which number you are quoting.** Where a provider bills through an Israeli-registered entity, the invoice carries 18% VAT for business customers too, and a VAT-registered business recovers it as input tax (מס תשומות) rather than being billed net. That changes two different numbers: cash outlay (the invoice is 18% above an ex-VAT quote) and true cost (a fully-deducting business bears none of it; an entity that cannot fully deduct bears all of it). Always state ex-VAT or inc-VAT, verify per provider whether the billing entity is Israeli-registered, and send anyone whose deduction position is not straightforward to their accountant.
 - **Cross-border transfer requires a documented basis under Privacy Protection Law Amendment 13** (in force since August 14, 2025). Do not silently default to eu-west-1 or europe-west4 for an Israeli SaaS handling personal data, the choice needs to fit one of the Section 2 exceptions (adequate jurisdiction list, controller-responsibility under the April 2026 PPA guidance, etc.). Israeli data residency requirements for government contracts may mandate hosting within Israel; agents may otherwise recommend cheaper international regions that violate these requirements.
-- **Currency drift**: USD/ILS has fallen from roughly 3.70 in 2024 to **2.985 on 19 August 2026** (Bank of Israel representative rate). A NIS budget set at the older rate is now roughly 20-25% too generous in USD terms. Right-size to the current Bank of Israel representative rate rather than recycling an old conversion, including any figure quoted in this skill.
+- **Currency drift**: USD/ILS has fallen from roughly 3.70 in 2024 to **2.985 on 19 August 2026** (Bank of Israel representative rate), so a NIS budget set at the older rate is roughly 20-25% too generous in USD terms. Right-size to the current rate rather than recycling an old conversion, including any figure quoted in this skill.
 - **Project Nimbus is not a startup option.** Do not recommend Project Nimbus to commercial customers, it is a government sovereign-tenant contract on AWS and Google, not a public cloud product.
-- Shabbat and holiday periods can affect spot instance pricing and availability in the Israel region differently than other regions due to reduced local demand.
+- **Spot capacity in a small region is thinner and more volatile than in eu-west-1**, because there are fewer zones and less spare fleet, so build capacity-aware fallback. Do not attribute spot swings to Shabbat or holiday demand: that mechanism is unsourced and AWS spot has not been demand-auction-priced since 2017.
 
 ## Troubleshooting
 
@@ -393,11 +337,16 @@ Common cost drivers: data transfer, NAT Gateway (AWS), premium networking (GCP),
 
 ### Error: "NIS billing not available"
 
-AWS and GCP bill in USD. Azure offers some NIS billing via Israeli enterprise agreements (contact Microsoft Israel). Kamatera bills natively in NIS. For USD providers: set budgets with a 10% currency buffer, time reserved-instance purchases to favorable rates, use corporate FX accounts, consider forward contracts for large committed spends, track USD/NIS and rebudget quarterly.
+AWS, GCP and Oracle bill in USD. Azure offers some NIS billing via Israeli enterprise agreements (contact Microsoft Israel), and Kamatera bills natively in NIS. For USD providers, set budgets with a currency buffer, pull the current Bank of Israel representative rate rather than reusing an old conversion, and rebudget quarterly on a 3-month trailing average. Fuller guidance, including how to size the buffer and when a forward contract is worth it, is in `references/cost-mechanics.md`.
 
 ## Reference Links
 
-**Provider pricing pages (always treat as the source of truth, since list prices change quarterly):**
+**Machine-readable price APIs (prefer these; they are fetchable and re-checkable, unlike the marketing pages):**
+- AWS Price List API, data transfer: `https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSDataTransfer/current/index.json`
+- AWS Price List API, EC2 per region: `https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/il-central-1/index.json`
+- Azure retail price API: `https://prices.azure.com/api/retail/prices`
+
+**Provider pricing pages (treat as the source of truth for list prices, but note several render prices only in JavaScript):**
 - AWS EC2 on-demand pricing: `https://aws.amazon.com/ec2/pricing/on-demand/`
 - AWS pricing calculator: `https://calculator.aws/`
 - GCP Compute Engine pricing (deep links, the old `/compute/all-pricing` and `/products/compute/pricing` URLs now redirect to a marketing page with no price tables): general-purpose `https://cloud.google.com/products/compute/pricing/general-purpose`, accelerators `https://cloud.google.com/products/compute/pricing/accelerator-optimized`
@@ -433,4 +382,5 @@ AWS and GCP bill in USD. Azure offers some NIS billing via Israeli enterprise ag
 
 **Privacy and data-protection references:**
 - Privacy Protection Authority (PPA): `https://www.gov.il/en/departments/the_privacy_protection_authority`
-- Bank of Israel, supervised entities and cloud guidance (Proper Conduct of Banking Business Directive 357): `https://www.boi.org.il/en/`
+- Proper Conduct of Banking Business Directive 364 (which replaced 357, 361 and 363): `https://kamakama.gov.il/roles/supervisionregulation/nbt/nbt364/`. Note that boi.org.il itself is bot-protected and cannot be read by an agent, so send the user there rather than trying to summarise it
+- Bank of Israel USD/ILS representative rate, machine-readable and fetchable: `https://edge.boi.org.il/FusionEdgeServer/sdmx/v2/data/dataflow/BOI.STATISTICS/EXR/1.0/RER_USD_ILS?format=csv`

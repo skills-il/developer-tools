@@ -40,7 +40,7 @@ GPU pricing is a separate cost axis. The 2026 market has bifurcated:
 
 **H200 / B200 (August 2026):** RunPod H200 from $3.59/hr and B200 from $5.98/hr on Community Cloud; Lambda B200 $6.69-$6.99/hr; Lambda GH200 $2.29/hr. Lambda did not list an H200 on-demand rate when checked, so do not quote one.
 
-**IIA Telem Program (Nebius):** Subsidized B200 access for Israeli companies and academic groups, 70/30 hi-tech/academia split. 1-6 month allocations, min 16 B200s (8 for academic). Reduced pricing vs. commercial, data stays in Israel. Most cost-effective AI training option for Israeli startups that can plan in 1-6 month blocks; apply before committing to a hyperscaler GPU reservation.
+**IIA Telem Program (Nebius):** Subsidized B200 access for Israeli companies and academic groups, 70/30 hi-tech/academia split. Allocation-period and minimum-request figures are NOT stated on the IIA announcement, so ask the user to check the live programme terms rather than quoting any. Reduced pricing vs. commercial, data stays in Israel. Most cost-effective AI training option for Israeli startups that can plan allocations ahead; apply before committing to a hyperscaler GPU reservation.
 
 **GPU recommendation framework:**
 - **Inference, latency-sensitive, Israeli users**: GCP me-west1 T4/L4 if available, or AWS il-central-1

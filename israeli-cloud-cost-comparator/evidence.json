@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "skill": "israeli-cloud-cost-comparator",
   "version": "1.4.0",
-  "generated_at": "2026-08-19T15:49:19Z",
+  "generated_at": "2026-08-19T16:22:22Z",
   "generated_by": "evidence re-verification pass (raw_snippet migration, August 2026)",
   "notes": "Every raw_snippet below was copied literally from the page at its source_url on 2026-08-13. Cloud pricing and startup-credit tiers move quarterly; several entries record that the live page NO LONGER matches the figure SKILL.md quotes. Those mismatches are flagged in the claim text and need a content fix, not an evidence fix.",
   "claims": [
@@ -112,19 +112,12 @@
       "id": "iia-telem-program-nebius",
       "claim": "The Israel Innovation Authority's Telem program selected Nebius to establish and operate a national AI supercomputer, with 1,000 Nvidia B200 accelerators split 70% to hi-tech companies and 30% to academic research groups.",
       "source_url": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
-      "raw_snippet": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
-      "verified": false,
+      "raw_snippet": "Following a competitive tender process published by the Israel Innovation Authority, Nebius was selected to establish and provide access to the computing infrastructure.",
+      "verified": true,
       "confidence": "low",
-      "note": "NOT READ THIS PASS. innovationisrael.org.il returns HTTP 403 (Cloudflare) to every non-browser client tried (gate fetcher, WebFetch, curl with browser UA), and archive.org rate-limited. No verbatim quote could be obtained, so the URL itself is recorded in place of a snippet rather than inventing one. Re-verify in a browser before this skill is pushed."
-    },
-    {
-      "id": "iia-telem-program-min-allocation",
-      "claim": "Telem program applications cover 1-6 month usage periods, with a minimum of 16 B200 accelerators for companies and 8 for academic research groups.",
-      "source_url": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
-      "raw_snippet": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
-      "verified": false,
-      "confidence": "low",
-      "note": "NOT READ THIS PASS, same Cloudflare 403 as iia-telem-program-nebius. Needs browser verification."
+      "note": "Read in headless Chromium 2026-08-19 (location.href asserted). Page also states verbatim: 'the program will allocate computing resources totaling 1,000 Nvidia B200 accelerators' and '70% of the supply will be allocated to high-tech companies ... 30% will be allocated to research groups'.",
+      "verified_via": "browser",
+      "verified_at": "2026-08-19"
     },
     {
       "id": "aws-activate-portfolio-credits",
@@ -240,13 +233,15 @@
       "confidence": "medium"
     },
     {
-      "id": "boi-directive-357-still-applies",
-      "claim": "Bank of Israel Proper Conduct of Banking Business Directive 357 remains the operative cloud-computing framework for supervised entities as of 2026.",
-      "source_url": "https://www.boi.org.il/en/communication-and-publications/regulation/357-cloud-computing/",
-      "raw_snippet": "https://www.boi.org.il/en/communication-and-publications/regulation/357-cloud-computing/",
-      "verified": false,
+      "id": "boi-directive-364-replaced-357",
+      "claim": "Bank of Israel Proper Conduct Directive 364 came into force on 18/05/2026 and repealed Directives 357, 361 and 363, so 364 is the operative framework for supervised entities.",
+      "source_url": "https://kamakama.gov.il/roles/supervisionregulation/nbt/nbt364/",
+      "raw_snippet": "כניסתה לתוקף של הוראה זו היא ביום 18/05/2026 או במועד אימוצה על ידי התאגיד הבנקאי, לפי המוקדם מביניהם. ממועד זה תבוטלנה שלוש הוראות נב",
+      "verified": true,
       "confidence": "low",
-      "note": "NOT READ THIS PASS. boi.org.il serves a Radware WAF challenge page to non-browser clients, so no verbatim text could be quoted; the URL is recorded in place of a snippet rather than inventing one. Deep link replaces the former bare-homepage citation (https://www.boi.org.il/en/), which could never have contained a snippet. Re-verify in a browser."
+      "note": "Cross-verified 2026-08-19 against israeli-ai-compliance-kit evidence (boi-364-in-force-may-2026). The previously cited boi.org.il/en/.../357-cloud-computing/ URL now 404s (confirmed headless, location.href asserted).",
+      "verified_via": "browser",
+      "verified_at": "2026-08-19"
     },
     {
       "id": "aws-savings-plans-discount",
@@ -573,17 +568,19 @@
     },
     {
       "id": "iia-telem-page-blocked",
-      "claim": "The Israel Innovation Authority site is behind Cloudflare and returns HTTP 403 to automated fetches, so an agent cannot read the current Telem terms and must direct the user to the page rather than summarising it.",
+      "claim": "The Israel Innovation Authority site blocks plain HTTP fetches (Cloudflare 403) but renders normally in a browser, so quote it only after reading it in a browser.",
       "source_url": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
       "raw_snippet": "Attention Required! | Cloudflare",
-      "note": "Both https://innovationisrael.org.il and this press-release path returned HTTP 403 to curl on 2026-08-19, serving a Cloudflare interstitial rather than content. Because an agent cannot read the page, the previously-stated minimum-request figures (16 B200s for companies, 8 for academic groups) could NOT be verified this cycle and were REMOVED from the skill rather than carried forward unsourced. The snippet quoted here is the interstitial itself, which is the operational point the skill now makes: send the user to the page, do not summarise it.",
-      "verified_at": "2026-08-19T15:39:57Z",
+      "note": "Corrected 2026-08-19: an earlier pass concluded an agent 'cannot read' the page. Headless Chromium retrieved the full 7,009-character article, so the blocker is plain-fetch only, not the browser.",
+      "verified_at": "2026-08-19",
       "where_used": [
         "SKILL.md Step 7",
         "SKILL_HE.md",
         "references/pricing-and-credits.md"
       ],
-      "confidence": "medium"
+      "confidence": "medium",
+      "verified": true,
+      "verified_via": "browser"
     },
     {
       "id": "usd-ils-example-rounding",
@@ -598,6 +595,137 @@
       ],
       "confidence": "high",
       "verified_via": "api"
+    },
+    {
+      "id": "aws-egress-il-central-1-premium",
+      "claim": "AWS internet egress from il-central-1 is $0.110/GB for the first 10 TB/month, against $0.090/GB from eu-west-1 and us-east-1, a 22% premium. Higher tiers are $0.085 / $0.077 / $0.055 in Tel Aviv against $0.085 / $0.070 / $0.050 in Ireland. Egress is therefore NOT priced uniformly across regions, which the skill previously asserted.",
+      "source_url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSDataTransfer/current/index.json",
+      "raw_snippet": "$0.110 per GB - first 10 TB / month data transfer out beyond",
+      "note": "Read from the AWS Price List API on 2026-08-19 by downloading the AWSDataTransfer offer file and filtering products on fromRegionCode and transferType 'AWS Outbound'. il-central-1 returns 0.1100000000 for the 0-10240 GB band; eu-west-1 and us-east-1 both return 0.0900000000 for the same band. This falsifies the skill's previous 'Data transfer out is the same pricing globally'.",
+      "verified_at": "2026-08-19T16:10:02Z",
+      "where_used": [
+        "SKILL.md Step 2",
+        "SKILL_HE.md",
+        "SKILL.md Gotchas"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "aws-interregion-egress-tlv-asymmetry",
+      "claim": "AWS inter-region transfer OUT of il-central-1 is $0.08/GB to every destination checked, against $0.02/GB out of eu-west-1 to the same destinations, so leaving Tel Aviv costs four times the European rate and the charge is asymmetric.",
+      "source_url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSDataTransfer/current/index.json",
+      "raw_snippet": "$0.08 per GB - Israel (Tel Aviv) data transfer to Africa (Ca",
+      "note": "Read from the AWS Price List API on 2026-08-19, transferType 'InterRegion Outbound'. Every il-central-1 destination row checked (af-south-1, ap-east-1, ap-northeast-1, eu-west-1, us-east-1 and others) returns 0.0800000000, while the equivalent eu-west-1 rows return 0.0200000000. This is the cost leg generated by the split Israeli-primary / European-fallback architecture the skill recommends elsewhere.",
+      "verified_at": "2026-08-19T16:10:02Z",
+      "where_used": [
+        "SKILL.md Step 2",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "aws-il-central-1-compute-premium",
+      "claim": "EC2 in il-central-1 carries a flat premium of about 5% over eu-west-1, not a 5-15% band: median 5.0% across all 324 shared Linux shared-tenancy instance types, range 4.3% to 5.9%.",
+      "source_url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/il-central-1/index.json",
+      "raw_snippet": "$0.2247 per On Demand Linux m6i.xlarge Instance Hour",
+      "note": "Computed on 2026-08-19 from the AWS Price List API region offer files for il-central-1 and eu-west-1, comparing on-demand USD for Linux / Shared tenancy / no pre-installed software / capacitystatus Used / No License required. Per-family samples: t3.medium 5.0%, m5.large 4.7%, m6i.xlarge 5.0%, m7i.xlarge 5.0%, c6i.xlarge 5.0%, r6i.xlarge 5.0%, g5.xlarge 5.0%, c7i.2xlarge 5.0%. Across all 324 instance types present in both regions the median is 5.0%, min 4.3%, max 5.9%. The skill previously stated 5-15%, whose midpoint doubles the real gap.",
+      "verified_at": "2026-08-19T16:10:02Z",
+      "where_used": [
+        "SKILL.md Step 2",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "aws-savings-plans-72pct",
+      "claim": "AWS advertises Savings Plans at up to 72% off on-demand, not the ~66% the skill previously stated.",
+      "source_url": "https://aws.amazon.com/savingsplans/",
+      "raw_snippet": "Benefit from significant cost savings of up to 72% compared to On-Demand prices.",
+      "verified_at": "2026-08-19T16:10:02Z",
+      "where_used": [
+        "SKILL.md Step 9",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "azure-reservations-72pct",
+      "claim": "Microsoft advertises Azure Reservations at up to 72% against pay-as-you-go for one-year or three-year terms, which is not the '1-year up to 40% / 3-year up to 65%' split the skill previously stated.",
+      "source_url": "https://azure.microsoft.com/en-us/pricing/reserved-vm-instances/",
+      "raw_snippet": "Significantly reduce costs—up to 72%",
+      "verified_at": "2026-08-19T16:10:02Z",
+      "where_used": [
+        "SKILL.md Step 4",
+        "SKILL.md Step 9",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "azure-reservation-exchange-2027",
+      "claim": "From 1 February 2027, Azure reservations purchased after that date are not eligible for exchange where the corresponding service is supported by savings plans, including Azure Virtual Machines, App Service and SQL Database. Reservations purchased before that date retain one final exchange.",
+      "source_url": "https://learn.microsoft.com/en-us/azure/cost-management-billing/reservations/exchange-and-refund-azure-reservations",
+      "raw_snippet": "Starting February 1, 2027, reservations purchased after this date aren't eligible for exchange if the corresponding service is supported by savings plans.",
+      "note": "This date falls inside the horizon of any three-year commitment decision taken today, which is why the skill now states it alongside the discount percentages.",
+      "verified_at": "2026-08-19T16:10:02Z",
+      "where_used": [
+        "SKILL.md Step 9",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "gcp-cud-non-cancellable",
+      "claim": "A Google Cloud committed use discount cannot be cancelled or deleted after purchase; the commitment stays active until its end date.",
+      "source_url": "https://docs.cloud.google.com/compute/docs/instances/signing-up-committed-use-discounts",
+      "raw_snippet": "After you purchase a commitment, you can't cancel or delete it. The commitment remains active until its specified end date.",
+      "verified_at": "2026-08-19T16:10:02Z",
+      "where_used": [
+        "SKILL.md Step 3",
+        "SKILL.md Step 9",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "kamatera-single-israeli-location",
+      "claim": "Kamatera's pricing page lists a single Israeli location, Tel Aviv. The skill previously claimed five Israeli data centres including Petah Tikva and Haifa, which is not supported by any cited page.",
+      "source_url": "https://www.kamatera.com/pricing/",
+      "raw_snippet": "Germany, Frankfurt Israel, Tel Aviv Italy, Milan",
+      "note": "Read by curl on 2026-08-19; the location list runs Australia Sydney, Canada Toronto, China Hong Kong, Germany Frankfurt, Israel Tel Aviv, Italy Milan, Japan Tokyo, and so on, with exactly one Israeli entry.",
+      "verified_at": "2026-08-19T16:10:02Z",
+      "where_used": [
+        "SKILL.md Step 5b",
+        "SKILL_HE.md",
+        "SKILL.md residency table"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ref-boi-sdmx-fx",
+      "claim": "Reference link: the Bank of Israel SDMX endpoint for the USD/ILS representative rate, which unlike the HTML site is fetchable by an agent.",
+      "source_url": "https://edge.boi.org.il/FusionEdgeServer/sdmx/v2/data/dataflow/BOI.STATISTICS/EXR/1.0/RER_USD_ILS?format=csv",
+      "raw_snippet": "RER_USD_ILS,D,USD,ILS",
+      "note": "Machine-readable CSV, verified reachable on 2026-08-19. This is the source the skill tells the agent to use for the current rate.",
+      "verified_via": "api",
+      "where_used": [
+        "SKILL.md Reference Links",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ref-azure-retail-price-api",
+      "claim": "Reference link: the Azure retail price API, which returns machine-readable list prices per region and SKU and is fetchable by an agent, unlike the JS-rendered pricing pages.",
+      "source_url": "https://prices.azure.com/api/retail/prices",
+      "raw_snippet": "\"Items\"",
+      "note": "Verified reachable on 2026-08-19; a filtered query for armRegionName eq 'israelcentral' and armSkuName eq 'Standard_D4s_v5' returned retailPrice 0.224 per hour for the Linux SKU. This is the source the skill points agents at for Azure figures.",
+      "verified_via": "api",
+      "verified_at": "2026-08-19T16:22:22Z",
+      "where_used": [
+        "SKILL.md Reference Links"
+      ],
+      "confidence": "high"
     }
   ]
 }
