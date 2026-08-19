@@ -10,11 +10,9 @@ Israeli shipping carriers generally do not offer publicly documented REST APIs. 
 
 ### Verified Integration Points
 
-**Tracking (unofficial, web scraping):**
-- Endpoint: `POST https://mypost.israelpost.co.il/umbraco/Surface/ItemTrace/GetItemTrace`
-- Auth: Requires CSRF token (`__RequestVerificationToken`) extracted from the tracking page, plus session cookies
-- Parameters: `itemCode` (tracking number), `lcid` (locale)
-- Built on Umbraco CMS
+**Tracking (unofficial, and no longer a workable path):**
+- The whole `israelpost.co.il` estate, `mypost.` and `doar.` subdomains included, sits behind Radware Bot Manager. Verified August 2026: a plain HTTPS request is answered by a `validate.perfdrive.com` bot-manager challenge rather than by the application, so the historical Umbraco surface-controller flow (`POST /umbraco/Surface/ItemTrace/GetItemTrace` with a `__RequestVerificationToken` and session cookies) cannot be driven from a script.
+- Use a third-party aggregator for tracking instead. Do not build a scraper against this host.
 
 **Rate calculation (public, no auth):**
 - Endpoint: `GET https://www.israelpost.co.il/npostcalc.nsf/CalcPrice?openagent&...`
@@ -28,13 +26,18 @@ Israeli shipping carriers generally do not offer publicly documented REST APIs. 
 - Documentation: israel-post.datalogics.co.il
 
 **Mikud (ZIP) search:**
-- Web interface: `mypost.israelpost.co.il/zipcodesearch`
-- No public API. Third-party Python library `mikud` scrapes this page.
+- Web interface: `doar.israelpost.co.il/locatezip`. The older `mypost.israelpost.co.il/zipcodesearch` URL now redirects here (verified August 2026).
+- No public API, and the page is behind the same bot-manager wall as the rest of the estate.
 
 ### Open-Source Libraries
-- `bennymeg/IsraelPostalServiceAPI` (TypeScript) -- rate calculation
-- `LandRover/postil-status` (Node.js) -- tracking
-- `Stajor/israel-post` (PHP) -- tracking
+
+All three are unmaintained. Read them for the request shapes; do not take a production dependency on any of them.
+
+| Library | Language | Scope | Last commit | Status |
+|---------|----------|-------|-------------|--------|
+| `bennymeg/IsraelPostalServiceAPI` | TypeScript | Rate calculation | March 2023 | Unmaintained but the request shape is still the best documented reference |
+| `Stajor/israel-post` | PHP | Tracking and rate | September 2020 | Unmaintained |
+| `LandRover/postil-status` | Node.js | Tracking | December 2020 | Dead. It targets `postil.com`, a domain that no longer resolves, so it cannot function |
 
 ### Notes
 - Tracking numbers: 13-character UPU S10 format (e.g., `RR123456789IL`)
@@ -44,7 +47,8 @@ Israeli shipping carriers generally do not offer publicly documented REST APIs. 
 
 ## Cheetah (צ'יטה)
 
-- **Website:** chitadelivery.co.il
+- **Website:** chitadelivery.co.il (the public site; SKILL.md previously pointed users at chita-il.com, which is the business login)
+- **Customer tracking:** chitadelivery-cx.com/login
 - **Group site:** cheetah-group.net
 - **No public REST API.** Integration is done through platform-specific plugins and private B2B contracts.
 
@@ -54,7 +58,7 @@ Israeli shipping carriers generally do not offer publicly documented REST APIs. 
 
 **Other platforms:** Contact Cheetah sales directly via chitadelivery.co.il or WhatsApp (0559577119).
 
-**Internal system:** Cheetah uses a "RUN" delivery management system at chita-il.com. Business customers access this for order entry and tracking, but it is not a public API.
+**Internal system:** Cheetah runs a RunCom-based business system reached from `chita-il.com/RunCom.Server/Request.aspx?APPNAME=run&PRGNAME=call_knisa`, linked from their site as "כניסת לקוחות". It is a business-customer login, not a public API and not a consumer tracking page. Customers track their shipment at `chitadelivery-cx.com/login`.
 
 ### Notes
 - Full name: Cheetah Deliveries Ltd., headquartered in Petah Tikva
@@ -80,7 +84,7 @@ Israeli shipping carriers generally do not offer publicly documented REST APIs. 
 - ~1,000 pickup points and lockers nationwide
 - Pickup points searchable on hfd.co.il/en/pick-up-points/
 - Tracking: hfd.co.il with barcode number
-- Third-party tracking via AfterShip, WeShip
+- Third-party tracking via AfterShip or TrackingMore
 
 ## Baldar (בלדר) -- Delivery Management Software
 
@@ -133,10 +137,30 @@ Baldar provides white-label CRM portals for courier companies. Each carrier host
 
 **UPS Developer Kit:** UPS provides documented REST APIs for label generation, rate calculation, and tracking. These work for the Israeli locker network as well. Sign up at developer.ups.com.
 
-**Locker drop-off flow:** Generate a label via the API, present the QR code at any UPS locker (24/7 access). 100 locker stations + 150 service stores nationwide.
+**Locker drop-off flow:** Generate a label via the API, present the QR code at any UPS locker (24/7 access). Note that the Israeli domestic price list is tied to the local easyship ordering site, so confirm which rate card an account is on before quoting a price from the UPS global API.
+
+### Published Israeli Price List
+
+From the Israeli operator's domestic price list (site.ship.co.il), which applies to shipments ordered through the local easyship site:
+
+| Service | Before VAT | Incl. VAT |
+|---------|-----------|-----------|
+| To a pickup point (store or locker) | 22.9 NIS | 27.02 NIS |
+| Home delivery up to 5 kg | 46.5 NIS | 54.87 NIS |
+| Home delivery up to 10 kg | 48.5 NIS | 57.23 NIS |
+| Home delivery up to 15 kg | 63.5 NIS | 74.93 NIS |
+
+Remote-zone surcharges, applied per weight band, on top of the above:
+
+| Zone | Before VAT | Incl. VAT |
+|------|-----------|-----------|
+| From or to zone 3 | 18 NIS | 21.24 NIS |
+| From or to zone 5 | 28 NIS | 33.04 NIS |
+
+Chargeable weight is the greater of actual weight and volumetric weight, where volumetric weight is length x width x height in cm divided by 5000. The price list covers shipments up to 15 kg chargeable weight; beyond that an excess weight/size fee applies.
 
 ### Notes
-- Flat rate ~27 NIS per package (incl. VAT) for the locker-to-locker domestic service
+- The pickup-point price is NOT flat nationwide. Quoting 27.02 NIS for a periphery address under-quotes it by the zone surcharge.
 - Delivery: 1-2 business days to most localities
 - No minimum volume requirement
 - Targets private customers and small businesses (under-served by traditional carriers' B2B contracts)
@@ -164,16 +188,16 @@ Baldar provides white-label CRM portals for courier companies. Each carrier host
 
 Israel has several locker and self-service pickup networks. There is no single "BOX" carrier. The main services:
 
-### BOX2GO (Israel Post + Paz/Yellow Box)
-- Israel Post's locker service using Yellow Box lockers at Paz gas stations
-- ~120 locations nationwide
-- Integrated with Israel Post shipping
-- Pickup code sent via SMS
+### BOX2GO (Israel Post + Paz/Yellow Box) -- DISCONTINUED
+
+**Do not offer this service. It ended in 2021.** Israel Post's Yellow Box locker partnership with Paz (launched March 2018, roughly 120 stations at Paz fuel stations) was wound down: parcels ordered for delivery to a BOX2GO locker after 30/09/2021 were delivered to the shipping address on the order instead, and mail arriving for distribution with a Box2Go address after 15/11/2021 was returned to sender. Israel Post's own BOX2GO page now redirects to their homepage with no BOX2GO content (verified August 2026).
+
+It is kept in this reference only as a negative entry, because the service is still described as live across a great deal of older documentation and it is a predictable thing for an agent to recommend. Use HFD pickup points, Done, or the UPS Israel locker network instead.
 
 ### Shlager (שלאגר) by Orian
 - Smart locker network for receiving and returning online purchases
 - Mobile stations in residential areas
-- Website: orian.com
+- Website: shlager.com (operated by Orian, orian.com)
 
 ### Done (דאן)
 - Locker-based delivery service
@@ -181,18 +205,18 @@ Israel has several locker and self-service pickup networks. There is no single "
 - Cost: ~30 NIS per package, max 5 kg
 - Delivery in 3 working days
 
-### SafeLocker
-- Lockers at malls and shopping centers
-- Website: safelocker.co.il
+### SafeLocker -- not a parcel network
+
+`safelocker.co.il` is a locker HARDWARE vendor (סייפ לוקר בע"מ), an importer and reseller of physical locker cabinets for schools, offices and gyms. It has no parcel pickup network and no shipping integration. Do not list it as a pickup option.
 
 ### HFD Pickup Points
 - ~1,000 pickup point locations
 - Searchable at hfd.co.il
 
 ### UPS Lockers Israel
-- 100 lockers + 150 service stores nationwide (launched March 2025)
+- Locker and service-store network nationwide, launched early 2025. The "100 lockers + 150 service stores" figures come from launch coverage and the operator does not publish a current count, so treat them as launch-era and do not quote them as today's footprint.
 - 24/7 drop-off AND pickup (most other Israeli locker networks are pickup-only)
-- Flat ~27 NIS per package (incl. VAT)
+- 27.02 NIS incl. VAT per package to a pickup point, plus the zone 3 / zone 5 remote surcharge
 - 1-2 business days
 - Locator: ups.com/il
 
@@ -205,8 +229,7 @@ For unified multi-carrier integration, consider these aggregator APIs:
 | AfterShip | Tracking only | Supports Israel Post, HFD, and many others |
 | TrackingMore | Tracking only | Israel Post tracking API with webhooks and SDKs |
 | ClickPost | Full integration | 150+ carriers including Israeli carriers |
-| WeShip (weship.com) | Full integration | Multi-carrier Israeli shipping platform |
-| LionWheel | Full integration | Used by Mahir Li and other Israeli couriers |
+| LionWheel | Full integration | Used by Mahir Li and other Israeli couriers. Public API repo at github.com/lionwheel/api, actively maintained (commits as recent as July 2026) |
 | UPS Developer Kit | Full integration | Official UPS APIs, also cover the new Israeli locker network |
 | GetPackage Business API | Full integration | Crowd-sourced same-day couriers in Israel; requires business account |
 
@@ -234,5 +257,5 @@ There is no unified rate API across Israeli carriers. Options:
 
 1. **Israel Post rate calculator** (public, no auth): Use the Lotus Notes endpoint or the `bennymeg/IsraelPostalServiceAPI` TypeScript library
 2. **Carrier-specific quotes:** Contact each carrier for rate agreements (usually volume-based)
-3. **Aggregator APIs:** WeShip and ClickPost offer multi-carrier rate comparison
+3. **Aggregator APIs:** ClickPost offers multi-carrier rate comparison. Note that `weship.com` is a MEXICAN logistics platform with no Israeli carrier coverage, despite occasionally being cited as an Israeli multi-carrier option
 4. **Manual rate tables:** Request current rate cards from carrier sales teams

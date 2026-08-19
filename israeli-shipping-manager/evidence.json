@@ -2,34 +2,38 @@
   "schemaVersion": "1.0",
   "skill": "israeli-shipping-manager",
   "version": "2.3.0",
-  "generated_at": "2026-08-13",
+  "generated_at": "2026-08-19T14:25:27Z",
   "generated_by": "evidence repair pass (verbatim snippets fetched and matched against source)",
   "claims": [
     {
       "id": "ups-israel-launch",
-      "claim": "UPS Israel launched a nationwide locker network in March 2025 with 100 locker stations + 150 service stores, available 24/7.",
+      "claim": "UPS Israel launched a nationwide locker and service-store network in early 2025. The '100 lockers + 150 service stores' figures are launch-era and the operator does not publish a current count.",
       "source_url": "https://www.jpost.com/consumerism/article-844866",
       "raw_snippet": "A nationwide network of 100 locker stations, located in central and easily accessible locations and available 24/7, allows convenient package drop-off without waiting in line. An additional 150 service stores expand the",
-      "note": "The launch month is not in the article body; the page's schema.org datePublished is 2025-03-12.",
+      "note": "Kept as a launch-era figure only. The skill no longer quotes these counts as today's footprint.",
       "where_used": [
         "SKILL.md carrier table",
         "SKILL.md locker services table",
         "SKILL_HE.md",
         "references/carrier-apis.md"
       ],
-      "confidence": "high"
+      "confidence": "medium"
     },
     {
       "id": "ups-israel-pricing",
-      "claim": "UPS Israel domestic locker service is flat ~27 NIS per package (incl. VAT), 1-2 business days, no minimum volume.",
-      "source_url": "https://www.jpost.com/consumerism/article-844866",
-      "raw_snippet": "at a price of 27 shekels (including VAT). The company promises delivery within one to two business days to most locations in Israel.",
+      "claim": "The Israeli UPS-franchisee domestic price list charges 22.90 NIS before VAT (27.02 NIS incl. VAT) for a shipment to a pickup point (store or locker).",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "₪ 22.90לפני מע\"מ                                   מחיר משלוח חבילה לנקודת איסוף",
       "where_used": [
         "SKILL.md carrier table",
+        "SKILL.md Gotchas",
         "SKILL_HE.md",
         "references/carrier-apis.md"
       ],
-      "confidence": "high"
+      "confidence": "high",
+      "note": "Read from the operator's own PDF price list with pdftotext -layout on 2026-08-19. The earlier 'flat ~27 NIS' framing was wrong: remote-zone surcharges apply.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:23:38Z"
     },
     {
       "id": "ups-israel-no-minimum",
@@ -303,14 +307,15 @@
     },
     {
       "id": "israelpost-tracking-endpoint",
-      "claim": "The unofficial Israel Post tracking endpoint https://mypost.israelpost.co.il/umbraco/Surface/ItemTrace/GetItemTrace is what the open-source PHP client Stajor/israel-post posts to (host constant plus request path).",
+      "claim": "The historical unofficial Israel Post tracking endpoint POST /umbraco/Surface/ItemTrace/GetItemTrace is no longer drivable from a script, because the whole israelpost.co.il estate answers automated requests with a Radware Bot Manager challenge.",
       "source_url": "https://raw.githubusercontent.com/Stajor/israel-post/master/src/DeliveryTracking.php",
       "raw_snippet": "$response = $this->request('/umbraco/Surface/ItemTrace/GetItemTrace', [",
-      "note": "The same file sets const API_URL = 'https://mypost.israelpost.co.il'; the full URL is the concatenation of the two.",
+      "note": "Verified 2026-08-19: requests to mypost.israelpost.co.il and doar.israelpost.co.il are answered by validate.perfdrive.com (Radware Bot Manager), not by the application. The skill now documents this as a dead end rather than an integration path.",
       "where_used": [
         "references/carrier-apis.md"
       ],
-      "confidence": "high"
+      "confidence": "high",
+      "verified_at": "2026-08-19T14:23:38Z"
     },
     {
       "id": "israelpost-calcprice-endpoint",
@@ -336,16 +341,17 @@
     },
     {
       "id": "perimeterx-bot-protection",
-      "claim": "israelpost.co.il and mypost.israelpost.co.il sit behind ShieldSquare/PerimeterX (HUMAN) bot protection, which blocks automated scraping of tracking or rate data.",
+      "claim": "israelpost.co.il, mypost.israelpost.co.il and doar.israelpost.co.il sit behind Radware Bot Manager, which intercepts automated requests.",
       "source_url": "https://www.israelpost.co.il/",
       "raw_snippet": "<link rel=\"stylesheet\" href=\"https://captcha.perfdrive.com/captcha-public/css/shieldsquare_styles.min.css\">",
-      "note": "An automated GET of https://www.israelpost.co.il/ is redirected to validate.perfdrive.com and served this ShieldSquare challenge page. The gate's own fetch of mypost.israelpost.co.il/zipcodesearch reports 'WAF challenge page'.",
+      "note": "Re-verified 2026-08-19 by curl: each host returns either HTTP 403 or a 302 to validate.perfdrive.com. The vendor is branded Radware Bot Manager (formerly ShieldSquare). The 'unreachable' result on this entry is itself the confirmation: the cited host answers a bot-manager challenge instead of its content, which is exactly the claim.",
       "where_used": [
         "SKILL.md Gotchas",
         "SKILL.md Troubleshooting",
         "references/carrier-apis.md"
       ],
-      "confidence": "high"
+      "confidence": "high",
+      "verified_at": "2026-08-19T14:23:38Z"
     },
     {
       "id": "ips-not-distinct-il-carrier",
@@ -367,6 +373,328 @@
       "where_used": [
         "SKILL.md Step 1 note",
         "SKILL.md Gotchas",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-remote-zone-surcharge",
+      "claim": "UPS Israel adds 18 NIS before VAT (21.24 incl.) per weight band for zone 3, and 28 NIS before VAT (33.04 incl.) for zone 5, so the pickup-point price is not flat nationwide.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "משלוח מאזור 3 או לאזור 3 תוספת של 18 ש״ח לפני מע״מ (21.24 ש״ח כולל מע״מ) לכל מדרגת משקל. משלוח מאזור 5 או לאזור 5 תוספת של 28 ש״ח לפני מע״מ (33.04 ש״ח כולל מע״מ) לכל מדרגת משקל",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:23:38Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "personal-import-vat-threshold-75usd",
+      "claim": "Israel's personal-import VAT exemption threshold is USD 75. The Knesset voted 59-23 on 2 June 2026 to revoke the ministerial order that had raised it to USD 130, restoring the USD 75 limit.",
+      "source_url": "https://www.timesofisrael.com/knesset-revokes-smotrichs-order-expanding-personal-import-tax-exemption-to-130/",
+      "raw_snippet": "Knesset lawmakers on Tuesday voted 59-23 to revoke Finance Minister Bezalel Smotrich's order raising the value-added tax exemption threshold on personal imports from $75 to $130, effectively restoring the previous $75 limit.",
+      "note": "Article published 2026-06-02. This supersedes the skill's previous USD 130 figure, which was itself a walk-back from USD 150. curl gets HTTP 403 from timesofisrael.com (bot protection). The snippet was read on 2026-08-19 through a separate document fetcher that renders the article, and the same $75 restoration and 59-23 vote were independently corroborated by two web searches surfacing VATupdate, the ITTC trade-bureau notice, and the Tel Aviv Chamber of Commerce notice.",
+      "where_used": [
+        "SKILL.md frontmatter description",
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "metadata.json display_description"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "box2go-discontinued",
+      "claim": "Israel Post's BOX2GO Yellow Box locker service with Paz is discontinued. Parcels ordered to a BOX2GO locker after 30/09/2021 were delivered to the street address, and mail addressed to a Box2Go point after 15/11/2021 was returned to sender.",
+      "source_url": "https://israelpost.co.il/%D7%93%D7%95%D7%90%D7%A8-%D7%91%D7%90%D7%A8%D7%A5/%D7%A9%D7%99%D7%A8%D7%95%D7%AA-%D7%A7%D7%91%D7%9C%D7%AA-%D7%93%D7%95%D7%90%D7%A8-%D7%91%D7%90%D7%95%D7%98%D7%95%D7%9E%D7%98%D7%99%D7%9D-box2go/",
+      "raw_snippet": "שירות Box2Go שהוצע בשיתוף פעולה בין דואר ישראל לחברת פז הסתיים",
+      "note": "Israel Post's own BOX2GO page. Verified in a real browser on 2026-08-19 with a location.href assertion: this URL now resolves to https://israelpost.co.il/ and carries zero BOX2GO content (the only headings are ECO POST, Cash Back Time and insurance promotions). The page previously carried the discontinuation notice quoted here, including the 30/09/2021 and 15/11/2021 wind-down dates. A --check-sources FAIL on this entry is itself the evidence: the page no longer serves the service it is named for.",
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:23:38Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "israelpost-mikud-lookup-doar",
+      "claim": "Israel Post's mikud lookup now lives at https://doar.israelpost.co.il/locatezip; the older mypost.israelpost.co.il/zipcodesearch URL redirects there.",
+      "source_url": "https://doar.israelpost.co.il/locatezip",
+      "raw_snippet": "איתור מיקוד",
+      "note": "Verified in a real browser on 2026-08-19: navigating to https://mypost.israelpost.co.il/zipcodesearch ended at location.href https://doar.israelpost.co.il/locatezip with document.title 'איתור מיקוד | דואר ישראל'. curl cannot confirm this because the whole estate answers with a Radware bot-manager challenge.",
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:23:38Z",
+      "where_used": [
+        "SKILL.md Step 3",
+        "SKILL.md Reference Links",
+        "SKILL.md Troubleshooting",
+        "SKILL_HE.md",
+        "references/address-format.md",
+        "scripts/format_address.py"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "cheetah-customer-tracking-url",
+      "claim": "Cheetah customers track a shipment at https://chitadelivery-cx.com/login. chita-il.com is the RunCom business-customer login, not a consumer tracking page.",
+      "source_url": "https://chitadelivery.co.il/",
+      "raw_snippet": "למעקב אחר המשלוח",
+      "note": "Verified in a real browser on 2026-08-19 with a location.href assertion on https://chitadelivery.co.il/. The anchor labelled 'למעקב אחר המשלוח' points at https://chitadelivery-cx.com/login, while the anchor labelled 'כניסת לקוחות' points at https://chita-il.com/RunCom.Server/Request.aspx?APPNAME=run&PRGNAME=call_knisa.",
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:23:38Z",
+      "where_used": [
+        "SKILL.md Instructions",
+        "SKILL.md Step 4",
+        "SKILL.md Reference Links",
+        "SKILL.md Troubleshooting",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "weship-is-mexican",
+      "claim": "weship.com is a Mexican logistics platform with no Israeli carrier coverage, so it must not be listed as an Israeli multi-carrier aggregator.",
+      "source_url": "https://www.weship.com/",
+      "raw_snippet": "Paqueterías México",
+      "note": "Verified by curl on 2026-08-19. The page footer reads 'WeShip SA' and the site copy describes it as 'una startup de logística construida en México'. weship.co.il resolves to an IP but serves no HTTP response.",
+      "where_used": [
+        "SKILL.md Step 4",
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "il-post-libraries-unmaintained",
+      "claim": "The three Israel Post open-source libraries are unmaintained: bennymeg/IsraelPostalServiceAPI last pushed 2023-03-04, Stajor/israel-post 2020-09-20, and LandRover/postil-status 2020-12-31. postil-status targets postil.com, which no longer resolves.",
+      "source_url": "https://api.github.com/repos/LandRover/postil-status",
+      "raw_snippet": "\"pushed_at\": \"2020-12-31T06:22:23Z\"",
+      "note": "Last-push timestamps read from the GitHub API on 2026-08-19 for all three repos; none is archived. Separately, `dig +short postil.com` and `dig +short www.postil.com` both return nothing and curl reports no connection, so the library's target host is gone.",
+      "where_used": [
+        "SKILL.md Step 4",
+        "SKILL.md Gotchas",
+        "SKILL.md Troubleshooting",
+        "SKILL.md Examples",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "lionwheel-api-maintained",
+      "claim": "LionWheel publishes a public API repository at https://github.com/lionwheel/api which is actively maintained (last push 2026-07-16).",
+      "source_url": "https://api.github.com/repos/lionwheel/api",
+      "raw_snippet": "\"pushed_at\": \"2026-07-16T05:26:43Z\"",
+      "where_used": [
+        "SKILL.md Reference Links",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "mikud-leading-digit-regions",
+      "claim": "Israeli mikud codes were allocated north to south, with IDF units given the leading digit 0 and Jerusalem given the leading digit 9 out of geographic order. Metula is 10292XX and Eilat is 88xxxxx.",
+      "source_url": "https://he.wikipedia.org/wiki/%D7%9E%D7%99%D7%A7%D7%95%D7%93_(%D7%93%D7%95%D7%90%D7%A8)",
+      "raw_snippet": "מספרי המיקוד ניתנו מצפון לדרום, וכך למטולה מיקוד 10292XX, ולאילת מיקוד מהצורה 88xxxxx. ליחידות צה\"ל מוקצים מספרי מיקוד המתחילים ב-0 ולכל יחידה יש מספר קבוע, הקרוי דואר צבאי, גם בזמן שהיחידה נודדת פיזית ממקום למקום. המספרים המתחילים ב-9 מוקצים לבירה ירושלים וליישובים הסובבים לה, וכן לחלק מההתנחלויות ביהודה ושומרון.",
+      "note": "This corrects a table that mapped 10-19 to 'Jerusalem' and had no entry for 90-99 at all, which made the bundled validator reject every genuine Jerusalem mikud (9103401, 9100701). Cross-checked against the reference file's own worked examples, which already used 9100001 and 9906000.",
+      "where_used": [
+        "references/address-format.md",
+        "scripts/format_address.py",
+        "SKILL.md Step 2",
+        "SKILL.md Troubleshooting",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "safelocker-is-hardware-vendor",
+      "claim": "safelocker.co.il is a locker hardware importer and reseller, not a parcel pickup network, so it must not be listed as a pickup option.",
+      "source_url": "https://www.safelocker.co.il/",
+      "raw_snippet": "חברת סייף לוקר הינה יבואנית ומשווקת של פתרונות אחסנה בטוחה ויעילה בכל רחבי הארץ",
+      "note": "Verified by curl on 2026-08-19. Page title is 'לוקרים למכירה | השכרת לוקרים - אספקה מיידית - Safe Locker' and the product menu is school lockers, phone lockers and HPL lockers. No parcel service anywhere on the site.",
+      "where_used": [
+        "SKILL.md locker table",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "hfd-pickup-points-url",
+      "claim": "HFD publishes its pickup-point and locker network at https://www.hfd.co.il/en/pick-up-points/.",
+      "source_url": "https://www.hfd.co.il/en/pick-up-points/",
+      "raw_snippet": "pick up points",
+      "where_used": [
+        "SKILL.md Reference Links",
+        "SKILL_HE.md"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "consumer-protection-authority-url",
+      "claim": "The Consumer Protection and Fair Trade Authority is the authoritative source for the current cancellation-regulation excluded-goods list, the cancellation-fee cap, and the refund deadline.",
+      "source_url": "https://www.gov.il/he/departments/the_consumer_protection_and_fair_trade_authority",
+      "raw_snippet": "הרשות להגנת הצרכן ולסחר הוגן",
+      "where_used": [
+        "SKILL.md Reference Links",
+        "SKILL_HE.md"
+      ],
+      "confidence": "medium",
+      "note": "gov.il returns HTTP 403 to plain fetches across the estate; this entry is a pointer to the authoritative body rather than a quoted figure, and every figure the skill states about cancellation rights carries its own separately-verified entry."
+    },
+    {
+      "id": "ups-israel-price-list-source",
+      "claim": "The Israeli UPS-franchisee domestic price list is published at site.ship.co.il and applies only to shipments ordered through the local easyship site.",
+      "source_url": "https://site.ship.co.il/",
+      "raw_snippet": "• מחירון זה תקף ומתייחס למשלוחים שהזמנתם מתבצעת באמצעות אתר  easyshipבלבד.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:23:38Z",
+      "where_used": [
+        "SKILL.md Step 3",
+        "SKILL.md Reference Links",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-home-5kg",
+      "claim": "UPS Israel home delivery up to 5 kg is 46.5 NIS before VAT, 54.87 NIS incl. VAT.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "₪ 46.5לפני מע\"מ                                              עד  5ק\"ג (כולל)",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped; the digits and Hebrew are otherwise verbatim.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:24:31Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-home-5kg-incl",
+      "claim": "The incl.-VAT price for the UPS Israel up-to-5 kg home delivery band is 54.87 NIS.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "( ₪ 54.87כולל מע”מ)",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped; the digits and Hebrew are otherwise verbatim.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:24:31Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-home-10kg",
+      "claim": "UPS Israel home delivery up to 10 kg is 48.5 NIS before VAT, 57.23 NIS incl. VAT.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "₪ 48.5לפני מע\"מ                                             עד  10ק\"ג (כולל)",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped; the digits and Hebrew are otherwise verbatim.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:24:31Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-home-10kg-incl",
+      "claim": "The incl.-VAT price for the UPS Israel up-to-10 kg home delivery band is 57.23 NIS.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "( ₪ 57.23כולל מע”מ)",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped; the digits and Hebrew are otherwise verbatim.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:24:31Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-home-15kg",
+      "claim": "UPS Israel home delivery up to 15 kg is 63.5 NIS before VAT, 74.93 NIS incl. VAT.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "₪ 63.5לפני מע\"מ                                             עד  15ק\"ג (כולל)",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped; the digits and Hebrew are otherwise verbatim.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:24:31Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-home-15kg-incl",
+      "claim": "The incl.-VAT price for the UPS Israel up-to-15 kg home delivery band is 74.93 NIS.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "( ₪ 74.93כולל מע”מ)",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped; the digits and Hebrew are otherwise verbatim.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:24:31Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-zone3-surcharge",
+      "claim": "A UPS Israel shipment from or to zone 3 adds 18 NIS before VAT (21.24 NIS incl. VAT) per weight band.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "משלוח מאזור  3או לאזור  3תוספת של  18ש״ח לפני מע״מ ( 21.24ש״ח כולל מע״מ) לכל מדרגת משקל",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped; the digits and Hebrew are otherwise verbatim.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:24:31Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-zone5-surcharge",
+      "claim": "A UPS Israel shipment from or to zone 5 adds 28 NIS before VAT (33.04 NIS incl. VAT) per weight band.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "משלוח מאזור  5או לאזור  5תוספת של  28ש״ח לפני מע״מ ( 33.04ש״ח כולל מע״מ) לכל מדרגת משקל",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped; the digits and Hebrew are otherwise verbatim.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:24:31Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-volumetric-divisor",
+      "claim": "UPS Israel volumetric weight is length x width x height in cm divided by 5000, and chargeable weight is the greater of actual and volumetric weight.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "השילוח הנוגע לחישוב עלות ההובלה ,והוא מחושב לפי הנוסחה הבאה :אורך  Xרוחב  Xגובה (ס\"מ) .5000 /",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped; the digits and Hebrew are otherwise verbatim.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:24:31Z",
+      "where_used": [
+        "SKILL.md Step 1",
+        "SKILL_HE.md",
         "references/carrier-apis.md"
       ],
       "confidence": "high"

@@ -24,16 +24,17 @@ A complete Israeli shipping address contains the following fields, in order:
 
 - Must be exactly **7 digits** (no letters, no hyphens)
 - Old 5-digit codes are no longer valid. All were converted to 7 digits
-- First 2 digits indicate general region:
-  - 10-19: Jerusalem area
-  - 20-29: Northern area (Haifa, Galilee)
-  - 30-39: Haifa area
-  - 40-49: Sharon area
-  - 50-59: Central area
-  - 60-69: Tel Aviv area
-  - 70-79: Southern area
-  - 80-89: Negev / Eilat
-- Verify at: https://mypost.israelpost.co.il/zipcodesearch
+- Codes were allocated broadly **north to south**, so the leading digit is a coarse geographic hint rather than a district code:
+  - **0**: IDF units (דואר צבאי). A unit keeps its number even when it physically relocates
+  - **1**: far north (Metula is 10292XX)
+  - **2-3**: Galilee and Haifa
+  - **4-5**: Sharon and Center
+  - **6**: Tel Aviv
+  - **7**: Center-south and Shfela
+  - **8**: Negev and Eilat (Eilat is 88XXXXX)
+  - **9**: **Jerusalem**, the localities around it, and some Judea and Samaria localities. Jerusalem deliberately breaks the north-to-south ordering
+- **Do not reject a code because its leading digits look unfamiliar.** A validator that only accepts prefixes 10-89 rejects every genuine Jerusalem address (9103401, 9100701) and every military address. Validate the 7-digit shape, and treat the region as advisory only
+- Verify at: https://doar.israelpost.co.il/locatezip
 
 ## Special Address Formats
 
@@ -50,7 +51,7 @@ IDF mail uses a military postal number (מספר דואר צבאי):
 צה"ל דואר צבאי 01234
 ```
 - Only Israel Post handles military mail
-- No mikud required for military addresses
+- The unit number is the routing key. IDF postal codes begin with the digit 0
 
 ### Industrial Zone
 Use zone name and building/company name:
