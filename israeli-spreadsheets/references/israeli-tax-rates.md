@@ -14,7 +14,7 @@
 
 The often-quoted "50% above 721,560" is not a bracket. Section 121B(a) adds a 3% surtax on taxable income above 721,560 NIS (60,130 NIS/month), giving 50% effective on personal-exertion income. Section 121B(a1) adds a FURTHER 2% on capital-source income above the same threshold, so investment income carries 5% of surtax, not 3%. The threshold is frozen for 2025-2027.
 
-The 2026 bracket widening expanded the middle brackets (20%, 31%, 35%); a taxpayer with 300,000 NIS taxable income saves roughly 5,000 NIS/year compared to the pre-amendment schedule. The top statutory rate (47%), the surtax and the Bituach Leumi rates were not affected.
+The 2026 bracket widening expanded the middle brackets (20%, 31%, 35%), reducing the tax owed by a middle-income taxpayer relative to the pre-widening schedule. The top statutory rate (47%), the surtax and the Bituach Leumi rates were not affected.
 
 ## Income Tax Brackets, non-exertion income (2026)
 
@@ -109,9 +109,9 @@ average wage (which caps the mandatory-pension base) is 13,769 NIS. A tlush mask
 - Ceiling: 15,712 NIS/month (2025 level, carried into 2026)
 
 ## Minimum Wage (from 1 April 2026)
-- Monthly: 6,443.85 NIS (raised 3.3% from 6,247.67 NIS on 2026-04-01)
+- Monthly: 6,443.85 NIS from 2026-04-01, up from 6,247.67 NIS
 - Hourly: ~35.40 NIS (based on a 182-hour full-time month)
-- Before 1 April 2026 the monthly minimum was 6,247.67 NIS. The 2025 figure of 5,880.02 NIS/month is no longer current.
+- Before 1 April 2026 the monthly minimum was 6,247.67 NIS. The 5,880.02 NIS/month rate dates from 1 April 2024 and is no longer current.
 
 ## Arnona (municipal property tax)
 

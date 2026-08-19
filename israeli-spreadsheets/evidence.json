@@ -20,7 +20,7 @@
     },
     {
       "id": "income-tax-brackets-2026-law",
-      "claim": "The 2026 income tax rates follow the bracket-widening law (Amendment 288, chok rivuach madregot mas hachnasa): 20% from 120,721 to 228,000 NIS, 31% from 228,001 to 301,200 NIS, 35% from 301,201 to 560,280 NIS.",
+      "claim": "The 2026 income tax bracket widening was made by chapter C of the Economic Efficiency Law 2026, published 31.3.2026, effective 1.1.2026",
       "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
       "raw_snippet": ".1על כל שקל חדש מ 120,721 -ש\"ח עד  228,000ש\"ח – יחול שיעור מס . 20% .2על כל שקל חדש מ 228,001 -ש\"ח עד  301,200ש\"ח – יחול שיעור מס . 31% .3על כל שקל חדש מ 301,201 -ש\"ח עד  560,280ש\"ח – יחול שיעור מס .35%"
     },
@@ -341,18 +341,6 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
-        "references/israeli-tax-rates.md"
-      ]
-    },
-    {
-      "claim_id": "amendment-288-illustration",
-      "claim": "The 300,000 NIS / ~5,000 NIS saving is a worked illustration of the Amendment 288 bracket widening, not a published figure: it is arithmetic on the section 121 brackets, which run 20% to 228,000 and 31% to 301,200.",
-      "source_url": "https://www.nevo.co.il/law_html/law00/84255.htm",
-      "raw_snippet": "(ג) על כל שקל חדש מ-107,041 שקלים חדשים עד 228,000 שקלים חדשים – 20%; (ד) על כל שקל חדש מ-228,001 שקלים חדשים עד 301,200 שקלים חדשים – 31%",
-      "fetched_at": "2026-08-17",
-      "verified_via": "Income Tax Ordinance section 121 read directly on nevo; the saving is arithmetic on those brackets",
-      "verified_at": "2026-08-17",
-      "appears_in": [
         "references/israeli-tax-rates.md"
       ]
     },
