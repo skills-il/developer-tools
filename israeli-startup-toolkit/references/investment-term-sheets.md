@@ -1,38 +1,33 @@
-# Israeli Investment Terms Reference
+# Israeli Investment Deal Terms Reference
 
-This file explains the terms Israeli early-stage instruments turn on so a founder
-can negotiate them and brief a lawyer. It deliberately does NOT contain
-fill-in-the-blank agreements. Drafting a SAFE, a convertible note, a share
-purchase agreement or articles for another person is work reserved to a licensed
-Israeli lawyer, and an executable-looking skeleton is the thing most likely to be
-signed without one.
+Deal-term parameters and what is market in Israel, so a founder can understand and
+negotiate a round and brief their lawyer. These are commercial terms, not contract
+language: preparing the actual SAFE, note, share purchase agreement or articles is
+work for a licensed Israeli lawyer.
 
 ## Israeli SAFE (Simple Agreement for Future Equity)
 
-### What to settle before instructing counsel
+### Key Commercial Terms
 
-This is a checklist of the decisions a SAFE turns on, not a document. Drafting the
-instrument itself is work for a licensed Israeli lawyer; bring these answers to them.
+| Term | What it sets | Israeli market note |
+|---|---|---|
+| Investment amount | Size of the cheque, and the currency it is denominated in | USD or NIS both common |
+| Valuation cap | Ceiling on the conversion valuation | Post-money is now the standard; pre-money still appears in older paper. They are not interchangeable |
+| Discount rate | Discount to the next round's price | 15-25% typical, 20% common |
+| Conversion mechanics | How cap and discount combine | Converts at the lower of (Cap / fully-diluted shares) or (Price x (1 - Discount)); new shares in the same class as the lead investor |
+| Conversion trigger | The equity financing size that forces conversion | Set as a threshold amount |
+| MFN | Most-favoured-nation: this investor inherits better terms given later | Yes / No |
+| Pro-rata rights | Right to participate in the next round | Yes / No |
+| Information rights | Reporting the investor receives | Annual financials, or quarterly updates |
+| Governing law and forum | Which law applies and where disputes go | Israeli law; courts of Tel Aviv-Jaffa |
+| Language | Execution language | Hebrew, English, or both |
 
-**Commercial terms to decide**
-- Investment amount, and the currency it is denominated in
-- Valuation cap, and whether it is pre-money or post-money (they are not
-  interchangeable, and the post-money form is now the market default)
-- Discount rate, if any, and how it interacts with the cap
-- What size of equity financing triggers conversion
-- Which conversion basis applies when both a cap and a discount are in play
-- Whether the investor gets MFN, pro-rata rights, or information rights
-
-**Israeli-specific questions to raise with counsel**
-- Whether the company has IIA grants that require notification
-- Which securities-law exemption the round relies on, and the offeree count
-  under it (see the securities discussion in SKILL.md)
-- Whether tax is withheld on conversion, and on whom the obligation falls
+**Israeli-specific points to raise with counsel**
+- IIA notification, if the company has taken Innovation Authority grants
+- Which securities-law exemption the round relies on, and the offeree count under
+  it (see the securities discussion in SKILL.md)
+- Tax withholding on conversion, per ITA requirements, and on whom it falls
 - Anti-money-laundering identification of the investor
-- Governing law and forum, and whether the document is executed in Hebrew,
-  English, or both
-
-Understanding these lets you negotiate. It does not replace the drafted agreement.
 
 ### Israeli SAFE vs Y Combinator SAFE
 
@@ -48,31 +43,28 @@ Understanding these lets you negotiate. It does not replace the drafted agreemen
 
 ## Convertible Note
 
-### What to settle before instructing counsel
+### Key Commercial Terms
 
-A convertible note is a debt instrument. Because it can become repayable, the
-consequences of getting it wrong are heavier than for a SAFE, and the drafting is
-work for a licensed Israeli lawyer. Decide these points first.
+A convertible note is debt, so unlike a SAFE it can become repayable and can put
+the company into default. That asymmetry is the main reason to choose one over the
+other.
 
-**Commercial terms to decide**
-- Principal amount and currency
-- Interest rate, and whether interest converts along with principal
-- Maturity, and what happens if no qualified financing has occurred by then:
-  repayment on demand, automatic conversion, or an extension by agreement
-- What counts as a qualified financing for automatic conversion
-- Discount and valuation cap, and how they interact
-- Whether the note is secured against company assets, and if so which
+| Term | What it sets | Israeli market note |
+|---|---|---|
+| Principal | Amount lent | USD or NIS |
+| Interest rate | Accrues until conversion or repayment | 5-8% per annum typical |
+| Maturity | When the note falls due if it has not converted | 12-24 months from issuance |
+| Automatic conversion | Converts on a qualified financing above a set threshold | |
+| Optional conversion | Investor may elect to convert at maturity | |
+| Discount and cap | Same mechanics as a SAFE | Discount 15-25% |
+| Repayment at maturity | If no conversion: principal plus accrued interest, payable on demand | This is the limb a SAFE does not have |
+| Security | Whether the note is secured against company assets | Unsecured, or secured |
 
-**Israeli-specific questions to raise with counsel**
-- How interest is taxed and withheld year by year, which differs from the SAFE
-  treatment where there is no interest at all
-- Whether conversion is a taxable event on these facts, and whether an ITA
-  ruling is warranted
-- The same IIA, securities-exemption and AML questions as for a SAFE
-
-Note the asymmetry worth understanding before you choose: a SAFE has no interest,
-no maturity and no repayment obligation, so it cannot put the company into default;
-a note can.
+**Israeli tax points**
+- Interest is taxed annually, with withholding at source, which is a live cash cost
+  a SAFE does not carry
+- Conversion is generally not an immediate tax event, subject to an ITA ruling on
+  the specific facts
 
 ## Priced Round (Series A)
 

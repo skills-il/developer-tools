@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.2 - 2026-08-19
+
+- Restored the deal-term parameters in the investment reference (SAFE conversion
+  mechanics, note interest and maturity ranges, repayment at maturity, security)
+  and presented them as commercial-terms tables. A previous pass had summarised
+  them away; they are market information a founder negotiating a round needs.
+- Renamed the reference to "Israeli Investment Deal Terms Reference" and its
+  subheadings to "Key Commercial Terms", so the labelling matches what the file
+  is: deal terms, not contract language.
+- Updated the Bundled Resources line in both languages, which still described the
+  file as providing agreement templates.
+
 ## 1.3.1 - 2026-08-19
 
 - Reworked the investment-terms reference so it explains the terms a SAFE and a

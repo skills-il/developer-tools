@@ -29,6 +29,16 @@
         "The disclaimer itself was advertising the trespass: the notice said 'any wording this skill drafts, whether a SAFE, a convertible note...' which asserts the skill drafts instruments. After removing the instruments the notice had to be reworded to match, otherwise the notice is the evidence.",
         "CARRY: the live enriched `avoid` field is EMPTY ({\"en\":[],\"he\":[]}) on prod. For a regulated-domain skill the anti-trigger list is the field most worth having. Flag to Phase 9."
       ]
+    },
+    {
+      "version": "1.3.2",
+      "date": "2026-08-19",
+      "lessons": [
+        "I OVER-CORRECTED in 1.3.1. The lead re-read the file and was right: it contained zero operative contract language (verified: no WHEREAS, hereby, shall-clauses, signature blocks or blanks), so it was deal-term parameters, not a reserved instrument. Removing the parameter tables cost five pieces of real commercial substance (SAFE conversion formula, note interest 5-8%, maturity 12-24 months, repayment on demand, security option) for no legal gain. Restored.",
+        "The correct remedy when framing is worse than substance is to fix the LABEL, not the content. 'Israeli Investment Agreement Templates Reference' and '### Key Terms Template' were the exposure; the tables under them were fine. Under ע\"א 4223/12 framing is half the test, and the H1 is what a reader or scanner sees first.",
+        "Diagnostic worth reusing before deciding a file emits an instrument: grep for operative contract language (whereas|hereby|shall |in witness|signature|_____). Zero hits means parameters, not an instrument. A document-styled TITLE over a parameter table is a labelling problem.",
+        "Propagation miss confirmed by the lead's prediction: the reference rename had to reach the Bundled Resources line in BOTH languages, which still said 'agreement templates' / 'תבניות הסכמי השקעה'. Same shape as the agritech miss. Grep the resource lines and metadata.json, not just the body."
+      ]
     }
   ]
 }

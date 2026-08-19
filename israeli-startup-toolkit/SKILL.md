@@ -162,7 +162,7 @@ Review period: 2-4 months typically
 
 ### Step 4: Investment Agreements
 
-**Terms an Israeli SAFE turns on. Settle these, then have a licensed Israeli lawyer draft the instrument; do not sign a skeleton.** (The Y Combinator post-money SAFE is the de-facto norm in Israel, with Israeli law applied via a choice-of-law clause.)
+**Terms an Israeli SAFE turns on. Settle these, then have a licensed Israeli lawyer draft the agreement.** (The Y Combinator post-money SAFE is the de-facto norm in Israel, with Israeli law applied via a choice-of-law clause.)
 ```
 Israeli SAFE, terms to settle:
 
@@ -473,7 +473,7 @@ Result: Flip decision memo with checklist and next steps.
 ### References
 - `references/ecosystem-context.md`: Israeli startup ecosystem context for 2024-2026, covering funding volume, the government high-tech stimulus and Yozma 2.0, active local VCs and accelerators, recent exits, the Delaware-flip trend, and a summary of the tax landscape. These are reporting-derived figures that move quickly. Consult for background when advising on fundraising climate, and re-verify before quoting.
 - `references/iia-programs-guide.md`: Detailed guide to Israel Innovation Authority grant programs including R&D Fund, Tnufa (early stage), Startup Fund, Technological Venture Incubators, BIRD (US-Israel binational), Horizon Europe, and Yozma 2.0 fund-of-funds. Covers funding percentages, maximum amounts, repayment terms, eligibility requirements, application process, and approval rates. Consult when helping users select the right IIA program or prepare grant applications.
-- `references/investment-term-sheets.md`: Israeli investment agreement templates including post-money SAFE and convertible note structures with Israeli-specific clauses (IIA notification, Section 102 interaction, Israeli securities law private-placement exemptions, anti-money laundering). Typical 2026 cap/discount ranges. Consult when drafting or reviewing early-stage investment terms under Israeli law.
+- `references/investment-term-sheets.md`: Israeli investment DEAL TERMS reference. Explains the commercial parameters a post-money SAFE, a convertible note and a Series A turn on (cap, discount, conversion mechanics, MFN, pro-rata, liquidation preference, anti-dilution, board, protective provisions), the Israeli-specific points to raise with counsel (IIA notification, Section 102 interaction, securities-law exemption, anti-money laundering), typical 2026 cap and discount ranges, and a due-diligence checklist. It contains commercial terms, not contract language. Consult when negotiating or reviewing early-stage investment terms under Israeli law.
 - `references/option-102-reference.md`: Complete reference for Section 102 of the Israeli Income Tax Ordinance covering all three tracks (Capital Gains Trustee, Income Trustee, Non-Trustee / 3(i)), holding periods (24 months from allotment and deposit with the trustee for capital gains), tax rates (25%, plus 3% under Section 121B(a) and a further 2% under Section 121B(a1) on capital-source income for high earners), employer deduction rules, ITA-approved trustees, filing procedures, and common pitfalls. Consult when setting up an ESOP or advising on employee equity compensation tax implications.
 
 ## Gotchas
