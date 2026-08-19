@@ -16,8 +16,22 @@
         "CARRY: the Excel sheet-direction menu path in Google Sheets was hedged rather than asserted, because the current UI path could not be confirmed from an official Google support page this cycle.",
         "Deferred over the Phase 4.1 discretionary cap: adding worked Hebrew examples for the non-standard BL categories, and an IMPORTDATA-based Hebcal recipe as an alternative to Apps Script.",
         "CARRY: the salary template now exposes the BL rate as an input cell keyed to the Step 2.5 table, but there is still no lookup table wiring the category name to its rates. Consider a hidden category sheet with a VLOOKUP next cycle.",
-        "CARRY (Expert MAJOR, deferred): the skill still does not state which base each deduction applies to, nor that employer contributions above the Section 3(e3)/3(e) ceilings become taxable income to the employee."
-      ]
+        "CARRY (Expert MAJOR, deferred): the skill still does not state which base each deduction applies to, nor that employer contributions above the Section 3(e3)/3(e) ceilings become taxable income to the employee.",
+        "Phase 5.7: the SKILL.md frontmatter description was missing the 'Do not use for' boundary that metadata.json already carried. Adding it was purely additive (no trigger phrase removed). Frozen 10-query set, 70/30 split; holdout 0.67 -> 1.00, zero regressions, so ACCEPT. The improved case is the negative query 'make a generic budget spreadsheet in English', which the pre-edit description had no basis to exclude."
+      ],
+      "holdout_before": 0.67,
+      "holdout_after": 1.0,
+      "buckets": {
+        "improved": [
+          "make a generic budget spreadsheet in English"
+        ],
+        "regressed": [],
+        "persistent_fail": [],
+        "stable_success": [
+          "arnona calculator spreadsheet",
+          "RTL Google Sheets for Hebrew"
+        ]
+      }
     }
   ]
 }

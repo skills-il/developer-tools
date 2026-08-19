@@ -1,6 +1,6 @@
 ---
 name: israeli-spreadsheets
-description: Generate Excel and Google Sheets spreadsheets with Israeli tax calculations, VAT, NIS formatting, RTL setup, and Hebrew-labeled financial templates. Use when user asks about Israeli tax spreadsheets, NIS-formatted Excel files, VAT calculations, salary slip templates, arnona estimators, common Hebrew formulas, or Israeli accounting worksheets. Covers 2026 tax brackets (after the 2026 bracket widening), Bituach Leumi rates, and openpyxl RTL configuration.
+description: Generate Excel and Google Sheets spreadsheets with Israeli tax calculations, VAT, NIS formatting, RTL setup, and Hebrew-labeled financial templates. Use when user asks about Israeli tax spreadsheets, NIS-formatted Excel files, VAT calculations, salary slip templates, arnona estimators, common Hebrew formulas, or Israeli accounting worksheets. Covers 2026 tax brackets (after the 2026 bracket widening), Bituach Leumi rates, and openpyxl RTL configuration. Do not use for filing actual tax returns, legal tax advice, or generic spreadsheets without an Israeli context.
 license: MIT
 compatibility: Requires openpyxl for Excel generation (Google Sheets needs no install). Works with Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex, Antigravity, Gemini CLI.
 ---
