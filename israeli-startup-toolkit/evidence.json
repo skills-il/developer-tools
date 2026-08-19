@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "skill": "israeli-startup-toolkit",
   "version": "1.2.0",
-  "generated_at": "2026-08-19T14:40:43.496692+00:00",
+  "generated_at": "2026-08-19T14:47:25.050322+00:00",
   "claims": [
     {
       "id": "tnufa-max-2026",
@@ -787,6 +787,20 @@
       "verified_via": "playwright navigation (page load, not fetch status)",
       "verified_at": "2026-08-19T14:40:43.496692+00:00",
       "fetched_at": "2026-08-19T14:40:43.496692+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "securities-15a-offeree-count",
+      "claim": "Securities Law Section 15A(a)(1) applies an offeree count set in regulations over a 12-month period, counting equity buyers and buyers of other securities separately, and Section 15A(b) excludes classified investors from the count",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%A0%D7%99%D7%99%D7%A8%D7%95%D7%AA_%D7%A2%D7%A8%D7%9A",
+      "raw_snippet": "יימנו בנפרד משקיעים שרכשו מניות",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:47:25.050322+00:00",
+      "fetched_at": "2026-08-19T14:47:25.050322+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"

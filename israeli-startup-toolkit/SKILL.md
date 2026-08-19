@@ -123,7 +123,7 @@ def calculate_founder_allocation(founders, vesting_months=48, cliff_months=12):
 | Tnufa (Ideation) | Pre-seed | Up to 80% | Up to NIS 200,000 over 12 months (NIS 250K budget cap) | Royalties 3-5% |
 | Startup Fund | Pre-seed / seed | Up to 50% (up to 75% periphery) | Per budget, typical NIS 2-5M | Royalties 3-5% |
 | R&D Fund | Seed-Growth | Up to 50% (up to 75% periphery) | Per budget | Royalties 3-5% |
-| Technological Venture Incubator | Early stage | Up to 85% | Up to ~NIS 9M over 2 years | Royalties + incubator equity |
+| Technological Venture Incubator | Early stage | Up to 85% | Approved budget up to NIS 3.5M, up to 2 years | Royalties + incubator equity |
 | BIRD General (US-Israel) | Any | Up to 50% | USD 1.5M | Royalties if reach sales |
 | BIRD HLS (Homeland Security) | Any | Up to 50% | USD 1M | Royalties if reach sales |
 | Horizon Europe | Any | Varies | Varies | Depends on track |
@@ -149,7 +149,6 @@ IIA R&D Fund Application:
 
 Application portal: innovationisrael.org.il
 Review period: 2-4 months typically
-Approval rate: ~40-50% for R&D Fund
 ```
 
 **Key IIA restrictions:**
@@ -181,7 +180,7 @@ Important Israeli-specific clauses:
 - Section 102 interaction (for employee investors)
 - Israeli securities law exemptions. Section 15A(a)(1) of the Securities Law
   works with an offeree count set in regulations (35 under Regulation 2 of the
-  1'2000 Details Regulations), counted over 12 months, and Section 15A(b)
+  2000 Details Regulations), counted over 12 months, and Section 15A(b)
   excludes classified/qualified investors listed in the First Schedule from
   that count. Equity buyers and buyers of other securities are counted in
   SEPARATE baskets, so SAFE holders and share buyers are two pools.
@@ -328,8 +327,9 @@ Preferred Enterprise (Mafal Mutaaf):
 - Applies to: Industrial or tech companies
 
 Preferred Technological Enterprise (PTE / Mafal Tehnologi Mutaaf):
-Section 51X of the Encouragement of Capital Investments Law. Conditions (1)
-AND (2) must both hold (or, alternatively, condition (3)), plus (4) and (5):
+Section 51KD (51כד) of the Encouragement of Capital Investments Law; the rates
+sit in Section 51KE (51כה). Conditions (1) AND (2) must both hold (or,
+alternatively, condition (3)), plus (4) and (5):
   1. R&D expenses averaged >= 7% of the company's revenue over the 3 prior
      years, OR exceeded NIS 75M per year
   2. AND at least one of: 20%+ of employees are R&D employees (or 200+ such
@@ -350,10 +350,17 @@ Special Preferred Technological Enterprise (SPTE):
 - For very large groups (group revenue of NIS 10 billion OR MORE, per 51KD)
 - Tax rate: 6% on qualifying IP income (nexus approach)
 
-R&D Expense Deduction (Section 20a):
-- Full deduction of R&D expenses in the year incurred
-- Applies to: All R&D conducted in Israel
-- No need for IIA approval (separate from grants)
+R&D Expense Deduction (Section 20A of the Income Tax Ordinance):
+- Section 20A(a)(1): current-year deduction of scientific-research expenses
+  (including capital expenses) in industry, agriculture, transport or energy,
+  but ONLY where the research was approved for this purpose by the delegate of
+  the responsible minister. It is not automatic and it is not approval-free.
+- Section 20A(a)(2): capital R&D expenditure that (a)(1) does not cover is
+  deducted in three equal annual instalments starting in the year paid.
+- Section 20A1: a deduction for funding research performed by another person is
+  capped at 40% of the taxpayer's taxable income for that year.
+- Section 20A(b): no deduction for an amount invested in an asset that carries
+  depreciation under Section 21.
 
 Angels benefit (Encouragement of Knowledge-Intensive Industry Law
 (Temporary Order), 2023, NOT Section 20c of the Ordinance):
@@ -462,6 +469,7 @@ Result: Flip decision memo with checklist and next steps.
 ## Bundled Resources
 
 ### References
+- `references/ecosystem-context.md`: Israeli startup ecosystem context for 2024-2026, covering funding volume, the government high-tech stimulus and Yozma 2.0, active local VCs and accelerators, recent exits, the Delaware-flip trend, and a summary of the tax landscape. These are reporting-derived figures that move quickly. Consult for background when advising on fundraising climate, and re-verify before quoting.
 - `references/iia-programs-guide.md`: Detailed guide to Israel Innovation Authority grant programs including R&D Fund, Tnufa (early stage), Startup Fund, Technological Venture Incubators, BIRD (US-Israel binational), Horizon Europe, and Yozma 2.0 fund-of-funds. Covers funding percentages, maximum amounts, repayment terms, eligibility requirements, application process, and approval rates. Consult when helping users select the right IIA program or prepare grant applications.
 - `references/investment-term-sheets.md`: Israeli investment agreement templates including post-money SAFE and convertible note structures with Israeli-specific clauses (IIA notification, Section 102 interaction, Israeli securities law private-placement exemptions, anti-money laundering). Typical 2026 cap/discount ranges. Consult when drafting or reviewing early-stage investment terms under Israeli law.
 - `references/option-102-reference.md`: Complete reference for Section 102 of the Israeli Income Tax Ordinance covering all three tracks (Capital Gains Trustee, Income Trustee, Non-Trustee / 3(i)), holding periods (24 months from allotment and deposit with the trustee for capital gains), tax rates (25%, plus 3% under Section 121B(a) and a further 2% under Section 121B(a1) on capital-source income for high earners), employer deduction rules, ITA-approved trustees, filing procedures, and common pitfalls. Consult when setting up an ESOP or advising on employee equity compensation tax implications.
@@ -501,18 +509,6 @@ If these MCPs are not installed, fall back to the official portals listed in Ref
 | Geektime | https://www.geektime.co.il | Israeli tech news (EN), startup launches |
 | Globes (Tech) | https://en.globes.co.il/en/startups.tag | Funding and exit reporting (EN) |
 | BIRD Foundation | https://www.birdf.com | US-Israel binational R&D grants |
-
-## Israeli Ecosystem Context (2024-2026)
-
-After the October 2023 war, Israeli startup funding contracted in late 2023 then partially rebounded through 2024-2025, with cyber, AI infrastructure, and defense tech absorbing most growth-stage capital. Key data points:
-
-- **Funding volume**: 2024 raised roughly USD 12B across ~600 rounds per Start-Up Nation Central; 2025 H1 trended ahead of 2024 driven by AI and cyber megadeals.
-- **Government stimulus**: The 2024 high-tech stimulus injected roughly USD 1B into the ecosystem over 2024-2026, including the Yozma 2.0 fund-of-funds (0.3:1 government:institutional ratio, USD 700M first round in Q3 2024) and a new Revolutionary Startup Fund co-investing in pre-seed / seed / Series A.
-- **Active local VCs**: Pitango (multi-stage, ~USD 2B AUM), Aleph (Series A/B), 83North (Series A/B), Vertex Ventures Israel (early growth), Vintage Investment Partners (Vintage X closed at USD 400M+ in 2024, secondaries plus fund-of-funds), OurCrowd (online platform plus partner funds), Viola Group, Jerusalem Venture Partners (JVP), TLV Partners, Glilot Capital (cyber), Team8 (cyber/AI foundry), Insight Partners (heavy IL deployment), Amiti Ventures (early stage).
-- **Accelerators / programs**: MassChallenge Israel (zero-equity, Jerusalem), OurCrowd Pitch (pitch competition plus syndicate), 8200 EISP (alumni-driven), Microsoft for Startups Israel, Google for Startups TLV. Bizzabo is an Israeli scale-up, not an accelerator; correct any agent that says otherwise.
-- **Recent exits / IPOs**: Mobileye (NASDAQ 2022), Wix (NASDAQ 2013), Lemonade (NYSE 2020), Riskified (NYSE 2021), monday.com (NASDAQ 2021); 2024-2025 saw renewed M&A (Wiz reportedly in advanced talks with Google for ~USD 23B in 2024, status confirmed in 2025) and several mid-cap cyber acquisitions.
-- **Delaware Flip trend**: Roughly 45% of new Israeli tech startups incorporated abroad in 2025 (up from ~20% in 2022), almost always Delaware C-Corp parent with Israeli R&D subsidiary. Driver is US VC preference, not Israeli law.
-- **Tax landscape**: Corporate tax 23% (unchanged through 2026). VAT 18% (raised from 17% in January 2025). PTE rate 12% (7.5% Area A); SPTE 6%. Section 102 capital-gains rate 25%, plus 3% (Section 121B(a)) and a further 2% (Section 121B(a1)) on capital-source income above NIS 721,560. OECD Pillar Two QDMTT applies for tax years starting after 31 December 2025. Closely-held companies pay a 2% company-level surcharge on undistributed excess profits under Section 81B from tax year 2025. Always verify current rates with the ITA before quoting.
 
 ## Troubleshooting
 
