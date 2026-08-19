@@ -7,7 +7,7 @@ whitespace collapse) required for fair HeQ scoring.
 Usage:
     python score_results.py --input eval-results/
     python score_results.py --input eval-results/ --normalize hebrew
-    python score_results.py --input eval-results/heq__claude-sonnet-4-6__run0.json
+    python score_results.py --input eval-results/heq__claude-opus-5__run0.json
 """
 
 import argparse
@@ -30,12 +30,23 @@ SOFIT_MAP = {
 
 NIKUD_RE = re.compile(r"[\u0591-\u05C7]")
 
+# U+05BE MAQAF is a word-JOINING hyphen, so it must become a space rather than
+# be deleted: deleting it turns "תל־אביב" into "תלאביב", which then fails to
+# match the spaced form "תל אביב" and silently costs you a correct answer.
+# It sits inside the NIKUD_RE range, so it has to be handled BEFORE that sub.
+MAQAF = "\u05BE"
+# Geresh (U+05F3) and gershayim (U+05F4) are not ASCII, so string.punctuation
+# does not touch them.
+GERESH_RE = re.compile(r"[\u05F3\u05F4]")
+
 
 def normalize_hebrew(text: str) -> str:
     """Hebrew-aware normalization for scoring."""
     if not text:
         return ""
     text = unicodedata.normalize("NFC", text)
+    text = text.replace(MAQAF, " ")
+    text = GERESH_RE.sub("", text)
     text = NIKUD_RE.sub("", text)
     for sofit, plain in SOFIT_MAP.items():
         text = text.replace(sofit, plain)
@@ -75,8 +86,14 @@ def score_heq(outputs: list[dict]) -> dict:
     f1_scores = []
     unanswerable_total = 0
     unanswerable_correct = 0
+    errored = 0
     for o in outputs:
         resp = (o.get("response") or "").strip()
+        if resp.startswith("__ERROR__"):
+            # An API failure is not a wrong answer. Counting it as one is how a
+            # rate-limited run gets reported as a model that performs badly.
+            errored += 1
+            continue
         ex = o.get("example", {})
         gold_answers = ex.get("answers", {}).get("text", [])
         is_unanswerable = len(gold_answers) == 0 or gold_answers == [""]
@@ -99,18 +116,52 @@ def score_heq(outputs: list[dict]) -> dict:
         ),
         "num_answerable": len(f1_scores),
         "num_unanswerable": unanswerable_total,
+        "num_errored": errored,
+        "error": (
+            f"all {len(outputs)} responses were API errors; this is a harness or "
+            "quota failure, not model performance."
+        ) if errored and not f1_scores and not unanswerable_total else None,
     }
+
+
+# Real Hebrew classification datasets do not agree on what the gold field is
+# called. HebArabNlpProject/HebrewSentiment, for example, has NO "label" field
+# at all: its gold value lives in "tag_ids". Reading a single hardcoded key
+# meant every gold lookup returned "", every example was skipped, and the
+# scorer reported a clean, plausible 0.0 for every model. Probe a candidate
+# list instead, and fail loudly rather than returning a fake zero.
+LABEL_KEY_CANDIDATES = ("label", "tag_ids", "gold", "answer", "sentiment", "class")
+
+
+def resolve_label(example: dict, label_key: str, valid_labels: set[str]) -> str:
+    """Find the gold label in an example, tolerating dataset field-name drift."""
+    keys = (label_key,) + tuple(k for k in LABEL_KEY_CANDIDATES if k != label_key)
+    for key in keys:
+        if key not in example:
+            continue
+        raw = str(example.get(key, "")).strip().upper()
+        if raw in valid_labels:
+            return raw
+    return ""
 
 
 def score_classification(outputs: list[dict], label_key: str, valid_labels: set[str]) -> dict:
     correct = 0
     total = 0
+    skipped = 0
+    errored = 0
     per_label_correct: Counter = Counter()
     per_label_total: Counter = Counter()
     for o in outputs:
-        resp = (o.get("response") or "").strip().upper().split("\n")[0].split()[0] if o.get("response") else ""
-        gold = str(o.get("example", {}).get(label_key, "")).upper()
+        raw_resp = (o.get("response") or "").strip()
+        if raw_resp.startswith("__ERROR__"):
+            errored += 1
+            continue
+        tokens = raw_resp.upper().split()
+        resp = tokens[0] if tokens else ""
+        gold = resolve_label(o.get("example", {}), label_key, valid_labels)
         if gold not in valid_labels:
+            skipped += 1
             continue
         total += 1
         per_label_total[gold] += 1
@@ -121,12 +172,24 @@ def score_classification(outputs: list[dict], label_key: str, valid_labels: set[
         label: per_label_correct[label] / per_label_total[label] if per_label_total[label] else 0.0
         for label in valid_labels
     }
-    macro_f1 = sum(per_label_acc.values()) / len(valid_labels) if valid_labels else 0.0
+    # This is the mean of per-label RECALL, not macro-F1: no precision term is
+    # computed anywhere here. Naming it macro_f1 put a misstated metric into
+    # procurement scorecards, so it is reported under its real name.
+    macro_recall = sum(per_label_acc.values()) / len(valid_labels) if valid_labels else 0.0
     return {
-        "accuracy": correct / total if total else 0.0,
-        "macro_f1": macro_f1,
+        "accuracy": correct / total if total else None,
+        "macro_recall": macro_recall if total else None,
         "per_label_accuracy": per_label_acc,
         "num": total,
+        "num_skipped_no_gold_label": skipped,
+        "num_errored": errored,
+        # A run where nothing was scorable is a pipeline failure, not a model
+        # scoring zero. Surface it instead of averaging a fake 0.0 into a rank.
+        "error": (
+            f"0 of {len(outputs)} examples had a usable gold label "
+            f"(tried {LABEL_KEY_CANDIDATES}). This is a field-name mismatch, "
+            "not model performance."
+        ) if total == 0 else None,
     }
 
 

@@ -55,14 +55,24 @@ def aggregate(scores: list[dict]) -> dict:
     return result
 
 
-def weighted_score(model_scores: dict, weights: dict) -> float:
+def weighted_score(model_scores: dict, weights: dict) -> tuple[float, float]:
+    """Return (weighted score, coverage) where coverage is the share of weight present.
+
+    Coverage is returned rather than swallowed because renormalising over only
+    the benchmarks a model happens to have present rewards the model that
+    FAILED its weakest benchmark: it gets averaged over its remaining, better
+    results and can outrank a model that was measured on everything.
+    """
     total = 0.0
     total_weight = 0.0
+    all_weight = sum(weights.values())
     for bench, w in weights.items():
         if bench in model_scores:
             total += model_scores[bench]["mean"] * w
             total_weight += w
-    return total / total_weight if total_weight else 0.0
+    score = total / total_weight if total_weight else 0.0
+    coverage = total_weight / all_weight if all_weight else 0.0
+    return score, coverage
 
 
 def render_markdown(agg: dict, weights: dict) -> str:
@@ -98,13 +108,20 @@ def render_markdown(agg: dict, weights: dict) -> str:
                     row.append(f"{s['mean'] * 100:.1f}")
             else:
                 row.append("-")
-        weighted = weighted_score(benches, weights) * 100
-        row.append(f"{weighted:.1f}")
-        model_rows.append((weighted, row))
+        weighted_raw, coverage = weighted_score(benches, weights)
+        weighted = weighted_raw * 100
+        if coverage < 1.0:
+            row.append(f"{weighted:.1f} (only {coverage * 100:.0f}% of weight measured)")
+        else:
+            row.append(f"{weighted:.1f}")
+        # Widest per-benchmark std, used below to say whether the top-two gap
+        # is bigger than the run-to-run noise behind it.
+        worst_std = max((s["std"] * 100 for s in benches.values()), default=0.0)
+        model_rows.append((weighted, row, coverage, worst_std))
 
     model_rows.sort(key=lambda x: -x[0])
-    for _, row in model_rows:
-        lines.append("| " + " | ".join(row) + " |")
+    for entry in model_rows:
+        lines.append("| " + " | ".join(entry[1]) + " |")
 
     lines.append("")
     lines.append("## Recommendation")
@@ -113,14 +130,40 @@ def render_markdown(agg: dict, weights: dict) -> str:
         winner = model_rows[0][1][0]
         winner_score = model_rows[0][0]
         lines.append(f"Top model by weighted score: **{winner}** ({winner_score:.1f})")
+        if model_rows[0][2] < 1.0:
+            lines.append("")
+            lines.append(
+                f"WARNING: {winner} was measured on only "
+                f"{model_rows[0][2] * 100:.0f}% of the weighted benchmarks. Its score is "
+                "renormalised over what it completed, so it is NOT comparable to a "
+                "fully measured model. Treat this ranking as provisional."
+            )
         if len(model_rows) > 1:
             runner = model_rows[1][1][0]
             gap = model_rows[0][0] - model_rows[1][0]
+            noise = max(model_rows[0][3], model_rows[1][3])
             lines.append(f"Runner-up: {runner} (gap: {gap:.1f} points)")
+            if noise and gap < 2 * noise:
+                lines.append("")
+                lines.append(
+                    f"WARNING: the {gap:.1f}-point gap is within twice the run-to-run "
+                    f"standard deviation ({noise:.1f}). This ranking is not "
+                    "distinguishable from noise. Do not report a winner on this "
+                    "evidence: add runs, add examples, or run a paired significance "
+                    "test on the per-example results."
+                )
+            elif not noise:
+                lines.append("")
+                lines.append(
+                    "NOTE: only one run per model, so there is no variance estimate "
+                    "and this gap cannot be called significant. Re-run with --runs 3."
+                )
     lines.append("")
     lines.append("## Notes")
     lines.append("")
     lines.append("- Results are per-benchmark primary metric (HeQ F1, sentiment accuracy, HebNLI accuracy).")
+    lines.append("- Scores across benchmarks are NOT commensurable: HeQ F1 has a nonzero floor, while the three-class tasks have a one-in-three chance baseline. The weighted column is a decision aid, not a measurement.")
+    lines.append("- Public-benchmark scores are partly a memorisation measurement. Anchor a procurement decision on a private held-out set built from your own Hebrew data.")
     lines.append("- Hebrew normalization applied: nikud stripped, sofit forms normalized, whitespace collapsed.")
     lines.append("- Multi-run mean and standard deviation where n_runs > 1.")
     lines.append("- Always verify with human evaluation on your specific use case before shipping.")

@@ -1,0 +1,21 @@
+{
+  "cycles": [
+    {
+      "version": "1.3.0",
+      "date": "2026-08-19",
+      "lessons": [
+        "Description was deliberately NOT changed this cycle, so the Phase 5.7 holdout gate did not run. The metadata display_description still claims the suite 'Runs evals against ... Llama, and local HuggingFace models', which the bundled run_eval.py does not implement (huggingface provider raises NotImplementedError, and Llama/Mistral are absent from SUPPORTED_MODELS). Next cycle: correct the description and run the holdout gate, or implement a local-inference path.",
+        "Expert MAJOR deferred: no Hebrew safety/refusal evaluation (false-compliance and over-refusal on Israeli security/military/political vocabulary are live product problems). Needs a dataset and a metric.",
+        "Expert MAJOR deferred: no instruction-following / structured-output eval in Hebrew (format adherence, 'answer only in Hebrew', JSON validity with Hebrew values). Probably the highest-value missing benchmark for real products.",
+        "Expert MAJOR deferred: asmachta, abstractive-qa-llm-eval and LCHAIM are listed in the Step 1 table but have no primary metric, no scorer, no prompt template and no BENCHMARKS entry. Either wire them up or move them to references as 'known but unwired'.",
+        "Expert MAJOR deferred: no code-switching, ktiv male vs ktiv haser, register, or grammatical-gender-agreement evaluation. normalize_hebrew() does not handle ktiv variants, which silently costs string-match F1.",
+        "Expert MAJOR deferred: provider terms-of-service on publishing named comparative benchmarks is unaddressed, and the skill's stated purpose is procurement publication.",
+        "Expert MAJOR deferred: human-eval protocol is one bullet (30-50 examples). Needs native-speaker raters, multiple raters, an inter-annotator agreement statistic, a rubric, and blind ordering.",
+        "Expert MINOR deferred: no latency or cost measurement in the pipeline, though Example 1 names both as decision inputs.",
+        "Expert MINOR deferred: leaderboard parity is promised but the bundled scorer computes SQuAD-style F1, not the leaderboard's TLNLS metric, so a leaderboard figure cannot actually be reproduced with it.",
+        "SKILL.md body is at ~4,890 words against a 5,000 cap. The next substantive addition must move a section to references/ first.",
+        "Method note for next cycle: the 'HebrewSentiment is gated' claim was introduced THIS cycle from a stale 'private: true' line in the dataset card frontmatter, and was false (the API reports gated=false, private=false, and an anonymous read succeeds). Check the HF repo API, not the card frontmatter, for access status."
+      ]
+    }
+  ]
+}

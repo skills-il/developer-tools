@@ -8,13 +8,11 @@ The Open Hebrew LLM Leaderboard is hosted by HuggingFace in collaboration with D
 
 ### HeQ (Hebrew Question Answering)
 
-- HuggingFace ID: `pig4431/HeQ_v1`
+- HuggingFace ID: `Etelis/HeQ_v1` (the older `pig4431/HeQ_v1` now 307-redirects here after a repo rename)
 - Original paper: Cohen et al., "HeQ: a Large and Diverse Hebrew Reading Comprehension Benchmark", EMNLP Findings 2023
 - Source: `https://aclanthology.org/2023.findings-emnlp.915.pdf`
 - Repository: `https://github.com/NNLP-IL/Hebrew-Question-Answering-Dataset`
-- Sample count: 30,147 questions total
-  - Answerable: 21,784 (answer present in paragraph)
-  - Unanswerable: 8,363 (question related to paragraph but answer not present)
+- Sample count: 30,147 questions total (per the HeQ paper and the dataset card). The answerable / unanswerable split is not stated on either source; count it yourself from the loaded split rather than quoting a figure.
 - Sources of paragraphs: Hebrew Wikipedia and Geektime (Israeli tech news)
 - Format: SQuAD-style extractive QA
 - Primary metric: F1 (not Exact Match, which is brittle on Hebrew)
@@ -27,10 +25,12 @@ Gotcha: treating Exact Match as the primary metric gives near-zero scores even o
 
 - HuggingFace ID: `HebArabNlpProject/HebrewSentiment`
 - Creator: Israel National NLP Program
-- License: CC-BY-4.0
-- Sample count: 41,305 total
-  - Train: 39,135 (positive 8,968, negative 7,669, neutral 22,498)
-  - Test: 2,170 (positive 503, negative 433, neutral 1,234)
+- License: `other` (verified on the dataset card 2026-08-19). NOT CC-BY-4.0. Read the card before any commercial use.
+- Access: public. The dataset card frontmatter still carries `private: true`, but that field is stale: the repo API reports `gated: false, private: false` and an anonymous `load_dataset` succeeds. Trust the API over the card field.
+- Gold label field: `tag_ids`, NOT `label`. Values are `Positive` / `Negative` / `Neutral` in title case. The row schema is `id, task_name, tag_ids, text, campaign_id, annotator_agreement_strength, survey_name, industry, type`. A scorer keyed on `label` matches nothing and silently returns 0.0 for every model.
+- Provenance caveat: the rows carry `survey_name` and `industry` fields (market-research surveys, e.g. tobacco), so this is consumer-survey text, not general social media. Check that the domain matches your product before treating a score here as representative.
+- Sample count: 43,645 rows total (train 35,135 / validation 2,000 / test 6,510), per the HuggingFace datasets-server size endpoint, 2026-08-19
+- Not the same data as the leaderboard's sentiment task, which uses an early Mafat/NNLP-IL subset of 3,000 examples. Scores from the two are not comparable.
 - Labels: Positive, Negative, Neutral
 - Primary metric: Accuracy
 - Secondary: Macro-F1 (important because of class imbalance)
@@ -39,7 +39,8 @@ Gotcha: treating Exact Match as the primary metric gives near-zero scores even o
 ### Hebrew Winograd Schema Challenge
 
 - Source: translation of the original Winograd Schema Challenge by Dr. Vered Schwartz
-- Sample count: under 300 items (exact count varies by version)
+- File: `https://www.cs.ubc.ca/~vshwartz/resources/winograd_he.jsonl` (verified reachable 2026-08-19)
+- Sample count: 278 items, matching the count the leaderboard documents for its Winograd task
 - Format: pronoun resolution with two candidate antecedents
 - Primary metric: Accuracy
 - High variance on single runs due to small dataset. Always report with standard deviation from multiple runs.
@@ -80,6 +81,26 @@ Source: DictaLM 3.0 Technical Report at `https://dicta.org.il/publications/Dicta
 - Secondary: per-category breakdown
 - Use case: any consumer-facing Hebrew product that needs cultural grounding
 
+## AlephBench and the 2026 HebArabNlpProject benchmarks
+
+The same body that runs the Open Hebrew LLM Leaderboard now publishes benchmarks directly as HuggingFace datasets. These are more reproducible than the DictaLM suite, whose task data is described in the technical report but not released as a downloadable dataset.
+
+| Dataset | HuggingFace ID | What it covers |
+|---------|---------------|----------------|
+| AlephBench | `HebArabNlpProject/AlephBench` | 11 Hebrew tasks, frozen prompts, per-row model outputs, CC-BY-4.0 |
+| Asmachta | `HebArabNlpProject/asmachta` | Attributed QA, a deliberate share of questions unanswerable, to measure hallucination vs abstention |
+| Abstractive QA eval | `HebArabNlpProject/abstractive-qa-llm-eval` | Grounding records for abstractive Hebrew QA |
+| LCHAIM | `HebArabNlpProject/LCHAIM` | Long-context Hebrew NLI |
+| HebSummaries | `HebArabNlpProject/HebSummaries` | Human-annotated Hebrew summarization; the downloadable substitute for the DictaLM Summarization task |
+| ASAS | `HebArabNlpProject/ASAS` | Short-answer scoring |
+
+## Hebrew MMLU
+
+- HuggingFace ID: `CohereLabs/Global-MMLU`, config `he`
+- Shipped as the native `global_mmlu` task in `lm-evaluation-harness`, which makes it the reproducible route to a Hebrew MMLU number
+- `openai/MMMLU` covers 14 languages and Hebrew is NOT among them. Do not substitute it.
+- Community Hebrew-MMLU forks exist and are not mutually comparable. Always name the fork you scored.
+
 ## Additional Hebrew datasets (not in the default suite)
 
 ### HebNLI
@@ -96,18 +117,19 @@ Source: DictaLM 3.0 Technical Report at `https://dicta.org.il/publications/Dicta
 ### Hebrew-Resources index
 
 - GitHub: `https://github.com/NNLP-IL/Hebrew-Resources`
-- Comprehensive listing of Hebrew NLP resources maintained by the Israeli National NLP Program. Check periodically for new benchmarks.
+- Listing of Hebrew NLP resources from the Israeli National NLP Program. Last pushed 2025-05-11, so treat it as a historical index rather than a current feed. The `HebArabNlpProject` HuggingFace org is where new benchmarks actually land.
 
 ## Licensing summary
 
-| Benchmark | License | Commercial use | Attribution |
-|-----------|---------|----------------|-------------|
-| HeQ | CC-BY (confirm current version) | Yes | Required |
-| HebrewSentiment | CC-BY-4.0 | Yes | Required |
-| Hebrew Winograd | Non-commercial (verify per port) | Check | Required |
+| Benchmark | License (verified 2026-08-19) | Commercial use | Attribution |
+|-----------|------------------------------|----------------|-------------|
+| HeQ | `cc-by-4.0` on the `Etelis/HeQ_v1` card | Yes | Required |
+| HebrewSentiment | `other` (repo itself is public) | Do NOT assume yes. Read the card | Required |
+| AlephBench | `cc-by-4.0` | Yes | Required |
+| Hebrew Winograd | Verify per port | Check | Required |
 | NeuLabs-TedTalks | CC-BY-NC-ND | Non-commercial only | Required |
-| DictaLM suite | Dicta terms (permissive for research) | Check per dataset | Required |
-| HebNLI | CC-BY (confirm) | Yes | Required |
+| DictaLM suite | Dicta terms; task data not released as a dataset | Check per dataset | Required |
+| HebNLI | `other` on the card | Check | Required |
 
 Always check the current license on the dataset card before commercial use. Licenses change.
 

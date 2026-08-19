@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "hebrew-llm-eval-suite",
-  "generated_at": "2026-05-20T00:00:00Z",
+  "generated_at": "2026-08-19T00:00:00Z",
   "claims": [
     {
       "claim_id": "open-hebrew-llm-leaderboard-blog",
@@ -18,12 +18,14 @@
       "claim_id": "hebrew-llm-leaderboard-space-2",
       "claim": "The live Open Hebrew LLM Leaderboard space is at huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard.",
       "source_url": "https://huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard",
-      "raw_snippet": "hebrew-llm-leaderboard",
+      "raw_snippet": "Hebrew LLM Leaderboard - a Hugging Face Space by hebrew-llm-leaderboard",
       "fetched_at": "2026-05-20T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "dictalm-3-tech-report",
@@ -101,12 +103,14 @@
       "claim_id": "inspect-ai",
       "claim": "UK AISI's Inspect framework for AI evaluations is hosted at github.com/UKGovernmentBEIS/inspect_ai.",
       "source_url": "https://github.com/UKGovernmentBEIS/inspect_ai",
-      "raw_snippet": "inspect_ai",
-      "fetched_at": "2026-05-20T00:00:00Z",
+      "raw_snippet": "Inspect: A framework for large language model evaluations",
+      "fetched_at": "2026-08-19T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "curl (repo page)",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "heq-paper",
@@ -159,14 +163,17 @@
     },
     {
       "claim_id": "hebrew-sentiment-dataset-2",
-      "claim": "HebrewSentiment is the Hebrew sentiment dataset published by the Israeli National NLP Program at huggingface.co/datasets/HebArabNlpProject/HebrewSentiment; verify license and split sizes on the live dataset card before commercial use.",
-      "source_url": "https://huggingface.co/datasets/HebArabNlpProject/HebrewSentiment",
-      "raw_snippet": "HebrewSentiment",
-      "fetched_at": "2026-05-20T00:00:00Z",
+      "claim": "HebArabNlpProject/HebrewSentiment is licensed 'other' (not CC-BY-4.0). The repo itself is public: the HF API reports gated=false and private=false, despite a stale 'private: true' line in the card frontmatter.",
+      "source_url": "https://huggingface.co/api/datasets/HebArabNlpProject/HebrewSentiment",
+      "raw_snippet": "\"gated\": false, \"private\": false",
+      "fetched_at": "2026-08-19T00:00:00Z",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
-      ]
+        "SKILL_HE.md",
+        "references/benchmark-catalog.md"
+      ],
+      "verified_via": "curl (HuggingFace datasets API) plus an anonymous datasets-server rows fetch returning HTTP 200",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "hebnli-dataset",
@@ -181,16 +188,16 @@
     },
     {
       "claim_id": "current-gen-models-2026",
-      "claim": "The Open Hebrew LLM Leaderboard evaluates models on four Hebrew-specific datasets built for the leaderboard.",
-      "source_url": "https://huggingface.co/blog/leaderboard-hebrew",
-      "raw_snippet": "We have developed four key datasets, each designed to test language models on their understanding an",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "claim": "The Open Hebrew LLM Leaderboard scores six tasks: SNLI Accuracy, QA TLNLS (HeQ), Sentiment Acc (Mafat), Winograd (Binary) Acc, Translation BLEU, and Israeli Trivia.",
+      "source_url": "https://huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard/raw/main/src/about.py",
+      "raw_snippet": "task5 = Task(\"custom|ilfacts-acc|0\", \"ilfacts_acc\", \"Israeli Trivia\")",
+      "fetched_at": "2026-08-19T00:00:00Z",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md",
-        "scripts/run_eval.py"
+        "SKILL_HE.md"
       ],
-      "verified_via": "curl (HuggingFace API / raw README / rendered page)"
+      "verified_via": "curl (raw src/about.py from the live Space)",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "cohere-labs-org-page",
@@ -229,6 +236,185 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "hebrew-sentiment-rowcount-2026",
+      "claim": "HebArabNlpProject/HebrewSentiment contains 43,645 rows (train 35,135 / validation 2,000 / test 6,510).",
+      "source_url": "https://huggingface.co/datasets/HebArabNlpProject/HebrewSentiment",
+      "raw_snippet": "Number of rows: 43,645",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (rendered dataset card)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/benchmark-catalog.md"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "leaderboard-winograd-278",
+      "claim": "The leaderboard's Hebrew Winograd task has 278 examples.",
+      "source_url": "https://huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard/raw/main/src/about.py",
+      "raw_snippet": "- **Number of examples**: 278 examples.",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (raw src/about.py)",
+      "appears_in": [
+        "references/benchmark-catalog.md"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "leaderboard-trivia-300",
+      "claim": "The Israeli Trivia task comprises 300 examples.",
+      "source_url": "https://huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard/raw/main/src/about.py",
+      "raw_snippet": "- **Number of examples**: 300 examples.",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (raw src/about.py)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "leaderboard-sentiment-is-mafat-subset",
+      "claim": "The leaderboard's sentiment split is an early Mafat/NNLP-IL subset and is explicitly different from the data on the HebrewSentiment HuggingFace card.",
+      "source_url": "https://huggingface.co/spaces/hebrew-llm-leaderboard/leaderboard/raw/main/src/about.py",
+      "raw_snippet": "(albeit it is different than the data we used)",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (raw src/about.py)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/benchmark-catalog.md"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "alephbench-dataset",
+      "claim": "AlephBench is a reproducible Hebrew LLM benchmark of 11 tasks with frozen prompts, licensed cc-by-4.0.",
+      "source_url": "https://huggingface.co/datasets/HebArabNlpProject/AlephBench",
+      "raw_snippet": "pretty_name: AlephBench",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (raw dataset card README)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/benchmark-catalog.md"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "global-mmlu-hebrew",
+      "claim": "CohereLabs/Global-MMLU is a HuggingFace dataset that includes a Hebrew (he) configuration, used as the reproducible Hebrew MMLU route.",
+      "source_url": "https://huggingface.co/datasets/CohereLabs/Global-MMLU",
+      "raw_snippet": "Global MMLU",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (rendered dataset card)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/benchmark-catalog.md"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "anthropic-model-ids-2026-08",
+      "claim": "Current Claude model IDs are claude-fable-5, claude-opus-5, claude-sonnet-5 and claude-haiku-4-5, and they carry no date suffix.",
+      "source_url": "https://docs.claude.com/en/docs/about-claude/models/overview",
+      "raw_snippet": "Claude Opus 5 for complex agentic coding and enterprise work.",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (rendered models overview)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/run_eval.py"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "openai-model-ids-2026-08",
+      "claim": "OpenAI's current published model family is gpt-5.6, with variants gpt-5.6-sol, gpt-5.6-terra and gpt-5.6-luna. There is no standalone gpt-5 id.",
+      "source_url": "https://developers.openai.com/api/docs/models",
+      "raw_snippet": "Frontier model for complex professional work Model ID gpt-5.6-sol",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (rendered models page)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/run_eval.py"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "gemini-model-ids-2026-08",
+      "claim": "Google's current stable Gemini ids include gemini-3.7-flash, gemini-3.5-flash and gemini-2.5-pro; gemini-3-pro-preview and gemini-3-flash-preview are preview-only.",
+      "source_url": "https://ai.google.dev/gemini-api/docs/models",
+      "raw_snippet": "/gemini-api/docs/models/gemini-3.7-flash /gemini-api/docs/models/gemini-3.6-flash",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (rendered models page)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/run_eval.py"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "ai21-jamba-ids-2026-08",
+      "claim": "AI21's callable Jamba model ids are the unversioned aliases jamba-large and jamba-mini plus versioned ids such as jamba-large-1.7 and jamba-mini-2.",
+      "source_url": "https://docs.ai21.com/docs/jamba-foundation-models",
+      "raw_snippet": "jamba-large currently points to jamba-large-1.7-2025-07",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (rendered docs page)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/run_eval.py"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "inspect-evals-171",
+      "claim": "The inspect_evals companion repo ships 171 pre-built evals.",
+      "source_url": "https://ukgovernmentbeis.github.io/inspect_evals/",
+      "raw_snippet": "171 evals",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (rendered docs index)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "hebrew-winograd-file",
+      "claim": "The Hebrew Winograd resource file is hosted at cs.ubc.ca/~vshwartz/resources/winograd_he.jsonl and contains 278 items.",
+      "source_url": "https://www.cs.ubc.ca/~vshwartz/resources/winograd_he.jsonl",
+      "raw_snippet": "\"question\": \"מי צפו אלימות?\", \"option1\": \"המפגינים\", \"option2\": \"חברי המועצה\"",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_via": "curl (HTTP 200, 278 lines counted)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/benchmark-catalog.md"
+      ],
+      "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "hebrew-sentiment-label-field",
+      "claim": "The gold label in HebArabNlpProject/HebrewSentiment lives in a field named tag_ids (values Positive/Negative/Neutral), not label.",
+      "source_url": "https://datasets-server.huggingface.co/rows?dataset=HebArabNlpProject%2FHebrewSentiment&config=default&split=train&offset=0&length=1",
+      "raw_snippet": "\"name\": \"tag_ids\"",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_at": "2026-08-19",
+      "verified_via": "curl (HuggingFace datasets-server rows endpoint, anonymous)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/benchmark-catalog.md",
+        "scripts/score_results.py"
       ]
     }
   ]
