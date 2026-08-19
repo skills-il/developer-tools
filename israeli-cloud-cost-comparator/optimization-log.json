@@ -1,0 +1,17 @@
+{
+  "cycles": [
+    {
+      "version": "1.4.0",
+      "date": "2026-08-19",
+      "lessons": [
+        "Deferred: the Hebrew body is still over the 5,000-word validator cap (5,273 vs a 5,352 baseline). This cycle moved the credits and GPU-pricing blocks into references/pricing-and-credits-he.md, which brought it below where it started but not under the cap. Next cycle, move the Step 6 compliance prose or the Step 8 latency table out as well. The English body passes at 4,924.",
+        "Deferred: the latency table in Step 8 has no published source for any of its figures. They are plausible against fibre distance but none is cited, and the Hetzner Falkenstein (60-75 ms) versus DigitalOcean Frankfurt (45-65 ms) spread is not defensible for two German data centres. Either cite a public measurement source or widen them to bands.",
+        "Deferred: the skill still asserts Azure Israel Central VMs are '5-12% more expensive than West Europe'. That specific percentage band was not verified this cycle. The absolute figure was cross-checked instead (Standard_D4s_v5 Linux at $0.224/hr), so the sanity band holds even though the premium claim does not have a source.",
+        "Open question: whether il-central-1 offers any H100-class instance family. A research pass suggested the only 8-GPU accelerated instance in the Tel Aviv on-demand feed is p4de.24xlarge (A100 80GB), which would make Step 9b's 'inference on AWS il-central-1' advice need a caveat. NOT confirmed this cycle, so nothing was written into the skill. Verify against the AWS price list API next cycle before asserting it either way.",
+        "Process lesson: a research subagent reported RunPod H100 at $2.89-$3.29 and implied the skill's $1.99-$2.69 was stale. The live pricing page shows Community Cloud at $1.99 / $2.59 / $2.69, so the figure already in the skill was correct and applying the reported correction would have introduced an error. Only Lambda's range had actually moved. Verify every reported price against the provider page before changing it.",
+        "Process lesson on evidence sourcing: a live FX quote page is unusable as a citation because its number changes on every fetch (2.9772, 2.9766, 2.9763 within one hour), so any pinned snippet fails the next source check. The dated Bank of Israel SDMX observation is stable and re-checkable forever, and is marked verified_via api because the endpoint is CSV with no prose to quote. Prefer dated observations over live tickers for anything that goes into evidence.json.",
+        "Structural change worth keeping: all volatile pricing and credit figures now live in references/pricing-and-credits.md (and the Hebrew mirror) with a single 'read on 19 August 2026' stamp at the top. That file is designed to be re-verified and replaced as a unit each cycle, rather than hunting figures scattered through the body. Next cycle, start there."
+      ]
+    }
+  ]
+}

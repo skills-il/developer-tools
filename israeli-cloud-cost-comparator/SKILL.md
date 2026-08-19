@@ -2,8 +2,7 @@
 name: israeli-cloud-cost-comparator
 description: Compare cloud hosting costs for Israeli startups and developers across AWS (il-central-1 Tel Aviv), Azure (Israel Central), GCP (me-west1 Tel Aviv), Oracle Cloud (il-jerusalem-1 Jerusalem), and Israeli providers like Kamatera. Use when the user needs to evaluate cloud pricing with Israel-specific considerations including data residency under Privacy Protection Law Amendment 13, latency from Tel Aviv, NIS billing options, startup credit programs (AWS Activate, Google for Startups, Microsoft Founders Hub, Israel Innovation Authority Telem program with subsidized Nvidia B200 GPUs), and FinOps cost optimization strategies. Do NOT use for comparing on-premise hosting, colocation services, or non-cloud SaaS pricing.
 license: MIT
-version: 1.3.0
-allowed-tools: Bash(node:*) Bash(python:*) WebFetch
+allowed-tools: Bash(node:*) Bash(python3:*) WebFetch
 ---
 
 
@@ -75,7 +74,7 @@ GCP's `me-west1` region is located in Tel Aviv, opened in 2022 and reached gener
 - Firebase hosting with me-west1 backend provides low-latency full-stack hosting
 - GCP for Startups program is active in Israel (see Step 7)
 
-**Pricing URL:** `https://cloud.google.com/products/compute/pricing` (filter by region: me-west1)
+**Pricing URL:** `https://cloud.google.com/products/compute/pricing/general-purpose` with the region selector set to Tel Aviv (me-west1). The shorter `/products/compute/pricing` and `/compute/all-pricing` URLs now redirect to a marketing page carrying no tables, which is a common way an agent ends up quoting from memory.
 
 ### Step 4: Compare Microsoft Azure
 
@@ -97,7 +96,7 @@ Azure serves Israel primarily through the following regions:
 
 **Azure advantages:**
 - Strong Microsoft enterprise ecosystem integration (Active Directory, Office 365, Teams)
-- Azure Government cloud for Israeli government contracts
+- Note that **Azure Government is not relevant here**: it is a US-sovereign cloud for US federal, state, local and DoD customers, not something an Israeli government buyer can procure. Microsoft competes for Israeli public-sector work through its commercial Israel Central region and separate government channels
 - Dev/Test pricing: significant discounts for non-production workloads
 - Azure Reserved Instances: 1-year (up to 40% off) or 3-year (up to 65% off)
 
@@ -147,7 +146,7 @@ For specific use cases, Israeli cloud providers may offer advantages:
 
 **Akamai / Linode**: Akamai has a Tel Aviv office but as of May 2026 there is no Linode Connected Cloud data center in Israel. Israeli users typically route to Linode's Frankfurt or Amsterdam regions, which adds 45-55 ms of latency. Do not recommend Linode as an "Israeli region" option.
 
-**DigitalOcean, Vultr, Hetzner, OVH**: none operate a data center in Israel. Israeli users on these platforms typically use Frankfurt (Hetzner, DigitalOcean), Strasbourg (OVH), or Amsterdam, with 45-65 ms latency to Tel Aviv. Hetzner is the lowest-cost EU option for non-residency-sensitive workloads (cloud servers from approximately €4.59/month).
+**DigitalOcean, Vultr, Hetzner, OVH**: none operate a data center in Israel. Israeli users on these platforms typically use Frankfurt (Hetzner, DigitalOcean), Strasbourg (OVH), or Amsterdam, with 45-65 ms latency to Tel Aviv. Hetzner is the lowest-cost EU option for non-residency-sensitive workloads, but it is no longer as cheap as older comparisons suggest: its 15 June 2026 price adjustment took the entry CX23 from €3.99 to €5.49/month net, with some CPX and CCX lines rising considerably more. Quote €5.49/month as the current floor, not the €4-ish figure that circulates.
 
 ### Step 6: Compare Data Residency and Compliance
 
@@ -199,30 +198,20 @@ Project Nimbus is the $1.2 billion Israeli-government cloud contract awarded to 
 
 Credits can change the comparison entirely. A provider 20% more expensive on list price may be cheapest for 6-12 months if the user has credits there. Always check before recommending.
 
-#### 7a. Free Tier and Trial Credits
+#### 7a and 7b: Free Tiers, Trials and Startup Credit Programmes
 
-| Provider | Trial Credits | Trial Duration | Always-Free Tier |
-|----------|--------------|----------------|------------------|
-| AWS | Free Tier (service-based limits) | 12 months | 30+ services with monthly limits (Lambda 1M req, DynamoDB 25GB) |
-| GCP | $300 | 90 days | 30+ services (Cloud Run 2M req, Firestore 1GB) |
-| Azure | $200 | 30 days | 65+ always-free + 25 services free for 12 months |
+The per-provider trial credits, always-free catalogues, and every startup-credit programme (AWS
+Activate, Google for Startups, Microsoft Founders Hub, the IIA grants and the Telem B200 programme)
+live in `references/pricing-and-credits.md`, with the amounts as read on 19 August 2026.
 
-AWS gives service-based limits (no lump sum); GCP's $300 is the most generous up-front credit; Azure's $200 expires fastest but has the largest always-free catalog.
+Read that file before quoting any figure. Three things there are counter-intuitive enough to state
+up front:
 
-#### 7b. Startup Credit Programs (For Registered Companies)
-
-| Program | Credits | Duration | How to Apply |
-|---------|---------|----------|--------------|
-| AWS Activate (Portfolio) | Up to $100,000 | 1-2 years | Through approved accelerators, or AWS Israeli startup team. `https://aws.amazon.com/startups/credits/` |
-| AWS Activate Founder (self-funded) | $1,000 | 2 years | Self-service via the AWS Activate console |
-| AWS Generative AI tier (foundation-model startups) | Up to $300,000 | Project-based | Selective; apply through AWS Activate with an AI-startup track |
-| Google Cloud for Startups | Up to $100,000 (year 1) + $20,000 (year 2) | 2 years | Through Google for Startups Campus Tel Aviv. `https://cloud.google.com/startup` |
-| Microsoft Founders Hub (self-serve) | $25,000 | 2 years | Self-service via Founders Hub portal |
-| Microsoft Founders Hub (top tier, VC- or accelerator-backed) | Up to $150,000 | 1-2 years | Through Microsoft Ventures Israel. `https://www.microsoft.com/en-us/startups` |
-| Israel Innovation Authority, standard R&D grant | Typically 20-50% of approved R&D expenses (including cloud) | Per approved project | Israel Innovation Authority, repayable as royalties if the company commercializes |
-| Israel Innovation Authority, Telem Program (subsidized B200 access via Nebius) | Reduced-price access to a slice of a 1,000-Nvidia-B200 supercomputer | 1-6 month allocations | `https://innovationisrael.org.il`. Minimum request: 16 B200s for companies, 8 for academic groups. 70% reserved for hi-tech, 30% for academic research |
-
-**Recommendation**: Early-stage startups should apply to all three hyperscaler programs in parallel. Combined credits can reach $350,000+ (with the AWS AI tier for foundation-model work), covering 1-2 years of near-free hosting. AI-heavy startups should also apply for the IIA Telem allocation, which is materially cheaper per B200-hour than on-demand H100/H200 at the hyperscalers and keeps training data inside Israel.
+- **AWS's free tier is no longer per-service limits for 12 months.** It is a lump sum of up to $200,
+  and the account closes itself after 6 months or when the credits run out.
+- **The published startup-credit ceilings moved up sharply in 2026** and most secondary write-ups
+  still quote the old ones.
+- **The ceilings are ceilings.** Quote them as such, not as expected awards.
 
 #### 7c. Other Credit Sources
 
@@ -275,8 +264,8 @@ Build a comprehensive comparison including:
 2. **Storage**: Object + block + database storage
 3. **Network**: Egress, inter-region, CDN
 4. **Managed services**: Databases, caches, queues, monitoring
-5. **Support**: Basic (free), Developer ($29/mo), Business (from $100/mo), Enterprise
-6. **Currency impact**: AWS, GCP, Oracle bill in USD; Azure offers some NIS billing via Israeli enterprise agreements. USD/ILS in 2026 has run 3.10-3.20 (vs. ~3.70 in 2024), so a NIS cloud budget set at the older rate is now ~15-20% too generous in USD terms. Use a 3-month trailing Bank of Israel average and rebudget quarterly.
+5. **Support**: AWS renamed and restructured its plans. There is no longer a Developer or a Business tier; the three paid plans are **Business Support+** (minimum spend $29/month per account), **Enterprise Support** ($5k/month) and **Unified Operations** ($50k/month), each priced as the greater of the minimum spend or a percentage of monthly AWS charges. Quoting "Developer $29 / Business $100" is out of date.
+6. **Currency impact**: AWS, GCP, Oracle bill in USD; Azure offers some NIS billing via Israeli enterprise agreements. The shekel has kept strengthening: the Bank of Israel representative rate was **2.985 on 19 August 2026**, against about 3.70 in 2024, having traded in the high 2.9s to low 3.0s through August. A NIS cloud budget set at the 2024 rate now buys roughly 20-25% more USD than it was sized for. For budgeting, use the Bank of Israel representative rate rather than any figure quoted here, and rebudget quarterly on a 3-month trailing average.
 7. **Hidden costs**: NAT Gateway (AWS), premium networking (GCP), diagnostic logging (Azure)
 
 **Cost comparison table format:**
@@ -289,25 +278,31 @@ Build a comprehensive comparison including:
 | Managed PostgreSQL | $X/month | $X/month | $X/month | $X/month | N/A |
 | **Total** | **$X/month** | **$X/month** | **$X/month** | **$X/month** | **$X/month** |
 
-**2026 anchor (verify on provider page):** GCP me-west1 `n2-standard-4` (4 vCPU, 16 GB) was ~$0.214/hr on-demand (~$156/mo); 1yr CUD ~$0.135/hr (~$98/mo); 3yr CUD ~$0.096/hr (~$70/mo); spot ~$0.073/hr (~$53/mo). Sanity check: a 4 vCPU / 16 GB Israeli-region VM should land in $130-200/month on-demand at any hyperscaler.
+**2026 anchor (verify on the provider page before quoting):** GCP me-west1 `n2-standard-4` (4 vCPU, 16 GB) at ~$0.214/hr on-demand (~$156/mo). The commitment figures below are the **resource-based** CUD column, ~$0.135/hr 1yr and ~$0.096/hr 3yr; note that Flexible CUDs are *more* expensive per hour, so name which column you are quoting. Cross-check: Azure Israel Central `Standard_D4s_v5` Linux on-demand is $0.224/hr (~$164/mo) per the Azure retail price API. Sanity check: a 4 vCPU / 16 GB Israeli-region VM should land in $130-200/month on-demand at any hyperscaler, and both of those figures sit inside it.
 
 ### Step 9b: GPU and AI Workload Pricing
 
-GPU pricing is a separate cost axis. The 2026 market has bifurcated:
+GPU pricing is a separate cost axis, and it is the fastest-drifting data in this skill. The current
+hyperscaler and specialty per-GPU-hour rates, the H200/B200 rates, and the IIA Telem route all live
+in `references/pricing-and-credits.md`.
 
-**Hyperscaler list (per H100 GPU-hour, on-demand):** AWS ~$6.88 (p5 8-GPU $55-60/hr); GCP A3 ~$10-11 (8-GPU $80-90/hr); Azure NC-H100 ~$6.98 (East US). AWS savings plans / reserved capacity bring effective rates closer to ~$1.90/GPU-hr.
+The shape of the market, which changes more slowly than the numbers:
 
-**Specialty clouds (per H100 GPU-hour, on-demand):** Lambda Labs $2.49-$3.44; RunPod $1.99-$2.69; Vast.ai from $1.49. Typically 40-85% cheaper than hyperscalers but no Israeli presence (80-150 ms latency) and fewer managed services.
-
-**H200 / B200:** Lambda H200 $4.99-$5.29/hr; GMI Cloud H200 $2.60/hr; B200 specialty on-demand $5-7/hr.
-
-**IIA Telem Program (Nebius):** Subsidized B200 access for Israeli companies and academic groups, 70/30 hi-tech/academia split. 1-6 month allocations, min 16 B200s (8 for academic). Reduced pricing vs. commercial, data stays in Israel. Most cost-effective AI training option for Israeli startups that can plan in 1-6 month blocks; apply before committing to a hyperscaler GPU reservation.
+- Specialty clouds (Lambda, RunPod, Vast.ai) undercut hyperscaler list prices, but the gap narrowed
+  through 2026 and none of them has an Israeli region, so expect 80-150 ms from Tel Aviv.
+- Israeli-region GPU availability is thin; check the region's accelerator catalogue before promising
+  a specific instance family in il-central-1 or me-west1.
+- For an Israeli AI startup doing real training rather than inference, the IIA Telem allocation is
+  worth pursuing before committing to a hyperscaler GPU reservation, both on price and because the
+  training data stays in Israel.
 
 **GPU recommendation framework:**
-- **Inference, latency-sensitive, Israeli users**: GCP me-west1 T4/L4 if available, or AWS il-central-1
-- **Training, no residency, budget-sensitive**: Lambda / RunPod / Vast.ai in EU or US
-- **Training, Israeli AI R&D**: Apply for IIA Telem first; fall back to specialty providers
-- **Steady-state inference at scale**: AWS Savings Plans on g5/g6 or GCP CUDs close most of the gap with specialty providers above ~60% utilization
+- **Inference, latency-sensitive, Israeli users**: an Israeli-region GPU instance if the family is
+  available, otherwise accept the EU hop
+- **Training, no residency requirement, budget-sensitive**: specialty providers in the EU or US
+- **Training, Israeli AI R&D**: apply for IIA Telem first, fall back to specialty providers
+- **Steady-state inference at scale**: commitment discounts close most of the gap with specialty
+  providers above roughly 60% utilisation
 
 ### Step 10: Present Recommendations
 
@@ -347,7 +342,7 @@ Actions:
 4. Calculate reserved instance pricing for predictable workloads (1-year and 3-year options)
 5. Include migration costs: AWS Migration Hub or Azure Migrate tooling, network setup, testing
 
-Result: Recommend Azure Israel Central as primary due to hybrid licensing benefits (bring existing Windows/SQL Server licenses) and strong financial services compliance posture. AWS il-central-1 as alternative if the team has more AWS expertise. Estimated monthly cost: $15,000-25,000/month with 3-year reserved instances. Highlight Azure's government cloud option for any future government contracts.
+Result: Recommend Azure Israel Central as primary due to hybrid licensing benefits (bring existing Windows/SQL Server licenses) and strong financial services compliance posture. AWS il-central-1 as alternative if the team has more AWS expertise. Estimated monthly cost: $15,000-25,000/month with 3-year reserved instances. Do NOT pitch Azure Government for future Israeli government contracts: it is a US-sovereign cloud for US government customers. For Israeli public-sector work the relevant conversation is the commercial Israel Central region plus the applicable tender requirements.
 
 ### Example 3: Developer Choosing Hosting for a Side Project
 
@@ -360,10 +355,12 @@ Actions:
 4. Check if GPU instances are available in Israeli regions (limited availability)
 5. Evaluate alternatives: Kamatera GPU instances, or Lambda Labs / RunPod for inference-only
 
-Result: For an inference-only side project the cheapest path in 2026 is a specialty GPU provider (Lambda Labs, RunPod, or Vast.ai) running an L4 or T4-class instance at roughly $0.40-$1.00/hour, paired with a small managed PostgreSQL anywhere, GCP me-west1 Cloud SQL micro, AWS RDS db.t4g.micro in il-central-1, or even a Kamatera VM for the database. If the side project needs Israeli residency or sub-5 ms latency, use GCP me-west1 with a preemptible/spot GPU instance plus Cloud SQL micro. Estimated cost in the lower-cost specialty-provider path: roughly 150-350 NIS/month at the current ~3.10 ILS/USD rate. For an Israeli AI startup with actual training (not just inference) workloads, recommend applying to the Israel Innovation Authority Telem program for subsidized Nvidia B200 access via Nebius before locking in a hyperscaler GPU reservation. For ultra-low cost, suggest running inference on CPU with quantized models if latency tolerance allows.
+Result: For an inference-only side project the cheapest path in 2026 is a specialty GPU provider (Lambda Labs, RunPod, or Vast.ai) running an L4 or T4-class instance at roughly $0.40-$1.00/hour, paired with a small managed PostgreSQL anywhere, GCP me-west1 Cloud SQL micro, AWS RDS db.t4g.micro in il-central-1, or even a Kamatera VM for the database. If the side project needs Israeli residency or sub-5 ms latency, use GCP me-west1 with a preemptible/spot GPU instance plus Cloud SQL micro. Estimated cost in the lower-cost specialty-provider path: roughly 150-350 NIS/month at a rate near 3.0 ILS/USD (check the current Bank of Israel rate before quoting). For an Israeli AI startup with actual training (not just inference) workloads, recommend applying to the Israel Innovation Authority Telem program for subsidized Nvidia B200 access via Nebius before locking in a hyperscaler GPU reservation. For ultra-low cost, suggest running inference on CPU with quantized models if latency tolerance allows.
 
 ## Gotchas
 
+- **Every list price in this skill has a shelf life of weeks, and the credit programmes move too.** Between the last review and this one, AWS replaced its whole free tier, renamed all three support plans, doubled Activate Portfolio, and Google restructured its startup programme; Hetzner raised prices and Lambda's H100 rate rose by roughly 60%. Treat every number here as a starting anchor to re-verify on the provider's page, and tell the user the date you checked. An agent quoting these figures as current, months later, is the single most likely failure mode of this skill.
+- **The shekel moved against the dollar far more than most budgets assume.** USD/ILS was about 3.70 in 2024 and 2.985 on 19 August 2026. Any NIS budget, conversion or example carried over from older material is materially wrong, including examples inside this skill.
 - **Credits blind spot**: When a user mentions having credits or promotions on one provider, agents tend to immediately recommend that provider without checking if other providers offer similar or better deals. Always compare credit programs across ALL providers before recommending. A user with $100 AWS credits may not know that GCP offers $300 in trial credits, that Azure Founders Hub offers up to $150,000 for VC-backed startups, or that the Israel Innovation Authority Telem program offers subsidized B200 GPU access for AI training.
 - AWS Israel region (il-central-1) pricing differs from eu-west-1 and other regions. Agents may use global pricing that does not reflect the Israeli region premium.
 - **Oracle il-jerusalem-1 is in Israel even though OCI is sometimes overlooked.** Do not tell users "there is no Oracle Israeli region", there has been one (in an underground Jerusalem bunker) since July 2021.
@@ -371,7 +368,7 @@ Result: For an inference-only side project the cheapest path in 2026 is a specia
 - **Akamai/Linode does not have an Israeli data center.** Akamai has a Tel Aviv office, but Linode Connected Cloud does not have an Israel location. Frankfurt is the typical fallback (45-65 ms latency).
 - Israeli cloud costs should be calculated in NIS including 18% VAT for B2C, but excluding VAT for B2B with valid tax invoice. Agents may forget to add VAT for consumer-facing comparisons.
 - **Cross-border transfer requires a documented basis under Privacy Protection Law Amendment 13** (in force since August 14, 2025). Do not silently default to eu-west-1 or europe-west4 for an Israeli SaaS handling personal data, the choice needs to fit one of the Section 2 exceptions (adequate jurisdiction list, controller-responsibility under the April 2026 PPA guidance, etc.). Israeli data residency requirements for government contracts may mandate hosting within Israel; agents may otherwise recommend cheaper international regions that violate these requirements.
-- **Currency drift**: USD/ILS has dropped from roughly 3.70 in 2024 to roughly 3.10 in 2026. A NIS budget that was set at the older rate is now ~15-20% too generous in USD terms. Right-size the budget to current rates rather than recycling old conversions.
+- **Currency drift**: USD/ILS has fallen from roughly 3.70 in 2024 to **2.985 on 19 August 2026** (Bank of Israel representative rate). A NIS budget set at the older rate is now roughly 20-25% too generous in USD terms. Right-size to the current Bank of Israel representative rate rather than recycling an old conversion, including any figure quoted in this skill.
 - **Project Nimbus is not a startup option.** Do not recommend Project Nimbus to commercial customers, it is a government sovereign-tenant contract on AWS and Google, not a public cloud product.
 - Shabbat and holiday periods can affect spot instance pricing and availability in the Israel region differently than other regions due to reduced local demand.
 
@@ -388,7 +385,7 @@ Common cost drivers: data transfer, NAT Gateway (AWS), premium networking (GCP),
 1. Enable billing alerts and budgets
 2. Review billing by service to find top drivers
 3. Fix common culprits:
-   - **NAT Gateway (AWS)**: $0.045/GB processed. Use VPC endpoints for S3/DynamoDB
+   - **NAT Gateway (AWS)**: about $0.045/GB processed, but the rate is region-dependent and this figure is the US East one, so check the il-central-1 page before quoting it to an Israeli deployment. Use VPC endpoints for S3/DynamoDB
    - **Egress**: Use CloudFront/CDN for static assets; compress API responses
    - **Idle resources**: Stopped instances, unattached EBS volumes, unused Elastic IPs
    - **Over-provisioned DBs**: RDS/Cloud SQL often at 10-20% utilization, right-size or use serverless
@@ -403,7 +400,7 @@ AWS and GCP bill in USD. Azure offers some NIS billing via Israeli enterprise ag
 **Provider pricing pages (always treat as the source of truth, since list prices change quarterly):**
 - AWS EC2 on-demand pricing: `https://aws.amazon.com/ec2/pricing/on-demand/`
 - AWS pricing calculator: `https://calculator.aws/`
-- GCP Compute Engine pricing: `https://cloud.google.com/compute/all-pricing`
+- GCP Compute Engine pricing (deep links, the old `/compute/all-pricing` and `/products/compute/pricing` URLs now redirect to a marketing page with no price tables): general-purpose `https://cloud.google.com/products/compute/pricing/general-purpose`, accelerators `https://cloud.google.com/products/compute/pricing/accelerator-optimized`
 - GCP pricing calculator: `https://cloud.google.com/products/calculator`
 - Azure pricing calculator: `https://azure.microsoft.com/en-us/pricing/calculator/`
 - Azure VMs pricing: `https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/`
@@ -411,7 +408,7 @@ AWS and GCP bill in USD. Azure offers some NIS billing via Israeli enterprise ag
 - Oracle Cloud cost estimator: `https://www.oracle.com/il-en/cloud/costestimator.html`
 
 **Israeli region announcements and service availability:**
-- AWS Israel (Tel Aviv) region: `https://aws.amazon.com/about-aws/whats-new/2023/08/aws-israel-tel-aviv-region/`
+- AWS Israel (Tel Aviv) region launch: `https://aws.amazon.com/blogs/aws/now-open-aws-israel-tel-aviv-region/`
 - AWS regional service availability: `https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/`
 - GCP locations and services per region: `https://cloud.google.com/about/locations`
 - Azure products by region: `https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/`

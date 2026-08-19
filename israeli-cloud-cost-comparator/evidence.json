@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0",
   "skill": "israeli-cloud-cost-comparator",
-  "version": "1.3.0",
-  "generated_at": "2026-08-13",
+  "version": "1.4.0",
+  "generated_at": "2026-08-19T15:49:19Z",
   "generated_by": "evidence re-verification pass (raw_snippet migration, August 2026)",
   "notes": "Every raw_snippet below was copied literally from the page at its source_url on 2026-08-13. Cloud pricing and startup-credit tiers move quarterly; several entries record that the live page NO LONGER matches the figure SKILL.md quotes. Those mismatches are flagged in the claim text and need a content fix, not an evidence fix.",
   "claims": [
@@ -163,12 +163,14 @@
     },
     {
       "id": "usd-ils-2026-level",
-      "claim": "USD/ILS is trading near 2.98 in August 2026 (Trading Economics' live page read 2.9787 on 13 August 2026, and forecasts 2.98 for the end of the quarter), below the 3.10-3.20 band SKILL.md cites for 2026 and far below the ~3.70 level of 2024. The SKILL.md band, and the ~2.93-3.19 spot range in SKILL_HE.md, should be restated.",
-      "source_url": "https://tradingeconomics.com/israel/currency",
-      "raw_snippet": "Historically, the USDILS reached an all time high of 5.01 in June of 2002.",
+      "claim": "The Bank of Israel USD/ILS representative rate was 2.985 on 19 August 2026, against about 3.70 in 2024. The market spot rate the same day was about 2.977.",
+      "source_url": "https://edge.boi.org.il/FusionEdgeServer/sdmx/v2/data/dataflow/BOI.STATISTICS/EXR/1.0/RER_USD_ILS?startperiod=2026-08-18&format=csv",
+      "raw_snippet": "RER_USD_ILS 2026-08-19 2.985 (Bank of Israel representative rate)",
       "verified": true,
-      "confidence": "medium",
-      "note": "The quoted sentence is the page's stable historical line; the 2.9787 spot print is a live value read on 2026-08-13 and will drift, so it is stated in the claim with its date rather than quoted. The former source (exchange-rates.org) returns HTTP 403 to non-browser clients."
+      "confidence": "high",
+      "note": "Read directly from the Bank of Israel SDMX representative-rate feed on 2026-08-19. The response row for 2026-08-19 is `RER_USD_ILS,D,USD,ILS,ILS,OF00,BOI_MRKT,V,F,Y,0,,2026-08-19,2.985,YP`, with 2026-08-18 at 2.986, 2026-08-17 at 2.95, 2026-08-14 at 2.954 and 2026-08-04 at 3.03. Marked verified_via api because this is a machine-readable CSV endpoint with no prose to quote, and boi.org.il's HTML pages sit behind Radware Bot Manager. A live FX quote page was tried first and rejected as a source: its figure changes on every fetch (2.9772, then 2.9766, then 2.9763 within the hour), so pinning a snippet to it guarantees a false failure on the next check. The dated BOI observation is stable and re-checkable forever. This replaces the skill's previous '3.10-3.20 in 2026', which sat above the actual August band.",
+      "verified_at": "2026-08-19T15:49:19Z",
+      "verified_via": "api"
     },
     {
       "id": "h100-hyperscaler-pricing",
@@ -180,11 +182,13 @@
     },
     {
       "id": "h100-specialty-pricing",
-      "claim": "Specialty GPU clouds price H100 well below hyperscalers: Vast.ai 1.87, RunPod 1.99, Lambda Labs 2.99 per GPU-hour against Microsoft Azure 6.98. SKILL.md line 300's ranges (Lambda $2.49-$3.44, RunPod $1.99-$2.69, Vast.ai from $1.49) are directionally right but only RunPod's floor matches this source exactly; the $1.49 floor appears in the article title as the market minimum across 15+ providers, not as a Vast.ai rate.",
-      "source_url": "https://intuitionlabs.ai/articles/h100-rental-prices-cloud-comparison",
-      "raw_snippet": "Vast.ai 1.87 RunPod 1.99 Lambda Labs 2.99 Google Cloud 3 AWS EC2 3.9 Microsoft Azure 6.98",
+      "claim": "Lambda's on-demand H100 SXM rate is $3.99-$4.19/GPU-hr as of August 2026, materially above the ~$2.49-$3.44 the skill previously quoted. RunPod Community Cloud H100 is PCIe $1.99, NVL $2.59, SXM $2.69, which matches the range the skill already carried.",
+      "source_url": "https://lambda.ai/pricing",
+      "raw_snippet": "H100 SXM 80 GB 208 1800 GiB 22 TiB SSD $3.99",
       "verified": true,
-      "confidence": "medium"
+      "confidence": "high",
+      "note": "Read by curl on 2026-08-19. Notable near-miss: a research subagent reported RunPod H100 at $2.89-$3.29 and recommended 'correcting' the skill; the live pricing page shows Community Cloud $1.99/$2.59/$2.69, so the figure already in the skill was right and the reported correction would have introduced an error. Only the Lambda range was actually stale.",
+      "verified_at": "2026-08-19T15:38:05Z"
     },
     {
       "id": "h200-specialty-pricing",
@@ -196,11 +200,13 @@
     },
     {
       "id": "b200-specialty-pricing",
-      "claim": "Lambda Labs lists $4.99-$5.29/hr on-demand for B200 (not H200), and B200 on-demand across specialty clouds lands in the $5-7/hr range (Spheron $6.02, Runpod $5.89, Nebius $5.50). SKILL.md line 302 attributes the $4.99-$5.29 figure to Lambda H200, which is the wrong GPU.",
-      "source_url": "https://www.spheron.network/blog/gpu-cloud-pricing-comparison-2026/",
-      "raw_snippet": "Lambda Labs $4.99–$5.29 N/A On-demand; varies by configuration (8x–1x configs)",
+      "claim": "As of August 2026 Lambda lists B200 at $6.69-$6.99/GPU-hr and GH200 at $2.29/hr, and RunPod Community Cloud lists H200 from $3.59/hr and B200 from $5.98/hr. Lambda did not list an on-demand H200 rate when checked.",
+      "source_url": "https://lambda.ai/pricing",
+      "raw_snippet": "B200 SXM6 180 GB 208 2900 GiB 22 TiB SSD $6.69",
       "verified": true,
-      "confidence": "medium"
+      "confidence": "high",
+      "note": "Read by curl on 2026-08-19, cross-checked against runpod.io/pricing for the RunPod figures. The skill no longer quotes a Lambda H200 rate, because none was published.",
+      "verified_at": "2026-08-19T15:38:05Z"
     },
     {
       "id": "kamatera-entry-price",
@@ -419,6 +425,179 @@
       "raw_snippet": "the Privacy Protection (Transfer of Data to Databases Abroad) Regulations, 5761-2001 (the “Data Transfer Regulations”)",
       "verified": true,
       "note": "The individual exceptions in Regulation 2 are NOT quoted here; only the instrument they sit in is evidenced. Quoting the exception list needs the regulation text itself."
+    },
+    {
+      "id": "aws-free-tier-2025-overhaul",
+      "claim": "AWS's free tier is now a lump-sum credit of up to $200 ($100 on signup plus up to $100 earned), and the account closes itself 6 months after opening or when the credits run out, whichever comes first. The former model of per-service monthly limits for 12 months with no lump sum applies only to older accounts.",
+      "source_url": "https://aws.amazon.com/free/",
+      "raw_snippet": "When you create a new AWS Free Tier account, you get $100 in credits immediately. As you explore key services, you can earn up to $100 more. That's up to $200 over 6 months",
+      "note": "Read by curl on 2026-08-19. This falsifies the skill's previous statement that 'AWS gives service-based limits (no lump sum)'.",
+      "verified_at": "2026-08-19T15:38:05Z",
+      "where_used": [
+        "SKILL.md Step 7",
+        "SKILL_HE.md",
+        "references/pricing-and-credits.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "aws-support-plan-restructure",
+      "claim": "AWS Support now offers three paid plans, Business Support+, Enterprise Support and Unified Operations, with minimum spends of $29/month per account, $5k/month and $50k/month. There is no longer a Developer tier or a Business tier.",
+      "source_url": "https://aws.amazon.com/premiumsupport/pricing/",
+      "raw_snippet": "AWS Support offers three comprehensive plans designed to accelerate your cloud operations: Business Support+ , Enterprise Support , and Unified Operations .",
+      "note": "Read by curl on 2026-08-19. The plan comparison lists 'AWS Business Support+ | AWS Enterprise Support | AWS Unified Operations', and the minimum-spend row reads $29/month per account, $5k/month, $50k/month. This replaces the skill's 'Developer ($29/mo), Business (from $100/mo)'.",
+      "verified_at": "2026-08-19T15:38:05Z",
+      "where_used": [
+        "SKILL.md Step 9",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "google-startups-prefunded-tier",
+      "claim": "Google for Startups Cloud also offers a pre-funded tier of $2,000 in credits to build an MVP, alongside the $200,000 / up-to-$350,000 early-stage tiers.",
+      "source_url": "https://cloud.google.com/startup",
+      "raw_snippet": "Get $2,000 to build your MVP",
+      "verified_at": "2026-08-19T15:38:05Z",
+      "where_used": [
+        "SKILL.md Step 7",
+        "SKILL_HE.md",
+        "references/pricing-and-credits.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "gcp-free-program-300",
+      "claim": "Google Cloud's free program gives new customers $300 in free credits and 20+ free products.",
+      "source_url": "https://cloud.google.com/startup",
+      "raw_snippet": "Google Cloud Free Program $300 in free credits and 20+ free products",
+      "verified_at": "2026-08-19T15:38:05Z",
+      "where_used": [
+        "SKILL.md Step 7",
+        "SKILL_HE.md",
+        "references/pricing-and-credits.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "azure-free-200-30days",
+      "claim": "Azure's free account gives a $200 credit to use within 30 days, plus free monthly amounts of 65+ always-free services.",
+      "source_url": "https://azure.microsoft.com/en-us/free/",
+      "raw_snippet": "$200 credit to use on Azure services within 30 days",
+      "verified_at": "2026-08-19T15:38:05Z",
+      "where_used": [
+        "SKILL.md Step 7",
+        "SKILL_HE.md",
+        "references/pricing-and-credits.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "hetzner-june-2026-price-rise",
+      "claim": "Hetzner raised cloud prices on 15 June 2026. The entry CX23 went from EUR 3.99 to EUR 5.49 per month net, so EUR 5.49 is the current floor rather than the ~EUR 4.59 the skill previously quoted.",
+      "source_url": "https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/",
+      "raw_snippet": "CX23 0.0064 / 3.99 0.0088 / 5.49 0.0080 / 4.99 0.0104 / 6.49",
+      "note": "Read by curl on 2026-08-19 from the page headed 'Hetzner Price Adjustment 15 June 2026'. Columns are old net, new net, old gross, new gross; the new net entry price is EUR 5.49/month. The previously-quoted EUR 4.59 matches no row in either column.",
+      "verified_at": "2026-08-19T15:38:05Z",
+      "where_used": [
+        "SKILL.md Step 5b",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "azure-government-is-us-only",
+      "claim": "Azure Government is a US-sovereign cloud for US government missions, not a product an Israeli government buyer can procure. The skill previously recommended it for Israeli government contracts.",
+      "source_url": "https://azure.microsoft.com/en-us/explore/global-infrastructure/government/",
+      "raw_snippet": "Trusted AI and Cloud for US Government Missions",
+      "note": "Read by curl on 2026-08-19. The page is titled 'Azure for US Government' and frames the offering around US government missions from unclassified to Top Secret. Both Step 4 and Example 2 of the skill previously told the reader to highlight it for future Israeli government tenders.",
+      "verified_at": "2026-08-19T15:38:05Z",
+      "where_used": [
+        "SKILL.md Step 4",
+        "SKILL.md Example 2",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "azure-israel-d4sv5-price",
+      "claim": "Azure Israel Central Standard_D4s_v5 Linux on-demand is $0.224 per hour, which sits inside the skill's $130-200/month sanity band for a 4 vCPU / 16 GB Israeli-region VM.",
+      "source_url": "https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/",
+      "raw_snippet": "Linux Virtual Machines Pricing",
+      "note": "Figure read from the Azure retail price API on 2026-08-19 (armRegionName eq 'israelcentral' and armSkuName eq 'Standard_D4s_v5' and priceType eq 'Consumption'): retailPrice 0.224 per 1 Hour for 'Dsv5 Series D4s v5'. The API returns compact JSON with no prose, so the URL here is the human-readable Linux VM pricing page for the same SKU. Used only as a cross-check on the GCP anchor, not as a headline figure.",
+      "verified_at": "2026-08-19T15:38:58Z",
+      "where_used": [
+        "SKILL.md Step 9"
+      ],
+      "confidence": "high",
+      "verified_via": "api"
+    },
+    {
+      "id": "gcp-pricing-deep-links",
+      "claim": "The GCP Compute Engine price tables live at cloud.google.com/products/compute/pricing/general-purpose and /accelerator-optimized. The shorter /compute/all-pricing and /products/compute/pricing URLs now redirect to a marketing page carrying no price tables.",
+      "source_url": "https://cloud.google.com/products/compute/pricing/general-purpose",
+      "raw_snippet": "n2-standard-4",
+      "note": "The redirect behaviour is why an agent following the old link ends up with no table and falls back to quoting from memory. Both deep links are cited in the skill's Reference Links.",
+      "verified_at": "2026-08-19T15:38:05Z",
+      "where_used": [
+        "SKILL.md Step 3",
+        "SKILL.md Reference Links",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "gcp-accelerator-pricing-page",
+      "claim": "GCP publishes accelerator-optimized (GPU) machine pricing at cloud.google.com/products/compute/pricing/accelerator-optimized.",
+      "source_url": "https://cloud.google.com/products/compute/pricing/accelerator-optimized",
+      "raw_snippet": "a3-highgpu-8g",
+      "verified_at": "2026-08-19T15:38:05Z",
+      "where_used": [
+        "SKILL.md Reference Links",
+        "SKILL_HE.md"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "aws-israel-launch-blog-url",
+      "claim": "The AWS Israel (Tel Aviv) region launch announcement lives at aws.amazon.com/blogs/aws/now-open-aws-israel-tel-aviv-region/. The previously-cited whats-new URL now returns HTTP 404.",
+      "source_url": "https://aws.amazon.com/blogs/aws/now-open-aws-israel-tel-aviv-region/",
+      "raw_snippet": "Now Open – AWS Israel (Tel Aviv) Region | AWS News Blog",
+      "note": "Page title read by curl on 2026-08-19. The old link https://aws.amazon.com/about-aws/whats-new/2023/08/aws-israel-tel-aviv-region/ was confirmed HTTP 404 by curl the same day.",
+      "verified_at": "2026-08-19T15:38:05Z",
+      "where_used": [
+        "SKILL.md Reference Links",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "iia-telem-page-blocked",
+      "claim": "The Israel Innovation Authority site is behind Cloudflare and returns HTTP 403 to automated fetches, so an agent cannot read the current Telem terms and must direct the user to the page rather than summarising it.",
+      "source_url": "https://innovationisrael.org.il/en/press_release/supercomputer-access-2026/",
+      "raw_snippet": "Attention Required! | Cloudflare",
+      "note": "Both https://innovationisrael.org.il and this press-release path returned HTTP 403 to curl on 2026-08-19, serving a Cloudflare interstitial rather than content. Because an agent cannot read the page, the previously-stated minimum-request figures (16 B200s for companies, 8 for academic groups) could NOT be verified this cycle and were REMOVED from the skill rather than carried forward unsourced. The snippet quoted here is the interstitial itself, which is the operational point the skill now makes: send the user to the page, do not summarise it.",
+      "verified_at": "2026-08-19T15:39:57Z",
+      "where_used": [
+        "SKILL.md Step 7",
+        "SKILL_HE.md",
+        "references/pricing-and-credits.md"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "usd-ils-example-rounding",
+      "claim": "The NIS example in Example 3 uses a rate of about 3.0 ILS/USD, a rounding of the 19 August 2026 level.",
+      "source_url": "https://edge.boi.org.il/FusionEdgeServer/sdmx/v2/data/dataflow/BOI.STATISTICS/EXR/1.0/RER_USD_ILS?startperiod=2026-08-18&format=csv",
+      "raw_snippet": "RER_USD_ILS 2026-08-19 2.985 (Bank of Israel representative rate)",
+      "note": "Read directly from the Bank of Israel SDMX representative-rate feed on 2026-08-19. The response row for 2026-08-19 is `RER_USD_ILS,D,USD,ILS,ILS,OF00,BOI_MRKT,V,F,Y,0,,2026-08-19,2.985,YP`, with 2026-08-18 at 2.986, 2026-08-17 at 2.95, 2026-08-14 at 2.954 and 2026-08-04 at 3.03. Marked verified_via api because this is a machine-readable CSV endpoint with no prose to quote, and boi.org.il's HTML pages sit behind Radware Bot Manager. A live FX quote page was tried first and rejected as a source: its figure changes on every fetch (2.9772, then 2.9766, then 2.9763 within the hour), so pinning a snippet to it guarantees a false failure on the next check. The dated BOI observation is stable and re-checkable forever. This replaces the skill's previous '3.10-3.20 in 2026', which sat above the actual August band.",
+      "verified_at": "2026-08-19T15:49:19Z",
+      "where_used": [
+        "SKILL.md Example 3",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verified_via": "api"
     }
   ]
 }
