@@ -118,6 +118,6 @@ tweens של `x:` ב-GSAP לא מתהפכים אוטומטית ל-RTL. `gsap.from
 | Google Fonts עם תמיכה בעברית | https://fonts.google.com/?subset=hebrew | Heebo, Rubik, Assistant, Alef, Frank Ruhl Libre, Noto Sans Hebrew |
 | מפרט unicode-bidi | https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-bidi | `isolate`, `<bdi>`, טקסט דו-כיווני |
 
-## References
+## מסמכי עיון
 
 רשימת הרפרנסים המלאה (palettes, house style, motion principles, transitions, captions, audio-reactive, TTS, typography, dynamic techniques, transcript guide) מופיעה ב-SKILL.md. הקובץ הזה מתרכז רק בשכבת העברית וה-RTL. לעבודה ללא עברית אפשר לפנות ישר ל-SKILL.md.

@@ -8,11 +8,35 @@
     "he": "שיטות עבודה להפקת וידאו מקוד עם HyperFrames: קומפוזיציות שהן פשוט HTML + GSAP שמתרנדרות ל-MP4, עם תמיכה מלאה בעברית ו-RTL. הסקיל מסביר איך כותבים קומפוזיציה, מה עושים מאפייני data-* לתזמון, איך עובדים עם ה-Timeline של GSAP ושיטת Layout-Before-Animation, איך מטפלים ב-Visual Identity Gate, איך לטעון פונטים עבריים (Heebo, Rubik, Assistant) בלי `<link>` או `@import`, איפה שמים dir=\"rtl\", איך מפיקים כתוביות עברית עם Whisper ומתמודדים עם קריינות בעברית כש-Kokoro המובנה לא תומך, איך להוסיף אפקטים שמגיבים לאודיו ומעברי סצנות, ואיך לעטוף טקסט מעורב עברית+אנגלית ב-<bdi>. מתאים לבניית תוכן וידאו מבוסס-HTML וסרטוני סושיאל ושיווק בעברית בלי React. לא מתאים ל-Remotion או לעבודת וידאו ב-React, שם השתמשו ב-remotion-best-practices."
   },
   "tags": {
-    "en": ["hyperframes", "video", "html", "gsap", "animation", "captions", "hebrew", "rtl", "programmatic-video", "tiktok", "voiceover"],
-    "he": ["HyperFrames", "וידאו", "HTML", "GSAP", "אנימציה", "כתוביות", "עברית", "RTL", "סרטונים", "TikTok", "קריינות"]
+    "en": [
+      "hyperframes",
+      "video",
+      "html",
+      "gsap",
+      "animation",
+      "captions",
+      "hebrew",
+      "rtl",
+      "programmatic-video",
+      "tiktok",
+      "voiceover"
+    ],
+    "he": [
+      "HyperFrames",
+      "וידאו",
+      "HTML",
+      "GSAP",
+      "אנימציה",
+      "כתוביות",
+      "עברית",
+      "RTL",
+      "סרטונים",
+      "TikTok",
+      "קריינות"
+    ]
   },
   "author": "skills-il",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "category": "developer-tools",
   "supported_agents": [
     "claude-code",
