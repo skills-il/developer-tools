@@ -226,8 +226,8 @@ It is kept in this reference only as a negative entry, because the service is st
 ### Done (דאן)
 - Locker-based delivery service
 - Website: done.co.il
-- Cost: ~30 NIS per package, max 5 kg
-- Delivery in 3 working days
+- Cost: 30 NIS per package, max 5 kg (verbatim from done.co.il/price-list/)
+- Transit time is not published on their pricing page; ask Done rather than quoting a figure
 
 ### SafeLocker -- not a parcel network
 
@@ -252,7 +252,7 @@ For unified multi-carrier integration, consider these aggregator APIs:
 |-----------|----------|-------|
 | AfterShip | Tracking only | Supports Israel Post, HFD, and many others |
 | TrackingMore | Tracking only | Israel Post tracking API with webhooks and SDKs |
-| ClickPost | Full integration | 150+ carriers including Israeli carriers |
+| ClickPost | Full integration | Publishes an Israel Post integration page. Its Israeli coverage beyond Israel Post was not verified, so confirm your specific carrier is supported before committing |
 | LionWheel | Full integration | Used by Mahir Li and other Israeli couriers. Public API repo at github.com/lionwheel/api, actively maintained (commits as recent as July 2026) |
 | UPS Developer Kit | Full integration | Official UPS APIs, also cover the new Israeli locker network |
 | GetPackage Business API | Full integration | Crowd-sourced same-day couriers in Israel; requires business account |

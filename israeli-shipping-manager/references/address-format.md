@@ -41,9 +41,10 @@ A complete Israeli shipping address contains the following fields, in order:
 ### Kibbutz / Moshav
 No street names. Use settlement name and house number:
 ```
-קיבוץ דגניה א, בית 15
-מיקוד 1512000
+דגניה א, בית 15
+1512000
 ```
+This is exactly what `--type kibbutz --settlement "דגניה א" --house 15 --mikud 1512000` produces. If the carrier wants the `קיבוץ` prefix, type it into `--settlement`.
 
 ### Military Address (APO)
 IDF mail uses a military postal number (מספר דואר צבאי):
