@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "skill": "israeli-startup-toolkit",
   "version": "1.2.0",
-  "generated_at": "2026-08-19T14:26:42.162261+00:00",
+  "generated_at": "2026-08-19T14:40:43.496692+00:00",
   "claims": [
     {
       "id": "tnufa-max-2026",
@@ -71,24 +71,10 @@
       "verified": "2026-08-13"
     },
     {
-      "id": "pte-ip-revenue-share",
-      "claim": "PTE eligibility also requires a minimum 20% of revenues from intellectual property created in Israel",
-      "source_url": "https://www.pertamapartners.com/funding/israel-preferred-technological-enterprise-2026",
-      "raw_snippet": "Minimum 20% of revenues from intellectual property created in Israel",
-      "verified": "2026-08-13"
-    },
-    {
       "id": "corporate-tax-2026",
       "claim": "Israeli standard corporate tax rate is 23% in 2026",
       "source_url": "https://taxsummaries.pwc.com/israel/corporate/taxes-on-corporate-income",
       "raw_snippet": "The corporate tax rate is 23% in 2026 (same rate as in 2025).",
-      "verified": "2026-08-13"
-    },
-    {
-      "id": "closely-held-tax-2026",
-      "claim": "From 2025, a closely held company (held by no more than five individuals) with business profitability above 25% has the excess attributed to its active shareholders and taxed at their marginal rates",
-      "source_url": "https://taxsummaries.pwc.com/israel/corporate/taxes-on-corporate-income",
-      "raw_snippet": "As of 2025, when the profitability (defined as taxable income divided by revenue) of a closely held company ( as defined above ) from business activity (i.e. income from any source other than interest, dividends, rent, consideration for the sale of assets, income from securities that constitute business inventory, consideration from the sale of real estate in Israel or abroad, or the shares of real estate companies) exceeds 25%, an active shareholder's (defined as a shareholder holding 30% or more of at least one of the means of control of the closely held company or a shareholder holding less than 30% thereof who is involved in generating the business income of the closely held company or involved in the management of the closely held company) pro-rata share of the income constituting the excess profitability (i.e. exceeding 25%) is included in the active shareholder's taxable income and subject to tax at the active shareholder's marginal tax rate.",
       "verified": "2026-08-13"
     },
     {
@@ -106,24 +92,10 @@
       "verified": "2026-08-13"
     },
     {
-      "id": "section-102-holding-period",
-      "claim": "Under the Section 102 capital-gains track the trustee must hold the shares for 24 months from the END of the tax year in which they were allocated and deposited with the trustee (not 24 months from the grant date)",
-      "source_url": "https://elih-tax102.co.il/wp-content/uploads/2024/08/%D7%97%D7%95%D7%96%D7%A8-3.03.pdf",
-      "raw_snippet": "במסלול רווח הון ‪ -‬תקופה של ‪ 24‬חודשים מתום שנת המס בה הוקצו",
-      "verified": "2026-08-13"
-    },
-    {
       "id": "section-102-rate",
       "claim": "Capital gains on shares are taxed at 25% for individuals, rising to 30% for a 10%-or-more shareholder",
       "source_url": "https://taxsummaries.pwc.com/israel/individual/income-determination",
       "raw_snippet": "The real gain, if any, realised upon the sale of shares purchased on or after 1 January 2003 is generally taxed at a rate of 25% for individuals. This rate is increased to 30% where the seller was a 10% or more shareholder at the date of sale or during any of the 12 months preceding the sale;",
-      "verified": "2026-08-13"
-    },
-    {
-      "id": "section-102-surtax",
-      "claim": "A 3% surtax applies on annual taxable income above ILS 721,560, producing a 50% maximum income tax rate",
-      "source_url": "https://taxsummaries.pwc.com/israel/individual/taxes-on-personal-income",
-      "raw_snippet": "Taxation of individuals is imposed in graduated rates ranging up to 47%. Additionally, a 3% surtax applies on annual taxable income exceeding ILS 721,560, resulting in a 50% maximum income tax rate.",
       "verified": "2026-08-13"
     },
     {
@@ -295,148 +267,6 @@
       "verified": "2026-08-13",
       "verified_via": "wayback",
       "verified_at": "2026-08-13"
-    },
-    {
-      "claim_id": "registrar-annual-fee-2026",
-      "claim": "A company or partnership registered with the Corporations Authority owes an annual fee per calendar year. The reduced fee of 1,338 NIS is payable until 31.03.2026; from 01.04.2026 the standard rate of 1,777 NIS applies.",
-      "source_url": "https://www.gov.il/he/service/company_partnership_annual_payment",
-      "raw_snippet": "אגרה שנתית חברות: ניתן לשלם אגרה מופחתת בסך 1,338 ש\"ח עד ל-31.03.2026. החל מה-01.04.2026 התעריף יעודכן לתעריף הרגיל בסך של 1,777 ש\"ח.",
-      "fetched_at": "2026-08-14",
-      "verified_via": "gov.il content API",
-      "verified_at": "2026-08-14",
-      "appears_in": [
-        "SKILL.md",
-        "references/"
-      ]
-    },
-    {
-      "claim_id": "tnufa-budget-cap-derived",
-      "claim": "The NIS 250K Tnufa budget ceiling is arithmetic, not a separately published figure: the grant is up to NIS 200,000 at 80% of the approved budget, so the budget it implies is 200,000/0.8 = 250,000.",
-      "source_url": "https://innovationisrael.org.il/en/programs/ideation-tnufa-incentive-program/",
-      "raw_snippet": "Entrepreneurs and new Israeli startup companies can receive a conditional grant of up to NIS 200,000 over a period of 12 months (80% of the approved budget).",
-      "fetched_at": "2026-08-14",
-      "verified_via": "playwright navigation (snippet confirmed verbatim on the live page)",
-      "verified_at": "2026-08-14",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
-      "claim_id": "registrar-fee-gap-derived",
-      "claim": "The NIS 439 saving from paying the annual fee in Q1 is the difference between the two published rates: 1,777 - 1,338 = 439.",
-      "source_url": "https://www.gov.il/he/service/company_partnership_annual_payment",
-      "raw_snippet": "אגרה שנתית חברות: ניתן לשלם אגרה מופחתת בסך 1,338 ש\"ח עד ל-31.03.2026. החל מה-01.04.2026 התעריף יעודכן לתעריף הרגיל בסך של 1,777 ש\"ח.",
-      "fetched_at": "2026-08-14",
-      "verified_via": "derived from the sourced fee pair",
-      "verified_at": "2026-08-14",
-      "appears_in": [
-        "SKILL.md"
-      ]
-    },
-    {
-      "claim_id": "media-globes-en",
-      "claim": "The page at https://en.globes.co.il/en/startups.tag loads and is served under the title 'Globes - Israel Business News'. It is cited only as a navigational pointer, not as the source of any figure.",
-      "source_url": "https://en.globes.co.il/en/startups.tag",
-      "raw_snippet": "Globes - Israel Business News",
-      "fetched_at": "2026-08-14",
-      "verified_via": "playwright navigation (page load, not fetch status)",
-      "verified_at": "2026-08-14",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
-      "claim_id": "media-globes-he",
-      "claim": "The page at https://www.globes.co.il/news/home.aspx?fid=594 loads and is served under the title 'גלובס - עיתון העסקים של ישראל'. It is cited only as a navigational pointer, not as the source of any figure.",
-      "source_url": "https://www.globes.co.il/news/home.aspx?fid=594",
-      "raw_snippet": "גלובס - עיתון העסקים של ישראל",
-      "fetched_at": "2026-08-14",
-      "verified_via": "playwright navigation (page load, not fetch status)",
-      "verified_at": "2026-08-14",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
-      "claim_id": "media-calcalist-he",
-      "claim": "The page at https://www.calcalist.co.il/calcalistech loads and is served under the title 'כלכליסט-טק - חדשות הייטק, סטארטאפים וטכנולוגיה | כלכליסט'. It is cited only as a navigational pointer, not as the source of any figure.",
-      "source_url": "https://www.calcalist.co.il/calcalistech",
-      "raw_snippet": "כלכליסט-טק - חדשות הייטק, סטארטאפים וטכנולוגיה | כלכליסט",
-      "fetched_at": "2026-08-14",
-      "verified_via": "playwright navigation (page load, not fetch status)",
-      "verified_at": "2026-08-14",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
-      "claim_id": "media-calcalist-en",
-      "claim": "The page at https://www.calcalistech.com loads and is served under the title 'CTech | Ctech'. It is cited only as a navigational pointer, not as the source of any figure.",
-      "source_url": "https://www.calcalistech.com",
-      "raw_snippet": "CTech | Ctech",
-      "fetched_at": "2026-08-14",
-      "verified_via": "playwright navigation (page load, not fetch status)",
-      "verified_at": "2026-08-14",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
-      "claim_id": "media-geektime",
-      "claim": "The page at https://www.geektime.co.il loads and is served under the title 'גיקטיים - אתר הטכנולוגיה וההייטק של ישראל | גיקטיים'. It is cited only as a navigational pointer, not as the source of any figure.",
-      "source_url": "https://www.geektime.co.il",
-      "raw_snippet": "גיקטיים - אתר הטכנולוגיה וההייטק של ישראל | גיקטיים",
-      "fetched_at": "2026-08-14",
-      "verified_via": "playwright navigation (page load, not fetch status)",
-      "verified_at": "2026-08-14",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
-      "claim_id": "registry-ica-he",
-      "claim": "The page at https://www.gov.il/he/departments/israeli_corporations_authority loads and is served under the title 'רשות התאגידים'. It is cited only as a navigational pointer, not as the source of any figure.",
-      "source_url": "https://www.gov.il/he/departments/israeli_corporations_authority",
-      "raw_snippet": "רשות התאגידים",
-      "fetched_at": "2026-08-14",
-      "verified_via": "playwright navigation (page load, not fetch status)",
-      "verified_at": "2026-08-14",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
-      "claim_id": "registry-ica-en",
-      "claim": "The page at https://www.gov.il/en/departments/israeli_corporations_authority loads and is served under the title 'Israeli Corporations Authority'. It is cited only as a navigational pointer, not as the source of any figure.",
-      "source_url": "https://www.gov.il/en/departments/israeli_corporations_authority",
-      "raw_snippet": "Israeli Corporations Authority",
-      "fetched_at": "2026-08-14",
-      "verified_via": "playwright navigation (page load, not fetch status)",
-      "verified_at": "2026-08-14",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
-      "claim_id": "registry-isa",
-      "claim": "The page at https://www.isa.gov.il loads and is served under the title 'רשות ניירות ערך – מפוקחים'. It is cited only as a navigational pointer, not as the source of any figure.",
-      "source_url": "https://www.isa.gov.il",
-      "raw_snippet": "רשות ניירות ערך – מפוקחים",
-      "fetched_at": "2026-08-14",
-      "verified_via": "playwright navigation (page load, not fetch status)",
-      "verified_at": "2026-08-14",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
     },
     {
       "claim_id": "registry-isa-en",
@@ -762,6 +592,204 @@
         "SKILL.md",
         "SKILL_HE.md",
         "references/option-102-reference.md"
+      ]
+    },
+    {
+      "id": "sec20a-requires-ministerial-approval",
+      "claim": "Section 20A(a)(1) allows the current-year R&D deduction only where the research was approved by the delegate of the responsible minister",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "למחקר מדעי בתחומי התעשיה, החקלאות, התחבורה או האנרגיה שאושר לענין זה בידי מי שהסמיך השר הממונה על המשרד שבתחום פעולתו נוגע המחקר",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:40:11.824780+00:00",
+      "fetched_at": "2026-08-19T14:40:11.824780+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "sec20a-three-instalments",
+      "claim": "Section 20A(a)(2) spreads capital R&D expenditure not covered by paragraph (1) over three equal annual instalments",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "יותר ניכוין בשלושה שיעורים שנתיים שווים החל בשנת המס שבה שולמו",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:40:11.824780+00:00",
+      "fetched_at": "2026-08-19T14:40:11.824780+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "sec20a1-40-percent-ceiling",
+      "claim": "Section 20A1 caps a deduction for funding research performed by another person at 40% of the taxpayer taxable income",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "לא יעלה על 40% מהכנסתו החייבת של הנישום בשנת המס שבה שולמו ההוצאות",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:40:11.824780+00:00",
+      "fetched_at": "2026-08-19T14:40:11.824780+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "sec20a-b-depreciation-exclusion",
+      "claim": "Section 20A(b) denies the deduction for amounts invested in an asset carrying depreciation under Section 21",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "לא יותר לניכוי לפי סעיף קטן (א) כל סכום של הוצאה שהושקעה בנכס שיש עליו ניכוי פחת",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:40:11.824780+00:00",
+      "fetched_at": "2026-08-19T14:40:11.824780+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "sec102b3-listed-share-bifurcation",
+      "claim": "Section 102(b)(3) taxes as employment income the part of the benefit equal to the average share price over the 30 trading days before allotment, or after listing, where the share is exchange-traded or the company lists within 90 days of allotment",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "היתה המניה המוקצית מניה הרשומה למסחר בבורסה, או מניה בחברה שמניותיה נרשמו למסחר בתוך 90 ימים ממועד ההקצאה",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:40:11.824780+00:00",
+      "fetched_at": "2026-08-19T14:40:11.824780+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/option-102-reference.md"
+      ]
+    },
+    {
+      "id": "sec102z-track-election-lockin",
+      "claim": "Section 102(z) makes the track election company-wide and bars a change until at least a year has passed from the end of the year of the first allotment after the previous election",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "בחירה לפי סעיף זה תחול על כל עובד אשר לו הוקצו המניות",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:40:11.824780+00:00",
+      "fetched_at": "2026-08-19T14:40:11.824780+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "sec102-employing-company-foreign",
+      "claim": "Section 102(a) defines employing company to include a foreign-resident company with an Israeli permanent establishment or R&D centre where the Director approved it, and parent or subsidiary companies",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "מעביד שהוא חברה תושבת ישראל או חברה תושבת חוץ שיש לה מפעל קבע או מרכז מחקר ופיתוח, בישראל, אם אישר זאת המנהל",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:40:11.824780+00:00",
+      "fetched_at": "2026-08-19T14:40:11.824780+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "securities-15b2a-employee-plan",
+      "claim": "Securities Law Section 15B(2)(a) exempts an offer by a non-reporting company to its employees under a compensation plan, subject to consideration and percentage-of-capital caps set in regulations",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%A0%D7%99%D7%99%D7%A8%D7%95%D7%AA_%D7%A2%D7%A8%D7%9A",
+      "raw_snippet": "הצעת ניירות ערך שהנפיק תאגיד שאינו תאגיד מדווח וניירות הערך שלו אינם רשומים למסחר מחוץ לישראל לעובדיו, לרבות לעובדי תאגיד בשליטתו, במסגרת תכנית תגמול לעובדים",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:40:11.824780+00:00",
+      "fetched_at": "2026-08-19T14:40:11.824780+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "tnufa-approved-budget-250k",
+      "claim": "Tnufa maximum approved budget is NIS 250,000, of which the grant is 80% up to NIS 200,000 over 12 months",
+      "source_url": "https://innovationisrael.org.il/en/programs/ideation-tnufa-incentive-program/",
+      "raw_snippet": "Entrepreneurs and new Israeli startup companies can receive a conditional grant of up to NIS 200,000 over a period of 12 months (80% of the approved budget).",
+      "verified": true,
+      "verified_via": "playwright navigation (snippet confirmed verbatim on the live page)",
+      "verified_at": "2026-08-19T14:40:43.496692+00:00",
+      "fetched_at": "2026-08-19T14:40:43.496692+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/iia-programs-guide.md"
+      ]
+    },
+    {
+      "id": "registrar-annual-fee-difference-439",
+      "claim": "The difference between the NIS 1,777 standard annual fee and the NIS 1,338 reduced annual fee is NIS 439",
+      "source_url": "https://www.gov.il/BlobFolder/reports/companies-fee-rates-2020/he/companies-fee-rates-2025.pdf",
+      "raw_snippet": "אגרה שנתית מופחתת (עד לתאריך 31.3) כולל חל\"צ 1338",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:40:43.496692+00:00",
+      "fetched_at": "2026-08-19T14:40:43.496692+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "registry-ica-he-nav",
+      "claim": "Israeli Corporations Authority department page, Hebrew, cited as a navigational reference for company formation and fees",
+      "source_url": "https://www.gov.il/he/departments/israeli_corporations_authority",
+      "raw_snippet": "רשות התאגידים",
+      "verified": true,
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-19T14:40:43.496692+00:00",
+      "fetched_at": "2026-08-19T14:40:43.496692+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "registry-ica-en-nav",
+      "claim": "Israeli Corporations Authority department page, English, cited as a navigational reference for company formation and fees",
+      "source_url": "https://www.gov.il/en/departments/israeli_corporations_authority",
+      "raw_snippet": "Israeli Corporations Authority",
+      "verified": true,
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-19T14:40:43.496692+00:00",
+      "fetched_at": "2026-08-19T14:40:43.496692+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "media-globes-en-nav",
+      "claim": "Globes English startups tag page, cited as an ecosystem news reference",
+      "source_url": "https://en.globes.co.il/en/startups.tag",
+      "raw_snippet": "START UPS",
+      "verified": true,
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-19T14:40:43.496692+00:00",
+      "fetched_at": "2026-08-19T14:40:43.496692+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "media-globes-he-nav",
+      "claim": "Globes Hebrew news section, cited as an ecosystem news reference",
+      "source_url": "https://www.globes.co.il/news/home.aspx?fid=594",
+      "raw_snippet": "טכנולוגיה - גלובס",
+      "verified": true,
+      "verified_via": "playwright navigation (page load, not fetch status)",
+      "verified_at": "2026-08-19T14:40:43.496692+00:00",
+      "fetched_at": "2026-08-19T14:40:43.496692+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
       ]
     }
   ]

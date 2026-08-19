@@ -2,7 +2,6 @@
 
 ## Overview
 - **Website:** innovationisrael.org.il
-- **Budget:** ~1.8B NIS annually
 - **Mission:** Support R&D and innovation in Israeli industry
 
 ## Programs
@@ -19,13 +18,15 @@
   - Technological innovation component
 - **Application:** Online via IIA portal
 - **Review:** Professional committee, 2-4 months
-- **Approval rate:** ~40-50%
 
-### 2. Tnufa (Early Stage)
+### 2. Tnufa (Ideation)
 - **Stage:** Pre-seed / Idea
-- **Funding:** Up to 85% of budget
-- **Max Amount:** 800K NIS
+- **Funding:** Up to 80% of the approved budget
+- **Max Amount:** NIS 200,000 over 12 months (approved budget capped at NIS 250K)
 - **Repayment:** Royalties 3-5%
+- Older guides cite much larger Tnufa ceilings at 85%. Those are stale. The IIA page states a
+  conditional grant of up to NIS 200,000 over a period of 12 months, being 80%
+  of the approved budget.
 - **Requirements:**
   - Very early stage
   - Technological concept
@@ -34,8 +35,10 @@
 
 ### 3. Incubator Program
 - **Stage:** Early stage
-- **Funding:** Up to 85%
-- **Duration:** 2-year program
+- **Funding:** Up to 85% of the approved budget
+- **Max approved budget:** NIS 3.5 million
+- **Duration:** operative period of up to 2 years (varies by project type and
+  the incubator's geographical location)
 - **How it works:**
   - Company joins approved incubator
   - Incubator provides workspace, mentoring, services
@@ -45,7 +48,9 @@
 ### 4. Binational Funds
 | Fund | Partner | Max Funding | Focus |
 |------|---------|-------------|-------|
-| BIRD | USA | $1M | Joint US-Israel projects |
+| BIRD General | USA | $1.5M | Joint US-Israel projects |
+| BIRD HLS | USA | $1M | Homeland security |
+| BIRD Energy / BIRD Cyber | USA | $1.5M | Same cap as the General Program |
 | CIIRDF | Canada | Varies | Canada-Israel R&D |
 | KORIL | Korea | Varies | Korea-Israel R&D |
 | SIIRD | Singapore | Varies | Singapore-Israel R&D |
@@ -64,7 +69,7 @@
 
 ### Royalties
 - 3-5% of revenue from products developed with grant funding
-- Paid until grant fully repaid (with interest linked to LIBOR/SOFR)
+- Paid until grant fully repaid, with interest. LIBOR ceased publication and is no longer a live reference rate; confirm the current index in the grant letter.
 - Royalties apply even if product evolves significantly
 
 ### Manufacturing

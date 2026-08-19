@@ -179,7 +179,19 @@ Israeli SAFE Key Terms:
 Important Israeli-specific clauses:
 - IIA notification (if company received grants)
 - Section 102 interaction (for employee investors)
-- Israeli securities law exemptions (private placement, max 35 offerees in 12 months)
+- Israeli securities law exemptions. Section 15A(a)(1) of the Securities Law
+  works with an offeree count set in regulations (35 under Regulation 2 of the
+  1'2000 Details Regulations), counted over 12 months, and Section 15A(b)
+  excludes classified/qualified investors listed in the First Schedule from
+  that count. Equity buyers and buyers of other securities are counted in
+  SEPARATE baskets, so SAFE holders and share buyers are two pools.
+- An employee option plan does NOT rely on the 35-offeree exemption. A
+  non-reporting company grants under Section 15B(2)(a), the employee
+  compensation-plan carve-out, which is capped by regulation on both the total
+  consideration and the percentage of issued and paid-up capital allotted to
+  employees in a rolling year. Granting to more than 35 employees on the
+  private-placement theory is an unlawful public offer. Confirm the current
+  regulatory caps with counsel before a broad grant.
 - Anti-money laundering compliance (Hok Issur Halbanat Hon)
 ```
 
@@ -239,6 +251,25 @@ Option 102 Capital Gains Track Setup Steps:
       same threshold, so up to 30% effective on a large exit)
      (a controlling shareholder cannot use Section 102 at all, see below)
    - Trustee handles withholding and reporting
+
+7. Listed shares and the IPO trap (Section 102(b)(3))
+   - The 25% rate does NOT apply to the whole gain if the allotted share is
+     exchange-traded, or if the company lists within 90 days of the allotment.
+   - In that case the part of the benefit equal to the average share price over
+     the 30 trading days before the allotment (or the 30 trading days after
+     listing) is taxed as EMPLOYMENT income under Section 2(1)/(2), and only the
+     excess is taxed at 25%.
+   - Granting shortly before an IPO therefore converts most of the upside into
+     ordinary income. Plan grant timing around this.
+
+8. The track election is company-wide and sticky (Section 102(z))
+   - The election binds every employee to whom shares are allotted.
+   - It applies to all allotments from the year after the year of the first
+     allotment onward.
+   - The company cannot switch tracks until at least a year has passed from the
+     end of the year of the first allotment made after the previous election.
+   - You cannot put some hires on the capital track and others on the income
+     track at the same time.
 ```
 
 **Option 102 tax comparison:**
@@ -316,7 +347,7 @@ AND (2) must both hold (or, alternatively, condition (3)), plus (4) and (5):
 - Reduced withholding on dividends (4-20%)
 
 Special Preferred Technological Enterprise (SPTE):
-- For very large groups (consolidated revenue > NIS 10 billion)
+- For very large groups (group revenue of NIS 10 billion OR MORE, per 51KD)
 - Tax rate: 6% on qualifying IP income (nexus approach)
 
 R&D Expense Deduction (Section 20a):
@@ -364,9 +395,25 @@ Reasons to stay Israeli-only:
 - Israeli investors prefer Israeli entity
 - Small / bootstrapped, no foreign capital plan
 
-Flip cost: USD 25K-75K legal + tax pre-ruling, 2-4 months timeline.
+Flip cost: legal plus tax pre-ruling; get written quotes, the range varies
+widely by structure. Typical timeline 2-4 months.
 Tax pre-ruling (mas mukdam) from ITA recommended to avoid deemed exit tax.
 IIA approval required if any IIA grants received before the flip.
+
+WHAT THE FLIP DOES TO YOUR ESOP (commonly missed):
+- A Delaware parent CAN grant Section 102 options to Israeli employees. Section
+  102(a) defines "employing company" to include a company that controls the
+  employer or is controlled by it, and a foreign-resident company with an
+  Israeli permanent establishment or R&D centre where the Director has approved
+  it.
+- But the parent needs its OWN Section 102 plan: a new filing with the
+  assessing officer, its own trustee, and its own notice at least 30 days
+  before the first grant.
+- Exchanging existing Israeli-company 102 options for parent options is not
+  automatic. Obtain an ITA ruling for the exchange, or the trustee holding
+  period restarts and employees lose the capital-gains track.
+- Budget the flip timeline around the 30-day notice and the ruling, not just
+  around the corporate steps.
 ```
 
 ## Examples
