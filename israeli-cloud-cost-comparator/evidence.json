@@ -263,8 +263,11 @@
       "id": "gcp-cuds-doc",
       "claim": "Google Cloud committed use discounts (CUDs) provide discounted prices in exchange for a spend or resource commitment; this doc is the reference link cited in SKILL.md.",
       "source_url": "https://cloud.google.com/docs/cuds",
-      "raw_snippet": "This document provides information about committed use discounts (CUDs) for Google Cloud and how they apply for various services.",
-      "verified": true
+      "raw_snippet": "Get started Guides Send feedback Committed use discounts Stay organized with collections Save and categorize content based on your preferences. This document provides information about committed use discounts (CUDs) for Google Cloud and how they apply for various services. Note : This document discusses some spend-based committed use discounts (CUDs) that automatically migrate to a new consumption model, which leverages discounts rather than credits.",
+      "verified": true,
+      "verified_via": "cited page fetched; 45 of 47 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"reference\"",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
       "id": "azure-reserved-instances-discount",

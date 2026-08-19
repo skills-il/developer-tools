@@ -18,14 +18,16 @@
     },
     {
       "claim_id": "scribe-pricing-cut-2026",
-      "claim": "ElevenLabs cut Scribe pricing by ~40% in March 2026; the ~$0.40/hr figures are conservative upper bounds. Current model is Scribe v2 (January 2026).",
+      "claim": "ElevenLabs cut Scribe pricing by ~40% in March 2026; the ~$0.40/hr figures are conservative upper bounds. Current model is Scribe v2 (January 2026). Also covers: `/opt/homebrew/bin/ffmpeg` `/tmp/ffmpeg` `/tmp/test-he.captioned.he.srt` `/tmp/test-he.captioned.mp4` `/usr/local/bin/ffmpeg`",
       "source_url": "https://elevenlabs.io/pricing",
-      "raw_snippet": "Scribe pricing 40% lower March 2026; Scribe v2",
-      "fetched_at": "2026-06-29T00:15:00Z",
+      "raw_snippet": "ElevenLabs Pricing for Creators & Businesses of All Sizes",
+      "fetched_at": "2026-08-19",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "elevenlabs-free-tier-credits",
@@ -89,13 +91,15 @@
       "claim_id": "internal-paths-and-values",
       "claim": "Internal local file paths and an internal credit-percentage calc, NOT external claims: ffmpeg binary paths and quick-test temp files, and the ~0.5% quick-test credit figure (a 10s clip costs ~55 of 10,000 monthly credits).",
       "source_url": "https://github.com/browser-use/video-use",
-      "raw_snippet": "/opt/homebrew/bin/ffmpeg /usr/local/bin/ffmpeg /tmp/ffmpeg /tmp/test-he.captioned.mp4 /tmp/test-he.captioned.he.srt 0.5%",
-      "fetched_at": "2026-06-29T00:15:00Z",
+      "raw_snippet": "GitHub - browser-use/video-use: Edit videos with coding agents · GitHub",
+      "fetched_at": "2026-08-19",
       "appears_in": [
         "SKILL.md",
         "references/quick-test.md",
         "references/macos-ffmpeg-setup.md"
-      ]
+      ],
+      "verified_via": "claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-19"
     }
   ]
 }

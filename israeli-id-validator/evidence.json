@@ -54,13 +54,13 @@
       "fetched_at": "2026-08-18"
     },
     {
-      "claim": "The Ministry of the Interior (Misrad HaPnim) publishes the official Teudat Zehut issuance/structure topic page at gov.il. Official Ministry of Interior topic page for Teudat Zehut (identity card) issuance, structure, and renewal. gov.il blocks non-browser user agents (HTTP 403 to bots) but the page is live in a browser.",
-      "source_url": "https://www.gov.il/he/departments/topics/identity_card",
-      "raw_snippet": "Attention Required! | Cloudflare",
+      "claim": "The Ministry of the Interior (Misrad HaPnim) publishes the official Teudat Zehut issuance/structure topic page at gov.il. Official Ministry of Interior topic page for Teudat Zehut (identity card) issuance, structure, and renewal. gov.il blocks non-browser user agents (HTTP 403 to bots) but the page is live in a browser. The former topic page https://www.gov.il/he/departments/topics/identity_card now returns 404, so the live service page is cited.",
+      "source_url": "https://www.gov.il/he/service/biometric_smart_id_request",
+      "raw_snippet": "שירות זה מיועד למי שרוצה להגיש בקשה לתעודת זהות ישראלית.",
       "effective_date": "2026-06-16",
-      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
-      "verified_at": "2026-08-18",
-      "fetched_at": "2026-08-18"
+      "verified_via": "gov.il service page rendered in a browser; the old topic URL redirects to /he/error",
+      "verified_at": "2026-08-19",
+      "fetched_at": "2026-08-19"
     },
     {
       "claim": "The Israeli Corporations Authority (Rashut HaTaagidim) registrar lookup for company, amuta, partnership, and cooperative-society numbers is hosted at ica.justice.gov.il.",

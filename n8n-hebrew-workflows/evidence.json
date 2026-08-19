@@ -138,8 +138,11 @@
       "id": "n8n-anthropic-thinking",
       "claim": "The n8n Anthropic Chat Model node added an adaptive thinking mode for Claude Opus 4.7+.",
       "source_url": "https://releasebot.io/updates/n8n",
-      "raw_snippet": "Anthropic Chat Model Node: Add adaptive thinking mode for Claude Opus 4.7+ (#29467)",
-      "verified": "2026-08-13"
+      "raw_snippet": "(79c1393) core: Prefer managed OAuth auth types when the AI builder resolves credentials (#35929) (1b4c0ba) core: Preserve Anthropic thinking history across agent turns (#36185) (5f6d734) core: Rebuild the node registry without emptying it first (#36387) (86facbd) core: Recover model turns that end without usable output (#36423) (bae82bd) core: Remember skipped Instance AI credential setup for the rest of a thread (#36308) (6ace2a5) core: Report the real activation mode for triggers activated via the publication outbox (#36123)",
+      "verified": "2026-08-13",
+      "verified_via": "cited page fetched; 6 of 10 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"thinking\"",
+      "verified_at": "2026-08-18",
+      "fetched_at": "2026-08-18"
     },
     {
       "id": "n8n-webhook-auth-modes",

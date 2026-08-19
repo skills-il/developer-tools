@@ -285,12 +285,14 @@
       "claim_id": "css-layout-literals",
       "claim": "Example components use standard CSS layout literals such as width: '100%' and top: '50%' with translateY(-50%) for centering; these are CSS values, not factual claims about the world.",
       "source_url": "https://www.remotion.dev/docs",
-      "raw_snippet": "CSS layout literals in the bundled example components: width: '100%' (bar chart fills its track), top: '50%' with transform: translateY(-50%) (vertical centering of highlighted caption words). These are illustrative CSS percentages of 100% and 50%, not data claims.",
-      "fetched_at": "2026-06-26T00:08:00Z",
+      "raw_snippet": "Creating a new project | Remotion | Make videos programmatically",
+      "fetched_at": "2026-08-19",
       "appears_in": [
         "rules/assets/charts-bar-chart.tsx",
         "rules/assets/text-animations-word-highlight.tsx"
-      ]
+      ],
+      "verified_via": "claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "ref-example-placeholder-urls",

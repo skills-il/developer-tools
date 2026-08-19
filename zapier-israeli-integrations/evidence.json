@@ -211,14 +211,16 @@
       "claim_id": "respondio-zapier-slug",
       "claim": "Respond.io's Zapier app slug is respondio, not respond-io.",
       "source_url": "https://zapier.com/apps/respondio/integrations",
-      "raw_snippet": "HTTP 200",
+      "raw_snippet": "Create Custom Field Creates a Custom Field. Name Required Description Slug Type Required Action This is an event a Zap performs. Write Create a new record or update an existing record in your app. Delete Contact Deletes a Contact. Identifier Type Required Action This is an event a Zap performs. Write Create a new record or update an existing record in your app. Remove Tags Removes Tag(s) for a Contact Identifier Type Required Action This is an event a Zap performs.",
       "verification_note": "zapier.com/apps/respond-io/integrations returns 404.",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/israeli-zapier-apps.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 5 of 7 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"slug\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "invoice-reform-threshold-schedule",
@@ -287,23 +289,27 @@
       "claim_id": "zapier-platform-docs",
       "claim": "Zapier publishes its platform / developer documentation at platform.zapier.com.",
       "source_url": "https://platform.zapier.com",
-      "raw_snippet": "HTTP 200",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "raw_snippet": "ing Triggers Troubleshooting Use form mode to setup your API calls Build with CLI Platform CLI tutorial Overview Input fields Making HTTP requests Testing and debugging Hydration TypeScript integrations Advanced topics FAQs Core reference CLI command reference Schema reference Manage Account and team Integration changes Integration performance Sharing Versions Manage integration maintenance preferences Publish Branding Launch process Partner program Validation checks Embed Powered by Zapier Reference Use cases Video tutorials C",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 5 of 6 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"http\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "zapier-webhooks",
       "claim": "Webhooks by Zapier is a built-in app documented at zapier.com/apps/webhook/integrations.",
       "source_url": "https://zapier.com/apps/webhook/integrations",
-      "raw_snippet": "HTTP 200",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "raw_snippet": "all npm install @zapier/zapier-sdk npm install -D @zapier/zapier-sdk-cli zapier-sdk login # create a Webhooks by Zapier connection @ https://zapier.com/app/assets/connections Run an action // Typescript import { createZapierSdk } from \"@zapier/zapier-sdk\"; const zapier = createZapierSdk(); const { data: connection } = await zapier.findFirstConnection({ app: \"webhook\", owner: \"me\" }); await zapier.runAction({ app: 'webhook', action: 'custom', connection: connection.",
+      "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "cited page fetched; 6 of 8 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"http\"",
+      "verified_at": "2026-08-18"
     },
     {
       "claim_id": "morning-api-docs-host",
