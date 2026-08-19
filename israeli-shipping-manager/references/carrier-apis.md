@@ -14,10 +14,11 @@ Israeli shipping carriers generally do not offer publicly documented REST APIs. 
 - The whole `israelpost.co.il` estate, `mypost.` and `doar.` subdomains included, sits behind Radware Bot Manager. Verified August 2026: a plain HTTPS request is answered by a `validate.perfdrive.com` bot-manager challenge rather than by the application, so the historical Umbraco surface-controller flow (`POST /umbraco/Surface/ItemTrace/GetItemTrace` with a `__RequestVerificationToken` and session cookies) cannot be driven from a script.
 - Use a third-party aggregator for tracking instead. Do not build a scraper against this host.
 
-**Rate calculation (public, no auth):**
+**Rate calculation (historically public, now behind the same wall):**
 - Endpoint: `GET https://www.israelpost.co.il/npostcalc.nsf/CalcPrice?openagent&...`
 - Built on Lotus Notes/Domino
 - Parameters appended as query string (weight, dimensions, destination)
+- **This endpoint is NOT reachable without auth in practice.** It sits on `www.israelpost.co.il`, inside the same Radware Bot Manager perimeter as tracking: a plain request returns HTTP 403 (verified August 2026). Older documentation, and the open-source libraries that wrap it, describe it as public and no-auth. That was true once and is not true now. Get a rate from a carrier account or an aggregator instead.
 
 **Domestic shipping (via Datalogics third-party):**
 - Endpoint: `POST https://connect.datalogics.co.il/rest/w_create_shipping`
@@ -43,7 +44,7 @@ All three are unmaintained. Read them for the request shapes; do not take a prod
 - Tracking numbers: 13-character UPU S10 format (e.g., `RR123456789IL`)
 - Prefixes: `RR` = registered parcel, `EE` = EMS express, `CP` = parcel
 - Supports registered mail, parcels, and EMS express
-- Bot protection (ShieldSquare/PerimeterX) on the main website may block automated requests
+- Radware Bot Manager fronts the whole estate and blocks automated requests in practice (older write-ups attribute this to ShieldSquare/PerimeterX)
 
 ## Cheetah (צ'יטה)
 
@@ -62,7 +63,7 @@ All three are unmaintained. Read them for the request shapes; do not take a prod
 
 ### Notes
 - Full name: Cheetah Deliveries Ltd., headquartered in Petah Tikva
-- 9 branches nationwide, "מהצפון ועד אילת" per their own site, so same-day delivery is not limited to Gush Dan
+- 9 operational branches (depots) nationwide, "מהצפון ועד אילת" per their own site, so same-day delivery is not limited to Gush Dan. Do not confuse these 9 depots with the 35 Cheetah Shops storefronts below; they are different things
 - **Cheetah Shops is the largest pickup network in this reference**: their site states "רשת צ'יטה שופס המונה 35 סניפים ויותר מ-1,300 נקודות חלוקה בפריסה ארצית", i.e. more distribution points than HFD's ~1,000. Do not classify Cheetah as express-and-door-to-door only.
 - Same-day delivery service with express deliveries often completed within 4 hours
 - B2B focus: contact sales for business account setup
@@ -279,7 +280,7 @@ Map each carrier's native statuses to this set. Status names vary by carrier and
 
 There is no unified rate API across Israeli carriers. Options:
 
-1. **Israel Post rate calculator** (public, no auth): Use the Lotus Notes endpoint or the `bennymeg/IsraelPostalServiceAPI` TypeScript library
+1. **Israel Post rate calculator**: the Lotus Notes endpoint is behind the bot wall and returns 403 to a plain request, and the `bennymeg/IsraelPostalServiceAPI` library that wraps it is unmaintained. Treat this as a manual/browser path, not an automatable one
 2. **Carrier-specific quotes:** Contact each carrier for rate agreements (usually volume-based)
 3. **Aggregator APIs:** ClickPost offers multi-carrier rate comparison. Note that `weship.com` is a MEXICAN logistics platform with no Israeli carrier coverage, despite occasionally being cited as an Israeli multi-carrier option
 4. **Manual rate tables:** Request current rate cards from carrier sales teams

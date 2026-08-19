@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "skill": "israeli-shipping-manager",
   "version": "2.4.0",
-  "generated_at": "2026-08-19T14:49:36Z",
+  "generated_at": "2026-08-19T15:14:24Z",
   "generated_by": "evidence repair pass (verbatim snippets fetched and matched against source)",
   "claims": [
     {
@@ -938,6 +938,98 @@
         "SKILL.md Step 1",
         "SKILL_HE.md",
         "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "cancellation-notice-channels-14t",
+      "claim": "סעיף 14ט(א) requires the seller to accept a cancellation notice orally (by phone or at the place of business), by registered mail, by email, by fax if the seller has one, and via the internet for any transaction that can be entered into online.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "בעל פה – בטלפון או בהודעה בעל פה במקום העסק, למעט אם נקבע לפי החוק כי ביטול העסקה ייעשה בדרך של הודעה בכתב;",
+      "note": "Read verbatim from the consolidated statute on Hebrew Wikisource, 2026-08-19. The full channel list at 14ט(א) is (1) orally by phone or at the place of business; (2) registered mail; (3) email; (4) fax if the seller has one; (5) internet, for a transaction that can be contracted by that means; (6) any other means the Minister prescribes.",
+      "where_used": [
+        "SKILL.md Step 6g",
+        "SKILL_HE.md שלב 6ז"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "homepage-cancellation-link-14t-b",
+      "claim": "סעיף 14ט(ב) requires a seller whose transactions can be contracted online to place a dedicated cancellation-notice link on the MAIN PAGE of their website, positioned prominently and clearly.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "ייצור עוסק בדף הראשי של אתר האינטרנט שלו קישור ייעודי שבאמצעותו ניתן לשלוח הודעת ביטול בהתאם להוראות סעיף קטן (א)(5), שימוקם באופן מובלט וברור",
+      "where_used": [
+        "SKILL.md Step 6g",
+        "SKILL_HE.md שלב 6ז"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "notice-contents-14t-c",
+      "claim": "סעיף 14ט(ג) limits the cancellation notice to the consumer's name and ID number, plus one further agreed identifying detail for an oral notice; the seller may not require more.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "בהודעת ביטול יפרט הצרכן את שמו ומספר הזהות שלו, ואם נמסרה הודעת הביטול בעל פה כאמור בסעיף קטן (א)(1) – פרט מזהה נוסף אם הוסכם עליו עם הצרכן בעת ההתקשרות",
+      "where_used": [
+        "SKILL.md Step 6g",
+        "SKILL_HE.md שלב 6ז"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "notice-disclosure-duty-14t-d-e-f",
+      "claim": "סעיף 14ט(ד)-(ו) require the cancellation channels, their contact details and the required notice contents to be disclosed in writing no later than delivery, repeated on invoices/receipts/payment notices and on the website's main page beside the dedicated link, all in special prominence and clear legible letters.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "פרטי מידע שיש לגלותו לצרכן לפי סעיפים קטנים (ד) ו־(ה) יופיעו בסמוך אחד לשני, בהבלטה מיוחדת ובאותיות ברורות וקריאות",
+      "where_used": [
+        "SKILL.md Step 6g",
+        "SKILL_HE.md שלב 6ז"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "notice-rules-exclude-14v-14t-z",
+      "claim": "סעיף 14ט(ז) disapplies the whole of section 14ט to a cancellation under section 14ו, which is the cleanest statutory statement of the split between the two return regimes.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "הוראות סעיף זה לא יחולו על ביטול עסקה לפי סעיף 14ו",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL.md Step 6g",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "statutory-damages-continuing-txn-31a-2b",
+      "claim": "סעיף 31א(א)(2ב) allows פיצויים לדוגמה without proof of damage where a consumer cancelled a CONTINUING transaction by a 14ט notice and the seller kept charging them contrary to 13ד(ג). This is a narrow route, not a general rule that any 14ט breach is compensable.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "ביקש צרכן לבטל עסקה מתמשכת באמצעות הודעת ביטול לפי הוראות סעיף 14ט – והעוסק המשיך לחייב את הצרכן בתשלומים בשל העסקה, בניגוד להוראות סעיף 13ד(ג)",
+      "note": "Checked because an expert reviewer asserted that breach of 14ט is 'a listed offence under section 23(א)(31א),(31ב) and grounds for statutory damages under 31א'. That broader claim did NOT survive reading the statute: searching sections 23 and 31א for 14ט returns only this continuing-transaction limb. The narrow verified version was written into the skill and the broad claim was rejected.",
+      "where_used": [
+        "SKILL.md Step 6g",
+        "SKILL_HE.md שלב 6ז"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "exclusions-2010-regs-underwear-furniture",
+      "claim": "Undergarments including swimwear, and furniture assembled in the consumer's home, are exclusions under תקנות הגנת הצרכן (ביטול עסקה) התשע\"א-2010, NOT under section 14ג(ד). They therefore do not exclude cancellation of a distance sale.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F_(%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94)",
+      "raw_snippet": "הלבשה תחתונה לרבות בגדי ים",
+      "note": "This is the evidential basis for the skill's blunt statement that refusing an online swimwear cancellation is unlawful. The item appears in the 2010 regulations' exclusion list and is absent from the closed five-item list in 14ג(ד).",
+      "where_used": [
+        "SKILL.md Step 6e",
+        "SKILL_HE.md שלב 6ה"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "statutory-damages-cap-31a",
+      "claim": "סעיף 31א(א) caps פיצויים לדוגמה (damages not dependent on proof of loss) at 10,000 NIS.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "רשאי בית המשפט לפסוק, בשל אותה הפרה, פיצויים שאינם תלויים בנזק (בסעיף זה – פיצויים לדוגמה), בסכום שלא יעלה על 10,000 שקלים חדשים",
+      "note": "Read verbatim from the consolidated statute on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "references/returns-law.md"
       ],
       "confidence": "high"
     }

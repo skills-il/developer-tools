@@ -22,7 +22,7 @@ Help the user choose the right carrier for their shipment. Ask about parcel size
 | Carrier | Best For | Speed | Price Range | Pickup Points | Integration |
 |---------|----------|-------|-------------|---------------|-------------|
 | Israel Post (דואר ישראל) | Standard parcels, nationwide coverage | 3-5 business days | Low-medium | Post office branches | Datalogics API, open-source libraries |
-| Cheetah (צ'יטה) | Same-day/express delivery | Same day (often within 4 hours) | Medium-high | Cheetah Shops, 35 branches + 1,300+ points | Shopify app, private B2B API |
+| Cheetah (צ'יטה) | Same-day/express delivery | Same day (often within 4 hours) | Medium-high | Cheetah Shops, 35 storefronts + 1,300+ points | Shopify app, private B2B API |
 | HFD (Hameritz & Flash) | E-commerce fulfillment | 2-4 business days | Medium | ~1,000 pickup points + lockers | Shopify/WooCommerce plugins, private API |
 | Mahir Li (מהיר לי) | Same-day B2B courier | Same day (within 9 hours) | Medium-high | Door-to-door only | Via LionWheel platform |
 | UPS Israel (locker drop-off) | Small parcels, one package up to 8 kg | 1-2 business days | 27.02 NIS incl. VAT to a pickup point, plus remote-zone surcharge (Aug 2026 price list) | Locker and service-store network (launched early 2025) | UPS Developer Kit + locker QR-code drop-off |
@@ -63,7 +63,7 @@ Special handling:
 - **Military addresses (APO):** Use IDF address format (`--type military --military-code NNNNN`). IDF unit postal codes begin with the digit 0. Only Israel Post handles military mail.
 - **Kibbutzim/Moshavim:** Settlement name + house number, no street (`--type kibbutz --settlement "..." --house N`)
 - **Localities with no street names:** recognised Bedouin localities in the Negev, parts of East Jerusalem, and newly-occupied neighbourhoods are addressed by neighbourhood or cluster plus house number, with no street at all (`--type no_street --neighbourhood "..." --house N`). Most carriers will additionally want a recipient phone number and a map pin for these.
-- **Industrial zones:** Area name + building/company name
+- **Industrial zones:** Zone name + building/company name. The zone name goes in `--street`, not `--settlement` (`--type industrial --street "אזור תעשייה הר טוב" --building 8 --city "בית שמש" --mikud 9906000`)
 - **Arab localities:** Verify transliteration matches carrier database
 
 ### Step 3: Generate Shipping Label
@@ -117,11 +117,11 @@ Notifications by status:
 Respect quiet hours: no notifications between 22:00-08:00 Israel time.
 
 ### Step 6: Handle Returns and RMA
-A distance sale (online or phone) is governed by **חוק הגנת הצרכן sections 14ג, 14ג1 and 14ה**, NOT by תקנות הגנת הצרכן (ביטול עסקה) התשע"א-2010. The 2010 regulations govern a different regime, the voluntary in-store return under section 14ו, and they carry a different deadline and a much longer exclusion list. Mixing the two is the most common way an RMA flow ends up unlawful, so keep them apart.
+A distance sale (online or phone) gives the buyer a right under **חוק הגנת הצרכן sections 14ג, 14ג1, 14ה and 14ט**. תקנות הגנת הצרכן (ביטול עסקה) התשע"א-2010, made under section 14ו, are a **separate and parallel** statutory right, not a rival regime that switches off when the sale is remote. They are simply less generous: the same 14-day window for goods, but the goods must be unused and undamaged and must be physically returned, and a longer exclusion list applies. A buyer in a distance sale will therefore rely on 14ג. Keep the two apart in your code, because the exclusion lists differ and mixing them is the most common way an RMA flow ends up unlawful. Section 14ט(ז) makes the split explicit: the notice rules in Step 6g do not apply to a 14ו return.
 
 **Step 6a: Determine the cancellation window.**
 - **Standard:** section 14ג(ג)(1) gives the buyer from the moment of the transaction until 14 days from receiving the goods, or from receiving the disclosure document, **whichever is later**. Do not start the clock at the order date.
-- **Four-month window:** section 14ג1(ג) gives a buyer who is a person with a disability, an אזרח ותיק (65 or over), or an עולה חדש (within five years of their עולה certificate) **four months**, on the same "whichever is later" basis, **provided the transaction involved a conversation between seller and buyer, including a conversation by electronic communication**. Most Israeli stores run live chat or WhatsApp, so this branch fires often. Under section 14ג1(ד) the seller may require ONE identifying document and may not demand any further proof.
+- **Four-month window:** section 14ג1(ג) gives a buyer who is a person with a disability, an אזרח ותיק (65 or over), or an עולה חדש (within five years of their עולה certificate) **four months**, on the same "whichever is later" basis, **provided the contracting of THIS transaction included a conversation between seller and buyer, including a conversation by electronic communication**. Read that condition narrowly: a support widget the buyer never used on this order does not satisfy it, and the mere presence of live chat on the site is not itself the conversation. Under section 14ג1(ד) the seller may require ONE identifying document and may not demand any further proof. An עולה חדש qualifies on either a תעודת עולה **or** a תעודת זכאות כעולה from משרד העלייה והקליטה, so do not build an intake that accepts only the first.
 - An RMA system that hardcodes 14 days will auto-reject lawful cancellations. Model the window as a function of buyer status, not a constant.
 
 **Step 6b: Branch the return logistics on the REASON, because the statute does.**
@@ -134,12 +134,12 @@ A distance sale (online or phone) is governed by **חוק הגנת הצרכן se
 
 **Step 6d: Fees, and what the cap swallows.**
 - Seller breach (14ה(א)(1)): **no cancellation fee at all**.
-- Changed mind (14ה(ב)(1)): at most **5% of the price or 100 NIS, whichever is lower**. Note that "מחיר הנכס" in section 14ג(ו) is the total price **including delivery charges**.
+- Changed mind (14ה(ב)(1)): at most **5% of the price or 100 NIS, whichever is lower**. Note that section 14ג(ו) defines "מחיר הנכס" as the total price **including delivery charges**. That definition opens "בסעיף זה", so applying it to the 14ה(ב)(1) cap is a consumer-protective inference rather than an express cross-reference. In practice the 100 NIS leg usually binds first.
 - Section 14ה(ד) defines דמי ביטול as **including shipping and packing costs**. The seller therefore cannot deduct the original outbound shipping on top of the cap; it is inside it. This is the single most common Israeli e-commerce refund error.
-- Section 14ה(ב2): installation costs may be recovered up to 100 NIS.
+- Section 14ה(ב2): where the seller **installed goods in the buyer's home in order to provide the service under the transaction**, installation costs may be recovered up to 100 NIS. It is not a general installation-cost recovery for any goods sale.
 - Section 14ה(ג): none of this removes the seller's right to sue for a significant deterioration in the goods' value.
 
-**Step 6e: Exclusions are a CLOSED list of five for a distance sale** (section 14ג(ד)). The right to cancel does not apply to:
+**Step 6e: Exclusions are a closed list of five for a distance sale** (section 14ג(ד)). The right to cancel does not apply to:
 1. Perishable goods (טובין פסידים)
 2. Hospitality, travel, leisure or entertainment services, where cancellation falls within 7 non-rest days before the service is due
 3. Information as defined in חוק המחשבים התשנ"ה-1995
@@ -147,6 +147,10 @@ A distance sale (online or phone) is governed by **חוק הגנת הצרכן se
 5. Recordable or reproducible goods whose original packaging the buyer opened
 
 Undergarments, swimwear and assembled furniture are **NOT** on this list. They are excluded under the separate 2010 in-store regulations. Telling a seller to refuse an online swimwear cancellation is telling them to break the law.
+
+**Step 6g: Build the notice INTAKE, because section 14ט mandates its shape.**
+
+Steps 6a-6f all hang off "the cancellation notice", and section 14ט dictates how that notice must be receivable. It is the most build-relevant provision in the chapter, because it dictates UI and queue behaviour rather than policy. In short: you must accept a notice orally, by registered mail, by email, by fax if you have one, and over the internet for anything contractable online; you must put a **dedicated cancellation link on your homepage**, prominently; and the notice may require only the buyer's name and ID number, so an intake form gating cancellation behind an order number or a reason code is over-collecting. See `references/returns-law.md` for the full text of 14ט(א)-(ז), the disclosure duties, and the one narrow statutory-damages route that actually attaches to it.
 
 **Step 6f: Operational bits.**
 - Generate the return label with the original tracking reference and track the return leg back to the seller.
@@ -180,7 +184,7 @@ Result: HFD integration active. Customers can select from ~1,000 HFD pickup poin
 User says: "I need to ship a 15kg package to Eilat, what are my options?"
 Actions:
 1. Check carrier availability for Eilat (periphery area)
-2. Use the Israel Post rate calculator. The `bennymeg/IsraelPostalServiceAPI` library wraps it but is unmaintained (last commit March 2023), so verify its output against the live calculator before quoting
+2. Get an Israel Post rate. Their rate-calculator endpoint now returns 403 to a plain request (it sits inside the same Radware perimeter as tracking), and the `bennymeg/IsraelPostalServiceAPI` library that wraps it is unmaintained since March 2023, so treat this as a browser or carrier-account path rather than an automatable one
 3. Contact HFD for a rate quote (no public rate API)
 4. Note: Mahir Li requires 10+ daily deliveries, likely not suitable for single parcels
 5. Cheetah serves Eilat (branch there) but at premium pricing
@@ -192,6 +196,7 @@ Result: Israel Post is the most accessible option with public rate calculation. 
 
 ### References
 - `references/carrier-apis.md` -- Verified integration methods for each Israeli carrier: Israel Post (Datalogics API, open-source libraries), Cheetah (Shopify app, RUN system), HFD (Shopify/WooCommerce plugins), Mahir Li (LionWheel), locker services, and third-party aggregators. Consult when integrating with a specific carrier in Steps 3-4.
+- `references/returns-law.md` -- The statutory detail behind Step 6: the two parallel return regimes and why the exclusion lists differ, the full five-item 14ג(ד) list, section 14ט's notice channels and homepage-link duty in full, the refund and fee mechanics per sub-section, the four-month 14ג1 window and its two easily-missed conditions, and the one narrow statutory-damages route. Consult when building an RMA flow in Step 6.
 - `references/address-format.md` -- Complete Israeli address formatting specification: street, house, apartment, entrance, floor, city, mikud. Includes special formats for kibbutzim, military addresses, and industrial zones. Consult when formatting addresses in Step 2.
 
 ### Scripts
