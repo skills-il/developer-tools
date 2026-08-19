@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "israeli-agritech-advisor",
-  "generated_at": "2026-05-20T00:00:00Z",
+  "generated_at": "2026-08-19T00:00:00Z",
   "claims": [
     {
       "claim_id": "volcani-aro",
@@ -17,23 +17,27 @@
     },
     {
       "claim_id": "moag-israel",
-      "claim": "Israel's Ministry of Agriculture and Rural Development publishes subsidy programs, regulations, and certifications at gov.il/en/departments/ministry_of_agriculture_and_rural_development.",
-      "source_url": "https://www.gov.il/en/departments/ministry_of_agriculture_and_rural_development",
-      "raw_snippet": "Ministry of Agriculture",
-      "fetched_at": "2026-05-20T00:00:00Z",
+      "claim": "Israel's agriculture ministry is the Ministry of Agriculture and Food Security; the former 'Agriculture and Rural Development' departmental URL now 404s.",
+      "source_url": "https://www.gov.il/en/departments/ministry_of_agriculture_and_food_security",
+      "raw_snippet": "Ministry of Agriculture and Food Security",
+      "fetched_at": "2026-08-19T00:00:00Z",
       "appears_in": [
         "SKILL.md"
-      ]
+      ],
+      "verified_at": "2026-08-19",
+      "verified_via": "browser (Playwright; document.title and h1 read after asserting location.href)"
     },
     {
       "claim_id": "moag-israel-he",
-      "claim": "Israel's Ministry of Agriculture and Rural Development Hebrew homepage is at gov.il/he/departments/ministry_of_agriculture_and_rural_development.",
-      "source_url": "https://www.gov.il/he/departments/ministry_of_agriculture_and_rural_development",
-      "raw_snippet": "משרד החקלאות",
+      "claim": "The Ministry of Agriculture and Food Security Hebrew departmental page is at gov.il/he/departments/ministry_of_agriculture_and_food_security.",
+      "source_url": "https://www.gov.il/he/departments/ministry_of_agriculture_and_food_security",
+      "raw_snippet": "משרד החקלאות וביטחון המזון",
       "fetched_at": "2026-05-20T00:00:00Z",
       "appears_in": [
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_at": "2026-08-19",
+      "verified_via": "browser (Playwright; gov.il blocks curl with 403)"
     },
     {
       "claim_id": "water-authority-en",
@@ -63,7 +67,9 @@
       "fetched_at": "2026-05-20T00:00:00Z",
       "appears_in": [
         "SKILL.md"
-      ]
+      ],
+      "verified_at": "2026-08-19",
+      "verified_via": "browser (headless Playwright); Cloudflare returns an 'Attention Required' interstitial to both curl and headless, so the page is reachable for humans but not verifiable by fetch"
     },
     {
       "claim_id": "iia-he",
@@ -73,7 +79,9 @@
       "fetched_at": "2026-05-20T00:00:00Z",
       "appears_in": [
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_at": "2026-08-19",
+      "verified_via": "browser (headless Playwright); Cloudflare returns an 'Attention Required' interstitial to both curl and headless, so the page is reachable for humans but not verifiable by fetch"
     },
     {
       "claim_id": "start-up-nation-central",
@@ -131,43 +139,45 @@
     },
     {
       "claim_id": "ims-mcp-cross-link",
-      "claim": "The Israel Meteorological Service MCP (ims-mcp) is listed in the skills-il MCP directory under government-services. The previously cited https://agentskills.co.il/he/mcps/government-services/ims-mcp now returns 404.",
+      "claim": "The Israel Meteorological Service MCP is published in the skills-il directory under the slug ims-weather at /he/mcp/ims-weather.",
       "source_url": "https://agentskills.co.il/he/mcp/ims-weather",
-      "raw_snippet": "מחולל סקילים הוספת סקיל חבילות כלים חדש קורסים עיצוב MCP סטטיסטיקות מדריכים אודות צרו קשר עב EN יומן שינויים GitHub כניסה דף הבית MCP מזג אוויר ישראל מזג אוויר ישראל קהילתי 63 /100 שרת MCP לנתוני מזג אוויר מהשירות המטאורולוגי הישראלי (שמ״י).",
-      "fetched_at": "2026-08-19",
+      "raw_snippet": "ims-weather",
+      "fetched_at": "2026-08-19T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
       "verification_note": "Internal cross-link to our own directory; not an external factual claim.",
-      "verified_via": "dead link replaced with a live page from the same publisher, checked with a browser user agent",
+      "verified_via": "curl (HTTP 200; the previously cited /he/mcps/government-services/ims-mcp returns 404)",
       "verified_at": "2026-08-19"
     },
     {
       "claim_id": "israel-water-recycling",
-      "claim": "Israel leads the world in the proportion of water it recycles, treating 80% of its sewage, with reuse for agriculture and public works.",
-      "source_url": "https://en.wikipedia.org/wiki/Water_supply_and_sanitation_in_Israel",
-      "raw_snippet": "Israel treats 80% of its sewage (400 billion liters a year), and 100% of the sewage from the Tel Aviv metropolitan area is treated and reused as irrigation water for agriculture and public works.",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "claim": "Nearly 90 percent of Israel's treated wastewater is reused for irrigation.",
+      "source_url": "https://www.epa.gov/system/files/documents/2023-03/From%20Water%20Stressed%20to%20Water%20Secure%20-%20Lessons%20from%20Israel's%20Water%20Reuse%20Approach.pdf",
+      "raw_snippet": "nearly 90 percent of Israel's treated wastewater is reused for irrigation purposes",
+      "fetched_at": "2026-08-19T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
       "verification_note": "CORRECTION: the skill previously claimed Israel recycles '85%+' of wastewater. No readable source supports 85%; the Wikipedia article states 'As of 2010, Israel leads the world in the proportion of water it recycles' and gives 80% of sewage treated. gov.il Water Authority pages return HTTP 403 to non-browser clients. SKILL.md and SKILL_HE.md were reworded to the sourced figure with an explicit instruction not to quote a more precise number.",
-      "verified_via": "curl (rendered page text) + DNS lookup where noted"
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "drip-irrigation-efficiency",
-      "claim": "Modern drip irrigation was invented in Israel in the 1960s; Simcha Blass partnered with Kibbutz Hatzerim in 1964 to create Netafim, and together they patented the first practical surface drip emitter.",
-      "source_url": "https://en.wikipedia.org/wiki/Drip_irrigation",
-      "raw_snippet": "who partnered later in 1964 with Kibbutz Hatzerim to create an irrigation company called Netafim . Together, they developed and patented the first practical surface drip irrigation emitter.",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "claim": "Kibbutz Hatzerim signed an agreement with Simcha Blass and established Netafim in 1965, beginning dripper manufacturing in January 1966.",
+      "source_url": "https://irrigationleadermagazine.com/how-kibbutz-hatzerim-helped-pioneer-drip-irrigation/",
+      "raw_snippet": "In 1965, we signed an agreement with the inventor and established Netafim. In January 1966, we started manufacturing drippers",
+      "fetched_at": "2026-08-19T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
       "verification_note": "CORRECTION: the skill dated the Hatzerim/Netafim origin to 1965; the source says 1964, and SKILL.md/SKILL_HE.md were corrected. The previously claimed '90-95% field efficiency in modern Israeli installations' appears nowhere in the article and could not be sourced; the code comment was reworded to present 0.92 as a calibration assumption, not a published Israeli figure.",
-      "verified_via": "curl (rendered page text) + DNS lookup where noted"
+      "verified_via": "curl (rendered article)",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "precision-agriculture-water-savings",
@@ -195,16 +205,18 @@
     },
     {
       "claim_id": "water-quota-thresholds",
-      "claim": "Israel's water sector regulator is the Government Water and Sewage Authority (הרשות הממשלתית למים ולביוב). The 80% and 95% quota alert thresholds used in this skill are operator-chosen operational defaults and are NOT regulatory thresholds set by this authority; no regulatory alert percentage is asserted.",
-      "source_url": "https://www.gov.il/he/departments/water_authority",
-      "raw_snippet": "הרשות הממשלתית למים ולביוב",
-      "fetched_at": "2026-08-11",
+      "claim": "The Government Water and Sewage Authority, not Mekorot, regulates Israel's water sector and allocates agricultural water.",
+      "source_url": "https://www.gov.il/en/departments/water_authority",
+      "raw_snippet": "The Government Water and Sewage Authority is responsible for the management, operation, conservation and rehabilitation of the country's natural water resources and the regulation of the water sector",
+      "fetched_at": "2026-08-19T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
       "verification_note": "The Israel Water Authority page returns HTTP 403 behind Cloudflare to non-browser clients and could not be read on 2026-08-09, so it is cited only as the responsible-body pointer. The 80% / 95% alert thresholds in this skill are explicitly operator-chosen defaults and no regulatory claim is made about them.",
-      "source_label": "רשות המים - הרשות הממשלתית למים ולביוב"
+      "source_label": "רשות המים - הרשות הממשלתית למים ולביוב",
+      "verified_at": "2026-08-19",
+      "verified_via": "browser (Playwright; body text read after asserting location.href)"
     },
     {
       "claim_id": "cropx-v2-endpoint-illustrative",
@@ -227,6 +239,71 @@
       "verification_note": "dig +short api.taranis.com returned no records on 2026-08-09 and curl could not resolve the host. Marked illustrative in SKILL.md and SKILL_HE.md.",
       "fetched_at": "2026-08-09T00:00:00Z",
       "verified_via": "dig + curl",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "fao56-kc-citrus",
+      "claim": "FAO-56 Table 12 gives citrus with no ground cover as 0.70/0.65/0.70 at 70% canopy, 0.65/0.60/0.65 at 50% canopy and 0.50/0.45/0.55 at 20% canopy, with Kc_mid below Kc_ini due to stomatal closure.",
+      "source_url": "https://www.fao.org/4/x0490e/x0490e0b.htm",
+      "raw_snippet": "The midseason value is lower than initial and ending values due to the effects of stomatal closure during periods of peak ET",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_at": "2026-08-19",
+      "verified_via": "curl (rendered FAO-56 chapter 6 table)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/agritech-ecosystem.md"
+      ]
+    },
+    {
+      "claim_id": "fao56-kc-wheat",
+      "claim": "FAO-56 Table 12 gives winter wheat as 0.4/1.15/0.25-0.4 with frozen soils and 0.7/1.15/0.25-0.4 with non-frozen soils.",
+      "source_url": "https://www.fao.org/4/x0490e/x0490e0b.htm",
+      "raw_snippet": "These periods for winter wheat will lengthen in frozen climates according to days having zero growth potential and wheat dormancy",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_at": "2026-08-19",
+      "verified_via": "curl (rendered FAO-56 chapter 6 table)",
+      "appears_in": [
+        "references/agritech-ecosystem.md"
+      ]
+    },
+    {
+      "claim_id": "water-tariff-annual-cadence",
+      "claim": "Israeli water tariffs, including agricultural tariffs, are revised with effect from 1 January following a Water Authority public-comment round, and the current structure keys the fresh-water tariff to a low-grade-water tier.",
+      "source_url": "https://www.gov.il/he/pages/water_and_sewer_rates1",
+      "raw_snippet": "הזמנה לציבור להשמיע עמדתו בדבר הכוונה לעדכן כללים לעניין עלויות הספקים במשק המים והביוב ותעריפי המים והביוב לצרכנים השונים לקראת 1.1.2026",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_at": "2026-08-19",
+      "verified_via": "browser (Playwright; page title read after asserting location.href)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "leaching-requirement-fao29",
+      "claim": "The leaching requirement is estimated from irrigation water salinity (ECw) and the crop's tolerated soil salinity (ECe), per FAO Irrigation and Drainage Paper 29 (Ayers and Westcot), citing Rhoades 1974.",
+      "source_url": "https://www.fao.org/4/t0234e/T0234E03.htm",
+      "raw_snippet": "LR = the minimum leaching requirement needed to control salts within the tolerance (ECe) of the crop with ordinary surface methods of irrigation",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_at": "2026-08-19",
+      "verified_via": "curl (rendered FAO-29 chapter text)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "salinity-leaching-need",
+      "claim": "Both irrigation water salinity (ECw) and crop salinity tolerance (ECe) must be known to estimate a leaching requirement, and salts otherwise reach damaging concentrations in the root zone.",
+      "source_url": "https://www.fao.org/4/t0234e/T0234E03.htm",
+      "raw_snippet": "To estimate the leaching requirement, both the irrigation water salinity (ECw) and the crop tolerance to soil salinity (ECe) must be known",
+      "fetched_at": "2026-08-19T00:00:00Z",
+      "verified_at": "2026-08-19",
+      "verified_via": "curl (rendered FAO-29 chapter text)",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"

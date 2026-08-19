@@ -1,0 +1,23 @@
+{
+  "cycles": [
+    {
+      "version": "1.3.0",
+      "date": "2026-08-19",
+      "lessons": [
+        "Expert MAJOR deferred: fertigation is entirely absent, although it is the default operating mode of every Israeli drip system and both CropX and GrowSphere are nutrient-aware. Needs injection ratios, N/P/K by phenological stage, target solution EC and pH, acid injection for bicarbonate and anti-clogging.",
+        "Expert MAJOR deferred: the FAO-56 climate adjustment (Kc = Kc_tab + [0.04(u2-2) - 0.004(RHmin-45)](h/3)^0.3) is named in prose as 'calibrate locally' but not given as an equation and not taken as an input. It matters most in the Arava and Jordan Valley, which the skill foregrounds.",
+        "Expert MAJOR deferred: quota and licensing mechanics are named but not specified. A compliance dashboard needs per-water-type allocations and meters (shafirim / kolchin / mlichim), the 1 January allocation-year reset, penalty-tariff (not physical block) semantics for over-quota, and the separate production licence for a private well.",
+        "Expert MAJOR deferred: ET0 provenance is unspecified. FAO-56 Kc is defined against FAO Penman-Monteith specifically, and pairing it with pan-evaporation or Hargreaves biases results 10-20%. The ims-weather MCP is mentioned but never wired to the code.",
+        "Expert MAJOR deferred: application efficiency is still a constant standing in for distribution uniformity, which drifts as effluent drip biofouls and clogs. Should require a measured DU/EU input plus uniformity testing and line flushing guidance.",
+        "Expert MAJOR deferred: regulated deficit irrigation (RDI) is standard Israeli practice for wine and table grapes and cotton, all of which are in the Kc table, and is absent.",
+        "Expert MINOR deferred: no mulching, shade-net or screenhouse handling, though Arava peppers/tomatoes and table grapes are flagship crops here and mostly grown under net or plastic.",
+        "Expert MINOR deferred: Kc dict has no canopy-cover / cultivar / rootstock dimension; a canopy_cover argument would let the citrus banding actually be used.",
+        "Six corporate-status claims (Manna into Phytech, Prospera into Valmont, SupPlant pivot, Netafim/Orbia sale, CropX/Acclym) carry no evidence.json entries. They are the highest-drift content in the skill and the part with no source to re-check next cycle. Add citations or move them behind a dated 'as of' marker.",
+        "The '600-750 active companies' figure in references/agritech-ecosystem.md and the 'reduce water use 20-40%' figure in the Step 1 table are both uncited efficacy/scale numbers.",
+        "references/agritech-ecosystem.md renders two FAO ranges as point values at the TOP of the range without disclosure: cotton Kc_mid 1.20 (FAO 1.15-1.20) and winter wheat Kc_end 0.40 (FAO 0.25-0.4). The existing footnote covers only cotton late and tomato late.",
+        "Method note: the Volcani-to-FAO correction was applied to the code and the reference file but initially MISSED SKILL.md's Bundled Resources line and metadata.json's Hebrew display_description (which also still carried 'Mekorot regime'). Caught by the review panel. Run the Phase 3f.1 old-value propagation grep across metadata.json too, not just the markdown, since the gate never reads metadata.json.",
+        "Pre-existing gate condition for the orchestrator: verify_legal.py returns REVIEW on this skill purely on the name tokens 'Advisor' / 'יועץ', with strong_emit, form_emit and applies_rule all false. This is present at HEAD, not introduced by this cycle. Agricultural and technology advice is not a reserved Israeli profession (the reserved advisor titles are yoetz mas, yoetz hashkaot, yoetz pensioni, all financial), so a legal notice would be misleading. The correct remedy is a REVIEWED_CLEAR entry in verify_legal.py, which is a shared-file decision outside this agent's scope."
+      ]
+    }
+  ]
+}
