@@ -131,16 +131,17 @@
     },
     {
       "claim_id": "ims-mcp-cross-link",
-      "claim": "The Israel Meteorological Service MCP (ims-mcp) is listed in the skills-il MCP directory under government-services.",
-      "source_url": "https://agentskills.co.il/he/mcps/government-services/ims-mcp",
-      "raw_snippet": "ims-mcp is listed under government-services in the skills-il MCP directory",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "claim": "The Israel Meteorological Service MCP (ims-mcp) is listed in the skills-il MCP directory under government-services. The previously cited https://agentskills.co.il/he/mcps/government-services/ims-mcp now returns 404.",
+      "source_url": "https://agentskills.co.il/he/mcp/ims-weather",
+      "raw_snippet": "מחולל סקילים הוספת סקיל חבילות כלים חדש קורסים עיצוב MCP סטטיסטיקות מדריכים אודות צרו קשר עב EN יומן שינויים GitHub כניסה דף הבית MCP מזג אוויר ישראל מזג אוויר ישראל קהילתי 63 /100 שרת MCP לנתוני מזג אוויר מהשירות המטאורולוגי הישראלי (שמ״י).",
+      "fetched_at": "2026-08-19",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
       "verification_note": "Internal cross-link to our own directory; not an external factual claim.",
-      "verified_via": "curl (rendered page text) + DNS lookup where noted"
+      "verified_via": "dead link replaced with a live page from the same publisher, checked with a browser user agent",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "israel-water-recycling",

@@ -44,14 +44,16 @@
     },
     {
       "claim_id": "elevenlabs-multilingual-v2-hebrew-listed",
-      "claim": "ElevenLabs Multilingual v2 lists Hebrew among 29 supported languages but real-world Hebrew quality is mediocre",
-      "source_url": "https://help.scenario.com/articles/2103421335-elevenlabs-text-to-speech-models-the-essentials",
-      "raw_snippet": "Multilingual v2 supports Hebrew among its 29 languages",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "claim": "ElevenLabs' own model table lists 29 language codes for eleven_multilingual_v2 and Hebrew is not among them; neither 'he' nor 'iw' appears. The skill previously said Multilingual v2 lists Hebrew, which would have routed Hebrew speech to a model that does not support it. Hebrew appears in the Eleven v3 list instead.",
+      "source_url": "https://elevenlabs.io/docs/models",
+      "raw_snippet": "eleven_multilingual_v2 Our most lifelike model with rich emotional expression en , ja , zh , de , hi , fr , ko , pt , it , es , id , nl , tr , fil , pl , sv , bg , ro , ar , cs , el , fi , hr , ms , sk , da , ta , uk , ru",
+      "fetched_at": "2026-08-19",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "ElevenLabs models documentation fetched; the 29 codes were enumerated and checked for he/iw",
+      "verified_at": "2026-08-19"
     },
     {
       "claim_id": "elevenlabs-flash-turbo-v25-not-hebrew-focused",
