@@ -1,0 +1,23 @@
+{
+  "cycles": [
+    {
+      "version": "2.4.0",
+      "date": "2026-08-19",
+      "lessons": [
+        "Expert CRITICAL deferred (C7): COD is named in the Gotchas as a thing agents forget, then never built anywhere in Steps 1-6. LionWheel's public API (the skill's own Mahir Li integration path) documents `money_collect` (amount in cents) and `cod_type` (Cash 0, Cheque 1, Card 2, Bank Transfer 3), and חוק לצמצום השימוש במזומן caps a cash COD for an עוסק. Build a COD section next cycle, and verify the current cash ceiling at the statute rather than transcribing a remembered figure.",
+        "Expert MAJOR deferred (M2): no coverage of declared value, insurance, or the bill-of-lading liability cap. The UPS price list says the service is subject to שטר המטען and its liability limits, but the cap figure itself was not readable from the price list. Find the שטר מטען and document the mechanism plus where the number lives.",
+        "Expert MAJOR deferred (M3): no proof-of-delivery capture, no lost/damaged parcel claim path, no SLA or compensation window for any carrier. POD is the artefact that decides a chargeback, so this belongs in a shipping skill.",
+        "Expert MAJOR deferred (M4): multi-parcel shipments are only partially handled. The chargeable-weight summation rule is now in references/carrier-apis.md, but the skill body still reasons per-parcel and LionWheel's packages_quantity / pallets_quantity are unmentioned.",
+        "Expert MAJOR deferred (M7): Step 4 prescribes 2-hour polling as the general pattern, but LionWheel (the named Mahir Li path) publishes webhooks. Make webhook-first the default where the carrier supports it, and polling the fallback.",
+        "Expert MAJOR deferred (M8): the 7-value normalized status set cannot distinguish a retryable failure from a terminal one. LionWheel exposes FAILED (8) and FINAL_FAILED (9) separately, and the Step 5 customer notification currently promises another delivery attempt for both. Split failed_delivery, and add buckets for warehouse/inventory states and cancellation.",
+        "Expert MINOR deferred (N4): the ~1,000 HFD pickup-point figure is read off a page whose schema.org dateModified is 2022-09-12. The points actually belong to HFD's subsidiary E-post (e-post.co.il), which is why the WooCommerce plugin is called 'HFD ePost'. Name E-post explicitly so an integrator recognises the brand, and re-source the count.",
+        "Expert MINOR deferred (N5): scripts/format_address.py prints 'קומה 0' for --floor 0, where Israeli usage is קומת קרקע. It goes onto a printed label.",
+        "Expert MINOR deferred (N7): LionWheel exposes age_verification (alcohol/tobacco), leave_next_to_door, earliest/latest delivery windows, is_roundtrip (the natural primitive for an RMA exchange) and line_items. None appear in the skill.",
+        "Open question carried forward (M11): the skill now asserts HFD / Cheetah Shops / Done / UPS as the live pickup networks, but israelpost.co.il sits behind Radware Bot Manager and could not be read, so whether Israel Post launched a replacement self-service product after BOX2GO closed in 2021 is UNRESOLVED. Treat the locker list as open, not closed, and re-check from a real browser next cycle.",
+        "Negative results worth not re-deriving (M12): boxit.co.il returns 404, ship-it.co.il and shlichuto.co.il do not resolve, and yuvalim.co.il is a community village in Misgav, not a carrier. None of these should be added to the carrier roster on the strength of a plausible-sounding name.",
+        "Process lesson: the UPS figures come from a price list whose closing line reads 'מחירון זה תקף לחודש אוגוסט 2026 בלבד'. Every cycle from now on must re-read site.ship.co.il and restamp the month, or move the whole table to references/ behind a single 'read this before quoting' instruction.",
+        "Process lesson: this cycle's most dangerous defect was NOT in any incoming report. The bundled validator's mikud region table mapped 10-19 to 'Jerusalem' and had no 90-99 entry at all, so it rejected every genuine Jerusalem address. It was found by executing the script, not by reading it. Execute every bundled script on every documented code path each cycle."
+      ]
+    }
+  ]
+}

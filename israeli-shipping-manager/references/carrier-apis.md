@@ -56,13 +56,14 @@ All three are unmaintained. Read them for the request shapes; do not take a prod
 
 **Shopify:** "Cheetah DeliverIt" app by BOA Ideas on Shopify App Store. Handles order sync, label generation, and tracking.
 
-**Other platforms:** Contact Cheetah sales directly via chitadelivery.co.il or WhatsApp (0559577119).
+**Other platforms:** Contact Cheetah sales directly via chitadelivery.co.il. (An earlier version of this file listed a WhatsApp number that does not appear anywhere on Cheetah's own site; it has been removed rather than carried forward unsourced.)
 
 **Internal system:** Cheetah runs a RunCom-based business system reached from `chita-il.com/RunCom.Server/Request.aspx?APPNAME=run&PRGNAME=call_knisa`, linked from their site as "כניסת לקוחות". It is a business-customer login, not a public API and not a consumer tracking page. Customers track their shipment at `chitadelivery-cx.com/login`.
 
 ### Notes
 - Full name: Cheetah Deliveries Ltd., headquartered in Petah Tikva
-- 9 branches nationwide (Kiryat Ata to Eilat), same-day delivery is not limited to Gush Dan
+- 9 branches nationwide, "מהצפון ועד אילת" per their own site, so same-day delivery is not limited to Gush Dan
+- **Cheetah Shops is the largest pickup network in this reference**: their site states "רשת צ'יטה שופס המונה 35 סניפים ויותר מ-1,300 נקודות חלוקה בפריסה ארצית", i.e. more distribution points than HFD's ~1,000. Do not classify Cheetah as express-and-door-to-door only.
 - Same-day delivery service with express deliveries often completed within 4 hours
 - B2B focus: contact sales for business account setup
 
@@ -141,7 +142,9 @@ Baldar provides white-label CRM portals for courier companies. Each carrier host
 
 ### Published Israeli Price List
 
-From the Israeli operator's domestic price list (site.ship.co.il), which applies to shipments ordered through the local easyship site:
+From the Israeli operator's domestic price list (site.ship.co.il), which applies to shipments ordered through the local easyship site.
+
+**This price list is valid for ONE MONTH.** Its closing line reads `מחירון זה תקף לחודש אוגוסט 2026 בלבד`. The figures below are the August 2026 list. Re-read the source before quoting any of them, and tell the user which month you read.
 
 | Service | Before VAT | Incl. VAT |
 |---------|-----------|-----------|
@@ -157,7 +160,28 @@ Remote-zone surcharges, applied per weight band, on top of the above:
 | From or to zone 3 | 18 NIS | 21.24 NIS |
 | From or to zone 5 | 28 NIS | 33.04 NIS |
 
-Chargeable weight is the greater of actual weight and volumetric weight, where volumetric weight is length x width x height in cm divided by 5000. The price list covers shipments up to 15 kg chargeable weight; beyond that an excess weight/size fee applies.
+Chargeable weight is the greater of actual weight and volumetric weight, where volumetric weight is length x width x height in cm divided by 5000. For a multi-parcel shipment the chargeable weight is the SUM across all packages, rounded up to the whole kilogram.
+
+**The two services have DIFFERENT caps, and conflating them is how an agent quotes a service that will refuse the parcel:**
+
+| Service | Cap |
+|---------|-----|
+| Pickup point or locker | ONE package only, maximum 8 kg physical or volumetric, whichever is higher (`ניתן למסור בחנות שירות או לוקר ... משלוח הכולל חבילה אחת בלבד, במשקל מקסימלי של 8 ק"ג`) |
+| Home delivery | Up to 15 kg chargeable, multi-parcel allowed |
+
+Beyond 15 kg an excess weight/size fee applies (2.75 NIS per kg before VAT from the first kg, not less than 63.5 NIS, plus a 50 NIS per-package excess fee).
+
+### Exception Handling and Its Costs
+
+| Event | Consequence |
+|-------|-------------|
+| Parcel not collected from a service store | Returned to sender after 5 business days from arrival |
+| Parcel not collected from a locker | Returned to sender after **48 hours** |
+| Return to sender | Charged at the full tariff for the relevant destination |
+| Shipment not ready when the courier arrives | 15 NIS before VAT per pickup or pickup attempt |
+| Destination requires pre-arranged entry approval, or is a post office branch or embassy | Not covered. The carrier may return the shipment at the sender's expense, or charge 200 NIS before VAT for special distribution |
+
+The 48-hour locker window is short enough that a pickup-ready notification flow needs a reminder inside it, not a next-day one.
 
 ### Notes
 - The pickup-point price is NOT flat nationwide. Quoting 27.02 NIS for a periphery address under-quotes it by the zone surcharge.

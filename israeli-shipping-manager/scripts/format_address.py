@@ -10,13 +10,14 @@ Every address type is reachable from the command line. Running with no address
 fields prints usage and exits 1.
 
 Usage:
-    python scripts/format_address.py --validate --street "הרצל" --house 42 --city "תל אביב-יפו" --mikud 6120001
-    python scripts/format_address.py --type kibbutz --settlement "דגניה א" --house 15 --mikud 1512000
-    python scripts/format_address.py --type military --military-code 01234
-    python scripts/format_address.py --type po_box --po-box 1234 --city "ירושלים" --mikud 9100001
-    python scripts/format_address.py --type industrial --street "אזור תעשייה הר טוב" --building 8 --city "בית שמש" --mikud 9906000
-    python scripts/format_address.py --json address.json
-    python scripts/format_address.py --help
+    python3 scripts/format_address.py --validate --street "הרצל" --house 42 --city "תל אביב-יפו" --mikud 6120001
+    python3 scripts/format_address.py --type kibbutz --settlement "דגניה א" --house 15 --mikud 1512000
+    python3 scripts/format_address.py --type military --military-code 01234
+    python3 scripts/format_address.py --type po_box --po-box 1234 --city "ירושלים" --mikud 9100001
+    python3 scripts/format_address.py --type industrial --street "אזור תעשייה הר טוב" --building 8 --city "בית שמש" --mikud 9906000
+    python3 scripts/format_address.py --type no_street --neighbourhood "שכונה 12" --house 5 --city "רהט" --mikud 8546500
+    python3 scripts/format_address.py --json address.json
+    python3 scripts/format_address.py --help
 """
 
 import sys
@@ -60,6 +61,12 @@ ADDRESS_TYPE_KIBBUTZ = "kibbutz"
 ADDRESS_TYPE_MILITARY = "military"
 ADDRESS_TYPE_INDUSTRIAL = "industrial"
 ADDRESS_TYPE_PO_BOX = "po_box"
+# Localities where houses are addressed by neighbourhood/cluster with no street
+# name at all. This is the normal case in recognised Bedouin localities in the
+# Negev, parts of East Jerusalem, and freshly-occupied neighbourhoods. Israel
+# Post assigns these a mikud regardless. Without this type the validator
+# rejected every such address for "missing street".
+ADDRESS_TYPE_NO_STREET = "no_street"
 
 
 def normalize_hebrew(text: str) -> str:
@@ -131,6 +138,14 @@ def validate_address(address: dict) -> list[str]:
     if addr_type == ADDRESS_TYPE_KIBBUTZ:
         if "settlement" not in address:
             errors.append("Kibbutz/Moshav address requires 'settlement' field")
+    elif addr_type == ADDRESS_TYPE_NO_STREET:
+        if "neighbourhood" not in address:
+            errors.append(
+                "Unnamed-street address requires 'neighbourhood' "
+                "(שכונה / אזור) field"
+            )
+        if "house" not in address:
+            errors.append("Missing required field: house number (מספר בית)")
     elif addr_type == ADDRESS_TYPE_INDUSTRIAL:
         # An industrial-zone address is "zone name + building/company", with no
         # house number. Requiring 'house' here made --type industrial
@@ -194,6 +209,10 @@ def format_address(address: dict) -> str:
         first_line = settlement
         if "house" in address:
             first_line += f", בית {address['house']}"
+    elif addr_type == ADDRESS_TYPE_NO_STREET:
+        first_line = normalize_hebrew(address.get("neighbourhood", ""))
+        if "house" in address:
+            first_line += f", בית {address['house']}"
     elif addr_type == ADDRESS_TYPE_INDUSTRIAL:
         first_line = street
         if "building" in address:
@@ -244,9 +263,12 @@ def main():
                         help="PO box number (ת.ד.)")
     parser.add_argument("--building",
                         help="Building or company name (industrial-zone addresses)")
+    parser.add_argument("--neighbourhood",
+                        help="Neighbourhood or cluster name, for localities "
+                             "with no street names (--type no_street)")
     parser.add_argument("--type", default="standard",
                         choices=["standard", "kibbutz", "military",
-                                 "industrial", "po_box"],
+                                 "industrial", "po_box", "no_street"],
                         help="Address type")
 
     args = parser.parse_args()
@@ -263,11 +285,12 @@ def main():
             print(f"Error: Invalid JSON: {e}")
             sys.exit(1)
     elif any([args.street, args.city, args.mikud, args.settlement,
-              args.military_code, args.po_box, args.building]):
+              args.military_code, args.po_box, args.building,
+              args.neighbourhood]):
         address = {"type": args.type}
         for field in ("street", "house", "entrance", "floor", "apartment",
                       "city", "mikud", "settlement", "military_code",
-                      "po_box", "building"):
+                      "po_box", "building", "neighbourhood"):
             value = getattr(args, field)
             if value:
                 address[field] = value

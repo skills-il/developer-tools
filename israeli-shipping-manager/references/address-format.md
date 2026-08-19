@@ -53,6 +53,18 @@ IDF mail uses a military postal number (מספר דואר צבאי):
 - Only Israel Post handles military mail
 - The unit number is the routing key. IDF postal codes begin with the digit 0
 
+### Locality with No Street Names
+Recognised Bedouin localities in the Negev, parts of East Jerusalem, and newly-occupied
+neighbourhoods are routinely addressed by neighbourhood or cluster plus house number, with no
+street name at all. Israel Post assigns these a mikud regardless.
+```
+שכונה 12, בית 5
+רהט, 8546500
+```
+- Use `--type no_street --neighbourhood "..." --house N`
+- Most couriers will additionally want a recipient phone number and a map pin for these
+  addresses, because the courier cannot resolve them from the text alone
+
 ### Industrial Zone
 Use zone name and building/company name:
 ```
@@ -87,5 +99,6 @@ Use zone name and building/company name:
 | Missing entrance | Courier cannot find apartment | Add entrance letter/number |
 | English street name | Most carriers require Hebrew | Transliterate to Hebrew |
 | City abbreviation (ת"א) | May not match carrier database | Use full name: תל אביב-יפו |
+| Forcing a street name onto a locality that has none | Validation fails, or an invented street is sent to the carrier | Use the unnamed-street format above |
 | Missing apartment number | Courier leaves at building entrance | Add apartment and floor |
 | Wrong mikud for city | Delivery routed to wrong area | Verify mikud matches city at Israel Post site |

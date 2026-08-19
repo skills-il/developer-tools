@@ -2,7 +2,7 @@
 name: israeli-shipping-manager
 description: Build and manage shipping integrations with Israeli carriers, including Israel Post, Cheetah, HFD, Mahir Li, GetPackage, and UPS Israel, plus locker pickup services (Shlager, Done, UPS lockers). Use when user asks about "shipping Israel", "Cheetah delivery", "meshloach", "shipping label", "HFD", "locker pickup Israel", "tawit mishloach", "GetPackage", "UPS lockers Israel", or setting up carrier integrations for an e-commerce store. Covers carrier selection, Israeli address formatting, label generation, cross-carrier tracking system setup, customer delivery notifications, and 14-day consumer-protection returns. Do NOT use for looking up a specific package tracking status (direct the user to the carrier site, Israel Post at doar.israelpost.co.il or HFD at hfd.co.il). Do NOT use for international shipping outside Israel or customs/import (see israeli-customs-duty-calculator for the personal-import USD 75 VAT threshold).
 license: MIT
-allowed-tools: Bash(python:*) WebFetch
+allowed-tools: Bash(python3:*) WebFetch
 compatibility: Works with Claude Code, OpenClaw, Cursor. OpenClaw recommended for automated tracking updates and customer WhatsApp/SMS notifications.
 ---
 
@@ -22,10 +22,10 @@ Help the user choose the right carrier for their shipment. Ask about parcel size
 | Carrier | Best For | Speed | Price Range | Pickup Points | Integration |
 |---------|----------|-------|-------------|---------------|-------------|
 | Israel Post (דואר ישראל) | Standard parcels, nationwide coverage | 3-5 business days | Low-medium | Post office branches | Datalogics API, open-source libraries |
-| Cheetah (צ'יטה) | Same-day/express delivery | Same day (often within 4 hours) | Medium-high | Cheetah Shops network | Shopify app, private B2B API |
+| Cheetah (צ'יטה) | Same-day/express delivery | Same day (often within 4 hours) | Medium-high | Cheetah Shops, 35 branches + 1,300+ points | Shopify app, private B2B API |
 | HFD (Hameritz & Flash) | E-commerce fulfillment | 2-4 business days | Medium | ~1,000 pickup points + lockers | Shopify/WooCommerce plugins, private API |
 | Mahir Li (מהיר לי) | Same-day B2B courier | Same day (within 9 hours) | Medium-high | Door-to-door only | Via LionWheel platform |
-| UPS Israel (locker drop-off) | Small parcels, prepaid pickup-point rate | 1-2 business days | 27.02 NIS incl. VAT to a pickup point, plus remote-zone surcharge | Locker and service-store network (launched early 2025) | UPS Developer Kit + locker QR-code drop-off |
+| UPS Israel (locker drop-off) | Small parcels, one package up to 8 kg | 1-2 business days | 27.02 NIS incl. VAT to a pickup point, plus remote-zone surcharge (Aug 2026 price list) | Locker and service-store network (launched early 2025) | UPS Developer Kit + locker QR-code drop-off |
 | GetPackage (גט פקג'/getpackage.com) | Crowdsourced same-day courier | Same day (often 1-3 hours) | Variable (bid-based) | Door-to-door only | Web platform + REST API (B2B account) |
 
 Additional courier companies use Baldar delivery management software (Tapuz, Hafoz, Isgav, Mach1). If a user mentions "Baldar," ask which specific courier company they use, as Baldar is software, not a carrier.
@@ -41,14 +41,14 @@ Locker/pickup services (not standalone carriers):
 
 Selection criteria:
 - **Delivery speed:** Same-day requires Cheetah, Mahir Li, or GetPackage; UPS Israel is 1-2 business days; standard allows all carriers
-- **Parcel size/weight:** Heavy or oversized items may limit carrier options. Locker services have size limits (Done max 5 kg). The UPS Israel courier price list is capped at 15 kg chargeable weight, where chargeable weight is the greater of actual weight and volumetric weight (length x width x height in cm, divided by 5000).
+- **Parcel size/weight:** Heavy or oversized items may limit carrier options. The caps differ per service and are easy to conflate. Done lockers take up to 5 kg. The UPS Israel **pickup-point/locker** service takes **one package of at most 8 kg** chargeable weight; its **home-delivery** scale runs to 15 kg. Chargeable weight is the greater of actual weight and volumetric weight, where volumetric weight is length x width x height in cm divided by 5000.
 - **Destination area:** Center (Gush Dan) has full coverage; periphery (Eilat, Galilee) may have limited options for some carriers
 - **Budget:** Israel Post is cheapest for standard; UPS Israel is 27.02 NIS incl. VAT pickup-point to pickup-point, but that rate is not flat nationwide (see the remote-zone surcharge in the Gotchas); Cheetah and Mahir Li are premium for speed
-- **Pickup vs door-to-door:** HFD points, Done and UPS lockers for self-service drop-off and pickup; Cheetah/Mahir Li/GetPackage for guaranteed door delivery
+- **Pickup vs door-to-door:** HFD points (~1,000), Cheetah Shops (35 branches and 1,300+ distribution points, the largest of the networks here), Done and UPS lockers for self-service drop-off and pickup. Mahir Li and GetPackage are door-to-door only. Do not assume Cheetah is express-only, its pickup network is bigger than HFD's.
 - **Volume:** Mahir Li requires minimum 10 deliveries/day; Israel Post, HFD, UPS Israel, and GetPackage have no minimums
 
 ### Step 2: Format Israeli Address
-Format addresses correctly per carrier requirements. The validator needs the address fields on the command line, so run it as `python scripts/format_address.py --validate --street "הרצל" --house 42 --city "תל אביב-יפו" --mikud 6120001`, or pass a whole address with `--json address.json`. Running it with no fields prints usage and exits 1. See references/address-format.md for the complete format specification.
+Format addresses correctly per carrier requirements. The validator needs the address fields on the command line, so run it as `python3 scripts/format_address.py --validate --street "הרצל" --house 42 --city "תל אביב-יפו" --mikud 6120001`, or pass a whole address with `--json address.json`. Running it with no fields prints usage and exits 1. See references/address-format.md for the complete format specification.
 
 Required fields:
 - **Street name (שם רחוב)** -- in Hebrew
@@ -62,6 +62,7 @@ Required fields:
 Special handling:
 - **Military addresses (APO):** Use IDF address format (`--type military --military-code NNNNN`). IDF unit postal codes begin with the digit 0. Only Israel Post handles military mail.
 - **Kibbutzim/Moshavim:** Settlement name + house number, no street (`--type kibbutz --settlement "..." --house N`)
+- **Localities with no street names:** recognised Bedouin localities in the Negev, parts of East Jerusalem, and newly-occupied neighbourhoods are addressed by neighbourhood or cluster plus house number, with no street at all (`--type no_street --neighbourhood "..." --house N`). Most carriers will additionally want a recipient phone number and a map pin for these.
 - **Industrial zones:** Area name + building/company name
 - **Arab localities:** Verify transliteration matches carrier database
 
@@ -116,15 +117,41 @@ Notifications by status:
 Respect quiet hours: no notifications between 22:00-08:00 Israel time.
 
 ### Step 6: Handle Returns and RMA
-Manage return shipments under Israel's distance-selling rules (Israeli Consumer Protection Law, Distance Selling Regulations):
-- Generate return label with original tracking reference
-- Track return shipment back to seller
-- Support different return reasons: defective, wrong item, changed mind. The buyer has 14 days from receipt to cancel a distance-selling transaction (online/phone purchase) without justification.
-- **Refund deadline:** the seller must refund money in the same payment method used, within 7 business days from the date the return is received.
-- **Cancellation fee:** for "changed mind" returns the seller may charge a cancellation fee of 5% of the purchase price OR 100 NIS, whichever is lower. NO cancellation fee is allowed if the item is defective, mis-described, late, or otherwise a breach of contract by the seller.
-- **Exclusions:** the cancellation regulations carry a long list of excluded goods and services. It includes perishable goods, items custom-made to the buyer's measurements, undergarments including swimwear, and furniture already assembled at the buyer's home, but it does not stop there. Read the current list in תקנות הגנת הצרכן (ביטול עסקה) before telling a seller an item is returnable.
-- Calculate return shipping cost by carrier. UPS pickup-point drop-off is often the cheapest return path for small parcels at 27.02 NIS incl. VAT, but add the remote-zone surcharge before quoting a periphery address (see Gotchas).
-- Update order status when return is received
+A distance sale (online or phone) is governed by **חוק הגנת הצרכן sections 14ג, 14ג1 and 14ה**, NOT by תקנות הגנת הצרכן (ביטול עסקה) התשע"א-2010. The 2010 regulations govern a different regime, the voluntary in-store return under section 14ו, and they carry a different deadline and a much longer exclusion list. Mixing the two is the most common way an RMA flow ends up unlawful, so keep them apart.
+
+**Step 6a: Determine the cancellation window.**
+- **Standard:** section 14ג(ג)(1) gives the buyer from the moment of the transaction until 14 days from receiving the goods, or from receiving the disclosure document, **whichever is later**. Do not start the clock at the order date.
+- **Four-month window:** section 14ג1(ג) gives a buyer who is a person with a disability, an אזרח ותיק (65 or over), or an עולה חדש (within five years of their עולה certificate) **four months**, on the same "whichever is later" basis, **provided the transaction involved a conversation between seller and buyer, including a conversation by electronic communication**. Most Israeli stores run live chat or WhatsApp, so this branch fires often. Under section 14ג1(ד) the seller may require ONE identifying document and may not demand any further proof.
+- An RMA system that hardcodes 14 days will auto-reject lawful cancellations. Model the window as a function of buyer status, not a constant.
+
+**Step 6b: Branch the return logistics on the REASON, because the statute does.**
+- **Defect, mismatch, late delivery, or any other breach by the seller** (section 14ה(א)(2)): the buyer only has to **make the goods available at the address where they were delivered** and notify the seller. Collection is the seller's job. Do NOT send this buyer a drop-off label.
+- **Changed mind** (section 14ה(ב)(2)): the buyer returns the goods **to the seller's place of business**. A prepaid drop-off label is a courtesy here, not a duty.
+
+**Step 6c: Refund on the statutory clock.**
+- Under BOTH section 14ה(א)(1) and section 14ה(ב)(1) the seller refunds **within 14 days of receiving the cancellation notice**. The trigger is the notice, not the arrival of the parcel. A flow that waits for the goods to come back before starting a clock will routinely miss the deadline.
+- The seller cancels the charge and gives the buyer a copy of the charge-cancellation notice.
+
+**Step 6d: Fees, and what the cap swallows.**
+- Seller breach (14ה(א)(1)): **no cancellation fee at all**.
+- Changed mind (14ה(ב)(1)): at most **5% of the price or 100 NIS, whichever is lower**. Note that "מחיר הנכס" in section 14ג(ו) is the total price **including delivery charges**.
+- Section 14ה(ד) defines דמי ביטול as **including shipping and packing costs**. The seller therefore cannot deduct the original outbound shipping on top of the cap; it is inside it. This is the single most common Israeli e-commerce refund error.
+- Section 14ה(ב2): installation costs may be recovered up to 100 NIS.
+- Section 14ה(ג): none of this removes the seller's right to sue for a significant deterioration in the goods' value.
+
+**Step 6e: Exclusions are a CLOSED list of five for a distance sale** (section 14ג(ד)). The right to cancel does not apply to:
+1. Perishable goods (טובין פסידים)
+2. Hospitality, travel, leisure or entertainment services, where cancellation falls within 7 non-rest days before the service is due
+3. Information as defined in חוק המחשבים התשנ"ה-1995
+4. Goods manufactured specially for the buyer as a result of the transaction
+5. Recordable or reproducible goods whose original packaging the buyer opened
+
+Undergarments, swimwear and assembled furniture are **NOT** on this list. They are excluded under the separate 2010 in-store regulations. Telling a seller to refuse an online swimwear cancellation is telling them to break the law.
+
+**Step 6f: Operational bits.**
+- Generate the return label with the original tracking reference and track the return leg back to the seller.
+- Calculate return shipping cost by carrier. UPS pickup-point drop-off is often the cheapest path for a small parcel at 27.02 NIS incl. VAT, but it accepts **one package of at most 8 kg**, and the remote-zone surcharge applies to periphery addresses (see Gotchas).
+- Update order status when the return is received.
 
 ## Examples
 
@@ -157,8 +184,8 @@ Actions:
 3. Contact HFD for a rate quote (no public rate API)
 4. Note: Mahir Li requires 10+ daily deliveries, likely not suitable for single parcels
 5. Cheetah serves Eilat (branch there) but at premium pricing
-6. Note that Eilat is a remote zone for UPS Israel, so the pickup-point rate carries a per-weight-band surcharge and is not the 27.02 NIS headline price
-6. Compare delivery times and costs
+6. Note that Eilat is a remote zone for UPS Israel, so the pickup-point rate carries a per-weight-band surcharge and is not the 27.02 NIS headline price. A 15 kg parcel is over the 8 kg pickup-point cap anyway, so this is a home-delivery quote
+7. Compare delivery times and costs
 Result: Israel Post is the most accessible option with public rate calculation. For better rates on volume, contact HFD directly.
 
 ## Bundled Resources
@@ -168,7 +195,7 @@ Result: Israel Post is the most accessible option with public rate calculation. 
 - `references/address-format.md` -- Complete Israeli address formatting specification: street, house, apartment, entrance, floor, city, mikud. Includes special formats for kibbutzim, military addresses, and industrial zones. Consult when formatting addresses in Step 2.
 
 ### Scripts
-- `scripts/format_address.py` -- Validates and formats Israeli shipping addresses per carrier requirements. Checks mikud (ZIP) validity, normalizes Hebrew text, and handles special address types (kibbutz, military, industrial zone). Run: `python scripts/format_address.py --help`
+- `scripts/format_address.py` -- Validates and formats Israeli shipping addresses per carrier requirements. Checks mikud (ZIP) validity, normalizes Hebrew text, and handles special address types (kibbutz, military, industrial zone). Run: `python3 scripts/format_address.py --help`
 
 ## Related Skills
 
@@ -194,8 +221,12 @@ This shipping-manager skill is a **developer integration guide** for building sh
 - **"WeShip" is not an Israeli platform.** `weship.com` is a Mexican logistics company. There is no Israeli WeShip carrier integration behind that name, so an agent that recommends it sends the user to the wrong country.
 - Baldar is delivery management software, not a carrier. If a user says "I ship with Baldar," they mean a courier that uses Baldar (Tapuz, Hafoz, Isgav, Mach1). Ask which carrier specifically.
 - Israel Post's website uses bot protection (ShieldSquare/PerimeterX). Automated scraping of tracking or rate data may be blocked. Use the open-source libraries or Datalogics API instead.
-- **Personal-import VAT threshold is USD 75, and it moved three times in six months.** It was raised to USD 150 in December 2025, cut back to USD 75 by a Knesset vote in February 2026, re-raised to USD 130 by ministerial order, and then returned to USD 75 when the Knesset revoked that order 59-23 on 2 June 2026. Orders above USD 75 (goods value, excluding shipping and insurance) attract 18% VAT and possible customs duty. Any figure you remember from training data for this threshold is probably one of the superseded ones, so re-check before quoting it. If a user asks about cross-border shipping cost or customs, refer them to the `israeli-customs-duty-calculator` skill (this skill is domestic-only).
-- **The UPS Israel pickup-point price is not flat nationwide.** The published Israeli price list is 22.9 NIS before VAT (27.02 NIS incl. VAT) to a pickup point, but a shipment from or to zone 3 adds 18 NIS before VAT (21.24 NIS incl. VAT) per weight band, and zone 5 adds 28 NIS before VAT (33.04 NIS incl. VAT) per weight band. Agents that quote a single national price will under-quote every periphery address. Home delivery is a separate and much higher scale, 46.5 NIS before VAT up to 5 kg, 48.5 NIS up to 10 kg, and 63.5 NIS up to 15 kg. The network launched in early 2025, so older shipping documentation will not mention it at all, and it is not the same as UPS's international express service.
+- **Personal-import VAT threshold is USD 75, and it moved three times in six months.** It was raised to USD 150 by ministerial order, cut back to USD 75 by a Knesset vote in February 2026, re-raised to USD 130 by a further ministerial order, and then returned to USD 75 when the Knesset revoked that order 59-23 on 2 June 2026. Orders above USD 75 (goods value, excluding shipping and insurance) attract 18% VAT and possible customs duty. Any figure you remember from training data for this threshold is probably one of the superseded ones, so re-check before quoting it. If a user asks about cross-border shipping cost or customs, refer them to the `israeli-customs-duty-calculator` skill (this skill is domestic-only).
+- **Every UPS Israel figure in this skill is from a price list valid for ONE MONTH.** The operator's price list closes with "מחירון זה תקף לחודש אוגוסט 2026 בלבד". Re-read site.ship.co.il before quoting any of these numbers, and tell the user the month you read. The figures below are the August 2026 list.
+- **The UPS Israel pickup-point price is not flat nationwide.** The published price is 22.9 NIS before VAT (27.02 NIS incl. VAT) to a pickup point, but a shipment from or to zone 3 adds 18 NIS before VAT (21.24 NIS incl. VAT) per weight band, and zone 5 adds 28 NIS before VAT (33.04 NIS incl. VAT) per weight band. Agents that quote a single national price will under-quote every periphery address. Home delivery is a separate and much higher scale, 46.5 NIS before VAT up to 5 kg, 48.5 NIS up to 10 kg, and 63.5 NIS up to 15 kg. The network launched in early 2025, so older shipping documentation will not mention it at all, and it is not the same as UPS's international express service.
+- **The pickup-point service and the home-delivery service have different caps, and conflating them quotes a service that will refuse the parcel.** Pickup point or locker takes ONE package of at most 8 kg chargeable. Home delivery runs to 15 kg and allows multi-parcel shipments, where chargeable weight is the SUM across packages, rounded up to the whole kilogram.
+- **Uncollected parcels bounce fast, and the locker window is 48 hours.** An uncollected shipment returns to the sender after 5 business days at a service store, or **48 hours at a locker**. Design the pickup-ready reminder cadence around 48 hours, not around a week. A failed pickup attempt at the sender costs 15 NIS before VAT, and return-to-sender is charged at the full destination tariff.
+- **Gated and restricted-access destinations are excluded and expensive.** The service does not cover destinations requiring pre-arranged entry approval, nor post office branches or embassies. The carrier may return the shipment at the sender's expense or charge 200 NIS before VAT for special distribution. This bites on military bases, secure campuses and some kibbutz gates, which is exactly where the skill's special address formats point.
 
 ## Reference Links
 
@@ -212,7 +243,7 @@ This shipping-manager skill is a **developer integration guide** for building sh
 ## Troubleshooting
 
 ### Error: "Invalid mikud (ZIP code)"
-Cause: Israeli mikud must be exactly 7 digits and match the city/street combination.
+Cause: Israeli mikud must be exactly 7 digits. **The bundled validator checks the SHAPE only.** It has no locality index and no street index, so it cannot tell you a well-formed mikud belongs to the city you paired it with. A VALIDATION PASSED result means "this is a plausible 7-digit code", never "this address is correct".
 Solution: Verify mikud at Israel Post's mikud lookup, which now lives at `doar.israelpost.co.il/locatezip` (the older `mypost.israelpost.co.il/zipcodesearch` redirects there). Common issue: old 5-digit codes, all Israeli mikud codes are now 7 digits. Second common issue: a validator that hardcodes a region-prefix range and rejects Jerusalem, whose codes begin with 9.
 
 ### Error: "Carrier API endpoint not found" or "404 on API call"
@@ -221,7 +252,7 @@ Solution: Check references/carrier-apis.md for the correct integration method. U
 
 ### Error: "Address not recognized by carrier"
 Cause: Address format doesn't match carrier's database, or Hebrew text encoding issue.
-Solution: Ensure address uses UTF-8 encoded Hebrew. Run `scripts/format_address.py --validate` to check format. For Arab localities, verify the carrier accepts the specific spelling. Try alternative transliterations.
+Solution: Ensure the address uses UTF-8 encoded Hebrew. Run `python3 scripts/format_address.py --validate` with the address fields to check the shape. Note that the script accepts ANY string as a city, so it will report VALIDATION PASSED for a misspelled or non-existent locality; it cannot settle a spelling dispute. For Arab localities, check the spelling against the carrier's own locality list and try alternative transliterations.
 
 ### Error: "Delivery failed -- recipient not found"
 Cause: Common for apartment buildings without intercom or missing entrance/floor details.

@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0",
   "skill": "israeli-shipping-manager",
-  "version": "2.3.0",
-  "generated_at": "2026-08-19T14:25:27Z",
+  "version": "2.4.0",
+  "generated_at": "2026-08-19T14:49:36Z",
   "generated_by": "evidence repair pass (verbatim snippets fetched and matched against source)",
   "claims": [
     {
@@ -86,79 +86,49 @@
     {
       "id": "distance-selling-14-day",
       "claim": "Under Israel's Consumer Protection Law (Distance Selling Regulations), a buyer has 14 days from receipt of an online/phone purchase to cancel without justification.",
-      "source_url": "https://nofryers.com/returning-goods-cancelling-services-for-cash-in-israel/",
-      "raw_snippet": "Within 14 days of receipt of the good or purchase of the service or within 14 days of delivery of the written terms, whichever is later",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "בנכס – מיום עשיית העסקה ועד ארבעה עשר ימים מיום קבלת הנכס",
       "where_used": [
         "SKILL.md Step 6 returns",
         "SKILL_HE.md Step 6"
       ],
-      "confidence": "high"
-    },
-    {
-      "id": "refund-7-business-days",
-      "claim": "When a return is accepted under the 14-day cancellation right, the seller must refund the buyer in the same payment method within 7 business days of receiving the returned goods.",
-      "source_url": "https://nofryers.com/returning-goods-cancelling-services-for-cash-in-israel/",
-      "raw_snippet": "Money must be returned within 7 business days from the date of return. (If paid by check, refund must be made within 5 business days.)",
-      "where_used": [
-        "SKILL.md Step 6",
-        "SKILL_HE.md Step 6"
-      ],
-      "confidence": "high"
+      "confidence": "high",
+      "note": "Re-anchored on the statute (14ג(ג)(1)) on 2026-08-19; previously cited a private blog."
     },
     {
       "id": "cancellation-fee-5pct-or-100nis",
       "claim": "For 'changed mind' returns, the seller may charge a cancellation fee of 5% of the purchase price OR 100 NIS, whichever is lower.",
-      "source_url": "https://nofryers.com/returning-goods-cancelling-services-for-cash-in-israel/",
-      "raw_snippet": "5% of the purchase price or 100 NIS, whichever is less",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "דמי ביטול בשיעור שלא יעלה על 5% ממחיר הנכס נושא החוזה או העסקה, או 100 שקלים חדשים, לפי הנמוך מביניהם",
       "where_used": [
         "SKILL.md Step 6",
         "SKILL_HE.md Step 6"
       ],
-      "confidence": "high"
+      "confidence": "high",
+      "note": "Re-anchored on the statute (14ה(ב)(1)) on 2026-08-19; previously cited a private blog."
     },
     {
       "id": "cancellation-fee-he",
       "claim": "דמי ביטול הם 5% ממחיר העסקה או 100 ₪, לפי הנמוך מביניהם.",
-      "source_url": "https://www.dinolaw.co.il/en/consumerism/cancellation-of-a-transactions-a-comprehensive-consumer-guide/",
-      "raw_snippet": "5% ממחיר התמורה ששולמה או 100 ₪",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "דמי ביטול בשיעור שלא יעלה על 5% ממחיר הנכס נושא החוזה או העסקה, או 100 שקלים חדשים, לפי הנמוך מביניהם",
       "where_used": [
         "SKILL_HE.md Step 6"
       ],
-      "confidence": "high"
-    },
-    {
-      "id": "return-exclusions-undergarments",
-      "claim": "The 14-day cancellation right does not apply to undergarments (including bathing suits).",
-      "source_url": "https://nofryers.com/returning-goods-cancelling-services-for-cash-in-israel/",
-      "raw_snippet": "Undergarments including bathing suits",
-      "where_used": [
-        "SKILL.md Step 6",
-        "SKILL_HE.md Step 6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "id": "return-exclusions-furniture",
-      "claim": "The 14-day cancellation right does not apply to furniture already assembled at the buyer's home.",
-      "source_url": "https://nofryers.com/returning-goods-cancelling-services-for-cash-in-israel/",
-      "raw_snippet": "Furniture assembled at the customer’s home",
-      "where_used": [
-        "SKILL.md Step 6",
-        "SKILL_HE.md Step 6"
-      ],
-      "confidence": "high"
+      "confidence": "high",
+      "note": "Re-anchored on the statute (14ה(ב)(1)) on 2026-08-19."
     },
     {
       "id": "return-exclusions-perishable",
       "claim": "Perishable goods are among the goods that cannot be returned under the cancellation regulations.",
-      "source_url": "https://nofryers.com/returning-goods-cancelling-services-for-cash-in-israel/",
-      "raw_snippet": "Goods which cannot be returned according to the law",
-      "note": "The page lists, immediately under this heading: Food products / Medications and nutritional supplements / Perishable goods / ... / Undergarments including bathing suits / Furniture assembled at the customer's home.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "טובין פסידים;",
+      "note": "Re-anchored on 14ג(ד)(1) on 2026-08-19. The undergarments and assembled-furniture entries that used to sit beside this one were REMOVED, because they belong to the 2010 in-store regulations and are not exclusions in a distance sale.",
       "where_used": [
         "SKILL.md Step 6",
         "SKILL_HE.md Step 6"
       ],
-      "confidence": "medium"
+      "confidence": "high"
     },
     {
       "id": "vat-rate-18pct",
@@ -692,6 +662,278 @@
       "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped; the digits and Hebrew are otherwise verbatim.",
       "verified_via": "pdf",
       "verified_at": "2026-08-19T14:24:31Z",
+      "where_used": [
+        "SKILL.md Step 1",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-pickup-8kg-cap",
+      "claim": "The UPS Israel pickup-point/locker service accepts ONE package only, at a maximum of 8 kg physical or volumetric weight, whichever is higher. The 15 kg cap belongs to the home-delivery scale.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "ניתן למסור בחנות שירות או לוקר ו/או לשלוח לחנות שירות או לוקר משלוח הכולל חבילה אחת בלבד ,במשקל מקסימלי של  8ק\"ג",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:49:36Z",
+      "where_used": [
+        "SKILL.md Step 1",
+        "SKILL.md Step 6",
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-price-list-validity",
+      "claim": "The UPS Israel domestic price list states it is valid for the month of August 2026 only, so every figure taken from it carries a one-month shelf life.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "מחירון זה תקף לחודש אוגוסט  2026בלבד.",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:49:36Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-uncollected-return-window",
+      "claim": "An uncollected UPS Israel shipment is returned to the sender after 5 business days from arrival at a service store, or after 48 hours at a locker.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "במידה והמשלוח לא נאסף מנקודת האיסוף ,הוא יוחזר לשולח לאחר  5ימי עסקים מיום הגעת המשלוח לחנות ,או  48שעות",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:49:36Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-failed-pickup-fee",
+      "claim": "A UPS Israel shipment that is not ready when the courier arrives incurs a fee of 15 NIS before VAT per pickup or pickup attempt.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "תיגבה עמלה בסך  ₪ 15לפני מע\"מ לכל איסוף או ניסיון איסוף.",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:49:36Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-restricted-access-fee",
+      "claim": "For destinations requiring pre-arranged entry approval, UPS Israel may return the shipment at the sender's expense or charge 200 NIS before VAT for special distribution.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "את המשלוח לשולח על חשבונו ,או לחילופין לחייב את הלקוח בתוספת תשלום בגין הפצה מיוחדת בסך של  ₪200לפני",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:49:36Z",
+      "where_used": [
+        "SKILL.md Gotchas",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-excess-weight-fee",
+      "claim": "Beyond the price list's weight limits UPS Israel charges 2.75 NIS per kg before VAT from the first kg, not less than 63.5 NIS, plus a 50 NIS excess weight/size fee per package.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "• עלות שילוח בסך  ₪ 2.75לכל ק\"ג לפני מע\"מ ,החל מהק\"ג הראשון ,ולא פחות מ ₪ 63.5-לפני מע\"מ.",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:49:36Z",
+      "where_used": [
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ups-excess-package-fee",
+      "claim": "UPS Israel charges an additional excess weight/size fee of 50 NIS per package in a shipment that exceeds the stated limits.",
+      "source_url": "https://site.ship.co.il/docs/%D7%9E%D7%97%D7%99%D7%A8%D7%95%D7%9F_%D7%90%D7%99%D7%96%D7%99%D7%A9%D7%99%D7%A4.pdf",
+      "raw_snippet": "• בנוסף תיגבה עמלת חריגה ממשקל/גודל בסך  ₪ 50לכל חבילה במשלוח.",
+      "note": "Read from the Israeli operator's own PDF price list with `pdftotext -layout` on 2026-08-19. Bidirectional control characters stripped.",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:49:36Z",
+      "where_used": [
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "distance-sale-14-day-window-14g",
+      "claim": "סעיף 14ג(ג)(1) לחוק הגנת הצרכן gives the buyer in a distance sale from the making of the transaction until 14 days from receiving the goods OR from receiving the disclosure document, whichever is later.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "בנכס – מיום עשיית העסקה ועד ארבעה עשר ימים מיום קבלת הנכס או מיום קבלת המסמך המכיל את הפרטים האמורים בסעיף קטן (ב), לפי המאוחר מביניהם",
+      "note": "Read verbatim from the consolidated statute text of חוק הגנת הצרכן on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "distance-sale-exclusions-14g-d",
+      "claim": "Section 14ג(ד) is a CLOSED list of five exclusions for a distance sale: perishable goods; hospitality/travel/leisure services cancelled within 7 non-rest days; information under חוק המחשבים; goods manufactured specially for the buyer; and recordable/reproducible goods whose original packaging the buyer opened. Undergarments and assembled furniture are NOT on it.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "טובין פסידים;",
+      "note": "Read verbatim from the consolidated statute on Hebrew Wikisource, 2026-08-19. Full list at 14ג(ד): (1) טובין פסידים; (2) שירותי הארחה, נסיעה, חופש או בילוי...; (3) מידע כהגדרתו בחוק המחשבים, התשנ\"ה-1995; (4) טובין שיוצרו במיוחד בעבור הצרכן בעקבות העסקה; (5) טובין הניתנים להקלטה, לשעתוק או לשכפול, שהצרכן פתח את אריזתם המקורית. The previously-shipped list (undergarments, assembled furniture) came from תקנות הגנת הצרכן (ביטול עסקה) התשע\"א-2010, which implements the separate section 14ו in-store regime.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "four-month-window-14g1",
+      "claim": "Section 14ג1(ג) gives a buyer who is a person with a disability, an אזרח ותיק (65+), or an עולה חדש (within five years of the עולה certificate) four months to cancel a distance sale, provided the transaction included a conversation between seller and buyer, including by electronic communication.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "בעסקת מכר מרחוק שנערכה עם צרכן שהוא אדם עם מוגבלות, אזרח ותיק או עולה חדש, רשאי הצרכן לבטל את העסקה בתוך ארבעה חודשים",
+      "note": "Read verbatim from the consolidated statute text of חוק הגנת הצרכן on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "four-month-one-document-14g1-d",
+      "claim": "Section 14ג1(ד) lets the seller require one identifying document and forbids demanding any further proof to exercise the four-month right.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "רשאי העוסק לדרוש ממנו להציג לפניו תעודה המוכיחה שהוא אדם עם מוגבלות, אזרח ותיק או עולה חדש, ובלבד שלא ידרוש ממנו הוכחה נוספת",
+      "note": "Read verbatim from the consolidated statute text of חוק הגנת הצרכן on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "refund-14-days-from-notice-14h",
+      "claim": "סעיף 14ה(א)(1) and סעיף 14ה(ב)(1) both require the seller to refund within 14 days of receiving the CANCELLATION NOTICE, not from receipt of the returned goods.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "יחזיר העוסק לצרכן בתוך 14 ימים מיום קבלת ההודעה על הביטול, את אותו חלק ממחיר העסקה ששולם על ידי הצרכן",
+      "note": "Read verbatim from the consolidated statute on Hebrew Wikisource, 2026-08-19. This corrects a previously-shipped claim of '7 business days from the date the return is received', which was wrong on BOTH the duration and the trigger: the 7-business-day rule belongs to תקנות הגנת הצרכן (ביטול עסקה) התשע\"א-2010, implementing the separate section 14ו voluntary-return regime.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "seller-collects-on-breach-14h-a2",
+      "claim": "Under section 14ה(א)(2), where the buyer cancels for a defect, mismatch, late delivery or other seller breach, the buyer only makes the goods available at the place where they were delivered and notifies the seller; the seller collects.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "קיבל הצרכן את הנכס נושא העסקה או החוזה, יעמידו לרשות העוסק במקום שבו נמסר לו הנכס ויודיע על כך לעוסק",
+      "note": "Read verbatim from the consolidated statute text of חוק הגנת הצרכן on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "buyer-returns-on-change-of-mind-14h-b2",
+      "claim": "Under section 14ה(ב)(2), where the buyer cancels for any other reason, the buyer returns the goods to the seller's place of business.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "קיבל הצרכן את הנכס נושא העסקה או החוזה, יחזירו לעוסק במקום עסקו",
+      "note": "Read verbatim from the consolidated statute text of חוק הגנת הצרכן on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "no-cancellation-fee-on-breach-14h-a1",
+      "claim": "Section 14ה(א)(1) forbids charging any cancellation fee where the buyer cancelled because of a seller breach.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "ולא יגבה מהצרכן דמי ביטול כלשהם",
+      "note": "Read verbatim from the consolidated statute text of חוק הגנת הצרכן on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "cancellation-fee-includes-shipping-14h-d",
+      "claim": "Section 14ה(ד) defines דמי ביטול as INCLUDING shipping and packing costs, so the seller cannot deduct the original outbound shipping on top of the 5% / 100 NIS cap.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "בסעיף זה, ”דמי ביטול“ – לרבות הוצאות או התחייבות בשל משלוח, אריזה או כל הוצאה או התחייבות אחרת",
+      "note": "Read verbatim from the consolidated statute text of חוק הגנת הצרכן on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "installation-cost-cap-14h-b2",
+      "claim": "Section 14ה(ב2) caps recoverable installation costs at 100 NIS.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "יהיה רשאי לגבות מהצרכן תשלום בשל הוצאות ההתקנה, בסכום שלא יעלה על 100 שקלים חדשים",
+      "note": "Read verbatim from the consolidated statute text of חוק הגנת הצרכן on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "deterioration-claim-14h-c",
+      "claim": "Section 14ה(ג) preserves the seller's right to sue for damage where the goods' value fell because of a significant deterioration in their condition.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "אין בהוראות סעיפים קטנים (א) ו־(ב) כדי לגרוע מזכותו של עוסק לתבוע את נזקיו, בשל כך שערך הנכס פחת כתוצאה מהרעה משמעותית במצבו",
+      "note": "Read verbatim from the consolidated statute text of חוק הגנת הצרכן on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "price-includes-delivery-14g-f",
+      "claim": "Section 14ג(ו) defines מחיר הנכס as the total price of the goods or service INCLUDING delivery charges, which is the base the 5% cancellation fee is computed on.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "”מחיר הנכס“ – מחירו הכולל של הנכס או של השירות, לרבות דמי ההובלה",
+      "note": "Read verbatim from the consolidated statute text of חוק הגנת הצרכן on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "section-14v-separate-regime",
+      "claim": "סעיף 14ו is a separate regime, the voluntary return of goods, implemented by תקנות הגנת הצרכן (ביטול עסקה) התשע\"א-2010. It is not the distance-selling right and carries different deadlines and a different exclusion list.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "בעסקה לרכישת טובין, סוגי טובין, שירותים או סוגי שירותים, שקבע השר, רשאי צרכן לבטל את הסכם הרכישה בתוך תקופה שקבע השר",
+      "note": "Read verbatim from the consolidated statute text of חוק הגנת הצרכן on Hebrew Wikisource, 2026-08-19.",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "cheetah-shops-network",
+      "claim": "Cheetah Shops comprises 35 branches and more than 1,300 distribution points nationwide, making it a larger pickup network than HFD's ~1,000 points.",
+      "source_url": "https://chitadelivery.co.il/en/",
+      "raw_snippet": "Cheetah Shops, a chain of 35 branches and more than 1,300 distribution points nationwide",
+      "note": "Read by curl from Cheetah's own English site on 2026-08-19; the Hebrew homepage carries the same figures as 'רשת צ'יטה שופס המונה 35 סניפים ויותר מ-1,300 נקודות חלוקה בפריסה ארצית'. The same pages state '9 סניפים בפריסה ארצית, מהצפון ועד אילת', which is why the reference no longer says 'Kiryat Ata to Eilat'.",
       "where_used": [
         "SKILL.md Step 1",
         "SKILL_HE.md",
