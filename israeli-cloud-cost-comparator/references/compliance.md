@@ -31,7 +31,7 @@ Israeli data protection considerations:
 | GCP me-west1 | Yes (Tel Aviv) | Google retains control | ISO 27001, SOC 2, PCI DSS |
 | Azure Israel Central | Yes (Israel) | Microsoft retains control | ISO 27001, SOC 2, PCI DSS, IL Gov |
 | Oracle il-jerusalem-1 | Yes (Jerusalem, underground) | Oracle retains control | ISO 27001, SOC 2, PCI DSS |
-| Kamatera | Yes (Petah Tikva, Haifa, others) | Israeli company | ISO 27001 |
+| Kamatera | Yes (Tel Aviv; its pricing page lists one Israeli location) | Israeli company | ISO 27001 |
 | HostIL (verify availability) | Yes (Israel) | Israeli company | Basic |
 
 **Recommendation by compliance level:**

@@ -27,7 +27,9 @@ Inter-region transfer out (`transferType = InterRegion Outbound`) is the sharper
 | eu-west-1 | $0.02/GB |
 
 Destinations checked from Tel Aviv: Ireland, Frankfurt, N. Virginia, Cape Town, Lagos, Hong Kong,
-Tokyo, Taipei. All $0.08. The charge is **asymmetric**: traffic INTO Tel Aviv from another region is
+Tokyo, Taipei. All $0.08, and $0.08 is the rate for 99 of the 104 destinations in the offer file.
+**It is not uniform, though**: the Australian regions (ap-southeast-2, -4, -6) are $0.15/GB, nearly
+double, so size an APAC replication leg from the offer file rather than from the headline rate. The charge is **asymmetric**: traffic INTO Tel Aviv from another region is
 billed at the sending region's ordinary rate, so a chatty two-way data plane is expensive in one
 direction only.
 

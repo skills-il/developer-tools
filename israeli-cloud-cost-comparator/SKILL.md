@@ -40,7 +40,7 @@ AWS launched the Israel (Tel Aviv) region `il-central-1` in August 2023. Key det
 - **The Israeli-region cost story is a network story, not a compute story.** Compute is a flat ~5% premium; network is 22% and 4x. A comparison that models a 10% compute premium and zero egress delta has it backwards on both counts.
 **When to use il-central-1:**
 - Data residency requirements mandate Israeli hosting
-- Latency-sensitive applications serving Israeli users (1-3ms local vs. 40-60ms to eu-west-1)
+- Latency-sensitive applications serving Israeli users (1-3 ms local vs. 45-65 ms to Western Europe)
 - Financial services, healthcare, or government applications
 - Compliance with Israeli Privacy Protection Authority regulations
 
@@ -127,7 +127,7 @@ Oracle's Israel Central region `il-jerusalem-1` sits in a hardened underground d
 
 **Note:** HostIL (`hostil.co.il`) appears in some directories but its current operational status could not be verified. Check the site directly before relying on it.
 
-**Akamai / Linode**: Akamai has a Tel Aviv office but there is no Linode Connected Cloud data center in Israel. Israeli users route to Frankfurt or Amsterdam, adding roughly 45-55 ms. Do not present Linode as an "Israeli region" option.
+**Akamai / Linode**: Akamai has a Tel Aviv office but there is no Linode Connected Cloud data center in Israel. Israeli users route to Frankfurt or Amsterdam, adding roughly 45-65 ms. Do not present Linode as an "Israeli region" option.
 
 **DigitalOcean, Vultr, Hetzner, OVH**: none operates a data center in Israel. Israeli users typically use Frankfurt, Strasbourg or Amsterdam at 45-65 ms to Tel Aviv. Hetzner remains the lowest-cost EU option for workloads with no residency requirement, but it is no longer as cheap as older comparisons suggest: its 15 June 2026 price adjustment took the entry CX23 from EUR 3.99 to **EUR 5.49/month net**, with some CPX and CCX lines rising considerably more.
 

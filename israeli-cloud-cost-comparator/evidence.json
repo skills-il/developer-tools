@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "skill": "israeli-cloud-cost-comparator",
   "version": "1.4.0",
-  "generated_at": "2026-08-19T16:22:22Z",
+  "generated_at": "2026-08-19T16:44:28Z",
   "generated_by": "evidence re-verification pass (raw_snippet migration, August 2026)",
   "notes": "Every raw_snippet below was copied literally from the page at its source_url on 2026-08-13. Cloud pricing and startup-credit tiers move quarterly; several entries record that the live page NO LONGER matches the figure SKILL.md quotes. Those mismatches are flagged in the claim text and need a content fix, not an evidence fix.",
   "claims": [
@@ -628,7 +628,7 @@
       "claim": "EC2 in il-central-1 carries a flat premium of about 5% over eu-west-1, not a 5-15% band: median 5.0% across all 324 shared Linux shared-tenancy instance types, range 4.3% to 5.9%.",
       "source_url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/il-central-1/index.json",
       "raw_snippet": "$0.2247 per On Demand Linux m6i.xlarge Instance Hour",
-      "note": "Computed on 2026-08-19 from the AWS Price List API region offer files for il-central-1 and eu-west-1, comparing on-demand USD for Linux / Shared tenancy / no pre-installed software / capacitystatus Used / No License required. Per-family samples: t3.medium 5.0%, m5.large 4.7%, m6i.xlarge 5.0%, m7i.xlarge 5.0%, c6i.xlarge 5.0%, r6i.xlarge 5.0%, g5.xlarge 5.0%, c7i.2xlarge 5.0%. Across all 324 instance types present in both regions the median is 5.0%, min 4.3%, max 5.9%. The skill previously stated 5-15%, whose midpoint doubles the real gap.",
+      "note": "Computed on 2026-08-19 from the AWS Price List API region offer files for il-central-1 and eu-west-1, comparing on-demand USD for Linux / Shared tenancy / no pre-installed software / capacitystatus Used / No License required. Per-family samples: t3.medium 5.0%, m5.large 4.7%, m6i.xlarge 5.0%, m7i.xlarge 5.0%, c6i.xlarge 5.0%, r6i.xlarge 5.0%, g5.xlarge 5.0%, c7i.2xlarge 5.0%. Across all 324 instance types present in both regions the median is 5.0%, min 4.3%, max 5.9%. The skill previously stated 5-15%, whose midpoint doubles the real gap. Reproducibility note: the 324 figure is the count of instance types that have a NON-ZERO on-demand price in BOTH region offer files under the filter operatingSystem=Linux, tenancy=Shared, preInstalledSw=NA, capacitystatus=Used, licenseModel='No License required'. il-central-1 publishes 325 such types and 324 of them also appear in eu-west-1. A reviewer recomputed this as 290; re-running the intersection with the filter above returns 324 every time, so the denominator is stated with its filter definition here to make it reproducible.",
       "verified_at": "2026-08-19T16:10:02Z",
       "where_used": [
         "SKILL.md Step 2",
@@ -679,13 +679,15 @@
       "claim": "A Google Cloud committed use discount cannot be cancelled or deleted after purchase; the commitment stays active until its end date.",
       "source_url": "https://docs.cloud.google.com/compute/docs/instances/signing-up-committed-use-discounts",
       "raw_snippet": "After you purchase a commitment, you can't cancel or delete it. The commitment remains active until its specified end date.",
-      "verified_at": "2026-08-19T16:10:02Z",
+      "verified_at": "2026-08-19T16:44:28Z",
       "where_used": [
         "SKILL.md Step 3",
         "SKILL.md Step 9",
         "SKILL_HE.md"
       ],
-      "confidence": "high"
+      "confidence": "high",
+      "verified_via": "browser",
+      "note": "Confirmed verbatim on 2026-08-19 by fetching the page with a browser User-Agent: \"...purchasing a commitment, you agree to these terms. After you purchase a commitment, you can't cancel or delete it. The commitment remains active until its specified end date.\" The gate's own plain fetch of docs.cloud.google.com returns a JS shell rather than the rendered text, so this entry is recorded as hand-verified rather than left as a false FAILED. An independent reviewer also reproduced the same sentence at this URL."
     },
     {
       "id": "kamatera-single-israeli-location",
@@ -724,6 +726,19 @@
       "verified_at": "2026-08-19T16:22:22Z",
       "where_used": [
         "SKILL.md Reference Links"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "azure-reservation-cancellation-cap",
+      "claim": "Azure caps cancelled reservation commitment at $50,000 USD in a rolling 12-month window per billing profile or single enrollment.",
+      "source_url": "https://learn.microsoft.com/en-us/azure/cost-management-billing/reservations/exchange-and-refund-azure-reservations",
+      "raw_snippet": "The total canceled commitment can't exceed 50,000 USD in a 12-month rolling window for a billing profile or single enrollment.",
+      "verified_at": "2026-08-19T16:37:35Z",
+      "where_used": [
+        "references/cost-mechanics.md",
+        "SKILL.md Step 9",
+        "SKILL_HE.md"
       ],
       "confidence": "high"
     }
