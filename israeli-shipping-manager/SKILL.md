@@ -117,7 +117,7 @@ Notifications by status:
 Respect quiet hours: no notifications between 22:00-08:00 Israel time.
 
 ### Step 6: Handle Returns and RMA
-A distance sale (online or phone) gives the buyer a right under **חוק הגנת הצרכן sections 14ג, 14ג1, 14ה and 14ט**. תקנות הגנת הצרכן (ביטול עסקה) התשע"א-2010, made under section 14ו, are a **separate and parallel** statutory right, not a rival regime that switches off when the sale is remote. They are simply less generous: the same 14-day window for goods, but the goods must be unused and undamaged and must be physically returned, and a longer exclusion list applies. A buyer in a distance sale will therefore rely on 14ג. Keep the two apart in your code, because the exclusion lists differ and mixing them is the most common way an RMA flow ends up unlawful. Section 14ט(ז) makes the split explicit: the notice rules in Step 6g do not apply to a 14ו return.
+A distance sale (online or phone) gives the buyer a right under **חוק הגנת הצרכן sections 14ג, 14ג1, 14ה and 14ט**. תקנות הגנת הצרכן (ביטול עסקה) התשע"א-2010, made under section 14ו, are a **separate and parallel** statutory right, not a rival regime that switches off when the sale is remote. They are simply less generous, and narrower than they look: they reach only the goods and services enumerated in the regulations' תוספת, and only where the price paid exceeds 50 NIS. The goods must be unused, undamaged and physically returned. The window is 14 days from receipt for the main goods items, but **clothing and footwear get only two non-rest days from purchase** (reg 2(2)), with the price tag still attached, so do not state a flat 14 days for that regime. The exclusion list is also longer. A buyer in a distance sale will therefore rely on 14ג. Keep the two apart in your code, because the exclusion lists differ and mixing them is the most common way an RMA flow ends up unlawful. Section 14ט(ז) makes the split explicit: the notice rules in Step 6g do not apply to a 14ו return.
 
 **Step 6a: Determine the cancellation window.**
 - **Standard:** section 14ג(ג)(1) gives the buyer from the moment of the transaction until 14 days from receiving the goods, or from receiving the disclosure document, **whichever is later**. Do not start the clock at the order date.
@@ -148,14 +148,14 @@ A distance sale (online or phone) gives the buyer a right under **חוק הגנ�
 
 Undergarments, swimwear and assembled furniture are **NOT** on this list. They are excluded under the separate 2010 in-store regulations. Telling a seller to refuse an online swimwear cancellation is telling them to break the law.
 
-**Step 6g: Build the notice INTAKE, because section 14ט mandates its shape.**
-
-Steps 6a-6f all hang off "the cancellation notice", and section 14ט dictates how that notice must be receivable. It is the most build-relevant provision in the chapter, because it dictates UI and queue behaviour rather than policy. In short: you must accept a notice orally, by registered mail, by email, by fax if you have one, and over the internet for anything contractable online; you must put a **dedicated cancellation link on your homepage**, prominently; and the notice may require only the buyer's name and ID number, so an intake form gating cancellation behind an order number or a reason code is over-collecting. See `references/returns-law.md` for the full text of 14ט(א)-(ז), the disclosure duties, and the one narrow statutory-damages route that actually attaches to it.
-
 **Step 6f: Operational bits.**
 - Generate the return label with the original tracking reference and track the return leg back to the seller.
 - Calculate return shipping cost by carrier. UPS pickup-point drop-off is often the cheapest path for a small parcel at 27.02 NIS incl. VAT, but it accepts **one package of at most 8 kg**, and the remote-zone surcharge applies to periphery addresses (see Gotchas).
 - Update order status when the return is received.
+
+**Step 6g: Build the notice INTAKE, because section 14ט mandates its shape.**
+
+Steps 6a-6f all hang off "the cancellation notice", and section 14ט dictates how that notice must be receivable. It is the most build-relevant provision in the chapter, because it dictates UI and queue behaviour rather than policy. In short: you must accept a notice orally, by registered mail, by email, by fax if you have one, and over the internet for anything contractable online; you must put a **dedicated cancellation link on your homepage**, prominently; and the notice may require only the buyer's name and ID number, so an intake form gating cancellation behind an order number or a reason code is over-collecting. See `references/returns-law.md` for the full text of 14ט(א)-(ז), the disclosure duties, and the one narrow statutory-damages route that actually attaches to it.
 
 ## Examples
 
@@ -190,7 +190,7 @@ Actions:
 5. Cheetah serves Eilat (branch there) but at premium pricing
 6. Note that Eilat is a remote zone for UPS Israel, so the pickup-point rate carries a per-weight-band surcharge and is not the 27.02 NIS headline price. A 15 kg parcel is over the 8 kg pickup-point cap anyway, so this is a home-delivery quote
 7. Compare delivery times and costs
-Result: Israel Post is the most accessible option with public rate calculation. For better rates on volume, contact HFD directly.
+Result: Israel Post is the most accessible option, but its rate calculator is no longer a scriptable public endpoint, so get the quote through a browser or a carrier account. For better rates on volume, contact HFD directly.
 
 ## Bundled Resources
 

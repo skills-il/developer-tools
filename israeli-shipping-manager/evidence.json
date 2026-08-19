@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "skill": "israeli-shipping-manager",
   "version": "2.4.0",
-  "generated_at": "2026-08-19T15:14:24Z",
+  "generated_at": "2026-08-19T15:25:49Z",
   "generated_by": "evidence repair pass (verbatim snippets fetched and matched against source)",
   "claims": [
     {
@@ -289,13 +289,15 @@
     },
     {
       "id": "israelpost-calcprice-endpoint",
-      "claim": "Israel Post rate calculation is reachable at https://www.israelpost.co.il/npostcalc.nsf/CalcPrice?openagent&lang=HE... , as used by the open-source client bennymeg/IsraelPostalServiceAPI.",
+      "claim": "The Israel Post rate-calculation endpoint https://www.israelpost.co.il/npostcalc.nsf/CalcPrice?openagent& exists but is NO LONGER reachable without auth: it sits inside the same Radware Bot Manager perimeter as the rest of the estate and returns HTTP 403 to a plain request.",
       "source_url": "https://raw.githubusercontent.com/bennymeg/IsraelPostalServiceAPI/master/src/service-utils.ts",
       "raw_snippet": "let url: string = \"https://www.israelpost.co.il/npostcalc.nsf/CalcPrice?openagent\";",
       "where_used": [
         "references/carrier-apis.md"
       ],
-      "confidence": "high"
+      "confidence": "high",
+      "note": "Re-verified 2026-08-19: `curl -sSI` returns HTTP/2 403 with `server: rdwr`. Older documentation and the open-source libraries that wrap this endpoint describe it as public and no-auth; that was true once and is not true now. The skill and references/carrier-apis.md were corrected accordingly.",
+      "verified_at": "2026-08-19T15:25:49Z"
     },
     {
       "id": "no-public-rest-api-il-carriers",
@@ -1029,6 +1031,100 @@
       "raw_snippet": "רשאי בית המשפט לפסוק, בשל אותה הפרה, פיצויים שאינם תלויים בנזק (בסעיף זה – פיצויים לדוגמה), בסכום שלא יעלה על 10,000 שקלים חדשים",
       "note": "Read verbatim from the consolidated statute on Hebrew Wikisource, 2026-08-19.",
       "where_used": [
+        "references/returns-law.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "shlager-orian",
+      "claim": "Shlager (שלאגר) is a smart-locker network for receiving and returning online purchases, operated by Orian.",
+      "source_url": "https://www.orian.com/",
+      "raw_snippet": "אוריין",
+      "note": "Operator attribution only. The count and exact footprint of the Shlager network are NOT asserted anywhere in the skill, because they could not be verified from a primary source. Flagged for re-sourcing next cycle.",
+      "where_used": [
+        "SKILL.md locker table",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "mahir-li-9-hours",
+      "claim": "Mahir Li advertises same-day courier delivery within 9 hours of pickup.",
+      "source_url": "https://mahirli.com/?page_id=8",
+      "raw_snippet": "עד 9 שעות והמשלוח אצל הלקוח",
+      "where_used": [
+        "SKILL.md carrier table",
+        "SKILL_HE.md",
+        "references/carrier-apis.md"
+      ],
+      "confidence": "high",
+      "note": "Deep link to the service page carrying the claim; the bare homepage was rejected by the evidence gate because a homepage cannot falsify a snippet."
+    },
+    {
+      "id": "penalty-14t-channels-22g",
+      "claim": "סעיף 22ג(א)(31א) makes it an עיצום כספי contravention to fail to allow a consumer to deliver a cancellation notice through the routes listed in section 14ט(א) and (ב). Section 23 (עונשין) by contrast contains NO reference to section 14ט, so breach of 14ט is not a criminal offence under Section 23.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "לא אפשר לצרכן למסור לו הודעה על ביטול עסקה בכל אחת מהדרכים המנויות",
+      "note": "Found only after widening the search from sections 23 and 31א to section 22ג. An earlier draft of this skill asserted that the narrow 31א(א)(2ב) route was the whole enforcement picture; that was itself an over-correction.",
+      "where_used": [
+        "references/returns-law.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "penalty-14t-disclosure-22g",
+      "claim": "סעיף 22ג(א)(31ב) makes it an עיצום כספי contravention to fail to disclose the information required by section 14ט(ד) and (ה).",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "לא גילה לצרכן מידע שהיה עליו לגלותו בהתאם להוראות",
+      "where_used": [
+        "references/returns-law.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "penalty-amounts-22g",
+      "claim": "סעיף 22ג(א) sets the עיצום כספי at 22,000 NIS for a corporate seller (25,950 NIS as adjusted for 2026) and 7,000 NIS otherwise (8,260 NIS for 2026).",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F",
+      "raw_snippet": "רשאי הממונה להטיל עליו עיצום כספי לפי הוראות פרק זה בסכום של 22,000 שקלים חדשים",
+      "note": "The 2026-adjusted figures 25,950 and 8,260 are carried in the statute's own inline adjustment notes alongside the 2015 base amounts.",
+      "where_used": [
+        "references/returns-law.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "regs2010-clothing-two-days",
+      "claim": "תקנה 2(2) of תקנות הגנת הצרכן (ביטול עסקה) gives only two non-rest days from purchase for clothing and footwear (schedule item 7), provided the price tag has not been removed, so the 2010 regime's window is not uniformly 14 days.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F_(%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94)",
+      "raw_snippet": "מיום הרכישה ועד תום שני ימים שלאחריו שאינם ימי מנוחה ובלבד שתווית המחיר על הטובין, אם ישנה, לא הוסרה",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6",
+        "references/returns-law.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "regs2010-50nis-floor",
+      "claim": "The 2010 cancellation regulations define טובין as goods whose price paid exceeds 50 NIS, so the regime does not reach cheaper items.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F_(%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94)",
+      "raw_snippet": "”טובין“ – טובין שהמחיר ששולם בעדם עולה על 50 שקלים חדשים",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6",
+        "references/returns-law.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "regs2010-unused-undamaged",
+      "claim": "תקנה 2 of the 2010 regulations conditions cancellation of a goods purchase on the consumer returning the goods, undamaged and unused.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%94%D7%92%D7%A0%D7%AA_%D7%94%D7%A6%D7%A8%D7%9B%D7%9F_(%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94)",
+      "raw_snippet": "ובלבד שביטול הסכם לרכישת טובין יהיה בתנאי שהצרכן יחזירם לעוסק והטובין לא נפגמו ולא נעשה בהם שימוש בידי הצרכן הרוכש",
+      "where_used": [
+        "SKILL.md Step 6",
+        "SKILL_HE.md שלב 6",
         "references/returns-law.md"
       ],
       "confidence": "high"

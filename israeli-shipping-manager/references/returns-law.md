@@ -10,7 +10,8 @@ All references are to **חוק הגנת הצרכן, התשמ"א-1981** unless st
 | | Distance sale (section 14ג) | Voluntary return (section 14ו + the 2010 regulations) |
 |---|---|---|
 | Instrument | חוק הגנת הצרכן 14ג / 14ג1 / 14ה / 14ט | תקנות הגנת הצרכן (ביטול עסקה), התשע"א-2010 |
-| Window for goods | 14 days from receipt of the goods **or** the disclosure document, whichever is later | Also 14 days from receipt for the main goods case |
+| Scope | Any distance sale | Only the goods and services enumerated in the regulations' תוספת, and only where the price paid exceeds 50 NIS |
+| Window for goods | 14 days from receipt of the goods **or** the disclosure document, whichever is later | 14 days from receipt for the main schedule items, but only **two non-rest days** from purchase for clothing and footwear (reg 2(2)), with the price tag still attached |
 | Condition of goods | Not a precondition of the right | Must be unused and undamaged, and physically returned |
 | Exclusions | Closed list of five in 14ג(ד) | A much longer list, including undergarments and assembled furniture |
 | Notice rules | Section 14ט applies | Section 14ט(ז) expressly disapplies 14ט |
@@ -50,8 +51,10 @@ UI and queue behaviour rather than policy.
 - **14ט(ב)** for any transaction contractable online, a dedicated cancellation link on the **main
   page** of the website, `שימוקם באופן מובלט וברור`.
 - **14ט(ג)** the notice carries the consumer's name and ID number, plus one further agreed
-  identifying detail for an oral notice. The seller may not require more. An intake form gating
-  cancellation behind an order number, a reason code or a photo is over-collecting.
+  identifying detail for an oral notice. The seller may not require more, although the same
+  sub-section lets the Minister prescribe additional particulars by regulation, so re-check before
+  hard-coding a field list. An intake form gating cancellation behind an order number, a reason
+  code or a photo is over-collecting.
 - **14ט(ד)** the channels, their contact details, and the required notice contents must be disclosed
   in writing no later than supply of the goods or services. "In writing" includes the contract, a
   disclosure form, or a document setting out the main terms.
@@ -61,16 +64,25 @@ UI and queue behaviour rather than policy.
   `בהבלטה מיוחדת ובאותיות ברורות וקריאות`.
 - **14ט(ז)** none of section 14ט applies to a 14ו return.
 
-## Enforcement: the narrow version is the true one
+## Enforcement: an administrative fine, plus one narrow damages route
 
-It is often said that any breach of 14ט carries statutory damages. That does not survive reading the
-statute. Searching sections 23 and 31א for references to 14ט yields one limb:
+Two separate hooks, and it is easy to look in the wrong place for them. Section 23 (עונשין) contains
+**no** reference to 14ט at all, so this is not a criminal offence under section 23. The real exposure
+is administrative:
 
-**Section 31א(א)(2ב)** allows פיצויים לדוגמה without proof of damage where a consumer cancelled a
-**continuing** transaction (עסקה מתמשכת) by a 14ט notice and the seller kept charging them, contrary
-to section 13ד(ג). Section 31א(א) caps such damages at 10,000 NIS.
+**Section 22ג (עיצום כספי)** lists both halves of 14ט:
+- **22ג(א)(31א)** `לא אפשר לצרכן למסור לו הודעה על ביטול עסקה בכל אחת מהדרכים המנויות בסעיף 14ט(א) ו־(ב), לפי הוראות אותו סעיף`
+- **22ג(א)(31ב)** `לא גילה לצרכן מידע שהיה עליו לגלותו בהתאם להוראות סעיף 14ט(ד) ו־(ה)`
 
-Use the narrow statement. It is enough reason to build the intake correctly.
+Under 22ג(א) the fine is **22,000 NIS** for a seller that is a corporation (the statute's own
+adjustment note gives **25,950 NIS for 2026**) and **7,000 NIS** otherwise (**8,260 NIS for 2026**).
+
+Separately, **section 31א(א)(2ב)** allows פיצויים לדוגמה without proof of damage where a consumer
+cancelled a **continuing** transaction (עסקה מתמשכת) by a 14ט notice and the seller kept charging
+them, contrary to section 13ד(ג). Section 31א(א) caps such damages at 10,000 NIS.
+
+So a missing homepage link, a missing channel, or missing disclosure is directly finable per breach.
+That is the number to quote a merchant, not the narrow damages route.
 
 ## Refund and fee mechanics
 
