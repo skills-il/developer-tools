@@ -1,0 +1,16 @@
+{
+  "cycles": [
+    {
+      "version": "1.4.0",
+      "date": "2026-08-19",
+      "lessons": [
+        "The arnona constants were the textbook 'banded amount written flat' defect and were wrong in BOTH value and UNIT: the skill carried Tel Aviv at 55.80 per sqm bi-monthly, while the city's own 2026 tzav arnona publishes tariffs per sqm PER YEAR, from 46.64 to 139.60 across 5 zones and 6 residential building types. 55.80 appears nowhere in the order. The bundled script compounded it by multiplying the bi-monthly figure by 6. Removed the constants rather than correcting them, because no single scalar per city can be right.",
+        "The Bituach Leumi / health tax rates were a one-row extract of a 17-row official table. The standard 1.04% / 7.00% row is correct, but under-18 employees and working pensioners are ZERO-rated, so a generated payroll sheet over-deducted their entire employee contribution. Added the full table in both languages.",
+        "CARRY: the self-employed BL rates in references/israeli-tax-rates.md (4.47% reduced / 12.83% full) were NOT verified this cycle; only the employee-side table was pulled from btl.gov.il. Verify against the self-employed rates page next cycle.",
+        "CARRY: only Tel Aviv's arnona order was actually fetched. The Jerusalem, Haifa, Beer Sheva and Netanya figures were removed as structurally unsound rather than proven wrong individually.",
+        "CARRY: the Excel sheet-direction menu path in Google Sheets was hedged rather than asserted, because the current UI path could not be confirmed from an official Google support page this cycle.",
+        "Deferred over the Phase 4.1 discretionary cap: adding worked Hebrew examples for the non-standard BL categories, and an IMPORTDATA-based Hebcal recipe as an alternative to Apps Script."
+      ]
+    }
+  ]
+}

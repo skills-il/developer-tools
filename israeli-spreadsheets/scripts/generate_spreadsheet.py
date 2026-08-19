@@ -42,7 +42,8 @@ TAX_BRACKETS = [
     (Decimal("999999999"), Decimal("0.50")),
 ]
 CREDIT_POINT_VALUE = Decimal("2904")
-RESIDENT_CREDIT_POINTS = Decimal("2.25")
+RESIDENT_CREDIT_POINTS = Decimal("2.25")  # male resident; a female resident gets 2.75
+FEMALE_RESIDENT_CREDIT_POINTS = Decimal("2.75")
 
 NIS_FORMAT = '#,##0.00 "₪"'
 PERCENT_FORMAT = "0.00%"
@@ -198,33 +199,30 @@ def create_arnona(output_path):
     ws["A1"] = "מחשבון ארנונה"
     ws["A1"].font = Font(name="Heebo", size=16, bold=True)
 
-    headers = ["עיר", "תעריף למ\"ר (דו-חודשי)", "שטח (מ\"ר)", "ארנונה דו-חודשית", "ארנונה שנתית"]
+    ws["A2"] = ("הזינו את התעריף השנתי למ\"ר מתוך צו הארנונה של הרשות המקומית "
+                "לשנת המס. התעריף משתנה לפי אזור, סוג בניין וגודל הנכס, ולכן "
+                "אין תעריף אחד לעיר.")
+    ws["A2"].font = Font(name="Heebo", size=10, italic=True)
+
+    headers = ["רשות מקומית", "אזור / סוג בניין", "תעריף שנתי למ\"ר",
+               "שטח (מ\"ר)", "ארנונה שנתית", "ארנונה דו-חודשית"]
     for i, h in enumerate(headers, 1):
-        ws.cell(row=3, column=i, value=h)
-    style_header(ws, 3, 5)
+        ws.cell(row=4, column=i, value=h)
+    style_header(ws, 4, 6)
 
-    cities = [
-        ("תל אביב-יפו", 55.80),
-        ("ירושלים", 40.50),
-        ("חיפה", 33.20),
-        ("באר שבע", 27.90),
-        ("נתניה", 43.10),
-        ("רעננה", 48.50),
-        ("הרצליה", 52.30),
-        ("פתח תקווה", 38.70),
-        ("ראשון לציון", 41.20),
-    ]
+    # Deliberately blank: municipal tariffs are published per sqm per YEAR in
+    # each authority's tzav arnona, stratified by zone, building type and area
+    # band. A single hardcoded number per city would be wrong for most
+    # properties, so the user fills in the tariff for their own property.
+    for row in range(5, 12):
+        ws.cell(row=row, column=1, value="[רשות]")
+        ws.cell(row=row, column=2, value="[אזור / סוג]")
+        ws.cell(row=row, column=3, value=0).number_format = NIS_FORMAT
+        ws.cell(row=row, column=4, value=80)  # default 80 sqm
+        ws.cell(row=row, column=5, value=f"=C{row}*D{row}").number_format = NIS_FORMAT
+        ws.cell(row=row, column=6, value=f"=E{row}/6").number_format = NIS_FORMAT
 
-    for i, (city, rate) in enumerate(cities, 4):
-        ws.cell(row=i, column=1, value=city)
-        ws.cell(row=i, column=2, value=rate).number_format = NIS_FORMAT
-        ws.cell(row=i, column=3, value=80)  # default 80 sqm
-        ws.cell(row=i, column=4).number_format = NIS_FORMAT
-        ws.cell(row=i, column=4, value=f"=B{i}*C{i}")
-        ws.cell(row=i, column=5).number_format = NIS_FORMAT
-        ws.cell(row=i, column=5, value=f"=D{i}*6")
-
-    for col in ["A", "B", "C", "D", "E"]:
+    for col in ["A", "B", "C", "D", "E", "F"]:
         ws.column_dimensions[col].width = 22
 
     wb.save(output_path)

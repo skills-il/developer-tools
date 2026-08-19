@@ -10,30 +10,44 @@
 | 120,721 - 228,000 | 20% | Widened in 2026 (was up to 193,800) |
 | 228,001 - 301,200 | 31% | Widened in 2026 (was 193,801-269,280) |
 | 301,201 - 560,280 | 35% | Floor raised in 2026 (was 269,281-560,280) |
-| 560,281 - 721,560 | 47% | Unchanged from 2025 |
-| Above 721,560 | 50% | Unchanged (47% + 3% surtax) |
+| Above 560,280 | 47% | Top statutory bracket. The official table ends here. |
+
+The often-quoted "50% above 721,560" is not a bracket. Section 121B(a) adds a 3% surtax on taxable income above 721,560 NIS (60,130 NIS/month), giving 50% effective on personal-exertion income. Section 121B(a1) adds a FURTHER 2% on capital-source income above the same threshold, so investment income carries 5% of surtax, not 3%. The threshold is frozen for 2025-2027.
 
 Amendment 288 expanded the middle brackets (20%, 31%, 35%); a taxpayer with 300,000 NIS taxable income saves roughly 5,000 NIS/year compared to the pre-amendment schedule. The top marginal rate (50%) and Bituach Leumi rates were not affected.
 
 ## Tax Credit Points (Nekudot Zikui)
 - Value per point: 2,904 NIS/year (242 NIS/month)
-- Israeli resident: 2.25 points
-- Woman: +0.5 points
+- Israeli resident: 2.25 points (male)
+- Woman: +0.5 points, so a female Israeli resident is entitled to 2.75 points in total
+- Combat reserve (miluim) service: Amendment 283, published 23.11.2025, added Section 39B to the Ordinance granting credit points for combat reserve service. Check the Tax Authority guidance for the current entitlement before applying it to a payslip.
 - New immigrant (year 1-1.5): +3 points
 - New immigrant (year 1.5-2): +2 points
 - New immigrant (year 2-3.5): +1 point
 
 ## National Insurance (Bituach Leumi), bands effective 01.01.2026
-| Income Range | Employee Rate | Self-Employed Rate |
+The employee rates below are for the STANDARD category only: an Israeli resident
+aged 18 to retirement age. The official table has 17 employee categories and
+several are zero-rated. See the full table in SKILL.md Step 2.5 before using
+these in a payroll calculation.
+
+| Income Range | Employee Rate (standard category) | Self-Employed Rate |
 |-------------|--------------|-------------------|
 | Up to 7,703 NIS/month | 1.04% | 4.47% |
 | 7,704 - 51,910 NIS/month | 7.00% | 12.83% |
 
+Employer rates for the standard category are 4.51% on the reduced band and 7.6%
+on the full band. Income above 51,910 NIS/month is not insurable.
+
 ## Health Tax (Mas Briut), bands effective 01.01.2026
+Standard category (resident aged 18 to retirement age):
+
 | Income Range | Rate |
 |-------------|------|
 | Up to 7,703 NIS/month | 3.23% |
-| Above 7,703 NIS/month | 5.17% |
+| 7,704 - 51,910 NIS/month | 5.17% |
+
+Combined employee total for this category is 4.27% on the reduced band and 12.17% on the full band.
 
 ## VAT (Ma'am)
 - Standard rate: 18% (raised from 17% on 2025-01-01). The Finance Ministry floated a rise to 19%, but it was not enacted and the 2026 state budget contains no such increase.
@@ -53,7 +67,10 @@ Amendment 288 expanded the middle brackets (20%, 31%, 35%); a taxpayer with 300,
 | Disability insurance | - | up to 0.5%, carved out of the employer's 6.5% tagmulim, not added on top |
 
 ### Section 45a Tax Credit on Pension Contributions
-Employees and self-employed who contribute to a recognized pension fund are entitled to a 35% tax credit on qualifying pension contributions under Section 45a of the Income Tax Ordinance. The credit is computed on the employee-side deposit (and the self-employed deposit for the self-employed), subject to annual ceilings set by the Tax Authority. A tlush maskoret (salary slip) spreadsheet that shows "income tax" without subtracting the 45a credit will overstate the actual tax withheld.
+Employees and self-employed who contribute to a recognized pension fund are entitled to a 35% tax credit on qualifying pension contributions under Section 45a of the Income Tax Ordinance. The credit is computed on the employee-side deposit (and the self-employed deposit for the self-employed), subject to annual ceilings set by the Tax Authority. The 2026 ceilings from the
+Tax Authority's monthly deductions booklet are: Section 45A(d) 189 NIS/month;
+Section 45A(e)(1) 19,400 NIS/month; Section 45A(e)(2) 9,700 NIS/month. The
+2026 average wage (which caps the mandatory-pension base) is 13,769 NIS. A tlush maskoret (salary slip) spreadsheet that shows "income tax" without subtracting the 45a credit will overstate the actual tax withheld.
 
 ## Keren Hishtalmut (Education Fund)
 | | Employee | Employer |
@@ -67,3 +84,15 @@ Employees and self-employed who contribute to a recognized pension fund are enti
 - Monthly: 6,443.85 NIS (raised 3.3% from 6,247.67 NIS on 2026-04-01)
 - Hourly: ~35.40 NIS (based on a 182-hour full-time month)
 - Before 1 April 2026 the monthly minimum was 6,247.67 NIS. The 2025 figure of 5,880.02 NIS/month is no longer current.
+
+## Arnona (municipal property tax)
+
+There is no national arnona rate and no single rate per city. Each local
+authority publishes a `צו הארנונה` for the tax year with tariffs stated **per
+sqm per YEAR**, stratified by zone, by building type and by area band. Tel
+Aviv's 2026 residential order, for example, has five zones times six building
+types, with tariffs from 46.64 to 139.60 NIS per sqm per year.
+
+Never hardcode a per-city scalar into a worksheet. Read the tariff for the
+specific property out of that authority's order and treat it as an input. The
+bi-monthly instalment is the annual charge divided by six.

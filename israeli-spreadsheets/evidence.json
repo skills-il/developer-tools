@@ -355,6 +355,403 @@
       "appears_in": [
         "references/israeli-tax-rates.md"
       ]
+    },
+    {
+      "id": "btl-employee-under18-zero",
+      "claim": "Employees under 18 have a 0% employee national insurance and health tax rate",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "מי שטרם מלאו לו 18 שנה",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "btl-employee-working-pensioner-zero",
+      "claim": "Employees receiving an old-age pension (working pensioners) have a 0% employee rate",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "נשים וגברים המקבלים קצבת אזרח ותיק",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "btl-employee-67-70-not-pensioner",
+      "claim": "Men and women aged 67 to 70 not receiving an old-age pension pay a combined employee rate of 3.93% reduced and 10.03% full",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "נשים וגברים בין גיל 67 לגיל 70 שאינם מקבלים קצבת אזרח ותיק",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "btl-employee-standard-combined",
+      "claim": "The standard employee category (resident aged 18 to retirement age) pays a combined 4.27% on the reduced band and 12.17% on the full band",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "טור 1 - עובד",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "btl-controlling-shareholder-rate",
+      "claim": "A controlling shareholder in a closely-held company aged 18 to retirement age pays a combined employee rate of 4.25% reduced and 11.96% full",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "בעל שליטה בחברת מעטים",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "btl-disability-pension-rate",
+      "claim": "Recipients of a work-disability or general-disability pension with an annual certificate pay 3.23% reduced and 5.17% full",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "מקבלי קצבת נכות מעבודה או נכות כללית ויש להם אישור",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "btl-soldier-treaty-resident-rate",
+      "claim": "A soldier in regular service, an organ donor, or a foreign resident from a treaty state pays 1.04% reduced and 7.00% full",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "חייל בשירות סדיר, תורם איברים, תושב זר ממדינת אמנה",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "btl-employer-standard-rates",
+      "claim": "Employer rates for the standard category are 4.51% on the reduced band and 7.6% on the full band",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "4.51% (החל ב- 01.01.2025)",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "btl-new-resident-over62-bands",
+      "claim": "Employees who first became residents above age 62 pay 3.60%/7.45%, 3.28%/5.52% or 3.26%/5.31% depending on age band",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "אישה וגבר מתחת ​לגיל פרישה שנעשו לראשונה תושב/ת ישראל",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "btl-woman-between-retirement-ages",
+      "claim": "A woman between retirement age and the male retirement age not receiving an old-age pension pays 3.95% reduced and 10.24% full",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "אישה בין גיל פרישה ל \" גיל פרישה לגבר\" שאינה מקבלת קצבת אזרח ותיק",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "ita-2026-top-bracket-47",
+      "claim": "The official 2026 income tax table ends at 47% on every additional shekel above 560,280 NIS; there is no 50% statutory bracket",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "47% מכל שקל נוסף",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "ita-2026-credit-point-242",
+      "claim": "The 2026 credit point value is 242 NIS per month, equal to 2,904 NIS per year",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "נקודת זיכוי 33א",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "credit-points-female-2-75",
+      "claim": "A female Israeli resident is entitled to 2.75 credit points, being the 2.25 resident points plus half a point for a woman",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%A0%D7%A7%D7%95%D7%93%D7%95%D7%AA_%D7%96%D7%99%D7%9B%D7%95%D7%99_%D7%9E%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94_%D7%9C%D7%AA%D7%95%D7%A9%D7%91_%D7%99%D7%A9%D7%A8%D7%90%D7%9C",
+      "raw_snippet": "כל אישה זכאית לחצי נקודת זיכוי",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "sec45a-2026-ceilings",
+      "claim": "The 2026 Section 45A ceilings are 189 NIS/month under 45A(d), 19,400 NIS/month under 45A(e)(1) and 9,700 NIS/month under 45A(e)(2)",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "תקרת הסכום לזיכוי בעד דמי ביטוח ותגמולים 45א(ה)(1) 19,400 לחודש",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "ita-2026-average-wage",
+      "claim": "The 2026 average wage is 13,769 NIS",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "שכר ממוצע במשק 13,769",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "amendment-283-miluim-credit",
+      "claim": "Amendment 283, published 23.11.2025, added Section 39B to the Income Tax Ordinance granting credit points for combat reserve service",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "חוק לתיקון פקודת מס הכנסה (מס' 283)",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "surtax-121b-capital-limb-2-percent",
+      "claim": "Section 121B(a) adds 3% surtax above the threshold and Section 121B(a1) adds a further 2% on capital-source income above the same threshold",
+      "source_url": "https://he.wikisource.org/wiki/%D7%A4%D7%A7%D7%95%D7%93%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94",
+      "raw_snippet": "יהיה חייב במס נוסף על חלק הכנסתו החייבת ממקורות הוניים העולה על הסכום האמור, בשיעור של 2%",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "telaviv-arnona-annual-per-sqm",
+      "claim": "Tel Aviv publishes arnona tariffs per square metre per YEAR, not bi-monthly",
+      "source_url": "https://www.tel-aviv.gov.il/Residents/Arnona/Documents/%D7%97%D7%95%D7%91%D7%A8%D7%AA%20%D7%A6%D7%95%20%D7%94%D7%90%D7%A8%D7%A0%D7%95%D7%A0%D7%94%20%D7%9C%D7%A9%D7%A0%D7%AA%202026.pdf",
+      "raw_snippet": "התעריפים לכל מ\"ר",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "telaviv-arnona-residential-range",
+      "claim": "Tel Aviv 2026 residential arnona tariffs run from 46.64 to 139.60 NIS per square metre per year across 5 zones and 6 building types",
+      "source_url": "https://www.tel-aviv.gov.il/Residents/Arnona/Documents/%D7%97%D7%95%D7%91%D7%A8%D7%AA%20%D7%A6%D7%95%20%D7%94%D7%90%D7%A8%D7%A0%D7%95%D7%A0%D7%94%20%D7%9C%D7%A9%D7%A0%D7%AA%202026.pdf",
+      "raw_snippet": "64.42 78.39 90.71 108.98 112.99 139.60",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "excel-lcid-hebrew-israel-40d",
+      "claim": "The Windows LCID for Hebrew Israel is 0x040D, so the portable Excel currency format token is [$symbol-40D]",
+      "source_url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/a9eac961-e77d-41a6-90a5-ce1a8b0cdb9c",
+      "raw_snippet": "Hebrew Israel 0x040D he-IL",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "sheets-ai-function-gemini-alias",
+      "claim": "The Google Sheets function list documents AI() with the alias Gemini() and marks it a Google Workspace with Gemini feature",
+      "source_url": "https://support.google.com/docs/table/25273?hl=en",
+      "raw_snippet": "AI() or Gemini()",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "sheets-let-function",
+      "claim": "LET is available in Google Sheets per the official function list",
+      "source_url": "https://support.google.com/docs/table/25273?hl=en",
+      "raw_snippet": "LET(name1, value_expression1",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "sheets-googlefinance-function",
+      "claim": "GOOGLEFINANCE is available in Google Sheets per the official function list",
+      "source_url": "https://support.google.com/docs/table/25273?hl=en",
+      "raw_snippet": "Fetches current or historical securities information from Google Finance",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "hebcal-geonameid-jerusalem-telaviv",
+      "claim": "Hebcal geonameid 281184 is Jerusalem and 293397 is Tel Aviv",
+      "source_url": "https://www.hebcal.com/hebcal?cfg=json&year=2026&maj=on&geo=geoname&geonameid=281184",
+      "raw_snippet": "\"title\":\"Hebcal Jerusalem 2026\"",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "openpyxl-stable-315",
+      "claim": "The current stable openpyxl release is 3.1.5",
+      "source_url": "https://pypi.org/pypi/openpyxl/json",
+      "raw_snippet": "\"version\": \"3.1.5\"",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:54:49.357267+00:00",
+      "fetched_at": "2026-08-19T14:54:49.357267+00:00",
+      "appears_in": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "id": "btl-employer-minimal-rates",
+      "claim": "The employer rate for an under-18 employee or a working pensioner is 0.61% on the reduced band and 2.12% on the full band",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "0.61% (החל ב- 01.01.2025)",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:55:54.671693+00:00",
+      "fetched_at": "2026-08-19T14:55:54.671693+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "btl-controlling-shareholder-soldier-rate",
+      "claim": "A controlling shareholder who is a soldier in regular service, organ donor or treaty-state foreign resident pays 1.02% reduced and 6.79% full",
+      "source_url": "https://www.btl.gov.il/Insurance/Rates/Pages/%D7%9C%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A9%D7%9B%D7%99%D7%A8%D7%99%D7%9D.aspx",
+      "raw_snippet": "1.02% (החל ב- 01.01.2025)",
+      "verified": true,
+      "verified_via": "browser",
+      "verified_at": "2026-08-19T14:55:54.671693+00:00",
+      "fetched_at": "2026-08-19T14:55:54.671693+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "id": "credit-point-half-point-value",
+      "claim": "Half a credit point is worth 1,452 NIS per year, being half of the 2,904 NIS annual credit point value",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "נקודת זיכוי 33א 242 לחודש",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T14:55:54.671693+00:00",
+      "fetched_at": "2026-08-19T14:55:54.671693+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
-  ]
+  ],
+  "generated_at": "2026-08-19T14:55:54.671693+00:00"
 }

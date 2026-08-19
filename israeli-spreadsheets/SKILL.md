@@ -21,10 +21,56 @@ pip install openpyxl
 ### Step 2: Israeli Financial Constants
 
 - VAT rate: 18% (raised from 17% on 2025-01-01). A rise to 19% was floated at the Finance Ministry but not enacted: the 2026 state budget contains no such increase.
-- Tax brackets 2026 (post Amendment 288): 10% up to 84,120 NIS, 14% up to 120,720, 20% up to 228,000, 31% up to 301,200, 35% up to 560,280, 47% up to 721,560, 50% above. The 20% and 31% bands were widened on 1 January 2026; the other thresholds were carried over from 2025 (frozen through 2027).
-- Credit point value: 2,904 NIS/year (242 NIS/month), 2.25 points for residents
-- Bituach Leumi (employee): 1.04% up to the reduced-collection step of 7,703 NIS/month, 7.00% above it up to the 51,910 NIS/month maximum insurable income; income above that is not insurable
-- Health tax (employee): 3.23% up to 7,703 NIS/month, 5.17% above
+- Tax brackets 2026 (post Amendment 288): 10% up to 84,120 NIS, 14% up to 120,720, 20% up to 228,000, 31% up to 301,200, 35% up to 560,280, then 47% on every additional shekel. The 20% and 31% bands were widened on 1 January 2026; the other thresholds were carried over from 2025 (frozen through 2027).
+- There is no statutory 50% bracket. The official table stops at 47%. The 50% figure comes from adding the Section 121B(a) surtax of 3% on taxable income above 721,560 NIS, which gives 50% effective on personal-exertion income. Section 121B(a1) adds a FURTHER 2% on capital-source income above the same threshold, so investment income above it reaches 5% of surtax, not 3%. Label these as surtax, not as brackets, or a sheet will apply the capital limb to salary.
+- Credit point value: 2,904 NIS/year (242 NIS/month). Entitlement is 2.25 points for a male Israeli resident and 2.75 for a female Israeli resident (the extra half point for a woman). Using 2.25 for everyone understates a woman's credit by 1,452 NIS/year.
+- Bituach Leumi (employee, resident aged 18 to retirement age): 1.04% up to the reduced-collection step of 7,703 NIS/month, 7.00% above it up to the 51,910 NIS/month maximum insurable income; income above that is not insurable
+- Health tax (employee, same category): 3.23% up to 7,703 NIS/month, 5.17% above
+- Those two lines are ONE ROW of the official table. The employee rate varies by
+  age, pension status and disability status, and for several categories it is
+  ZERO. See "Step 2.5: the full employee rate table" below before generating any
+  payroll sheet.
+
+### Step 2.5: The Full Employee Bituach Leumi / Health Tax Table
+
+The single 1.04% / 7.00% row above applies ONLY to an Israeli resident aged 18
+to retirement age. The official Bituach Leumi table (the "לעובדים שכירים" rates
+page) publishes a combined EMPLOYEE percentage for every category below. Several
+are zero. Applying the standard row to a working pensioner or an under-18
+employee over-deducts the entire employee contribution.
+
+Combined employee rate (Bituach Leumi + health tax), reduced band up to 7,703
+NIS/month | full band from there to 51,910 NIS/month:
+
+| Employee category | Reduced | Full |
+|---|---|---|
+| Resident aged 18 to retirement age (the standard row) | 4.27% | 12.17% |
+| Controlling shareholder in a closely-held company, 18 to retirement age | 4.25% | 11.96% |
+| Man or woman above the old-age-pension eligibility age (70), or first became resident above 62 | 3.23% | 5.17% |
+| Controlling shareholder, same category | 3.23% | 5.17% |
+| Below retirement age, first became resident above 62 | 3.60% | 7.45% |
+| Woman between retirement age and the male retirement age, first became resident above 62 | 3.28% | 5.52% |
+| Between male retirement age and eligibility age, first became resident above 62 | 3.26% | 5.31% |
+| Recipient of a work-disability or general-disability pension with an annual certificate | 3.23% | 5.17% |
+| Controlling shareholder, same category | 3.23% | 5.17% |
+| Woman between retirement age and male retirement age, not receiving an old-age pension | 3.95% | 10.24% |
+| Men and women aged 67 to 70 not receiving an old-age pension | 3.93% | 10.03% |
+| Controlling shareholder, same category | 3.93% | 10.03% |
+| Under 18 | 0% | 0% |
+| Controlling shareholder under 18 | 0% | 0% |
+| Receiving an old-age pension (working pensioner) | 0% | 0% |
+| Controlling shareholder, working pensioner | 0% | 0% |
+| Soldier in regular service, organ donor, foreign resident from a treaty state | 1.04% | 7.00% |
+| Controlling shareholder, same category | 1.02% | 6.79% |
+
+Notes:
+- The employer rate varies too, from 4.51% / 7.6% for the standard row down to
+  0.61% / 2.12% for an under-18 employee or a working pensioner.
+- The official page splits Bituach Leumi from health tax only for the standard
+  row (1.04% / 7.00% and 3.23% / 5.17%). For the other categories it publishes
+  the combined employee figure, which is what this table carries.
+- Ask which category the employee falls into before generating a payroll sheet.
+  Do not silently default to the standard row.
 
 ### Step 3: Tax Calculation Functions
 
@@ -40,18 +86,32 @@ The bundled `scripts/generate_spreadsheet.py` produces three RTL Hebrew template
 
 - **Invoice (Heshbonit Mas)**: Business/customer details, item table, subtotal, 18% VAT, total
 - **Salary slip (Tlush Maskoret)**: Earnings, deductions (income tax, Bituach Leumi, health tax, pension, keren hishtalmut), net pay. For the "income tax" line, subtract the Section 45a pension credit (35% of the employee-side pension deposit, subject to annual ceilings) from the progressive tax owed, otherwise the withheld amount will be overstated.
-- **Arnona estimator**: Rates by city (Tel Aviv 55.80, Jerusalem 40.50, Haifa 33.20, Beer Sheva 27.90, Netanya 43.10 per sqm/bi-monthly)
+- **Arnona estimator**: builds the calculation structure. It does NOT ship
+  per-city rates, because a single number per city cannot be right. Each
+  municipality publishes a `צו הארנונה` for the year with tariffs **per sqm per
+  YEAR**, stratified by zone, building type and area band. Tel Aviv's 2026 order
+  alone has 5 zones times 6 residential building types, running from 46.64 to
+  139.60 NIS per sqm per year. Read the tariff for the specific property out of
+  the municipality's order and enter it as an input.
 
 ### Step 6: Google Sheets (RTL and ILS)
 
 Many users work in Google Sheets rather than Excel. For Hebrew worksheets:
 
-- Set sheet direction via **Sheet > Right-to-left** (or the toolbar RTL toggle). This flips column order so Hebrew reads naturally.
+- Turn on right-to-left sheet direction (a per-tab setting, reachable from the Format menu and from the toolbar RTL toggle). This flips column order so Hebrew reads naturally. It is per-tab: a newly added tab reverts to left-to-right.
 - Set the spreadsheet locale via **File > Settings > Locale > Israel** so dates parse as DD/MM/YYYY and currency defaults to NIS.
 - Format currency cells with **Format > Number > Custom number format** using `#,##0.00 ₪` (or apply the built-in ILS currency format from the locale).
 - For live exchange rates, use `GOOGLEFINANCE`, for example `=GOOGLEFINANCE("CURRENCY:USDILS")` returns USD-to-ILS. Multiply a USD amount by this to convert to shekels.
 - Google Sheets has no `openpyxl`-style API, build templates by hand or with Apps Script. The tax constants and VAT logic in this skill apply identically.
-- Gemini-powered helpers: the **Insert > Smart fill** menu and the in-cell `=AI("prompt", range)` formula (rolled out to most Workspace tiers during 2026) can categorize Hebrew text, summarize columns, or draft a formula from a natural-language description. Treat `=AI()` output as a draft: an Israeli payroll or invoice line still needs the deterministic VAT and tax-bracket math, not an LLM guess.
+- Gemini-powered helpers: **enhanced Smart Fill with Gemini** (it surfaces
+  itself as a live suggestion while you type rather than sitting behind an
+  Insert menu item; the toggle lives under Tools > Suggestion controls) and the
+  in-cell `=AI("prompt", range)` formula, which Google's function list also
+  documents under the alias `Gemini()`. `=AI()` is a Google Workspace with
+  Gemini feature, so it is tier-gated and usage-limited; a sheet full of `=AI()`
+  calls will hit caps. Treat its output as a draft: an Israeli payroll or
+  invoice line still needs the deterministic VAT and tax-bracket math, not an
+  LLM guess.
 
 ### Step 6.5: Common Israeli Formulas
 
@@ -69,10 +129,14 @@ VAT amount on a VAT-exclusive price: =A1*0.18
 **NIS currency format string (Excel custom format, symbol after the number per Israeli convention):**
 
 ```
-#,##0.00 [$₪-he-IL]
+#,##0.00 [$₪-40D]
 ```
 
-The shorter `#,##0.00 "₪"` form also works; the `[$₪-he-IL]` variant carries the Hebrew/Israel locale tag so the symbol survives a re-save by a user whose Excel runs in another locale.
+The shorter `#,##0.00 "₪"` form also works and is what the bundled script uses.
+Excel's `[$symbol-locale]` token expects a hexadecimal LCID, not a BCP-47 tag, so
+the portable locale-tagged form is `[$₪-40D]` (0x040D is Hebrew-Israel). Newer
+Excel builds may accept and normalise `[$₪-he-IL]` in the UI, but that literal
+string is not portable through openpyxl or older builds.
 
 **Progressive income tax (2026 brackets, annual income in A1, residents only) -- Google Sheets / Excel 365:**
 
@@ -108,9 +172,9 @@ Income above the 51,910 NIS/month maximum insurable income is not insurable, so 
 
 Returns "ראשון", "שני", etc., when the workbook locale is he-IL. Outside an Israeli locale, fall back to `=CHOOSE(WEEKDAY(A1,1),"ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת")`.
 
-**Israeli holidays via Hebcal:** Hebcal does not have a direct spreadsheet function. Either:
+**Israeli holidays via Hebcal:** Hebcal does not have a direct spreadsheet function. Pick the geonameid deliberately: Jerusalem is 281184 and Tel Aviv is 293397, and they differ in candle-lighting offsets, so a sheet labelled for one city while querying the other emits wrong times. Either:
 - Export a year-range CSV from `hebcal.com` (Yom Tov + minor holidays + parashat hashavua) and `VLOOKUP` against the Gregorian date column, or
-- In Google Sheets, drive a Hebcal REST call from Apps Script (`UrlFetchApp.fetch('https://www.hebcal.com/hebcal?cfg=json&year=2026&maj=on&geo=geoname&geonameid=293397')`) and write the result to a hidden sheet. The `hebcal` MCP server (listed in Step 7) is the cleanest path when an agent is driving the workbook.
+- In Google Sheets, drive a Hebcal REST call from Apps Script (`UrlFetchApp.fetch('https://www.hebcal.com/hebcal?cfg=json&year=2026&maj=on&geo=geoname&geonameid=281184')` (281184 is Jerusalem; 293397 is Tel Aviv)) and write the result to a hidden sheet. The `hebcal` MCP server (listed in Step 7) is the cleanest path when an agent is driving the workbook.
 
 ### Step 7: Recommended MCP Servers
 
@@ -159,7 +223,7 @@ Result: VAT-compliant Hebrew invoice spreadsheet template
 - NIS currency formatting places the symbol after the number, not before it (US-style). Both `₪` and the abbreviation `ש"ח` are acceptable in Israel. This skill and the bundled script standardize on `#,##0.00 ₪` (symbol after the number). Pick one convention and use it consistently across the whole workbook, do not mix `₪` and `ש"ח` in the same sheet.
 - Israeli tax calculations in spreadsheets must account for VAT at 18%. Agents may hardcode older VAT rates (17%) from pre-2025 training data.
 - 2026 income tax brackets are NOT the same as 2025. Amendment 288 widened the 20% and 31% bands effective 1 January 2026 (20% now to 228,000 NIS/yr; 31% to 301,200 NIS/yr; the 35% floor moved up to 301,201). Older payroll templates copied from 2024-2025 sources will overstate the tax for middle-income employees.
-- Excel's SORT and the column header sort on Hebrew text matches the first letter only on some builds; subsequent letters fall back to Unicode codepoint order, which is not the Hebrew alphabetical order. For Hebrew names lists, expect ~5-10% misordering and verify by eye, or sort in Google Sheets which uses a Unicode collation that handles Hebrew correctly.
+- Sorting Hebrew text depends on the collation of the Excel build and its system locale, and Hebrew final-form letters (ך ם ן ף ץ) sort by codepoint rather than beside their base letters unless the collation handles them. For Hebrew name lists, verify the order by eye rather than trusting the sort, or sort in Google Sheets. There is no published error rate for this; treat any specific percentage you see quoted as unsourced.
 - Merged cells in an RTL Excel sheet sometimes "flip" their alignment when the file is opened by an Excel build with a non-Israeli system locale: the merged span renders in the wrong direction even though `rightToLeft` is set. Avoid merged cells across rows in RTL workbooks; use centered text in a wider unmerged column instead.
 
 ## Reference Links
