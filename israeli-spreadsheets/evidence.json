@@ -545,9 +545,9 @@
     },
     {
       "id": "sec45a-2026-ceilings",
-      "claim": "The 2026 Section 45A ceilings are 189 NIS/month under 45A(d), 19,400 NIS/month under 45A(e)(1) and 9,700 NIS/month under 45A(e)(2)",
+      "claim": "The 2026 Section 45A ceilings are 189 NIS/month under 45A(d), 189 NIS/month under 45A(e)(1) and 19,400 NIS/month under 45A(e)(2). The adjacent 9,700 NIS/month figure is the Section 47(a) qualifying-income ceiling for a self-employed member, not a 45A ceiling.",
       "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
-      "raw_snippet": "תקרת הסכום לזיכוי בעד דמי ביטוח ותגמולים 45א(ה)(1) 19,400 לחודש",
+      "raw_snippet": "תקרת הסכום לזיכוי בעד דמי ביטוח ותגמולים 45א(ה)(2) 19,400 לחודש",
       "verified": true,
       "verified_via": "pdf",
       "verified_at": "2026-08-19T14:54:49.357267+00:00",
@@ -751,7 +751,80 @@
         "SKILL.md",
         "SKILL_HE.md"
       ]
+    },
+    {
+      "id": "ita-2026-non-exertion-brackets",
+      "claim": "The 2026 non-exertion income tax table is 31% up to 25,100 NIS/month, 35% up to 46,690, then 47% on every additional shekel, with no 10/14/20 bands",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "שיעורי המס החלים על הכנסה שאינה מיגיעה אישית",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T15:07:35.530615+00:00",
+      "fetched_at": "2026-08-19T15:07:35.530615+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "ita-2026-monthly-bracket-grid",
+      "claim": "The 2026 monthly personal-exertion bracket thresholds are 7,010, 10,060, 19,000, 25,100 and 46,690 NIS",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "עד- 7,010",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T15:07:35.530615+00:00",
+      "fetched_at": "2026-08-19T15:07:35.530615+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "ita-2026-bracket-widening-law",
+      "claim": "The 2026 bracket widening was made by chapter C of the Economic Efficiency Law 2026, published 31.3.2026",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "חוק ההתייעלות הכלכלית 2026 - פרק ג': ריווח מדרגות מס הכנסה",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T15:07:35.530615+00:00",
+      "fetched_at": "2026-08-19T15:07:35.530615+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-tax-rates.md",
+        "scripts/generate_spreadsheet.py",
+        "metadata.json"
+      ]
+    },
+    {
+      "id": "sec47a-self-employed-ceiling",
+      "claim": "The 2026 Section 47(a) qualifying-income ceiling for a self-employed member is 9,700 NIS/month",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "תקרת הכנסה לעמית עצמאי 47(א)",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T15:07:35.530615+00:00",
+      "fetched_at": "2026-08-19T15:07:35.530615+00:00",
+      "appears_in": [
+        "references/israeli-tax-rates.md"
+      ]
+    },
+    {
+      "id": "ita-2026-surtax-monthly-threshold",
+      "claim": "The Section 121B surtax monthly threshold for 2026 is 60,130 NIS",
+      "source_url": "https://www.gov.il/BlobFolder/generalpage/income-tax-monthly-deductions-booklet/he/generalInformation_income-tax-monthly-deductions-booklet_monthly-deductions-booklet-2026.pdf",
+      "raw_snippet": "מעסיק אשר משלם משכורת העולה על 60,130 ₪ לחודש (721,560 ₪ לשנה)",
+      "verified": true,
+      "verified_via": "pdf",
+      "verified_at": "2026-08-19T15:07:35.530615+00:00",
+      "fetched_at": "2026-08-19T15:07:35.530615+00:00",
+      "appears_in": [
+        "scripts/generate_spreadsheet.py"
+      ]
     }
   ],
-  "generated_at": "2026-08-19T14:55:54.671693+00:00"
+  "generated_at": "2026-08-19T15:07:35.530615+00:00"
 }

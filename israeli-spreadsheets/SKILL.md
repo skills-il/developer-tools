@@ -1,6 +1,6 @@
 ---
 name: israeli-spreadsheets
-description: Generate Excel and Google Sheets spreadsheets with Israeli tax calculations, VAT, NIS formatting, RTL setup, and Hebrew-labeled financial templates. Use when user asks about Israeli tax spreadsheets, NIS-formatted Excel files, VAT calculations, salary slip templates, arnona estimators, common Hebrew formulas, or Israeli accounting worksheets. Covers 2026 tax brackets (post Amendment 288), Bituach Leumi rates, and openpyxl RTL configuration.
+description: Generate Excel and Google Sheets spreadsheets with Israeli tax calculations, VAT, NIS formatting, RTL setup, and Hebrew-labeled financial templates. Use when user asks about Israeli tax spreadsheets, NIS-formatted Excel files, VAT calculations, salary slip templates, arnona estimators, common Hebrew formulas, or Israeli accounting worksheets. Covers 2026 tax brackets (after the 2026 bracket widening), Bituach Leumi rates, and openpyxl RTL configuration.
 license: MIT
 compatibility: Requires openpyxl for Excel generation (Google Sheets needs no install). Works with Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex, Antigravity, Gemini CLI.
 ---
@@ -21,7 +21,7 @@ pip install openpyxl
 ### Step 2: Israeli Financial Constants
 
 - VAT rate: 18% (raised from 17% on 2025-01-01). A rise to 19% was floated at the Finance Ministry but not enacted: the 2026 state budget contains no such increase.
-- Tax brackets 2026 (post Amendment 288): 10% up to 84,120 NIS, 14% up to 120,720, 20% up to 228,000, 31% up to 301,200, 35% up to 560,280, then 47% on every additional shekel. The 20% and 31% bands were widened on 1 January 2026; the other thresholds were carried over from 2025 (frozen through 2027).
+- Tax brackets 2026 (after the 2026 bracket widening): 10% up to 84,120 NIS, 14% up to 120,720, 20% up to 228,000, 31% up to 301,200, 35% up to 560,280, then 47% on every additional shekel. The 20% and 31% bands were widened on 1 January 2026; the other thresholds were carried over from 2025 (frozen through 2027).
 - There is no statutory 50% bracket. The official table stops at 47%. The 50% figure comes from adding the Section 121B(a) surtax of 3% on taxable income above 721,560 NIS, which gives 50% effective on personal-exertion income. Section 121B(a1) adds a FURTHER 2% on capital-source income above the same threshold, so investment income above it reaches 5% of surtax, not 3%. Label these as surtax, not as brackets, or a sheet will apply the capital limb to salary.
 - Credit point value: 2,904 NIS/year (242 NIS/month). Entitlement is 2.25 points for a male Israeli resident and 2.75 for a female Israeli resident (the extra half point for a woman). Using 2.25 for everyone understates a woman's credit by 1,452 NIS/year.
 - Bituach Leumi (employee, resident aged 18 to retirement age): 1.04% up to the reduced-collection step of 7,703 NIS/month, 7.00% above it up to the 51,910 NIS/month maximum insurable income; income above that is not insurable
@@ -85,8 +85,16 @@ Set `ws.sheet_view.rightToLeft = True` for RTL sheets. NIS format: '#,##0.00 "�
 The bundled `scripts/generate_spreadsheet.py` produces three RTL Hebrew templates via `--template {invoice,salary,arnona} --output FILE.xlsx`:
 
 - **Invoice (Heshbonit Mas)**: Business/customer details, item table, subtotal, 18% VAT, total
-- **Salary slip (Tlush Maskoret)**: Earnings, deductions (income tax, Bituach Leumi, health tax, pension, keren hishtalmut), net pay. For the "income tax" line, subtract the Section 45a pension credit (35% of the employee-side pension deposit, subject to annual ceilings) from the progressive tax owed, otherwise the withheld amount will be overstated.
-- **Arnona estimator**: builds the calculation structure. It does NOT ship
+- **Salary slip (Tlush Maskoret)**: earnings, gross total, deductions and net
+  pay, all as live formulas. The income-tax line uses the MONTHLY
+  personal-exertion bracket grid and subtracts both the credit points and the
+  Section 45A credit (35% of the employee-side pension deposit) from the tax
+  owed, otherwise the withheld amount is overstated. The credit points, the
+  Bituach Leumi and health-tax rates, the collection bands and the pension and
+  keren hishtalmut rates are all INPUT cells, so the sheet can be set to the
+  employee's actual category from the Step 2.5 table rather than defaulting to
+  the standard row.
+- **Arnona estimator**: builds the calculation structure (it is not a per-city rate table). It does NOT ship
   per-city rates, because a single number per city cannot be right. Each
   municipality publishes a `צו הארנונה` for the year with tariffs **per sqm per
   YEAR**, stratified by zone, building type and area band. Tel Aviv's 2026 order
@@ -153,6 +161,18 @@ string is not portable through openpyxl or older builds.
     - credit))
 ```
 
+The last two terms are NOT brackets. The statutory ladder ends at 47% above
+560,280. `MAX(0, MIN(inc,721560)-560280)*0.47` plus `MAX(0, inc-721560)*0.50`
+is 47% throughout plus the Section 121B(a) 3% surtax above 721,560, which is
+correct ONLY for personal-exertion income (yegia ishit). For capital-source
+income add Section 121B(a1)'s further 2%, giving 0.52 on the last term.
+
+This ladder is also for personal-exertion income only. The Tax Authority
+publishes a SEPARATE table for non-exertion income (rent, investment, most
+passive income): 31% up to 301,200 NIS/year, 35% up to 560,280, then 47%. There
+is no 10% / 14% / 20% band at all. Applying the ladder above to rental income
+understates the tax substantially.
+
 The `LET` helper keeps the formula readable and runs once instead of repeating `A1` seven times. For older Excel versions, expand `LET` into separate cells.
 
 **Bituach Leumi + health tax (employee side, monthly salary in A1):**
@@ -191,7 +211,7 @@ When building financial spreadsheets, these MCP servers from the directory provi
 User says: "Build a payroll Excel sheet for an Israeli employee"
 Actions:
 1. Create RTL workbook with Hebrew headers
-2. Add income tax brackets (2026 rates after Amendment 288: 10%, 14%, 20% to 228K, 31% to 301.2K, 35%, 47%, 50%)
+2. Add income tax brackets (2026 rates: 10%, 14%, 20% to 228K, 31% to 301.2K, 35%, then 47% on every additional shekel), and the Section 121B surtax as a SEPARATE line above 721,560 NIS
 3. Calculate Bituach Leumi (employee 1.04% up to 7,703 NIS, 7% from there to 51,910), health tax (3.23% / 5.17% on the same bands)
 4. Include pension (6.0% employee + 6.5% employer, plus 6.0% severance by employer) and keren hishtalmut
 5. Apply Section 45a tax credit (35% of employee-side pension deposit) against the income tax line
@@ -211,7 +231,7 @@ Result: VAT-compliant Hebrew invoice spreadsheet template
 ## Bundled Resources
 
 ### Scripts
-- `scripts/generate_spreadsheet.py` -- Generates ready-to-use RTL Hebrew Excel templates with Israeli tax constants and NIS formatting baked in. Three templates: `invoice` (heshbonit mas with 18% VAT line), `salary` (tlush maskoret with earnings and deductions), `arnona` (per-city rate calculator with bi-monthly and annual formulas). Run: `python scripts/generate_spreadsheet.py --template {invoice,salary,arnona} --output FILE.xlsx`. Requires `openpyxl`.
+- `scripts/generate_spreadsheet.py` -- Generates ready-to-use RTL Hebrew Excel templates with Israeli tax constants and NIS formatting baked in. Three templates: `invoice` (heshbonit mas with 18% VAT line), `salary` (tlush maskoret with earnings and deductions), `arnona` (annual and bi-monthly arnona calculator; the per-sqm tariff is a user input, not a shipped constant). Run: `python scripts/generate_spreadsheet.py --template {invoice,salary,arnona} --output FILE.xlsx`. Requires `openpyxl`.
 
 ### References
 - `references/israeli-tax-rates.md` -- Israeli income tax brackets, Bituach Leumi and health tax rates, VAT rate, pension requirements, minimum wage, and common financial constants. Consult when building any financial calculations for Israeli context.
@@ -222,7 +242,7 @@ Result: VAT-compliant Hebrew invoice spreadsheet template
 - Israeli date format in spreadsheets is DD/MM/YYYY, not MM/DD/YYYY. Excel and Google Sheets may auto-parse "01/03/2026" as January 3rd (US) instead of March 1st (Israeli). Always set locale to Hebrew (Israel).
 - NIS currency formatting places the symbol after the number, not before it (US-style). Both `₪` and the abbreviation `ש"ח` are acceptable in Israel. This skill and the bundled script standardize on `#,##0.00 ₪` (symbol after the number). Pick one convention and use it consistently across the whole workbook, do not mix `₪` and `ש"ח` in the same sheet.
 - Israeli tax calculations in spreadsheets must account for VAT at 18%. Agents may hardcode older VAT rates (17%) from pre-2025 training data.
-- 2026 income tax brackets are NOT the same as 2025. Amendment 288 widened the 20% and 31% bands effective 1 January 2026 (20% now to 228,000 NIS/yr; 31% to 301,200 NIS/yr; the 35% floor moved up to 301,201). Older payroll templates copied from 2024-2025 sources will overstate the tax for middle-income employees.
+- 2026 income tax brackets are NOT the same as 2025. Chapter C of the Economic Efficiency Law 2026 widened the 20% and 31% bands effective 1 January 2026 (20% now to 228,000 NIS/yr; 31% to 301,200 NIS/yr; the 35% floor moved up to 301,201). Older payroll templates copied from 2024-2025 sources will overstate the tax for middle-income employees.
 - Sorting Hebrew text depends on the collation of the Excel build and its system locale, and Hebrew final-form letters (ך ם ן ף ץ) sort by codepoint rather than beside their base letters unless the collation handles them. For Hebrew name lists, verify the order by eye rather than trusting the sort, or sort in Google Sheets. There is no published error rate for this; treat any specific percentage you see quoted as unsourced.
 - Merged cells in an RTL Excel sheet sometimes "flip" their alignment when the file is opened by an Excel build with a non-Israeli system locale: the merged span renders in the wrong direction even though `rightToLeft` is set. Avoid merged cells across rows in RTL workbooks; use centered text in a wider unmerged column instead.
 

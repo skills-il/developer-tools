@@ -4,12 +4,19 @@
       "version": "1.4.0",
       "date": "2026-08-19",
       "lessons": [
+        "Panel round 2 fixed: I misread the ITA booklet's Section 45A ceiling column and shifted it one row (wrote 45A(e)(1)=19,400 and 45A(e)(2)=9,700; the booklet has 45A(d)=189, 45A(e)(1)=189, 45A(e)(2)=19,400, and 9,700 is the Section 47(a) self-employed ceiling on the adjacent row). A layout-mangled PDF column is exactly where an off-by-one-row read hides.",
+        "Panel round 2 fixed: 'Amendment 288' was repeated in six files including the trigger description and appears NOWHERE in the ITA 2026 booklet, which names the change as chapter C of the Economic Efficiency Law 2026 published 31.3.2026. An unsourced statutory ordinal that everyone has been copying forward is invisible until someone greps the primary source for it.",
+        "Panel round 2 fixed: correcting the 'no 50% bracket' rule in prose left the contradiction alive in four other places (the English Example 1, the reference file header, the script's TAX_BRACKETS constant, and both LET formulas). A framing correction has to be swept through executable artifacts, not just prose.",
+        "Panel round 2 fixed: both the invoice and salary templates wrote ZERO formulas while SKILL.md claimed they computed VAT, deductions and net pay, and calculate_income_tax() was dead code. The Expert found this only by running the script and dumping the workbook. 'The script runs without error' is not evidence that it does what the docs say.",
+        "Panel round 2 fixed: added the separate non-exertion bracket ladder (31/35/47, no 10/14/20 bands) and the monthly bracket grid; the skill previously shipped one ladder labelled generically, which understates tax on rental and investment income.",
         "The arnona constants were the textbook 'banded amount written flat' defect and were wrong in BOTH value and UNIT: the skill carried Tel Aviv at 55.80 per sqm bi-monthly, while the city's own 2026 tzav arnona publishes tariffs per sqm PER YEAR, from 46.64 to 139.60 across 5 zones and 6 residential building types. 55.80 appears nowhere in the order. The bundled script compounded it by multiplying the bi-monthly figure by 6. Removed the constants rather than correcting them, because no single scalar per city can be right.",
         "The Bituach Leumi / health tax rates were a one-row extract of a 17-row official table. The standard 1.04% / 7.00% row is correct, but under-18 employees and working pensioners are ZERO-rated, so a generated payroll sheet over-deducted their entire employee contribution. Added the full table in both languages.",
         "CARRY: the self-employed BL rates in references/israeli-tax-rates.md (4.47% reduced / 12.83% full) were NOT verified this cycle; only the employee-side table was pulled from btl.gov.il. Verify against the self-employed rates page next cycle.",
         "CARRY: only Tel Aviv's arnona order was actually fetched. The Jerusalem, Haifa, Beer Sheva and Netanya figures were removed as structurally unsound rather than proven wrong individually.",
         "CARRY: the Excel sheet-direction menu path in Google Sheets was hedged rather than asserted, because the current UI path could not be confirmed from an official Google support page this cycle.",
-        "Deferred over the Phase 4.1 discretionary cap: adding worked Hebrew examples for the non-standard BL categories, and an IMPORTDATA-based Hebcal recipe as an alternative to Apps Script."
+        "Deferred over the Phase 4.1 discretionary cap: adding worked Hebrew examples for the non-standard BL categories, and an IMPORTDATA-based Hebcal recipe as an alternative to Apps Script.",
+        "CARRY: the salary template now exposes the BL rate as an input cell keyed to the Step 2.5 table, but there is still no lookup table wiring the category name to its rates. Consider a hidden category sheet with a VLOOKUP next cycle.",
+        "CARRY (Expert MAJOR, deferred): the skill still does not state which base each deduction applies to, nor that employer contributions above the Section 3(e3)/3(e) ceilings become taxable income to the employee."
       ]
     }
   ]
