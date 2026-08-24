@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "idf-date-converter",
-  "generated_at": "2026-05-20T00:00:00Z",
+  "generated_at": "2026-08-24T00:00:00Z",
   "claims": [
     {
       "claim_id": "hebrew-year-5786-not-leap",
@@ -114,6 +114,205 @@
         "SKILL_HE.md",
         "scripts/convert_date.py"
       ]
+    },
+    {
+      "claim_id": "taanit-esther-shabbat-thursday",
+      "claim": "Ta'anit Esther is observed on 13 Adar (in a leap year, 13 Adar II only). If 13 Adar falls on Shabbat the fast is brought FORWARD to the preceding Thursday (11 Adar), unlike the other movable fasts which are postponed.",
+      "source_url": "https://en.wikipedia.org/wiki/Fast_of_Esther",
+      "raw_snippet": "If the date of the Fast of Esther falls on Shabbat , the fast is instead observed on the preceding Thursday.",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/convert_date.py"
+      ],
+      "verified_via": "curl (rendered article text)",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "taanit-esther-adar-ii",
+      "claim": "In a leap year Ta'anit Esther (and with it Purim) is observed in Adar II, not Adar I, so pyluach month 13 rather than month 12.",
+      "source_url": "https://en.wikipedia.org/wiki/Fast_of_Esther",
+      "raw_snippet": "(when the year has two Adars, it is observed only in the second Adar)",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/convert_date.py"
+      ],
+      "verified_via": "curl (rendered article text)",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "tisha-bav-nidcheh-sunday",
+      "claim": "When Tisha B'Av (9 Av) falls on Shabbat it is nidcheh (delayed) and observed the following day, Sunday. This last occurred in 2022 and next occurs in 2029.",
+      "source_url": "https://en.wikipedia.org/wiki/Tisha_B%27Av",
+      "raw_snippet": "When Tisha b'Av falls on Shabbat , it then is nidḥā ( נִדְחָה \"delayed\"). Thus the observance of Tisha b'Av can take place on the following day (that is, Sunday). This last occurred in 2022, and will next occur in 2029.",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/convert_date.py"
+      ],
+      "verification_note": "scripts/convert_date.py independently returns 2022-08-07 (Sunday) and 2029-07-22 (Sunday) for Tisha B'Av, matching the two years the source names.",
+      "verified_via": "curl (rendered article text)",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "tzom-gedaliah-postponed-sunday",
+      "claim": "The Fast of Gedaliah (3 Tishrei) is postponed to Sunday 4 Tishrei when 3 Tishrei falls on Shabbat, because no public fast may be observed on Shabbat except Yom Kippur.",
+      "source_url": "https://en.wikipedia.org/wiki/Fast_of_Gedalia",
+      "raw_snippet": "the fast is postponed until Sunday (which would be the fourth of Tishrei ), since no public fast may be observed on Shabbat (Saturday) with the exception of Yom Kippur",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/convert_date.py"
+      ],
+      "verified_via": "curl (rendered article text)",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "shabbat-sunset-to-sunset",
+      "claim": "The Hebrew day, and Shabbat with it, runs from just before sundown on the preceding evening to just after sundown the next, not midnight to midnight. Conversion libraries return the daytime Hebrew date.",
+      "source_url": "https://en.wikipedia.org/wiki/Public_holidays_in_Israel",
+      "raw_snippet": "Shabbat , the weekly Sabbath day of rest, in Israel begins every Friday evening just before sundown, ending Saturday evening just after sundown.",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-calendar-reference.md"
+      ],
+      "verified_via": "curl (rendered article text)",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "hebcal-israel-schedule-flag",
+      "claim": "The Hebcal REST API returns the diaspora schedule by default; the i=on parameter selects the Israel schedule, which is what this skill's holiday tables were verified against.",
+      "source_url": "https://www.hebcal.com/home/developer-apis",
+      "raw_snippet": "Hebcal",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "references/hebrew-calendar-reference.md"
+      ],
+      "verification_note": "Verified behaviourally: the same year queried with i=on returns Sukkot II as CH''M and a single Shmini Atzeret, while the default returns a second yom tov. 197 holiday-year pairs across 2026-2035 were cross-checked against this endpoint with i=on and matched the script exactly.",
+      "verified_via": "curl",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "atzmaut-monday-rule-from-2004",
+      "claim": "The Monday postponement of Yom HaAtzmaut to Tuesday (6 Iyar) has only been in force since 2004; the Friday/Saturday move-up to the preceding Thursday was decided in 1951. Applying the Monday rule to a pre-2004 year shifts Yom HaAtzmaut and Yom HaZikaron one day late.",
+      "source_url": "https://en.wikipedia.org/wiki/Yom_Ha%27atzmaut",
+      "raw_snippet": "it was decided in 1951 that if the 5th of Iyar falls on a Friday or Saturday, the celebrations would be moved up to the preceding Thursday (3 or 4 of Iyar). Additionally, since 2004, if the 5th of Iyar is on a Monday, the festival is postponed to Tuesday (6 of Iyar).",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/convert_date.py"
+      ],
+      "verification_note": "Confirmed against Hebcal (i=on) for 1993, a pre-2004 Monday year: Hebcal returns Yom HaZikaron 1993-04-25 and Yom HaAtzmaut 1993-04-26. Before this fix the script returned 04-26 / 04-27. After gating the Monday rule on 2004 the script matches Hebcal exactly.",
+      "verified_via": "curl (rendered article text)",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "atzmaut-state-holiday-1949",
+      "claim": "Yom HaAtzmaut was enshrined in law as a state holiday in 1949, while Yom HaZikaron was only enacted into law in 1963 (having been established as a practice from 1951). The script therefore emits no national days for years before they existed.",
+      "source_url": "https://en.wikipedia.org/wiki/Yom_Ha%27atzmaut",
+      "raw_snippet": "While Israel's Independence Day celebrations were enshrined into law as a state holiday in 1949, Yom Hazikaron was only enacted into law many years later.",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/convert_date.py"
+      ],
+      "verified_via": "curl (rendered article text)",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "yom-hashoah-27-nisan-1951",
+      "claim": "27 Nisan was established as Yom HaShoah by a Knesset resolution in 1951, and the day was formally instituted by the Martyrs' and Heroes' Remembrance Day Law of 1959.",
+      "source_url": "https://en.wikipedia.org/wiki/Yom_HaShoah",
+      "raw_snippet": "the Knesset passed a resolution establishing 27 Nisan in the Hebrew calendar, a week after Passover, and eight days before Israel Independence Day as the annual Holocaust and Ghetto Uprising Remembrance Day",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/convert_date.py"
+      ],
+      "verified_via": "curl (rendered article text)",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "hebcal-candle-lighting-offsets",
+      "claim": "Hebcal's Shabbat REST API defaults candle lighting to 18 minutes before sundown, but uses 40 minutes for Jerusalem and 30 minutes for Haifa and Zikhron Ya'akov, overridable with the b= parameter. It also returns erev chag candle lighting for the major festivals.",
+      "source_url": "https://www.hebcal.com/home/197/shabbat-times-rest-api",
+      "raw_snippet": "b=18 – Candle-lighting time minutes before sunset. By default, candle lighting time is 18 minutes before sundown (40 minutes for Jerusalem, 30 minutes for Haifa and Zikhron Ya’akov) on Erev Shabbat (Friday) and Erev Chag (Rosh Hashana, Yom Kippur, Sukkot, Shmini Atzeret, Simchat Torah, Pesach, Shavuot).",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "Endpoint exercised live: geonameid 281184 (Jerusalem) returned candle lighting 18:36 / havdalah 19:53 and 293397 (Tel Aviv) 18:58 / 19:55 for the same Shabbat, confirming both the endpoint shape and the differing local offsets.",
+      "verified_via": "curl",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "hebcal-shabbat-endpoint-jerusalem",
+      "claim": "The Hebcal Shabbat endpoint https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on returns candle-lighting and havdalah times for Jerusalem (geonameid 281184). This is the exact call the skill instructs the agent to make rather than computing sunset itself.",
+      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on",
+      "raw_snippet": "\"title\":\"Jerusalem, Israel\",\"city\":\"Jerusalem\",\"tzid\":\"Asia/Jerusalem\"",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "Live response confirmed: location.title 'Jerusalem, Israel', items include category 'candles' (Candle lighting: 18:36) and 'havdalah' (Havdalah: 19:53). Geonameids for Tel Aviv 293397, Haifa 294801 and Beersheba 295530 were each exercised against the same endpoint.",
+      "verified_via": "curl",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "yom-yerushalayim-28-iyar-1968",
+      "claim": "Yom Yerushalayim (Jerusalem Day) falls on 28 Iyar and was first observed on 12 May 1968. It is a state day and an ordinary working day, not a statutory rest day.",
+      "source_url": "https://en.wikipedia.org/wiki/Jerusalem_Day",
+      "raw_snippet": "Date 28 Iyar ( Hebrew calendar )",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/convert_date.py"
+      ],
+      "verification_note": "The same infobox gives 'First time 12 May 1968', which is the effective year gated in MODERN_STATE_DAYS. Dates cross-checked against Hebcal (i=on) for 2027-2035: 18 of 18 matched.",
+      "verified_via": "curl (rendered article text)",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "yom-haaliyah-10-nisan-2016",
+      "claim": "Yom HaAliyah (Aliyah Day) is marked on 10 Nisan under the Yom HaAliyah Law, 5776-2016, with an additional school observance on 7 Cheshvan. It is a working day, not a statutory rest day.",
+      "source_url": "https://en.wikipedia.org/wiki/Yom_HaAliyah",
+      "raw_snippet": "10 Nisan national holiday & observed in schools 7 Cheshvan",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/convert_date.py"
+      ],
+      "verification_note": "The article cites the Knesset text 'חוק יום העלייה, התשע\"ו- 2016' dated 2016-06-23, which is the effective year gated in MODERN_STATE_DAYS. The script emits the 10 Nisan national date only; the 7 Cheshvan school observance is not modelled.",
+      "verified_via": "curl (rendered article text)",
+      "verified_at": "2026-08-24"
+    },
+    {
+      "claim_id": "displacement-6-of-10-years-2026-2035",
+      "claim": "Yom HaAtzmaut displacement is due in 6 of the 10 years from 2026 to 2035, namely 2028, 2029, 2031, 2032, 2034 and 2035; 5 Iyar falls on a Wednesday (the only undisplaced weekday) in 2026, 2027, 2030 and 2033.",
+      "source_url": "https://en.wikipedia.org/wiki/Yom_Ha%27atzmaut",
+      "raw_snippet": "the 5th of Iyar can fall on a Monday, a Wednesday, a Friday, or a Saturday",
+      "fetched_at": "2026-08-24T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verification_note": "Computed from the cited rule with pyluach: 5 Iyar is Wed in 5786/5787/5790/5793 and Mon or Fri in 5788/5789/5791/5792/5794/5795, giving 6 displaced years. CORRECTION: an earlier draft of this cycle stated 7; both the Independent Judge and the Expert reviewer flagged it and it was corrected in SKILL.md and SKILL_HE.md before push.",
+      "verified_via": "curl (rendered article text)",
+      "verified_at": "2026-08-24"
     }
   ]
 }

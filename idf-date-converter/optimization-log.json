@@ -1,0 +1,21 @@
+{
+  "cycles": [
+    {
+      "version": "2.1.0",
+      "date": "2026-08-24",
+      "lessons": [
+        "Expert MAJOR deferred: gematria output is documented in Step 3 but never implemented. `dual` emits Latin transliteration ('5 Iyar 5786'), not the Hebrew-numeral form an Israeli document needs (ה' באייר תשפ\"ו). Implement a Hebrew-numeral formatter with the tet-vav / tet-zayin exceptions next cycle.",
+        "Expert MAJOR deferred: Rosh Chodesh is absent from the script, the reference tables and both SKILL files, despite the reference documenting the variable Cheshvan/Kislev lengths that determine whether it is one day or two.",
+        "Expert MAJOR deferred: no Julian/Gregorian calendar-reform warning. Both pyluach and hebcal treat pre-1582 input as proleptic Gregorian, and Ottoman Palestine used the Julian/Rumi calendar until 1917, so genealogy and yahrzeit conversions from such documents are silently off by 10-13 days. The two implementations agree, so a cross-check cannot surface it.",
+        "Expert MAJOR deferred: is_israeli_business_day counts Friday, but Bank of Israel and most Israeli administrative deadline counting use Sunday-Thursday. The choice is documented but there is no CLI flag to change it. Add --workweek=sun-thu|sun-fri.",
+        "Expert MAJOR deferred: transliteration is inconsistent across three conventions in one CLI. pyluach emits 'Teves' and 'Nissan' and 'Adar 2' while the skill's own tables say 'Tevet', 'Nisan' and 'Adar II'. Normalise through a single naming table, and consider emitting Hebrew script for an Israeli-facing tool.",
+        "Expert MINOR deferred: `holidays <year>` truncates Chanukah at the Gregorian year boundary (2027 lists days 1-7; day 8 falls 2028-01-01) with no note, despite the skill's own gotcha about Chanukah straddling years.",
+        "Expert MINOR deferred: Purim Katan / Shushan Purim Katan (14-15 Adar I in a leap year) are unlabelled; classify_israeli_day returns None for them.",
+        "Expert MINOR deferred: frontmatter `allowed-tools` is space-separated rather than comma-separated, and declares pip although the skill installs nothing itself.",
+        "Rabin Memorial Day (12 Cheshvan) and Sigd (29 Cheshvan) were ADDED and then REMOVED this cycle: hard-coding the nominal Hebrew date disagreed with Hebcal in 2026, 2027, 2028 and 2030, so both carry date rules not modelled here. Omitted rather than shipped wrong. Source the real rules and re-add.",
+        "The year in which the Friday/Sunday displacement of Yom HaShoah itself took effect could not be sourced this cycle, so it is applied throughout from 1951. Mid-century Yom HaShoah dates should be treated as approximate until this is pinned down.",
+        "Every legal claim in evidence.json rests on English Wikipedia or hebcal.com. The Israeli primary sources (פקודת סדרי השלטון והמשפט s.18a, חוק יום העצמאות תש\"ט-1949 and its 2004 amendment) are bot-blocked to curl on both nevo.co.il (403) and gov.il (403). A statutory citation for the rest-day list was drafted and then REMOVED this cycle because the evidence gate correctly refused an encyclopedia source for it. Retrieve via Playwright next cycle and restore the citation."
+      ]
+    }
+  ]
+}

@@ -79,8 +79,10 @@ Special cases:
 | Simchat Torah | 22 Tishrei | National |
 | Pesach (Day 1) | 15 Nisan | National |
 | Pesach (Day 7) | 21 Nisan | National |
-| Yom HaAtzmaut | 5 Iyar | National |
+| Yom HaAtzmaut | 5 Iyar, displaced (see below) | National |
 | Shavuot | 6 Sivan | National |
+
+Nominal Hebrew dates are not final dates. Yom HaAtzmaut, Yom HaZikaron and Yom HaShoah are displaced by weekday, and four of the five public fasts move when they fall on Shabbat (Ta'anit Esther moves earlier, the rest move later). Resolve them with `scripts/convert_date.py` rather than reading a fixed Hebrew date out of this table.
 
 ### Memorial/Observance Days (Partial or Full Closure)
 
@@ -106,3 +108,14 @@ Special cases:
 
 - **hebcal:** Hebrew calendar computations
   - Web API: https://www.hebcal.com/home/developer-apis
+  - Use the `i=on` parameter for the Israel schedule. Without it the API returns
+    the diaspora schedule, which adds a second yom tov day to Sukkot, Pesach and
+    Shavuot and splits Shmini Atzeret from Simchat Torah.
+
+## The Hebrew Day Boundary
+
+The Hebrew day runs sunset to sunset, not midnight to midnight. Both pyluach and
+the hebcal conversion endpoint return the DAYTIME Hebrew date for a Gregorian
+date. After sunset the correct Hebrew date is one day later. Sunset is
+location-dependent; use hebcal's zmanim endpoint with a geonameid rather than
+approximating it.
