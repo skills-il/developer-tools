@@ -2,6 +2,18 @@
 
 The compiler embeds supported fonts, just write `font-family` in CSS.
 
+## Hebrew first (read before anything below)
+
+**Every rule and every font on this page is calibrated for Latin, and the bundled font-discovery script excludes Hebrew by construction**: it filters on `if "latin" not in (f.get("subsets") or []): return False` and its `skip_pfx` list drops every family starting `Noto `, which removes Noto Sans Hebrew. None of the 18 fonts the HyperFrames compiler treats as canonical carries Hebrew glyphs.
+
+If the composition has any Hebrew:
+
+- Pick the family from `references/hebrew-rtl.md`, not from this page. Heebo, Rubik, Assistant, Alef, Frank Ruhl Libre and Noto Sans Hebrew are the Google Fonts families with Hebrew coverage. To query for more, swap the filter to `if "hebrew" not in (f.get("subsets") or []): return False` and drop `Noto ` from `skip_pfx`.
+- **A Latin-only face fails silently.** `fetchGoogleFont()` returns nothing usable for the Hebrew codepoints, so Hebrew falls through to whatever ends your CSS stack, which in headless Chromium is an undesigned system font. Nothing in `lint` or `check` reports it. The only way to catch it is to look at a rendered frame.
+- The negative tracking advised below (-0.03em to -0.05em) collides Hebrew letterforms, which have no ascender/descender rhythm to absorb it. Use 0 or slightly positive tracking on Hebrew display text.
+- The weight-contrast rule holds but the numbers shift: Hebrew families carry less optical weight range, so pair 400 against 900, not 300 against 900.
+- The serif-plus-sans pairing rule is close to unsatisfiable in Hebrew on Google Fonts, where Frank Ruhl Libre is effectively the only serif. Pair two Hebrew sans weights instead, or set the Hebrew in one family and reserve the second family for Latin runs inside `<bdi>`.
+
 ## Banned
 
 Training-data defaults that every LLM reaches for. These produce monoculture across compositions.

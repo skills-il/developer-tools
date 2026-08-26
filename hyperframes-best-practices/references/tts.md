@@ -14,7 +14,7 @@ Match voice to content. Default is `af_heart`.
 | Documentation | `bf_emma`/`bm_george` | Clear British English      |
 | Casual        | `af_heart`/`af_sky`   | Approachable, natural      |
 
-Run `npx hyperframes tts --list` for all 54 voices (8 languages).
+Run `npx hyperframes tts --list` for the bundled voices. The CLI ships 12 (`BUNDLED_VOICES`), covering 6 of Kokoro's 9 phonemizer locales: 5 American English, 3 British English, and one each of Spanish, French, Japanese and Mandarin. Hindi, Italian and Brazilian Portuguese are accepted by `--lang` but have no bundled voice. Hebrew is not supported at all.
 
 ## Multilingual Phonemization
 

@@ -1,6 +1,28 @@
 {
   "cycles": [
     {
+      "version": "1.2.0",
+      "date": "2026-08-26",
+      "upstream_validated_against": "heygen-com/hyperframes @ 4f00336c92f6418aab82c060853da604dd832197, release v0.8.15 (2026-08-26)",
+      "lessons": [
+        "DRIFT TYPE B confirmed at scale: upstream moved ~2,500 commits since the last cycle and the CLI surface rotted underneath the skill while the font pipeline section stayed exact. Next cycle, diff the CLI command registration in packages/cli/src/cli.ts FIRST, before reading any prose.",
+        "RESOLVED [CARRY from 1.1.1]: the Kokoro/ElevenLabs hedge was wrong, not merely soft. `hyperframes tts` has no provider argument at all; the HeyGen Starfish then ElevenLabs then Kokoro order belongs to the media-use audio path. Upstream's own tts.md says verbatim: it 'does not accept a --provider or --words flag'. Stop hedging a claim you can settle by reading the command's args.",
+        "Kokoro was documented as '8 languages' while listing nine, in six places across four files, for at least two cycles. A self-contradicting sentence survived every gate because both halves were individually plausible. Count the list.",
+        "The skill's biggest defect was not a stale fact but a MISSING one: upstream ships `html_dir_attribute_breaks_render` at severity error, and it is the only RTL-specific rule in the entire codebase. A Hebrew skill that never greps upstream for its own subject matter will keep missing exactly the rules aimed at it. Next cycle: grep the lint rule catalogue for rtl/dir/bidi/hebrew before anything else.",
+        "Running the bundled scripts found what reading them did not: both default to a 1920x1080 viewport, so the documented invocation analyses a portrait Hebrew composition against a landscape frame. The prose was fine; the defaults were not.",
+        "CARRY (Expert MAJOR, deferred): `class=\"clip\"` is absent from the Data Attributes tables and references/transitions/catalog.md tells you not to use it, while upstream keeps it because the scaffold's `.clip { position:absolute; inset:0 }` rule is what gives a scene its full-frame box. Logged in domain-checklist M3. Fix next cycle.",
+        "CARRY (Expert MAJOR, deferred): no render-output surface at all, no --resolution, --format, --crf, and no data-fps on the Composition Clips table. Portrait fps is a first-order decision for the TikTok/Reels audience this skill targets.",
+        "CARRY (Expert MAJOR, deferred): the registry is entirely absent (154 blocks, 219 components via `npx hyperframes add`), and its catalog index is English-only, which is its own Hebrew trap: an agent querying in Hebrew gets nothing and concludes no block exists.",
+        "CARRY (Expert MAJOR, deferred): direction mirroring is documented only for title entrances. Wipe/push transitions and per-word caption sweep order are the two places it actually bites in a Hebrew social video, and references/transitions.md names six directional transitions with no direction note.",
+        "CARRY (Expert MAJOR, deferred): SKILL_HE.md (163 lines) omits sections SKILL.md marks Non-Negotiable, including all four Scene Transitions rules, both Data Attributes tables and the Output Checklist. Hebrew is the site's default locale, so this is the file the primary audience reads. Full parity is a large rewrite; this has now been carried three cycles and must be resolved or explicitly scoped out next cycle.",
+        "CARRY (Expert MAJOR, deferred): sub-composition direction inheritance is asserted but the Composition Structure template carries no dir at all, so the example an agent copies renders every Hebrew scene LTR.",
+        "CARRY (Expert MINOR): contrast-report.mjs imports `sharp`, a dependency of @hyperframes/cli and NOT of @hyperframes/producer, so the Bundled Scripts note names the wrong package for a strict-resolution install.",
+        "CARRY (Expert MINOR): `hyperframes doctor` always exits 0; gate on the .ok field of --json instead. Also `hyperframes preview` is buried in hebrew-rtl.md as a font-cache trick and absent from the SKILL.md workflow, despite being where a Hebrew reader would catch bidi defects before paying for a render.",
+        "REJECTED Expert MINOR (verified against source): the reviewer claimed 'seeks to 5 timestamps' is wrong because `check --samples` defaults to 9. It is correct. `--samples` is the layout/overlap sampler; check.ts separately describes 'the five audited contrast frames'. Two different samplers.",
+        "Legal-gate false positive to remember: the ordinary Hebrew noun הניסוח (\"the wording\") matches scan_catalog.py's DRAFTING regex (מנסחים|מנסחת|מנסח|ניסוח) and flips a pure dev-tools skill to REVIEW regulated level=3. Reword to התיאור; do not add a legal notice."
+      ]
+    },
+    {
       "version": "1.1.1",
       "date": "2026-06-28",
       "lessons": [

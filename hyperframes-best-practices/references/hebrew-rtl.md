@@ -36,7 +36,7 @@ Hebrew display letterforms carry less visual weight than equivalent Latin glyphs
 
 ## Direction
 
-Set `dir="rtl"` explicitly on Hebrew text containers. Composition roots inherit document direction by default, but HyperFrames sub-compositions (loaded via `data-composition-src`) set their own context and don't inherit from the parent.
+Set `dir="rtl"` explicitly on Hebrew text containers. **Never set `dir` on the `<html>` element.** `<html dir="rtl">` and `<html dir="auto">` preview correctly and render a fully blank black MP4; upstream flags it as the severity-`error` lint rule `html_dir_attribute_breaks_render`. Keep `lang="he"` there and scope direction downward. Composition roots inherit document direction by default, but HyperFrames sub-compositions (loaded via `data-composition-src`) set their own context and don't inherit from the parent.
 
 ```html
 <div data-composition-id="hero" data-width="1920" data-height="1080" dir="rtl">
@@ -113,7 +113,7 @@ Word-level timestamps produce better Hebrew captions than phrase-level SRT/VTT, 
 
 ## Voiceover
 
-The built-in `npx hyperframes tts` command uses Kokoro-82M, which does not support Hebrew. The 8 supported Kokoro languages encode in the voice-ID first letter: `a`=American English, `b`=British English, `e`=Spanish, `f`=French, `h`=Hindi, `i`=Italian, `j`=Japanese, `p`=Brazilian Portuguese, `z`=Mandarin.
+The built-in `npx hyperframes tts` command is local-only (no provider argument) and uses Kokoro-82M, which does not support Hebrew. Kokoro's 9 phonemizer locales encode in the voice-ID first letter: `a`=American English, `b`=British English, `e`=Spanish, `f`=French, `h`=Hindi, `i`=Italian, `j`=Japanese, `p`=Brazilian Portuguese, `z`=Mandarin.
 
 Generate Hebrew voiceover with an external service and import the audio file as a normal `<audio>` clip:
 
@@ -157,7 +157,7 @@ Wrap Latin runs with `<bdi>` or apply `unicode-bidi: isolate` via CSS:
 .brand { unicode-bidi: isolate; }
 ```
 
-Numbers in Hebrew context (prices, statistics, dates) are already handled correctly by the bidi algorithm, they display left-to-right inside an RTL paragraph without any wrapper.
+A **bare** integer in Hebrew context is handled correctly by the bidi algorithm and displays left-to-right inside an RTL paragraph without any wrapper. A digit touching a symbol is not: a percent sign, a currency sign, a range dash or an adjacent Latin token can detach and land on the wrong side, so prices and percentages DO need isolation. Write `<bdi>₪199</bdi>`, `<bdi>15%</bdi>`, `<bdi>10-20</bdi>`.
 
 ## Quick checklist
 

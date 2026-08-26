@@ -1,20 +1,20 @@
 {
   "schemaVersion": "1.0",
   "skill": "hyperframes-best-practices",
-  "generated_at": "2026-06-28T23:30:00Z",
+  "generated_at": "2026-08-26T16:20:11Z",
   "claims": [
     {
-      "claim_id": "gsap-version-3-15-0",
-      "claim": "GSAP's v3 line resolves to 3.15.0, which is the version the skill loads from the jsDelivr CDN. Confirmed through jsDelivr's own resolver API. The skill references https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js. Covers these references: https://data.jsdelivr.com/v1/packages/npm/gsap@3.15.0 https://data.jsdelivr.com/v1/packages/npm/gsap@3.15.0/",
-      "source_url": "https://data.jsdelivr.com/v1/packages/npm/gsap@3.15.0",
-      "raw_snippet": "js\", \"files\": [ { \"type\": \"directory\", \"name\": \"dist\", \"files\": [ { \"type\": \"file\", \"name\": \"all.",
-      "fetched_at": "2026-08-18",
+      "claim_id": "gsap-pin-3-14-2-upstream-template",
+      "claim": "HyperFrames scaffolds compositions with GSAP pinned to 3.14.2 via jsDelivr, so skill snippets pin the same version to avoid loading two GSAP builds in one project.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/templates/blank/index.html",
+      "raw_snippet": "https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js",
+      "fetched_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md",
         "references/transitions/catalog.md"
       ],
-      "verified_via": "reference-coverage entry; snippet quoted from one of the covered sources",
-      "verified_at": "2026-08-18"
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z"
     },
     {
       "claim_id": "gsap-docs-v3",
@@ -30,14 +30,15 @@
     },
     {
       "claim_id": "hyperframes-repo",
-      "claim": "HyperFrames is an open-source HeyGen project (public repo, default branch main, latest release v0.7.x)",
-      "source_url": "https://github.com/heygen-com/hyperframes",
-      "raw_snippet": "https://github.com/heygen-com/hyperframes",
+      "claim": "HyperFrames is an open-source HeyGen project: public repo, default branch main. Validated at commit 4f00336c92f6418aab82c060853da604dd832197, release v0.8.15 (2026-08-26).",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/package.json",
+      "raw_snippet": "\"name\": \"@hyperframes/cli\"",
       "fetched_at": "2026-06-28T23:30:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "source"
     },
     {
       "claim_id": "hyperframes-font-logic",
@@ -53,26 +54,32 @@
       "verified_at": "2026-08-18"
     },
     {
-      "claim_id": "kokoro-no-hebrew-8-langs",
-      "claim": "The local Kokoro-82M TTS fallback supports 8 language codes (en-us, en-gb, es, fr-fr, hi, it, pt-br, ja, zh) and does NOT support Hebrew",
-      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-media/references/tts.md",
-      "raw_snippet": "Valid `--lang` codes (only needed to override the voice's auto-detected language): `en-us`, `en-gb`, `es`, `fr-fr`, `hi`, `it`, `pt-br`, `ja`, `zh`.",
-      "fetched_at": "2026-06-28T23:30:00Z",
+      "claim_id": "kokoro-nine-locales-no-hebrew",
+      "claim": "Kokoro's SUPPORTED_LANGS tuple in the HyperFrames CLI holds nine locales (en-us, en-gb, es, fr-fr, hi, it, pt-br, ja, zh) and Hebrew is not among them.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/tts/manager.ts",
+      "raw_snippet": "export const SUPPORTED_LANGS = [",
+      "fetched_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
-      ]
+        "SKILL_HE.md",
+        "references/tts.md",
+        "references/hebrew-rtl.md"
+      ],
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z"
     },
     {
-      "claim_id": "hyperframes-tts-providers",
-      "claim": "hyperframes tts routes to HeyGen (Starfish) or ElevenLabs via env keys ($HEYGEN_API_KEY / $ELEVENLABS_API_KEY) and falls back to local Kokoro; ElevenLabs has Hebrew voices",
-      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-media/references/tts.md",
-      "raw_snippet": "ElevenLabs        | `$ELEVENLABS_API_KEY`",
-      "fetched_at": "2026-06-28T23:30:00Z",
+      "claim_id": "hyperframes-tts-is-local-only",
+      "claim": "The `hyperframes tts` command is local-only (Kokoro-82M) and exposes no provider argument; the HeyGen Starfish then ElevenLabs then Kokoro voice-engine order belongs to the media-use audio path, not to the tts command.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/audio/providers.ts",
+      "raw_snippet": "voice: HeyGen Starfish → ElevenLabs (key + `elevenlabs`) → Kokoro (local)",
+      "fetched_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z"
     },
     {
       "claim_id": "hyperframes-render-command",
@@ -163,6 +170,227 @@
       ],
       "verified_via": "the skill's own SKILL.md in its category repository",
       "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "hyperframes-check-supersedes-validate",
+      "claim": "`hyperframes validate` is deprecated upstream in favour of `hyperframes check`, which runs lint, runtime, layout, motion and the WCAG contrast pass in one browser session. `lint` is not deprecated.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/validate.ts",
+      "raw_snippet": "Load a composition in headless Chrome and report console errors (deprecated, use check)",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "hyperframes-check-contrast-flag",
+      "claim": "`hyperframes check` runs the WCAG AA contrast pass by default (`--contrast` defaults to true, so `--no-contrast` disables it) and `--snapshots` persists the five audited contrast frames.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/check.ts",
+      "raw_snippet": "Run the WCAG AA contrast pass (enabled by default)",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "data-track-index-not-a-timing-constraint",
+      "claim": "`data-track-index` is a Studio display lane, not a timing constraint; neither it nor the legacy `data-layer` is read by the render, so same-track clips may overlap in time.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/SKILL.md",
+      "raw_snippet": "`data-track-index` is a Studio display lane, not a timing constraint, so it does not need to be free.",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "claim_id": "fit-text-returns-object",
+      "claim": "`window.__hyperframes.fitTextFontSize` returns a FitTextResult object `{ fontSize, fits }`, not a number, and accepts six options: maxWidth, baseFontSize, minFontSize, fontWeight, fontFamily, step.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/core/src/text/fitTextFontSize.ts",
+      "raw_snippet": "export type FitTextResult = {",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "claim_id": "bundled-voices-count",
+      "claim": "The HyperFrames CLI ships 12 bundled Kokoro voices covering 6 of the 9 phonemizer locales (5 en-us, 3 en-gb, and one each of es, fr-fr, ja, zh).",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/tts/manager.ts",
+      "raw_snippet": "export const BUNDLED_VOICES: VoiceInfo[] = [",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "references/tts.md"
+      ]
+    },
+    {
+      "claim_id": "audio-groups-and-fx-chain",
+      "claim": "Upstream exposes audio grouping via the `data-audio-group` attribute and a summed FX bus via `data-fx-chain`; `data-audio-group` on a `<video>` element is ignored.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/core/src/audioGroups.ts",
+      "raw_snippet": "export const HF_AUDIO_GROUP_ATTR = \"data-audio-group\";",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "normalize-audio-command",
+      "claim": "`hyperframes normalize-audio` matches one local audio clip to another using integrated LUFS.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/normalize-audio.ts",
+      "raw_snippet": "Match one local audio clip to another using integrated LUFS",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "transcribe-engine-flag",
+      "claim": "`hyperframes transcribe` accepts an `--engine` flag with values auto, parakeet or whisper, defaulting to Parakeet when it is installed.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/transcribe.ts",
+      "raw_snippet": "ASR engine: auto (Parakeet if installed, else whisper), parakeet, or whisper. Default: auto.",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "claim_id": "producer-requires-node-22",
+      "claim": "The @hyperframes/producer package that both bundled scripts import declares an engines field requiring Node 22 or newer.",
+      "source_url": "https://registry.npmjs.org/@hyperframes/producer/latest",
+      "raw_snippet": "\"node\": \">=22\"",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "kokoro-tts-reference-doc-url",
+      "claim": "The upstream Kokoro voice/locale reference lives at skills/media-use/audio/references/tts.md and states that `hyperframes tts` synthesizes locally with Kokoro and accepts no provider flag. The previously cited skills/hyperframes-media path returns 404.",
+      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/media-use/audio/references/tts.md",
+      "raw_snippet": "`npx hyperframes tts` synthesizes locally with Kokoro. It does not accept a",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "hyperframes-repo-url",
+      "claim": "The HyperFrames upstream repository is github.com/heygen-com/hyperframes, an Apache-2.0 HeyGen project, cited in the skill Reference Links table.",
+      "source_url": "https://github.com/heygen-com/hyperframes",
+      "raw_snippet": "HyperFrames is an open-source framework for turning HTML, CSS, media, and seekable ani",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "uax9-bidi-algorithm",
+      "claim": "The Unicode Bidirectional Algorithm (UAX #9) governs how mixed-direction runs, isolates and neutral characters such as percent and currency signs resolve, which is why a bare integer is safe inside an RTL run but a digit adjacent to a symbol needs isolation.",
+      "source_url": "https://www.unicode.org/reports/tr9/",
+      "raw_snippet": "UAX #9: Unicode Bidirectional Algorithm",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "wcag21-contrast-minimum",
+      "claim": "WCAG 2.1 success criterion 1.4.3 requires a contrast ratio of at least 4.5:1 for normal text (3:1 for large text), which is the threshold the HyperFrames contrast pass enforces.",
+      "source_url": "https://www.w3.org/TR/WCAG21/#contrast-minimum",
+      "raw_snippet": "contrast ratio of at least 4.5:1",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "html-dir-blanks-render",
+      "claim": "Setting dir=\"rtl\" or dir=\"auto\" on the <html> element previews and snapshots correctly but renders a fully blank/black MP4. Upstream ships this as lint rule html_dir_attribute_breaks_render at severity error.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/composition.ts",
+      "raw_snippet": "renders correctly in preview/snapshot but produces a fully blank/black video from render",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "gsap-repeat-ceil-overshoot",
+      "claim": "Upstream lints `repeat: Math.ceil(...) - 1` as gsap_repeat_ceil_overshoot and prescribes `repeat: Math.max(0, Math.floor(totalDuration / cycleDuration) - 1)` instead, because ceil runs one cycle past the composition duration.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/gsap.ts",
+      "raw_snippet": "`repeat: Math.max(0, Math.floor(totalDuration / cycleDuration) - 1)`",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "clip-class-convention",
+      "claim": "`class=\"clip\"` is a convention the runtime never reads, but the scaffold's shared `.clip { position: absolute; inset: 0 }` rule supplies the full-frame scene box and lint warns via timed_element_missing_clip_class when a visible timed element lacks it.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/data-attributes.md",
+      "raw_snippet": "`class=\"clip\"` is a **convention, not a requirement**: the runtime never reads it.",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "script-viewport-defaults",
+      "claim": "Both bundled scripts default their capture viewport to 1920x1080 and 30fps, so a 1080x1920 portrait composition must be given --width/--height or every bounding box, flag and contrast sample is computed against the wrong frame.",
+      "source_url": "https://raw.githubusercontent.com/skills-il/developer-tools/master/hyperframes-best-practices/scripts/animation-map.mjs",
+      "raw_snippet": "const WIDTH = Number(args.width ?? 1920);",
+      "fetched_at": "2026-08-26T16:20:11Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:20:11Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/animation-map.mjs",
+        "scripts/contrast-report.mjs"
+      ]
     }
   ]
 }

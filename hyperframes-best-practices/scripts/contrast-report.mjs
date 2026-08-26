@@ -9,7 +9,9 @@
 //   - contrast-overlay.png  (sprite grid; magenta=fail AA, yellow=pass AA only, green=AAA)
 //
 // Usage:
-//   node skills/hyperframes/scripts/contrast-report.mjs <composition-dir> \
+//   Copy this file into your HyperFrames project first (Node resolves
+//   @hyperframes/producer relative to THIS file, not to your cwd), then:
+//   node scripts/contrast-report.mjs <composition-dir> \
 //     [--samples N] [--out <dir>] [--width W] [--height H] [--fps N]
 //
 // The composition directory must contain an index.html. Raw authoring HTML

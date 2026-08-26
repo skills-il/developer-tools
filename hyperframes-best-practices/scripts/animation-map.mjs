@@ -6,7 +6,9 @@
 // human-readable summaries. Outputs a single animation-map.json.
 //
 // Usage:
-//   node skills/hyperframes/scripts/animation-map.mjs <composition-dir> \
+//   Copy this file into your HyperFrames project first (Node resolves
+//   @hyperframes/producer relative to THIS file, not to your cwd), then:
+//   node scripts/animation-map.mjs <composition-dir> \
 //     [--frames N] [--out <dir>] [--min-duration S] [--width W] [--height H] [--fps N]
 
 import { mkdir, writeFile } from "node:fs/promises";

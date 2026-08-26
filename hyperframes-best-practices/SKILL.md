@@ -12,11 +12,26 @@ HTML is the source of truth for video. A composition is an HTML file with `data-
 
 ## Problem
 
-Building HTML-based videos with Hebrew text requires the compiler to fetch Hebrew Google Fonts on demand, explicit `dir="rtl"` on Hebrew containers, mirrored GSAP entrance directions, and Hebrew caption sync via Whisper, none of which HyperFrames documents out of the box. Hebrew voiceover is a separate gap: the local Kokoro fallback does not support Hebrew (only 8 languages: en-us, en-gb, es, fr-fr, hi, it, pt-br, ja, zh), so Hebrew narration must come from a cloud TTS provider, either by pointing `hyperframes tts` at ElevenLabs via `$ELEVENLABS_API_KEY` (when your CLI build supports cloud providers), or by generating the file with any external service and importing it as an `<audio>` element.
+Building HTML-based videos with Hebrew text requires the compiler to fetch Hebrew Google Fonts on demand, explicit `dir="rtl"` on Hebrew containers, mirrored GSAP entrance directions, and Hebrew caption sync via Whisper, none of which HyperFrames documents out of the box. Hebrew voiceover is a separate gap: the local Kokoro fallback does not support Hebrew (its `SUPPORTED_LANGS` tuple holds 9 locales: en-us, en-gb, es, fr-fr, hi, it, pt-br, ja, zh), so Hebrew narration must come from a cloud TTS provider, either through the media-use audio path, whose voice resolution order is HeyGen Starfish then ElevenLabs then Kokoro, or by generating the file with any external service and importing it as an `<audio>` element. The `hyperframes tts` command itself is local-only and has no provider argument.
 
 ## Hebrew and RTL
 
+<HARD-GATE>
+**Never put `dir="rtl"` (or `dir="auto"`) on the `<html>` element.** It previews correctly, snapshots correctly, and then renders a fully blank black MP4. The only tell is an output file far smaller than expected. Upstream ships this as a severity-`error` lint rule, `html_dir_attribute_breaks_render`, with the note "a confirmed, silent failure". Keep `lang="he"` on `<html>`, and scope direction to the elements that hold text: `dir="rtl"` on the composition root div, on Hebrew text containers, and on caption word spans. Text still shapes correctly, because the browser's bidi algorithm runs off the element's own direction. This is the single highest-cost mistake available in a Hebrew composition, and it is reachable only from Hebrew.
+</HARD-GATE>
+
 For Hebrew and RTL compositions, load [references/hebrew-rtl.md](./references/hebrew-rtl.md). It covers Hebrew font loading (the compiler auto-fetches from Google Fonts), `dir="rtl"` scoping, GSAP x-axis mirroring, Hebrew caption sync via `hyperframes transcribe --language he`, Hebrew voiceover via external TTS, and bidirectional text with `<bdi>`.
+
+## Host Capabilities
+
+Every gate in this skill (`npx hyperframes check`, `render`, `transcribe`, `normalize-audio`, `doctor`, and the two bundled Node scripts) is a shell command needing a local Node 22+ and FFmpeg install. Split your expectations by host:
+
+| Host tier | Hosts | What you get |
+|---|---|---|
+| Shell | claude-code, cursor, windsurf, github-copilot, opencode, codex | The whole skill, gates included |
+| No shell | chatgpt, claude-ai, claude-desktop, manus | Authoring guidance only. You can write a correct composition; you cannot lint, contrast-audit, transcribe or render it |
+
+On a no-shell host, say so up front and hand the user the commands to run themselves. That matters most for Hebrew: the blank-render `<html dir>` failure below is caught only by `check`, so on those hosts the rule has to be followed by construction rather than verified.
 
 ## Approach
 
@@ -130,11 +145,11 @@ Layered effects (glow behind text, shadow elements, background patterns) and z-s
 | `id`               | Yes                               | Unique identifier                                      |
 | `data-start`       | Yes                               | Seconds or clip ID reference (`"el-1"`, `"intro + 2"`) |
 | `data-duration`    | Required for img/div/compositions | Seconds. Video/audio defaults to media duration.       |
-| `data-track-index` | Yes                               | Integer. Same-track clips cannot overlap.              |
+| `data-track-index` | Yes                               | Integer. A Studio display lane, not a timing constraint. |
 | `data-media-start` | No                                | Trim offset into source (seconds)                      |
 | `data-volume`      | No                                | 0-1 (default 1)                                        |
 
-`data-track-index` does **not** affect visual layering, use CSS `z-index`.
+`data-track-index` does **not** affect visual layering (use CSS `z-index`) and it does **not** constrain timing. Upstream's linter says of it and its legacy alias `data-layer`: "Neither name is read by the render." Two clips on the same track index may overlap in time and the render accepts it, so do not restructure tracks to free a lane.
 
 ### Composition Clips
 
@@ -161,7 +176,7 @@ Sub-composition structure:
         /* scoped styles */
       }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
@@ -214,7 +229,7 @@ Video must be `muted playsinline`. Audio is always a separate `<audio>` element:
 
 **Animation conflicts:** Never animate the same property on the same element from multiple timelines simultaneously.
 
-**No `repeat: -1`:** Infinite-repeat timelines break the capture engine. Calculate the exact repeat count from composition duration: `repeat: Math.ceil(duration / cycleDuration) - 1`.
+**No `repeat: -1`:** Infinite-repeat timelines break the capture engine. Calculate the exact repeat count from composition duration with `Math.floor`, never `Math.ceil`: `repeat: Math.max(0, Math.floor(duration / cycleDuration) - 1)`. Upstream lints the `Math.ceil(...) - 1` form as `gsap_repeat_ceil_overshoot`, because ceil runs one cycle past the end and the last cycle is cut mid-motion.
 
 **Synchronous timeline construction:** Never build timelines inside `async`/`await`, `setTimeout`, or Promises. The capture engine reads `window.__timelines` synchronously after page load. Fonts are embedded by the compiler, so they're available immediately, no need to wait for font loading.
 
@@ -276,7 +291,7 @@ When no `visual-style.md` or animation direction is provided, follow [house-styl
 
 - **Fonts:** Just write the `font-family` you want in CSS, the compiler embeds supported fonts automatically. If a font isn't supported, the compiler warns.
 - Add `crossorigin="anonymous"` to external media
-- For dynamic text overflow, use `window.__hyperframes.fitTextFontSize(text, { maxWidth, fontFamily, fontWeight })`
+- For dynamic text overflow, use `window.__hyperframes.fitTextFontSize(text, { maxWidth, fontFamily, fontWeight })`. It returns an object `{ fontSize, fits }`, not a number, so read `.fontSize`. The full option set is `maxWidth, baseFontSize, minFontSize, fontWeight, fontFamily, step`
 - All files live at the project root alongside `index.html`; sub-compositions use `../`
 
 ## Editing Existing Compositions
@@ -287,7 +302,7 @@ When no `visual-style.md` or animation direction is provided, follow [house-styl
 
 ## Output Checklist
 
-- [ ] `npx hyperframes lint` and `npx hyperframes validate` both pass
+- [ ] `npx hyperframes check` passes with 0 findings (it runs lint, runtime, layout, motion and the WCAG contrast pass in one browser session). `npx hyperframes validate` is deprecated upstream in favour of `check`; `lint` is not
 - [ ] Contrast warnings addressed (see Quality Checks below)
 - [ ] Animation choreography verified (see Quality Checks below)
 - [ ] Rendered to MP4 with `npx hyperframes render` (lint and validate run on the HTML; `render` is the step that actually encodes the video, see `/hyperframes-cli` upstream for flags)
@@ -296,7 +311,7 @@ When no `visual-style.md` or animation direction is provided, follow [house-styl
 
 ### Contrast
 
-`hyperframes validate` runs a WCAG contrast audit by default. It seeks to 5 timestamps, screenshots the page, samples background pixels behind every text element, and computes contrast ratios. Failures appear as warnings:
+`hyperframes check` runs a WCAG contrast audit by default (`--contrast` defaults to true, so `--no-contrast` still turns it off). It seeks to 5 timestamps, screenshots the page, samples background pixels behind every text element, and computes contrast ratios. Failures appear as warnings:
 
 ```
 ⚠ WCAG AA contrast warnings (3):
@@ -308,17 +323,17 @@ If warnings appear:
 - On dark backgrounds: brighten the failing color until it clears 4.5:1 (normal text) or 3:1 (large text, 24px+ or 19px+ bold)
 - On light backgrounds: darken it
 - Stay within the palette family, don't invent a new color, adjust the existing one
-- Re-run `hyperframes validate` until clean
+- Re-run `hyperframes check` until clean
 
-Use `--no-contrast` to skip if iterating rapidly and you'll check later.
+Use `--no-contrast` to skip if iterating rapidly and you'll check later, and `--snapshots` to persist the five audited frames as PNGs under `snapshots/`.
 
 ### Animation Map
 
 After authoring animations, run the animation map to verify choreography:
 
 ```bash
-node skills/hyperframes/scripts/animation-map.mjs <composition-dir> \
-  --out <composition-dir>/.hyperframes/anim-map
+# Copy the script into the project first, see Bundled Resources below.
+node scripts/animation-map.mjs . --out .hyperframes/anim-map
 ```
 
 Outputs a single `animation-map.json` with:
@@ -359,14 +374,38 @@ Skip on small edits (fixing a color, adjusting one duration). Run on new composi
 
 For GSAP timeline patterns and easing, follow [house-style.md](./house-style.md) and [references/motion-principles.md](references/motion-principles.md) in this skill, plus the official GSAP docs at https://gsap.com/docs/v3/.
 
+## Bundled Scripts
+
+Two Node scripts ship with this skill under `scripts/`. **Both import `@hyperframes/producer`, and Node resolves that import relative to the script file, not to your working directory.** Running them from the skill folder fails with `ERR_MODULE_NOT_FOUND` no matter what directory you pass as the argument. Copy them into your HyperFrames project first, next to its `node_modules`, then run them from the project root:
+
+```bash
+mkdir -p scripts && cp <skill-dir>/scripts/*.mjs scripts/
+# Portrait (TikTok / Reels). BOTH scripts default to a 1920x1080 viewport,
+# so a portrait composition MUST be given --width/--height or every flag,
+# bbox and contrast sample is computed against a frame you will never render.
+node scripts/animation-map.mjs . --width 1080 --height 1920 --out .hyperframes/anim-map
+node scripts/contrast-report.mjs . --width 1080 --height 1920 --samples 10 --out .hyperframes/contrast
+```
+
+Both also accept `--fps` (default 30). Match it to your render, and set `data-fps` on the composition root if you are not rendering at 30.
+
+| Script | What it does |
+|---|---|
+| `scripts/animation-map.mjs` | Enumerates every tween in `window.__timelines`, samples bounding boxes, and emits `animation-map.json` with per-tween summaries, an ASCII timeline, stagger detection, dead zones and flags. |
+| `scripts/contrast-report.mjs` | Standalone WCAG audit. Emits `contrast-report.json` plus a `contrast-overlay.png` sprite grid (magenta fails AA, yellow passes AA only, green passes AAA) and exits 1 if any element fails AA. Useful when you want the overlay image, which `hyperframes check` does not produce. |
+
+Both require Node 22+ (the producer package declares `"engines": { "node": ">=22" }`).
+
 ## Gotchas
 
 These are agent failure modes specific to Hebrew/RTL HyperFrames work. Generic HyperFrames gotchas (see upstream) still apply.
 
 - **Don't add a Google Fonts `<link rel="stylesheet">` tag or a CSS `@import url(...)` statement for Hebrew fonts.** The compiler already fetches Google Fonts server-side via `fetchGoogleFont()` in `packages/producer/src/services/deterministicFonts.ts`, caches the WOFF2s at `~/.cache/hyperframes/fonts/<slug>/`, and embeds them as base64 data URIs in the compiled HTML. An external stylesheet breaks determinism (network dependency at render time) and duplicates the font loading. Just write `font-family: 'Heebo', sans-serif;`.
-- **Don't reach for the built-in `hyperframes tts` command for Hebrew narration.** The bundled Kokoro-82M supports 8 languages via voice-ID prefix, `a`=American English, `b`=British English, `e`=Spanish, `f`=French, `h`=Hindi, `i`=Italian, `j`=Japanese, `p`=Brazilian Portuguese, `z`=Mandarin. Hebrew is not included, so the local fallback can't voice Hebrew. Two paths: (a) set `$ELEVENLABS_API_KEY` so `hyperframes tts` routes to ElevenLabs (Hebrew voices) instead of Kokoro, if your installed CLI build supports cloud providers; or (b) generate the WAV/MP3 with any external service (ElevenLabs, OpenAI TTS, Google Cloud TTS Hebrew) and drop the file into the composition as a normal `<audio>` clip. The published `hyperframes tts` may synthesize locally with Kokoro only, so verify against your installed version.
-- **Don't use `.en` Whisper models on Hebrew audio.** `.en` variants TRANSLATE non-English audio to English instead of transcribing it. For Hebrew captions use `npx hyperframes transcribe audio.wav --model medium --language he` (`small` is weak for Hebrew ASR; step up to `large-v3 --language he` for noisy audio). The `.en` suffix is only correct when the user explicitly says the audio is English.
+- **Don't reach for the built-in `hyperframes tts` command for Hebrew narration.** It is local-only, described upstream as "Generate speech audio from text using a local AI model (Kokoro-82M)", and its arguments are exactly `input, text-file, output, voice, speed, lang, list, json`. There is no provider argument, so no environment variable can make this command speak Hebrew. Kokoro maps 9 locales via voice-ID prefix, `a`=American English, `b`=British English, `e`=Spanish, `f`=French, `h`=Hindi, `i`=Italian, `j`=Japanese, `p`=Brazilian Portuguese, `z`=Mandarin. Hebrew is not among them. Two paths that do work: (a) the media-use audio path, whose voice resolution order is HeyGen Starfish, then ElevenLabs (needs `ELEVENLABS_API_KEY` **and** the `elevenlabs` Python module importable), then local Kokoro. Run `hyperframes doctor` to see which engine your machine would actually pick. (b) Generate the WAV/MP3 with any external service (ElevenLabs, OpenAI TTS, Google Cloud TTS Hebrew) and drop the file into the composition as a normal `<audio>` clip. Path (b) is the one that works with no account and no Python deps.
+- **Don't use `.en` Whisper models on Hebrew audio.** `.en` variants TRANSLATE non-English audio to English instead of transcribing it. For Hebrew captions use `npx hyperframes transcribe audio.wav --model medium --language he` (`small` is weak for Hebrew ASR; step up to `large-v3 --language he` for noisy audio). **`references/captions.md` is upstream text and prescribes a flat `--model small`; for Hebrew that rule is superseded by this one**, because per-word effects (karaoke, slam, marker sweep) key off word boundaries that `small` gets wrong. The `.en` suffix is only correct when the user explicitly says the audio is English. Upstream also added an `--engine` flag (`auto`, `parakeet`, `whisper`) that prefers Parakeet when it is installed; pass `--engine whisper` if you need the Whisper multilingual behaviour described here.
 - **Don't forget `dir="rtl"` on Hebrew text containers, even inside a RTL-defaulted composition.** HyperFrames sub-compositions set their own direction context. GSAP `x:` tweens also don't auto-mirror. A title that uses `gsap.from({x: -80})` enters from the left in both LTR and RTL, for Hebrew, flip to `x: 80` so it enters from the right, matching reading direction.
+- **Don't "fix" a Hebrew entrance because `animation-map.mjs` says it moves the wrong way.** The map describes motion from screen-space bounding-box deltas, with no notion of writing direction. In an RTL composition a correct Hebrew entrance, `gsap.from(".subtitle", { x: 80 })` so the text flies in from the right, is reported as `moves 51px left` (measured, 1080x1920 RTL composition). That prose is accurate about pixels and misleading about intent. Read the summaries for choreography and flags, not for direction, and never flip a tween's sign to make the wording read "right".
+- **Hebrew narration over a music bed now has a first-class API, and a lint rule that can fail you.** Upstream added audio groups (`data-audio-group` on the member clip) with a summed FX bus (`data-fx-chain`), plus a lint rule that validates group membership and timing. If you are layering an externally-generated Hebrew voiceover over music, put both in a group rather than hand-balancing `data-volume`, and use `npx hyperframes normalize-audio` to match the narration's integrated LUFS to the bed instead of guessing. `data-audio-group` on a `<video>` element is ignored, it is audio-clip-only.
 - **Don't paste English brand names into Hebrew paragraphs without `<bdi>` or `unicode-bidi: isolate`.** Without isolation, the Unicode bidi algorithm reorders mixed-direction runs and can place punctuation on the wrong side of the brand name or visually reverse it. Wrap brand names: `הצטרפו ל־<bdi>HyperFrames</bdi> עכשיו`.
 
 ## Hebrew Bidi Details
@@ -385,11 +424,11 @@ HyperFrames requires Node 22+ and FFmpeg on PATH. Confirm `node --version` is 22
 ### Compiler warns "font not supported" or Hebrew renders in a fallback font
 The compiler only embeds fonts it can fetch from Google Fonts. Use a Hebrew family that exists on Google Fonts (Heebo, Rubik, Assistant, Alef, Frank Ruhl Libre, Noto Sans Hebrew) and write it plainly in CSS: `font-family: 'Heebo', sans-serif;`. Do NOT add a `<link rel="stylesheet">` or `@import` (see Gotchas), that breaks determinism without fixing the warning. If a custom non-Google font is required, the upstream docs cover local font embedding.
 
-### WCAG contrast audit fails (`hyperframes validate`)
-`validate` samples background pixels behind each text element at 5 timestamps and flags ratios under 4.5:1 (normal text) or 3:1 (large text). Fix by adjusting the failing color WITHIN the palette family: brighten it on dark backgrounds, darken it on light backgrounds. Do not invent a new color. Re-run `hyperframes validate` until clean. Use `--no-contrast` only while iterating, never as the final state.
+### WCAG contrast audit fails (`hyperframes check`)
+`check` samples background pixels behind each text element at 5 timestamps and flags ratios under 4.5:1 (normal text) or 3:1 (large text). Fix by adjusting the failing color WITHIN the palette family: brighten it on dark backgrounds, darken it on light backgrounds. Do not invent a new color. Re-run `hyperframes check` until clean. Use `--no-contrast` only while iterating, never as the final state.
 
 ### Composition renders blank or content is invisible
-The most common cause is a `<template>` wrapper on a standalone composition. The main `index.html` must put the `data-composition-id` div directly in `<body>`, not inside `<template>`. Also check that every timeline is registered via `window.__timelines["<composition-id>"] = tl` and built synchronously (not inside `async`, `setTimeout`, or a Promise), the capture engine reads `window.__timelines` synchronously after page load.
+**If the composition is Hebrew and it previews fine but the MP4 is black, check `<html>` for a `dir` attribute first.** `<html dir="rtl">` or `dir="auto"` produces a blank render while preview and snapshot look correct; remove it, keep `lang`, and scope `dir="rtl"` to the text-bearing elements instead. `npx hyperframes check` reports this as `html_dir_attribute_breaks_render` at severity error. Otherwise, the most common cause is a `<template>` wrapper on a standalone composition. The main `index.html` must put the `data-composition-id` div directly in `<body>`, not inside `<template>`. Also check that every timeline is registered via `window.__timelines["<composition-id>"] = tl` and built synchronously (not inside `async`, `setTimeout`, or a Promise), the capture engine reads `window.__timelines` synchronously after page load.
 
 ### Hebrew title enters from the wrong side
 GSAP `x:` tweens do not auto-mirror for RTL. A `gsap.from({x: -80})` enters from the left in both LTR and RTL. For Hebrew, flip to a positive value (`x: 80`) so the element enters from the right, matching reading direction. See `references/hebrew-rtl.md`.
@@ -401,7 +440,7 @@ GSAP `x:` tweens do not auto-mirror for RTL. A `gsap.from({x: -80})` enters from
 | HyperFrames GitHub | https://github.com/heygen-com/hyperframes | Upstream repo, issues, releases |
 | HyperFrames docs | https://hyperframes.heygen.com/quickstart | CLI, Node 22+, FFmpeg requirement |
 | Compiler font logic | https://github.com/heygen-com/hyperframes/blob/main/packages/producer/src/services/deterministicFonts.ts | Canonical font list, Google Fonts fallback, cache path |
-| Kokoro TTS voices | https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-media/references/tts.md | Kokoro voices across 8 languages (no Hebrew) |
+| Kokoro TTS voices | https://github.com/heygen-com/hyperframes/blob/main/skills/media-use/audio/references/tts.md | Kokoro voice prefixes across 9 locales (no Hebrew) |
 | Whisper model guide | https://github.com/skills-il/developer-tools/blob/master/hyperframes-best-practices/references/transcript-guide.md | `.en` vs multilingual models, `--language` flag |
 | Google Fonts Hebrew | https://fonts.google.com/?subset=hebrew | Heebo, Rubik, Assistant, Alef, Frank Ruhl Libre, Noto Sans Hebrew |
 | Unicode bidi spec | https://developer.mozilla.org/en-US/docs/Web/CSS/unicode-bidi | `isolate`, `<bdi>`, mixed-direction text |
