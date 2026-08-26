@@ -146,11 +146,21 @@ Store the advance rate in a Make.com Data Store or Set Variable module, since it
 
 | Deadline | Report | Trigger Configuration |
 |---|---|---|
+| January 18 | Form 126 employer wage reconciliation, covering January to December of the PRECEDING year | January 1 |
 | January 31 | Annual payroll summary (106) | January 1 |
 | March 31 | 856 form (payments to suppliers) | March 1 |
 | April 30 | Annual income tax return (online filing) | April 1 |
 | May 31+ | Annual income tax return (accountant filing) | May 1 |
 | June 30 | Annual VAT summary | June 1 |
+| July 18 | Form 126 employer wage reconciliation, covering January to June of the SAME year | July 1 |
+
+Form 126 is filed at three points, not two. Bituach Leumi states the schedule as
+`עד 18 ביולי בכל שנה` for January to June of that year, `עד 18 בינואר בכל שנה` for January
+to December of the preceding year, and `עד 30 באפריל בכל שנה` for the preceding tax year,
+the last being the extension under section 166 of the Income Tax Ordinance, which
+constitutes the final reconciliation approved by the employer's accountant. Note the day is
+the **18th**, not the end of the month, which is where a scenario scheduled on a
+month-end pattern will silently miss it.
 
 ### Year-End Aggregation Scenario
 
@@ -185,7 +195,7 @@ Israeli payroll runs monthly, with several recurring obligations:
 | Day of Month | Action | Automation |
 |---|---|---|
 | 1st-9th | Previous month's pay processed | Watch for payroll file from HR system |
-| 10th | Social Security (Bituach Leumi) payment | Aggregate and prepare payment summary |
+| mid-month, VERIFY | Social Security (Bituach Leumi) employer payment, via Tofes 102 | Aggregate and prepare the payment summary. **Do not schedule this on the 10th without checking.** This row previously asserted the 10th with no source; the deadline is commonly cited as the 15th of the month following the salary month, and neither day could be confirmed against a Bituach Leumi page. Late transfer carries קנסות plus הצמדה, so confirm the date for your own תיק ניכויים before wiring a reminder to it. |
 | 15th | Tax withholding (nikui mas) deposit | Generate withholding report |
 | Last day | Salary bank transfer | Trigger payroll file generation |
 

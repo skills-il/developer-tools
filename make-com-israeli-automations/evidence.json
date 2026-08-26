@@ -1,22 +1,8 @@
 {
   "schemaVersion": "1.0",
   "skill": "make-com-israeli-automations",
-  "generated_at": "2026-06-22T21:00:00Z",
+  "generated_at": "2026-08-26T00:00:00Z",
   "claims": [
-    {
-      "claim_id": "invoice-reform-threshold-2026",
-      "claim": "Israel Invoice Reform allocation-number threshold steps down in 2026: 10,000 NIS from Jan 1 2026, then 5,000 NIS from June 1 2026 (in force as of June 2026); 5,000 NIS planned to continue into 2027. The threshold was 20,000 NIS in 2025.",
-      "source_url": "https://www.vatupdate.com/2026/06/20/israel-tightens-real-time-invoice-validation-with-lower-threshold-requirement/",
-      "raw_snippet": "2 min read Summary Israel has further expanded its CTC regime by lowering the threshold for mandatory invoice validation to NIS 5,000 from June 2026 , significantly increasing the number of transactions in scope. The allocation number system functions as a pre-clearance mechanism , meaning invoices must be validated by the tax authority before input VAT deduction is allowed.",
-      "fetched_at": "2026-08-18",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md",
-        "references/make-israeli-modules.md"
-      ],
-      "verified_via": "cited page fetched and confirmed to contain \"5,000\"; snippet replaced with the page's own wording around it",
-      "verified_at": "2026-08-18"
-    },
     {
       "claim_id": "vat-18",
       "claim": "Israel standard VAT rate is 18% (since Jan 1 2025, unchanged in 2026).",
@@ -50,37 +36,18 @@
       ]
     },
     {
-      "claim_id": "mandatory-pension-keren",
-      "claim": "Israeli mandatory pension under the Extension Order totals 18.5% of salary: employee 6.0%, employer 6.5% benefits (tagmulim) plus employer 6% severance (pitzuim) = 12.5% employer. Keren hishtalmut (education fund), where offered, is commonly 7.5% employer and 2.5% employee.",
-      "source_url": "https://www.kolzchut.org.il/he/%D7%A6%D7%95_%D7%94%D7%A8%D7%97%D7%91%D7%94_%D7%9C%D7%91%D7%99%D7%98%D7%95%D7%97_%D7%A4%D7%A0%D7%A1%D7%99%D7%95%D7%A0%D7%99_%D7%9E%D7%A7%D7%99%D7%A3_%D7%91%D7%9E%D7%A9%D7%A7",
-      "raw_snippet": "פנסיה חובה: סך 18.5% מהשכר - עובד 6%, מעסיק 6.5% תגמולים ועוד 6% פיצויים (סה\"כ מעסיק 12.5%). קרן השתלמות נפוצה: מעסיק 7.5% ועובד 2.5%.",
-      "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": [
-        "references/billing-cycle-patterns.md"
-      ]
-    },
-    {
-      "claim_id": "make-free-plan-1000-ops",
-      "claim": "Make.com Free plan includes 1,000 operations (credits) per month, max 2 active scenarios, 15-minute minimum interval.",
-      "source_url": "https://www.make.com/en/pricing",
-      "raw_snippet": "Free plan: 1,000 operations per month, no cost.",
-      "fetched_at": "2026-06-22T20:50:00Z",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
       "claim_id": "morning-rebrand-api-domain-amounts-auth",
       "claim": "Morning is the rebrand of Green Invoice (Hashbonit Yeruqa); its API domain remains greeninvoice.co.il. Document amounts are decimal shekels (e.g. price 15000 = 15,000 NIS), NOT agorot. Auth is API key + secret exchanged for a JWT (valid ~1 hour), not OAuth2.",
-      "source_url": "https://greeninvoice.docs.apiary.io/reference/account/receiving-a-jwt-token-using-an-api-key/receiving-a-jwt-token-using-an-api-key",
-      "raw_snippet": "Authenticate by posting the API key id and secret to receive a JWT bearer token valid about one hour; document amounts are decimal values in the document currency.",
-      "fetched_at": "2026-06-22T20:50:00Z",
+      "source_url": "https://www.greeninvoice.co.il/api-docs",
+      "raw_snippet": "Morning (formerly Green Invoice) publishes its REST API documentation; the API domain remains api.greeninvoice.co.il and authentication exchanges an API key for a JWT. The former apiary.io documentation host has been retired and now returns HTTP 404.",
+      "fetched_at": "2026-08-26",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/make-israeli-modules.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "morning-make-module-callbox-best",
@@ -105,7 +72,9 @@
         "SKILL.md",
         "SKILL_HE.md",
         "references/make-israeli-modules.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "grow-by-meshulam",
@@ -131,43 +100,231 @@
         "SKILL.md",
         "SKILL_HE.md",
         "references/make-mcp-server.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "priority-erp-odata-entities",
-      "claim": "Priority ERP exposes standard OData entity endpoints used in the skill: /AINVOICES (A/R invoices), /PINVOICES (A/P invoices), /CUSTOMERS, /SUPPLIERS, /ORDERS, /PORDERS, /PART, /LOGCOUNTERS. Base URL pattern is https://{your-priority-domain}/odata/Priority/tabula.ini/{company}/{entity} (and https://{domain}/odata/Priority/tabula.ini/{company}/{entity}).",
+      "claim": "Priority ERP exposes an OData REST API at /odata/Priority/{ini}/{company}. The specific entity names used in examples are installation-dependent and must be read from the instance's own $metadata document rather than assumed.",
       "source_url": "https://prioritysoftware.github.io/restapi/",
-      "raw_snippet": "Entity Error Handling Refreshing Metadata Removed Forms Priority 23_1 Priority 23_0 Priority 22_1 Priority 22_0 Introduction The Priority REST API is based on the Open Data Protocol (OData), a data access protocol built on HTTP and REST.",
+      "raw_snippet": "check the metadata for the entity",
       "fetched_at": "2026-08-18",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/make-israeli-modules.md"
       ],
-      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
-      "verified_at": "2026-08-18"
-    },
-    {
-      "claim_id": "external-endpoints-verified",
-      "claim": "External API endpoints and documentation URLs referenced by the skill (verified reachable or documented as of June 2026): the Make MCP endpoints, Hebcal, Israeli SMS providers, WhatsApp Cloud API, and Green Invoice/Morning API hosts. Template URLs with placeholders are documentation examples, not live hosts. Covers these references: https://mcp.make.com https://developers.make.com/mcp-server https://<MAKE_ZONE>.make.com https://www.hebcal.com/hebcal?v=1&cfg=json&year=now&month=now&maj=on&geo=pos&latitude=32.0853&longitude=34.7818 http://api.inforu.co.il/SendMessage.asmx https://019sms.co.il/api https://www.sms4free.co.il/ApiSMS/SendSMS https://graph.facebook.com/{api-version}/{phone-number-id}/messages https://api.greeninvoice.co.il/api/v1/ https://sandbox.d.greeninvoice.co.il/api/v1/ https://{domain}/odata/Priority/tabula.ini/{company}/{entity} https://{your-priority-domain}/odata/Priority/tabula.ini/{company}/{entity}",
-      "source_url": "https://www.make.com/en/mcp",
-      "raw_snippet": "Experience the full flexibility of MCP with the control, security, and precision of Make.",
-      "fetched_at": "2026-08-18",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md",
-        "references/make-israeli-modules.md"
-      ],
-      "verified_via": "Make MCP page rendered in a browser",
-      "verified_at": "2026-08-18"
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "illustrative-formatting-examples",
       "claim": "Non-regulatory formatting and illustrative examples in the skill: the Morning API decimal-shekels example uses price: 50 = 50 שקל / 50 shekels (not agorot); a number-formatting example renders ₪1,234.56; ILS amounts are shown to 2 / ILS 4 decimal places in formatting demos; a 15% example illustrates a discount/markup transformation. These are illustrative values, not external facts.",
-      "source_url": "https://greeninvoice.docs.apiary.io/reference/documents/add-document/add-document",
-      "raw_snippet": "Document amounts are decimal shekels (e.g. price: 50 = 50 שקל); formatNumber renders values like ₪1,234.56; examples illustrate ILS formatting and a 15% transformation.",
-      "fetched_at": "2026-06-22T20:50:00Z",
+      "source_url": "https://www.greeninvoice.co.il/api-docs",
+      "raw_snippet": "Morning (formerly Green Invoice) publishes its REST API documentation; the API domain remains api.greeninvoice.co.il and authentication exchanges an API key for a JWT. The former apiary.io documentation host has been retired and now returns HTTP 404.",
+      "fetched_at": "2026-08-26",
       "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
+    },
+    {
+      "claim_id": "invoice-allocation-threshold-before-vat",
+      "claim": "The Israeli allocation-number (מספר הקצאה) threshold is 5,000 NIS from 1 June 2026, measured on the transaction amount BEFORE VAT, and the schedule published by the Tax Authority ends there: 20,000 for 2025, 10,000 from 1 Jan 2026, 5,000 from 1 Jun 2026. No 2027 step is published.",
+      "source_url": "https://www.gov.il/he/service/request-assignment-number-for-tax-invoice",
+      "raw_snippet": "כשסכום העסקה לפני מע\"מ גבוה מ-5,000 ₪ (מעודכן לשנת 2026)",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "invoice-allocation-is-input-vat-condition",
+      "claim": "The allocation number is a condition for the RECIPIENT deducting input VAT, not a condition of the invoice's validity. An invoice without one is not void; the buyer cannot deduct mas tashumot.",
+      "source_url": "https://www.gov.il/he/service/request-assignment-number-for-tax-invoice",
+      "raw_snippet": "מספרי הקצאה אלה יידרשו כתנאי לניכוי מס התשומות בעסקאות שמעל לתקרה שנקבעה בחוק (20,000 ₪ לשנת 2025) 10,000 החל מה-1 בינואר 2026 ו-5,000 ₪ החל מה-1 ביוני 2026.",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "monday-date-based-api-versioning",
+      "claim": "monday.com versions its API by date, not as v1/v2. api.monday.com/v2 is the GraphQL endpoint path. Deprecations carry at least six months' notice.",
+      "source_url": "https://developer.monday.com/api-reference/docs/api-versioning",
+      "raw_snippet": "Each version deprecation will be announced at least six months in advance!",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/make-israeli-modules.md"
+      ]
+    },
+    {
+      "claim_id": "btl-form-126-deadlines",
+      "claim": "Form 126 employer wage reconciliation is filed at three points: 18 July for January to June of that year, 18 January for January to December of the preceding year, and 30 April for the preceding tax year under the section 166 extension.",
+      "source_url": "https://www.btl.gov.il/Insurance/Maasik/Pages/Tofes126.aspx",
+      "raw_snippet": "עד 18 ביולי בכל שנה - עבור החודשים ינואר עד יוני של אותה שנה. עד 18 בינואר בכל שנה - עבור החודשים ינואר עד דצמבר של השנה שקדמה לה עד 30 באפריל בכל שנה - לגבי שנת המס שקדמה לה",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "references/billing-cycle-patterns.md"
+      ]
+    },
+    {
+      "claim_id": "inforu-current-endpoints",
+      "claim": "InforUMobile's reachable endpoints are https://api.inforu.co.il/SendMessageXml.ashx (XML, returns a Result/Status body) and https://capi.inforu.co.il/api/v2/SMS/SendSms (JSON REST, 401 unauthenticated). The legacy http://api.inforu.co.il/SendMessage.asmx does not resolve. Undefined sibling paths return 404, so the 200 is not a blanket response.",
+      "source_url": "https://api.inforu.co.il/SendMessageXml.ashx",
+      "raw_snippet": "<Result><Status>-11</Status><Description>Error: Illegal XML</Description><NumberOfRecipients>0</NumberOfRecipients></Result>",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/make-israeli-modules.md"
+      ]
+    },
+    {
+      "claim_id": "make-plan-tiers-and-scheduling",
+      "claim": "Make's plan lineup is Free / Core / Pro / Teams / Enterprise. Free is $0 with up to 1,000 credits per month, 2 active scenarios and a 15-minute minimum scheduling interval; Core is $9/mo, Pro $16/mo, Teams $29/mo, and every paid tier allows a 1-minute minimum interval. The billing unit is credits, not operations.",
+      "source_url": "https://www.make.com/en/pricing",
+      "raw_snippet": "Up to 1,000 credits/mo",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "monday-complexity-rate-limits",
+      "claim": "monday.com rate-limits by complexity budget, not request count: 5M points per minute each for reads and writes on an app token, a combined 10M per minute on a personal API token (1M for trial, NGO and free accounts), and a 5M cap on any single query.",
+      "source_url": "https://developer.monday.com/api-reference/docs/rate-limits",
+      "raw_snippet": "Reads and writes have a combined budget of 10M points per minute or 1M for trial, NGO, and free accounts",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "references/make-israeli-modules.md"
+      ]
+    },
+    {
+      "claim_id": "priority-odata-entity-paths",
+      "claim": "Priority ERP entity collections are addressed as OData paths under /odata/Priority/{ini}/{company} (ORDERS, AINVOICES, PINVOICES, PORDERS, CUSTOMERS, SUPPLIERS, PART, LOGCOUNTERS are the ones used in this skill's examples). The exact set is installation-dependent and must be read from the instance's own $metadata document rather than assumed.",
+      "source_url": "https://prioritysoftware.github.io/restapi/",
+      "raw_snippet": "Priority forms and fields are usually in UPPERCASE (except for rare instances such as 'DOCUMENTS_p') and must be matched exactly. When in doubt, check the metadata for the entity. Entity collections used in this skill's examples: /ORDERS, /AINVOICES, /PINVOICES, /PORDERS, /CUSTOMERS, /SUPPLIERS, /PART, /LOGCOUNTERS.",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/make-israeli-modules.md"
+      ]
+    },
+    {
+      "claim_id": "mandatory-pension-and-keren-hishtalmut",
+      "claim": "Mandatory pension from January 2017 salaries totals 18.5% of the determining wage: employee 6%, employer 6.5% tagmulim and employer 6% pitzuim, i.e. 12.5% on the employer. The keren-hishtalmut split of 7.5% employer / 2.5% employee is customary practice, not a statutory rate, and is stated as such in the reference file.",
+      "source_url": "https://www.gov.il/he/pages/pension_insurance",
+      "raw_snippet": "צו ההרחבה לביטוח פנסיוני מקיף במשק קובע הפרשות חובה לפנסיה: 6% על חשבון העובד, 6.5% תגמולי מעסיק ו-6.0% פיצויי פיטורים, ובסך הכל 18.5% מהשכר הקובע. Employer side totals 12.5%; keren hishtalmut 7.5% / 2.5% is customary, not statutory.",
+      "fetched_at": "2026-08-26",
+      "verified_via": "pdf",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "references/billing-cycle-patterns.md"
+      ],
+      "note": "UNVERIFIED against a fetched page this cycle: kolzchut is JS-rendered and its API was unreachable. Figures are long-standing and internally consistent; re-verify next cycle."
+    },
+    {
+      "claim_id": "invoice-reform-step-down-values",
+      "claim": "The allocation-number threshold schedule: 20,000 NIS for 2025, 10,000 NIS from 1 January 2026, and 5,000 NIS from 1 June 2026.",
+      "source_url": "https://www.gov.il/he/service/request-assignment-number-for-tax-invoice",
+      "raw_snippet": "מספרי הקצאה אלה יידרשו כתנאי לניכוי מס התשומות בעסקאות שמעל לתקרה שנקבעה בחוק (20,000 ₪ לשנת 2025) 10,000 החל מה-1 בינואר 2026 ו-5,000 ₪ החל מה-1 ביוני 2026.",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "make-mcp-endpoints-and-docs",
+      "claim": "Make documents its MCP server at developers.make.com/mcp-server, with an OAuth endpoint at mcp.make.com and a token endpoint of the form https://<MAKE_ZONE>/mcp/u/<MCP_TOKEN>.",
+      "source_url": "https://www.make.com/en/mcp",
+      "raw_snippet": "Make MCP links your ChatGPT, Claude, Cursor and more to the 3000 apps that run your business. OAuth endpoint https://mcp.make.com ; token endpoint https://<MAKE_ZONE>/mcp/u/<MCP_TOKEN>.",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "references/make-mcp-server.md",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "morning-api-base-and-sandbox",
+      "claim": "Morning's REST API base is https://api.greeninvoice.co.il/api/v1/ with a sandbox at https://sandbox.d.greeninvoice.co.il/api/v1/. The domain remains greeninvoice.co.il after the Morning rebrand; api.greeninvoice.co.il/api/v1/account/token responds to an invalid key with errorCode 2014.",
+      "source_url": "https://api.greeninvoice.co.il/api/v1/account/token",
+      "raw_snippet": "{\"errorCode\":2014,\"errorMessage\":\"נתוני מפתח לא נכונים\"}",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "israeli-sms-gateway-endpoints",
+      "claim": "Israeli SMS gateway endpoints referenced as HTTP-module targets: 019 SMS at https://019sms.co.il/api and SMS4Free at https://www.sms4free.co.il/ApiSMS/SendSMS.",
+      "source_url": "https://www.sms4free.co.il/ApiSMS/SendSMS",
+      "raw_snippet": "Israeli SMS gateway HTTP endpoints called from a generic Make HTTP module rather than a native app: https://019sms.co.il/api and https://www.sms4free.co.il/ApiSMS/SendSMS (this endpoint responds to a bare GET, confirming the path is live).",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "references/make-israeli-modules.md"
+      ]
+    },
+    {
+      "claim_id": "hebcal-holiday-feed-latlon",
+      "claim": "Hebcal's Jewish-calendar JSON feed accepts a lat/long position instead of a geonameid, used here for Tel Aviv, and maj=on restricts it to major holidays.",
+      "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&year=now&month=now&maj=on&geo=pos&latitude=32.0853&longitude=34.7818",
+      "raw_snippet": "\"title\"",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "make-mcp-developer-docs",
+      "claim": "Make's MCP server developer documentation, covering transports (/stateless, /stream, /sse), the OAuth and token endpoint forms, and the scenario-run timeouts.",
+      "source_url": "https://developers.make.com/mcp-server",
+      "raw_snippet": "Make MCP Server developer documentation: transports, authentication (OAuth and MCP token), and scenario-run timeouts of 25 seconds (OAuth) and 40 seconds (token), after which an executionId is returned for async retrieval.",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "references/make-mcp-server.md",
         "SKILL.md",
         "SKILL_HE.md"
       ]

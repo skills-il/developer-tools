@@ -123,7 +123,7 @@ iCount is a strong alternative to Morning for Israeli accounting automation, esp
 
 Monday.com has a built-in Make.com module.
 
-**Important:** Monday.com API v1 is maintained only until May 1, 2026. The Make.com native module uses v2 by default. Do NOT create new scenarios with v1.
+**Important:** monday.com versions its API by DATE, not as v1/v2. `api.monday.com/v2` is the GraphQL endpoint path and is unrelated to the API version. Current default is `2026-07`; `2026-04` is in maintenance and `2026-10` is a release candidate. Set the version explicitly with an `API-Version` request header. Deprecations get at least six months' notice.
 
 **Connection Setup:**
 1. In Monday.com: Avatar > Developers > My Access Tokens
@@ -339,7 +339,7 @@ Make.com expression to format: `replace(replace(phone; "+"; ""); "-"; "")` then 
 
 | Setting | Value |
 |---|---|
-| URL | `http://api.inforu.co.il/SendMessage.asmx` |
+| URL | `https://api.inforu.co.il/SendMessageXml.ashx` (XML) or `https://capi.inforu.co.il/api/v2/SMS/SendSms` (JSON REST). The legacy `http://api.inforu.co.il/SendMessage.asmx` does not resolve. |
 | Method | POST |
 | Content-Type | `application/xml` |
 
@@ -470,12 +470,31 @@ Digital payment solution with webhook notifications for completed transactions.
 
 | Service | Rate Limit | Recommended Polling Interval |
 |---|---|---|
-| Morning (Green Invoice) API | 100 req/min | 15 minutes |
+| Morning (Green Invoice) API | 100 req/min (uncited, confirm against Morning's docs before sizing a scenario) | 15 minutes |
 | iCount API | Check iCount docs | 15 minutes |
-| Monday.com API | 10,000 complexity/min | 5 minutes |
+| Monday.com API | Complexity budget, not a request count: 5M points/min each for reads and writes on an app token, or a combined 10M/min on a personal token (1M for trial, NGO and free accounts); a single query is capped at 5M | 5 minutes |
 | Priority OData | Varies by installation | 15 minutes |
-| WhatsApp Cloud API | 250 messages/sec (business) | N/A (event-driven) |
+| WhatsApp Cloud API | 250 messages/sec for a business-initiated send (uncited, confirm against Meta's throughput docs) | N/A (event-driven) |
 | Cardcom | No documented limit | N/A (webhook) |
 | Tranzila | No documented limit | N/A (webhook) |
 
 For all scheduled scenarios, prefer longer intervals (15+ minutes) during non-business hours to conserve Make.com credits.
+
+## Hebrew Month Names
+
+Make has no native Hebrew month formatting. Get the numeric month with `formatDate(now; "M")`, then map it with a switch function or a Set Variable lookup:
+
+| Month | Hebrew |
+|---|---|
+| 1 | ינואר |
+| 2 | פברואר |
+| 3 | מרץ |
+| 4 | אפריל |
+| 5 | מאי |
+| 6 | יוני |
+| 7 | יולי |
+| 8 | אוגוסט |
+| 9 | ספטמבר |
+| 10 | אוקטובר |
+| 11 | נובמבר |
+| 12 | דצמבר |

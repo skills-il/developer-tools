@@ -45,19 +45,7 @@ To set up the connection:
 
 Available actions (there are NO watch/trigger modules):
 
-| Action | Description | Key Parameters |
-|---|---|---|
-| Add Client | Create a new client record | `name`, `emails`, `taxId`, `address` |
-| Add Document | Create invoice, receipt, quote | `type`, `client`, `income`, `currency`, `lang` |
-| Add Expense | Record an expense | `supplier`, `amount`, `date`, `category` |
-| Get All Clients | List all client records | Pagination params |
-| Get All Documents | List all documents | Pagination params |
-| Search Clients | Query clients by criteria | Name, tax ID, etc. |
-| Search Documents | Query documents by criteria | `type`, `fromDate`, `toDate`, `status` |
-| Search Expenses | Query expenses by criteria | Date range, category, etc. |
-| Update Client | Modify existing client | Client ID + fields to update |
-| Delete Client | Remove a client record | Client ID |
-| Make an API Call | Raw API request | Any Morning API endpoint |
+The module's action list (Add Client, Add Document, Add Expense, the Get All / Search variants, Update and Delete Client, plus the raw `Make an API Call`) is tabulated with its key parameters in `references/make-israeli-modules.md`. Note that Callbox now also exposes Add Supplier, Add Expense Draft by File, Get Document and Get a Preview Document.
 
 Since there are no triggers, use one of these patterns for event-driven scenarios:
 - **Scheduled polling:** Use "Search Documents" on a schedule (e.g., every 15 minutes) filtered to recent documents
@@ -65,14 +53,7 @@ Since there are no triggers, use one of these patterns for event-driven scenario
 
 Key field mappings for Morning documents:
 
-| Morning Field | Make.com Field | Notes |
-|---|---|---|
-| `type` | Document type | 10 = Price Quote, 305 = Tax Invoice, 320 = Tax Invoice/Receipt, 330 = Credit Note/Refund, 400 = Receipt |
-| `client.name` | Client name | Hebrew characters supported |
-| `currency` | Currency code | Use `ILS` for Israeli Shekel |
-| `income[].price` | Unit price (ILS) | **Decimal shekels** (e.g., `price: 50` means 50 shekels). NOT agorot. |
-| `vatType` | VAT handling | 0 = Exempt, 1 = Included, 2 = Excluded |
-| `lang` | Document language | `he` for Hebrew, `en` for English |
+The Morning field mapping (document `type` codes, `currency`, `vatType`, `lang`) is tabulated in `references/make-israeli-modules.md`. Two that cause real damage if guessed: `income[].price` is in **decimal shekels, not agorot** (`price: 50` is 50 shekels), and `type` is a numeric code (305 = tax invoice, 320 = tax invoice/receipt, 400 = receipt).
 
 **Israel Invoice Reform 2026 (threshold step-down):** Tax invoices over the threshold require a Tax Authority allocation number (mispar haktza'a). The threshold drops in 2026:
 
@@ -80,13 +61,16 @@ Key field mappings for Morning documents:
 |-----------|-----------|
 | Jan 1, 2026 | 10,000 NIS |
 | **Jun 1, 2026** | **5,000 NIS** |
-| Jan 1, 2027 | 5,000 NIS (planned to continue) |
 
 Morning's API supports the allocation number via the `allocationNumber` field. For invoices above the current threshold, your scenario must either:
 1. Request an allocation number from the Tax Authority API before creating the document
 2. Use Morning's built-in allocation flow (if enabled in your Morning account settings)
 
-Build the threshold check as a configurable variable in your workflow, not a hardcoded number, since the threshold is scheduled to drop again. Failure to include an allocation number on qualifying invoices renders them invalid.
+**Compare the amount BEFORE VAT.** The Tax Authority states the requirement applies "כשסכום העסקה לפני מע"מ גבוה מ-5,000 ₪". A scenario that tests the gross document total requests an allocation number on every invoice between roughly 4,238 and 5,000 NIS net that does not need one.
+
+**What actually happens without one:** the allocation number is a condition for the RECIPIENT deducting input VAT (`יידרשו כתנאי לניכוי מס התשומות`), not a condition of the invoice's validity. The invoice is not void; the buyer simply cannot deduct מס תשומות. That difference decides who your automation has to alert, and when.
+
+Hold the threshold in a workflow variable rather than hardcoding it. The published schedule ends at 5,000 NIS from 1 June 2026 and no further step-down has been legislated, so this is for maintainability, not because another drop is scheduled.
 
 **iCount**
 
@@ -104,7 +88,7 @@ To set up: search "iCount" in the module palette, connect with your iCount API c
 
 Monday.com has a native Make.com module. Israeli businesses commonly use it for project billing.
 
-**Important (v2 migration):** Monday.com API v1 is maintained only until May 1, 2026. All new scenarios MUST use API v2. If connecting an existing scenario that uses v1, plan migration immediately. The Make.com native module uses v2 by default as of 2025.
+**Important (API versioning):** monday.com does not version its API as v1/v2. `api.monday.com/v2` is the GraphQL ENDPOINT path, and it has not changed. The API *version* is date-based (`2026-07` is the current default; `2026-04` is in maintenance and `2026-10` is a release candidate), selected per request with an `API-Version` header. Pin an explicit version rather than riding the default, and track the deprecation notices: monday states that "Each version deprecation will be announced at least six months in advance".
 
 1. Use "Watch Items" as trigger (set to a specific board)
 2. Map column values using the column ID (not the title, since titles may be in Hebrew and can be renamed)
@@ -125,14 +109,7 @@ For HTTP module approach:
 4. Set header `Content-Type: application/json`
 5. For Hebrew field values, ensure the request body is UTF-8 encoded
 
-Common Priority entities for Israeli scenarios:
-
-| Entity | OData Path | Use Case |
-|---|---|---|
-| `ORDERS` | `/ORDERS` | Sales orders |
-| `AINVOICES` | `/AINVOICES` | A/R invoices |
-| `PORDERS` | `/PORDERS` | Purchase orders |
-| `LOGCOUNTERS` | `/LOGCOUNTERS` | Inventory counts |
+The common Priority entities for Israeli scenarios (`ORDERS`, `AINVOICES`, `PORDERS`, `LOGCOUNTERS`) are listed with their OData paths in `references/make-israeli-modules.md`.
 
 **WhatsApp Business**
 
@@ -157,7 +134,7 @@ For SMS automation (019, InforUMobile, SMS4Free):
 | Provider | API Endpoint | Auth Method |
 |---|---|---|
 | 019 SMS | `https://019sms.co.il/api` | Bearer token: `Authorization: Bearer YOUR_TOKEN` |
-| InforUMobile | `http://api.inforu.co.il/SendMessage.asmx` | Username + token (ASMX web service, XML format) |
+| InforUMobile | `https://api.inforu.co.il/SendMessageXml.ashx` (XML) or `https://capi.inforu.co.il/api/v2/SMS/SendSms` (JSON REST) | Username + token. The old `http://api.inforu.co.il/SendMessage.asmx` does not resolve, so do not use it |
 | SMS4Free | `https://www.sms4free.co.il/ApiSMS/SendSMS` | Three credentials: `key`, `user`, `pass` |
 
 Consult `references/make-israeli-modules.md` for full endpoint specs, authentication details, and payload examples.
@@ -189,24 +166,7 @@ Note: the Shekel sign is Unicode U+20AA. Do not use `NIS` as a symbol in custome
 Make.com stores dates in ISO 8601 format. For Hebrew display:
 
 - Use `formatDate(date; "DD/MM/YYYY")` for Israeli date format (day/month/year)
-- For Hebrew month names, use a lookup table (Make.com does not have native Hebrew month formatting):
-
-| Month | Hebrew |
-|---|---|
-| 1 | ינואר |
-| 2 | פברואר |
-| 3 | מרץ |
-| 4 | אפריל |
-| 5 | מאי |
-| 6 | יוני |
-| 7 | יולי |
-| 8 | אוגוסט |
-| 9 | ספטמבר |
-| 10 | אוקטובר |
-| 11 | נובמבר |
-| 12 | דצמבר |
-
-Use `formatDate(now; "M")` to get the numeric month, then map it to the Hebrew name using a switch function or lookup table in a Set Variable module.
+- For Hebrew month names, Make has no native Hebrew month formatting. Get the numeric month with `formatDate(now; "M")` and map it with a switch function or a Set Variable lookup; the full 12-row table is in `references/make-israeli-modules.md` under "Hebrew Month Names".
 
 ### Step 4: Build Router Patterns for Israeli Billing Cycles
 
@@ -307,13 +267,7 @@ Cardcom has two webhook generations with different field names, confirm which yo
 2. Set Cardcom's "Notify URL" to the Make.com webhook URL
 3. Legacy LowProfile (v10) callback fields:
 
-| Field | Description | Example |
-|---|---|---|
-| `OperationResponse` | Success/failure code | `0` = success |
-| `Amount` | Charge amount in ILS | `150.00` |
-| `CardOwnerID` | Teudat Zehut of card owner | 9-digit Israeli ID |
-| `NumOfPayments` | Installment count (tashlumim) | `3` |
-| `Token` | Card token for recurring charges | |
+The legacy LowProfile (v10) field set (`OperationResponse`, `Amount`, `CardOwnerID`, `NumOfPayments`, `Token`) and the v11 JSON field names are tabulated in `references/make-israeli-modules.md`. Confirm which generation your terminal uses before mapping fields.
 
 **Tranzila Webhook**
 
@@ -323,15 +277,7 @@ Tranzila uses a redirect-based flow. To capture results:
 2. Set Tranzila's `notify_url` parameter
 3. Key fields:
 
-| Field | Description |
-|---|---|
-| `Response` | `000` = approved |
-| `sum` | Amount in ILS |
-| `ccno` | Masked card number |
-| `myid` | Customer ID (Teudat Zehut) |
-| `fpay` | First payment amount (tashlumim) |
-| `spay` | Subsequent payment amount |
-| `npay` | Number of **additional** payments (total installments = npay + 1). If npay=2, customer pays 3 installments total. |
+The Tranzila notify fields (`Response`, `sum`, `ccno`, `myid`, and the installment trio `fpay` / `spay` / `npay`) are tabulated in `references/make-israeli-modules.md`. The one that catches people: `npay` is the number of ADDITIONAL payments, so total installments = `npay + 1`.
 
 **Tranzila API v2** introduces iframe-based hosted payment fields for PCI compliance and supports Bit payments.
 
@@ -429,8 +375,8 @@ Consult `references/make-mcp-server.md` for the connection-method details, the C
 | **Best for** | Visual automations, non-developers | Self-hosted, code-heavy workflows | Simple 2-app connections |
 | **Israeli app modules** | Morning (community), iCount (native), Priority (community), Hebcal (community) | Fewer Israeli modules | Some Israeli apps |
 | **AI Agents** | Built-in visual AI Agents | Via code nodes | Limited AI features |
-| **Pricing** | Core: $10.59/mo (annual), 5-min minimum schedule | Free (self-hosted) | Starter: $29.99/mo |
-| **1-minute scheduling** | Pro plan only | Available on all plans | Available on paid plans |
+| **Pricing** | Free: $0 (1,000 credits/mo, 2 active scenarios); Core: $9/mo; Pro: $16/mo; Teams: $29/mo | Free (self-hosted) | Starter: $29.99/mo |
+| **1-minute scheduling** | Every paid plan, from Core up. Only Free is capped, at 15 minutes | Available on all plans | Available on paid plans |
 | **Hebrew UI** | No (English UI, Hebrew data supported) | No | No |
 | **Community modules** | Growing Israeli ecosystem | npm packages | Fewer community options |
 
@@ -513,8 +459,8 @@ For a worked example of exposing a Morning invoice scenario as an MCP tool calla
 - Hebrew column names in Monday.com should be referenced by column ID, not by the display title. Agents often try to use the Hebrew title directly, which breaks when users rename columns.
 - Make.com filters use a **visual UI** with dropdown operators, not code syntax. There is no `=` vs `==` distinction since you select "equal to" from a dropdown.
 - The Israeli tax year is January-December (same as calendar year), but agents sometimes assume April-March (UK pattern) or October-September (US fiscal year).
-- **Invoice Reform 2026 affects automation, threshold drops June 1, 2026.** Tax invoices over the threshold (10,000 NIS through May 31, 2026, then 5,000 NIS from June 1, 2026) require Tax Authority allocation numbers. Make the threshold a scenario variable, not a hardcoded literal.
-- Monday.com API v1 is maintained only until May 1, 2026. New scenarios must use v2. The Make.com native module defaults to v2.
+- **Invoice Reform 2026 affects automation, and the comparison is made BEFORE VAT.** Tax invoices over the threshold (10,000 NIS through 31 May 2026, then 5,000 NIS from 1 June 2026) require a Tax Authority allocation number. The Tax Authority phrases it as `כשסכום העסקה לפני מע"מ גבוה מ-5,000 ₪`, so a scenario that filters on the gross document total over-requests on every invoice between roughly 4,238 and 5,000 NIS net. Note also what the number is FOR: it is a condition of the recipient's input-VAT deduction, not of the invoice's validity. Hold the threshold in a scenario variable rather than a literal.
+- monday.com has no v1/v2 API split. `api.monday.com/v2` is the GraphQL endpoint path; the API version is date-based (`2026-07` current) and set per request with an `API-Version` header. Pin one explicitly rather than inheriting whatever the default becomes.
 - A Make scenario only appears as an MCP tool when it is both **active** AND set to **on-demand** scheduling. Agents often satisfy only one condition; a scheduled or instant-trigger scenario will never show up in the MCP tool list.
 - MCP scenario-run tools time out at 25s (OAuth) or 40s (token). A longer scenario returns an `executionId` instead of the result, poll with `executions_get` using that ID rather than treating the timeout as a failure.
 
@@ -538,11 +484,11 @@ Solution: Ensure the scenario is active and the webhook is in listening mode. Co
 
 ### Error: "Morning module not available in Make.com"
 Cause: The Morning module requires the Best subscription tier or higher. It is a community module, not included in Free or Core plans.
-Solution: Upgrade your Make.com plan to Best or higher. Alternatively, use the "Make an API Call" action from the Morning module, or use a generic HTTP module with the Morning REST API directly.
+Solution: the Callbox app page states the module "requires a best or higher subscription and an api key". Note that **"Best" is not a tier in Make's current lineup** (Free / Core / Pro / Teams / Enterprise), so treat it as legacy wording and check what the app store shows against your own account rather than shopping for a plan by that name. The alternatives avoid the question entirely: use the "Make an API Call" action from the Morning module, call the Morning REST API through a generic HTTP module, or use **iCount, which has a native first-party Make module with no community-app tier gate**.
 
 ### Error: "Invoice rejected: missing allocation number"
 Cause: Invoices over the Invoice Reform threshold require a Tax Authority allocation number. The threshold is 10,000 NIS through May 31, 2026, then drops to 5,000 NIS on June 1, 2026.
-Solution: Add a Filter module before document creation that compares the amount against a workflow variable holding the current threshold (do not hardcode the number, it is scheduled to drop again). If the amount exceeds the threshold, request an allocation number first, then pass it in the `allocationNumber` field when creating the document.
+Solution: Add a Filter module before document creation that compares the amount BEFORE VAT against a workflow variable holding the current threshold (hold it in a variable for maintainability; the published schedule ends at 5,000 NIS from 1 June 2026 and no further drop has been legislated). If the amount exceeds the threshold, request an allocation number first, then pass it in the `allocationNumber` field when creating the document.
 
 ### Error: "Make scenario does not appear as an MCP tool"
 Cause: The scenario is not active, is not set to on-demand scheduling, or the MCP connection is missing the scenario-run scope.
