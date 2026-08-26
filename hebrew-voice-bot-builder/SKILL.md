@@ -30,20 +30,20 @@ Before building, decide on the voice bot architecture based on the use case:
 | Hybrid | Complex flows with both speech and keypad input | STT + TTS + DTMF + telephony |
 
 **Key decisions:**
-- **STT provider**: OpenAI `gpt-4o-transcribe` or `gpt-4o-mini-transcribe` (best Hebrew WER and lower latency than `whisper-1`, available via the OpenAI Realtime API for streaming), `whisper-large-v3-turbo` for self-host, ivrit-ai's Hebrew-tuned variants (`ivrit-ai/whisper-large-v3-turbo-ct2`) for the best open Hebrew WER, Google Cloud STT (low latency), Azure Speech (enterprise features). The legacy `whisper-1` API is still supported but `gpt-4o-transcribe` is the current default for Hebrew.
+- **STT provider**: OpenAI `gpt-4o-transcribe` or `gpt-4o-mini-transcribe` (lower latency than `whisper-1` and available via the OpenAI Realtime API for streaming), `whisper-large-v3-turbo` for self-host, ivrit-ai's Hebrew-tuned variants (`ivrit-ai/whisper-large-v3-turbo-ct2`) for an open model trained specifically on Hebrew, Google Cloud STT (low latency; Hebrew runs on Chirp, `iw-IL`), Azure Speech (enterprise features), and ElevenLabs Scribe v2, which lists Hebrew (heb) in the "Good (>10% to <=20% WER)" band with a realtime variant at roughly 150ms. Note the WER band honestly: Hebrew is two tiers below English there, so benchmark on your own call audio rather than picking on the marketing claim. The legacy `whisper-1` API is still supported but `gpt-4o-transcribe` is the current default for Hebrew.
 - **TTS provider, split by use case**:
-  - **Real-time / streaming (voice agents, IVR, live conversation)**: OpenAI Realtime API (`gpt-realtime` / `gpt-realtime-1.5`, GA; the older `gpt-4o-realtime-preview` was REMOVED from the API on 2026-05-07, do not use it), native multilingual speech-to-speech including Hebrew over WebRTC/WebSocket/SIP, the 2026 default for sub-500ms turn-taking. Inworld TTS-1.5 / Realtime TTS-2, explicitly lists Hebrew, sub-130ms P90 latency, designed for live conversation. Deepdub Phantom X 3.2, Israeli company, real-time Hebrew with emotive eTTS, launched March 2026. ElevenLabs `eleven_flash_v2_5`, WebSocket-capable but Hebrew quality is weak, use only when latency dominates over quality.
+  - **Real-time / streaming (voice agents, IVR, live conversation)**: OpenAI Realtime API, native multilingual speech-to-speech including Hebrew over WebRTC/WebSocket/SIP, the 2026 default for sub-500ms turn-taking. The current GA model is `gpt-realtime-2.1` (`gpt-realtime-2.1-mini` for the smaller tier). Two model names to avoid: `gpt-realtime` was deprecated on 2026-07-20 with a hard shutdown on 2027-01-20 (replacement `gpt-realtime-2.1`), and `gpt-4o-realtime-preview` was removed from the API on 2026-05-07. `gpt-realtime-1.5` is still live. Other realtime options: ElevenLabs `eleven_v3_conversational` (~280ms, and Hebrew IS in the v3 language list, so this is now a real realtime-Hebrew route), Inworld Realtime TTS-2 and TTS-2 Flash (Inworld advertises "200+ languages" but does NOT enumerate Hebrew in its docs, so treat Hebrew as untested there and verify with your own audio; the older TTS-1 / TTS-1.5 names no longer appear), and Deepdub Phantom X 3.2 from the Israeli vendor Deepdub. Do NOT reach for ElevenLabs `eleven_flash_v2_5` for Hebrew: its language list is Multilingual v2's 29 languages plus Hungarian, Norwegian and Vietnamese, so Hebrew is absent entirely rather than merely weak.
   - **Offline / max quality (audiobooks, voicemail playback, batch generation)**: ElevenLabs `eleven_v3`, best Hebrew quality ElevenLabs offers, supports Hebrew (heb) among 70+ languages but **NO WebSocket / streaming API**, REST only. Deepdub Phantom X 3.2 also serves this track with emotional control.
   - **Fallbacks**: Azure Neural TTS (`he-IL-HilaNeural`, `he-IL-AvriNeural`), Google Cloud TTS Wavenet (`he-IL-Wavenet-A/B`). **Amazon Polly does NOT support Hebrew** (no he-IL locale, no Hebrew voice of any engine, the "Avri" voice belongs to Azure, not Polly), so do not route Hebrew through Polly. ElevenLabs Multilingual v2 does NOT list Hebrew: its documented 29 languages are en, ja, zh, de, hi, fr, ko, pt, it, es, id, nl, tr, fil, pl, sv, bg, ro, ar, cs, el, fi, hr, ms, sk, da, ta, uk and ru. Hebrew appears only in the Eleven v3 language list, so route Hebrew to v3 (or to Azure/Google above) and not to Multilingual v2.
-- **Telephony**: Twilio (largest Israeli number inventory), Vonage (competitive pricing for Israel).
+- **Telephony**: Twilio and Vonage both sell Israeli numbers. Twilio publishes Israeli voice pricing (local, mobile and toll-free tiers); Vonage does not publish comparable Israeli number documentation, so compare quotes yourself rather than trusting a ranking. Number portability exists in the Israeli market, but confirm with the carrier that your specific number can be ported to your chosen provider before committing.
 - **Hosting**: Cloud functions for low-volume, dedicated servers for high-volume.
-- **Recording-consent disclosure**: Israeli outbound automated calls must disclose recording at the start of the call (`השיחה מוקלטת`). Privacy Protection Law Amendment 13 (in force Aug 2025) tightens consent requirements for biometric voice data.
+- **Call recording and voiceprints**: play a recording announcement (`השיחה מוקלטת`) at the start of the call. It is standard practice for Israeli call flows, and this skill does not assert it as a cited statutory duty (an earlier version did, and the source did not hold up). Treat a voiceprint as a different artifact from the recording: store it in its own table, keyed for per-caller deletion, so it can be erased independently of the audio and of the transcript. Have the operator confirm which obligations apply to their business with a qualified professional before launch.
 
 ### Step 2: Hebrew Speech-to-Text (STT)
 
-#### OpenAI Whisper (Recommended for Accuracy)
+#### OpenAI (recommended as the default)
 
-Whisper provides the best Hebrew transcription accuracy, especially for mixed Hebrew-English speech common in Israeli tech environments.
+OpenAI handles mixed Hebrew-English speech well, which is common in Israeli tech environments.
 
 ```python
 import openai
@@ -79,7 +79,7 @@ def transcribe_hebrew_with_timestamps(audio_file_path: str) -> dict:
 - Set `language="he"` explicitly to avoid misdetecting Hebrew as Arabic
 - For mixed Hebrew-English, let Whisper auto-detect (omit the language parameter) and post-process
 - Whisper handles niqqud-free text well (standard for modern Hebrew)
-- Audio quality matters: 16kHz+ sample rate, mono channel, WAV or FLAC preferred
+- Audio quality matters: 16kHz+ sample rate, mono channel, WAV. Do NOT capture to FLAC or OGG if OpenAI is the target: its transcription API accepts only mp3, mp4, mpeg, mpga, m4a, wav and webm, and rejects the file after upload
 - Maximum file size: 25MB. For longer recordings, split into segments
 
 #### Google Cloud Speech-to-Text
@@ -87,65 +87,62 @@ def transcribe_hebrew_with_timestamps(audio_file_path: str) -> dict:
 Lower latency than Whisper, suitable for real-time voice bots.
 
 ```python
-from google.cloud import speech_v1
+import os
+from google.api_core.client_options import ClientOptions
+from google.cloud.speech_v2 import SpeechClient
+from google.cloud.speech_v2.types import cloud_speech
+
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+
+# Hebrew on Google STT is Chirp-only and REGIONAL, and Chirp 2 is documented as
+# "exclusively available within the Speech-to-Text API V2". So Hebrew must go
+# through speech_v2 against a regional endpoint, not the global speech_v1
+# client. The supported-languages table lists iw-IL on: chirp and chirp_2 in
+# europe-west4 and asia-southeast1, and chirp_3 in the eu and us multi-regions.
+# There is no phone_call or telephony model for Hebrew, so do not expect a
+# phone-audio-tuned accuracy gain; benchmark on your own 8kHz call audio.
+LOCATION = "europe-west4"
+MODEL = "chirp_2"
+
 
 def transcribe_hebrew_google(audio_content: bytes) -> str:
-    """Transcribe Hebrew audio using Google Cloud STT."""
-    client = speech_v1.SpeechClient()
-
-    audio = speech_v1.RecognitionAudio(content=audio_content)
-    config = speech_v1.RecognitionConfig(
-        encoding=speech_v1.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=16000,
-        language_code="iw-IL",  # Google STT documents Hebrew as iw-IL, not he-IL
-        # Enable automatic punctuation for Hebrew
-        enable_automatic_punctuation=True,
-        # Model optimized for phone calls
-        model="phone_call",
-        # Enable word-level confidence scores
-        enable_word_confidence=True,
+    """Transcribe Hebrew audio using Google Cloud STT V2 (Chirp)."""
+    client = SpeechClient(
+        client_options=ClientOptions(
+            api_endpoint=f"{LOCATION}-speech.googleapis.com",
+        )
     )
 
-    response = client.recognize(config=config, audio=audio)
-
-    results = []
-    for result in response.results:
-        results.append(result.alternatives[0].transcript)
-
-    return " ".join(results)
-
-
-def stream_transcribe_hebrew(audio_generator):
-    """Real-time streaming transcription for live phone calls."""
-    client = speech_v1.SpeechClient()
-
-    config = speech_v1.StreamingRecognitionConfig(
-        config=speech_v1.RecognitionConfig(
-            encoding=speech_v1.RecognitionConfig.AudioEncoding.MULAW,
-            sample_rate_hertz=8000,  # Standard phone audio
-            language_code="iw-IL",  # Google STT documents Hebrew as iw-IL
-            model="phone_call",
-            enable_automatic_punctuation=True,
-        ),
-        interim_results=True,  # Get partial results for faster response
+    config = cloud_speech.RecognitionConfig(
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
+        language_codes=["iw-IL"],  # Google STT documents Hebrew as iw-IL, not he-IL
+        model=MODEL,
     )
 
-    streaming_config = speech_v1.StreamingRecognizeRequest(
-        streaming_config=config
+    request = cloud_speech.RecognizeRequest(
+        recognizer=f"projects/{PROJECT_ID}/locations/{LOCATION}/recognizers/_",
+        config=config,
+        content=audio_content,
     )
 
-    def request_generator():
-        yield streaming_config
-        for chunk in audio_generator:
-            yield speech_v1.StreamingRecognizeRequest(audio_content=chunk)
-
-    responses = client.streaming_recognize(requests=request_generator())
-
-    for response in responses:
-        for result in response.results:
-            if result.is_final:
-                yield result.alternatives[0].transcript
+    response = client.recognize(request=request)
+    return " ".join(
+        result.alternatives[0].transcript for result in response.results
+    )
 ```
+
+**Streaming Hebrew needs a different model from the one above.** Chirp 2 enumerates the
+languages its `Speech.StreamingRecognize` accepts, and Hebrew is NOT on that list (it
+covers 17 locales: the Chinese, English, French, German, Italian, Japanese, Korean,
+Portuguese and Spanish variants). Chirp 2's `Recognize` and `BatchRecognize` are fine for
+Hebrew, which is what the code above uses. For STREAMING Hebrew use **`chirp_3` in the
+`eu` or `us` multi-region**: Chirp 3 lists StreamingRecognize as Supported and its locale
+table includes `Hebrew (Israel) iw-IL` at **Preview** maturity. Two consequences: set
+`LOCATION = "us"` (or `"eu"`) and `MODEL = "chirp_3"` for the streaming path, and treat
+Preview as Preview, meaning pin your behaviour with tests and have a fallback. If you do
+not want a Preview dependency, run the call through short `Recognize` requests on
+utterance boundaries, or use a provider whose Hebrew streaming you have tested (OpenAI
+Realtime, or ElevenLabs Scribe v2 Realtime).
 
 #### Azure Speech Services
 
@@ -178,7 +175,7 @@ def transcribe_hebrew_azure(audio_file_path: str) -> str:
         raise RuntimeError(f"Speech recognition failed: {result.reason}")
 ```
 
-Consult `references/hebrew-stt-models.md` for a detailed comparison of STT providers with accuracy benchmarks.
+Consult `references/hebrew-stt-models.md` for a comparison of STT providers.
 
 ### Step 3: Hebrew Text-to-Speech (TTS)
 
@@ -195,6 +192,9 @@ def synthesize_hebrew(text: str, output_path: str, voice_gender: str = "female")
 
     # Available Hebrew voices
     voice_name_map = {
+        # Chirp3-HD is the newer he-IL voice tier (Achernar, Aoede, Charon,
+        # Kore, Puck, Zephyr and more). Wavenet below is the older tier and is
+        # still live; A/B them on your own prompts before choosing.
         "female": "he-IL-Wavenet-A",  # Female, high quality
         "male": "he-IL-Wavenet-B",    # Male, high quality
         "female_standard": "he-IL-Standard-A",  # Female, lower cost
@@ -362,7 +362,7 @@ IVR_MENU = {
             "3": "tech_support",
             "4": "order_status",
             "9": "english_menu",
-            "*": "main_menu",  # Repeat
+            "#": "main_menu",   # Main menu (see rules/ scheme: * = previous, # = main)
         },
         "timeout_seconds": 8,
         "no_input_prompt_he": "לא קיבלנו בחירה. בבקשה הקישו מספר מ-1 עד 4.",
@@ -380,7 +380,7 @@ IVR_MENU = {
             "1": "account_inquiry",
             "2": "complaint",
             "0": "agent_queue",
-            "*": "main_menu",
+            "*": "main_menu",   # this IS the previous menu from a first-level submenu
         },
     },
     "agent_queue": {
@@ -412,6 +412,12 @@ import os
 import json
 from datetime import datetime
 
+# NOTE: this block is a pipeline SKELETON, not a runnable module.
+# detect_voicemail_language() and classify_voicemail_intent() are defined below.
+# extract_voicemail_entities(), get_audio_duration() and route_voicemail() are
+# YOUR business logic and are intentionally not implemented here: entity
+# extraction and routing depend on your CRM and your queue names. Stub them
+# before running, or the first call raises NameError.
 def process_voicemail(audio_path: str, caller_number: str) -> dict:
     """
     Process a voicemail recording: transcribe, classify, and route.
@@ -493,6 +499,15 @@ def classify_voicemail_intent(transcript: str) -> str:
 Israeli tech professionals frequently switch between Hebrew and English mid-sentence (code-switching). Voice bots must handle this gracefully.
 
 ```python
+def detect_segment_language(text: str) -> str:
+    """Label a segment by script: Hebrew block U+0590-U+05FF vs Latin."""
+    hebrew = sum(1 for ch in text if "\u0590" <= ch <= "\u05FF")
+    latin = sum(1 for ch in text if ch.isascii() and ch.isalpha())
+    if hebrew and latin:
+        return "mixed"
+    return "he" if hebrew else ("en" if latin else "unknown")
+
+
 def handle_mixed_speech(audio_path: str) -> dict:
     """
     Handle mixed Hebrew-English speech common in Israeli tech.
@@ -511,14 +526,17 @@ def handle_mixed_speech(audio_path: str) -> dict:
         )
 
     segments = []
+    # transcript.segments holds TranscriptionSegment pydantic models, not dicts.
+    # segment["text"] raises TypeError and segment.get("text") raises
+    # AttributeError on every current openai SDK. Read the attributes.
     for segment in transcript.segments:
-        text = segment["text"]
+        text = segment.text
         lang = detect_segment_language(text)
         segments.append({
             "text": text,
             "language": lang,
-            "start": segment["start"],
-            "end": segment["end"],
+            "start": segment.start,
+            "end": segment.end,
         })
 
     return {
@@ -531,7 +549,7 @@ def handle_mixed_speech(audio_path: str) -> dict:
 # Common Hebrew-English tech phrases that Whisper may mishandle
 HEBREW_ENGLISH_CORRECTIONS = {
     "דיפלוי": "deploy",     # Hebrew-accented English
-    "פושׁ": "push",
+    "פוש": "push",
     "קומיט": "commit",
     "סרבר": "server",
     "באג": "bug",
@@ -591,7 +609,12 @@ def handle_incoming_call():
         num_digits=1,
         action="/voice/menu-selection",
         timeout=8,
-        language="he-IL",
+        # `language` configures Twilio's SPEECH recognizer, so on a DTMF-only
+        # gather (num_digits, no input="speech") it does nothing. If you switch
+        # to input="speech", Twilio's <Gather> documents Hebrew as `iw-IL`, not
+        # `he-IL`, and notes it is not supported in Google's v2 STT global APIs.
+        # The `Google.he-IL-Wavenet-A` voice below is a <Say> voice and is
+        # correct as written: <Say> and <Gather> use different tag vocabularies.
     )
     gather.say(
         "לשירות לקוחות, הקישו 1. למכירות, הקישו 2. לתמיכה טכנית, הקישו 3.",
@@ -656,18 +679,20 @@ def handle_voicemail():
 
 Hebrew speakers in Israel have diverse accent backgrounds that affect speech recognition accuracy.
 
-| Accent Type | Characteristics | STT Impact |
-|-------------|----------------|------------|
-| Standard Israeli | Modern Israeli pronunciation, merged alef/ayin, no distinction between chet/chaf | Baseline accuracy, all models handle well |
-| Russian-accented | Hard "r" (guttural to alveolar), softer sibilants, vowel shifts | Recognition degrades noticeably. Add Russian as an alternate language hint |
-| Arabic-accented | Preserved pharyngeal sounds (ayin, chet), emphatic consonants | Generally handled well by models trained on Israeli data |
-| Ethiopian-accented | Distinct vowel patterns, different stress patterns | May need custom model training for high accuracy |
-| English-accented | American/British vowel sounds applied to Hebrew, different "r" | Mixed results. Whisper handles best due to multilingual training |
+| Accent Type | Characteristics | What to test for |
+|-------------|----------------|------------------|
+| Standard Israeli | Modern Israeli pronunciation, merged alef/ayin, no distinction between chet/chaf | Your baseline set |
+| Russian-accented | Hard "r" (guttural to alveolar), softer sibilants, vowel shifts | Whether a Russian language hint helps or hurts on your audio |
+| Arabic-accented | Preserved pharyngeal sounds (ayin, chet), emphatic consonants | Whether pharyngeals are dropped or substituted in the transcript |
+| Ethiopian-accented | Distinct vowel patterns, different stress patterns | Whether word boundaries survive the different stress pattern |
+| English-accented | American/British vowel sounds applied to Hebrew, different "r" | Whether the model code-switches mid-word |
+
+**No vendor publishes accent-conditioned Hebrew WER, so this table deliberately ranks nothing.** Earlier versions asserted which accents degrade and which model handles them best; those rankings had no source. Collect 20-30 utterances per accent group from your own callers and measure with the bundled demo script before choosing a provider.
 
 **Improving accuracy for non-standard accents:**
-- Use Whisper as primary (trained on diverse accents)
+- Measure before choosing a primary provider; a model trained on diverse accents is a reason to test it, not a result
 - For Google/Azure, consider custom speech models with accent-specific training data
-- Implement a confidence threshold: if STT confidence is below 0.7, ask the caller to repeat
+- Implement a confidence threshold and re-prompt below it, but derive the number from your own recordings rather than copying one (see the Gotcha on thresholds). A threshold that is right for a quiet office is wrong for a bus
 - Add domain-specific vocabulary to improve recognition of industry terms
 
 Run the demo script to test Hebrew STT with sample audio:
@@ -697,7 +722,7 @@ User says: "Build a conversational voice bot for our e-commerce site. It should 
 
 Actions:
 1. Set up Twilio webhook for incoming calls
-2. Configure Google Cloud STT for real-time streaming transcription (he-IL, phone_call model)
+2. Configure Google Cloud STT V2 for real-time streaming transcription. Hebrew is `iw-IL`, and streaming Hebrew requires `chirp_3` in the `eu` or `us` multi-region (Preview): `chirp_2` does not list Hebrew for StreamingRecognize. There is no telephony-tuned Hebrew model
 3. Process transcribed text through an LLM for intent detection and response generation
 4. Use Azure Neural TTS (he-IL-HilaNeural) for natural Hebrew responses
 5. Implement order lookup by order number (DTMF or spoken digits)
@@ -746,11 +771,11 @@ Result: Voice bot that correctly transcribes mixed Hebrew-English speech common 
 
 - Hebrew speech-to-text engines struggle with Israeli slang ("yalla", "sababa", "balagan") and loan words from Arabic, Russian, and Amharic. Agents may not account for multilingual input in Hebrew voice bots.
 - Israeli phone IVR systems must offer Hebrew as the default language, with English as secondary. Agents may build voice bots with English as the default, frustrating Hebrew-speaking callers.
-- Hebrew Text-to-Speech (TTS) requires correct nikud (vowel diacritics) placement for proper pronunciation. Without nikud, ambiguous words like "דבר" may be read as "davar" (thing) or "daber" (speak).
+- Hebrew TTS does NOT require nikud, and every Hebrew string in this skill is deliberately unvocalized: Google and Azure he-IL neural voices run their own diacritization, which is why unvocalized input is the normal case. What nikud buys you is disambiguation of homographs. "דבר" can be read `davar` (thing) or `daber` (speak), so if a homograph lands on a word that changes the meaning of a menu option, either add nikud on that word alone or reword the prompt. Listen to the output before shipping rather than assuming either behaviour.
 - Israeli phone numbers have varying IVR input lengths: landlines are 9 digits (0X-XXXXXXX), mobile are 10 digits (05X-XXXXXXX). Voice bots must accept both formats.
-- Background noise levels in typical Israeli environments (cafes, open offices, public transit) are higher than global averages. Voice bot confidence thresholds should be set lower to avoid excessive re-prompts.
+- Do not copy a confidence threshold from a tutorial, including from earlier versions of this skill, which asserted that Israeli ambient noise runs above a global average. We have no source for that comparison. Set the threshold from measurements on your own line: record real calls from the environments your callers are actually in (cafes, open offices, public transit are the common hard cases here) and tune against that recording set.
 - **ElevenLabs `eleven_v3` is REST-only**, no WebSocket / streaming API as of May 2026. Agents that pick v3 for "best Hebrew quality" and then try to wire it into a live voice agent will hit unacceptable latency. Use OpenAI Realtime API, Inworld Realtime TTS-2, or Deepdub Phantom X 3.2 for sub-second turn-taking in Hebrew; reserve v3 for offline / batch / playback scenarios.
-- The Hebrew TTS landscape moves fast (Deepdub Phantom X shipped March 2026, Inworld TTS-1.5 January 2026, Realtime TTS-2 later in 2026). Re-verify provider Hebrew support at build time rather than trusting any list older than a few months.
+- The Hebrew TTS landscape moves fast (Deepdub Phantom X shipped March 2026; Inworld replaced its TTS-1 line with Realtime TTS-2 during 2026, and the older names are gone from its docs). Re-verify provider Hebrew support at build time rather than trusting any list older than a few months, and check the vendor's enumerated LANGUAGE LIST rather than a headline language count: a "200+ languages" claim that never names Hebrew is not evidence of Hebrew support.
 
 
 ## Reference Links
@@ -764,13 +789,13 @@ Result: Voice bot that correctly transcribes mixed Hebrew-English speech common 
 | ivrit.ai (Hebrew voice corpus) | https://www.ivrit.ai | Open-source Hebrew speech corpus, pre-trained ASR models |
 | ElevenLabs streaming / WebSocket docs | https://elevenlabs.io/docs/api-reference/streaming | Which models support streaming (v3 does NOT, Flash v2.5 does) |
 | Deepdub (Israeli) | https://deepdub.ai | Phantom X 3.2 real-time AI voice with native Hebrew, emotive eTTS |
-| Inworld TTS | https://inworld.ai/tts | TTS-1.5 (15 languages incl. Hebrew) + Realtime TTS-2 (100+ languages, sub-130ms) |
+| Inworld TTS | https://inworld.ai/tts | Realtime TTS-2 and TTS-2 Flash. Inworld advertises 200+ languages but does NOT enumerate Hebrew; verify with your own audio. The TTS-1 / TTS-1.5 names no longer appear in its docs |
 
 ## Troubleshooting
 
 ### Error: "Hebrew transcription returns Arabic text"
 Cause: STT model misidentifies Hebrew as Arabic due to shared character ranges or similar phonemes.
-Solution: Explicitly set the language to "he-IL" (Google/Azure) or `language="he"` (Whisper). For Whisper, adding a Hebrew prompt hint also helps: `prompt="שלום, ברוכים הבאים"`.
+Solution: Explicitly set the language. Google STT wants `iw-IL` (NOT `he-IL`, which does not appear on its supported-languages table at all); Google TTS and Azure want `he-IL`; OpenAI wants `language="he"`. For Whisper, adding a Hebrew prompt hint also helps: `prompt="שלום, ברוכים הבאים"`.
 
 ### Error: "TTS voice sounds robotic for Hebrew"
 Cause: Using Standard-tier voices instead of Neural/Wavenet voices.
@@ -782,4 +807,4 @@ Solution: Increase gather timeout to 8-10 seconds. Add a "repeat" option ("לש�
 
 ### Error: "Twilio cannot find Israeli numbers"
 Cause: Israeli number availability varies. Twilio has limited +972 inventory compared to US numbers.
-Solution: Search for both local and toll-free numbers. Consider Vonage as an alternative with better Israeli number availability. For high-volume needs, contact Twilio sales for dedicated number blocks. You can also port existing Israeli numbers to Twilio.
+Solution: Search for both local and toll-free numbers. Vonage is worth a quote as an alternative, but neither vendor publishes a comparable Israeli number inventory, so compare actual availability yourself rather than trusting a ranking. For high-volume needs, contact Twilio sales for dedicated number blocks. You can also port existing Israeli numbers to Twilio.

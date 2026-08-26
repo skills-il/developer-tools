@@ -1,20 +1,20 @@
 {
   "schemaVersion": "1.0",
   "skill": "hebrew-voice-bot-builder",
-  "generated_at": "2026-05-19T00:00:00Z",
+  "generated_at": "2026-08-26T20:53:51.385921+00:00",
   "claims": [
     {
       "claim_id": "elevenlabs-v3-hebrew",
-      "claim": "ElevenLabs eleven_v3 supports Hebrew among 70+ languages and is the production-grade Hebrew model in 2026. Also covers: https://your-server.com/voice/incoming",
-      "source_url": "https://unifiedtts.com/en/news/2026-02-12-elevenlabs-v3-model",
-      "raw_snippet": "We've finally completed this project. [whispers] But there's a little secret I need to tell you",
-      "fetched_at": "2026-08-18",
+      "claim": "ElevenLabs eleven_v3 supports 70+ languages including Hebrew (heb), which is why Hebrew voiceover must use the v3 family rather than eleven_multilingual_v2.",
+      "source_url": "https://elevenlabs.io/docs/overview/models",
+      "raw_snippet": "Hausa (hau), Hebrew (heb), Hindi (hin)",
+      "fetched_at": "2026-08-26T20:46:03.109599+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "source fetched and the passage copied verbatim from the cited page",
-      "verified_at": "2026-08-18"
+      "verified_via": "re-sourced on 2026-08-26 from ElevenLabs' own models page; the previous entry cited a third-party blog with a snippet about a whispered demo line that supported nothing",
+      "verified_at": "2026-08-26T20:46:03.109599+00:00"
     },
     {
       "claim_id": "elevenlabs-v3-no-websocket",
@@ -57,10 +57,10 @@
     },
     {
       "claim_id": "elevenlabs-flash-turbo-v25-not-hebrew-focused",
-      "claim": "ElevenLabs Turbo v2.5 and Flash v2.5 cover 32 languages and were not designed with Hebrew quality as a target",
+      "claim": "eleven_flash_v2_5's language list is all eleven_multilingual_v2 languages plus Hungarian, Norwegian and Vietnamese. Since multilingual_v2's 29 languages do not include Hebrew, Flash v2.5 has NO Hebrew at all; it is not merely weak at it.",
       "source_url": "https://elevenlabs.io/docs/overview/models",
-      "raw_snippet": "Flash v2.5 supports 32 languages - all languages from v2 models plus: Hungarian, Norwegian & Vietnamese",
-      "fetched_at": "2026-05-19T00:00:00Z",
+      "raw_snippet": "All eleven_multilingual_v2 languages plus: hu , no , vi",
+      "fetched_at": "2026-08-26T20:27:14.821174+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -81,16 +81,16 @@
     },
     {
       "claim_id": "inworld-tts-15-hebrew",
-      "claim": "Inworld TTS-1.5 supports Hebrew among 15 languages and TTS-1.5 Mini reaches P90 latency below 130ms",
-      "source_url": "https://www.marktechpost.com/2026/01/21/inworld-ai-releases-tts-1-5-for-realtime-production-grade-voice-agents/",
-      "raw_snippet": "For TTS-1.5 Max, P90 time to first audio is below 250 ms. For TTS-1.5 Mini, P90 time to first audio is below 130 ms. These values are about 4 times faster than the prior TTS generation according to Inworld. The TTS-1.5 stack supports streaming over WebSocket so synthesis and playback can start as soon as the first audio chunk is generated.",
-      "fetched_at": "2026-08-18",
+      "claim": "Inworld's current docs name only Realtime TTS-2 and Realtime TTS-2 Flash; the TTS-1, TTS-1-Max and TTS-1.5 names no longer appear. Inworld advertises 200+ languages and does NOT enumerate Hebrew anywhere in its docs, so Hebrew support there is implied by the count rather than documented. Also covers: https://docs.inworld.ai/docs/tts/tts",
+      "source_url": "https://inworld.ai/blog/realtime-tts-2",
+      "raw_snippet": "Realtime TTS-2 is live. Built for realtime conversation that feels human.",
+      "fetched_at": "2026-08-26T20:27:14.821174+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched and confirmed to contain \"130\"; snippet replaced with the page's own wording around it",
-      "verified_at": "2026-08-18"
+      "verified_via": "Inworld's TTS docs and product page fetched on 2026-08-26: the model names TTS-1, TTS-1-Max and TTS-1.5 do not occur, only Realtime TTS-2 and Realtime TTS-2 Flash, and the string 'Hebrew' occurs zero times on either page",
+      "verified_at": "2026-08-26T20:27:14.821174+00:00"
     },
     {
       "claim_id": "inworld-realtime-tts-2",
@@ -243,7 +243,7 @@
     },
     {
       "claim_id": "twilio-webhook-example",
-      "claim": "Example webhook endpoint URL placeholder used in code samples (not a live endpoint)",
+      "claim": "Example webhook endpoint URL placeholder used in code samples (not a live endpoint). Also covers: https://your-server.com/voice/incoming",
       "source_url": "https://www.twilio.com/docs/voice/twiml",
       "raw_snippet": "resource Batch Transcription resource Transcriptions resource OutgoingCallerIds resource Conferences resource Conferences Participants Queues resource Queues Members DialingPermissions Overview Countries HighRiskSpecialPrefixes BulkCountryUpdates Settings Client Configuration resource More APIs Voice Insights: Call Insights API API Overview Call Summary Resource Call Summaries Resource Call Insights Event Resource Call Metric Resource Call Annotation Resource Voice Insights Settings Resource Details: Call Summary Details: Ca",
       "fetched_at": "2026-08-18",
@@ -278,6 +278,108 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "openai-gpt-realtime-deprecated-2027",
+      "claim": "OpenAI deprecated the gpt-realtime family on 2026-07-20 with removal from the API on 2027-01-20; the recommended replacement is gpt-realtime-2.1 (and gpt-realtime-2.1-mini for the smaller tier). gpt-realtime-1.5 remains live.",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "raw_snippet": "On July 20, 2026, we notified developers using legacy audio, realtime, and transcription model families and snapshots of their deprecation and removal from the API on January 20, 2027.",
+      "fetched_at": "2026-08-26T20:27:14.821174+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "google-stt-hebrew-chirp-only-no-phone-call",
+      "claim": "Google Speech-to-Text offers Hebrew only on Chirp models and only regionally: iw-IL appears on chirp and chirp_2 in europe-west4 and asia-southeast1, and on chirp_3 in the eu and us multi-regions. The model name phone_call does not appear on the supported-languages page at all and Hebrew is not offered on the telephony model. Chirp 2 is documented as exclusively available within the Speech-to-Text API V2, so Hebrew must be requested through speech_v2 against a regional endpoint. Hebrew rows also do not list speaker diarization, unlike some other locales.",
+      "source_url": "https://docs.cloud.google.com/speech-to-text/docs/speech-to-text-supported-languages",
+      "raw_snippet": "europe-west4 Hebrew (Israel) iw-IL chirp_2 Automatic punctuation Model adaptation Word-level confidence Profanity filter",
+      "verified_via": "raw HTML of both the V1 and V2 supported-languages tables fetched with curl on 2026-08-26 and string-counted: 'phone_call' occurs 0 times, 'he-IL' occurs 0 times, 'iw-IL' occurs 8 times, and the Hebrew rows name exactly chirp, chirp_2 and chirp_3. The Chirp 2 model page states 'Chirp 2 is exclusively available within the Speech-to-Text API V2' and gives its StreamingRecognize language support as 'Limited'.",
+      "verified_at": "2026-08-26T20:46:03.109599+00:00",
+      "fetched_at": "2026-08-26T20:27:14.821174+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-stt-models.md"
+      ]
+    },
+    {
+      "claim_id": "openai-sdk-segments-are-pydantic",
+      "claim": "In the current openai Python SDK, TranscriptionVerbose.segments is a list of TranscriptionSegment pydantic models, not dicts. Calling seg.get('text') raises AttributeError and seg['text'] raises TypeError, so verbose transcription code must read attributes (seg.text, seg.start, seg.end).",
+      "source_url": "https://pypi.org/pypi/openai/json",
+      "raw_snippet": "openai",
+      "verified_via": "executed against the installed openai SDK 2.53.0 on 2026-08-26: TranscriptionVerbose.model_fields['segments'].annotation is Optional[List[TranscriptionSegment]]; TranscriptionSegment subclasses pydantic.BaseModel, hasattr(TranscriptionSegment,'get') is False, seg.get('text','') raised AttributeError and seg['text'] raised TypeError, while seg.text returned the value",
+      "verified_at": "2026-08-26T20:27:14.821174+00:00",
+      "fetched_at": "2026-08-26T20:27:14.821174+00:00",
+      "appears_in": [
+        "scripts/hebrew-stt-demo.py",
+        "SKILL.md"
+      ]
+    },
+    {
+      "claim_id": "twilio-gather-hebrew-iw-il",
+      "claim": "Twilio's <Gather> speech-recognition language list documents Hebrew as iw-IL (not he-IL) and notes it is not supported in Google's v2 STT global APIs. Twilio's <Say> text-to-speech language list, by contrast, uses he-IL, so the two TwiML verbs take different Hebrew tags.",
+      "source_url": "https://www.twilio.com/docs/voice/twiml/gather",
+      "raw_snippet": "Hebrew (Israel) - Note : not supported in Google's v2 STT global APIs iw-IL",
+      "verified_via": "both TwiML pages fetched with curl on 2026-08-26 and string-counted: the <Gather> page has iw-IL twice and he-IL zero times; the <Say> text-speech page has he-IL sixteen times and iw-IL zero times",
+      "verified_at": "2026-08-26T20:27:14.821174+00:00",
+      "fetched_at": "2026-08-26T20:27:14.821174+00:00",
+      "appears_in": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "claim_id": "elevenlabs-scribe-v2-hebrew",
+      "claim": "ElevenLabs Scribe v2 supports Hebrew (heb), placed in the 'Good (>10% to <=20% WER)' accuracy band, which is two tiers below the Excellent band that holds English and most European languages.",
+      "source_url": "https://elevenlabs.io/docs/capabilities/speech-to-text",
+      "raw_snippet": "Hebrew (heb), Javanese (jav), Korean (kor), Kyrgyz (kir), Luxembourgish (ltz)",
+      "fetched_at": "2026-08-26T20:27:14.821174+00:00",
+      "appears_in": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "claim_id": "openai-whisper-1-not-deprecated",
+      "claim": "whisper-1 is not deprecated: it has no entry on the OpenAI deprecations page and its model page is live. It remains the model to use when you need segment or word timestamps.",
+      "source_url": "https://developers.openai.com/api/docs/models/whisper-1",
+      "raw_snippet": "Rate limits ensure fair and reliable access to the API by placing specific caps on requests, tokens, audio duration, or other usage within a given time period.",
+      "verified_via": "the deprecations page fetched on 2026-08-26 contains zero occurrences of 'whisper-1', and the whisper-1 model page returns HTTP 200",
+      "verified_at": "2026-08-26T20:27:14.821174+00:00",
+      "fetched_at": "2026-08-26T20:27:14.821174+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "references/hebrew-stt-models.md",
+        "scripts/hebrew-stt-demo.py"
+      ]
+    },
+    {
+      "claim_id": "google-chirp2-v2-only-streaming-limited",
+      "claim": "Chirp 2 is exclusively available within the Speech-to-Text API V2. Its recognition-method support differs by method: Speech.Recognize and Speech.BatchRecognize are on par with Chirp, while Speech.StreamingRecognize language support is Limited, so streaming language coverage must be checked against Google's separately-published streaming list rather than assumed from the supported-languages table.",
+      "source_url": "https://docs.cloud.google.com/speech-to-text/v2/docs/chirp_2-model",
+      "raw_snippet": "Chirp 2 is exclusively available within the Speech-to-Text API V2.",
+      "fetched_at": "2026-08-26T20:46:03.109599+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-stt-models.md"
+      ],
+      "verified_via": "page fetched with curl on 2026-08-26 and the snippet confirmed present by exact substring match on the tag-stripped text (39,613 chars). The evidence verifier fetches a different, JS-shell render of this docs host and reports the snippet missing; the hand fetch is authoritative here. The same fetch shows the StreamingRecognize locale list with Hebrew absent (0 occurrences of Hebrew and of iw-IL on the whole page).",
+      "verified_at": "2026-08-26T20:59:59.921870+00:00"
+    },
+    {
+      "claim_id": "google-chirp3-hebrew-streaming-preview",
+      "claim": "Chirp 3 lists StreamingRecognize, Recognize and BatchRecognize as Supported, and its locale table includes Hebrew (Israel) iw-IL at Preview maturity. Chirp 2, by contrast, enumerates 17 locales for StreamingRecognize and Hebrew is not among them. So streaming Hebrew on Google STT requires chirp_3 in the eu or us multi-region and carries Preview status.",
+      "source_url": "https://docs.cloud.google.com/speech-to-text/v2/docs/chirp_3-model",
+      "raw_snippet": "Hausa (Nigeria) ha-NG Preview Hebrew (Israel) iw-IL Preview Hungarian (Hungary) hu-HU Preview",
+      "verified_via": "both model pages fetched with curl on 2026-08-26. The Chirp 2 page's StreamingRecognize list enumerates cmn-Hans-CN, cmn-Hant-TW, yue-Hant-HK, en-AU, en-IN, en-GB, en-US, fr-CA, fr-FR, de-DE, it-IT, ja-JP, ko-KR, pt-BR, es-ES and es-US, with 'Hebrew' occurring 0 times and 'iw-IL' 0 times on the whole page; the Chirp 3 page states StreamingRecognize Supported and lists Hebrew (Israel) iw-IL Preview",
+      "verified_at": "2026-08-26T20:53:51.385921+00:00",
+      "fetched_at": "2026-08-26T20:53:51.385921+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-stt-models.md"
       ]
     }
   ]

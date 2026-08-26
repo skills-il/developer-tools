@@ -17,7 +17,7 @@ Common IVR flow patterns for different Israeli business types. All prompts use f
 | "Press" | "הקישו" (hakishu, plural imperative) |
 | Agent | "נציג" (natzig) or "נציג/ה" (natzig/a) |
 | Hold message | Repeat every 60 seconds |
-| Language option | English on key 9 (standard placement) |
+| Language option | English on key 9 (standard Israeli placement). Because 9 is taken at the welcome level, do not also use 9 for "previous menu". Every pattern in this file uses ONE scheme, and yours should too: `*` (כוכבית) = previous menu, `#` (סולמית) = main menu, `0` = human agent, and a numbered key for "repeat". Binding one key to two destinations is the most common IVR defect in this file class. |
 
 ### Menu Depth Guidelines
 
@@ -41,7 +41,7 @@ Do not exceed 3 menu levels. If you need more depth, redesign the flow.
     -> [Main Menu]
   IF Friday afternoon / Shabbat:
     "אנחנו סגורים כעת. שעות פעילות: א'-ה' {hours}, ו' {fri_hours}."
-    "להשאיר הודעה, הקישו 1. לשמוע שוב, הקישו כוכבית."
+    "להשאיר הודעה, הקישו 1. לשמוע שוב, הקישו 2."
 
 [Main Menu]
 "להזמנת מקום, הקישו 1.
@@ -62,12 +62,12 @@ Do not exceed 3 menu levels. If you need more depth, redesign the flow.
 [2 - Hours & Location]
 "שעות פעילות: א'-ה' {hours}, ו' {fri_hours}, שבת סגור.
  הכתובת: {address}.
- לחזרה לתפריט, הקישו כוכבית."
+ לחזרה לתפריט הקודם, הקישו כוכבית."
 
 [3 - Daily Menu]
 "תפריט היום: {menu_items}.
  להזמנת מקום, הקישו 1.
- לחזרה, הקישו כוכבית."
+ לחזרה לתפריט הקודם, הקישו כוכבית."
 ```
 
 ## Pattern 2: Medical Clinic / Dentist
@@ -134,7 +134,7 @@ Do not exceed 3 menu levels. If you need more depth, redesign the flow.
  תאריך משלוח משוער: {delivery_date}.
  לפרטים נוספים, הקישו 1.
  לנציג, הקישו 0.
- לתפריט ראשי, הקישו כוכבית."
+ לתפריט ראשי, הקישו סולמית."
 
 [2 - Returns]
 "מדיניות ההחזרות שלנו: ניתן להחזיר מוצרים עד 14 יום מהרכישה.
@@ -266,8 +266,8 @@ Do not exceed 3 menu levels. If you need more depth, redesign the flow.
 
 ### Navigation Controls (Include in Every Sub-menu)
 ```
-"לחזרה לתפריט הקודם, הקישו 9.
- לתפריט הראשי, הקישו כוכבית.
+"לחזרה לתפריט הקודם, הקישו כוכבית.
+ לתפריט הראשי, הקישו סולמית.
  לנציג, הקישו 0."
 ```
 

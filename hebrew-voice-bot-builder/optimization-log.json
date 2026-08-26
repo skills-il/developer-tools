@@ -1,6 +1,26 @@
 {
   "cycles": [
     {
+      "version": "1.3.0",
+      "date": "2026-08-27",
+      "lessons": [
+        "CRITICAL fixed: the bundled script's --verbose path crashed 100% of the time, and SKILL.md's handle_mixed_speech had the same bug in subscript form. TranscriptionVerbose.segments holds pydantic TranscriptionSegment models, so seg.get('text') raises AttributeError and seg['text'] raises TypeError. Verified by executing against the installed openai SDK 2.53.0.",
+        "CRITICAL fixed: calculate_accuracy was a SET-overlap score presented as accuracy. It reported 100% precision/recall/F1 for a fully reversed transcript, for a dropped duplicate word, AND for a transcript with the IVR menu options SWAPPED (press 1 for sales instead of support). Replaced with a real Levenshtein WER plus punctuation and Hebrew-numeral normalization. This is the 'a test that cannot detect what it claims' failure mode; look for it first every cycle.",
+        "CRITICAL fixed: Google STT model=phone_call for Hebrew. That model name has 0 occurrences on Google's supported-languages page and Hebrew is not on the telephony model. Hebrew is Chirp-only, regional, and V2-only.",
+        "CRITICAL fixed: the first attempt at that fix put model='chirp_2' into a speech_v1 client. Chirp 2 is 'exclusively available within the Speech-to-Text API V2', so the fix was itself broken until the code moved to speech_v2 with a regional endpoint and a recognizers/_ path.",
+        "CRITICAL fixed: streaming. Chirp 2 enumerates 17 StreamingRecognize locales and Hebrew is NOT among them, while Chirp 3 lists StreamingRecognize as Supported with Hebrew (Israel) iw-IL at Preview. The skill had been recommending live Hebrew IVR on the one config Google documents as having no Hebrew streaming. Note the method: an ENUMERATED list makes a negative sourceable; a first pass wrongly concluded it was unsourceable and hedged instead.",
+        "Fixed: gpt-realtime deprecated 2026-07-20, shutdown 2027-01-20, replacement gpt-realtime-2.1. eleven_flash_v2_5 has NO Hebrew at all (its list is multilingual_v2's 29 plus hu/no/vi), which the skill had described as 'Hebrew quality is weak'. Inworld's TTS-1/TTS-1.5 names are gone from its docs and it never enumerates Hebrew despite a '200+ languages' headline.",
+        "Fixed: Twilio <Gather> documents Hebrew as iw-IL while <Say> uses he-IL. Two TwiML verbs, two tag vocabularies, in the same file.",
+        "Fixed: detect_segment_language was CALLED but never DEFINED in either language file, so handle_mixed_speech was a NameError for anyone who copied it.",
+        "Fixed: FLAC/OGG recommended for OpenAI upload in prose and the reference table; OpenAI accepts only mp3, mp4, mpeg, mpga, m4a, wav, webm.",
+        "Fixed: unsourced Hebrew accuracy rankings, including a per-ACCENT table that ranked which accents degrade and which model handles them best. No vendor publishes accent-conditioned Hebrew WER. The reference file had a note saying such rankings do not exist while ranking on six other lines.",
+        "Process lesson: a fix applied to SKILL.md must be chased into SKILL_HE.md AND references/. Three separate rounds found the same defect surviving in a file the first pass did not open, including the reference file that SKILL.md explicitly tells the agent to consult.",
+        "Process lesson: my own legal rewording tripped the legal tripwire to REVIEW, on the single Hebrew word 'מנסחים' matching the DRAFTING pattern. The gate resolved CLEAR; the remedy was to reword, not to add a notice a devtools skill does not need.",
+        "[CARRY] evidence.json still contains entries whose verified_via is term-overlap scoring rather than a real snippet match (twilio-webhook-example, hebrew-stt-accuracy-ranges, inworld-tts-website). Re-source them against primary vendor pages next cycle.",
+        "[CARRY] Deferred: the voicemail pipeline block is now labelled a skeleton but still calls unimplemented business-logic helpers; the HEBREW_ENGLISH_CORRECTIONS dict is defined and never used; every executable sample hardcodes whisper-1 while Step 1 names gpt-4o-transcribe as the default; Hebrew numeral gender in TTS prompts (bare digit reads as masculine אחד where the keypad convention is feminine אחת) is still undocumented."
+      ]
+    },
+    {
       "version": "1.2.1",
       "date": "2026-07-06",
       "lessons": [

@@ -7,15 +7,15 @@ Comparison of STT providers for Hebrew voice applications, with accuracy benchma
 | Feature | OpenAI Whisper | Google Cloud STT | Azure Speech Services |
 |---------|---------------|-------------------|----------------------|
 | Hebrew Language Code | `he` | `iw-IL` | `he-IL` |
-| Best Model | whisper-1 | phone_call / latest_long | Standard |
+| Best Model | gpt-4o-transcribe (whisper-1 only when you need segment or word timestamps) | chirp_2 / chirp_3 (Hebrew is Chirp-only; there is no phone_call or telephony model for iw-IL) | Standard |
 | Accuracy (clean audio) | see note below | see note below | see note below |
 | Accuracy (phone audio) | see note below | see note below | see note below |
 | Accuracy (noisy) | see note below | see note below | see note below |
-| Mixed Hebrew-English | Excellent | Good | Good |
-| Streaming Support | No (batch only) | Yes | Yes |
-| Real-time Factor | ~0.3x (batch) | ~1x (streaming) | ~1x (streaming) |
+| Mixed Hebrew-English | All three document multilingual handling; none publishes a code-switching benchmark. Measure it. | | |
+| Streaming Support | Yes via the Realtime API and the streaming transcription models; the batch transcription endpoint itself is not streaming | Yes, but for Hebrew only on chirp_3 (Preview) | Yes |
+| Real-time Factor (vendor-reported, not measured here) | ~0.3x (batch) | ~1x (streaming) | ~1x (streaming) |
 | Custom Vocabulary | Via prompt hint | Phrase hints | Custom Speech models |
-| Speaker Diarization | No | Yes | Yes |
+| Speaker Diarization | Yes (gpt-4o-transcribe-diarize) | Not for Hebrew: no iw-IL row lists speaker diarization | Yes |
 | Word Timestamps | Yes | Yes | Yes |
 | Punctuation | Auto (good) | Auto (good) | Auto (moderate) |
 | Max Audio Length | 25MB file | 480 min (async) | 10 min (sync), unlimited (batch) |
@@ -34,8 +34,10 @@ will tell you more than any published figure, because Hebrew WER moves sharply
 with telephony codec, speaker accent and the amount of English mixed in.
 
 What can be said from the vendor documentation is structural rather than
-numeric, and the rest of this table covers it: Whisper is batch-only, Google and
-Azure stream, and only Google and Azure offer diarization.
+numeric, and the rest of this table covers it: OpenAI streams through the Realtime
+API rather than the file-upload endpoint, Google streams Hebrew only on chirp_3 at
+Preview maturity, Azure streams, and OpenAI offers diarization through
+gpt-4o-transcribe-diarize while Google does not list it for any Hebrew row.
 
 ## Pricing (as of 2026)
 
@@ -43,7 +45,7 @@ Azure stream, and only Google and Azure offer diarization.
 |----------|-------|-----------------|-------|
 | OpenAI Whisper | whisper-1 | ~$0.006/min | Batch only, no streaming |
 | Google Cloud STT | Standard | $0.006/15s ($0.024/min) | First 60 min/month free |
-| Google Cloud STT | Enhanced / phone_call | $0.009/15s ($0.036/min) | Higher accuracy for phone |
+| Google Cloud STT | Chirp (chirp_2 / chirp_3) | $0.009/15s ($0.036/min) | No Hebrew phone-tuned model exists; verify on real call audio |
 | Azure Speech | Standard | $1.00/hr ($0.0167/min) | First 5 hours/month free |
 | Azure Speech | Custom | $1.40/hr ($0.0233/min) | Custom model training extra |
 
@@ -52,28 +54,28 @@ Azure stream, and only Google and Azure offer diarization.
 ## Hebrew-Specific Accuracy Notes
 
 ### Whisper Strengths
-- Best at handling Hebrew without niqqud (standard modern Hebrew text)
-- Excellent code-switching detection (Hebrew-English transitions)
-- Handles diverse accents well due to multilingual training data
-- Good at transcribing Hebrew numbers and dates
+- Handles Hebrew written without niqqud, which is standard modern Hebrew text
+- Handles code-switching between Hebrew and English in the same utterance (Hebrew-English transitions)
+- Trained on multilingual data covering a range of accents due to multilingual training data
+- Transcribes Hebrew numbers and dates
 - Recognizes common Hebrew abbreviations and acronyms
 
 ### Whisper Weaknesses
-- Batch-only processing (no real-time streaming)
+- The file-upload transcription endpoint is batch-only; streaming comes from the Realtime API and the streaming transcription models, which are separate products
 - Can occasionally hallucinate content for very short or silent audio segments
 - No custom vocabulary training (only prompt-based hints)
 - File size limit of 25MB requires splitting long recordings
 
 ### Google Cloud STT Strengths
 - Real-time streaming support (essential for live voice bots)
-- Phone call model (optimized for 8kHz telephony audio)
+- Streaming recognition with interim results, but for Hebrew only on chirp_3 (eu/us, Preview); chirp_2 streaming does not list Hebrew. There is NO Hebrew phone_call or telephony model, so expect no phone-audio-tuned gain
 - Phrase hints for domain-specific Hebrew terms
-- Speaker diarization for multi-speaker scenarios
+- Speaker diarization for multi-speaker scenarios, but NOT for Hebrew: no iw-IL row lists it
 - Robust silence detection and endpoint detection
 
 ### Google Cloud STT Weaknesses
-- Slightly lower accuracy than Whisper for Hebrew
-- Mixed Hebrew-English handling less robust than Whisper
+- Relative Hebrew accuracy versus Whisper is not published by either vendor; benchmark on your own call audio rather than trusting a ranking
+- Code-switching behaviour between Hebrew and English is not benchmarked by the vendor; test it on your own mixed-language utterances
 - Phrase hints limited to 5,000 entries
 - Hebrew punctuation sometimes inconsistent
 
@@ -85,7 +87,7 @@ Azure stream, and only Google and Azure offer diarization.
 - Continuous recognition for long-form audio
 
 ### Azure Speech Weaknesses
-- Lowest baseline Hebrew accuracy of the three
+- Baseline Hebrew accuracy versus the other two is not published by any vendor; benchmark it yourself
 - Custom model training requires significant labeled data
 - Closest region to Israel is West Europe (adds latency vs Middle East regions)
 - Hebrew voice list more limited than English
@@ -94,13 +96,13 @@ Azure stream, and only Google and Azure offer diarization.
 
 | Use Case | Recommended Provider | Why |
 |----------|---------------------|-----|
-| Voicemail transcription (batch) | OpenAI Whisper | Best accuracy, cost-effective for batch |
-| Live IVR voice bot | Google Cloud STT | Streaming support, phone_call model |
+| Voicemail transcription (batch) | OpenAI Whisper | Simplest to set up, cost-effective for batch |
+| Live IVR voice bot | Google Cloud STT V2 (chirp_3, eu/us) or OpenAI Realtime | Hebrew streaming is documented on chirp_3 only, at Preview maturity; chirp_2 does not list Hebrew for StreamingRecognize |
 | Enterprise call center | Azure Speech | Custom models, compliance, enterprise support |
-| Mixed Hebrew-English tech calls | OpenAI Whisper | Superior code-switching detection |
+| Mixed Hebrew-English tech calls | OpenAI | Documents code-switching handling; verify on your own audio |
 | High-volume transcription | Google Cloud STT | Free tier + competitive pricing at scale |
 | Domain-specific (medical, legal) | Azure Speech (custom) | Custom model training for specialized vocab |
-| Prototype / MVP | OpenAI Whisper | Simplest API, best out-of-box accuracy |
+| Prototype / MVP | OpenAI | Simplest API, no cloud project or regional endpoint to configure |
 
 ## Audio Format Recommendations
 
@@ -108,8 +110,8 @@ Azure stream, and only Google and Azure offer diarization.
 |----------|--------|-------------|----------|-------|
 | Phone calls (Twilio) | MULAW | 8000 Hz | Mono | Standard telephony format |
 | VoIP calls | PCM/WAV | 16000 Hz | Mono | Better quality than MULAW |
-| Pre-recorded audio | WAV/FLAC | 16000+ Hz | Mono | Lossless preferred |
-| Whisper upload | MP3/WAV/FLAC | 16000+ Hz | Mono | Max 25MB file size |
+| Pre-recorded audio | WAV | 16000+ Hz | Mono | Lossless preferred. FLAC only if your target API accepts it |
+| OpenAI upload | mp3/mp4/mpeg/mpga/m4a/wav/webm | 16000+ Hz | Mono | Max 25MB. FLAC and OGG are NOT accepted |
 | Streaming (Google) | LINEAR16 | 16000 Hz | Mono | Raw PCM for streaming |
 
 ## Hebrew-Specific Configuration Tips
@@ -128,19 +130,27 @@ transcript = client.audio.transcriptions.create(
 
 ### Google Cloud STT
 ```python
-# Best settings for Hebrew phone calls
-config = speech_v1.RecognitionConfig(
-    encoding=speech_v1.RecognitionConfig.AudioEncoding.MULAW,
-    sample_rate_hertz=8000,
-    language_code="he-IL",
-    model="phone_call",
-    enable_automatic_punctuation=True,
-    speech_contexts=[
-        speech_v1.SpeechContext(
-            phrases=["שלום", "הזמנה", "תלונה", "נציג"],
-            boost=10.0,
-        )
-    ],
+# Hebrew on Google STT is Chirp-only, regional, and V2-only. Chirp 2 is documented
+# as "exclusively available within the Speech-to-Text API V2", so a speech_v1 client
+# asking for chirp_2 will not work, and the v1 encoding / speech_contexts fields do
+# not exist on the v2 config. See SKILL.md Step 2 for the full working call.
+from google.api_core.client_options import ClientOptions
+from google.cloud.speech_v2 import SpeechClient
+from google.cloud.speech_v2.types import cloud_speech
+
+# Batch / short Recognize for Hebrew: chirp_2 in europe-west4 or asia-southeast1.
+# STREAMING Hebrew: chirp_3 in the eu or us multi-region (Preview). Hebrew is NOT
+# on Chirp 2's StreamingRecognize language list.
+LOCATION, MODEL = "europe-west4", "chirp_2"
+
+client = SpeechClient(
+    client_options=ClientOptions(api_endpoint=f"{LOCATION}-speech.googleapis.com")
+)
+
+config = cloud_speech.RecognitionConfig(
+    auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
+    language_codes=["iw-IL"],  # Google STT documents Hebrew as iw-IL, NOT he-IL
+    model=MODEL,
 )
 ```
 
