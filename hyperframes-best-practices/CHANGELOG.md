@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.1 - 2026-08-26
+
+Citation corrections in `references/domain-checklist.md`, found by the Independent Judge re-verifying every cited path and line against upstream @ 4f00336.
+
+### Fixed
+
+- Row M12 listed `inspect` among the commands deprecated in favour of `check`. `validate.ts` and `layout.ts` do carry `deprecated: true`; `inspect.ts` carries no deprecation marker and `inspect` is a live command. Corrected.
+- Row S2 cited `registry.json` as 154 blocks and 219 components. It parses to 154 blocks, 218 components and 9 examples.
+- Row M11 cited `browser/manager.ts:191` for the chrome-headless-shell auto-download; line 191 is a type export. The substantive line is 45 (`PUPPETEER_CACHE_DIR`).
+
 ## 1.2.0 - 2026-08-26
 
 Validated against upstream heygen-com/hyperframes @ 4f00336 (release v0.8.15, 2026-08-26).
