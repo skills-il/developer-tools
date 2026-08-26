@@ -96,14 +96,21 @@ jobs:
 
       - name: Check evidence.json present for touched skill folders
         if: steps.changed.outputs.files != ''
+        env:
+          CHANGED_DIRS: ${{ steps.changed.outputs.dirs }}
         run: |
           # Forward-only enforcement: any skill folder touched in this change must
           # contain evidence.json. Skills not touched here are exempt
           # (lazy backfill: they pick up the gate on their next update).
           # See /he/guides/how-we-validate Layer 2 + .claude/skills/update-skill/SKILL.md.
+          #
+          # CHANGED_DIRS is newline-separated and MUST reach the shell as an env
+          # var, not as a `${{ }}` interpolation inside the `for` header. Splicing
+          # 2+ lines there produced `for dir in a<newline>b<newline>do`, a hard
+          # syntax error, so on any push touching 2+ skills the gate never ran.
           set -e
           MISSING=""
-          for dir in ${{ steps.changed.outputs.dirs }}; do
+          for dir in $CHANGED_DIRS; do
             if [ -f "$dir/SKILL.md" ] && [ ! -f "$dir/evidence.json" ]; then
               MISSING="$MISSING\n  - $dir/evidence.json"
             fi
