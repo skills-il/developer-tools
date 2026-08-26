@@ -18,10 +18,22 @@ on:
   schedule:
     # Sunday-Thursday at 09:00 Israel time (UTC+2 winter)
     - cron: '0 7 * * 0-4'
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Bypass the Shabbat/holiday freeze (production incidents only)'
+        type: boolean
+        default: false
+      override_reason:
+        description: 'Why the freeze is being bypassed (recorded in the run summary)'
+        type: string
 
 concurrency:
+  # cancel-in-progress is right for CI on a branch and WRONG for a deploy: cancelling a
+  # half-finished production rollout is worse than queueing behind it. Keyed on the event
+  # so a push-triggered deploy is never killed by the next push.
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   lint-and-test:
@@ -29,9 +41,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '24'
 
       - uses: pnpm/action-setup@v6
         with:
@@ -41,7 +53,7 @@ jobs:
         shell: bash
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         with:
           path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -56,9 +68,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '24'
       - uses: pnpm/action-setup@v6
         with:
           version: 9
@@ -95,7 +107,9 @@ jobs:
             })
 
   deploy-production:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # workflow_dispatch must be allowed through, otherwise the force_deploy input added
+    # above is unreachable and an hebcal outage hard-blocks production with no escape.
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -105,7 +119,12 @@ jobs:
         uses: ./.github/actions/shabbat-check
 
       - name: Deploy to Vercel Production
-        if: steps.shabbat.outputs.is_frozen != 'true'
+        # NOT always(): if the gate step crashes it never writes its output, is_frozen is
+        # empty, and always() would let '' != 'true' deploy during Shabbat. success() keeps
+        # a crashed gate blocking; the explicit force_deploy arm is the documented escape.
+        if: |
+          (success() && steps.shabbat.outputs.is_frozen != 'true')
+          || (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -119,27 +138,39 @@ jobs:
         if: always()
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          # Untrusted context is bound here, never interpolated into the run: script.
+          STATUS: ${{ job.status }}
+          RAW_COMMIT_MSG: ${{ github.event.head_commit.message }}
+          ACTOR: ${{ github.actor }}
         run: |
-          STATUS="${{ job.status }}"
           if [ "$STATUS" = "success" ]; then
             STATUS_HE="הצליחה"; COLOR="#36a64f"
           else
             STATUS_HE="נכשלה"; COLOR="#dc3545"
           fi
           RTL=$'\u200F'
-          curl -s -X POST "$SLACK_WEBHOOK" \
-            -H 'Content-Type: application/json' \
-            -d "{\"attachments\":[{\"color\":\"$COLOR\",\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"${RTL}*פריסה לפרודקשן ${STATUS_HE}*\n${RTL}קומיט: ${{ github.event.head_commit.message }}\n${RTL}מפתח: ${{ github.actor }}\"}}]}]}"
+          # Build the payload with jq so Hebrew, quotes and newlines are escaped correctly,
+          # and so untrusted context never reaches the shell as raw text. RAW_COMMIT_MSG and
+          # ACTOR are bound in the step's env: block, never interpolated into this script.
+          jq -n --arg color "$COLOR" --arg status "$STATUS_HE" \
+                  --arg msg "$(printf '%s' "$RAW_COMMIT_MSG" | head -1)" --arg actor "$ACTOR" --arg rtl "$RTL" \
+              '{attachments:[{color:$color,blocks:[{type:"section",text:{type:"mrkdwn",
+                text:($rtl+"*פריסה לפרודקשן "+$status+"*\n"+$rtl+"קומיט: "+$msg+"\n"+$rtl+"מפתח: "+$actor)}}]}]}' \
+              | curl -s -X POST "$SLACK_WEBHOOK" -H 'Content-Type: application/json' -d @-
 
       - name: Notify frozen
         if: steps.shabbat.outputs.is_frozen == 'true'
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          REASON: ${{ steps.shabbat.outputs.reason }}
         run: |
           RTL=$'\u200F'
-          curl -s -X POST "$SLACK_WEBHOOK" \
-            -H 'Content-Type: application/json' \
-            -d "{\"attachments\":[{\"color\":\"#ffc107\",\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"${RTL}*פריסה הוקפאה*\n${RTL}סיבה: ${{ steps.shabbat.outputs.reason }}\n${RTL}הפריסה תתבצע אוטומטית אחרי מוצאי שבת/חג\"}}]}]}"
+          # Nothing in this template queues the deploy, so the message must not promise that
+          # it will resume by itself. Say what actually has to happen.
+          jq -n --arg rtl "$RTL" --arg reason "$REASON" \
+            '{attachments:[{color:"#ffc107",blocks:[{type:"section",text:{type:"mrkdwn",
+              text:($rtl+"*פריסה הוקפאה*\n"+$rtl+"סיבה: "+$reason+"\n"+$rtl+"הריצו את ה-workflow מחדש אחרי צאת השבת/החג, או השתמשו ב-workflow_dispatch עם force_deploy במקרה תקלה בייצור")}}]}]}' \
+            | curl -s -X POST "$SLACK_WEBHOOK" -H 'Content-Type: application/json' -d @-
 ```
 
 ## Template 2: Supabase Migration CI
@@ -162,7 +193,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: supabase/setup-cli@v2
+      - uses: supabase/setup-cli@v3
         with:
           version: latest
 
@@ -301,7 +332,7 @@ jobs:
                   IN_CODE=false
                 fi
               elif [ "$IN_CODE" = true ]; then
-                if echo "$line" | grep -qP '[\u0590-\u05FF]'; then
+                if echo "$line" | grep -qP '[\x{0590}-\x{05FF}]'; then
                   echo "::warning file=SKILL_HE.md,line=$LINE_NUM::Hebrew text inside code block (will render LTR)"
                 fi
               fi
@@ -330,9 +361,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '24'
 
       - run: npm ci
       - run: npm run build
@@ -457,10 +488,14 @@ jobs:
     steps:
       - name: Extract Monday.com item ID
         id: extract
+        env:
+          # A PR title and a fork's branch name are attacker-controlled free text. Bind them
+          # here; interpolating ${{ }} into the script below would run a title containing
+          # $(...) as code, in a job that holds MONDAY_TOKEN.
+          REF: ${{ github.head_ref || github.ref_name }}
+          TITLE: ${{ github.event.pull_request.title || github.event.issue.title }}
         run: |
           # Try branch name first (PRs), then issue title
-          REF="${{ github.head_ref || github.ref_name }}"
-          TITLE="${{ github.event.pull_request.title || github.event.issue.title }}"
 
           ITEM_ID=$(echo "$REF" | grep -oP 'MON-\K\d+' || echo "$TITLE" | grep -oP 'MON-\K\d+' || true)
 
@@ -474,15 +509,17 @@ jobs:
       - name: Determine status
         if: steps.extract.outputs.found == 'true'
         id: status
+        env:
+          EVENT: ${{ github.event_name }}
+          ACTION: ${{ github.event.action }}
+          MERGED: ${{ github.event.pull_request.merged }}
         run: |
-          EVENT="${{ github.event_name }}"
-          ACTION="${{ github.event.action }}"
 
           if [ "$EVENT" = "pull_request" ]; then
             case "$ACTION" in
               opened|reopened|ready_for_review) STATUS="In Review" ;;
               closed)
-                if [ "${{ github.event.pull_request.merged }}" = "true" ]; then
+                if [ "$MERGED" = "true" ]; then
                   STATUS="Done"
                 else
                   STATUS="Working on it"

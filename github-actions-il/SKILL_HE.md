@@ -64,25 +64,108 @@ runs:
     - id: check
       shell: bash
       run: |
-        SHABBAT_JSON=$(curl -s "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on")
-        CANDLE=$(echo "$SHABBAT_JSON" | jq -r '.items[] | select(.category=="candles") | .date')
-        HAVDALAH=$(echo "$SHABBAT_JSON" | jq -r '.items[] | select(.category=="havdalah") | .date')
-        NOW=$(date -u +%Y-%m-%dT%H:%M:%S)
+        # ONE feed covers Shabbat AND holidays. The /shabbat endpoint honours maj=on and
+        # returns `holiday` items together with their candle-lighting times, including the
+        # EREV entries (Erev Yom Kippur, Erev Sukkot) that the /hebcal feed omits entirely.
+        # Ask for TODAY in Israel time: runners are UTC, so a bare `date` is still yesterday
+        # between 00:00 and 03:00 Israel time and would miss the chag.
+        export TZ=Asia/Jerusalem
+        CURL_OK=0
+        FEED=$(curl -sf --max-time 10 --retry 2 \
+          "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on&maj=on&gy=$(date +%Y)&gm=$(date +%-m)&gd=$(date +%-d)") || CURL_OK=$?
 
-        if [[ "$NOW" > "$CANDLE" && "$NOW" < "$HAVDALAH" ]]; then
+        # Fail CLOSED: a deploy freeze is a safety gate, so an unreachable API means frozen.
+        if [ "$CURL_OK" -ne 0 ] || [ -z "$FEED" ]; then
           echo "frozen=true" >> $GITHUB_OUTPUT
-          echo "reason=Shabbat (candle lighting: $CANDLE)" >> $GITHUB_OUTPUT
-        else
-          HOLIDAYS=$(curl -s "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&year=$(date +%Y)&month=$(date +%-m)&geo=geoname&geonameid=281184")
-          HOLIDAY_TODAY=$(echo "$HOLIDAYS" | jq -r ".items[] | select(.date | startswith(\"$(date +%Y-%m-%d)\")) | .title" | head -1)
-          if [[ -n "$HOLIDAY_TODAY" ]]; then
+          echo "reason=Could not reach hebcal to verify the Shabbat/holiday window; failing closed. Override with force_deploy." >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        # Walk the feed in order, pairing each candle-lighting with the havdalah that follows
+        # it, and compare in EPOCH SECONDS. hebcal returns offset-aware times (+03:00 summer,
+        # +02:00 winter); comparing those as strings against a UTC clock is wrong by exactly
+        # the offset and leaves the gate open for the first hours of every Shabbat.
+        # A 200 with an unexpected shape must freeze too: pipefail does not propagate out
+        # of the process substitution below, so an empty item list would silently open the gate.
+        ITEM_COUNT=$(echo "$FEED" | jq -r '.items | length' 2>/dev/null || echo 0)
+        if [ -z "$ITEM_COUNT" ] || [ "$ITEM_COUNT" = "0" ] || [ "$ITEM_COUNT" = "null" ]; then
+          echo "frozen=true" >> $GITHUB_OUTPUT
+          echo "reason=hebcal returned no calendar items; failing closed. Override with force_deploy." >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        # Rule 1: any FULL yom tov dated today. A feed requested for the chag itself starts
+        # that morning, so the previous evening's candle-lighting is outside its range and the
+        # window walk below cannot see it. `yomtov: true` marks exactly the days on which work
+        # is prohibited (Yom Kippur, Shavuot, both days of Rosh Hashana, Sukkot I, Shmini
+        # Atzeret) and is absent on chol hamoed, fast days and Shabbat Shuva.
+        TODAY=$(date +%Y-%m-%d)
+        YOMTOV=$(echo "$FEED" | jq -r --arg d "$TODAY" '[.items[] | select(.yomtov == true and (.date | startswith($d)))] | first | .title // empty')
+        if [ -n "$YOMTOV" ]; then
+          # The chag ends at havdalah, not at midnight. If today's closing havdalah has
+          # already passed, fall through to rule 2 rather than freezing until 00:00.
+          END_TODAY=$(echo "$FEED" | jq -r --arg d "$TODAY" '[.items[] | select(.category=="havdalah" and (.date | startswith($d)))] | first | .date // empty')
+          END_EPOCH=""
+          [ -n "$END_TODAY" ] && END_EPOCH=$(date -d "$END_TODAY" +%s 2>/dev/null || echo "")
+          # No havdalah today, or we could not parse it, means still yom tov: freeze.
+          if [ -z "$END_EPOCH" ] || [ "$(date +%s)" -le "$END_EPOCH" ]; then
             echo "frozen=true" >> $GITHUB_OUTPUT
-            echo "reason=Holiday: $HOLIDAY_TODAY" >> $GITHUB_OUTPUT
-          else
-            echo "frozen=false" >> $GITHUB_OUTPUT
-            echo "reason=none" >> $GITHUB_OUTPUT
+            echo "reason=$YOMTOV (yom tov)" >> $GITHUB_OUTPUT
+            exit 0
           fi
         fi
+
+        # Rule 2: inside a candle-lighting to havdalah window (Shabbat, and the evening a chag
+        # begins, which is dated the day BEFORE the yom tov and so is not caught by rule 1).
+        NOW_EPOCH=$(date +%s)
+        FROZEN=false
+        REASON=none
+        START=""
+        LABEL="Shabbat"
+        PENDING="Shabbat"
+
+        while IFS=$'\t' read -r CAT WHEN TITLE; do
+          case "$CAT" in
+            holiday)  PENDING="$TITLE" ;;
+            candles)
+              # Keep the EARLIEST unclosed candle-lighting. A two-day yom tov (Rosh Hashana,
+              # or any chag adjacent to Shabbat) emits TWO candle-lightings before a single
+              # havdalah; overwriting here would test only the second night and leave the
+              # gate open for the whole of day one.
+              if [ -z "$START" ]; then
+                START="$WHEN"
+                LABEL="$PENDING"
+              fi
+              ;;
+            havdalah)
+              EE=$(date -d "$WHEN" +%s)
+              if [ -z "$START" ]; then
+                # A havdalah with no candle-lighting before it means the window opened
+                # before this feed's range started, i.e. we are already inside it. This is
+                # the chag-daytime case (querying on Yom Kippur itself returns the closing
+                # havdalah but not the previous evening's candles). Freeze.
+                if [ "$NOW_EPOCH" -le "$EE" ]; then
+                  FROZEN=true
+                  REASON="$PENDING (in progress, ends $WHEN)"
+                  break
+                fi
+              else
+                SE=$(date -d "$START" +%s)
+                if [ "$NOW_EPOCH" -ge "$SE" ] && [ "$NOW_EPOCH" -le "$EE" ]; then
+                  FROZEN=true
+                  REASON="$LABEL (frozen from $START until $WHEN)"
+                  break
+                fi
+              fi
+              START=""
+              LABEL="Shabbat"
+              PENDING="Shabbat"
+              ;;
+          esac
+        done < <(echo "$FEED" | jq -r '.items[] | [.category, .date, .title] | @tsv')
+
+        echo "frozen=$FROZEN" >> $GITHUB_OUTPUT
+        echo "reason=$REASON" >> $GITHUB_OUTPUT
 ```
 
 2. השתמשו ב-action הזה כשער בתהליך הפריסה:
@@ -128,7 +211,7 @@ if: >
   github.event.inputs.force_deploy == 'true'
 ```
 
-> **הערה:** ה-bash המוטמע ב-composite action שלמעלה הוא להמחשה בלבד. ההשוואה הלקסיקלית של מחרוזות `[[ "$NOW" > "$CANDLE" ]]` שבירה, היא עובדת רק כששני ה-timestamps חולקים אותו היסט אזור זמן ואותו פורמט מחרוזת, והיא נשברת במעברי שעון קיץ/חורף ובמעבר תאריך. המימוש הקנוני והנכון ב-`references/shabbat-deploy-freeze.md` ממיר כל timestamp לשניות epoch לפני ההשוואה ומוסיף buffer מתוכנן לפני שבת. השתמשו במימוש הייחוס בתהליכים אמיתיים.
+> **הערה:** ה-composite action שלמעלה הוא מימוש העבודה המלא: הוא מזווג כל הדלקת נרות עם ההבדלה שאחריה ומשווה בשניות epoch, הוא מבקש מ-hebcal את התאריך של היום לפי `Asia/Jerusalem` ולא לפי שעון ה-UTC של הראנר, והוא נכשל סגור (fail closed) כש-hebcal לא זמין. הקובץ `references/shabbat-deploy-freeze.md` מוסיף באפר מתכוונן לפני שבת, geonameid לכל עיר, אסטרטגיות לריבוי סביבות ואת workflow החירום. שני דברים שהשער הזה לא מכסה: צומות קטנים וחנוכה/פורים (`min=on`) וימי הזיכרון והעצמאות (`mod=on`). צוותים ישראליים רבים מקפיאים גם ביום הזיכרון; הוסיפו את הפרמטר אם אתם מציינים אותם.
 
 למדריך המלא עם מקרי קצה וטיפול באזורי זמן, עיינו ב-`references/shabbat-deploy-freeze.md`.
 
@@ -143,11 +226,15 @@ if: >
   if: always()
   env:
     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+    # לעולם אל תשתלו ${{ }} ישירות בתוך run:. GitHub מחליף אותו כטקסט גולמי לפני
+    # ש-bash מנתח את השורה, ולכן הודעת קומיט שמכילה גרש הפוך או $(...) תרוץ כקוד
+    # ב-job שמחזיק את טוקני הפריסה שלכם. קשרו הקשר לא-מהימן ל-env ואז קראו אותו
+    # כמשתנה shell רגיל.
+    STATUS: ${{ job.status }}
+    REPO: ${{ github.repository }}
+    BRANCH: ${{ github.ref_name }}
+    ACTOR: ${{ github.actor }}
   run: |
-    STATUS="${{ job.status }}"
-    REPO="${{ github.repository }}"
-    BRANCH="${{ github.ref_name }}"
-    ACTOR="${{ github.actor }}"
 
     if [ "$STATUS" = "success" ]; then
       STATUS_HE="הצליח"; COLOR="#36a64f"
@@ -175,14 +262,17 @@ if: >
 - name: Update Monday.com item
   env:
     MONDAY_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
+    # A fork's branch name is attacker-controlled; bind it rather than interpolating it.
+    REF_NAME: ${{ github.ref_name }}
+    BOARD_ID: ${{ vars.MONDAY_BOARD_ID }}
   run: |
-    ITEM_ID=$(echo "${{ github.ref_name }}" | grep -oP 'MON-\K\d+' || true)
+    ITEM_ID=$(printf '%s' "$REF_NAME" | grep -oP 'MON-\K\d+' || true)
     if [ -n "$ITEM_ID" ]; then
       STATUS_LABEL="${{ job.status == 'success' && 'Deployed' || 'Failed' }}"
       curl -s -X POST "https://api.monday.com/v2" \
         -H "Authorization: $MONDAY_TOKEN" \
         -H "Content-Type: application/json" \
-        -d "{\"query\": \"mutation { change_simple_column_value(item_id: $ITEM_ID, board_id: ${{ vars.MONDAY_BOARD_ID }}, column_id: \\\"status\\\", value: \\\"$STATUS_LABEL\\\") { id } }\"}"
+        -d "{\"query\": \"mutation { change_simple_column_value(item_id: $ITEM_ID, board_id: $BOARD_ID, column_id: \\\"status\\\", value: \\\"$STATUS_LABEL\\\") { id } }\"}"
     fi
 ```
 
@@ -190,7 +280,7 @@ if: >
 
 **נגישות IS-5568 (תקן ישראלי)**
 
-IS-5568 הוא תקן הנגישות הישראלי, מבוסס על WCAG 2.1 AA עם דרישות נוספות לתוכן עברי/RTL.
+תקן IS-5568 הוא תקן הנגישות הישראלי לאתרים, שקיבל תוקף מחייב בתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות). הוא מאמץ את WCAG בתוספת דרישות לתוכן עברי/RTL. מהדורת WCAG שאליה התקן מפנה השתנתה בין גרסאות של התקן, ולכן ודאו מול מכון התקנים הישראלי מול איזו רמה נמדדת החובה שלכם במקום להניח; סריקה מול WCAG 2.1 AA מקיימת גם 2.0 AA כקבוצה מכילה, ולכן תצורת axe שלמטה עוברת את שלוש קבוצות התגיות.
 
 | דרישת IS-5568 | מקביל ב-WCAG | כלל ישראלי נוסף |
 |---------------|--------------|-----------------|
@@ -207,9 +297,9 @@ accessibility-check:
   runs-on: ubuntu-latest
   steps:
     - uses: actions/checkout@v7
-    - uses: actions/setup-node@v6
+    - uses: actions/setup-node@v7
       with:
-        node-version: '22'
+        node-version: '24'
     - name: Install accessibility tools
       run: npm install -g @axe-core/cli pa11y-ci
 
@@ -256,12 +346,14 @@ privacy-check:
 
 ### שלב 5: פריסה ליעדי ענן מתאימים לישראל
 
-| ספק ענן | אזור מומלץ | חביון לישראל | הגדרה ב-Actions |
+| ספק ענן | אזור מומלץ | חביון יחסי מישראל | הגדרה ב-Actions |
 |---------|------------|-------------|-----------------|
-| Vercel | fra1 (פרנקפורט) | כ-30ms | `vercel --regions fra1` |
-| AWS | il-central-1 (תל אביב) / eu-west-1 (אירלנד) | כ-3ms / כ-40ms | `AWS_DEFAULT_REGION` |
-| GCP | europe-west1 (בלגיה) / me-west1 (תל אביב) | כ-35ms / כ-5ms | `GOOGLE_CLOUD_REGION` |
-| Cloudflare Workers | אוטומטי (TLV edge) | כ-5ms | לא צריך הגדרת אזור |
+| Vercel | fra1 (פרנקפורט) | נמוך | `vercel --regions fra1` |
+| AWS | il-central-1 (תל אביב) / eu-west-1 (אירלנד) | הנמוך ביותר / גבוה יותר | `AWS_DEFAULT_REGION` |
+| GCP | europe-west1 (בלגיה) / me-west1 (תל אביב) | גבוה יותר / הנמוך ביותר | `GOOGLE_CLOUD_REGION` |
+| Cloudflare Workers | אוטומטי (TLV edge) | הנמוך ביותר | לא צריך הגדרת אזור |
+
+עמודת החביון היא דירוג יחסי ולא מדידה: אזור בתוך הארץ עדיף על אזור אירופי, שעדיף על אזור רחוק יותר. מדדו מהמשתמשים שלכם בפועל לפני שנועלים אזור, ושקללו את זה מול העובדה ש-il-central-1 ו-me-west1 מציעים קטלוג שירותים דל יותר מהאזורים האירופיים הוותיקים.
 
 **פריסה ל-Vercel עם fra1:**
 
@@ -294,6 +386,8 @@ permissions:
 הקשחות נוספות לריפו של צוות ישראלי:
 - **נעצו פעולות צד-שלישי ל-SHA מלא** (`uses: owner/action@<sha>`), לא לתג נייד. תג נייד היה הווקטור בפריצת שרשרת האספקה של tj-actions/changed-files ב-2025. פעולות `actions/*` רשמיות בסיכון נמוך יותר, אבל נעיצה ל-SHA היא הסטנדרט.
 - **הפעילו Dependabot לפעולות** (`.github/dependabot.yml` עם `package-ecosystem: "github-actions"`) כדי שהגרסאות הנעוצות יתעדכנו אוטומטית. זו התשובה התחזוקתית להתיישנות.
+- **הפעולה `actions/checkout` חוסמת כברירת מחדל checkout של fork תחת `pull_request_target`.** החל מ-v7 (והשינוי גובה לאחור ל-v4/v5/v6) הפעולה דוחה את דפוסי ה-"pwn request" הקלאסיים, כולל `ref: ${{ github.event.pull_request.head.sha }}` ו-`repository: ${{ github.event.pull_request.head.repo.full_name }}`, מפני שה-workflows האלה רצים עם ה-`GITHUB_TOKEN` והסודות של הריפו הבסיסי. הפעולה חושפת `allow-unsafe-pr-checkout: true` כמנגנון יציאה מפורש; התייחסו אליו כמוצא אחרון, והעדיפו את הטריגר `pull_request` יחד עם job מורשה נפרד ב-`workflow_run`. אם workflow ותיק שלכם נכשל פתאום בשלב ה-checkout, זו הסיבה.
+- **הגדירו `timeout-minutes` לכל job.** ברירת המחדל היא 360 דקות (שש שעות). זה קריטי כאן במיוחד כי שער השבת מבצע קריאת רשת ל-API חיצוני בנתיב הקריטי של כל פריסה לייצור: `--max-time` מגביל את ה-curl, אבל רק `timeout-minutes` מגביל את ה-job. `timeout-minutes: 10` ל-job של השער ו-30 ל-job של הפריסה הם ערכי פתיחה סבירים.
 
 ### שלב 6: תזמון שבוע עבודה ישראלי
 
@@ -306,7 +400,7 @@ permissions:
 | ו 12:00 (קאטאוף חצי יום) | `0 10 * * 5` | `0 9 * * 5` | פריסה אחרונה לפני שבת |
 | יומי מלבד שבת | `0 7 * * 0-5` | `0 6 * * 0-5` | ימי חול + שישי בוקר |
 
-**טיפול במעבר שעון קיץ/חורף**: ישראל עוברת לשעון קיץ ביום שישי האחרון לפני 2 באפריל, ובחזרה ביום ראשון האחרון לפני אוקטובר. במקום לתחזק שני cron schedules, השתמשו ב-hebcal API לקביעת ההיסט הנוכחי, או קבלו סטייה של שעה בשבועות המעבר.
+**טיפול במעבר שעון קיץ/חורף**: ישראל עוברת לשעון קיץ ביום שישי שלפני יום ראשון האחרון של מרץ, וחוזרת לשעון חורף ביום ראשון האחרון של אוקטובר (27 במרץ ו-25 באוקטובר ב-2026; 26 במרץ ו-31 באוקטובר ב-2027). במקום לתחזק שני cron schedules, השתמשו ב-hebcal API לקביעת ההיסט הנוכחי, או קבלו סטייה של שעה בשבועות המעבר.
 
 ### שלב 7: יצירת Composite Actions לשימוש חוזר
 
@@ -436,7 +530,8 @@ runs:
 
 - **לוחות cron משתמשים ב-UTC, לא בשעון ישראל.** סוכנים נוטים לכתוב cron schedules בשעון מקומי. ישראל היא UTC+2 (חורף) או UTC+3 (קיץ). `0 9 * * 0-4` ב-cron פירושו 09:00 UTC, שזה 11:00 או 12:00 בישראל. תמיד תמירו.
 - **שבוע העבודה בישראל הוא ראשון-חמישי, לא שני-שישי.** סוכנים כותבים `1-5` ל-cron של ימי חול (שני-שישי). לצוותים ישראליים, השתמשו ב-`0-4` (ראשון-חמישי) או `0-5` (ראשון-שישי חצי יום).
-- **זמני שבת משתנים כל שבוע ולפי עיר.** סוכנים נוטים לקבע "שישי 18:00" כזמן כניסת שבת. בפועל, הדלקת נרות נעה בין 16:10 בחורף ל-19:45 בקיץ. תמיד השתמשו ב-hebcal API לזמנים מדויקים.
+- **זמני שבת משתנים כל שבוע ולפי עיר.** סוכנים נוטים לקבע "שישי 18:00" כזמן כניסת שבת. בפועל, הדלקת נרות בערים בישראל נעה בין 15:55 בערך (ירושלים, תחילת-אמצע דצמבר) ל-19:30 בערך (תל אביב, יוני), וירושלים מדליקה כ-20 דקות מוקדם יותר מערי החוף כי היא נוהגת להדליק 40 דקות לפני השקיעה. תמיד השתמשו ב-hebcal API לזמנים מדויקים.
+- **שלוש דרכים שבהן סוכן שובר את ההקפאה בשקט בזמן שה-workflow עדיין נראה תקין.** ראשית, hebcal מחזיר זמנים עם היסט (`2026-08-28T18:28:00+03:00`); השוואה לקסיקוגרפית מול `date -u` שגויה בגודל ההיסט ומשאירה את השער פתוח בשעות הראשונות של השבת. המירו את שני הגבולות לשניות epoch עם `date -d`. שנית, `/shabbat` מחזיר כברירת מחדל את סוף השבוע הקרוב, ולכן העבירו `gy`/`gm`/`gd` של היום, מחושבים תחת `TZ=Asia/Jerusalem`: `date` רגיל על ראנר הוא עדיין אתמול בין 00:00 ל-03:00 שעון ישראל. שלישית, חג של יומיים פולט שתי הדלקות נרות לפני הבדלה אחת, ולכן שמרו את המוקדמת שבהן שטרם נסגרה; דריסה שלה בודקת רק את הלילה השני ומאפשרת פריסות לאורך כל היום הראשון של ראש השנה.
 - **טקסט עברי ב-YAML צריך סמני RTL.** בלי תו RTL mark (U+200F), טקסט עברי ב-Slack payloads מציג סימני פיסוק במקום הלא נכון. תמיד הוסיפו `\u200F` לפני שורות בעברית.
 - **IS-5568 הוא לא רק WCAG 2.1 AA.** סוכנים מתייחסים ל-IS-5568 כמילה נרדפת ל-WCAG. ל-IS-5568 יש דרישות נוספות ספציפיות לישראל סביב תוכן דו-לשוני, לוגואים ממשלתיים ונגישות יצירת קשר.
 - **`me-south-1` (בחריין) לא זמין לכל חשבונות AWS.** האזור הזה דורש הפעלה (opt-in). אל תניחו שהוא זמין. חיזרו ל-`eu-west-1` אם המשתמש לא הפעיל אותו.

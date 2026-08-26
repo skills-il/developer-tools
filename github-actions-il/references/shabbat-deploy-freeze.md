@@ -5,7 +5,7 @@ This reference covers the full implementation of Shabbat and Jewish holiday depl
 ## How Shabbat Times Work
 
 Shabbat begins at candle lighting time on Friday and ends at havdalah on Saturday night. These times vary by:
-- **Week**: Candle lighting ranges from ~16:10 (December) to ~19:45 (June) in Israel
+- **Week**: Candle lighting ranges from about 15:55 (Jerusalem, early-to-mid December) to about 19:30 (Tel Aviv, June). Jerusalem lights roughly 20 minutes earlier than the coastal cities.
 - **City**: Jerusalem lights 40 minutes before sunset, Tel Aviv 20-30 minutes before, Haifa 22 minutes before
 - **Custom**: Some communities add extra minutes before candle lighting
 
@@ -168,9 +168,22 @@ runs:
 
         # Check holidays (if enabled and not already frozen)
         if [ "$FROZEN" = "false" ] && [ "${{ inputs.check_holidays }}" = "true" ]; then
+          # Israel time, not the runner's UTC: between 00:00 and 03:00 Israel time a bare
+          # `date` is still yesterday and the holiday lookup silently misses the chag.
+          export TZ=Asia/Jerusalem
           YEAR=$(date +%Y)
           MONTH=$(date +%-m)
-          HOLIDAYS_JSON=$(curl -sf --max-time 10 --retry 2 "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&yto=on&year=$YEAR&month=$MONTH&geo=geoname&geonameid=$GEONAMEID" || echo '{"items":[]}')
+          DAY=$(date +%-d)
+          # Fail CLOSED here too. Substituting an empty item list on an outage makes
+          # "hebcal is down" indistinguishable from "no holiday today" and the deploy ships.
+          HOL_OK=0
+          HOLIDAYS_JSON=$(curl -sf --max-time 10 --retry 2 "https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on&maj=on&gy=$YEAR&gm=$MONTH&gd=$DAY") || HOL_OK=$?
+          if [ "$HOL_OK" -ne 0 ] || [ -z "$HOLIDAYS_JSON" ]; then
+            echo "frozen=true" >> $GITHUB_OUTPUT
+            echo "reason=Could not reach hebcal to verify the holiday calendar; failing closed. Override with force_deploy." >> $GITHUB_OUTPUT
+            echo "next_window=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
 
           TODAY=$(date +%Y-%m-%d)
           HOLIDAY_TODAY=$(echo "$HOLIDAYS_JSON" | jq -r ".items[] | select(.date | startswith(\"$TODAY\")) | .title" | head -1)
@@ -252,15 +265,18 @@ on:
 ```yaml
 - name: Validate override
   if: github.event.inputs.force_deploy == 'true'
+  env:
+    # workflow_dispatch free text. Bind it; do not interpolate it into the script.
+    REASON: ${{ github.event.inputs.override_reason }}
+    ACTOR: ${{ github.actor }}
   run: |
-    REASON="${{ github.event.inputs.override_reason }}"
     if [ -z "$REASON" ]; then
       echo "::error::Emergency override requires a reason. Please provide override_reason."
       exit 1
     fi
 
     echo "### EMERGENCY OVERRIDE" >> $GITHUB_STEP_SUMMARY
-    echo "**Override by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+    echo "**Override by:** $ACTOR" >> $GITHUB_STEP_SUMMARY
     echo "**Reason:** $REASON" >> $GITHUB_STEP_SUMMARY
     echo "**Time:** $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_STEP_SUMMARY
 
@@ -268,11 +284,15 @@ on:
   if: github.event.inputs.force_deploy == 'true'
   env:
     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+    ACTOR: ${{ github.actor }}
+    REASON: ${{ github.event.inputs.override_reason }}
   run: |
     RTL=$'\u200F'
-    curl -s -X POST "$SLACK_WEBHOOK" \
-      -H 'Content-Type: application/json' \
-      -d "{\"attachments\":[{\"color\":\"#dc3545\",\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"${RTL}*פריסת חירום בשבת/חג*\n${RTL}מפתח: ${{ github.actor }}\n${RTL}סיבה: ${{ github.event.inputs.override_reason }}\"}}]}]}"
+    # jq builds the JSON so a quote or newline in the reason cannot break the payload.
+    jq -n --arg rtl "$RTL" --arg actor "$ACTOR" --arg reason "$REASON" \
+      '{attachments:[{color:"#dc3545",blocks:[{type:"section",text:{type:"mrkdwn",
+        text:($rtl+"*פריסת חירום בשבת/חג*\n"+$rtl+"מפתח: "+$actor+"\n"+$rtl+"סיבה: "+$reason)}}]}]}' \
+      | curl -s -X POST "$SLACK_WEBHOOK" -H 'Content-Type: application/json' -d @-
 ```
 
 ## Timezone Edge Cases
@@ -280,8 +300,8 @@ on:
 ### DST Transitions
 
 Israel observes DST (Israel Daylight Time, IDT):
-- **Clocks forward**: Last Friday before April 2, at 02:00 (becomes 03:00)
-- **Clocks back**: Last Sunday before October, at 02:00 (becomes 01:00)
+- **Clocks forward**: The Friday before the last Sunday of March, 27 Mar 2026 and 26 Mar 2027, at 02:00 (becomes 03:00)
+- **Clocks back**: Last Sunday **of** October, at 02:00 (becomes 01:00), 25 Oct 2026 and 31 Oct 2027
 
 During the transition weeks, cron schedules shift by 1 hour. The hebcal API always returns times with the correct UTC offset, so the shabbat-check action handles this correctly. Cron-based schedules (like "daily CI run at 09:00 Israel time") will drift by 1 hour during transition weeks.
 

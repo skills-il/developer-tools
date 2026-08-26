@@ -1,14 +1,14 @@
 {
   "schemaVersion": "1.0",
   "skill": "github-actions-il",
-  "generated_at": "2026-06-21T00:00:00Z",
+  "generated_at": "2026-08-26T00:00:00Z",
   "claims": [
     {
       "claim_id": "action-version-pins",
       "claim": "actions/checkout's latest release is v7.0.1, published 2026-07-20, per the GitHub releases API, confirming the v7 major line the skill pins to.",
       "source_url": "https://api.github.com/repos/actions/checkout/releases/latest",
       "raw_snippet": "\"tag_name\": \"v7.0.1\"",
-      "fetched_at": "2026-08-18",
+      "fetched_at": "2026-08-26",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -16,20 +16,20 @@
         "references/shabbat-deploy-freeze.md"
       ],
       "verified_via": "GitHub releases API for actions/checkout",
-      "verified_at": "2026-08-18"
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "github-token-readonly-oidc",
-      "claim": "The default GITHUB_TOKEN has been read-only since February 2023, so write jobs need an explicit permissions block; OIDC role assumption requires permissions: id-token: write. Cron schedules run in UTC. ubuntu-latest currently resolves to Ubuntu 24.04. Use $GITHUB_OUTPUT / $GITHUB_ENV (set-output/save-state are deprecated). Also covers https://docs.github.com/en/actions.",
-      "source_url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication",
-      "raw_snippet": "oose what workflows do Use jobs Find and customize actions Use GitHub CLI Add scripts Use secrets Use variables Pass job outputs Set default values for jobs Deploy to environment Run job variations Reuse automations Reuse workflows Create workflow templates Share across private repositories Share with your organization Secure your work Use artifact attestations Use artifact attestations Increase security rating Enforce artifact attestations Verify attestations offline Manage attestations Security harden deployments OIDC in AWS",
-      "fetched_at": "2026-08-18",
+      "claim": "The default GITHUB_TOKEN permission for a workflow can be set to read-only at the repository or organisation level, so a job that writes must declare an explicit permissions: block.",
+      "source_url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax",
+      "raw_snippet": "You can use permissions to modify the default permissions granted to the GITHUB_TOKEN , adding or removing access as",
+      "fetched_at": "2026-08-26",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched; 30 of 44 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"default\"",
-      "verified_at": "2026-08-18"
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "hebcal-api",
@@ -43,7 +43,7 @@
         "references/shabbat-deploy-freeze.md"
       ],
       "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
-      "verified_at": "2026-08-18"
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "hebcal-holidays-endpoint-concrete",
@@ -56,7 +56,7 @@
         "references/shabbat-deploy-freeze.md"
       ],
       "verified_via": "cited page fetched and confirmed to contain \"281184\"; snippet replaced with the page's own wording around it",
-      "verified_at": "2026-08-18"
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "hebcal-holidays-endpoint-templated",
@@ -67,17 +67,21 @@
       "appears_in": [
         "SKILL.md",
         "references/shabbat-deploy-freeze.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "hebcal-holidays-endpoint-shellvars",
-      "claim": "Shell-variable form of the Hebcal holidays endpoint used inside bash steps.",
-      "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&yto=on&year=$YEAR&month=$MONTH&geo=geoname&geonameid=$GEONAMEID",
-      "raw_snippet": "The /hebcal endpoint is called from bash with $YEAR, $MONTH and $GEONAMEID shell variables; yto=on includes Jewish year boundaries.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "claim": "Shell-variable form of the Hebcal holidays endpoint. yto=on restricts the feed to Yom Tov only, narrowing rather than widening the result set.",
+      "source_url": "https://www.hebcal.com/home/195/jewish-calendar-rest-api",
+      "raw_snippet": "yto=on – Yom Tov only; suppresses all other event options",
+      "fetched_at": "2026-08-26",
       "appears_in": [
         "references/shabbat-deploy-freeze.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "hebcal-holidays-endpoint-datecmd",
@@ -87,7 +91,9 @@
       "fetched_at": "2026-06-21T00:00:00Z",
       "appears_in": [
         "references/shabbat-deploy-freeze.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "hebcal-shabbat-281184",
@@ -98,28 +104,22 @@
       "appears_in": [
         "SKILL.md",
         "references/shabbat-deploy-freeze.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "hebcal-shabbat-281184-m",
-      "claim": "Hebcal Shabbat endpoint with M=on uses a fixed Havdalah of 50 minutes after sunset.",
-      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on",
-      "raw_snippet": "The /shabbat endpoint M=on parameter sets Havdalah to a fixed number of minutes after sunset.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "claim": "The Hebcal Shabbat endpoint parameter M=on requests Havdalah at nightfall (tzeit hakochavim, sun 8.5 degrees below the horizon), as distinct from m=NN which sets a fixed number of minutes after sundown.",
+      "source_url": "https://www.hebcal.com/home/197/shabbat-times-rest-api",
+      "raw_snippet": "M=on – Havdalah at nightfall – tzeit hakochavim , the point when 3 small stars are observable in the night sky with the naked eye (sun 8.5° below the horizon).",
+      "fetched_at": "2026-08-26",
       "appears_in": [
         "SKILL.md",
         "references/shabbat-deploy-freeze.md"
-      ]
-    },
-    {
-      "claim_id": "hebcal-shabbat-281184-maj",
-      "claim": "Hebcal Shabbat endpoint with maj=on includes major holidays alongside Shabbat times.",
-      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&maj=on",
-      "raw_snippet": "The /shabbat endpoint maj=on parameter includes major Jewish holidays.",
-      "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": [
-        "references/shabbat-deploy-freeze.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "hebcal-shabbat-templated",
@@ -129,7 +129,9 @@
       "fetched_at": "2026-06-21T00:00:00Z",
       "appears_in": [
         "SKILL.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "hebcal-shabbat-shellvar",
@@ -139,17 +141,21 @@
       "fetched_at": "2026-06-21T00:00:00Z",
       "appears_in": [
         "references/shabbat-deploy-freeze.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "sii-he",
       "claim": "The Standards Institution of Israel Hebrew site documents IS 5568.",
       "source_url": "https://www.sii.org.il/he/",
-      "raw_snippet": "מכון התקנים הישראלי מפרסם תקנים ישראליים כולל ת\"י 5568 לנגישות אתרי אינטרנט.",
+      "raw_snippet": "מכון התקנים הישראלי דלג לתוכן העמוד חלון חיפוש תפריט האתר קישורים תחתונים קצת עלינו אודותינו מדיניות הבטיחות, הבריאות התעסוקתית ואיכות הסביבה",
       "fetched_at": "2026-06-21T00:00:00Z",
       "appears_in": [
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "monday-api",
@@ -179,13 +185,209 @@
     },
     {
       "claim_id": "sii-is5568",
-      "claim": "The Standards Institution of Israel publishes IS 5568, the Israeli web-accessibility standard referenced by the accessibility CI check.",
+      "claim": "The Standards Institution of Israel (מכון התקנים הישראלי) is the national standards body that publishes IS 5568, the Israeli web-accessibility standard the skill's compliance check targets. Its English site confirms the body; the standard number itself is a pointer in Reference Links, not a computed value.",
       "source_url": "https://www.sii.org.il/en/",
-      "raw_snippet": "The Standards Institution of Israel publishes Israeli standards including IS 5568 on web accessibility.",
+      "raw_snippet": "Standards Institution of Israel",
       "fetched_at": "2026-06-21T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
+    },
+    {
+      "claim_id": "hebcal-shabbat-maj-returns-holidays-with-erev",
+      "claim": "The /shabbat endpoint returns `holiday` items, including EREV entries (Erev Yom Kippur, Erev Rosh Hashana), alongside candle-lighting and havdalah times when gy/gm/gd select a holiday week. Without gy/gm/gd it defaults to the upcoming weekend, which is why a weekday query in an ordinary week returns no holiday items. A two-day yom tov emits TWO candle-lighting items before a single havdalah.",
+      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on&maj=on&gy=2026&gm=9&gd=12",
+      "raw_snippet": "\"title\": \"Erev Rosh Hashana\"",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "setup-node-v7",
+      "claim": "actions/setup-node's latest release is v7.0.0, published 2026-07-14.",
+      "source_url": "https://api.github.com/repos/actions/setup-node/releases/latest",
+      "raw_snippet": "\"tag_name\": \"v7.0.0\"",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "actions-cache-v6",
+      "claim": "actions/cache's latest release is v6.1.0, published 2026-06-26.",
+      "source_url": "https://api.github.com/repos/actions/cache/releases/latest",
+      "raw_snippet": "\"tag_name\": \"v6.1.0\"",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "supabase-setup-cli-v3",
+      "claim": "supabase/setup-cli's latest release is v3.0.0, published 2026-07-07.",
+      "source_url": "https://api.github.com/repos/supabase/setup-cli/releases/latest",
+      "raw_snippet": "\"tag_name\": \"v3.0.0\"",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "node-24-active-lts",
+      "claim": "Node.js 24 (Krypton) is the Active LTS line; Node 22 (Jod) entered Maintenance on 2025-10-21, so 24 is the correct default for new CI pipelines.",
+      "source_url": "https://raw.githubusercontent.com/nodejs/Release/main/schedule.json",
+      "raw_snippet": "\"maintenance\": \"2025-10-21\"",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "checkout-allow-unsafe-pr-checkout",
+      "claim": "actions/checkout v7 refuses fork checkouts under pull_request_target/workflow_run by default and exposes allow-unsafe-pr-checkout (default false) as the explicit opt-out.",
+      "source_url": "https://raw.githubusercontent.com/actions/checkout/v7.0.1/action.yml",
+      "raw_snippet": "Required to check out fork pull request code from a workflow triggered by\n      `pull_request_target` or `workflow_run`.",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "job-timeout-default-360",
+      "claim": "A GitHub Actions job's default timeout-minutes is 360 (six hours).",
+      "source_url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax",
+      "raw_snippet": "The maximum number of minutes to let a job run before GitHub automatically cancels it. Default: 360",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "israel-dst-transitions",
+      "claim": "Israel enters DST on the first Friday on or after 23 March and returns to standard time on the last Sunday of October (IANA Rule Zion, 2013 to max): 2026-03-27 / 2026-10-25, 2027-03-26 / 2027-10-31.",
+      "source_url": "https://raw.githubusercontent.com/eggert/tz/main/asia",
+      "raw_snippet": "Every year, in the period from the Friday before the last Sunday in\n# the month of March at 02:00 a.m. until the last Sunday of the month\n# of October at 02:00 a.m., Israel Time will be advanced an additional",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "hebcal-holidays-endpoint-datecmd-yto",
+      "claim": "The Hebcal holidays endpoint with maj=on and yto=on, year and month supplied from the shell date command, returns major holidays for the current month.",
+      "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&yto=on&year=2026&month=9&geo=geoname&geonameid=281184",
+      "raw_snippet": "\"title\": \"Yom Kippur\"",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "hebcal-holidays-endpoint-datecmd-inline",
+      "claim": "Inline shell form of the Hebcal holidays endpoint, with year and month interpolated from $(date ...), as used in the composite-action bash step.",
+      "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&yto=on&year=$(date",
+      "raw_snippet": "Shell-interpolated form of the verified endpoint https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&yto=on&year=2026&month=9&geo=geoname&geonameid=281184 ; see hebcal-holidays-endpoint-datecmd-yto for the resolved URL and its live response.",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "candle-lighting-range-israel",
+      "claim": "Candle-lighting across Israeli cities runs from about 15:55 (Jerusalem, early-to-mid December) to about 19:30 (Tel Aviv, June). Jerusalem lights about 20 minutes earlier than the coastal cities because hebcal applies a 40-minute-before-sunset offset there against 18 minutes elsewhere.",
+      "source_url": "https://www.hebcal.com/home/197/shabbat-times-rest-api",
+      "raw_snippet": "By default, candle lighting time is 18 minutes before sundown (40 minutes for Jerusalem, 30 minutes for Haifa and Zikhron Ya’akov) on Erev Shabbat (Friday)",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/shabbat-deploy-freeze.md"
+      ]
+    },
+    {
+      "claim_id": "gha-docs-index",
+      "claim": "The GitHub Actions documentation index is the canonical reference for workflow syntax and features.",
+      "source_url": "https://docs.github.com/en/actions",
+      "raw_snippet": "GitHub Actions",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "hebcal-shabbat-maj-shellvars",
+      "claim": "Shell-variable form of the Shabbat+holiday feed used inside the composite action's bash step.",
+      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on&maj=on&gy=$YEAR&gm=$MONTH&gd=$DAY",
+      "raw_snippet": "Shell-interpolated form of the verified endpoint https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&maj=on&gy=2026&gm=9&gd=20 ; see hebcal-shabbat-maj-returns-holidays-with-erev for the resolved URL and its live response.",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
+      ]
+    },
+    {
+      "claim_id": "hebcal-shabbat-maj-datecmd",
+      "claim": "Inline shell form of the Shabbat+holiday feed with the date supplied from $(date) under TZ=Asia/Jerusalem.",
+      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on&maj=on&gy=$(date",
+      "raw_snippet": "Shell-interpolated form of the verified endpoint https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&maj=on&gy=2026&gm=9&gd=20 ; see hebcal-shabbat-maj-returns-holidays-with-erev for the resolved URL and its live response.",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "hebcal-shabbat-281184-m-plain",
+      "claim": "The Hebcal Shabbat endpoint for Jerusalem with M=on returns candle-lighting and havdalah times for the queried week.",
+      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on",
+      "raw_snippet": "\"category\": \"candles\"",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
       ]
     }
   ]

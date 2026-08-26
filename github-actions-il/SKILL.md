@@ -54,36 +54,108 @@ runs:
     - id: check
       shell: bash
       run: |
-        # Fetch Shabbat times for Israel (Jerusalem)
-        SHABBAT_JSON=$(curl -sf --max-time 10 "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on" || echo "")
+        # ONE feed covers Shabbat AND holidays. The /shabbat endpoint honours maj=on and
+        # returns `holiday` items together with their candle-lighting times, including the
+        # EREV entries (Erev Yom Kippur, Erev Sukkot) that the /hebcal feed omits entirely.
+        # Ask for TODAY in Israel time: runners are UTC, so a bare `date` is still yesterday
+        # between 00:00 and 03:00 Israel time and would miss the chag.
+        export TZ=Asia/Jerusalem
+        CURL_OK=0
+        FEED=$(curl -sf --max-time 10 --retry 2 \
+          "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on&maj=on&gy=$(date +%Y)&gm=$(date +%-m)&gd=$(date +%-d)") || CURL_OK=$?
 
-        # Extract candle lighting and havdalah times
-        CANDLE=$(echo "$SHABBAT_JSON" | jq -r '.items[] | select(.category=="candles") | .date')
-        HAVDALAH=$(echo "$SHABBAT_JSON" | jq -r '.items[] | select(.category=="havdalah") | .date')
-
-        NOW=$(date -u +%Y-%m-%dT%H:%M:%S)
-
-        # Fail CLOSED: if hebcal is unreachable, freeze rather than risk a Shabbat deploy (override with force_deploy)
-        if [ -z "$CANDLE" ]; then
+        # Fail CLOSED: a deploy freeze is a safety gate, so an unreachable API means frozen.
+        if [ "$CURL_OK" -ne 0 ] || [ -z "$FEED" ]; then
           echo "frozen=true" >> $GITHUB_OUTPUT
-          echo "reason=Could not verify Shabbat window (hebcal unreachable); failing closed" >> $GITHUB_OUTPUT
-        elif [[ "$NOW" > "$CANDLE" && "$NOW" < "$HAVDALAH" ]]; then
-          echo "frozen=true" >> $GITHUB_OUTPUT
-          echo "reason=Shabbat (candle lighting: $CANDLE)" >> $GITHUB_OUTPUT
-        else
-          # Check holidays
-          MONTH=$(date +%Y-%m)
-          HOLIDAYS=$(curl -sf --max-time 10 "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&maj=on" || echo "")
-          HOLIDAY_TODAY=$(echo "$HOLIDAYS" | jq -r ".items[] | select(.date | startswith(\"$(date +%Y-%m-%d)\")) | .title" | head -1)
+          echo "reason=Could not reach hebcal to verify the Shabbat/holiday window; failing closed. Override with force_deploy." >> $GITHUB_OUTPUT
+          exit 0
+        fi
 
-          if [[ -n "$HOLIDAY_TODAY" ]]; then
+        # Walk the feed in order, pairing each candle-lighting with the havdalah that follows
+        # it, and compare in EPOCH SECONDS. hebcal returns offset-aware times (+03:00 summer,
+        # +02:00 winter); comparing those as strings against a UTC clock is wrong by exactly
+        # the offset and leaves the gate open for the first hours of every Shabbat.
+        # A 200 with an unexpected shape must freeze too: pipefail does not propagate out
+        # of the process substitution below, so an empty item list would silently open the gate.
+        ITEM_COUNT=$(echo "$FEED" | jq -r '.items | length' 2>/dev/null || echo 0)
+        if [ -z "$ITEM_COUNT" ] || [ "$ITEM_COUNT" = "0" ] || [ "$ITEM_COUNT" = "null" ]; then
+          echo "frozen=true" >> $GITHUB_OUTPUT
+          echo "reason=hebcal returned no calendar items; failing closed. Override with force_deploy." >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        # Rule 1: any FULL yom tov dated today. A feed requested for the chag itself starts
+        # that morning, so the previous evening's candle-lighting is outside its range and the
+        # window walk below cannot see it. `yomtov: true` marks exactly the days on which work
+        # is prohibited (Yom Kippur, Shavuot, both days of Rosh Hashana, Sukkot I, Shmini
+        # Atzeret) and is absent on chol hamoed, fast days and Shabbat Shuva.
+        TODAY=$(date +%Y-%m-%d)
+        YOMTOV=$(echo "$FEED" | jq -r --arg d "$TODAY" '[.items[] | select(.yomtov == true and (.date | startswith($d)))] | first | .title // empty')
+        if [ -n "$YOMTOV" ]; then
+          # The chag ends at havdalah, not at midnight. If today's closing havdalah has
+          # already passed, fall through to rule 2 rather than freezing until 00:00.
+          END_TODAY=$(echo "$FEED" | jq -r --arg d "$TODAY" '[.items[] | select(.category=="havdalah" and (.date | startswith($d)))] | first | .date // empty')
+          END_EPOCH=""
+          [ -n "$END_TODAY" ] && END_EPOCH=$(date -d "$END_TODAY" +%s 2>/dev/null || echo "")
+          # No havdalah today, or we could not parse it, means still yom tov: freeze.
+          if [ -z "$END_EPOCH" ] || [ "$(date +%s)" -le "$END_EPOCH" ]; then
             echo "frozen=true" >> $GITHUB_OUTPUT
-            echo "reason=Holiday: $HOLIDAY_TODAY" >> $GITHUB_OUTPUT
-          else
-            echo "frozen=false" >> $GITHUB_OUTPUT
-            echo "reason=none" >> $GITHUB_OUTPUT
+            echo "reason=$YOMTOV (yom tov)" >> $GITHUB_OUTPUT
+            exit 0
           fi
         fi
+
+        # Rule 2: inside a candle-lighting to havdalah window (Shabbat, and the evening a chag
+        # begins, which is dated the day BEFORE the yom tov and so is not caught by rule 1).
+        NOW_EPOCH=$(date +%s)
+        FROZEN=false
+        REASON=none
+        START=""
+        LABEL="Shabbat"
+        PENDING="Shabbat"
+
+        while IFS=$'\t' read -r CAT WHEN TITLE; do
+          case "$CAT" in
+            holiday)  PENDING="$TITLE" ;;
+            candles)
+              # Keep the EARLIEST unclosed candle-lighting. A two-day yom tov (Rosh Hashana,
+              # or any chag adjacent to Shabbat) emits TWO candle-lightings before a single
+              # havdalah; overwriting here would test only the second night and leave the
+              # gate open for the whole of day one.
+              if [ -z "$START" ]; then
+                START="$WHEN"
+                LABEL="$PENDING"
+              fi
+              ;;
+            havdalah)
+              EE=$(date -d "$WHEN" +%s)
+              if [ -z "$START" ]; then
+                # A havdalah with no candle-lighting before it means the window opened
+                # before this feed's range started, i.e. we are already inside it. This is
+                # the chag-daytime case (querying on Yom Kippur itself returns the closing
+                # havdalah but not the previous evening's candles). Freeze.
+                if [ "$NOW_EPOCH" -le "$EE" ]; then
+                  FROZEN=true
+                  REASON="$PENDING (in progress, ends $WHEN)"
+                  break
+                fi
+              else
+                SE=$(date -d "$START" +%s)
+                if [ "$NOW_EPOCH" -ge "$SE" ] && [ "$NOW_EPOCH" -le "$EE" ]; then
+                  FROZEN=true
+                  REASON="$LABEL (frozen from $START until $WHEN)"
+                  break
+                fi
+              fi
+              START=""
+              LABEL="Shabbat"
+              PENDING="Shabbat"
+              ;;
+          esac
+        done < <(echo "$FEED" | jq -r '.items[] | [.category, .date, .title] | @tsv')
+
+        echo "frozen=$FROZEN" >> $GITHUB_OUTPUT
+        echo "reason=$REASON" >> $GITHUB_OUTPUT
 ```
 
 2. Use this action as a gate in deployment workflows:
@@ -112,8 +184,12 @@ jobs:
     if: needs.check-deploy-window.outputs.is_frozen == 'true'
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "Deploy frozen: ${{ needs.check-deploy-window.outputs.reason }}"
+      - env:
+          # The reason string carries a title from hebcal's HTTP response, so bind it to an
+          # env var rather than interpolating ${{ }} into the script.
+          FREEZE_REASON: ${{ needs.check-deploy-window.outputs.reason }}
+        run: |
+          echo "Deploy frozen: $FREEZE_REASON"
           # Send notification (see Step 3)
 ```
 
@@ -138,7 +214,7 @@ if: >
   github.event.inputs.force_deploy == 'true'
 ```
 
-> **Note:** The inline bash in the composite action above is illustrative. Its `[[ "$NOW" > "$CANDLE" ]]` lexical string comparison is fragile, it works only when both timestamps share the same timezone offset and string format, and it breaks across DST transitions and date rollovers. The canonical, correct implementation in `references/shabbat-deploy-freeze.md` converts every timestamp to epoch seconds before comparing and adds a configurable pre-Shabbat buffer. Use the reference implementation in real workflows.
+> **Note:** The composite action above is the working reference implementation: it pairs each candle-lighting with the havdalah that follows it and compares in epoch seconds, it asks hebcal for TODAY in `Asia/Jerusalem` rather than the runner's UTC date, and it fails closed when hebcal is unreachable. `references/shabbat-deploy-freeze.md` adds a configurable pre-Shabbat buffer, per-city geonameids, multi-environment strategies and the emergency-override workflow. Two things this gate does NOT cover: minor fasts and Chanukah/Purim (`min=on`) and the modern civil days Yom HaZikaron and Yom HaAtzmaut (`mod=on`). Israeli teams commonly freeze on Yom HaZikaron too; add the parameter if you observe them.
 
 For the full implementation guide with edge cases and timezone handling, consult `references/shabbat-deploy-freeze.md`.
 
@@ -153,12 +229,17 @@ Hebrew text in webhook payloads requires explicit RTL handling. Slack and Teams 
   if: always()
   env:
     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+    # NEVER interpolate ${{ }} directly into a run: script. GitHub substitutes it as raw
+    # text BEFORE bash parses the line, so a commit message containing a backtick or
+    # $(...) executes in a job that holds your deploy tokens. Bind untrusted context to
+    # env vars, then read them as ordinary shell variables.
+    STATUS: ${{ job.status }}
+    REPO: ${{ github.repository }}
+    BRANCH: ${{ github.ref_name }}
+    RAW_COMMIT_MSG: ${{ github.event.head_commit.message }}
+    ACTOR: ${{ github.actor }}
   run: |
-    STATUS="${{ job.status }}"
-    REPO="${{ github.repository }}"
-    BRANCH="${{ github.ref_name }}"
-    COMMIT_MSG=$(echo "${{ github.event.head_commit.message }}" | head -1)
-    ACTOR="${{ github.actor }}"
+    COMMIT_MSG=$(printf '%s' "$RAW_COMMIT_MSG" | head -1)
 
     if [ "$STATUS" = "success" ]; then
       EMOJI=":white_check_mark:"
@@ -251,10 +332,13 @@ Hebrew text in webhook payloads requires explicit RTL handling. Slack and Teams 
 - name: Update Monday.com item
   env:
     MONDAY_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
+    # A fork's branch name is attacker-controlled; bind it rather than interpolating it.
+    REF_NAME: ${{ github.ref_name }}
+    BOARD_ID: ${{ vars.MONDAY_BOARD_ID }}
   run: |
     # Extract Monday.com item ID from branch name or commit message
     # Convention: branch names like "feat/MON-12345-feature-name"
-    ITEM_ID=$(echo "${{ github.ref_name }}" | grep -oP 'MON-\K\d+' || true)
+    ITEM_ID=$(printf '%s' "$REF_NAME" | grep -oP 'MON-\K\d+' || true)
 
     if [ -n "$ITEM_ID" ]; then
       STATUS_LABEL="${{ job.status == 'success' && 'Deployed' || 'Failed' }}"
@@ -262,7 +346,7 @@ Hebrew text in webhook payloads requires explicit RTL handling. Slack and Teams 
       curl -s -X POST "https://api.monday.com/v2" \
         -H "Authorization: Bearer $MONDAY_TOKEN" \
         -H "Content-Type: application/json" \
-        -d "{\"query\": \"mutation { change_simple_column_value(item_id: $ITEM_ID, board_id: ${{ vars.MONDAY_BOARD_ID }}, column_id: \\\"status\\\", value: \\\"$STATUS_LABEL\\\") { id } }\"}"
+        -d "{\"query\": \"mutation { change_simple_column_value(item_id: $ITEM_ID, board_id: $BOARD_ID, column_id: \\\"status\\\", value: \\\"$STATUS_LABEL\\\") { id } }\"}"
     fi
 ```
 
@@ -270,7 +354,7 @@ Hebrew text in webhook payloads requires explicit RTL handling. Slack and Teams 
 
 **IS-5568 Accessibility (Israeli Standard)**
 
-IS-5568 is the Israeli accessibility standard, based on WCAG 2.1 AA with additional requirements for Hebrew/RTL content. Key differences from WCAG alone:
+IS-5568 is the Israeli web-accessibility standard made binding by the Equal Rights for Persons with Disabilities (accessibility of a service) regulations. It adopts WCAG with additional requirements for Hebrew/RTL content. The WCAG edition it points at has moved between revisions of the standard, so confirm the level your obligation is assessed against with the Standards Institution of Israel rather than assuming; scanning against WCAG 2.1 AA satisfies 2.0 AA as a superset, which is why the axe configuration below passes all three tag sets. Key differences from WCAG alone:
 
 | IS-5568 Requirement | WCAG Equivalent | Additional Israeli Rule |
 |---------------------|-----------------|------------------------|
@@ -287,9 +371,9 @@ accessibility-check:
   runs-on: ubuntu-latest
   steps:
     - uses: actions/checkout@v7
-    - uses: actions/setup-node@v6
+    - uses: actions/setup-node@v7
       with:
-        node-version: '22'
+        node-version: '24'
 
     - name: Install accessibility tools
       run: npm install -g @axe-core/cli pa11y-ci
@@ -363,13 +447,15 @@ privacy-check:
 
 Israeli projects should deploy to regions with low latency to Israel. Here are the recommended targets and how to configure them in workflows.
 
-| Cloud Provider | Recommended Region | Latency to IL | GitHub Actions Setup |
+| Cloud Provider | Recommended Region | Relative latency from Israel | GitHub Actions Setup |
 |---------------|-------------------|---------------|---------------------|
-| Vercel | fra1 (Frankfurt) | ~30ms | `vercel --regions fra1` |
-| AWS | il-central-1 (Tel Aviv) or eu-west-1 (Ireland) | ~3ms / ~40ms | Set `AWS_DEFAULT_REGION` |
-| GCP | europe-west1 (Belgium) or me-west1 (Tel Aviv) | ~35ms / ~5ms | Set `GOOGLE_CLOUD_REGION` |
-| Cloudflare Workers | Automatic (TLV edge) | ~5ms | No region config needed |
-| DigitalOcean | fra1 (Frankfurt) | ~30ms | `doctl apps create --region fra` |
+| Vercel | fra1 (Frankfurt) | low | `vercel --regions fra1` |
+| AWS | il-central-1 (Tel Aviv) or eu-west-1 (Ireland) | lowest / higher | Set `AWS_DEFAULT_REGION` |
+| GCP | europe-west1 (Belgium) or me-west1 (Tel Aviv) | higher / lowest | Set `GOOGLE_CLOUD_REGION` |
+| Cloudflare Workers | Automatic (TLV edge) | lowest | No region config needed |
+| DigitalOcean | fra1 (Frankfurt) | low | `doctl apps create --region fra` |
+
+The latency column is a relative ranking, not measured figures: an in-country region beats a European one, which beats anything further out. Measure from your own users before committing to a region, and weigh it against il-central-1 and me-west1 carrying a thinner service catalogue than the mature European regions.
 
 **Vercel deployment with fra1 pinning:**
 
@@ -420,6 +506,8 @@ permissions:
 Additional hardening for an Israeli team's repos:
 - **Pin third-party actions to a full commit SHA** (`uses: owner/action@<40-char-sha>`), not a moving tag. A moving tag was the vector in the 2025 tj-actions/changed-files supply-chain compromise. First-party `actions/*` are lower risk, but SHA-pinning is the standard.
 - **Enable Dependabot for actions** (`.github/dependabot.yml` with `package-ecosystem: "github-actions"`) so pinned versions stay current automatically. This is the maintenance answer to action staleness.
+- **`actions/checkout` refuses fork checkouts under `pull_request_target` by default.** From v7 (and backported to v4/v5/v6) the action rejects the classic "pwn request" patterns, including `ref: ${{ github.event.pull_request.head.sha }}` and `repository: ${{ github.event.pull_request.head.repo.full_name }}`, because those workflows run with the base repo's `GITHUB_TOKEN` and secrets. The action exposes `allow-unsafe-pr-checkout: true` as an explicit opt-out; treat it as a last resort, and prefer the `pull_request` trigger plus a separate privileged `workflow_run` job. If an older workflow of yours suddenly fails at the checkout step, this is why.
+- **Set `timeout-minutes` on every job.** The default is 360 (six hours). It matters here specifically because the Shabbat gate makes a network call to a third-party API on the critical path of every production deploy: `--max-time` bounds the curl, but only `timeout-minutes` bounds the job. `timeout-minutes: 10` on the gate job and 30 on a deploy job are sane starting points.
 
 ### Step 6: Configure Israeli Work Week Scheduling
 
@@ -434,7 +522,7 @@ Israeli work week is Sunday through Thursday. Friday is a half-day (typically un
 | Fri 12:00 (half-day cutoff) | `0 10 * * 5` | `0 9 * * 5` | Last Friday deploy |
 | Daily except Shabbat | `0 7 * * 0-5` | `0 6 * * 0-5` | Weekday + Friday morning |
 
-**Handling DST transitions**: Israel switches to DST on the last Friday before April 2, and back on the last Sunday before October. Rather than maintaining two cron schedules, use the hebcal API to determine the current UTC offset dynamically, or accept a 1-hour drift during transition weeks.
+**Handling DST transitions**: Israel enters DST on the Friday before the last Sunday of March, and returns to standard time on the last Sunday of October (27 Mar and 25 Oct in 2026; 26 Mar and 31 Oct in 2027). Rather than maintaining two cron schedules, use the hebcal API to determine the current UTC offset dynamically, or accept a 1-hour drift during transition weeks.
 
 ```yaml
 on:
@@ -577,7 +665,8 @@ Result: Complete CI/CD pipeline respecting Israeli work culture, with compliance
 
 - **Cron schedules use UTC, not Israel time.** Agents default to writing cron schedules in local time. Israel is UTC+2 (winter) or UTC+3 (summer/DST). A `0 9 * * 0-4` cron means 09:00 UTC, which is 11:00 or 12:00 in Israel. Always convert.
 - **Israeli work week is Sunday-Thursday, not Monday-Friday.** Agents consistently write `1-5` for weekday cron (Monday-Friday). For Israeli teams, use `0-4` (Sunday-Thursday) or `0-5` (Sunday-Friday half-day).
-- **Shabbat times vary weekly and by city.** Agents tend to hardcode "Friday 18:00" as Shabbat start. In reality, candle lighting ranges from ~16:10 in winter to ~19:45 in summer. Always use the hebcal API for accurate times.
+- **Shabbat times vary weekly and by city.** Agents tend to hardcode "Friday 18:00" as Shabbat start. In reality, candle lighting across Israeli cities runs from about 15:55 (Jerusalem, early-to-mid December) to about 19:30 (Tel Aviv, June), and Jerusalem lights roughly 20 minutes earlier than the coastal cities because it keeps a 40-minute-before-sunset custom. Always use the hebcal API for accurate times.
+- **Three ways an agent silently breaks the freeze while the workflow still looks correct.** First, hebcal returns offset-aware times (`2026-08-28T18:28:00+03:00`); comparing that lexicographically against `date -u` is wrong by the offset and leaves the gate open for the first hours of Shabbat. Convert both bounds to epoch seconds with `date -d`. Second, `/shabbat` defaults to the UPCOMING weekend, so pass `gy`/`gm`/`gd` for today, computed under `TZ=Asia/Jerusalem`: a runner's bare `date` is still yesterday between 00:00 and 03:00 Israel time. Third, a two-day yom tov emits TWO candle-lightings before a single havdalah, so keep the EARLIEST unclosed one; overwriting it tests only the second night and deploys run through the whole of Rosh Hashana day one.
 - **Hebrew text in YAML needs RTL markers.** Without the RTL mark character (U+200F), Hebrew text in Slack payloads renders with punctuation in the wrong position. Always prefix Hebrew lines with `\u200F`.
 - **IS-5568 is not just WCAG 2.1 AA.** Agents treat IS-5568 as a synonym for WCAG. IS-5568 has additional Israeli-specific requirements around bilingual content, government logos, and contact accessibility.
 - **`me-south-1` (Bahrain) is NOT available to all AWS accounts.** This region requires opt-in activation. Do not assume it is available. Fall back to `eu-west-1` if the user has not explicitly enabled it.
