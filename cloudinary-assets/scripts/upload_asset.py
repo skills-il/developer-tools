@@ -39,7 +39,13 @@ except ImportError:
     sys.exit(1)
 
 
-def get_cloudinary_config() -> dict:
+# (connect, read). Generative transformations and large uploads are genuinely
+# slow, so the read budget is wide, but never unbounded: without a timeout
+# requests blocks forever on a stalled socket.
+HTTP_TIMEOUT = (10, 180)
+
+
+def get_cloudinary_config():
     """Get Cloudinary configuration from environment variables.
 
     Returns:
@@ -50,11 +56,22 @@ def get_cloudinary_config() -> dict:
     if cloudinary_url:
         # Format: cloudinary://API_KEY:API_SECRET@CLOUD_NAME
         parsed = urllib.parse.urlparse(cloudinary_url)
-        return {
+        # urlparse returns userinfo still percent-encoded, and returns None for a
+        # missing password. Formatting None into the digest produces the literal
+        # string "None" and a valid-looking but wrong signature, surfacing as an
+        # opaque 401 instead of a config error, so validate here.
+        cfg = {
             "cloud_name": parsed.hostname,
-            "api_key": parsed.username,
-            "api_secret": parsed.password,
+            "api_key": urllib.parse.unquote(parsed.username or ""),
+            "api_secret": urllib.parse.unquote(parsed.password or ""),
         }
+        missing = [k for k, v in cfg.items() if not v]
+        if missing:
+            print(f"ERROR: CLOUDINARY_URL is missing {', '.join(missing)}. "
+                  "Expected cloudinary://API_KEY:API_SECRET@CLOUD_NAME",
+                  file=sys.stderr)
+            sys.exit(1)
+        return cfg
 
     # Option 2: Individual variables
     cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME')
@@ -83,21 +100,28 @@ def generate_signature(params: dict, api_secret: str) -> str:
     """
     sorted_params = "&".join(
         f"{k}={v}" for k, v in sorted(params.items())
-        if v is not None and k not in ("file", "api_key", "resource_type")
+        if v is not None and k not in ("file", "cloud_name", "api_key", "resource_type")
     )
     return hashlib.sha1(f"{sorted_params}{api_secret}".encode()).hexdigest()
 
 
 def upload_image(file_path: str, config: dict, folder: str = "",
-                 tags: list = None, public_id: str = None) -> dict:
+                 tags: list = None, public_id: str = None,
+                 asset_folder: str = "") -> dict:
     """Upload an image to Cloudinary.
 
     Args:
         file_path: Path to local file
         config: Cloudinary config dict
-        folder: Optional folder in Cloudinary
+        folder: Fixed-folder-mode folder. In that mode the folder becomes part
+            of the public ID.
         tags: Optional list of tags
         public_id: Optional custom public ID
+        asset_folder: Dynamic-folder-mode folder. New Cloudinary product
+            environments use dynamic folder mode, where this is the parameter
+            that places the asset in the folder tree and it does NOT affect the
+            public ID. Check your product environment's folder mode before
+            choosing between this and `folder`.
 
     Returns:
         Upload response from Cloudinary
@@ -107,6 +131,8 @@ def upload_image(file_path: str, config: dict, folder: str = "",
     params = {"timestamp": timestamp}
     if folder:
         params["folder"] = folder
+    if asset_folder:
+        params["asset_folder"] = asset_folder
     if tags:
         params["tags"] = ",".join(tags)
     if public_id:
@@ -123,21 +149,25 @@ def upload_image(file_path: str, config: dict, folder: str = "",
     data.update({k: v for k, v in params.items() if k != "timestamp"})
 
     with open(file_path, "rb") as f:
-        response = requests.post(url, data=data, files={"file": f})
+        response = requests.post(url, data=data, files={"file": f},
+                                 timeout=HTTP_TIMEOUT)
 
     response.raise_for_status()
     return response.json()
 
 
 def upload_video(file_path: str, config: dict, folder: str = "",
-                 tags: list = None) -> dict:
+                 tags: list = None, asset_folder: str = "",
+                 public_id: str = None) -> dict:
     """Upload a video to Cloudinary.
 
     Args:
         file_path: Path to local video file
         config: Cloudinary config dict
-        folder: Optional folder
+        folder: Fixed-folder-mode folder
         tags: Optional list of tags
+        asset_folder: Dynamic-folder-mode folder (the default for new accounts)
+        public_id: Optional custom public ID
 
     Returns:
         Upload response
@@ -147,8 +177,12 @@ def upload_video(file_path: str, config: dict, folder: str = "",
     params = {"timestamp": timestamp}
     if folder:
         params["folder"] = folder
+    if asset_folder:
+        params["asset_folder"] = asset_folder
     if tags:
         params["tags"] = ",".join(tags)
+    if public_id:
+        params["public_id"] = public_id
 
     signature = generate_signature(params, config["api_secret"])
 
@@ -161,7 +195,8 @@ def upload_video(file_path: str, config: dict, folder: str = "",
     data.update({k: v for k, v in params.items() if k != "timestamp"})
 
     with open(file_path, "rb") as f:
-        response = requests.post(url, data=data, files={"file": f})
+        response = requests.post(url, data=data, files={"file": f},
+                                 timeout=HTTP_TIMEOUT)
 
     response.raise_for_status()
     return response.json()
@@ -244,34 +279,65 @@ def get_responsive_urls(cloud_name: str, public_id: str,
 
 
 def list_assets(config: dict, resource_type: str = "image",
-                max_results: int = 30) -> dict:
+                max_results: int = 30, all_pages: bool = False) -> dict:
     """List assets in Cloudinary media library.
+
+    The Admin API returns at most 500 resources per call and paginates with
+    next_cursor. Without following that cursor a "list everything" call
+    silently stops at the first page, which is why all_pages exists.
 
     Args:
         config: Cloudinary config dict
         resource_type: Type of resource (image, video, raw)
-        max_results: Maximum results to return
+        max_results: Page size, capped by Cloudinary at 500
+        all_pages: Follow next_cursor until the listing is exhausted
 
     Returns:
-        List of assets
+        Dict with a "resources" list. When all_pages is False and the response
+        carried a next_cursor, "next_cursor" is preserved so the caller can see
+        the listing was truncated.
     """
     url = (f"https://api.cloudinary.com/v1_1/{config['cloud_name']}"
            f"/resources/{resource_type}")
-    response = requests.get(
-        url,
-        params={"max_results": max_results},
-        auth=(config["api_key"], config["api_secret"])
-    )
-    response.raise_for_status()
-    return response.json()
+    params = {"max_results": min(max_results, 500)}
+    resources = []
+    seen_cursors = set()
+    while True:
+        response = requests.get(
+            url, params=params,
+            auth=(config["api_key"], config["api_secret"]),
+            timeout=HTTP_TIMEOUT
+        )
+        response.raise_for_status()
+        payload = response.json()
+        resources.extend(payload.get("resources", []))
+        cursor = payload.get("next_cursor")
+        if cursor and cursor in seen_cursors:
+            # A repeated cursor means the API is not advancing; stop rather
+            # than spin forever.
+            cursor = None
+        elif cursor:
+            seen_cursors.add(cursor)
+        if not all_pages or not cursor:
+            payload["resources"] = resources
+            if cursor and not all_pages:
+                payload["next_cursor"] = cursor
+            return payload
+        params["next_cursor"] = cursor
 
 
-def delete_asset(public_id: str, config: dict) -> dict:
+def delete_asset(public_id: str, config: dict,
+                 resource_type: str = "image") -> dict:
     """Delete an asset from Cloudinary.
+
+    The destroy endpoint is per resource type. Calling the image endpoint for a
+    video returns "not found", which reads like the asset is already gone while
+    it is in fact still there consuming storage credits.
 
     Args:
         public_id: Asset public ID
         config: Cloudinary config dict
+        resource_type: image, video or raw. Must match how it was uploaded.
 
     Returns:
         Deletion response
@@ -280,13 +346,14 @@ def delete_asset(public_id: str, config: dict) -> dict:
     params = {"public_id": public_id, "timestamp": timestamp}
     signature = generate_signature(params, config["api_secret"])
 
-    url = f"https://api.cloudinary.com/v1_1/{config['cloud_name']}/image/destroy"
+    url = (f"https://api.cloudinary.com/v1_1/{config['cloud_name']}"
+           f"/{resource_type}/destroy")
     response = requests.post(url, data={
         "public_id": public_id,
         "api_key": config["api_key"],
         "timestamp": timestamp,
         "signature": signature,
-    })
+    }, timeout=HTTP_TIMEOUT)
     response.raise_for_status()
     return response.json()
 
@@ -301,7 +368,8 @@ def main():
     # Upload
     up = subparsers.add_parser("upload", help="Upload image or video")
     up.add_argument("--file", required=True, help="Local file to upload")
-    up.add_argument("--folder", default="", help="Cloudinary folder")
+    up.add_argument("--folder", default="", help="Folder (fixed folder mode; becomes part of the public ID)")
+    up.add_argument("--asset-folder", default="", help="Folder (dynamic folder mode, the default for new accounts; does not affect the public ID)")
     up.add_argument("--tags", default="", help="Comma-separated tags")
     up.add_argument("--public-id", help="Custom public ID")
     up.add_argument("--video", action="store_true", help="Upload as video")
@@ -329,15 +397,30 @@ def main():
     ls = subparsers.add_parser("list", help="List assets")
     ls.add_argument("--type", default="image",
                     choices=["image", "video", "raw"], help="Resource type")
-    ls.add_argument("--max", type=int, default=30, help="Max results")
+    ls.add_argument("--max", type=int, default=30, help="Page size (Cloudinary caps this at 500)")
+    ls.add_argument("--all", action="store_true", help="Follow next_cursor and list every page")
 
     # Delete
     dl = subparsers.add_parser("delete", help="Delete asset")
     dl.add_argument("--public-id", required=True, help="Asset public ID")
+    dl.add_argument("--type", default="image",
+                    choices=["image", "video", "raw"],
+                    help="Resource type; must match how the asset was uploaded")
 
     args = parser.parse_args()
 
+    if not args.command:
+        parser.print_help()
+        return
+
     config = get_cloudinary_config()
+    # transform and responsive are pure URL builders: they need cloud_name only,
+    # never the API secret. Requiring full credentials for them locked users out
+    # of generating delivery URLs for a public cloud.
+    if not config and args.command in ("transform", "responsive"):
+        cloud_only = os.environ.get('CLOUDINARY_CLOUD_NAME')
+        if cloud_only:
+            config = {"cloud_name": cloud_only, "api_key": "", "api_secret": ""}
     if not config:
         print("ERROR: Cloudinary credentials not found.", file=sys.stderr)
         print("Set CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME",
@@ -350,10 +433,13 @@ def main():
         if args.command == "upload":
             tags = [t.strip() for t in args.tags.split(",") if t.strip()] if args.tags else None
             if args.video:
-                result = upload_video(args.file, config, folder=args.folder, tags=tags)
+                result = upload_video(args.file, config, folder=args.folder,
+                                      tags=tags, asset_folder=args.asset_folder,
+                                      public_id=args.public_id)
             else:
                 result = upload_image(args.file, config, folder=args.folder,
-                                       tags=tags, public_id=args.public_id)
+                                       tags=tags, public_id=args.public_id,
+                                       asset_folder=args.asset_folder)
 
             print(f"Uploaded: {args.file}")
             print(f"Public ID:  {result.get('public_id', 'N/A')}")
@@ -399,9 +485,12 @@ def main():
             print(f"\nHTML:\n{result['html']}")
 
         elif args.command == "list":
-            result = list_assets(config, resource_type=args.type, max_results=args.max)
+            result = list_assets(config, resource_type=args.type,
+                                 max_results=args.max, all_pages=args.all)
             resources = result.get("resources", [])
             print(f"Found {len(resources)} {args.type}(s):")
+            if result.get("next_cursor") and not args.all:
+                print("  (truncated: more pages exist, re-run with --all)")
             for r in resources:
                 size_kb = r.get("bytes", 0) / 1024
                 print(f"  {r.get('public_id', 'N/A'):<40} "
@@ -410,7 +499,7 @@ def main():
                       f"{r.get('width', '')}x{r.get('height', '')}")
 
         elif args.command == "delete":
-            result = delete_asset(args.public_id, config)
+            result = delete_asset(args.public_id, config, resource_type=args.type)
             status = result.get("result", "unknown")
             print(f"Delete {args.public_id}: {status}")
 
@@ -419,6 +508,13 @@ def main():
 
     except requests.exceptions.HTTPError as e:
         print(f"HTTP Error: {e.response.status_code} - {e.response.text}",
+              file=sys.stderr)
+        sys.exit(1)
+    except requests.exceptions.RequestException as e:
+        print(f"Network error: {e}", file=sys.stderr)
+        sys.exit(1)
+    except ValueError as e:
+        print(f"Could not parse the Cloudinary response as JSON: {e}",
               file=sys.stderr)
         sys.exit(1)
     except FileNotFoundError as e:

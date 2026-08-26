@@ -60,27 +60,32 @@ import hashlib
 import time
 
 def upload_image(file_path, cloud_name, api_key, api_secret,
-                 folder="", tags=None):
+                 folder="", asset_folder="", tags=None):
     """Upload image to Cloudinary."""
     timestamp = str(int(time.time()))
-    params_to_sign = f"timestamp={timestamp}"
-    if folder:
-        params_to_sign = f"folder={folder}&{params_to_sign}"
 
+    # EVERY upload parameter except file, cloud_name, api_key, resource_type
+    # and signature itself must be in the signed string, sorted alphabetically.
+    # Signing only a subset (e.g. omitting tags) yields "Invalid Signature".
+    params = {"timestamp": timestamp}
+    if folder:
+        params["folder"] = folder            # fixed folder mode
+    if asset_folder:
+        params["asset_folder"] = asset_folder  # dynamic folder mode (new accounts)
+    if tags:
+        params["tags"] = ",".join(tags)
+
+    params_to_sign = "&".join(f"{k}={v}" for k, v in sorted(params.items()))
     signature = hashlib.sha1(
         f"{params_to_sign}{api_secret}".encode()
     ).hexdigest()
 
-    # Note: This URL requires valid credentials and file upload
     url = f"https://api.cloudinary.com/v1_1/{cloud_name}/image/upload"
-    data = {"api_key": api_key, "timestamp": timestamp, "signature": signature}
-    if folder:
-        data["folder"] = folder
-    if tags:
-        data["tags"] = ",".join(tags)
+    data = {"api_key": api_key, "signature": signature, **params}
 
     with open(file_path, "rb") as f:
-        response = requests.post(url, data=data, files={"file": f})
+        response = requests.post(url, data=data, files={"file": f}, timeout=(10, 180))
+    response.raise_for_status()
     return response.json()
 ```
 
@@ -102,24 +107,32 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 | Social share | w_1200,h_630,c_fill | OpenGraph image size |
 | Watermarked | l_watermark,w_200,o_50,g_south_east | Semi-transparent watermark |
 
-### Step 4b: AI-Powered Transformations (2024-2025)
+**Folder mode matters.** Cloudinary has two modes and new product environments are created in
+**dynamic folder mode**. In dynamic folder mode the parameter that places an asset in the folder
+tree is `asset_folder`, and it does NOT affect the public ID. The older `folder` parameter is the
+fixed-folder-mode parameter, where the folder becomes part of the public ID. Passing `folder` on a
+dynamic-folder account therefore does not do what a fixed-folder tutorial implies. Check your
+product environment's folder mode in Settings before scripting bulk uploads, and pass
+`asset_folder` when you are in dynamic mode.
 
-Cloudinary's generative AI effects (gen_remove, gen_replace, gen_background_replace, gen_recolor, gen_restore) are available as `e_gen_*` URL params. Generative fill is the exception: it is a **background qualifier** `b_gen_fill:prompt_(...)` that fills a padded area, NOT an `e_gen_fill` effect (constructing `e_gen_fill:...` returns a 400). Some variants may still be flagged as Beta on the docs page, so check the current status before relying on a specific effect in production:
+### Step 4b: AI-Powered Transformations
+
+Cloudinary's generative AI effects (gen_remove, gen_replace, gen_background_replace, gen_recolor, gen_restore) are available as `e_gen_*` URL params. Generative fill is the exception: it is a **background qualifier** `b_gen_fill:prompt_<text>` used with a padding crop in the SAME component, e.g. `c_pad,w_1600,h_900,b_gen_fill:prompt_beach` (200). Two traps: the prompt is unparenthesized like `e_gen_background_replace` (`b_gen_fill:prompt_(beach)` returns HTTP 500 `General Error`), and without a padding crop it returns HTTP 400 `gen_fill only available for padding crop modes` that fills a padded area, NOT an `e_gen_fill` effect (constructing `e_gen_fill:...` returns a 400). Some variants may still be flagged as Beta on the docs page, so check the current status before relying on a specific effect in production:
 
 | Param | What it does |
 |-------|--------------|
 | `e_gen_remove:prompt_(person)` | AI removes the matched object from the image |
 | `e_gen_replace:from_(car);to_(bicycle)` | AI replaces one object with another |
-| `e_gen_background_replace:prompt_(beach at sunset)` | Generative background swap |
+| `e_gen_background_replace:prompt_beach%20at%20sunset` | Generative background swap. Note the prompt is NOT parenthesized for this effect: `prompt_(beach)` returns HTTP 500 `General Error`, while `prompt_beach` returns 200. The parenthesized form is correct for `e_gen_remove` but not here |
 | `e_background_removal` | Background removal, a built-in transformation (no separate add-on subscription; the legacy add-on is closed to new accounts from Feb 1 2026). It is NOT free, it bills via special transformation counting. |
 | `e_gen_restore` | AI restoration for old, blurry, or damaged photos |
-| `auto_tagging:0.7` | Auto-tag uploads via AI (confidence threshold 0.0-1.0); pass at upload time |
+| `auto_tagging:0.7` | Auto-tag uploads via AI (confidence threshold 0.0-1.0); pass at upload time. Unlike the `e_gen_*` effects this is NOT built in: it requires registering a tagging add-on (Google Auto Tagging, AWS Rekognition, Imagga) on the Add-ons page first, otherwise the upload returns an error instead of tags |
 | `f_auto:image` | Restrict auto format selection to image candidates (AVIF, WebP, JPEG) |
 | `f_auto:video` | Restrict auto format selection to video candidates (mp4, webm) |
 
 Example: remove a person from the background, then replace background:
 ```
-https://res.cloudinary.com/{cloud_name}/image/upload/e_gen_remove:prompt_(person)/e_gen_background_replace:prompt_(modern office)/{public_id}
+https://res.cloudinary.com/{cloud_name}/image/upload/e_gen_remove:prompt_(person)/e_gen_background_replace:prompt_modern%20office/{public_id}
 ```
 
 Auto-tagging at upload time:
@@ -170,30 +183,51 @@ def get_responsive_urls(cloud_name, public_id, widths=None):
 
 **List all assets:**
 ```python
-def list_assets(cloud_name, api_key, api_secret, resource_type="image", max_results=30):
-    """List assets in Cloudinary media library."""
-    # Note: This URL requires authentication
+def list_assets(cloud_name, api_key, api_secret, resource_type="image",
+                max_results=30, all_pages=False):
+    """List assets in Cloudinary media library.
+
+    The Admin API returns at most 500 per call and paginates with next_cursor.
+    Ignoring the cursor truncates a "list everything" call at the first page
+    with no error, so the short list looks complete.
+    """
     url = f"https://api.cloudinary.com/v1_1/{cloud_name}/resources/{resource_type}"
-    response = requests.get(url, params={"max_results": max_results},
-                            auth=(api_key, api_secret))
-    return response.json()
+    params = {"max_results": min(max_results, 500)}
+    resources = []
+    while True:
+        response = requests.get(url, params=params,
+                                auth=(api_key, api_secret), timeout=(10, 60))
+        response.raise_for_status()
+        payload = response.json()
+        resources.extend(payload.get("resources", []))
+        cursor = payload.get("next_cursor")
+        if not all_pages or not cursor:
+            payload["resources"] = resources
+            return payload
+        params["next_cursor"] = cursor
 ```
 
 **Delete an asset:**
 ```python
-def delete_asset(public_id, cloud_name, api_key, api_secret):
-    """Delete an asset from Cloudinary."""
+def delete_asset(public_id, cloud_name, api_key, api_secret,
+                 resource_type="image"):
+    """Delete an asset from Cloudinary.
+
+    destroy is per resource type. Calling the image endpoint for a video
+    returns "not found", which reads as "already deleted" while the asset is
+    still there consuming storage credits, so pass the type you uploaded with.
+    """
     timestamp = str(int(time.time()))
     signature = hashlib.sha1(
         f"public_id={public_id}&timestamp={timestamp}{api_secret}".encode()
     ).hexdigest()
 
-    # Note: This URL requires valid credentials and signature
-    url = f"https://api.cloudinary.com/v1_1/{cloud_name}/image/destroy"
+    url = f"https://api.cloudinary.com/v1_1/{cloud_name}/{resource_type}/destroy"
     response = requests.post(url, data={
         "public_id": public_id, "api_key": api_key,
         "timestamp": timestamp, "signature": signature
-    })
+    }, timeout=(10, 60))
+    response.raise_for_status()
     return response.json()
 ```
 
@@ -237,7 +271,7 @@ import { AdvancedImage } from "@cloudinary/react";
 
 ### Step 8: Hebrew Text Overlays
 
-Cloudinary's `l_text:` overlay supports Hebrew when you URL-encode the string and pick a font that ships Hebrew glyphs. Built-in fonts that include Hebrew (no font upload needed): **Heebo, Assistant, Rubik, David Libre, Frank Ruhl Libre, Suez One, Secular One**.
+Cloudinary's `l_text:` overlay supports Hebrew when you URL-encode the string and pick a font that ships Hebrew glyphs. Built-in fonts that include Hebrew (no font upload needed): **Heebo, Assistant, Rubik, Frank Ruhl Libre, Suez One, Secular One**. `David Libre` and `Noto Sans Hebrew` are NOT Cloudinary font families: they return HTTP 400 with `x-cld-error: Unsupported font family`.
 
 Pattern:
 ```
@@ -289,15 +323,19 @@ Result: Video URL with optimized delivery and poster image.
 
 ## Gotchas
 
-- Hebrew text overlays render correctly only when the font supports Hebrew glyphs (Heebo, Assistant, Rubik, David Libre, Frank Ruhl Libre, Suez One, Secular One). Latin-only fonts produce missing glyphs or boxes. The text value must be URL-encoded.
-- Free tier includes 25 credits per month. One credit equals 1,000 transformations OR 1GB managed storage OR 1GB video bandwidth (the metric whose consumption you exceed first is the one that bills). The Free → Plus jump is steep (Plus lists at $99/month billed monthly, $89/month billed yearly, for 225 monthly credits as of 2026), so model your eager-transform variants carefully before launch.
+- Percent-encode EVERY space inside a transformation component. A raw space (for example `prompt_modern office`) makes the URL malformed: `curl` rejects it locally with exit code 3 and never sends a request, and `requests` behaves the same way. Browsers hide this by encoding silently. Use `%20`, or `urllib.parse.quote`.
+
+- Hebrew text overlays need a font family Cloudinary actually ships. Verified working: Heebo, Assistant, Rubik, Frank Ruhl Libre, Suez One, Secular One. `David Libre` and `Noto Sans Hebrew` are NOT available and return HTTP 400 `Unsupported font family`, so an unrecognised name fails the whole URL rather than falling back. A Latin family like Arial is accepted (HTTP 200) rather than rejected, so the failure mode here is typographic rather than a 400. Pick a Hebrew family for typographic control; if you use a Latin one, inspect the rendered image yourself instead of trusting the 200. The text value must be URL-encoded.
+- Free tier includes 25 credits per month. Per the pricing page, one credit equals 1,000 transformations OR 1GB managed storage OR 1GB IMAGE bandwidth. Video bandwidth is 2GB per credit and is PAID PLANS ONLY, so free-tier video delivery gets no boost. Credits are a single shared pool spent across transformations, storage and bandwidth together, not three separate allowances. The Free → Plus jump is steep (Plus lists at $99/month billed monthly, $89/month billed yearly, for 225 monthly credits as of 2026), so model your eager-transform variants carefully before launch.
 - Upload and Admin API endpoints require proper authentication. Example URLs in documentation may return 401/404 errors when accessed without valid credentials.
 - Signed URLs and `auth_token`/strict transformation modes: derived URLs may be blocked unless signed. Toggle "Strict transformations" in Settings, Security, then sign delivery URLs with `s--{signature}--` or use `auth_token` for time-bound access.
 - Eager vs lazy transforms: lazy (default) builds the derived asset on first request and caches it (slow first hit). Eager builds at upload time (faster first hit, costs upload credits). Use eager for predictable variants like thumbnails and social cards; let everything else stay lazy.
 - Named transformations: define a reusable transformation like `t_product_card` in Settings, Transformations. URLs become `.../t_product_card/{public_id}` instead of long parameter chains, and you can change the recipe centrally without rewriting URLs.
 - CORS for direct browser upload: by default, the Upload API blocks browser fetches from arbitrary origins. In Settings, Upload, Allowed CORS origins, add your site origins (no trailing slash) before calling the API from `fetch`/`XMLHttpRequest`.
+- Prefer an official server SDK over hand-rolled signing for backend work. `cloudinary` on npm (2.x) and `cloudinary` on PyPI (1.x) implement signing, retries and the folder-mode parameters for you; the bundled `scripts/upload_asset.py` hand-rolls SHA-1 signing so it stays dependency-light for one-off CLI use, which is not a reason to hand-roll it inside an application.
+
 - `upload_preset` in unsigned mode: unsigned upload presets let the browser upload without exposing the API secret. Lock down each preset (allowed formats, max file size, allowed folders, allowed tags) or anyone with the preset name can flood your account.
-- `notification_url` webhook: pass `notification_url` in upload params (or set globally) to receive POST callbacks when async work finishes (eager transforms, video encoding, moderation). Cloudinary signs the body, verify the `X-Cld-Signature` header before trusting it.
+- `notification_url` webhook: pass `notification_url` in upload params (or set globally) to receive POST callbacks when async work finishes (eager transforms, video encoding, moderation). Cloudinary signs the body, verify the `X-Cld-Signature` header before trusting it. The signature is `SHA-1(body + timestamp + api_secret)` where the timestamp comes from `X-Cld-Timestamp`, so verification is: `hashlib.sha1((raw_body + ts + api_secret).encode()).hexdigest() == received_signature`, compared with `hmac.compare_digest`. Reject anything older than about two hours. Use the raw request body, not a re-serialized JSON dict, or the digest will not match.
 
 ## Troubleshooting
 
@@ -315,10 +353,12 @@ Solution: Verify public_id with Admin API list. Check folder paths are included 
 
 ### Error: "Invalid Signature" or signature mismatch on upload
 Cause: Wrong parameter order, wrong API secret, or the timestamp drifted (Cloudinary rejects timestamps more than 1 hour off).
-Solution: Sign the alphabetically sorted, ampersand-joined params (excluding `file`, `cloud_name`, `api_key`, `signature`), append the API secret, then SHA-1 the result. Sync your clock (NTP). When in doubt, log the exact `params_to_sign` string and compare to the docs. Cloudinary defaults to SHA-1 and also supports SHA-256 (pass `signature_algorithm=sha256`); the SHA-1 code above still works.
+Solution: Sign the alphabetically sorted, ampersand-joined params (excluding `file`, `cloud_name`, `api_key`, `resource_type` and `signature` itself, and including EVERY other parameter you send, `tags` and `asset_folder` included), append the API secret, then SHA-1 the result. Sync your clock (NTP). When in doubt, log the exact `params_to_sign` string and compare to the docs. Cloudinary defaults to SHA-1 and also supports SHA-256 (pass `signature_algorithm=sha256`); the SHA-1 code above still works.
 
 ### Error: "Rate limit exceeded" / 420 / 429
-Cause: Free tier caps Admin API calls at 500/hour and total transformations at ~25,000/month.
+Admin API rate limiting returns HTTP **420** (not 429) and carries `X-FeatureRateLimit-Limit`, `X-FeatureRateLimit-Remaining` and `X-FeatureRateLimit-Reset` headers; read `Remaining` to back off before you are cut off. The Upload API is not rate-limited this way.
+
+Cause: the free tier caps Admin API calls at 500/hour and gives 25 monthly credits shared across transformations, storage and bandwidth. Do not read that as 25,000 transformations per month: that number is only reachable if storage and bandwidth consume zero credits, which cannot happen once the account holds assets.
 Solution: Cache list/metadata responses, batch operations, or upgrade the plan. For traffic spikes, rely on the CDN cache (derived URLs are cached for 30+ days) instead of re-issuing Admin calls.
 
 ### Error: "Invalid transformation" / 400 on a derived URL

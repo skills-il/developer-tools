@@ -56,6 +56,10 @@ https://res.cloudinary.com/{cloud}/image/upload/f_auto,q_auto/{public_id}
 For fixed-size images on retina displays:
 ```
 w_400,dpr_auto,q_auto,f_auto
+# Keep dpr_auto in the INLINE transformation. Cloudinary documents that
+# "dpr_auto and w_auto transformations are not effective if used in named
+# transformations", so folding this recipe into a t_* named transformation
+# silently drops the responsive behaviour.
 ```
 
 ## Lazy Loading

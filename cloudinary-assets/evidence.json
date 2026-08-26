@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "cloudinary-assets",
-  "generated_at": "2026-05-20T00:00:00Z",
+  "generated_at": "2026-08-26T19:50:35.774547+00:00",
   "claims": [
     {
       "claim_id": "cloudinary-free-tier-25-credits",
@@ -102,10 +102,10 @@
     },
     {
       "claim_id": "cloudinary-transforms-cap-derived",
-      "claim": "One Cloudinary credit is interchangeable: 1,000 transformations OR 1GB managed storage OR 1GB video bandwidth (2GB video bandwidth on paid plans).",
+      "claim": "One Cloudinary credit is interchangeable: 1,000 transformations OR 1GB managed storage OR 1GB IMAGE bandwidth, and on PAID PLANS ONLY 2GB video bandwidth. Credits are one shared pool spent across all of these, so 25 free credits is NOT a 25,000-transformation allowance.",
       "source_url": "https://cloudinary.com/pricing",
-      "raw_snippet": "1 credit = 1,000 transformations image and video processing OR 1GB managed storage for all digital assets OR 1GB video bandwidth high-performance CDN",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "raw_snippet": "1 credit = 1,000 transformations image and video processing OR 1GB managed storage for all digital assets OR 1GB image bandwidth high-performance CDN OR PAID PLANS ONLY 2GB video bandwidth boosted 2:1 for video delivery",
+      "fetched_at": "2026-08-26T19:33:11.300170+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -126,14 +126,16 @@
     },
     {
       "claim_id": "cloudinary-hebrew-fonts",
-      "claim": "Common Hebrew-supporting fonts available through Cloudinary's l_text overlay (when uploaded as custom fonts or via Google Fonts integration): Heebo, Assistant, Rubik, David Libre, Frank Ruhl Libre, Suez One, Secular One. These are widely-used Hebrew web fonts on Google Fonts.",
-      "source_url": "https://fonts.google.com/?subset=hebrew",
-      "raw_snippet": "Heebo Assistant Rubik",
-      "fetched_at": "2026-05-20T00:00:00Z",
+      "claim": "Cloudinary's l_text overlay renders Hebrew with the built-in families Heebo, Assistant, Rubik, Frank Ruhl Libre, Suez One and Secular One. David Libre and Noto Sans Hebrew are NOT Cloudinary font families: they return HTTP 400 with x-cld-error 'Unsupported font family', the same response as a fabricated font name, so an unrecognised family fails the whole URL rather than falling back.",
+      "source_url": "https://res.cloudinary.com/demo/image/upload/l_text:David%20Libre_40_bold:%D7%A9%D7%9C%D7%95%D7%9D/sample.jpg",
+      "raw_snippet": "x-cld-error: Unsupported font family David Libre",
+      "fetched_at": "2026-08-26T19:33:11.300170+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "live render against Cloudinary's public demo cloud on 2026-08-26. Heebo, Assistant, Rubik, Frank Ruhl Libre, Suez One and Secular One returned HTTP 200; David Libre and Noto Sans Hebrew returned HTTP 400 with x-cld-error 'Unsupported font family', identical to the negative control 'Totally Fake Font XYZ', which proves the 400 is font resolution and not a transformation-syntax artifact",
+      "verified_at": "2026-08-26T19:33:11.300170+00:00"
     },
     {
       "claim_id": "cloudinary-signature-timestamp",
@@ -236,6 +238,130 @@
         "metadata.json"
       ],
       "verified_via": "curl (rendered page text)"
+    },
+    {
+      "claim_id": "cloudinary-signature-string-to-sign",
+      "claim": "A Cloudinary signature is the sorted parameter string with the API secret appended and no separator, hashed with SHA-1 (or SHA-256). file, cloud_name, resource_type and api_key are never part of the string to sign. Cloudinary's worked example with secret 'abcd' and timestamp 1315060510 yields a21ad0f63beb4de2e5575204b79ab90bffb02c10, which the bundled script reproduces exactly.",
+      "source_url": "https://cloudinary.com/documentation/authentication_signatures",
+      "raw_snippet": "Note file , cloud_name , resource_type , and api_key are never part of the string to sign, but are always part of the upload call.",
+      "fetched_at": "2026-08-26T19:33:11.300170+00:00",
+      "appears_in": [
+        "scripts/upload_asset.py",
+        "SKILL.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-signature-sha1-default",
+      "claim": "The SDK methods use SHA-1 by default and SHA-256 is selected with the signature_algorithm configuration parameter set to sha256.",
+      "source_url": "https://cloudinary.com/documentation/authentication_signatures",
+      "raw_snippet": "The SDK methods use the SHA-1 algorithm by default, but you can use the SHA-256 algorithm instead by setting the signature_algorithm SDK configuration parameter to sha256 .",
+      "fetched_at": "2026-08-26T19:33:11.300170+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-asset-folder-dynamic-mode",
+      "claim": "In dynamic folder mode, asset_folder is the parameter that places an asset in the folder tree and it does not affect the asset's public ID. The older folder parameter belongs to the legacy fixed folder mode.",
+      "source_url": "https://cloudinary.com/documentation/image_upload_api_reference",
+      "raw_snippet": "asset_folder String The full path of the folder where the asset is placed within the Cloudinary repository. This value doesn't impact the asset's public ID path",
+      "fetched_at": "2026-08-26T19:33:11.300170+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/upload_asset.py"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-dpr-auto-not-in-named-transformations",
+      "claim": "dpr_auto and w_auto are not effective when used inside a named transformation, so folding a responsive recipe into a t_* named transformation silently drops the responsive behaviour.",
+      "source_url": "https://cloudinary.com/documentation/responsive_images",
+      "raw_snippet": "The dpr_auto and w_auto transformations are not effective if used in named transformations .",
+      "fetched_at": "2026-08-26T19:33:11.300170+00:00",
+      "appears_in": [
+        "references/transformation-cheatsheet.md",
+        "references/optimization-guide.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-auto-tagging-addon-registration",
+      "claim": "Auto tagging is an add-on, not a built-in transformation: the account must register the tagging add-on before auto_tagging works, unlike the built-in e_gen_* effects.",
+      "source_url": "https://cloudinary.com/documentation/google_auto_tagging_addon",
+      "raw_snippet": "Add-ons page",
+      "verified_via": "add-on documentation page fetched on 2026-08-26; it instructs the user to log in and register the add-on from the Add-ons page before use",
+      "verified_at": "2026-08-26T19:33:11.300170+00:00",
+      "fetched_at": "2026-08-26T19:33:11.300170+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-server-sdk-versions",
+      "claim": "The official Cloudinary server SDKs are current: the cloudinary npm package is on 2.x (2.10.1) and the cloudinary PyPI package is on 1.x (1.46.0). @cloudinary/url-gen remains on 1.x (1.22.0).",
+      "source_url": "https://www.npmjs.com/package/cloudinary",
+      "raw_snippet": "Cloudinary NPM package for Node.js integration",
+      "verified_via": "npm registry JSON and PyPI JSON fetched directly on 2026-08-26; npm cloudinary dist-tags latest=2.10.1, PyPI cloudinary info.version=1.46.0, npm @cloudinary/url-gen latest=1.22.0",
+      "verified_at": "2026-08-26T19:33:11.300170+00:00",
+      "fetched_at": "2026-08-26T19:33:11.300170+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-gen-background-replace-prompt-syntax",
+      "claim": "e_gen_background_replace takes an UNPARENTHESIZED prompt: e_gen_background_replace:prompt_beach returns HTTP 200 while e_gen_background_replace:prompt_(beach) returns HTTP 500 with x-cld-error 'General Error'. The parenthesized form IS correct for e_gen_remove (prompt_(person) returns 200), which is why the two are easy to conflate. Cloudinary's own generative-AI docs use the unparenthesized multi-word form.",
+      "source_url": "https://cloudinary.com/documentation/transformation_reference",
+      "raw_snippet": "gen_background_replace For images only e_gen_background_replace[:prompt_<prompt>][;seed_<seed>] Replaces the background of an image with an AI-generated background.",
+      "verified_via": "live requests against Cloudinary's public demo cloud on 2026-08-26: e_gen_background_replace:prompt_(beach) -> 500 General Error; e_gen_background_replace:prompt_beach -> 200; e_gen_background_replace:prompt_modern%20office -> 200; e_gen_remove:prompt_(person) -> 200; the corrected chained example in SKILL.md -> 200",
+      "verified_at": "2026-08-26T19:40:47.821576+00:00",
+      "fetched_at": "2026-08-26T19:40:47.821576+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-gen-fill-prompt-syntax",
+      "claim": "b_gen_fill needs BOTH an unparenthesized prompt AND a padding crop mode in the same component. c_pad,w_1600,h_900,b_gen_fill:prompt_beach returns HTTP 200; the same with prompt_(beach) returns HTTP 500 'General Error'; and b_gen_fill:prompt_beach with no padding crop returns HTTP 400 'gen_fill only available for padding crop modes'.",
+      "source_url": "https://cloudinary.com/documentation/transformation_reference",
+      "raw_snippet": "gen_background_replace For images only e_gen_background_replace[:prompt_<prompt>][;seed_<seed>] Replaces the background of an image with an AI-generated background.",
+      "verified_via": "live requests against Cloudinary's public demo cloud on 2026-08-26: c_pad,w_1600,h_900,b_gen_fill:prompt_beach -> 200; c_pad,w_1600,h_900,b_gen_fill:prompt_(beach) -> 500 General Error; b_gen_fill:prompt_beach alone -> 400 'gen_fill only available for padding crop modes'; fabricated negative control e_zzz_fabricated_control:prompt_(x) -> 400 'Invalid effect in transformation'",
+      "verified_at": "2026-08-26T20:00:46.546876+00:00",
+      "fetched_at": "2026-08-26T19:50:35.774547+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-signature-covers-all-params",
+      "claim": "Every upload parameter except file, cloud_name, api_key, resource_type and the signature itself must be included in the signed string. Signing a subset (for example omitting tags while still POSTing tags) produces an Invalid Signature error.",
+      "source_url": "https://cloudinary.com/documentation/authentication_signatures",
+      "raw_snippet": "Note file , cloud_name , resource_type , and api_key are never part of the string to sign, but are always part of the upload call.",
+      "fetched_at": "2026-08-26T19:50:35.774547+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/upload_asset.py"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-transformation-space-encoding",
+      "claim": "A raw space inside a transformation component makes the URL malformed: curl rejects it locally with exit code 3 and never sends a request, while the %20-encoded form returns HTTP 200. Browsers hide this by encoding silently.",
+      "source_url": "https://cloudinary.com/documentation/transformation_reference",
+      "raw_snippet": "gen_background_replace For images only e_gen_background_replace[:prompt_<prompt>][;seed_<seed>]",
+      "verified_via": "tested on 2026-08-26: curl against .../e_gen_background_replace:prompt_modern office/sample.jpg exited 3 (malformed URL, no request sent); the same URL with %20 returned HTTP 200",
+      "verified_at": "2026-08-26T19:50:35.774547+00:00",
+      "fetched_at": "2026-08-26T19:50:35.774547+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md"
+      ]
     }
   ]
 }

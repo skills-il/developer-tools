@@ -1,6 +1,22 @@
 {
   "cycles": [
     {
+      "version": "1.2.0",
+      "date": "2026-08-26",
+      "lessons": [
+        "CRITICAL fixed: `David Libre` and `Noto Sans Hebrew` are NOT Cloudinary font families. Both return HTTP 400 `Unsupported font family`, identical to a fabricated control name, so an unrecognised family fails the whole URL rather than falling back. The prior cycle's [CARRY] on the Hebrew font list is now RESOLVED: 6 of the 7 listed families are real, one was invented.",
+        "CRITICAL fixed: the credit definition. It is 1GB IMAGE bandwidth per credit, and video bandwidth is 2GB per credit on PAID PLANS ONLY. The skill said `1GB video bandwidth`, which misplans free-tier video by 100% in the wrong direction. The prior [CARRY] on the credit definition is RESOLVED.",
+        "CRITICAL fixed: `e_gen_background_replace` and `b_gen_fill` take UNPARENTHESIZED prompts. `prompt_(beach)` returns HTTP 500 General Error on both, while `e_gen_remove:prompt_(person)` returns 200, which is exactly why the two get conflated. b_gen_fill additionally needs a padding crop in the same component or it 400s.",
+        "CRITICAL fixed: the inline upload sample signed only folder+timestamp while POSTing `tags`, so every documented upload would have failed Invalid Signature. The bundled script was already correct, so body and script contradicted each other on the one thing that decides whether an upload works.",
+        "CRITICAL fixed: raw un-encoded spaces in copy-paste transformation strings. curl rejects them locally with exit 3 before sending anything; browsers hide it by encoding silently. Added the rule as a Gotcha.",
+        "The prior [CARRY] on the 10MB free-plan upload cap is RESOLVED: no per-plan cap is published, the figure is correctly absent, and the 100MB upload_large threshold is exact. The `~25,000 transformations/month` figure is REFUTED as framed: 25 credits is one shared pool across transformations, storage and bandwidth.",
+        "Script fixes from actually running it: transform/responsive demanded an API secret they never use; cloud_name was missing from the signature exclusion tuple; list_assets dropped next_cursor and silently truncated; delete hardcoded /image/destroy so video assets could not be deleted; --public-id was dropped for video uploads; no HTTP timeouts and a too-narrow except; CLOUDINARY_URL was neither percent-decoded nor validated (a missing secret became the literal string 'None' in the digest).",
+        "[CARRY] references/domain-checklist.md does not exist for this skill. Bootstrap one next cycle; its absence is why b_gen_fill and the space-encoding rule had no coverage contract to be checked against.",
+        "[CARRY] Deferred MINORs: the eager_transforms snippet in references/optimization-guide.md is not runnable as written (no indication of how eager/incoming reach the Upload API, and both must be in the signed params); l_watermark is an unmarked placeholder public_id; fl_layer_apply is never mentioned despite two layer recipes; f_auto:video sits in an image table.",
+        "Verified current, no change: SHA-1 default with signature_algorithm=sha256 available, the published worked example digest reproduces exactly, unsigned presets unchanged, Free 25 credits, Plus $99/$89 for 225 credits, Admin API 500/hr free and 2000/hr paid with HTTP 420, 30-day CDN max-age, company facts (2012, Petah Tikva, San Jose), npm cloudinary 2.10.1, PyPI cloudinary 1.46.0, @cloudinary/url-gen 1.22.0."
+      ]
+    },
+    {
       "version": "1.1.2",
       "date": "2026-07-06",
       "lessons": [

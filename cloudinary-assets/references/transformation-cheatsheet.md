@@ -66,7 +66,7 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 | e_background_removal | Background removal, built-in (no add-on subscription; not free, bills via special transformation counting) |
 | e_gen_remove:prompt_(text) | AI generative remove |
 | e_gen_replace:from_(a);to_(b) | AI generative replace |
-| e_gen_background_replace:prompt_(text) | AI generative background swap |
+| e_gen_background_replace:prompt_text | AI generative background swap. NOT parenthesized: prompt_(text) returns HTTP 500 General Error |
 | e_gen_restore | AI restore old/blurry/damaged photos |
 
 ## Overlays and Text
@@ -84,9 +84,9 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 
 | Parameter | Description |
 |-----------|-------------|
-| dpr_auto | Automatic device pixel ratio |
+| dpr_auto | Automatic device pixel ratio. NOT effective inside a named transformation (`t_*`); use it in the inline transformation string |
 | dpr_{1.0-5.0} | Manual DPR |
-| w_auto | Automatic width (needs client hints) |
+| w_auto | Automatic width (needs client hints). NOT effective inside a named transformation (`t_*`); use it in the inline transformation string |
 | fl_progressive | Progressive JPEG |
 | fl_lossy | Allow lossy for PNG/GIF |
 
@@ -128,7 +128,7 @@ l_watermark,w_200,o_50,g_south_east,x_10,y_10
 ```
 
 ### Hebrew Text Overlay
-URL-encode Hebrew characters and pick a Hebrew-capable built-in font: Heebo, Assistant, Rubik, David Libre, Frank Ruhl Libre, Suez One, Secular One.
+URL-encode Hebrew characters and pick a Hebrew-capable built-in font: Heebo, Assistant, Rubik, Frank Ruhl Libre, Suez One, Secular One. `David Libre` and `Noto Sans Hebrew` are NOT Cloudinary font families and return HTTP 400 `Unsupported font family`.
 ```
 # "שלום" in Heebo 40 bold, white, bottom of image
 l_text:Heebo_40_bold:%D7%A9%D7%9C%D7%95%D7%9D,co_white,g_south,y_30
@@ -136,7 +136,7 @@ l_text:Heebo_40_bold:%D7%A9%D7%9C%D7%95%D7%9D,co_white,g_south,y_30
 
 ### AI Generative Remove + Background Replace
 ```
-e_gen_remove:prompt_(person)/e_gen_background_replace:prompt_(modern office)
+e_gen_remove:prompt_(person)/e_gen_background_replace:prompt_modern%20office
 ```
 
 ## Video Transformations
@@ -161,7 +161,7 @@ https://res.cloudinary.com/{cloud}/video/upload/so_5,w_800,h_450,c_fill,q_auto,f
 
 ## Rate Limits
 
-The Free plan is rate-limited to 500 Admin API requests per hour and 25 monthly credits worth of transformations / storage / bandwidth (each credit equals 1,000 transformations or 1 GB storage or 1 GB net bandwidth, measured on a rolling 30-day window). Cloudinary's published Admin API doc states paid plans "begin at 2,000 requests per hour" and rise per tier; check the current pricing page or your plan dashboard for the exact limit on Plus, Advanced, and Enterprise tiers.
+The Free plan is rate-limited to 500 Admin API requests per hour and 25 monthly credits shared across transformations, storage and bandwidth (each credit equals 1,000 transformations or 1 GB managed storage or 1 GB IMAGE bandwidth; video bandwidth is 2 GB per credit and paid plans only). Cloudinary's published Admin API doc states paid plans "begin at 2,000 requests per hour" and rise per tier; check the current pricing page or your plan dashboard for the exact limit on Plus, Advanced, and Enterprise tiers.
 
 ## Environment Setup
 
