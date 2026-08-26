@@ -36,7 +36,11 @@ After running the pipeline you should see:
 2. Console: `Stripped sentence-end punctuation (. ? !) from N Hebrew line(s) for clean caption display.`
 3. File: `/tmp/test-he.captioned.mp4` exists and is ~1-2MB
 4. File: `/tmp/test-he.captioned.he.srt` exists with 1-3 cues of Hebrew text
-5. Frame check: open the MP4 at t=5s and the caption should show "שלום זאת בדיקה" (or similar) with Hebrew chars in source byte order LTR within each word, no period at the end of the line
+5. Frame check: open the MP4 at t=5s. The caption should show "שלום זאת בדיקה" (or similar) with **the pixel left-to-right order REVERSED relative to source byte order**: the first source word sits at the visual RIGHT, the last at the visual LEFT. No period at the end of the line.
+
+   **Pixel order matching source byte order is the failure, not the success.** That is the exact symptom of BiDi not being applied, which is the bug this whole skill exists to work around (see SKILL.md Step 6). Earlier versions of this file described the failure as the acceptance criterion.
+
+   If your test line starts with a Latin token, also confirm that token lands on the visual RIGHT. If it lands on the left, the pre-shape ran without `base_dir='R'`.
 
 If any of those fail, see Troubleshooting in the main SKILL.md.
 

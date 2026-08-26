@@ -11,12 +11,13 @@ Constants you can edit at the top of `scripts/captions-only.sh` to change behavi
 | `TAIL_THRESHOLD` | `10`s | Untranscribed tail width that triggers tail recovery | If the last transcribed word ends more than this before the video duration, treat the tail as a dropped chunk and re-transcribe it. Set to a high number (e.g. 600) to disable tail recovery if your source genuinely ends in silence (closing music, credits). |
 | `MAX_DISPLAY_SEC` | `7.0`s | Per-cue display cap | Prevents a single cue from lingering after speech ends. Raise to 10s for slower readers or accessibility audiences; lower to 5s for tighter visual rhythm. |
 
-## Scribe v1 vs v2 choice
+## Scribe model
 
-- **Full-video pass**: `scribe_v1`. More stable on long files, slightly cheaper, more conservative chunking.
-- **Each gap-recovery call**: `scribe_v2`. Better at isolated short segments where the speaker context is missing (no preceding words to anchor the language model).
+**There is no longer a choice.** `scribe_v1` was deprecated and removed on 9 July 2026; the only current models are `scribe_v2` and `scribe_v2_realtime`. Both the full-video pass and each gap-recovery call now send `scribe_v2`.
 
-Both are billed per second; v2 is not more expensive per ElevenLabs' May 2026 pricing. Don't swap them around without testing , the failure modes differ.
+Earlier versions of this file recommended `scribe_v1` for the main pass. That advice was dead from 9 July 2026 onward and left `captions-only.sh` unable to transcribe anything. If a future cycle sees a v1/v2 split anywhere in this skill, it is stale: check https://elevenlabs.io/docs/api-reference/speech-to-text/convert for the current `model_id` enum before restoring it.
+
+Scribe v2 is billed at $0.22 per hour of audio on the API rate card (see [pricing.md](pricing.md)).
 
 ## Punctuation stripping (Step 0 of `burn-hebrew-captions.sh`)
 
@@ -37,7 +38,7 @@ Every successful run writes two artifacts:
 
 | Flag | Effect |
 |---|---|
-| `--strip-fillers` | Remove ALWAYS-FILLER Hebrew tokens (אה, אהה, אם, וואלה when standalone, etc.) from caption text. Audio is untouched. |
+| `--strip-fillers` | Remove ALWAYS-FILLER Hebrew tokens from caption text. Audio is untouched. The set is exactly `אֶה, אה, אֶמ, אממ, אמממ, אהמ, המ, ממ` (see `hebrew-filler-words.md`). **`אם` is deliberately NOT in it**, it means "if/whether" and auto-cutting it silently changes meaning; `וואלה` is context-dependent and is not auto-cut either. Do not add either one back. |
 | `--yes` | Skip the cost-confirmation prompt. Useful in CI / batch / scripted runs. |
 | `--output PATH` | Override the default `<input>.captioned.<ext>` output path. |
 | `--ffmpeg PATH` | Override the `ffmpeg` binary (e.g. `/tmp/ffmpeg` for the static evermeet build on macOS, where Homebrew ffmpeg often lacks libass). |

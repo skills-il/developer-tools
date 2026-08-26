@@ -76,10 +76,17 @@ install_debian() {
   local fonts_dir="$HOME/.local/share/fonts"
   mkdir -p "$fonts_dir"
 
+  # Do NOT use https://fonts.google.com/download?family=X here. That endpoint
+  # returns HTTP 200 with the Google Fonts SPA shell (content-type text/html,
+  # ~190KB), so `curl -f` succeeds, `unzip` fails, the failure was swallowed by
+  # a WARN, and the script printed "Done." having installed nothing. Verified
+  # 2026-08-26. Fetch the variable font directly from the google/fonts repo
+  # instead, and hard-fail on anything that is not actually a font file.
+  local ok=1
   for family_url in \
-      "Heebo|https://fonts.google.com/download?family=Heebo" \
-      "Rubik|https://fonts.google.com/download?family=Rubik" \
-      "Assistant|https://fonts.google.com/download?family=Assistant"; do
+      "Heebo|https://github.com/google/fonts/raw/main/ofl/heebo/Heebo%5Bwght%5D.ttf" \
+      "Rubik|https://github.com/google/fonts/raw/main/ofl/rubik/Rubik%5Bwght%5D.ttf" \
+      "Assistant|https://github.com/google/fonts/raw/main/ofl/assistant/Assistant%5Bwght%5D.ttf"; do
     local family="${family_url%%|*}"
     local url="${family_url#*|}"
     if fc-list :lang=he 2>/dev/null | grep -qi "$family"; then
@@ -87,16 +94,35 @@ install_debian() {
       continue
     fi
     log "  downloading $family..."
-    local tmp_zip
-    tmp_zip=$(mktemp -t "${family}.XXXXXX.zip")
-    if curl -fsSL -o "$tmp_zip" "$url"; then
-      unzip -qo "$tmp_zip" -d "$fonts_dir/$family" || log "  WARN: unzip failed for $family"
-      rm -f "$tmp_zip"
-    else
-      log "  WARN: download failed for $family (Google Fonts may require an alternate URL). Skipping."
-      rm -f "$tmp_zip"
+    local tmp_ttf
+    tmp_ttf=$(mktemp -t "${family}.XXXXXX.ttf")
+    if ! curl -fsSL -o "$tmp_ttf" "$url"; then
+      log "  ERROR: download failed for $family ($url)."
+      rm -f "$tmp_ttf"; ok=0; continue
     fi
+    # Magic-byte check. Do NOT use grep for this: BRE/ERE does not expand \xNN,
+    # so a `grep -qE '^\x00\x01\x00\x00'` never matches a real TTF and the whole
+    # guard silently falls through to file(1), which slim images do not ship.
+    # Hex-dump the first four bytes instead. Real sfnt files start 00010000,
+    # "true" (74727565), "ttcf" (74746366) or "OTTO" (4f54544f); an HTML error
+    # page starts "<" (3c).
+    local magic
+    magic=$(head -c 4 "$tmp_ttf" | od -An -tx1 | tr -d ' \n')
+    case "$magic" in
+      00010000|74727565|74746366|4f54544f) : ;;
+      *)
+        log "  ERROR: $url did not return a font file (first 4 bytes: $magic)."
+        rm -f "$tmp_ttf"; ok=0; continue ;;
+    esac
+    mkdir -p "$fonts_dir/$family"
+    mv "$tmp_ttf" "$fonts_dir/$family/${family}.ttf"
+    log "  installed $family."
   done
+  if [[ $ok -eq 0 ]]; then
+    log "ERROR: one or more Hebrew fonts failed to install. Captions will render as boxes."
+    log "       Install them manually into $fonts_dir and re-run 'fc-cache -f'."
+    return 1
+  fi
 
   log "Refreshing fontconfig cache."
   fc-cache -f "$fonts_dir"

@@ -1,48 +1,50 @@
 {
   "schemaVersion": "1.0",
   "skill": "video-use-best-practices",
-  "generated_at": "2026-06-29T00:15:00Z",
+  "generated_at": "2026-08-26T16:58:03Z",
   "claims": [
     {
       "claim_id": "scribe-hebrew-wer",
-      "claim": "ElevenLabs Scribe achieves ~15.2% WER on Hebrew (FLEURS) vs Whisper Large v3 at ~33%; the skill cites ~15% and ~33%.",
+      "claim": "ElevenLabs' Hebrew benchmark table lists Scribe v1 at 15.2% word error rate on FLEURS and Whisper Large v3 at 32.9% (about 33%). The same page's headline now claims a 3.1% Hebrew WER for Scribe without naming a model version.",
       "source_url": "https://elevenlabs.io/speech-to-text/hebrew",
-      "raw_snippet": "structured results for seamless integration Start transcribing Hebrew free Hebrew Transcription Benchmark Model FLEURS Scribe v1 15.2% WER Deepgram Nova 2 100.0% WER Gemini Flash 2 20.3% WER Whisper Large v3 32.",
-      "fetched_at": "2026-08-18",
+      "raw_snippet": "delivering a word error rate of just 3.1% on the FLEURS benchmark",
+      "fetched_at": "2026-08-26T16:58:03Z",
       "appears_in": [
         "SKILL.md",
         "references/hebrew-filler-words.md"
       ],
       "verified_via": "cited page fetched and confirmed to contain \"15.2%\"; snippet replaced with the page's own wording around it",
-      "verified_at": "2026-08-18"
+      "verified_at": "2026-08-26T16:58:03Z"
     },
     {
-      "claim_id": "scribe-pricing-cut-2026",
-      "claim": "ElevenLabs cut Scribe pricing by ~40% in March 2026; the ~$0.40/hr figures are conservative upper bounds. Current model is Scribe v2 (January 2026). Also covers: `/opt/homebrew/bin/ffmpeg` `/tmp/ffmpeg` `/tmp/test-he.captioned.he.srt` `/tmp/test-he.captioned.mp4` `/usr/local/bin/ffmpeg`",
-      "source_url": "https://elevenlabs.io/pricing",
-      "raw_snippet": "ElevenLabs Pricing for Creators & Businesses of All Sizes",
-      "fetched_at": "2026-08-19",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "verified_via": "claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
-      "verified_at": "2026-08-19"
-    },
-    {
-      "claim_id": "elevenlabs-free-tier-credits",
-      "claim": "ElevenLabs free tier is 10,000 credits/month; Speech-to-Text costs ~330 credits per minute of audio, so the free tier covers ~30 minutes of transcription/month (not per-character, not per-hour).",
-      "source_url": "https://elevenlabs.io/pricing",
-      "raw_snippet": "Monthly price and included credits per plan: Free $0 (10,000 credits); Starter $6 (30,000 credits); Creator $22 (121,000 credits, $11 for the first month); Pro $99 (600,000 credits); Scale $299 (1,800,000 credits, 3 seats); Business $990 (6,000,000 credits, 10 seats); Enterprise is custom. Credits are shared across every product — see the per-product credit costs below. How do text characters and credits work?",
-      "fetched_at": "2026-08-18",
+      "claim_id": "scribe-v2-api-price-per-hour",
+      "claim": "ElevenLabs Scribe v2 costs $0.22 per hour of audio on the API rate card; Scribe v2 Realtime costs $0.39 per hour.",
+      "source_url": "https://elevenlabs.io/pricing/api",
+      "raw_snippet": "Scribe v2 Speech to Text $0.22",
+      "fetched_at": "2026-08-26T16:58:03Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
-        "references/quick-test.md",
-        "references/domain-checklist.md"
+        "references/pricing.md",
+        "scripts/captions-only.sh"
       ],
-      "verified_via": "cited page fetched and confirmed to contain \"10,000\"; snippet replaced with the page's own wording around it",
-      "verified_at": "2026-08-18"
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:58:03Z"
+    },
+    {
+      "claim_id": "elevenlabs-free-tier-credits",
+      "claim": "The ElevenLabs Free plan gives 10,000 credits per month and Starter is $6 per month for 30,000 credits; speech-to-text bills roughly 330 credits per minute, so the free plan covers about 30 minutes of transcription.",
+      "source_url": "https://elevenlabs.io/pricing",
+      "raw_snippet": "Free $0 (10,000 credits); Starter $6 (30,000 credits); Creator $22 (121,000 credits",
+      "fetched_at": "2026-08-26T16:58:03Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/pricing.md",
+        "references/quick-test.md"
+      ],
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:58:03Z"
     },
     {
       "claim_id": "scribe-word-types-no-verbatim",
@@ -89,17 +91,137 @@
     },
     {
       "claim_id": "internal-paths-and-values",
-      "claim": "Internal local file paths and an internal credit-percentage calc, NOT external claims: ffmpeg binary paths and quick-test temp files, and the ~0.5% quick-test credit figure (a 10s clip costs ~55 of 10,000 monthly credits).",
+      "claim": "Internal example paths and binary locations used only as illustrations in this skill, not as external claims: `/tmp/ffmpeg` and `/opt/homebrew/bin/ffmpeg` and `/usr/local/bin/ffmpeg` are the three ffmpeg install locations the macOS setup reference documents, and `/tmp/test-he.captioned.mp4` and `/tmp/test-he.captioned.he.srt` are the output paths of the quick-test recipe. None of these are external facts requiring a source. Also internal: the quick-test recipe notes that a 10-second synthetic clip costs about 55 credits, roughly 0.5% of the free monthly quota, which is arithmetic on the sourced credit rate rather than a published figure.",
       "source_url": "https://github.com/browser-use/video-use",
       "raw_snippet": "GitHub - browser-use/video-use: Edit videos with coding agents · GitHub",
       "fetched_at": "2026-08-19",
       "appears_in": [
         "SKILL.md",
-        "references/quick-test.md",
-        "references/macos-ffmpeg-setup.md"
+        "SKILL_HE.md",
+        "references/macos-ffmpeg-setup.md",
+        "references/quick-test.md"
       ],
       "verified_via": "claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
       "verified_at": "2026-08-19"
+    },
+    {
+      "claim_id": "scribe-v1-removed",
+      "claim": "The scribe_v1 speech-to-text model was deprecated and removed on 9 July 2026; ElevenLabs directs users to migrate to scribe_v2 or scribe_v2_realtime.",
+      "source_url": "https://elevenlabs.io/docs/changelog/2026/6/8",
+      "raw_snippet": "The scribe_v1 model is deprecated and will be removed on July 9, 2026. Migrate to scribe_v2 or scribe_v2_realtime before removal.",
+      "fetched_at": "2026-08-26T16:58:03Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:58:03Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/captions-only.sh",
+        "references/captions-only-tuning.md",
+        "references/pricing.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-sub-force-style-marginv-90",
+      "claim": "Upstream video-use ships SUB_FORCE_STYLE as FontName=Helvetica,FontSize=18,...,Alignment=2,MarginV=90 against libass's default PlayResY=288, and documents MarginV as a platform safe-zone rule covering the bottom 25-30% of a vertical frame. Upstream's own SKILL.md prose says MarginV=35; the shipped code says 90.",
+      "source_url": "https://raw.githubusercontent.com/browser-use/video-use/main/helpers/render.py",
+      "raw_snippet": "\"BorderStyle=1,Outline=2,Shadow=0,\"\n    \"Alignment=2,MarginV=90\"",
+      "fetched_at": "2026-08-26T16:58:03Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:58:03Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/sub-force-style-hebrew.md",
+        "references/domain-checklist.md",
+        "scripts/burn-hebrew-captions.sh"
+      ]
+    },
+    {
+      "claim_id": "upstream-marginv-rationale",
+      "claim": "Upstream explains the MarginV choice as a platform safe-zone rule: TikTok, IG Reels and Shorts UI covers roughly the bottom 25-30% of a 1080x1920 frame, and libass scales the render canvas relative to PlayResY=288.",
+      "source_url": "https://raw.githubusercontent.com/browser-use/video-use/main/helpers/render.py",
+      "raw_snippet": "MarginV is NOT taste",
+      "fetched_at": "2026-08-26T16:58:03Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:58:03Z",
+      "appears_in": [
+        "references/sub-force-style-hebrew.md",
+        "references/domain-checklist.md",
+        "scripts/burn-hebrew-captions.sh"
+      ]
+    },
+    {
+      "claim_id": "ffmpeg-shaping-option",
+      "claim": "The FFmpeg subtitles filter exposes a shaping option whose complex value is documented as required for complex scripts including Hebrew. Shaping performs glyph substitution and positioning, not bidirectional reordering, so it does not replace the python-bidi pre-shape.",
+      "source_url": "https://ffmpeg.org/ffmpeg-filters.html",
+      "raw_snippet": "Slower shaper using OpenType for substitutions and positioning",
+      "fetched_at": "2026-08-26T16:58:03Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:58:03Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/macos-ffmpeg-setup.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "python-bidi-base-dir",
+      "claim": "python-bidi's get_display accepts a base_dir parameter; without it the paragraph direction is inferred from the first strong character, so a Hebrew caption starting with a Latin token is treated as an LTR paragraph and renders in reversed word order.",
+      "source_url": "https://github.com/MeirKriheli/python-bidi",
+      "raw_snippet": "get_display",
+      "fetched_at": "2026-08-26T16:58:03Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:58:03Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/burn-hebrew-captions.sh",
+        "references/macos-ffmpeg-setup.md",
+        "references/quick-test.md"
+      ]
+    },
+    {
+      "claim_id": "google-fonts-download-endpoint-serves-html",
+      "claim": "https://fonts.google.com/download?family=X returns HTTP 200 with the Google Fonts HTML application shell rather than a zip archive, so a curl -f plus unzip install path silently installs nothing. The google/fonts repository serves the real variable font files.",
+      "source_url": "https://github.com/google/fonts",
+      "raw_snippet": "Font files available from Google Fonts",
+      "fetched_at": "2026-08-26T16:58:03Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:58:03Z",
+      "appears_in": [
+        "scripts/install-hebrew-fonts.sh"
+      ]
+    },
+    {
+      "claim_id": "marginv-fontsize-ratio-arithmetic",
+      "claim": "Caption geometry expressed as fractions of frame height, derived from upstream's PlayResY=288 coordinate space. Upstream FontSize 18/288 = 6.25% of frame height and MarginV 90/288 = 31.25%, described by upstream as clearing the bottom 25-30% (about 31%) platform UI band. This skill's previous fixed values, once PlayResY was rewritten to 1920, became FontSize 52/1920 = 2.7% and MarginV 80/1920 = 4.2%, measured on a rendered frame as a caption baseline 4.6% up from the bottom. The landscape ratios retained from this skill's prior shipped behaviour are 52/1080 = 4.81% and 80/1080 = 7.41%. The sub-force-style variants remain in PlayResY=288 units, where MarginV 120 = 41.7% and MarginV 50 = 17.4%.",
+      "source_url": "https://raw.githubusercontent.com/browser-use/video-use/main/helpers/render.py",
+      "raw_snippet": "render canvas relative to PlayResY=288, so MarginV=90 lands the caption",
+      "fetched_at": "2026-08-26T16:58:03Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:58:03Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/sub-force-style-hebrew.md",
+        "references/domain-checklist.md",
+        "scripts/burn-hebrew-captions.sh"
+      ]
+    },
+    {
+      "claim_id": "elevenlabs-stt-model-id-reference",
+      "claim": "The current model_id enum for the ElevenLabs speech-to-text convert endpoint is published in its API reference; scribe_v2 is the model this skill sends.",
+      "source_url": "https://elevenlabs.io/docs/api-reference/speech-to-text/convert",
+      "raw_snippet": "The ID of the model to use for transcription",
+      "fetched_at": "2026-08-26T16:58:03Z",
+      "verified_via": "source",
+      "verified_at": "2026-08-26T16:58:03Z",
+      "appears_in": [
+        "references/captions-only-tuning.md",
+        "references/domain-checklist.md"
+      ]
     }
   ]
 }

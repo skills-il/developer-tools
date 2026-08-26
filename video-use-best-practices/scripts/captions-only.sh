@@ -13,7 +13,11 @@
 #                         (no audio cuts, just words you don't see).
 #   --output PATH         Output path (default: <video>.captioned.<ext>)
 #   --font NAME           Caption font (default: Heebo)
-#   --font-size N         Font size in ASS PlayRes units (default: 52)
+#   --font-size N         Font size in output pixels. Default "auto": scaled
+#                         from the video height by burn-hebrew-captions.sh.
+#   --margin-v N          Bottom margin in output pixels. Default "auto", same.
+#   --fontsdir PATH       Font directory passed to libass. Default is per-platform
+#                         (~/Library/Fonts on macOS, ~/.local/share/fonts elsewhere).
 #   --ffmpeg PATH         Path to ffmpeg with libass (default: ffmpeg on PATH)
 #   --keep-work           Don't delete temp work directory after success
 #   --yes                 Skip the cost confirmation prompt (for unattended/CI runs)
@@ -40,8 +44,13 @@ VIDEO=""
 OUTPUT=""
 STRIP_FILLERS=0
 FONT="Heebo"
-# Default FontSize is in absolute pixels, 52 suits ~1080p; lower to ~26-36 for 720p, raise to 56-72 for 4K.
-FONTSIZE=52
+# "auto" hands the decision to burn-hebrew-captions.sh, which derives font size
+# and bottom margin as ratios of the probed frame height. Do NOT restore a fixed
+# default here: passing an absolute --font-size unconditionally is what silently
+# defeated the ratio scaling and left portrait captions at 2.7% of frame height.
+FONTSIZE="auto"
+MARGINV="auto"
+FONTSDIR=""      # empty = let burn-hebrew-captions.sh pick the per-platform default
 FFMPEG="ffmpeg"
 KEEP_WORK=0
 ASSUME_YES=0
@@ -51,6 +60,8 @@ while [[ $# -gt 0 ]]; do
     --strip-fillers) STRIP_FILLERS=1; shift ;;
     --font) FONT="$2"; shift 2 ;;
     --font-size) FONTSIZE="$2"; shift 2 ;;
+    --margin-v) MARGINV="$2"; shift 2 ;;
+    --fontsdir) FONTSDIR="$2"; shift 2 ;;
     --output) OUTPUT="$2"; shift 2 ;;
     --ffmpeg) FFMPEG="$2"; shift 2 ;;
     --keep-work) KEEP_WORK=1; shift ;;
@@ -86,7 +97,7 @@ trap cleanup EXIT
 log "Source video:  $VIDEO"
 log "Output:        $OUTPUT"
 log "Work dir:      $WORKDIR"
-log "Font:          $FONT @ ${FONTSIZE}pt"
+log "Font:          $FONT @ ${FONTSIZE} (auto = scaled from video height)"
 log "Strip fillers: $([[ $STRIP_FILLERS -eq 1 ]] && echo "yes (ALWAYS-FILLER tokens dropped from SRT)" || echo "no")"
 
 EL_KEY="${ELEVENLABS_API_KEY:-}"
@@ -105,22 +116,40 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 BURN_SCRIPT="${SCRIPT_DIR}/burn-hebrew-captions.sh"
 [[ ! -f "$BURN_SCRIPT" ]] && { log "ERROR: burn-hebrew-captions.sh not found alongside this script at $BURN_SCRIPT"; exit 1; }
 
+# FFPROBE must be assigned unconditionally: it is used again at Step 4, and
+# leaving it unset made the script die under `set -u` AFTER the paid Scribe
+# call had already gone out. Without a duration we also cannot price the run,
+# and silently skipping the billing confirmation is not acceptable, so abort.
 DURATION_SEC=0
-if command -v ffprobe >/dev/null 2>&1 || [[ -x "${FFMPEG%ffmpeg}ffprobe" ]]; then
-  FFPROBE="${FFMPEG%ffmpeg}ffprobe"
-  [[ ! -x "$FFPROBE" ]] && FFPROBE="ffprobe"
+FFPROBE="${FFMPEG%ffmpeg}ffprobe"
+[[ -x "$FFPROBE" ]] || FFPROBE="ffprobe"
+if command -v "$FFPROBE" >/dev/null 2>&1; then
   DURATION_SEC=$("$FFPROBE" -v error -show_entries format=duration -of csv=p=0 "$VIDEO" 2>/dev/null | cut -d. -f1)
+fi
+if [[ -z "$DURATION_SEC" || "$DURATION_SEC" -le 0 ]]; then
+  log "ERROR: could not determine video duration (ffprobe missing or unreadable input)."
+  log "       Refusing to bill your ElevenLabs account without showing you the cost first."
+  log "       Install ffprobe (see references/macos-ffmpeg-setup.md) or pass --ffmpeg <path>."
+  exit 1
 fi
 if [[ -n "$DURATION_SEC" ]] && [[ "$DURATION_SEC" -gt 0 ]]; then
   MIN=$((DURATION_SEC / 60))
-  COST_CENTS=$(( DURATION_SEC * 40 / 3600 ))
+  # 22 = ElevenLabs Scribe v2 list price in cents per hour of audio.
+  # Keep this in sync with SKILL.md; check https://elevenlabs.io/pricing/api
+  COST_CENTS=$(( DURATION_SEC * 22 / 3600 ))
   COST_STR="\$0.$(printf '%02d' $COST_CENTS)"
   [[ $COST_CENTS -gt 99 ]] && COST_STR="\$$(($COST_CENTS / 100)).$(printf '%02d' $((COST_CENTS % 100)))"
-  log "Duration: ${MIN} minutes. Estimated Scribe cost: ~${COST_STR}"
+  # Quote BOTH rails. A free/Starter user is metered in credits, not dollars, so
+  # "~$0.03" reads as free while actually consuming a third of their month.
+  CREDITS=$(( DURATION_SEC * 330 / 60 ))
+  FREE_PCT=$(( CREDITS * 100 / 10000 ))
+  log "Duration: ${MIN} minutes. Estimated Scribe cost: ~${COST_STR} on the API rate,"
+  log "  or ~${CREDITS} credits (~${FREE_PCT}% of the 10,000-credit free monthly allowance) on a subscription."
+  log "  Gap recovery may add further billed calls beyond this estimate."
 
   # Cost confirmation gate (skipped with --yes)
   if [[ $ASSUME_YES -eq 0 ]]; then
-    printf '[captions-only] Proceed and bill your ElevenLabs account ~%s? [y/N] ' "${COST_STR}"
+    printf '[captions-only] Proceed and bill your ElevenLabs account ~%s (or ~%s credits)? [y/N] ' "${COST_STR}" "${CREDITS}"
     read -r CONFIRM
     case "$CONFIRM" in
       y|Y|yes|YES) ;;
@@ -132,7 +161,7 @@ fi
 log "Step 1: Transcribing with ElevenLabs Scribe (no_verbatim=false, language_code=heb)"
 HTTP_CODE=$(curl -sS -o "${WORKDIR}/scribe.json" -w '%{http_code}' \
   -H "xi-api-key: $EL_KEY" \
-  -F "model_id=scribe_v1" \
+  -F "model_id=scribe_v2" \
   -F "language_code=heb" \
   -F "tag_audio_events=false" \
   -F "diarize=false" \
@@ -341,13 +370,15 @@ cp "${WORKDIR}/captions.srt" "$SRT_OUT"
 log "Step 3a: Exported soft-caption SRT to $SRT_OUT"
 
 log "Step 3b: Burning captions onto ${VIDEO}"
-bash "$BURN_SCRIPT" \
-  --base "$VIDEO" \
-  --srt "${WORKDIR}/captions.srt" \
-  --out "$OUTPUT" \
-  --font "$FONT" \
-  --font-size "$FONTSIZE" \
-  --ffmpeg "$FFMPEG"
+# Only forward --font-size / --margin-v when the user actually set them.
+# Forwarding "auto" values would override the burn script's height-based ratios.
+BURN_ARGS=(--base "$VIDEO" --srt "${WORKDIR}/captions.srt" --out "$OUTPUT" --font "$FONT" --ffmpeg "$FFMPEG")
+# Use `if`, not `[[ ]] && ...`: under `set -e` a false test is a non-zero
+# compound and would abort the script right before the burn step.
+if [[ "$FONTSIZE" != "auto" ]]; then BURN_ARGS+=(--font-size "$FONTSIZE"); fi
+if [[ "$MARGINV"  != "auto" ]]; then BURN_ARGS+=(--margin-v  "$MARGINV");  fi
+if [[ -n "$FONTSDIR"          ]]; then BURN_ARGS+=(--fontsdir  "$FONTSDIR"); fi
+bash "$BURN_SCRIPT" "${BURN_ARGS[@]}"
 
 log ""
 log "Done."

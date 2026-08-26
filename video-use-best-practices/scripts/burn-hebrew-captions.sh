@@ -14,7 +14,7 @@
 #   2. Convert pre-shaped SRT to ASS via ffmpeg
 #   3. Patch ASS: PlayResX/Y to match output resolution, Heebo style with proper spacing
 #   4. Burn captions onto the base video with explicit fontsdir
-#   5. Sample 3 frames for visual self-verification
+#   5. Sample frames for visual self-verification (1/minute, min 3, max 30)
 #
 # Usage:
 #   burn-hebrew-captions.sh \
@@ -23,9 +23,9 @@
 #     --out  <path/to/final.mp4> \
 #     [--font Heebo] \
 #     [--fontsdir $HOME/Library/Fonts] \
-#     [--font-size 52] \
+#     [--font-size N]     # default "auto": scaled from frame height
 #     [--spacing 2] \
-#     [--margin-v 80] \
+#     [--margin-v N]      # default "auto": scaled from frame height
 #     [--ffmpeg /tmp/ffmpeg]   # static evermeet build path (default: ffmpeg on PATH)
 #
 # Requires: ffmpeg with libass + fontconfig (Homebrew ffmpeg often lacks these on macOS;
@@ -34,10 +34,16 @@
 set -euo pipefail
 
 FONT="Heebo"
-FONTSDIR="$HOME/Library/Fonts"
-FONTSIZE="52"
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  FONTSDIR="$HOME/Library/Fonts"
+else
+  FONTSDIR="$HOME/.local/share/fonts"   # where install-hebrew-fonts.sh puts them on Debian
+fi
+# "auto" scales off the probed video height, see the ratio block after the probe.
+# Pass an explicit number to --font-size / --margin-v to override.
+FONTSIZE="auto"
 SPACING="2"
-MARGINV="80"
+MARGINV="auto"
 FFMPEG="ffmpeg"
 
 BASE=""
@@ -103,7 +109,59 @@ fi
 [[ -z "$BASE_W" || -z "$BASE_H" ]] && { log "ERROR: could not probe base resolution"; exit 1; }
 log "Base resolution: ${BASE_W}x${BASE_H}"
 
+# ---------------------------------------------------------------------------
+# Font size and bottom margin are RATIOS of the frame height, not fixed pixels.
+#
+# Why this is not cosmetic. Step 3 below rewrites `PlayResY: 288` to the real
+# video height, which changes the unit MarginV is expressed in. Upstream
+# video-use ships `Alignment=2,MarginV=90` against libass default PlayResY=288,
+# i.e. 31.25% of frame height, and helpers/render.py explains why: "TikTok /
+# IG Reels / Shorts UI ... covers roughly the bottom ~25-30% of a 1080x1920
+# frame ... Do not drop this below ~75 without a specific reason."
+#
+# Carrying a fixed MarginV=80 into 1920-tall coordinates silently turned that
+# 31.25% into 4.2%. Measured on a 1080x1920 render: the caption baseline sat
+# 89px from the bottom, 4.6% of frame height, i.e. buried inside the platform
+# UI band that upstream value exists to clear. Font size collapsed the same
+# way: 52/1920 is 2.7% against upstream 18/288 = 6.25%.
+#
+# Portrait uses upstream ratios directly, since the stated rationale is
+# vertical-platform UI. Landscape keeps this script previously shipping
+# effective ratios (52/1080 and 80/1080), because a lecture, webinar or 4:5 feed post has
+# YouTube has no bottom action rail and a 31% margin would float the captions
+# into the middle of the frame.
+# ---------------------------------------------------------------------------
+# Upstream's 31.25% safe zone is specifically about the full-screen 9:16 player
+# UI. A 4:5 Instagram feed post (1080x1350) is taller than it is wide but has no
+# in-frame action rail, and a 31% margin would float its captions into the middle
+# third. Test for an aspect at least as tall as 9:16 rather than merely portrait.
+if [[ $(( BASE_H * 9 )) -ge $(( BASE_W * 16 )) ]]; then
+  ORIENTATION="portrait 9:16"
+  FONT_RATIO_NUM=625;   FONT_RATIO_DEN=10000     # 18/288, upstream proven size
+  MARGIN_RATIO_NUM=3125; MARGIN_RATIO_DEN=10000  # 90/288, upstream safe zone
+else
+  ORIENTATION="standard (not 9:16)"
+  FONT_RATIO_NUM=481;   FONT_RATIO_DEN=10000     # 52/1080, previously shipped
+  MARGIN_RATIO_NUM=741;  MARGIN_RATIO_DEN=10000  # 80/1080, previously shipped
+fi
+[[ "$FONTSIZE" == "auto" ]] && FONTSIZE=$(( BASE_H * FONT_RATIO_NUM / FONT_RATIO_DEN ))
+[[ "$MARGINV"  == "auto" ]] && MARGINV=$(( BASE_H * MARGIN_RATIO_NUM / MARGIN_RATIO_DEN ))
+# Outline, letter spacing and side margins live in the SAME rewritten coordinate
+# space as FontSize, so leaving them at fixed pixels reintroduces the unit bug at
+# a smaller scale: an Outline of 4px against a 120px font is a third of the
+# relative stroke upstream ships (Outline=2 against FontSize=18, i.e. 11%).
+OUTLINE_PX=$(( FONTSIZE * 11 / 100 ))
+[[ $OUTLINE_PX -lt 1 ]] && OUTLINE_PX=1
+SPACING_PX=$(( FONTSIZE * SPACING / 52 ))
+[[ $SPACING_PX -lt 1 ]] && SPACING_PX=1
+MARGIN_H=$(( BASE_W * 37 / 1000 ))   # 40/1080, the side gutter this script has always shipped
+log "Orientation: ${ORIENTATION}. Font ${FONTSIZE}px, bottom margin ${MARGINV}px, outline ${OUTLINE_PX}px, side margin ${MARGIN_H}px (frame ${BASE_W}x${BASE_H})."
+
 WORKDIR=$(dirname "$OUT")
+# Step 0 sanitizes into a WORKDIR copy. It used to write back over the file the
+# caller passed to --srt, so the documented one-line invocation silently rewrote
+# video-use's own master.srt, a paid, non-recreatable Scribe artifact.
+CLEAN_SRT="${WORKDIR}/.clean_$(basename "$SRT")"
 BIDI_SRT="${WORKDIR}/.bidi_$(basename "$SRT")"
 RAW_ASS="${WORKDIR}/.raw_$(basename "${SRT%.srt}.ass")"
 PATCHED_ASS="${WORKDIR}/$(basename "${SRT%.srt}.bidi.ass")"
@@ -160,7 +218,10 @@ if punct_stripped > 0:
     print(f'  Stripped sentence-end punctuation (. ? !) from {punct_stripped} Hebrew line(s) for clean caption display.')
 
 # Now scan for remaining suspicious characters
-allowed = re.compile(r'[֐-׿a-zA-Z0-9\s.,!?\'"()\\[\\]:;\\-–,’>﻿]')
+# Percent, slash, plus, ampersand and friends are ordinary caption content
+# (הנחה של 15%, dates like 3/4). They were absent from this class, so every
+# price or date line produced a false "may render as boxes" warning.
+allowed = re.compile(r'[֐-׿a-zA-Z0-9\s.,!?\'"()\\[\\]:;\\-–,’>%/+=&#@*_₪﻿]')
 suspicious = []
 for ln_num, line in enumerate(content.split('\n'), 1):
     if '-->' in line or re.match(r'^\d+\$', line.strip()): continue
@@ -178,24 +239,43 @@ if suspicious:
 elif fixed_count == 0 and punct_stripped == 0:
     print(f'  Clean. No changes needed.')
 
-# Write back the sanitized version
-with open('${SRT}', 'w', encoding='utf-8') as f:
+# Write the sanitized version to a WORKDIR copy. NEVER write back over
+# '${SRT}': that is the caller's file and may be video-use's master transcript.
+with open('${CLEAN_SRT}', 'w', encoding='utf-8') as f:
     f.write('﻿' + content.lstrip('﻿'))
 PYEOF
 
 # Step 1: Pre-shape SRT with python-bidi
+# The pre-shape exists because libass on macOS does not apply BiDi reordering to
+# SRT-derived events. It is validated on macOS only. On a libass build that DOES
+# reorder, feeding it display-order text reverses it a second time and every
+# Hebrew caption comes out backwards, with no error. Warn rather than guess, and
+# tell the operator exactly what to look at.
+if [[ "$(uname -s)" != "Darwin" ]]; then
+  log "  NOTE: the python-bidi pre-shape is validated on macOS, where libass does not"
+  log "        reorder SRT BiDi. This looks like $(uname -s). If your libass DOES reorder,"
+  log "        the pre-shape double-reverses and captions render backwards."
+  log "        Check the verification frames in Step 5 before rendering anything long:"
+  log "        the FIRST word of each source line must appear at the visual RIGHT."
+fi
 log "Step 1: Pre-shaping Hebrew with python-bidi (logical -> display order)"
 python3 <<PYEOF
 import re
 from bidi.algorithm import get_display
 
-src = open('${SRT}', encoding='utf-8-sig').read()  # strip leading BOM if present
+src = open('${CLEAN_SRT}', encoding='utf-8-sig').read()  # sanitized copy, not the caller's file
 out_lines = []
 for line in src.split('\n'):
     if re.match(r'^\d+$', line.strip()) or '-->' in line or line.strip() == '':
         out_lines.append(line)
     else:
-        out_lines.append(get_display(line))
+        # base_dir='R' is load-bearing. Without it python-bidi infers the
+        # paragraph direction from the first strong character, so any caption
+        # that STARTS with a Latin token ("React הוא מעולה", "ChatGPT משנה...")
+        # is treated as an LTR paragraph and comes out in reversed word order.
+        # Measured: get_display("React הוא מעולה") puts React leftmost;
+        # with base_dir='R' it is rightmost, which is correct for a Hebrew line.
+        out_lines.append(get_display(line, base_dir='R'))
 # Write WITH UTF-8 BOM for downstream libass compatibility
 with open('${BIDI_SRT}', 'w', encoding='utf-8') as f:
     f.write('﻿' + '\n'.join(out_lines))
@@ -209,9 +289,26 @@ log "Step 2: Converting pre-shaped SRT to ASS"
 # Step 3: Patch ASS - PlayRes to match output, Heebo style with Spacing
 log "Step 3: Patching ASS (PlayRes=${BASE_W}x${BASE_H}, Font=${FONT} ${FONTSIZE}, Spacing=${SPACING}, MarginV=${MARGINV})"
 python3 <<PYEOF
-src = open('${RAW_ASS}').read()
-src = src.replace('PlayResX: 384', 'PlayResX: ${BASE_W}')
-src = src.replace('PlayResY: 288', 'PlayResY: ${BASE_H}')
+import sys
+src = open('${RAW_ASS}', encoding='utf-8').read()
+# The style values below are in OUTPUT-PIXEL units, which is only true once
+# PlayRes has been rewritten to the real frame size. If ffmpeg ever emits a
+# different default canvas, or omits PlayRes entirely (libass then assumes 288),
+# a font size of ${FONTSIZE} would be interpreted against 288 and the caption
+# would render off-frame. Fail loudly instead of rendering garbage.
+n_x = src.count('PlayResX: 384')
+n_y = src.count('PlayResY: 288')
+if n_y != 1:
+    if 'PlayResY:' in src:
+        sys.exit('ERROR: unexpected PlayResY in generated ASS; expected exactly one "PlayResY: 288". '
+                 'Style values are in output-pixel units and would be misinterpreted. Aborting.')
+    # No PlayRes header at all: insert one so libass does not fall back to 288.
+    src = src.replace('[Script Info]', '[Script Info]\nPlayResX: ${BASE_W}\nPlayResY: ${BASE_H}', 1)
+    if 'PlayResY: ${BASE_H}' not in src:
+        sys.exit('ERROR: generated ASS has no [Script Info] section to add PlayRes to. Aborting.')
+else:
+    src = src.replace('PlayResX: 384', 'PlayResX: ${BASE_W}')
+    src = src.replace('PlayResY: 288', 'PlayResY: ${BASE_H}')
 # Build the V4+ Style line in canonical order:
 # Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour,
 # Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle,
@@ -220,9 +317,9 @@ new_style = (
     'Style: Default,${FONT},${FONTSIZE},'
     '&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,'  # white text, black outline
     '-1,0,0,0,'                                     # Bold=true, no italic/underline/strikeout
-    '100,100,${SPACING},0,'                         # ScaleX/Y=100, Spacing, Angle=0
-    '1,4,0,'                                        # BorderStyle=1 outline, Outline=4px, Shadow=0
-    '2,40,40,${MARGINV},'                           # Alignment=bottom-center, MarginL/R=40, MarginV
+    '100,100,${SPACING_PX},0,'                      # ScaleX/Y=100, Spacing, Angle=0
+    '1,${OUTLINE_PX},0,'                            # BorderStyle=1 outline, Outline, Shadow=0
+    '2,${MARGIN_H},${MARGIN_H},${MARGINV},'         # Alignment=bottom-center, MarginL/R, MarginV
     '1'                                             # Encoding=1 (libass: MUST always be 1)
 )
 out = [new_style if l.startswith('Style: Default,') else l for l in src.splitlines()]
@@ -261,7 +358,17 @@ NUM_FRAMES=$(( DURATION / 60 ))
 STEP=$(( DURATION / NUM_FRAMES ))
 [[ $STEP -lt 1 ]] && STEP=1
 
-log "  Sampling ${NUM_FRAMES} frames (every ~${STEP}s across ${DURATION}s output)"
+# The crop MUST follow the caption band. It used to be a fixed 200px strip 20px
+# above the bottom edge, which stopped containing the captions the moment the
+# margin became a ratio: on a 1080x1920 portrait render the captions now sit
+# ~600px up, so every verification frame was empty background while the script
+# still printed "MANDATORY VISUAL CHECK". Derive the window from the values
+# actually used, with generous padding for descenders and two-line cues.
+CROP_H=$(( FONTSIZE * 4 ))
+CROP_Y=$(( BASE_H - MARGINV - FONTSIZE * 3 ))
+[[ $CROP_Y -lt 0 ]] && CROP_Y=0
+[[ $(( CROP_Y + CROP_H )) -gt $BASE_H ]] && CROP_H=$(( BASE_H - CROP_Y ))
+log "  Sampling ${NUM_FRAMES} frames (every ~${STEP}s across ${DURATION}s output), crop ${CROP_H}px at y=${CROP_Y}"
 # Frame sampling is best-effort: if a single frame fails (e.g. ss past EOF), keep going.
 # Do not let this kill the parent script via set -e since the captioned video is already done.
 set +e
@@ -270,7 +377,7 @@ for ((i=0; i<NUM_FRAMES; i++)); do
   [[ $t -lt 1 ]] && t=1
   [[ $t -ge $DURATION ]] && t=$((DURATION - 1))
   "$FFMPEG" -y -loglevel error -ss "$t" -i "$OUT" -frames:v 1 \
-    -vf "crop=iw:200:0:ih-220" "${VERIFY_DIR}/t$(printf '%04d' $t)s.png" 2>/dev/null
+    -vf "crop=iw:${CROP_H}:0:${CROP_Y}" "${VERIFY_DIR}/t$(printf '%04d' $t)s.png" 2>/dev/null
 done
 set -e
 FRAME_COUNT=$(ls "${VERIFY_DIR}"/*.png 2>/dev/null | wc -l | tr -d ' ')

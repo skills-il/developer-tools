@@ -101,7 +101,7 @@ The editor sub-agent then resolves the context-dependent items in its strategy d
 ## Sources
 
 - ElevenLabs Scribe API behavior: https://github.com/elevenlabs/skills/blob/main/speech-to-text/references/transcription-options.md (word `type` field values, `no_verbatim` semantics).
-- ElevenLabs Hebrew benchmark: https://elevenlabs.io/speech-to-text/hebrew (15.2% WER on FLEURS).
+- ElevenLabs Hebrew benchmark: https://elevenlabs.io/speech-to-text/hebrew (benchmark table lists Scribe v1 at 15.2% WER on FLEURS and Whisper Large v3 at 32.9%; the page headline now claims 3.1% for Scribe with no version attached).
 - Discourse markers in spoken Modern Hebrew: Maschler et al., John Benjamins (https://benjamins.com/catalog/prag.7.2.04mas).
 - Filled-pauses analysis in Hebrew: ResearchGate, "Is It a Filler or a Pause? A Quantitative Analysis of Filled Pauses in Hebrew" (https://www.researchgate.net/publication/354527243).
 - "tov" as discourse marker in Israeli Hebrew talk-in-interaction (Academia.edu, https://www.academia.edu/47718372).

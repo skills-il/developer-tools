@@ -4,11 +4,17 @@ Three drop-in replacements for the `SUB_FORCE_STYLE` constant in `helpers/render
 
 ## Why these values differ from the upstream Latin defaults
 
-The upstream `bold-overlay` style in `render.py` is designed for English short-form social video and uses Helvetica at FontSize=18, MarginV=35. Three Hebrew-specific adjustments:
+The upstream `bold-overlay` style in `render.py` is designed for English short-form social video and uses Helvetica at **FontSize=18, MarginV=90**, against libass's default `PlayResY: 288`.
+
+> **Correction (2026-08-26).** Earlier revisions of this file said upstream uses `MarginV=35`. That number appears in upstream's own SKILL.md prose, but its shipped `SUB_FORCE_STYLE` in `helpers/render.py` is `Alignment=2,MarginV=90`, with a comment explaining the choice: "MarginV is NOT taste, it is a platform safe-zone rule. TikTok / IG Reels / Shorts UI ... covers roughly the bottom ~25-30% of a 1080x1920 frame ... libass auto-scales the render canvas relative to PlayResY=288, so MarginV=90 lands the caption baseline roughly 30% up from the bottom on any aspect. Do not drop this below ~75 without a specific reason." The code is ground truth.
+
+**Everything below is expressed against PlayResY=288, so the numbers are fractions of frame height, not output pixels.** This matters because `scripts/burn-hebrew-captions.sh` rewrites `PlayResY` to the real video height. Once it does, an absolute MarginV means something completely different: measured on a 1080x1920 render, the old fixed `MARGINV=80` put the caption baseline 89px from the bottom, **4.6% of frame height**, inside the very UI band upstream's 31.25% exists to clear. Font size collapsed the same way, 52/1920 = 2.7% against upstream's 18/288 = 6.25%. As of skill v1.3.0 the script derives both from frame height: portrait uses upstream's ratios (6.25% font, 31.25% margin), landscape keeps the script's previously shipping ratios (4.81% font, 7.41% margin), because upstream's stated rationale is vertical-platform UI and a 31% margin would float captions into the middle of a landscape lecture. `--font-size` and `--margin-v` still accept absolute pixels and override the ratio.
+
+Three Hebrew-specific adjustments:
 
 1. **FontName**: Helvetica has no Hebrew glyphs on macOS or Linux. libass falls back to a tofu box. Heebo is the closest Hebrew design match (rationale below).
 2. **FontSize**: Hebrew x-height is taller than Latin Helvetica at the same point size. Bumping to 22 keeps the optical weight balanced; using the Latin size makes Hebrew captions look oversized next to where users expect.
-3. **MarginV**: Hebrew has more vertical ink below the baseline than Latin (sofit forms like ך, ץ, ף descend) plus the occasional dot below for nikud. The Latin MarginV=35 clips descenders against video edges or platform UI. The values used here (50 horizontal, 70 documentary, 120 vertical social) are working defaults , adjust if your platform's safe-zone has changed or if your specific Hebrew content trends shorter.
+3. **MarginV**: Hebrew has more vertical ink below the baseline than Latin (sofit forms like ך, ץ, ף descend) plus the occasional dot below for nikud, so it needs a little more clearance than the Latin equivalent. The variant values below (50 horizontal, 70 documentary, 120 vertical social) are in PlayResY=288 units. **Note the 120 vertical-social value is 41.7% of frame height, deliberately above upstream's 31.25%; the 50 used for the horizontal variant is 17.4%, deliberately below it, because a landscape lecture has no bottom action rail.** Adjust if your platform's safe zone has changed.
 
 ## Why Heebo as the canonical font
 
@@ -93,7 +99,7 @@ SUB_FORCE_STYLE_HE_VERTICAL = (
 **Chunking rules:**
 - 3-5 Hebrew words per line (narrower visual width).
 - Single line preferred; two lines max.
-- Position above platform UI varies by year and platform; 120 is a conservative MarginV that works across all three as of 2026. Verify against the current Instagram/TikTok safe-zone before final delivery , platforms change UI layouts.
+- Position above platform UI varies by year and platform; 120 (41.7% of frame height at PlayResY=288) is a conservative MarginV that works across all three as of 2026, and sits above upstream's 31.25% floor. Verify against the current Instagram/TikTok safe-zone before final delivery , platforms change UI layouts.
 
 ## Wiring into video-use
 

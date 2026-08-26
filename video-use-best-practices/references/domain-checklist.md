@@ -1,6 +1,6 @@
 # Domain Coverage Checklist, video-use-best-practices
 
-Generated: 2026-05-16 via research on: github.com/browser-use/video-use SKILL.md+install.md, github.com/libass/libass wiki, ffmpeg.org/ffmpeg-filters.html, www.unicode.org/reports/tr9/, fonts.google.com, hyperframes-best-practices and remotion-best-practices skills in skills-il directory.
+Generated: 2026-05-16. Last revised: 2026-08-26 (v1.3.0), when the coverage pointers below were re-checked against the current SKILL.md. Research sources: github.com/browser-use/video-use SKILL.md+install.md, github.com/libass/libass wiki, ffmpeg.org/ffmpeg-filters.html, www.unicode.org/reports/tr9/, fonts.google.com, hyperframes-best-practices and remotion-best-practices skills in skills-il directory.
 
 ## Must cover (core)
 
@@ -16,8 +16,8 @@ Generated: 2026-05-16 via research on: github.com/browser-use/video-use SKILL.md
 - [x] **Code-switching with English brand names** , source: common in Israeli tech tutorials , why important: mixed-script SRT rendering breaks differently than pure Hebrew (BiDi algorithm activates per-line). Covered in Step 4, Example 2, Self-eval Step 6.
 - [x] **Sofit forms (ם ן ץ ף ך) and nikud in Scribe output** , source: Hebrew orthography , why important: Scribe occasionally produces middle-of-word sofit or surprise nikud; downstream display assumes the canonical form. Covered in Step 4 item 3.
 - [x] **Self-eval checks for Hebrew (glyph fallback + direction)** , source: upstream self-eval step 7 , why important: upstream's 4 visual checks do not catch the two most common Hebrew render failures. Covered in Step 6 items 5+6.
-- [x] **Vertical social (1080x1920) MarginV** , source: Instagram/TikTok safe-zone conventions , why important: the upstream MarginV=35 default puts captions under platform UI on mobile. Covered in references/sub-force-style-hebrew.md Variant 3.
-- [x] **Hebrew prompts table for conversation phase** , source: upstream "Converse" step + common Hebrew creator workflows , why important: video-use's conversation phase is shaped by user prompts; non-Hebrew creators will not know what natural Hebrew requests map to the upstream workflow. Covered in Step 7.
+- [x] **Vertical social (1080x1920) MarginV** , source: upstream `helpers/render.py` SUB_FORCE_STYLE, which ships `Alignment=2,MarginV=90` against libass default `PlayResY=288` (31.25% of frame height) with the comment "TikTok / IG Reels / Shorts UI ... covers roughly the bottom ~25-30% of a 1080x1920 frame ... Do not drop this below ~75 without a specific reason" , why important: `burn-hebrew-captions.sh` rewrites PlayResY to the real frame height, which changes the unit MarginV is expressed in, so a fixed MarginV=80 silently became 4.2% and buried the captions inside the platform UI band. Fixed in v1.3.0 by scaling font size and margin as ratios of frame height. **NOTE: upstream's own SKILL.md prose says `MarginV=35`; its shipped code says 90. The code is ground truth.** Covered in Step 7 + references/sub-force-style-hebrew.md.
+- [x] **Hebrew prompts table for conversation phase** , source: upstream "Converse" step + common Hebrew creator workflows , why important: video-use's conversation phase is shaped by user prompts; non-Hebrew creators will not know what natural Hebrew requests map to the upstream workflow. Covered in Step 9.
 
 ## Out of scope (explicit, with rationale)
 
@@ -37,11 +37,13 @@ These are Scribe / libass failure modes discovered during real-use validation. E
 - [x] **Scribe occasionally emits a single "word" with 80+s duration** , mitigation: `captions-only.sh` clips any word with duration > `MAX_WORD_DUR` (default 2.0s). Without clipping, a single freak cue would freeze on screen for the full duration. Tunable in `references/captions-only-tuning.md`.
 - [x] **Punctuation positioning unstable under python-bidi + libass double-reversal** , mitigation: `burn-hebrew-captions.sh` Step 0 strips trailing `.`/`?`/`!` from Hebrew lines by default (BBC/Netflix style). Disable rationale + how-to in `references/captions-only-tuning.md`. Troubleshooting entry: "Captions have no periods or question marks".
 - [x] **ElevenLabs free-tier limit is credit-based (10,000 credits/month), not per-hour or per-character** , mitigation: pricing section states STT costs ~330 credits/min (~30 minutes of transcription/month) so non-technical users understand they get only a couple of short videos a month. Quick-test recipe in `references/quick-test.md` lets users validate the pipeline without burning the quota.
-- [x] **VSFilter-era pre-shape recipe is user-validated, not a workaround** , mitigation: Gotchas entry and Troubleshooting entry both flag the double-reversal as DELIBERATE rendering, with explicit instructions for switching to canonical BiDi if the user prefers it. Prevents future maintainers from "fixing" the working render.
+- [x] **Pre-shape recipe is deliberate, not an accident** , mitigation: the Gotchas and Troubleshooting entries both flag the double reversal as DELIBERATE, and say the pre-shape is mandatory. There is deliberately NO canonical-BiDi escape hatch: on macOS libass does not reorder, so feeding a raw SRT renders reversed. FFmpeg's documented `shaping=complex` was tested on 2026-08-26 and does not substitute for the pre-shape (shaping is glyph substitution, not reordering). Prevents future maintainers from "fixing" the working render.
 
 ## Authoritative sources
 
-- https://github.com/browser-use/video-use , upstream SKILL.md, install.md, helpers/. Re-check on every video-use minor version bump (currently early-stage, ~16 commits as of 2026-05).
+- https://github.com/browser-use/video-use , upstream SKILL.md, install.md, helpers/. **Pin by HEAD SHA, not by version:** the repo has no tags, no releases and no published package, so "re-check on a minor version bump" is an inert trigger. Last validated against `92c2b34e44c205cbc2acae7f6ca7c1c219d5dd66` (2026-07-01, 18 commits, repo dormant since). Note upstream's `helpers/transcribe.py` still hardcodes the removed `scribe_v1`, so this skill must override upstream here rather than defer to it.
+- https://elevenlabs.io/pricing and https://elevenlabs.io/pricing/api , Scribe rate card and credit rates. Re-check on EVERY cycle that touches cost text; pricing changed twice in 2026.
+- https://elevenlabs.io/docs/api-reference/speech-to-text/convert , current `model_id` enum. `scribe_v1` removed 2026-07-09.
 - https://github.com/libass/libass/wiki/ASS-File-Format-Guide , UTF-8 BOM rule, Encoding=1 rule, alignment numpad layout.
 - https://ffmpeg.org/ffmpeg-filters.html , `subtitles=` filter syntax, libass build dependency.
 - https://www.unicode.org/reports/tr9/ , UAX #9 BiDi algorithm, directional isolation for mixed-script text.
