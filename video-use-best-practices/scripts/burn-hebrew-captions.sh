@@ -125,11 +125,12 @@ log "Base resolution: ${BASE_W}x${BASE_H}"
 # UI band that upstream value exists to clear. Font size collapsed the same
 # way: 52/1920 is 2.7% against upstream 18/288 = 6.25%.
 #
-# Portrait uses upstream ratios directly, since the stated rationale is
-# vertical-platform UI. Landscape keeps this script previously shipping
-# effective ratios (52/1080 and 80/1080), because a lecture, webinar or 4:5 feed post has
-# YouTube has no bottom action rail and a 31% margin would float the captions
-# into the middle of the frame.
+# A 9:16 source uses upstream's ratios directly, since upstream's stated
+# rationale is the full-screen vertical player UI. Everything else (landscape,
+# 4:5 feed posts, square) keeps this script's previously shipping effective
+# ratios (52/1080 and 80/1080), because a lecture, webinar or feed post has no
+# bottom action rail and a 31% margin would float the captions into the middle
+# of the frame.
 # ---------------------------------------------------------------------------
 # Upstream's 31.25% safe zone is specifically about the full-screen 9:16 player
 # UI. A 4:5 Instagram feed post (1080x1350) is taller than it is wide but has no
@@ -152,7 +153,9 @@ fi
 # relative stroke upstream ships (Outline=2 against FontSize=18, i.e. 11%).
 OUTLINE_PX=$(( FONTSIZE * 11 / 100 ))
 [[ $OUTLINE_PX -lt 1 ]] && OUTLINE_PX=1
-SPACING_PX=$(( FONTSIZE * SPACING / 52 ))
+# Round rather than truncate: integer division floored small frames to 0 spacing,
+# which silently drops the Hebrew tracking this script exists to add.
+SPACING_PX=$(( (FONTSIZE * SPACING + 26) / 52 ))
 [[ $SPACING_PX -lt 1 ]] && SPACING_PX=1
 MARGIN_H=$(( BASE_W * 37 / 1000 ))   # 40/1080, the side gutter this script has always shipped
 log "Orientation: ${ORIENTATION}. Font ${FONTSIZE}px, bottom margin ${MARGINV}px, outline ${OUTLINE_PX}px, side margin ${MARGIN_H}px (frame ${BASE_W}x${BASE_H})."
@@ -296,7 +299,6 @@ src = open('${RAW_ASS}', encoding='utf-8').read()
 # different default canvas, or omits PlayRes entirely (libass then assumes 288),
 # a font size of ${FONTSIZE} would be interpreted against 288 and the caption
 # would render off-frame. Fail loudly instead of rendering garbage.
-n_x = src.count('PlayResX: 384')
 n_y = src.count('PlayResY: 288')
 if n_y != 1:
     if 'PlayResY:' in src:
@@ -323,7 +325,7 @@ new_style = (
     '1'                                             # Encoding=1 (libass: MUST always be 1)
 )
 out = [new_style if l.startswith('Style: Default,') else l for l in src.splitlines()]
-open('${PATCHED_ASS}', 'w').write('\n'.join(out) + '\n')
+open('${PATCHED_ASS}', 'w', encoding='utf-8').write('\n'.join(out) + '\n')
 PYEOF
 
 # Step 4: Burn captions
@@ -364,8 +366,14 @@ STEP=$(( DURATION / NUM_FRAMES ))
 # ~600px up, so every verification frame was empty background while the script
 # still printed "MANDATORY VISUAL CHECK". Derive the window from the values
 # actually used, with generous padding for descenders and two-line cues.
-CROP_H=$(( FONTSIZE * 4 ))
-CROP_Y=$(( BASE_H - MARGINV - FONTSIZE * 3 ))
+# Anchor the window on the MARGIN and open it upward, rather than guessing a
+# line count. Measured on a 9:16 render at 120px font: a 3-line cue spans ~450px
+# and a 5-line cue spans 662px, so a FONTSIZE*5 window still clipped the top of
+# the latter. FONTSIZE*7 upward from one line below the margin covers both, and
+# an oversized PNG costs nothing. A cue taller than six lines will still clip;
+# that is a caption-design problem, not a verification problem.
+CROP_H=$(( FONTSIZE * 7 ))
+CROP_Y=$(( BASE_H - MARGINV - FONTSIZE * 6 ))
 [[ $CROP_Y -lt 0 ]] && CROP_Y=0
 [[ $(( CROP_Y + CROP_H )) -gt $BASE_H ]] && CROP_H=$(( BASE_H - CROP_Y ))
 log "  Sampling ${NUM_FRAMES} frames (every ~${STEP}s across ${DURATION}s output), crop ${CROP_H}px at y=${CROP_Y}"

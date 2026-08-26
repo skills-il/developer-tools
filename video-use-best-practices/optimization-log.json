@@ -1,6 +1,23 @@
 {
   "cycles": [
     {
+      "version": "1.3.1",
+      "date": "2026-08-26",
+      "upstream_validated_against": "browser-use/video-use @ 92c2b34; ElevenLabs pricing/docs 2026-08-26. Follow-up to 1.3.0 after Expert round 2.",
+      "lessons": [
+        "CRITICAL, and the same defect shape twice in one cycle: the crop fix landed in scripts/burn-hebrew-captions.sh but NOT in the copy of the same command printed at SKILL.md Step 6 and SKILL_HE.md, which is the protocol an agent runs BY HAND at cut boundaries. The docs are more likely to be executed than the script internals, so the defect was fully live after 1.3.0 shipped. Step 6 now says to use the frames the script already produced, and derives the window from the logged FONTSIZE/MARGINV if you must sample elsewhere.",
+        "THE RULE THAT WOULD HAVE CAUGHT IT: after changing any literal, grep the WHOLE skill folder for the old value and require zero hits outside the changelog. Running that grep found 200:0:ih-220 in exactly two files, both docs. It costs one command.",
+        "Do NOT transcribe a reviewer's arithmetic without testing it. The reviewer proposed CROP_H=FONTSIZE*5, CROP_Y=BASE_H-MARGINV-FONTSIZE*4 for a 3-line cue. Measured: a 3-line cue at 120px spans ~450px, but a 5-line cue spans 662px and the *5 window still clipped its top. The window is now anchored on the margin and opens upward (FONTSIZE*7 / *6), verified against both cue heights.",
+        "SPACING_PX floored to 0 on small frames (17px font gave 0 tracking), silently removing the Hebrew letter-spacing this script exists to add. Now rounds with (FONTSIZE*SPACING+26)/52.",
+        "The ASS write at Step 3 had no encoding=, so under LANG=C it would raise UnicodeEncodeError on Hebrew AFTER the paid transcription, in exactly the unattended mode --yes exists for. Two sibling heredocs already had it right.",
+        "n_x was computed and never used inside the PlayRes guard. Dead code in a guard reads as a check that is happening.",
+        "The non-Darwin BiDi caveat existed only in script stdout and in none of SKILL.md, SKILL_HE.md or macos-ffmpeg-setup.md. A reader of the docs had no way to know to look for it. Now stated in both language files.",
+        "Verified after the fix at 640x360, 1080x1080, 1080x1350, 1920x1080, 1080x1920 and 3840x2160: every verification window contains captions (max grey 255 in every frame that has a cue on screen).",
+        "CARRY (from 1.3.0, still open): audio extraction for the main Scribe call, a cap on gap-recovery calls, nikud combining marks, the three conflicting Mode B price floors, the sidecar keeping garbage characters, and the tuning doc flag table.",
+        "CARRY: portrait chunking. captions-only.sh chunks 5-7 words, which at a 120px 9:16 font can wrap to three lines. The verification window now covers that, but 4-5 words would read better on vertical. Behaviour change, needs a real-content test."
+      ]
+    },
+    {
       "version": "1.3.0",
       "date": "2026-08-26",
       "upstream_validated_against": "browser-use/video-use @ 92c2b34e44c205cbc2acae7f6ca7c1c219d5dd66 (2026-07-01, repo dormant, no tags or releases). ElevenLabs pricing and STT docs fetched 2026-08-26.",

@@ -145,13 +145,20 @@ When spawning a parallel sub-agent for a Hebrew animation slot, include in the p
 
 ### Step 6: Frame-sampling self-eval (you must look at actual pixels)
 
-Upstream's self-eval (step 7 of "The process") runs `timeline_view` on the rendered output at every cut boundary and checks four things. For Hebrew, you must **actually open and look at sampled frames** to verify two more checks. Do not just trust that libass succeeded; the failure modes are silent.
+Upstream's self-eval runs `timeline_view` at every cut boundary and checks four things. For Hebrew you must **actually open and look at sampled frames** for two more. Do not trust that libass succeeded; the failure modes are silent.
 
 The mandatory protocol:
 
+**Do not hand-roll the crop.** `burn-hebrew-captions.sh` already writes verification frames into a `verify_*/` directory, cropped to where it actually placed the captions. Open those. A fixed crop like `crop=iw:200:0:ih-220` was correct only while the margin was a fixed 80px; now that geometry is a ratio of frame height, that strip holds no captions at all on a 9:16 render, so a self-eval against it certifies an empty band.
+
+To sample a boundary the script missed, derive the window from the values it logged (`Font Npx, bottom margin Mpx`):
+
 ```bash
-# Sample frames at evenly-spaced timestamps across the output, plus right after every cut
-ffmpeg -y -ss <time> -i final.mp4 -frames:v 1 -vf "crop=iw:200:0:ih-220" /tmp/verify/t<time>s.png
+# Read FONTSIZE and MARGINV from the burn script's own log line for this render.
+CROP_H=$(( FONTSIZE * 7 ))                  # anchored on the margin, opening upward
+CROP_Y=$(( BASE_H - MARGINV - FONTSIZE * 6 ))
+ffmpeg -y -ss <time> -i final.mp4 -frames:v 1 \
+  -vf "crop=iw:${CROP_H}:0:${CROP_Y}" /tmp/verify/t<time>s.png
 ```
 
 Then **open each PNG and verify with your own eyes**:
@@ -190,11 +197,13 @@ bash scripts/burn-hebrew-captions.sh \
 
 **Why (macOS):** `ffmpeg -i master.srt master.ass` alone does not fix BiDi; the python-bidi pre-shape converts logical to display order before libass sees it. Always verify rendered frames by comparing pixel order to source byte order, not just "no boxes" (a line can render with perfect glyphs yet be fully reversed).
 
-**Caption geometry now auto-scales off the probed frame height.** The script rewrites `PlayResY: 288` to the real video height, which changes the unit `MarginV`, `FontSize`, `Outline` and the side margins are expressed in, so the old fixed values meant something different at every resolution. Measured on a 1080x1920 render, they put the caption baseline 4.6% up from the bottom, inside the TikTok/Reels UI band that upstream's `MarginV=90` (31.25% against PlayResY=288) exists to clear. A 9:16 source now uses upstream's ratios; everything else (landscape, 4:5 feed, square) keeps this script's previously shipping ratios, so the lecture case is unchanged. `--font-size` and `--margin-v` still take absolute pixels and win. Rationale and measurements: `references/sub-force-style-hebrew.md`.
+**Caption geometry auto-scales off the probed frame height.** The script rewrites `PlayResY: 288` to the real height, which changes the unit `MarginV`, `FontSize`, `Outline` and the side margins are expressed in, so the old fixed values meant something different at every resolution. Measured on 1080x1920, they put the baseline 4.6% from the bottom, inside the UI band upstream's `MarginV=90` (31.25%) exists to clear. A 9:16 source now uses upstream's ratios; landscape, 4:5 and square keep the previously shipping ones, so the lecture case is unchanged. `--font-size` and `--margin-v` still win. See `references/sub-force-style-hebrew.md`.
+
+**Validated on macOS only.** On a libass build that DOES reorder, pre-shaped text is reversed a second time and every caption comes out backwards with no error. The script warns when `uname -s` is not `Darwin`; elsewhere, check the verification frames first and confirm the FIRST source word lands at the visual RIGHT.
 
 **The pre-shape must force RTL base direction.** `get_display(line)` alone infers paragraph direction from the first strong character, so a caption starting with a Latin token ("React הוא מעולה") is treated as an LTR paragraph and renders in reversed word order. The script passes `base_dir='R'`. Do not remove it, and add it to any pre-shape you write yourself.
 
-Note: as of v1.3.0 the script sanitizes into a working copy and **no longer rewrites the SRT you pass to `--srt`**. Earlier versions did, which meant the documented one-line invocation silently overwrote video-use's own `master.srt`. `captions-only.sh` copies the sidecar `.he.srt` before the burn, so the sidecar keeps punctuation the burned-in captions do not.
+Note: since v1.3.0 the script sanitizes into a working copy and **no longer rewrites the SRT you pass to `--srt`** (earlier versions overwrote video-use's own `master.srt`). `captions-only.sh` copies the sidecar `.he.srt` before the burn, so it keeps punctuation the burned-in captions do not.
 
 ### Step 8: Long video, captions-only mode (cheap path for non-editors)
 
@@ -290,6 +299,7 @@ video-use is a standalone Claude Code skill and does not require any MCP server.
 - `references/sub-force-style-hebrew.md`: Three ready-to-use `SUB_FORCE_STYLE` overrides for Hebrew (`bold-overlay-he`, `natural-sentence-he`, `vertical-social-he`). Documents why each value differs from the upstream Latin defaults, including PlayResX/Y and Spacing notes.
 - `references/hebrew-filler-words.md`: Annotated Hebrew filler list with editorial guidance (which are always-fillers vs. sometimes-load-bearing). Drop-in for the Step 3 post-pass.
 - `references/macos-ffmpeg-setup.md`: Fixes for the common Homebrew ffmpeg-without-libass trap and other macOS-specific gotchas (loudnorm on freeze frames, drawtext fallback to PIL, libass+SRT BiDi failure mode).
+- `references/known-limitations.md`: Validated-vs-assumed boundaries, unvalidated style variants, and behaviours this skill does not cover.
 - `references/captions-only-tuning.md`: All `captions-only.sh` tunables in one place , thresholds (`MAX_WORD_DUR`, `GAP_THRESHOLD`, `TAIL_THRESHOLD`, `MAX_DISPLAY_SEC`), the punctuation-stripping default + how to disable, side-output paths, and the full flags reference. Read this before changing any caption behavior.
 - `references/quick-test.md`: 10-second synthetic Hebrew test video recipe (uses macOS `say -v Carmit` + ffmpeg). Costs ~$0.001 in Scribe and lets you validate the full pipeline end-to-end without burning your free-tier quota on real footage.
 
@@ -308,16 +318,7 @@ video-use is a standalone Claude Code skill and does not require any MCP server.
 
 ## Known Limitations
 
-Gaps we know about so users don't burn cycles on unsupported workflows. Log new symptoms in the skill's GitHub issues.
-
-- **`captions-only.sh` validated up to ~12-min video** (Scribe per-file limit is ~2GB/10hr). At 1hr+ split with `ffmpeg -t` and concat SRTs.
-- **`vertical-social-he` 1080x1920 not validated against a real render.** MarginV=120 (41.7% of frame height at PlayResY=288) is theoretical; spot-check against current Instagram/TikTok UI.
-- **Heebo alternatives (Rubik/Assistant/Noto Sans Hebrew) listed but not tested as `FontName=`.** Verify with Step 6.
-- **Multi-speaker interviews not handled.** `captions-only.sh` hardcodes `diarize=false`, no speaker labels. Use upstream `helpers/transcribe.py --num-speakers N` for interview content.
-- **No SDH / accessibility tags** (`[music]`, `[laughter]`). `tag_audio_events=false` is hardcoded. Inject manually for full IS 5568 / ADA compliance.
-- **No detection of pre-existing burned-in captions** , double-burns silently. Inspect source first.
-- **Scribe garbage-char auto-fix covers 2 patterns.** Add new ones to `auto_fixes` in `burn-hebrew-captions.sh` Step 0.
-- **1-3hr cost claim is extrapolated** , agent re-reading the transcript may push upper bound higher.
+Validated-vs-assumed boundaries, unvalidated variants, and behaviours this skill does not cover: [references/known-limitations.md](references/known-limitations.md). Read it before promising a result the skill has not measured.
 
 ## Troubleshooting
 
