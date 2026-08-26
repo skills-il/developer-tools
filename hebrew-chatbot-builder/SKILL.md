@@ -325,6 +325,7 @@ help - עזרה
 menu - תפריט ראשי
 order - הזמנה חדשה
 status - סטטוס הזמנה
+faq - שאלות נפוצות
 language - שפה / Language
 ```
 
@@ -687,16 +688,30 @@ def extract_israeli_entities(text: str) -> dict:
     """Extract Israeli-specific entities from Hebrew text."""
     entities = {}
 
-    # Israeli phone numbers
+    # Israeli phone numbers.
+    # The digit-boundary lookarounds are load-bearing. Without them the landline pattern
+    # also matches the FIRST NINE characters of an unseparated mobile number, so
+    # "0521234567" yields both the real number and the bogus "052123456". Anything that
+    # later dials or messages an extracted number would then have a 50% chance of using a
+    # truncated one. Matches are also de-duplicated while preserving order.
     phone_patterns = [
-        r'05\d[\s-]?\d{3}[\s-]?\d{4}',   # Mobile: 050-1234567
-        r'0[2-9][\s-]?\d{3}[\s-]?\d{4}',  # Landline: 02-1234567
-        r'\+972[\s-]?\d{1,2}[\s-]?\d{3}[\s-]?\d{4}',  # International
+        r'(?<!\d)05\d[\s-]?\d{3}[\s-]?\d{4}(?!\d)',      # Mobile: 050-1234567
+        r'(?<!\d)0[2-9][\s-]?\d{3}[\s-]?\d{4}(?!\d)',     # Landline: 02-1234567
+        r'(?<!\d)\+?972[\s-]?\d{1,2}[\s-]?\d{3}[\s-]?\d{4}(?!\d)',  # International
     ]
+    phones: list[str] = []
     for pattern in phone_patterns:
-        matches = re.findall(pattern, text)
-        if matches:
-            entities.setdefault("phone_numbers", []).extend(matches)
+        for match in re.findall(pattern, text):
+            # An Israeli landline written without separators is nine digits, and so is a
+            # Teudat Zehut. Anything that passes the ID check digit is far more likely to
+            # be an ID than a phone number, and classifying it as a phone means some
+            # downstream job dials a national ID and files it in a non-sensitive field.
+            if match.isdigit() and len(match) == 9 and is_valid_teudat_zehut(match):
+                continue
+            if match not in phones:
+                phones.append(match)
+    if phones:
+        entities["phone_numbers"] = phones
 
     # NIS amounts (shekel)
     nis_patterns = [
@@ -745,6 +760,10 @@ def is_valid_teudat_zehut(value: str) -> bool:
     """
     digits = value.strip()
     if len(digits) != 9 or not digits.isdigit():
+        return False
+    # All-zeros passes the mod-10 check but is a placeholder, not an ID. It is the most
+    # common value in test fixtures and seed data, so reject it explicitly.
+    if set(digits) == {"0"}:
         return False
     total = 0
     for i, ch in enumerate(digits):
@@ -950,14 +969,18 @@ And reference documents in `references/`:
 - Common Hebrew greetings change by time of day: "בוקר טוב" (morning), "צהריים טובים" (noon), "ערב טוב" (evening). Agents may use a single greeting regardless of time.
 - Hebrew word tokenization differs from English. Prefixed prepositions (ב-, ל-, מ-) are attached to the following word. Agents may split tokens incorrectly, breaking intent detection.
 - Israeli users expect informal chatbot communication ("דוגרי"). Overly formal Hebrew sounds robotic and unnatural. Agents may generate formal Hebrew that alienates Israeli users.
+- **Webhook signature verification must fail CLOSED, and the check cannot be conditional on the secret being present.** The natural-looking `if APP_SECRET:` wrapper is the bug: the env-var validation that would catch an unset secret usually lives under `if __name__ == "__main__":`, which never runs under a WSGI server (`gunicorn handler:app`), and that is how a webhook endpoint is actually deployed because Meta requires HTTPS. The result is a production endpoint that accepts every forged payload while passing every local test. Refuse to serve (HTTP 500) when the secret is missing.
+- **Never ship `app.run(debug=True)` on a webhook host.** The Werkzeug debugger is remote code execution by design, and a webhook host is by definition publicly reachable. Bind the dev server to `127.0.0.1` and put a real WSGI server plus TLS in front of it in production.
+- **A nine-digit run is not a Teudat Zehut, and an unanchored phone regex invents numbers.** Validate ID matches with the check-digit algorithm and reject the all-zeros placeholder; anchor phone patterns with digit-boundary lookarounds, or the landline pattern will also match the first nine characters of an unseparated mobile number and hand you a truncated number alongside the real one.
+- **Pin the Graph API version in one named constant.** Meta retires a version roughly two years after release (v25.0, February 2026, is supported until 29 July 2028). Scattering the version through URLs across four files turns a one-line bump into an archaeology exercise, and a missed one fails only for some message types.
 
 ## Reference Links
 
 | Source | URL | What to Check |
 |--------|-----|---------------|
 | WhatsApp Cloud API Docs | https://developers.facebook.com/documentation/business-messaging/whatsapp/about-the-platform | API version, message types, webhook format |
-| Meta Graph API Changelog | https://developers.facebook.com/docs/graph-api/changelog/ | Latest API version, breaking changes |
-| Telegram Bot API Docs | https://core.telegram.org/bots/api | Bot API methods, inline keyboards, webhook setup |
+| Meta Graph API Changelog | https://developers.facebook.com/docs/graph-api/changelog/ | Version support windows. Each version is retired about two years after release; v25.0 (Feb 2026) is supported until 29 Jul 2028 |
+| Telegram Bot API Docs | https://core.telegram.org/bots/api | Bot API methods, inline keyboards, webhook setup. The changelog at the foot of the page names the current version (Bot API 10.3, 24 Aug 2026); this skill deliberately pins no version, so check it for primitives added since |
 | python-telegram-bot Docs | https://docs.python-telegram-bot.org/en/stable/ | Library version, async API changes |
 | Meta Business Suite | https://business.facebook.com/ | Template creation, phone number setup |
 

@@ -42,7 +42,11 @@ VERIFY_TOKEN = os.environ.get("WHATSAPP_VERIFY_TOKEN", "")
 APP_SECRET = os.environ.get("WHATSAPP_APP_SECRET", "")
 ACCESS_TOKEN = os.environ.get("WHATSAPP_ACCESS_TOKEN", "")
 PHONE_NUMBER_ID = os.environ.get("WHATSAPP_PHONE_ID", "")
-GRAPH_API_URL = f"https://graph.facebook.com/v25.0/{PHONE_NUMBER_ID}/messages"
+# Meta retires a Graph API version about two years after release; v25.0 (Feb 2026) is
+# supported until 29 Jul 2028. Keep this in one place and check the changelog before
+# pinning a newer one: https://developers.facebook.com/docs/graph-api/changelog/
+GRAPH_API_VERSION = os.environ.get("WHATSAPP_GRAPH_VERSION", "v25.0")
+GRAPH_API_URL = f"https://graph.facebook.com/{GRAPH_API_VERSION}/{PHONE_NUMBER_ID}/messages"
 
 # Logging
 logging.basicConfig(level=logging.INFO)
@@ -60,8 +64,13 @@ sessions: dict[str, dict[str, Any]] = {}
 # =============================================================================
 
 RESPONSES = {
+    # Identify the bot as a bot in the opening turn. The Telegram scaffold already does
+    # this; WhatsApp did not. Beyond being basic courtesy, Israeli privacy regulators have
+    # been moving toward an explicit disclosure duty for automated systems that interact
+    # with people directly, and a user who thinks they are talking to a person will share
+    # more than they meant to.
     "welcome": (
-        "שלום! ברוכים הבאים.\n\n"
+        "שלום! אני הבוט של [שם העסק].\n\n"
         "איך אפשר לעזור לך היום?"
     ),
     "main_menu": "בחר/י אחת מהאפשרויות:",
@@ -393,14 +402,21 @@ def handle_webhook():
     signature = request.headers.get("X-Hub-Signature-256", "")
     body = request.get_data()
 
-    if APP_SECRET:
-        expected = "sha256=" + hmac.new(
-            APP_SECRET.encode(), body, hashlib.sha256
-        ).hexdigest()
+    # Never make this conditional on APP_SECRET being set. The env check in __main__ does
+    # not run under a WSGI server (gunicorn whatsapp-webhook-handler:app), which is how this
+    # is actually deployed, so an `if APP_SECRET:` guard silently accepts every forged
+    # webhook in production. Refuse to serve instead.
+    if not APP_SECRET:
+        logger.error("WHATSAPP_APP_SECRET is not set; refusing to process webhooks")
+        return "Server misconfigured", 500
 
-        if not hmac.compare_digest(signature, expected):
-            logger.warning("Invalid webhook signature")
-            return "Invalid signature", 403
+    expected = "sha256=" + hmac.new(
+        APP_SECRET.encode(), body, hashlib.sha256
+    ).hexdigest()
+
+    if not hmac.compare_digest(signature, expected):
+        logger.warning("Invalid webhook signature")
+        return "Invalid signature", 403
 
     data = request.get_json()
 
@@ -478,4 +494,9 @@ if __name__ == "__main__":
         logger.error("Set them before starting the server. See docstring for details.")
         sys.exit(1)
 
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    # debug=True enables the Werkzeug debugger, which is remote code execution by design,
+    # on a host that must be publicly reachable for Meta to deliver webhooks. Never enable it.
+    # This dev server is for local testing only; Meta requires HTTPS, so run it in production
+    # behind a real WSGI server and TLS terminator:
+    #   gunicorn --bind 127.0.0.1:8080 whatsapp-webhook-handler:app
+    app.run(host="127.0.0.1", port=8080, debug=False)

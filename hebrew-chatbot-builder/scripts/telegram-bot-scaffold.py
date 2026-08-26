@@ -86,6 +86,7 @@ TEXTS = {
         ),
         "main_menu": "בחר/י אחת מהאפשרויות:",
         "btn_new_order": "הזמנה חדשה",
+        "new_order_ask": "מה תרצה/י להזמין?",
         "btn_check_status": "בדיקת סטטוס",
         "btn_faq": "שאלות נפוצות",
         "btn_contact": "דבר/י עם נציג",
@@ -133,6 +134,7 @@ TEXTS = {
         ),
         "main_menu": "Choose an option:",
         "btn_new_order": "New Order",
+        "new_order_ask": "What would you like to order?",
         "btn_check_status": "Check Status",
         "btn_faq": "FAQ",
         "btn_contact": "Contact Agent",
@@ -327,10 +329,12 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     if data == "new_order":
-        # TODO: Implement order creation flow
+        # TODO: Implement order creation flow.
+        # Do NOT reuse order_ask here: that string asks for an EXISTING order number,
+        # which is the opposite of starting a new order. Hebrew is the default language,
+        # so getting this wrong sends almost every user down the wrong branch.
         await query.edit_message_text(
-            get_text(context, "order_ask") if lang == "he"
-            else "What would you like to order?",
+            get_text(context, "new_order_ask"),
             reply_markup=build_back_keyboard(lang),
         )
         return
@@ -454,6 +458,10 @@ def main():
     app.add_handler(CommandHandler("menu", cmd_menu))
     app.add_handler(CommandHandler("order", cmd_order))
     app.add_handler(CommandHandler("faq", cmd_faq))
+    # /status is in the BotFather list the skill tells you to paste, so it must exist.
+    # A listed-but-unregistered command is pure silence: filters.COMMAND excludes it from
+    # the text handler, so the user gets no reply at all.
+    app.add_handler(CommandHandler("status", cmd_order))
     app.add_handler(CommandHandler("language", cmd_language))
 
     # Callback query handler (inline keyboard buttons)

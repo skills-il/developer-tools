@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "hebrew-chatbot-builder",
-  "generated_at": "2026-06-21T00:00:00Z",
+  "generated_at": "2026-08-26T00:00:00Z",
   "claims": [
     {
       "claim_id": "llm-models-2026",
@@ -12,20 +12,24 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "whatsapp-graph-v25",
-      "claim": "The WhatsApp Cloud API uses Graph API v25.0; messages are sent via POST https://graph.facebook.com/v25.0/{PHONE_NUMBER_ID}/messages.",
+      "claim": "The WhatsApp Cloud API is reached through the Graph API. v25.0 was released 18 February 2026 and is supported until 29 July 2028; Meta retires a version roughly two years after release. Messages are sent via POST https://graph.facebook.com/{version}/{PHONE_NUMBER_ID}/messages.",
       "source_url": "https://developers.facebook.com/docs/graph-api/changelog/",
-      "raw_snippet": "Graph API v25.0 is the current version. WhatsApp Cloud API endpoints are versioned under graph.facebook.com.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "raw_snippet": "v25.0 February 18, 2026 July 29, 2028",
+      "fetched_at": "2026-08-26",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/whatsapp-business-api-guide.md",
         "scripts/whatsapp-webhook-handler.py"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "whatsapp-platform-docs",
@@ -36,7 +40,9 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "whatsapp-pricing",
@@ -47,21 +53,23 @@
       "appears_in": [
         "SKILL.md",
         "references/whatsapp-business-api-guide.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "telegram-bot-api",
-      "claim": "The Telegram Bot API is documented at core.telegram.org/bots/api; python-telegram-bot (>=21, async) wraps it.",
+      "claim": "The Telegram Bot API is documented at core.telegram.org/bots/api. The changelog at the foot of that page names the current version; as of 24 August 2026 it is Bot API 10.3. This skill deliberately pins no Bot API version.",
       "source_url": "https://core.telegram.org/bots/api",
-      "raw_snippet": "Telegram Bot API Follow on X Home FAQ Apps API Protocol Schema Telegram Bots Telegram Bot API Telegram Bot API The Bot API is an HTTP-based interface created for developers keen on building bots for Telegram. To learn how to create and set up a bot, please consult our Introduction to Bots and Bot FAQ .",
-      "fetched_at": "2026-08-18",
+      "raw_snippet": "Bot API 10.3",
+      "fetched_at": "2026-08-26",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "scripts/telegram-bot-scaffold.py"
       ],
-      "verified_via": "cited page fetched; 31 of 35 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"home\"",
-      "verified_at": "2026-08-18"
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "python-telegram-bot",
@@ -111,7 +119,9 @@
       "appears_in": [
         "SKILL.md",
         "references/whatsapp-business-api-guide.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "whatsapp-url-button-variable",
@@ -132,7 +142,9 @@
       "fetched_at": "2026-06-21T00:00:00Z",
       "appears_in": [
         "references/whatsapp-business-api-guide.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
     },
     {
       "claim_id": "graph-messages-endpoint-shellvar",
@@ -142,6 +154,35 @@
       "fetched_at": "2026-06-21T00:00:00Z",
       "appears_in": [
         "references/whatsapp-business-api-guide.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-26"
+    },
+    {
+      "claim_id": "werkzeug-debug-rce",
+      "claim": "Flask's built-in server must not run with debug=True in production: the Werkzeug debugger exposes an interactive console that allows arbitrary code execution, and Flask's own documentation states the development server is not suitable for production.",
+      "source_url": "https://flask.palletsprojects.com/en/stable/server/",
+      "raw_snippet": "Do not use the development server when deploying to production.",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/whatsapp-webhook-handler.py"
+      ]
+    },
+    {
+      "claim_id": "teudat-zehut-check-digit",
+      "claim": "An Israeli Teudat Zehut carries a check digit computed with a Luhn-style alternating 1-2 weighting over its nine digits, so a nine-digit run is not a valid ID merely by being nine digits long.",
+      "source_url": "https://en.wikipedia.org/wiki/Israeli_identity_card",
+      "raw_snippet": "Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit calculated using the Luhn algorithm",
+      "fetched_at": "2026-08-26",
+      "verified_via": "browser",
+      "verified_at": "2026-08-26",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
       ]
     }
   ]
