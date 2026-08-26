@@ -54,7 +54,7 @@ For any Hebrew video content, load the [./rules/hebrew-rtl.md](./rules/hebrew-rt
 - Bidirectional text handling (Unicode bidi isolates for mixed Hebrew/English)
 - Hebrew captions with RTL word highlighting
 - Hebrew typewriter effects (right-to-left character reveal)
-- Hebrew voiceover with ElevenLabs multilingual v2
+- Hebrew voiceover with ElevenLabs `eleven_v3` (multilingual v2 does not cover Hebrew)
 - Israeli map coordinates and Hebrew map labels
 
 ### Captions
@@ -129,9 +129,9 @@ Read individual rule files for detailed explanations and code examples:
 User wants a vertical (1080x1920) social clip with a Hebrew voiceover and word-highlighted captions.
 
 1. Scaffold a project: `npx create-video@latest --yes --blank --no-tailwind my-video`.
-2. Generate the Hebrew voiceover (load `rules/voiceover.md`, ElevenLabs multilingual v2).
-3. Transcribe the voiceover to captions (load `rules/transcribe-captions.md`, use the `medium` multilingual Whisper model, never `medium.en`).
-4. Render TikTok-style word-highlighted captions (load `rules/display-captions.md` and `rules/hebrew-rtl.md`): set `direction: "rtl"`, `textAlign: "right"`, and wrap any embedded Latin digits with `⁦...⁩` bidi isolates.
+2. Generate the Hebrew voiceover (load `rules/voiceover.md`, ElevenLabs `eleven_v3`).
+3. Convert the MP3 to a 16-bit 16kHz WAV, then transcribe to captions (load `rules/transcribe-captions.md`, use the `medium` multilingual Whisper model with `language: "he"`, never `medium.en`).
+4. Render TikTok-style word-highlighted captions (load `rules/display-captions.md` and `rules/hebrew-rtl.md`): set `direction: "rtl"`, `textAlign: "right"`, and wrap any embedded Latin digits in LTR bidi isolates (`\u2066` ... `\u2069`).
 5. Size the composition 1080x1920, drop the Hebrew display font two steps below the English size you would use (Gotcha #7).
 6. Preview in `npx remotion studio`, then render with `npx remotion render` (load `rules/rendering.md`).
 
@@ -161,7 +161,7 @@ Ready-to-use TSX component examples referenced by the rule files: `charts-bar-ch
 
 2. **Hebrew text without `direction: "rtl"` renders backwards.** Punctuation, numbers, and parentheses will appear on the wrong side. Every Hebrew text container must explicitly set RTL direction.
 
-3. **Whisper `medium.en` model does not support Hebrew.** Use `medium` (the multilingual model) for Hebrew transcription. Using `medium.en` produces garbage output for Hebrew audio.
+3. **Whisper needs BOTH a multilingual model and an explicit language for Hebrew.** Use `medium` (or `large-v3-turbo`), never `medium.en`, which is English-only and produces garbage for Hebrew. Just as important, pass `language: "he"` to `transcribe()`: with auto-detect, whisper.cpp on short or noisy Hebrew voiceover routinely picks Arabic, Yiddish or English, or emits Latin transliteration, and every caption downstream is then wrong however correct the RTL container is. Also convert to a 16-bit 16kHz WAV first (`npx remotion ffmpeg -i vo.mp3 -ar 16000 -ac 1 vo.wav`); `transcribe()` accepts nothing else, and TTS providers emit MP3.
 
 4. **`useFrame()` from React Three Fiber is forbidden.** Inside `<ThreeCanvas>`, only `useCurrentFrame()` from Remotion is allowed. Using `useFrame()` causes flickering during rendering because it animates outside Remotion's frame-based timeline.
 
@@ -171,13 +171,17 @@ Ready-to-use TSX component examples referenced by the rule files: `charts-bar-ch
 
 7. **Hebrew text wraps to a second line at the same font size English fits on one line.** Hebrew fonts (Heebo, Rubik, Assistant) at display weights render 20-30% wider than English at the same size. If an English title works at `fontSize: 72`, the Hebrew equivalent needs `54-60`. Also set `flexWrap: "nowrap"` and `whiteSpace: "nowrap"` on any flex row containing display-size Hebrew words to prevent unwanted line breaks mid-phrase.
 
-8. **Hebrew captions must sound Israeli, not translated.** Avoid corporate-sounding phrases like "תמיכה מלאה", passive-participle text descriptions, and literal translations of English idioms. Israeli dev slang: "עולים" (load), "נופלת" (falls), "אפקט הקלדה" (not "מכונת כתיבה"). Use "אפשר" not "ניתן", use active voice, and sprinkle natural connectors like "סוף סוף", "כמו שצריך", "באמת".
+8. **Hebrew captions must sound Israeli, not translated.** Avoid corporate-sounding phrases like "תמיכה מלאה", passive-participle text descriptions, and literal translations of English idioms. Israeli dev slang: "עולים" (load), "מתיישרת" / "נדחפת" / "מופיעה" for movement, "אפקט הקלדה" (not "מכונת כתיבה"). Do NOT use "נופלת", which means falls DOWN, not sideways; see the verb table in `rules/hebrew-rtl.md`. Use "אפשר" not "ניתן", use active voice, and sprinkle natural connectors like "סוף סוף", "כמו שצריך", "באמת".
 
 9. **Never use em dashes or en dashes.** Replace em/en dash characters with commas, colons, parentheses, or double hyphens (`--`). They are not on standard keyboards, don't render reliably across platforms, and make text feel machine-generated. This applies to both English and Hebrew content in SKILL.md, video captions, and UI copy.
 
-10. **Remotion is not unconditionally free.** It is free for individuals, non-profits, and for-profit organizations with 3 or fewer employees. Organizations of 4 or more employees must buy a paid Company License from remotion.pro. This applies to using Remotion at all (Studio, rendering, CI), not just to a specific feature. Check https://www.remotion.dev/docs/license and the bundled `LICENSE` file before shipping a commercial project.
+10. **Remotion is not unconditionally free.** It is free for individuals, non-profits, and for-profit organizations with 3 or fewer employees. Organizations of 4 or more employees must buy a paid Company License from remotion.pro. This applies to using Remotion at all (Studio, rendering, CI), not just to a specific feature. Check https://www.remotion.dev/license and the bundled `LICENSE` file before shipping a commercial project.
 
 11. **Tune render performance, do not just accept defaults.** Lower `--concurrency` if a render runs out of memory; raise it on many-core machines for faster renders. Use `--scale` below 1 for fast draft renders and above 1 for high-resolution masters. For embedded video, prefer the new `<Video>` from `@remotion/media` (frame-exact, off the main thread via Mediabunny); the older "prefer `<OffthreadVideo>` over `<Video>`" advice applies only to the legacy `<Video>` from the `remotion` package. Keep `calculateMetadata` cheap and lazy since it runs before every render. See `rules/rendering.md`.
+
+12. **`Math.random()` breaks renders.** A render evaluates your component once per frame, often in parallel across several browser tabs, so `Math.random()` returns a different value on every frame and anything derived from it jitters or flickers. Use `random()` from `remotion` with a fixed seed instead: `random("particle-3")` is deterministic across frames and across machines. The same applies to `Date.now()` and `new Date()`. See https://www.remotion.dev/docs/using-randomness.
+
+13. **Plan for the Remotion 5.0 breaking set.** Stable today is the 4.0.x line (4.0.518 as of August 2026); `4.1.0-alpha*` is the pre-release train for 5.0 and the written migration guide targets 5.0. Four changes hit this skill's advice directly: `@remotion/light-leaks` and `@remotion/starburst` stop receiving releases and are replaced by `lightLeak()` and `starburst()` from `@remotion/effects`; `loadFont()` from `@remotion/google-fonts` will REQUIRE explicit weights and subsets (so `subsets: ["hebrew"]` goes from best practice to mandatory); `<Sequence>`, `<Series.Sequence>` and `<TransitionSeries.Sequence>` premount automatically for one second, with `premountFor={0}` as the opt-out; and contractors count towards the employee threshold for the Company License. See https://www.remotion.dev/docs/5-0-migration.
 
 ## Reference Links
 
@@ -185,12 +189,12 @@ Ready-to-use TSX component examples referenced by the rule files: `charts-bar-ch
 |--------|-----|---------------|
 | Remotion Docs | https://www.remotion.dev/docs | API reference, latest version changes |
 | Remotion GitHub | https://github.com/remotion-dev/remotion | Source code, issues, releases |
-| Remotion License | https://www.remotion.dev/docs/license | Free vs paid Company License, 4+ employee threshold |
-| Remotion Render / CLI | https://www.remotion.dev/docs/cli/render | `npx remotion render` flags: concurrency, scale, codec |
+| Remotion License | https://www.remotion.dev/license | Free vs paid Company License, 4+ employee threshold |
+| Remotion Render / CLI | https://www.remotion.dev/docs/cli/render | `npx remotion render` flags: concurrency, scale. Its `--codec` table is STALE and still lists `png`; use the list in `rules/rendering.md` |
 | @remotion/lambda | https://www.remotion.dev/docs/lambda | Cloud rendering on AWS Lambda at scale |
 | @remotion/google-fonts | https://www.remotion.dev/docs/google-fonts | Available Google Fonts with Hebrew subset support |
 | @remotion/captions | https://www.remotion.dev/docs/captions | Caption types, TikTok-style captions API |
-| ElevenLabs TTS | https://elevenlabs.io/docs | Multilingual v2 model, Hebrew voice support |
+| ElevenLabs models | https://elevenlabs.io/docs/overview/models | Which model IDs list Hebrew (v3 family), which do not (multilingual v2) |
 | Google Fonts Hebrew | https://fonts.google.com/?subset=hebrew | Browse Hebrew-supporting fonts |
 
 ## Troubleshooting
@@ -208,7 +212,7 @@ Ensure you loaded the font with `subsets: ["hebrew"]` and called `waitUntilDone(
 Use Unicode bidi isolates: wrap numbers with `\u2066...\u2069` (LTR isolate) when embedded in Hebrew text.
 
 ### Whisper produces gibberish for Hebrew audio
-Switch from `medium.en` to `medium` model. The `.en` suffix means English-only.
+Three causes, check all: (1) the model is `medium.en`, which is English-only, switch to `medium` or `large-v3-turbo`; (2) `language: "he"` was not passed to `transcribe()`, so auto-detect picked the wrong language; (3) the input was not a 16-bit 16kHz WAV.
 
 ### Icons appear on the wrong side in flex rows
 In an RTL container, `justifyContent: "flex-start"` aligns to the RIGHT, not left. Do not use `flexDirection: "row-reverse"` -- it double-reverses the order. Just put the icon as the first child in the DOM.

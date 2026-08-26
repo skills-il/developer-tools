@@ -1,6 +1,19 @@
 {
   "cycles": [
     {
+      "version": "1.8.0",
+      "date": "2026-08-26",
+      "lessons": [
+        "[CARRY] The 20-30% Hebrew-width heuristic driving Gotcha #7 (English 72 -> Hebrew 54-60) is asserted, never measured. Next cycle: run measureText/canvas advance-width on Heebo, Rubik and Assistant at weights 700-900 over matched HE/EN strings and record the observed ratio as the evidence snippet; move the 54-60 guidance if the number differs.",
+        "[CARRY] Nine ref-* evidence entries (ref-img, ref-interpolate, ref-sequence, ref-series, ref-spring, ref-three, ref-transitions, ref-offthreadvideo, ref-the-fundamentals) use their own page slug as raw_snippet, so they can never fail. Replace each with a distinctive sentence from the cited page.",
+        "[CARRY] remotion-version-4-stable bundles 15 unrelated URLs behind one snippet via an 'Also covers:' list. Split into one claim per source and cite registry.npmjs.org for the dist-tags.",
+        "Watch for Remotion 5.0 stable. 4.1.0-alpha* is its pre-release train and the migration doc is titled 5.0. When it ships, Gotcha #13 stops being a horizon note and becomes required migration work in rules/light-leaks.md, rules/transitions.md, rules/fonts.md and rules/sequencing.md.",
+        "Root cause worth remembering: a Hebrew-first skill defaulted to an ElevenLabs model with no Hebrew for at least two cycles. Every gate passed because the model ID was live; only the LANGUAGE LIST was dead. Next cycle re-check the language list, not just that the model ID resolves.",
+        "Invisible-Unicode class of bug found twice in one cycle (U+2060 inside a Mapbox style URL, literal U+2066/U+2069 in prose). Add a zero-width/bidi-control grep to every cycle.",
+        "Deferred MINORs: rules/display-captions.md CaptionedContent references `pages` and SWITCH_CAPTIONS_EVERY_MS across a snippet boundary; rules/images.md points at <Gif> where gifs.md makes <AnimatedImage> primary; rules/assets.md teaches raw FontFace while fonts.md mandates loadFont(); rules/lottie.md uses bare delayRender while sibling files use useDelayRender(); rules/voiceover.md never checks response.ok before writing the MP3; the domain-checklist bidi bullet cites a bare /docs/ URL that documents nothing about bidi; the Troubleshooting waitUntilDone() remedy is a measurement requirement, not a render requirement, since Remotion auto-waits for fonts from 2.2."
+      ]
+    },
+    {
       "version": "1.7.1",
       "date": "2026-06-25",
       "lessons": [

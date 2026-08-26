@@ -8,7 +8,7 @@ license: MIT
 
 ## בעיה
 
-יצירת סרטונים מקוד עם טקסט עברי ב-Remotion פשוט לא עובדת out of the box. ברירת המחדל של Remotion מייצרת טקסט עם יישור שמאלי, אנימציות מכונת כתיבה שרצות משמאל לימין, וכתוביות שמרונדרות הפוך בתוכן RTL. מפתחים ישראלים מבזבזים שעות על דיבוג בעיות RTL, טעינת פונטים לא נכונה, ובאגים של טקסט דו-כיווני שהדוקומנטציה של Remotion פשוט לא מכסה.
+יצירת סרטונים מקוד עם טקסט עברי ב-Remotion פשוט לא עובדת out of the box. ברירת המחדל של Remotion מייצרת טקסט עם יישור שמאלי, אפקטי הקלדה שרצים משמאל לימין, וכתוביות שמרונדרות הפוך בתוכן RTL. מפתחים ישראלים מבזבזים שעות על דיבוג בעיות RTL, טעינת פונטים לא נכונה, ובאגים של טקסט דו-כיווני שהדוקומנטציה של Remotion פשוט לא מכסה.
 
 ## הוראות
 
@@ -44,8 +44,8 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 - כיוון טקסט RTL (`direction: "rtl"`, `textAlign: "right"`)
 - עבודה עם טקסט דו-כיווני (Unicode bidi isolates לשילוב עברית/אנגלית)
 - כתוביות עבריות עם הדגשת מילים בזמן אמת
-- אפקט מכונת כתיבה עברית (חשיפת תווים מימין לשמאל)
-- קריינות עברית עם ElevenLabs multilingual v2
+- אפקט הקלדה בעברית (חשיפת תווים מימין לשמאל)
+- קריינות עברית עם ElevenLabs במודל `eleven_v3` (למודל multilingual v2 אין תמיכה בעברית)
 - נקודות ציון של ערים ישראליות ותוויות מפה בעברית
 
 ### כתוביות
@@ -120,8 +120,8 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 המשתמש רוצה קליפ סושיאל אנכי (1080x1920) עם קריינות בעברית וכתוביות עם הדגשת מילים.
 
 אחד, מקימים פרויקט: `npx create-video@latest --yes --blank --no-tailwind my-video`.
-שתיים, מייצרים את הקריינות בעברית (טוענים את `rules/voiceover.md`, ElevenLabs multilingual v2).
-שלוש, מתמללים את הקריינות לכתוביות (טוענים את `rules/transcribe-captions.md`, משתמשים במודל הרב-לשוני `medium`, אף פעם לא `medium.en`).
+שתיים, מייצרים את הקריינות בעברית (טוענים את `rules/voiceover.md`, ElevenLabs במודל `eleven_v3`).
+שלוש, ממירים את ה-MP3 ל-WAV של 16 ביט ב-16kHz ואז מתמללים את הקריינות לכתוביות (טוענים את `rules/transcribe-captions.md`, משתמשים במודל הרב-לשוני `medium` עם `language: "he"`, אף פעם לא `medium.en`).
 ארבע, מרנדרים כתוביות בסגנון TikTok עם הדגשת מילים (טוענים את `rules/display-captions.md` ואת `rules/hebrew-rtl.md`): מגדירים `direction: "rtl"`, `textAlign: "right"` ועוטפים ספרות לטיניות מוטמעות ב-bidi isolates.
 חמש, מגדירים קומפוזיציה בגודל 1080x1920 ומקטינים את הפונט העברי בשתי דרגות מתחת לגודל שהייתם נותנים באנגלית (מלכודת 7).
 שש, מציגים תצוגה מקדימה ב-`npx remotion studio` ואז מרנדרים עם `npx remotion render` (טוענים את `rules/rendering.md`).
@@ -144,7 +144,7 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 
 ### נכסים (`rules/assets/`)
 
-דוגמאות קומפוננטות TSX מוכנות לשימוש שקבצי הכללים מפנים אליהן: `charts-bar-chart.tsx` (גרף עמודות מונפש), `text-animations-typewriter.tsx` (אפקט מכונת כתיבה) ו-`text-animations-word-highlight.tsx` (הדגשת כתוביות מילה אחר מילה).
+דוגמאות קומפוננטות TSX מוכנות לשימוש שקבצי הכללים מפנים אליהן: `charts-bar-chart.tsx` (גרף עמודות מונפש), `text-animations-typewriter.tsx` (אפקט הקלדה) ו-`text-animations-word-highlight.tsx` (הדגשת כתוביות מילה אחר מילה).
 
 ## מלכודות נפוצות
 
@@ -152,7 +152,7 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 
 2. **טקסט עברי בלי `direction: "rtl"` מרונדר הפוך.** סימני פיסוק, מספרים וסוגריים יקפצו לצד הלא נכון.
 
-3. **מודל Whisper `medium.en` לא מבין עברית.** תמלול עברי דורש את `medium` (בלי ה-en). הסיומת `.en` אומרת אנגלית בלבד.
+3. **תמלול עברי דורש גם מודל רב-לשוני וגם ציון שפה מפורש.** השתמשו ב-`medium` (או ב-`large-v3-turbo`), אף פעם לא ב-`medium.en` שהוא אנגלית בלבד ומייצר ג'יבריש לעברית. חשוב לא פחות, העבירו `language: "he"` ל-`transcribe()`: בזיהוי אוטומטי whisper.cpp על קריינות עברית קצרה או רועשת בוחר לא פעם ערבית, יידיש או אנגלית, או פולט תעתיק לטיני, וכל הכתוביות בהמשך יוצאות שגויות גם אם מיכל ה-RTL מושלם. בנוסף, המירו קודם ל-WAV של 16 ביט ב-16kHz (`npx remotion ffmpeg -i vo.mp3 -ar 16000 -ac 1 vo.wav`); `transcribe()` לא מקבל שום פורמט אחר, ושירותי TTS פולטים MP3.
 
 4. **`useFrame()` של React Three Fiber אסור לשימוש.** בתוך `<ThreeCanvas>`, רק `useCurrentFrame()` של Remotion. `useFrame()` גורם להבהוב כי הוא מנפש מחוץ לציר הזמן של Remotion.
 
@@ -162,13 +162,17 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 
 7. **טקסט עברי נשבר לשורה שנייה בגודל פונט שבו אנגלית נכנסת בשורה אחת.** פונטים עבריים (Heebo, Rubik, Assistant) בגדלים גדולים רחבים ב-20-30% מאנגלית באותו גודל. אם כותרת באנגלית עובדת ב-`fontSize: 72`, הגרסה העברית צריכה `54-60`. תוסיפו גם `flexWrap: "nowrap"` ו-`whiteSpace: "nowrap"` לכל שורת flex עם מילים עבריות גדולות כדי למנוע שבירת שורה באמצע המשפט.
 
-8. **כתוביות עבריות חייבות להישמע ישראלי, לא מתורגם.** תתרחקו מביטויים קורפורטיביים כמו "תמיכה מלאה", מתיאורים בבניין סביל, ומתרגומים מילוליים של ביטויים באנגלית. סלנג של מפתחים ישראלים: "עולים" (load), "נופלת" (falls), "אפקט הקלדה" (לא "מכונת כתיבה"). תשתמשו ב-"אפשר" לא "ניתן", בבניין פעיל, ותפזרו מחברים טבעיים כמו "סוף סוף", "כמו שצריך", "באמת".
+8. **כתוביות עבריות חייבות להישמע ישראלי, לא מתורגם.** תתרחקו מביטויים קורפורטיביים כמו "תמיכה מלאה", מתיאורים בבניין סביל, ומתרגומים מילוליים של ביטויים באנגלית. סלנג של מפתחים ישראלים: "עולים" (load), "מתיישרת" / "נדחפת" / "מופיעה" לתנועה, "אפקט הקלדה" (לא "מכונת כתיבה"). אל תשתמשו ב-"נופלת", שמשמעותה נפילה כלפי מטה ולא תזוזה הצידה; ראו את טבלת הפעלים ב-`rules/hebrew-rtl.md`. תשתמשו ב-"אפשר" לא "ניתן", בבניין פעיל, ותפזרו מחברים טבעיים כמו "סוף סוף", "כמו שצריך", "באמת".
 
 9. **לעולם אל תשתמשו ב-em dash או en dash.** תחליפו אותם בפסיק, נקודתיים, סוגריים או שני מקפים (`--`). הם לא על מקלדת סטנדרטית, לא תמיד מרונדרים נכון, וגורמים לטקסט להרגיש כאילו מכונה כתבה אותו. הכלל תקף גם באנגלית וגם בעברית בקובצי SKILL.md, כתוביות וטקסט ממשק.
 
-10. **רמושן לא חינמי בלי תנאים.** הוא חינמי ליחידים, למלכ"רים ולארגונים עסקיים עם 3 עובדים או פחות. ארגונים של 4 עובדים ומעלה חייבים לקנות רישיון Company License בתשלום מ-remotion.pro. זה תקף לשימוש ב-Remotion בכלל (סטודיו, רינדור, CI), לא רק לפיצ'ר מסוים. בדקו את https://www.remotion.dev/docs/license ואת קובץ ה-`LICENSE` המצורף לפני שמשחררים פרויקט מסחרי.
+10. **רמושן לא חינמי בלי תנאים.** הוא חינמי ליחידים, למלכ"רים ולארגונים עסקיים עם 3 עובדים או פחות. ארגונים של 4 עובדים ומעלה חייבים לקנות רישיון Company License בתשלום מ-remotion.pro. זה תקף לשימוש ב-Remotion בכלל (סטודיו, רינדור, CI), לא רק לפיצ'ר מסוים. בדקו את https://www.remotion.dev/license ואת קובץ ה-`LICENSE` המצורף לפני שמשחררים פרויקט מסחרי.
 
 11. **כווננו את ביצועי הרינדור, אל תקבלו סתם את ברירות המחדל.** הורידו את `--concurrency` אם רינדור נגמר לו הזיכרון; העלו אותו במכונות עם הרבה ליבות בשביל רינדור מהיר יותר. השתמשו ב-`--scale` קטן מ-1 לרינדור טיוטה מהיר וגדול מ-1 למאסטר ברזולוציה גבוהה. לוידאו מוטמע, העדיפו את ה-`<Video>` החדש מ-`@remotion/media` (frame-exact, שולף את הפריים המדויק מחוץ ל-thread הראשי דרך Mediabunny); העצה הישנה "העדיפו `<OffthreadVideo>` על פני `<Video>`" תקפה רק ל-`<Video>` הישן מחבילת `remotion`. שמרו על `calculateMetadata` זול ועצל כי הוא רץ לפני כל רינדור. ראו את `rules/rendering.md`.
+
+12. **`Math.random()` שובר רינדורים.** רינדור מריץ את הקומפוננטה מחדש לכל פריים, ולעיתים במקביל בכמה טאבים, ולכן `Math.random()` מחזיר ערך אחר בכל פריים וכל מה שנגזר ממנו רועד או מהבהב. השתמשו ב-`random()` מ-`remotion` עם seed קבוע במקום: `random("particle-3")` דטרמיניסטי גם בין פריימים וגם בין מכונות. אותו דבר תקף ל-`Date.now()` ול-`new Date()`. ראו https://www.remotion.dev/docs/using-randomness.
+
+13. **היערכו לשינויים השוברים של Remotion 5.0.** הגרסה היציבה היום היא קו 4.0.x (4.0.518 נכון לאוגוסט 2026); `4.1.0-alpha*` הוא רכבת הפרה-רליז ל-5.0 ומדריך המעבר הכתוב מכוון ל-5.0. ארבעה שינויים נוגעים ישירות לעצות בסקיל הזה: החבילות `@remotion/light-leaks` ו-`@remotion/starburst` מפסיקות לקבל גרסאות ומוחלפות ב-`lightLeak()` וב-`starburst()` מ-`@remotion/effects`; הפונקציה `loadFont()` מ-`@remotion/google-fonts` תחייב ציון מפורש של משקלים ו-subsets (כלומר `subsets: ["hebrew"]` הופך מהמלצה לחובה); הרכיבים `<Sequence>`, `<Series.Sequence>` ו-`<TransitionSeries.Sequence>` יבצעו premount אוטומטי של שנייה אחת, עם `premountFor={0}` כדרך לבטל; וקבלני משנה נספרים מעכשיו לצורך סף העובדים של ה-Company License. ראו https://www.remotion.dev/docs/5-0-migration.
 
 ## קישורי עזר
 
@@ -176,12 +180,12 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 |------|-----|----------|
 | תיעוד Remotion | https://www.remotion.dev/docs | API reference, שינויי גרסה |
 | GitHub של Remotion | https://github.com/remotion-dev/remotion | קוד מקור, issues, releases |
-| רישיון Remotion | https://www.remotion.dev/docs/license | חינמי מול רישיון בתשלום, סף 4 עובדים ומעלה |
-| רינדור / CLI של Remotion | https://www.remotion.dev/docs/cli/render | דגלי `npx remotion render`: concurrency, scale, codec |
+| רישיון Remotion | https://www.remotion.dev/license | חינמי מול רישיון בתשלום, סף 4 עובדים ומעלה |
+| רינדור / CLI של Remotion | https://www.remotion.dev/docs/cli/render | דגלי `npx remotion render`: concurrency, scale. טבלת ה-`--codec` שם מיושנת ועדיין מציגה `png`; השתמשו ברשימה שב-`rules/rendering.md` |
 | @remotion/lambda | https://www.remotion.dev/docs/lambda | רינדור בענן על AWS Lambda בכמות גדולה |
 | @remotion/google-fonts | https://www.remotion.dev/docs/google-fonts | פונטים עם תמיכה בעברית |
 | @remotion/captions | https://www.remotion.dev/docs/captions | סוגי כתוביות, API לכתוביות TikTok |
-| ElevenLabs TTS | https://elevenlabs.io/docs | מודל multilingual v2, תמיכה בקולות עבריים |
+| מודלים של ElevenLabs | https://elevenlabs.io/docs/overview/models | אילו מודלים כוללים עברית (משפחת v3) ואילו לא (multilingual v2) |
 | Google Fonts Hebrew | https://fonts.google.com/?subset=hebrew | עיון בפונטים התומכים בעברית |
 
 ## פתרון בעיות
@@ -199,7 +203,7 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 השתמשו ב-Unicode bidi isolates: עטפו מספרים או שמות אנגליים עם `\u2066...\u2069` (LTR Isolate) בתוך טקסט עברי. בלי זה, אלגוריתם ה-bidi של הדפדפן עשוי לערבב את הסדר.
 
 ### Whisper מייצר ג'יבריש לאודיו עברי
-החליפו ממודל `medium.en` למודל `medium`. הסיומת `.en` פירושה אנגלית בלבד - המודל הרב-לשוני תומך בעברית ובעוד עשרות שפות.
+שלוש סיבות אפשריות, בדקו את כולן: ראשית, המודל הוא `medium.en` שהוא אנגלית בלבד, החליפו ל-`medium` או ל-`large-v3-turbo`. שנית, לא הועבר `language: "he"` ל-`transcribe()`, ולכן הזיהוי האוטומטי בחר שפה אחרת. שלישית, הקלט לא היה WAV של 16 ביט ב-16kHz.
 
 ### אייקונים מופיעים בצד הלא נכון בשורות של flex
 בתוך RTL, `justifyContent: "flex-start"` מיישר לימין, לא לשמאל. אל תשתמשו ב-`flexDirection: "row-reverse"` כי הוא הופך את הסדר פעמיים. פשוט שימו את האייקון כאלמנט הראשון ב-DOM.

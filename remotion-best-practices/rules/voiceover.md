@@ -15,7 +15,7 @@ By default this guide uses **ElevenLabs** as the TTS provider (`ELEVENLABS_API_K
 
 If the user has not specified a TTS provider, recommend ElevenLabs and ask for their API key.
 
-For voiceover (which renders ahead of time, not live), `eleven_multilingual_v2` is the safe default and supports Hebrew. If you need broader language coverage or more expressive delivery, the newer `eleven_v3` model covers 70+ languages, but it is a non-realtime model -- use it for pre-rendered voiceover, not for live/conversational audio (ElevenLabs recommends the Flash or `eleven_multilingual_v2` models for real-time).
+**For Hebrew you must use `eleven_v3`.** `eleven_multilingual_v2` covers 29 languages and Hebrew is NOT among them (nor is it in `eleven_flash_v2_5`, which is v2's list plus Hungarian, Norwegian and Vietnamese). Hebrew appears only in the v3 family, which supports 70+ languages including Hebrew (heb). Because voiceover renders ahead of time rather than live, `eleven_v3` is the right model here; use `eleven_v3_conversational` only if you need realtime synthesis. `eleven_multilingual_v2` remains a reasonable default for the 29 languages it does cover.
 
 Ensure the environment variable is available when running the generation script:
 
@@ -41,7 +41,7 @@ const response = await fetch(
     },
     body: JSON.stringify({
       text: "Welcome to the show.",
-      model_id: "eleven_multilingual_v2",
+      model_id: "eleven_v3", // v3 for Hebrew; multilingual_v2 has no Hebrew
       voice_settings: {
         stability: 0.5,
         similarity_boost: 0.75,

@@ -43,7 +43,7 @@ The user needs to create a free Mapbox account and create an access token by vis
 The mapbox token needs to be added to the `.env` file:
 
 ```txt title=".env"
-REMOTION_MAPBOX_TOKEN==pk.your-mapbox-access-token
+REMOTION_MAPBOX_TOKEN=pk.your-mapbox-access-token
 ```
 
 ## Adding a map
@@ -82,7 +82,7 @@ export const MyComposition = () => {
       center: [6.5615, 46.0598],
       pitch: 65,
       bearing: 0,
-      style: "⁠mapbox://styles/mapbox/standard",
+      style: "mapbox://styles/mapbox/standard",
       interactive: false,
       fadeDuration: 0,
     });
@@ -215,9 +215,14 @@ import * as turf from "@turf/turf";
 import { interpolate } from "remotion";
 import { Easing } from "remotion";
 import { useCurrentFrame, useVideoConfig, useDelayRender } from "remotion";
+import mapboxgl from "mapbox-gl";
 
 const animationDuration = 20;
 const cameraAltitude = 4000;
+// The camera must TRAIL the point it looks at. Position and lookAtPoint set to the same
+// coordinate gives a straight-down nadir view with a degenerate up-vector, which discards
+// the map's pitch and renders a top-down scroll instead of a fly-along.
+const lookAheadKm = 1;
 ```
 
 ```tsx
@@ -251,14 +256,26 @@ useEffect(() => {
     routeDistance * progress,
   ).geometry.coordinates;
 
+  // The camera sits at the current point along the route...
+  camera.position = mapboxgl.MercatorCoordinate.fromLngLat(
+    { lng: alongRoute[0], lat: alongRoute[1] },
+    cameraAltitude,
+  );
+
+  // ...and looks at a point further ahead on the same line, so the shot keeps its pitch.
+  const lookAtTarget = turf.along(
+    turf.lineString(lineCoordinates),
+    routeDistance * progress + lookAheadKm,
+  ).geometry.coordinates;
+
   camera.lookAtPoint({
-    lng: alongRoute[0],
-    lat: alongRoute[1],
+    lng: lookAtTarget[0],
+    lat: lookAtTarget[1],
   });
 
   map.setFreeCameraOptions(camera);
   map.once("idle", () => continueRender(handle));
-}, [lineCoordinates, fps, frame, handle, map]);
+}, [lineCoordinates, fps, frame, map]);
 ```
 
 Notes:

@@ -17,7 +17,7 @@ If `package-lock.json` is found, use the following command:
 npm i zod
 ```
 
-If `bun.lockb` is found, use the following command:
+If `bun.lock` (or the legacy `bun.lockb`) is found, use the following command:
 
 ```bash
 bun i zod

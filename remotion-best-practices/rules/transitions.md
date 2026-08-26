@@ -46,6 +46,8 @@ Any React component can be used as an overlay. For a ready-made effect, see the 
 
 ```tsx
 import { TransitionSeries } from "@remotion/transitions";
+// Remotion 5.0 discontinues @remotion/light-leaks: it is replaced by lightLeak() from
+// @remotion/effects. Correct on the 4.0.x line; plan the swap before upgrading.
 import { LightLeak } from "@remotion/light-leaks";
 
 <TransitionSeries>

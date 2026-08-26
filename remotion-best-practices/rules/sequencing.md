@@ -32,7 +32,8 @@ If the items should not be wrapped, use the `layout` prop:
 ## Premounting
 
 This loads the component in the timeline before it is actually played.  
-Always premount any `<Sequence>`!
+Always premount any `<Sequence>`! (In Remotion 5.0 this becomes the default: sequences premount
+for one second automatically, and `premountFor={0}` is the opt-out.)
 
 ```tsx
 <Sequence premountFor={1 * fps}>

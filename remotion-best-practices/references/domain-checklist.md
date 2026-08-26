@@ -18,7 +18,7 @@ against. Used as the gate for review and future updates.
   local-frame reset inside a Sequence, negative-`from` trimming, nesting.
   https://www.remotion.dev/docs/sequence , https://www.remotion.dev/docs/series
 - **Premounting.** `premountFor` to load a Sequence before it plays (fonts/assets ready).
-  https://www.remotion.dev/docs/premount
+  https://www.remotion.dev/docs/player/premounting
 - **`@remotion/media` `<Video>` / `<Audio>` and `<OffthreadVideo>`.** Use new
   `@remotion/media` `<Video>` (frame-exact, off-thread via Mediabunny) as the current
   default; explain that the legacy "prefer `<OffthreadVideo>` over `<Video>`" advice
@@ -35,8 +35,8 @@ against. Used as the gate for review and future updates.
   https://www.remotion.dev/docs/parametrized-rendering
 - **Fonts: `@remotion/google-fonts` + `@remotion/fonts`.** Type-safe loadFont, weights,
   subsets, `waitUntilDone()`, local fonts. https://www.remotion.dev/docs/fonts
-- **Rendering + Lambda/Cloud Run.** `npx remotion render`, `--codec` (incl. `h264-mkv`,
-  `png` image-sequence), `--concurrency`, `--scale`, `--frames`; `@remotion/lambda`
+- **Rendering + Lambda/Cloud Run.** `npx remotion render`, `--codec` (incl. `h264-mkv`, `h264-ts`, `gif`; `png` is
+  NOT a codec, use `--sequence` + `--image-format=png`), `--concurrency`, `--scale`, `--frames`; `@remotion/lambda`
   (recommended) and `@remotion/cloudrun` (alpha). https://www.remotion.dev/docs/cli/render ,
   https://www.remotion.dev/docs/lambda
 - **whisper.cpp captions.** `@remotion/install-whisper-cpp` `installWhisperCpp` +
@@ -52,8 +52,8 @@ against. Used as the gate for review and future updates.
 
 ### Hebrew / RTL differentiators (the skill's reason to exist)
 
-- **Bidi isolates** for mixed Hebrew/Latin/numbers: `⁦` (LRI), `⁧` (RLI),
-  `⁩` (PDI); container `direction: "rtl"`. https://www.remotion.dev/docs/
+- **Bidi isolates** for mixed Hebrew/Latin/numbers: `\u2066` (LRI), `\u2067` (RLI),
+  `\u2069` (PDI); container `direction: "rtl"`. https://www.remotion.dev/docs/
 - **RTL flex semantics**: in an RTL flex container `flex-start` = RIGHT, `flex-end` = LEFT;
   do NOT use `flexDirection: "row-reverse"` (double-reverses). First DOM child renders right.
 - **Hebrew font width**: Hebrew display weights render ~20-30% wider than English; drop the
@@ -61,7 +61,9 @@ against. Used as the gate for review and future updates.
 - **Hebrew fonts with `subsets: ["hebrew"]`** (Heebo, Rubik, Assistant, Noto Sans Hebrew).
   https://www.remotion.dev/docs/google-fonts
 - **Hebrew RTL captions / typewriter**: caption container `direction: "rtl"`,
-  `whiteSpace: "pre"`; typewriter reveals from the end of the string.
+  `whiteSpace: "pre"`; typewriter reveals with `slice(0, n)` (logical order, which RTL paints
+  right-to-left), never from the end of the string. Hebrew transcription pins `language: "he"`.
+  Mapbox has no Hebrew basemap localization, so Hebrew map labels are Remotion overlays.
 - **Natural Israeli Hebrew copy** (not literal translation) for on-screen text/captions.
 
 ## Should cover
@@ -75,7 +77,7 @@ against. Used as the gate for review and future updates.
 - Charts, text animations, GIFs (`@remotion/gif`), Lottie, Tailwind, light leaks, maps,
   transparent video, measuring text/DOM, `getVideoDuration/Dimensions`, FFmpeg helpers,
   silence detection.
-- Voiceover (ElevenLabs `eleven_multilingual_v2` default; `eleven_v3` for broader langs),
+- Voiceover (ElevenLabs `eleven_v3` for Hebrew; `eleven_multilingual_v2` has no Hebrew),
   Israeli map coordinates.
 - One-frame `npx remotion still` sanity check; Studio is preview-only.
 

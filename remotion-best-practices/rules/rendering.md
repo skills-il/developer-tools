@@ -19,7 +19,7 @@ Run `npx remotion render` with no composition id to get an interactive picker.
 
 Common flags (verify against https://www.remotion.dev/docs/cli/render for the version you use):
 
-- `--codec` -- output codec: `h264` (default), `h265`, `vp8`, `vp9`, `av1`, `prores`, `h264-mkv`, image-sequence `png`, plus audio-only `mp3`, `aac`, `wav`.
+- `--codec` -- output codec. The runtime accepts exactly: `h264` (default), `h265`, `vp8`, `vp9`, `av1`, `prores`, `h264-mkv`, `h264-ts`, `gif`, plus audio-only `mp3`, `aac`, `wav`. `png` is NOT a codec: `getFileExtensionFromCodec` throws `Codec must be one of the following: ...` for anything outside `validCodecs` in `packages/renderer/src/codec.ts`. Note the rendered docs page at /docs/cli/render is out of date and still lists `png`; trust the source. For an image sequence use `--sequence` with `--image-format=png`.
 - `--concurrency` -- how many frames render in parallel. Higher uses more CPU/RAM; tune it down on memory-constrained machines, up on many-core machines.
 - `--scale` -- scales output frames by the factor passed (greater than 0, up to 16, default 1). Use `--scale=2` for a 4K render of a 1080p composition; use a small value like `--scale=0.25` for a fast low-res preview render.
 - `--frames` -- render only a frame range instead of the whole composition.
@@ -36,7 +36,7 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 For rendering at scale or from a server (no local CPU cost, parallel across many functions):
 
 - **AWS Lambda** -- `@remotion/lambda`. Mature, recommended cloud option. Deploy a Lambda function and an S3 site, then trigger renders via `renderMediaOnLambda()` or the `npx remotion lambda` CLI.
-- **Google Cloud Run** -- `@remotion/cloudrun`. Alpha as of the 4.0.x line; the Remotion team plans to align its runtime with Lambda. Prefer Lambda for production until Cloud Run is stable.
+- **Google Cloud Run** -- `@remotion/cloudrun`. Still published and not deprecated, but frozen: the docs state Cloud Run is not being actively developed, with critical bugs fixed and no new features added (https://www.remotion.dev/docs/cloudrun/status). Prefer `@remotion/lambda` for new work.
 
 Install whichever you need with `npx remotion add @remotion/lambda` (or `@remotion/cloudrun`). All Remotion packages must share the exact same version as `remotion` itself, so a single render package install will pull the matching version.
 

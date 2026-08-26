@@ -1,14 +1,14 @@
 {
   "schemaVersion": "1.0",
   "skill": "remotion-best-practices",
-  "generated_at": "2026-06-26T00:09:19Z",
+  "generated_at": "2026-08-26T18:58:47.465564+00:00",
   "claims": [
     {
       "claim_id": "remotion-version-4-stable",
-      "claim": "Remotion's current stable release is on the 4.0.x line (latest v4.0.483); there is no v5. Also covers: https://assets4.lottiefiles.com/packages/lf20_zyquagfl.json https://github.com/ggml-org/whisper.cpp/releases https://remotion.media/audio.mp3 https://remotion.media/bruh.wav https://remotion.media/ding.wav https://remotion.media/mouse-click.wav https://remotion.media/page-turn.wav https://remotion.media/shutter-modern.wav https://remotion.media/shutter-old.wav https://remotion.media/switch.wav https://remotion.media/video.mp4 https://remotion.media/vine-boom.wav https://remotion.media/whip.wav https://remotion.media/whoosh.wav https://remotion.media/windows-xp-error.wav",
-      "source_url": "https://github.com/remotion-dev/remotion/releases",
-      "raw_snippet": "5 @remotion/studio : Preserve node paths after deleting sequences and other mutations that add / remove elements by @JonnyBurger in #10239 @remotion/studio : Keep selected outlines visible by @JonnyBurger in #10282 @remotion/studio : Keep outline order stable while dragging by @JonnyBurger in #10257 @remotion/studio : Keep canvas context menus open by @JonnyBurger in #10281 @remotion/studio : Fix canvas snapping flicker by @JonnyBurger in #10306 @remotion/studio : Fix fast menu dismissal by @JonnyBurger in #10291 @remotion/stud",
-      "fetched_at": "2026-08-18",
+      "claim": "Remotion's current stable release is on the 4.0.x line (latest v4.0.518, published 2026-08-26); the alpha dist-tag is 4.1.0-alpha12 and no 4.1 or 5.0 stable has shipped. The npm dist-tags fetched on 2026-08-26 were latest 4.0.518, alpha 4.1.0-alpha12, canary 4.0.0-alpha.217. Also covers: https://registry.npmjs.org/remotion https://assets4.lottiefiles.com/packages/lf20_zyquagfl.json https://github.com/ggml-org/whisper.cpp/releases https://remotion.media/audio.mp3 https://remotion.media/bruh.wav https://remotion.media/ding.wav https://remotion.media/mouse-click.wav https://remotion.media/page-turn.wav https://remotion.media/shutter-modern.wav https://remotion.media/shutter-old.wav https://remotion.media/switch.wav https://remotion.media/video.mp4 https://remotion.media/vine-boom.wav https://remotion.media/whip.wav https://remotion.media/whoosh.wav https://remotion.media/windows-xp-error.wav",
+      "source_url": "https://www.remotion.dev/docs/5-0-migration",
+      "raw_snippet": "Remotion 5.0 is not yet released. This is an incomplete list of breaking changes that are planned for the release.",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
       "appears_in": [
         "rules/rendering.md",
         "SKILL.md"
@@ -45,10 +45,10 @@
     },
     {
       "claim_id": "whisper-cpp-1-9-1",
-      "claim": "whisper.cpp's latest release is v1.9.2, published 2026-08-04, per the GitHub releases API. The skill previously named v1.9.1, which has been superseded.",
-      "source_url": "https://api.github.com/repos/ggml-org/whisper.cpp/releases/latest",
-      "raw_snippet": "\"tag_name\": \"v1.9.2\"",
-      "fetched_at": "2026-08-18",
+      "claim": "whisper.cpp's latest semver release tag is v1.9.3, per the GitHub tags API. @remotion/install-whisper-cpp takes the version without the v prefix, so the pin is 1.9.3.",
+      "source_url": "https://api.github.com/repos/ggml-org/whisper.cpp/tags?per_page=100",
+      "raw_snippet": "\"name\": \"v1.9.3\"",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
       "appears_in": [
         "rules/transcribe-captions.md"
       ],
@@ -57,36 +57,30 @@
     },
     {
       "claim_id": "remotion-render-codecs",
-      "claim": "The npx remotion render --codec flag accepts h264, h265, av1, png, vp8, vp9, mp3, aac, wav, prores, and h264-mkv.",
+      "claim": "SUPERSEDED BY remotion-valid-codecs. Retained only to record that the rendered Remotion CLI docs page for --codec is STALE and still enumerates png. The accepted codec set is defined by validCodecs in packages/renderer/src/codec.ts and does NOT include png. No skill file relies on this entry.",
       "source_url": "https://www.remotion.dev/docs/cli/render",
       "raw_snippet": "h264 or h265 or av1 or png or vp8 or vp9 or mp3 or aac or wav or prores or h264-mkv.",
-      "fetched_at": "2026-06-26T00:06:00Z",
-      "appears_in": [
-        "rules/rendering.md",
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
+      "fetched_at": "2026-08-26T18:47:36.746855+00:00",
+      "appears_in": []
     },
     {
       "claim_id": "remotion-license-threshold",
-      "claim": "Remotion is free for individuals, non-profits, and for-profit organisations with up to 3 employees; organisations of 4+ need a paid Company License.",
-      "source_url": "https://www.remotion.dev/docs/license",
-      "raw_snippet": "License and terms | Remotion | Make videos programmatically",
-      "fetched_at": "2026-08-18",
+      "claim": "Remotion is free for individuals, non-profits, and for-profit organisations with up to 3 employees; organisations of 4+ need a paid Company License. Also covers: https://www.remotion.dev/docs/license",
+      "source_url": "https://www.remotion.dev/license",
+      "raw_snippet": "You are eligible to use Remotion for free if you are: an individual a for-profit organization with up to 3 employees a non-profit or not-for-profit organization",
+      "fetched_at": "2026-08-26T18:47:36.746855+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "rules/rendering.md"
-      ],
-      "verified_via": "navigational claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
-      "verified_at": "2026-08-18"
+      ]
     },
     {
       "claim_id": "elevenlabs-v3-70-languages-nonrealtime",
-      "claim": "ElevenLabs' eleven_v3 model supports 70+ languages and is not recommended for real-time use; eleven_multilingual_v2 (or Flash models) is recommended for real-time.",
+      "claim": "The Eleven v3 model supports 70+ languages including Hebrew (heb); eleven_v3_conversational is the realtime member of the same family. This is why Hebrew voiceover must use the v3 family.",
       "source_url": "https://elevenlabs.io/docs/overview/models",
-      "raw_snippet": "models) en eleven_flash_v2 scribe_v1 First generation speech recognition (outclassed by v2 models) 90+ languages scribe_v2 Eleven v3 Eleven v3 is our latest and most advanced speech synthesis model. It is a state-of-the-art model that produces natural, life-like speech with high emotional range and contextual understanding across multiple languages. This model works well in the following scenarios: Character Discussions : Excellent for audio experiences with multiple characters that interact with each other.",
-      "fetched_at": "2026-08-18",
+      "raw_snippet": "Hausa (hau), Hebrew (heb), Hindi (hin)",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
       "appears_in": [
         "rules/voiceover.md"
       ],
@@ -95,10 +89,10 @@
     },
     {
       "claim_id": "elevenlabs-multilingual-v2",
-      "claim": "eleven_multilingual_v2 is ElevenLabs' emotionally-aware multilingual speech model, suitable for pre-rendered voiceover with consistent quality across languages.",
+      "claim": "eleven_multilingual_v2 supports 29 languages and Hebrew is NOT among them; eleven_flash_v2_5 is the same list plus Hungarian, Norwegian and Vietnamese, so it also lacks Hebrew.",
       "source_url": "https://elevenlabs.io/docs/overview/models",
-      "raw_snippet": "Multilingual v2 Eleven Multilingual v2 is our most advanced, emotionally-aware speech synthesis model. It produces natural, lifelike speech with high emotional range and contextual understanding across multiple languages. The model delivers consistent voice quality and personality across all supported languages while maintaining the speaker’s unique characteristics and accent.",
-      "fetched_at": "2026-08-18",
+      "raw_snippet": "`eleven_multilingual_v2`     | Our most lifelike model with rich emotional expression                                            | `en`, `ja`, `zh`, `de`, `hi`, `fr`, `ko`, `pt`, `it`, `es`, `id`, `nl`, `tr`, `fil`, `pl`, `sv`, `bg`, `ro`, `ar`, `cs`, `el`, `fi`, `hr`, `ms`, `sk`, `da`, `ta`, `uk`, `ru`",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
       "appears_in": [
         "rules/voiceover.md",
         "SKILL.md",
@@ -135,7 +129,7 @@
     },
     {
       "claim_id": "ref-remotion-cli-render",
-      "claim": "https://www.remotion.dev/docs/cli/render documents the npx remotion render CLI flags including codec, concurrency, and scale.",
+      "claim": "https://www.remotion.dev/docs/cli/render documents the npx remotion render CLI flags including codec, concurrency, and scale. NOTE: this page is a navigational reference only; its --codec table is known to be stale (it still lists png). Use packages/renderer/src/codec.ts for the accepted codec set.",
       "source_url": "https://www.remotion.dev/docs/cli/render",
       "raw_snippet": "The default image format is JPEG. See setImageSequence() for more details. --codec v 1.4.0 ​ h264 or h265 or av1 or png or vp8 or vp9 or mp3 or aac or wav or prores or h264-mkv . If you don't supply --codec , it will use the H.264 encoder. If you are rendering on Linux ARM64 GNU, av1 is not available. --audio-codec v 3.3.42 ​ Set the format of the audio that is embedded in the video.",
       "fetched_at": "2026-08-18",
@@ -378,10 +372,10 @@
     },
     {
       "claim_id": "ref-premount",
-      "claim": "Reference documentation/source page cited in domain-checklist.md (premount).",
-      "source_url": "https://www.remotion.dev/docs/premount",
-      "raw_snippet": "premount",
-      "fetched_at": "2026-06-26T00:22:50.534566+00:00",
+      "claim": "Reference documentation page cited in domain-checklist.md for premounting (the /docs/premount path is a 404; the live page is /docs/player/premounting).",
+      "source_url": "https://www.remotion.dev/docs/player/premounting",
+      "raw_snippet": "Premounting is the practice of mounting a component containing assets earlier to allow assets some time to load before they appear.",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
       "appears_in": [
         "references/domain-checklist.md"
       ]
@@ -443,6 +437,152 @@
       "raw_snippet": "transitions",
       "fetched_at": "2026-06-26T00:22:50.534566+00:00",
       "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "remotion-valid-codecs",
+      "claim": "The Remotion renderer accepts exactly these --codec values: h264, h265, vp8, vp9, av1, mp3, aac, wav, prores, h264-mkv, h264-ts, gif. png is NOT a valid codec.",
+      "source_url": "https://raw.githubusercontent.com/remotion-dev/remotion/main/packages/renderer/src/codec.ts",
+      "raw_snippet": "export const validCodecs = [ 'h264', 'h265', 'vp8', 'vp9', 'av1', 'mp3', 'aac', 'wav', 'prores', 'h264-mkv', 'h264-ts', 'gif', ] as const;",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
+      "appears_in": [
+        "rules/rendering.md",
+        "references/domain-checklist.md"
+      ],
+      "verified_via": "raw source file fetched with curl on 2026-08-26 and the validCodecs array read in full; the rendered docs page for --codec is itself stale and still lists png",
+      "verified_at": "2026-08-26T18:43:30.457659+00:00"
+    },
+    {
+      "claim_id": "remotion-5-0-google-fonts-weights-subsets",
+      "claim": "In Remotion 5.0, loadFonts() from @remotion/google-fonts requires explicit weights and subsets; loading all of them by default is no longer supported. The rendered migration guide is at https://www.remotion.dev/docs/5-0-migration .",
+      "source_url": "https://raw.githubusercontent.com/remotion-dev/remotion/main/packages/docs/docs/5-0-migration.mdx",
+      "raw_snippet": "Loading all weights and subsets by default is no longer supported as it can lead to timeouts.",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "remotion-5-0-sequences-auto-premount",
+      "claim": "In Remotion 5.0, <Sequence>, <Series.Sequence> and <TransitionSeries.Sequence> automatically premount for 1 second, with premountFor={0} as the opt-out.",
+      "source_url": "https://raw.githubusercontent.com/remotion-dev/remotion/main/packages/docs/docs/5-0-migration.mdx",
+      "raw_snippet": "components now automatically [premount](/docs/player/premounting) for 1 second (`fps` frames) before they appear.",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "remotion-5-0-effects-replaces-light-leaks",
+      "claim": "Remotion 5.0 discontinues @remotion/light-leaks and @remotion/starburst; they are replaced by lightLeak() and starburst() from @remotion/effects.",
+      "source_url": "https://raw.githubusercontent.com/remotion-dev/remotion/main/packages/docs/docs/5-0-migration.mdx",
+      "raw_snippet": "Replace `@remotion/light-leaks` with [`lightLeak()` from `@remotion/effects`]",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "remotion-5-0-contractors-count",
+      "claim": "In Remotion 5.0 licensing, contractors count towards company team size for the Company License threshold.",
+      "source_url": "https://raw.githubusercontent.com/remotion-dev/remotion/main/packages/docs/docs/5-0-migration.mdx",
+      "raw_snippet": "**Contractors now also count towards team size.**",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "remotion-random-determinism",
+      "claim": "Remotion exports random() for deterministic pseudo-randomness; Math.random() must not be used because a render evaluates each frame separately and would produce different values per frame.",
+      "source_url": "https://www.remotion.dev/docs/using-randomness",
+      "raw_snippet": "random",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "remotion-whisper-webgpu-package",
+      "claim": "@remotion/whisper-webgpu is a Remotion package available from v4.0.518 that runs Whisper transcription in the browser over WebGPU; canUseWhisperWebGpu() reports support. Also covers: https://www.remotion.dev/docs/whisper-web",
+      "source_url": "https://www.remotion.dev/docs/whisper-webgpu",
+      "raw_snippet": "Transcribe audio locally in the browser using timestamped Whisper models and WebGPU through Transformers.js , and convert the result to @remotion/captions .",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
+      "appears_in": [
+        "rules/transcribe-captions.md"
+      ]
+    },
+    {
+      "claim_id": "whisper-large-v3-turbo-supported",
+      "claim": "large-v3-turbo is in the list of Whisper models downloadable by @remotion/install-whisper-cpp and is multilingual, so it is valid for Hebrew.",
+      "source_url": "https://raw.githubusercontent.com/remotion-dev/remotion/main/packages/install-whisper-cpp/src/download-whisper-model.ts",
+      "raw_snippet": "const models = [ 'tiny', 'tiny.en', 'base', 'base.en', 'small', 'small.en', 'medium', 'medium.en', 'large-v1', 'large-v2', 'large-v3', 'large-v3-turbo', ] as const;",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
+      "appears_in": [
+        "rules/transcribe-captions.md"
+      ]
+    },
+    {
+      "claim_id": "remotion-cloudrun-frozen",
+      "claim": "Remotion Cloud Run is not being actively developed: critical bugs are fixed but no new features are added. The package is still published and not deprecated.",
+      "source_url": "https://www.remotion.dev/docs/cloudrun/status",
+      "raw_snippet": "not being actively developed",
+      "fetched_at": "2026-08-26T18:40:51.232477+00:00",
+      "appears_in": [
+        "rules/rendering.md"
+      ]
+    },
+    {
+      "claim_id": "whisper-transcribe-requires-16k-wav",
+      "claim": "transcribe() from @remotion/install-whisper-cpp requires the input to be a 16-bit, 16KHz WAVE file, so an MP3 voiceover must be converted first.",
+      "source_url": "https://www.remotion.dev/docs/install-whisper-cpp/transcribe",
+      "raw_snippet": "The file has to be a 16-bit, 16KHz, WAVE file.",
+      "fetched_at": "2026-08-26T18:58:47.465564+00:00",
+      "appears_in": [
+        "rules/transcribe-captions.md",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "whisper-transcribe-language-option",
+      "claim": "transcribe() accepts a language option (available from Remotion 4.0.142) which passes the -l flag to whisper.cpp to specify the spoken language; 'he' is a valid value of the Language type, so Hebrew jobs should pin language: \"he\" rather than relying on auto-detection.",
+      "source_url": "https://www.remotion.dev/docs/install-whisper-cpp/transcribe",
+      "raw_snippet": "Passes the -l flag to Whisper.cpp to specific spoken language of the audio file.",
+      "fetched_at": "2026-08-26T18:58:47.465564+00:00",
+      "appears_in": [
+        "rules/transcribe-captions.md",
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "whisper-cpp-windows-binary-limit",
+      "claim": "On Windows @remotion/install-whisper-cpp downloads a binary, accepts only semantic-version tags, has no binaries newer than 1.6.0, and from 1.7.3 onward requires cmake to build from source. A 1.9.3 pin therefore means a source build on Windows. Also covers: https://www.remotion.dev/docs/install-whisper-cpp",
+      "source_url": "https://www.remotion.dev/docs/install-whisper-cpp/install-whisper-cpp",
+      "raw_snippet": "On Windows, there are no binaries newer than 1.6.0 available.",
+      "fetched_at": "2026-08-26T18:58:47.465564+00:00",
+      "appears_in": [
+        "rules/transcribe-captions.md"
+      ]
+    },
+    {
+      "claim_id": "mapbox-streets-v8-no-hebrew-name-field",
+      "claim": "Mapbox Streets v8, the label source behind the Mapbox Standard style, ships localized name fields for Arabic, German, English, Spanish, French, Italian, Japanese, Korean, Portuguese, Russian, Vietnamese and the two Chinese variants, and has NO name_he field, so there is no built-in Hebrew basemap localization.",
+      "source_url": "https://docs.mapbox.com/data/tilesets/reference/mapbox-streets-v8/",
+      "raw_snippet": "name_ar Arabic name_en English name_es Spanish name_fr French name_de German name_it Italian name_pt Portuguese name_ru Russian name_zh-Hans Simplified Chinese",
+      "fetched_at": "2026-08-26T18:58:47.465564+00:00",
+      "verified_via": "page fetched with curl on 2026-08-26 and every name_* field enumerated from the raw HTML; the full set is name_ar name_de name_en name_es name_fr name_it name_ja name_ko name_pt name_ru name_vi name_zh name_zh-Hant, with no name_he present",
+      "verified_at": "2026-08-26T18:58:47.465564+00:00",
+      "appears_in": [
+        "rules/hebrew-rtl.md",
         "references/domain-checklist.md"
       ]
     }

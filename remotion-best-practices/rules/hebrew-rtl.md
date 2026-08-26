@@ -207,7 +207,7 @@ For interjections and excitement: "סוף סוף" (finally), "כמו שצריך"
 
 ## Em Dashes Forbidden
 
-Never use em dashes (`—`) or en dashes (`–`) in skill content, video captions, or any Hebrew/English text. Replace with:
+Never use em dashes (U+2014) or en dashes (U+2013) in skill content, video captions, or any Hebrew/English text. Replace with:
 - `,` (comma) for mid-sentence pauses
 - `:` (colon) for explanations
 - `()` (parentheses) for asides
@@ -253,7 +253,10 @@ When displaying Hebrew captions using `createTikTokStyleCaptions()`, the caption
 
 ```tsx
 import type { TikTokPage } from "@remotion/captions";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
+import { loadFont } from "@remotion/google-fonts/Heebo";
 
+const { fontFamily } = loadFont("normal", { subsets: ["hebrew"], weights: ["700"] });
 const HIGHLIGHT_COLOR = "#39E508";
 
 const HebrewCaptionPage: React.FC<{ page: TikTokPage }> = ({ page }) => {
@@ -305,7 +308,7 @@ await downloadWhisperModel({
 
 ## Hebrew Typewriter Effect
 
-Standard typewriter effects slice from the left. For Hebrew, you must slice from the RIGHT (end of string) to reveal characters in reading order:
+A JS string holds Hebrew in LOGICAL order: index 0 is the first character read, and `direction: "rtl"` paints it at the RIGHT edge. So `slice(0, n)` is what reveals right-to-left in reading order, exactly as it does for English left-to-right. Slicing from the END of the string reveals the leftmost (last logical) characters first, which types the phrase backwards:
 
 ```tsx
 const HebrewTypewriter: React.FC<{ text: string }> = ({ text }) => {
@@ -319,8 +322,11 @@ const HebrewTypewriter: React.FC<{ text: string }> = ({ text }) => {
     text.length
   );
 
-  // Hebrew: slice from the END to reveal right-to-left
-  const visibleText = text.slice(text.length - charsToShow);
+  // A JS string holds Hebrew in LOGICAL order: index 0 is the FIRST character read,
+  // which `direction: "rtl"` paints at the RIGHT edge. So slicing from the start is
+  // what reveals right-to-left in reading order. Slicing from the end reveals the
+  // leftmost (last logical) characters first, i.e. backwards.
+  const visibleText = text.slice(0, charsToShow);
 
   return (
     <div
@@ -374,7 +380,7 @@ const HebrewWordReveal: React.FC<{ text: string }> = ({ text }) => {
 
 ## Hebrew Voiceover
 
-When using ElevenLabs TTS for Hebrew voiceover, use the `eleven_multilingual_v2` model:
+When using ElevenLabs TTS for Hebrew voiceover, use an `eleven_v3` family model. `eleven_multilingual_v2` supports 29 languages and Hebrew is not one of them, so a Hebrew request against it will not produce correct Hebrew speech:
 
 ```ts
 const response = await fetch(
@@ -388,7 +394,7 @@ const response = await fetch(
     },
     body: JSON.stringify({
       text: "שלום, ברוכים הבאים לסרטון שלנו",
-      model_id: "eleven_multilingual_v2", // Required for Hebrew
+      model_id: "eleven_v3", // Hebrew is in the v3 language list, NOT in multilingual_v2
       voice_settings: {
         stability: 0.5,
         similarity_boost: 0.75,
@@ -399,7 +405,7 @@ const response = await fetch(
 );
 ```
 
-ElevenLabs Hebrew voices: check the voice library for voices tagged with Hebrew support. The multilingual v2 model handles Hebrew nikkud (vowel marks) but works better without them in most cases.
+ElevenLabs Hebrew voices: check the voice library for voices tagged with Hebrew support. Use `eleven_v3` for pre-rendered voiceover and `eleven_v3_conversational` for realtime; both list Hebrew (heb). Behaviour with nikkud (vowel marks) is not documented by ElevenLabs, so test your own text both ways rather than assuming.
 
 ## Israeli Map Defaults
 
@@ -432,11 +438,19 @@ const TLV_TO_JLM: [number, number][] = [
 ];
 ```
 
-For Hebrew map labels, use Mapbox's built-in Hebrew localization:
+**Mapbox has no Hebrew basemap localization.** Mapbox Streets v8, the label source behind the
+Standard style, ships `name_ar`, `name_de`, `name_en`, `name_es`, `name_fr`, `name_it`, `name_ja`,
+`name_ko`, `name_pt`, `name_ru`, `name_vi` and the two Chinese variants, and no `name_he`. Setting
+a `language` config property to `"he"` therefore does NOT produce Hebrew labels. Two paths that do
+work:
 
-```tsx
-_map.setConfigProperty("basemap", "language", "he");
-```
+1. **Render Hebrew labels as Remotion DOM or SVG overlays** positioned with `map.project()`. This
+   is the recommended route: you get the same fonts, RTL handling and bidi isolates as the rest of
+   the video, and the labels animate on the Remotion timeline.
+2. **Add a symbol layer with a Hebrew-capable glyph font.** The default `["DIN Pro Bold", "Arial
+   Unicode MS Bold"]` stack in `rules/maps.md` has no Hebrew glyphs in the first family, so Hebrew
+   `text-field` values fall through to the fallback or render as tofu. Supply a font stack whose
+   first family covers Hebrew.
 
 ## Text Measurement with Hebrew Fonts
 
