@@ -105,7 +105,10 @@ jobs:
           # See /he/guides/how-we-validate Layer 2 + .claude/skills/update-skill/SKILL.md.
           #
           # CHANGED_DIRS is newline-separated and MUST reach the shell as an env
-          # var, not as a `${{ }}` interpolation inside the `for` header. Splicing
+          # var, not as a workflow expression interpolated inside the `for` header
+          # (and note: never write a bare empty expression in a comment either, GitHub
+          # evaluates expressions anywhere in the file and rejects the whole workflow).
+          # Splicing
           # 2+ lines there produced `for dir in a<newline>b<newline>do`, a hard
           # syntax error, so on any push touching 2+ skills the gate never ran.
           set -e
