@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "israeli-product-price-comparator",
-  "generated_at": "2026-06-22T20:30:00Z",
+  "generated_at": "2026-08-27T07:55:00+00:00",
   "claims": [
     {
       "claim_id": "personal-import-threshold-75-2026",
@@ -18,14 +18,15 @@
     },
     {
       "claim_id": "personal-import-tiers-2026",
-      "claim": "Personal-import tax tiers: up to $75 fully exempt (product value only, excluding shipping/insurance, not tobacco/alcohol); $75-$500 VAT only (18%) plus purchase tax on some items; above $500 full customs + VAT + purchase tax. Standard customs rate where it applies is around 12% on top of 18% VAT.",
+      "claim": "Personal-import tax tiers, still current as of the source's 16.08.2026 update: up to $75 fully exempt (goods value only, excluding separately-itemised shipping/insurance; not tobacco/alcohol); $75-$500 VAT only (18%); above $500 VAT and, for some, customs and purchase tax; above $1,000, and tobacco/alcohol at any value, taxed as a commercial importer is taxed.",
       "source_url": "https://www.kolzchut.org.il/he/%D7%96%D7%9B%D7%95%D7%AA%D7%95%D7%9F_%D7%91%D7%A0%D7%95%D7%A9%D7%90_%D7%99%D7%91%D7%95%D7%90_%D7%90%D7%99%D7%A9%D7%99_(%D7%97%D7%91%D7%99%D7%9C%D7%95%D7%AA_%D7%9E%D7%97%D7%95%22%D7%9C)",
-      "raw_snippet": "משלוח עם מוצרים שערכם הכולל עד 75 דולר פטור לחלוטין ממסי יבוא. מוצרים שעלו בין 75 דולר ל-500 דולר חייבים במע\"מ בלבד - 18%. מוצרים שעלו מעל 500 דולר חייבים בתשלום מע\"מ וחלקם חייבים גם בתשלום מכס ומס קנייה. התעריף הסטנדרטי של מכס הוא כ-12%.",
-      "fetched_at": "2026-06-22T20:00:00Z",
+      "raw_snippet": "מוצרים שעלו עד 75 דולר פטורים מכל מס",
+      "fetched_at": "2026-08-27T07:55:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "note": "The previous cycle's snippet contained a sentence about a ~12% standard customs rate that is NOT on this page. That figure has been removed from the skill rather than re-sourced."
     },
     {
       "claim_id": "vat-rate-18",
@@ -42,21 +43,23 @@
     },
     {
       "claim_id": "online-return-14-day-14c",
-      "claim": "Online (distance-sale) purchases may be cancelled within 14 days of receipt under Consumer Protection Law Section 14C (סעיף 14ג); the seller may charge a cancellation fee of 5% of the price or 100 NIS / 100 ש\"ח / 100 שקלים, whichever is lower.",
-      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98_%D7%90%D7%95_%D7%91%D7%98%D7%9C%D7%A4%D7%95%D7%9F",
-      "raw_snippet": "בעסקת מכר מרחוק (חוק הגנת הצרכן, סעיף 14ג) ניתן לבטל את העסקה בתוך 14 ימים מקבלת המוצר. העוסק רשאי לגבות דמי ביטול בשיעור של 5% ממחיר המוצר או 100 ש\"ח, לפי הנמוך.",
-      "fetched_at": "2026-06-22T20:00:00Z",
+      "claim": "On a remote-sale cancellation the seller may charge a cancellation fee of 5% of the value of the product or service, or NIS 100, whichever is lower. On a cancellation for a reason other than a defect the consumer returns the product at their own expense.",
+      "source_url": "https://www.gov.il/he/pages/returns",
+      "raw_snippet": "מותר לעוסק לגבות דמי ביטול בסכום של 5% מערך המוצר/שירות או 100 ₪ לפי הנמוך מבניהם",
+      "fetched_at": "2026-08-27T08:05:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-27T08:05:00+00:00"
     },
     {
       "claim_id": "instore-return-bitul-iska-14-day",
-      "claim": "In-store cancellation under the Consumer Protection (Cancellation of Transaction) Regulations: electronics/appliances over 50 NIS / 50 ש\"ח returnable within 14 days of receipt, unused and in original packaging; clothing/footwear within 2 business days.",
+      "claim": "Under the Consumer Protection (Cancellation of Transaction) Regulations a consumer may cancel an in-store consumer transaction unilaterally without giving a reason where the value of the product purchased exceeds NIS 50. Returning the product in its original packaging counts as proof it was not used, but opening the packaging is not itself use or damage unless proven otherwise. The seller may charge a cancellation fee of 5% of the price or NIS 100, whichever is lower, and must refund within 7 business days.",
       "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A8%D7%9B%D7%99%D7%A9%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%91%D7%99%D7%AA_%D7%94%D7%A2%D7%A1%D7%A7_%D7%95%D7%94%D7%97%D7%96%D7%A8%D7%AA_%D7%94%D7%9E%D7%95%D7%A6%D7%A8",
-      "raw_snippet": "ניתן לבטל רכישה של מוצר שמחירו עולה על 50 ש\"ח בתוך 14 ימים מיום קבלתו, ובלבד שלא נעשה בו שימוש והוא הוחזר באריזתו המקורית. על הלבשה והנעלה חל חלון של 2 ימי עסקים.",
-      "fetched_at": "2026-06-22T20:00:00Z",
+      "raw_snippet": "ערך המוצר שנרכש עולה על 50 ₪",
+      "fetched_at": "2026-08-27T08:05:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -80,48 +83,128 @@
       "claim_id": "be-owned-by-shufersal",
       "claim": "The Be pharmacy/beauty chain (bestore.co.il) is owned by Shufersal.",
       "source_url": "https://he.wikipedia.org/wiki/Be_(%D7%A8%D7%A9%D7%AA_%D7%91%D7%AA%D7%99_%D7%9E%D7%A8%D7%A7%D7%97%D7%AA)",
-      "raw_snippet": "רשת Be היא רשת בתי מרקחת ומוצרי טיפוח בבעלות שופרסל.",
+      "raw_snippet": "שופרסל",
       "fetched_at": "2026-06-22T20:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "note": "Ownership is shown in the article infobox ('חברת אם: שופרסל'), not as the running sentence a previous cycle quoted. Snippet reduced to text that is actually on the page.",
+      "verified_via": "browser",
+      "verified_at": "2026-08-27T08:20:00+00:00"
     },
     {
       "claim_id": "topcash-amex-cashback",
-      "claim": "TopCash is a cashback platform that works with American Express (and Isracard) cards, offering roughly 1%-10% back from partnered retailers.",
+      "claim": "TopCash is an Israeli cashback platform; its published welcome page ties the benefit to Isracard/American Express cardholders. Rates vary by merchant and are not a fixed published range.",
       "source_url": "https://www.topcash.co.il/welcome",
-      "raw_snippet": "TopCash מאפשרת קבלת אחוזי החזר (cashback) של 1%-10% מקמעונאים שותפים בעת תשלום בכרטיסי אמריקן אקספרס.",
+      "raw_snippet": "TopCash",
       "fetched_at": "2026-06-22T20:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "navigational",
+      "verified_at": "2026-08-27T08:20:00+00:00",
+      "note": "The previous cycle's snippet was an authored paraphrase asserting a 1%-10% range that is not on the page. The skill no longer states a fixed range."
     },
     {
       "claim_id": "illustrative-market-figures",
-      "claim": "NON-REGULATORY illustrative ranges and the skill's own editorial buying heuristics, not authoritative facts and intentionally NOT precision-sourced: Israeli Black Friday discounts of 15%-40% are commonly observed; old-model electronics drop 20%-30% at model changeover; standard AC installation runs roughly 400-800 NIS / 400-800 שקל / 800 NIS / 800 שקל; the skill ADVISES buying locally when the price gap is under 20% and abroad when it exceeds 30% (editorial guidance); in the headphones example a 150-200 NIS / 150-200 שקל / 200 NIS / 200 שקל / 500 NIS local premium is treated as acceptable for warranty value; Super-Pharm '1+50%' promotions are common. These figures are presented in the skill as ballpark guidance, not as sourced claims; the linked deals aggregator is a representative example of Israeli Black Friday discounting, not the source of every number.",
-      "source_url": "https://black-friday.org.il/about-cyber-monday/",
-      "raw_snippet": "במקרים רבים, חג הקניות סייבר מאנדיי ממשיך את ההנחות וההטבות של בלאק פריידי, משום שהוא מגיע ביום שני הקרוב ביותר לאחד יום שישי.",
+      "claim": "Market-colour figures used as illustrative ranges only, NOT sourced benchmarks: Black Friday discount ranges, model-changeover drops, AC installation cost range, the buy-local/buy-abroad percentage thresholds, the headphone premium and promo formats. These are rules of thumb for shaping a recommendation, not published data, and the skill must not present any of them to a user as a market statistic.",
+      "source_url": "https://www.gov.il/he/departments/consumer_protection_and_fair_trade_authority",
+      "raw_snippet": "Illustrative, deliberately uncited market-colour ranges: Black Friday 15%-40%, model-changeover 20%-30%, AC installation 400-800 NIS, buy-local under 20% and buy-abroad over 30%, a 150-200 NIS warranty premium, and a 1+50% promo format.",
       "fetched_at": "2026-08-09T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "curl (rendered text)"
+      "verified_via": "authored",
+      "verified_at": "2026-08-27T08:20:00+00:00",
+      "note": "These ranges are authored rules of thumb with NO external source by design; the source_url is a navigational placeholder only and proves nothing about the figures. A previous cycle attached a Black Friday page whose sentence proved none of them, which laundered them past the gate. Next cycle should either source each figure or delete it from the skill. Never present any of these to a user as a market statistic."
     },
     {
       "claim_id": "verified-operating-retailers-and-sources",
-      "claim": "Retailers and reference sources verified operating/correct as of June 2026 (per research subagent cross-check): store and source URLs below. Covers these references: https://www.zap.co.il https://www.zap.co.il/search.aspx?keyword=PRODUCT_NAME https://ksp.co.il https://www.idigital.co.il https://www.ivory.co.il https://www.bug.co.il https://www.homecenter.co.il https://mhashmal.co.il https://www.ikea.co.il https://www.ace.co.il https://shop.super-pharm.co.il https://www.bestore.co.il https://www.lastprice.co.il https://www.topcash.co.il https://www.cashback.co.il https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/PersonalImportTax https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/he/PersonalImportTax/Home/Calc https://www.gov.il/he/departments/topics/customs-personal-import/govil-landing-page https://www.gov.il/en/departments/topics/customs-personal-import/govil-landing-page https://www.kolzchut.org.il/he/זכותון_בנושא_יבוא_אישי_(חבילות_מחו\"ל)",
+      "claim": "Reference-coverage entry for the retailer, tool and authority URLs cited in the skill; each destination was checked this cycle. mhashmal.co.il is explicitly NOT a Machsanei Hashmal address and is not endorsed by this entry, see payngo-is-machsanei-hashmal.",
       "source_url": "https://www.zap.co.il/search.aspx?keyword=PRODUCT_NAME",
-      "raw_snippet": "זאפ השוואת מחירים - תוצאות חיפוש - product_name",
-      "fetched_at": "2026-08-18",
+      "raw_snippet": "Reference-coverage entry. Destinations cited by the skill and checked this cycle: https://ksp.co.il https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/PersonalImportTax https://shaarolami-query.customs.mof.gov.il/CustomspilotWeb/he/PersonalImportTax/Home/Calc https://shop.super-pharm.co.il https://www.ace.co.il https://www.bestore.co.il https://www.bug.co.il https://www.cashback.co.il https://www.gov.il/en/departments/topics/customs-personal-import/govil-landing-page https://www.gov.il/he/departments/topics/customs-personal-import https://www.homecenter.co.il https://www.idigital.co.il https://www.ikea.com/il/he/ https://www.ivory.co.il https://www.kolzchut.org.il/he/זכותון_בנושא_יבוא_אישי_(חבילות_מחו https://www.lastprice.co.il https://www.payngo.co.il https://www.topcash.co.il https://www.zap.co.il/search.aspx?keyword=PRODUCT_NAME Page title confirming the Zap search endpoint: זאפ השוואת מחירים - תוצאות חיפוש - product_name",
+      "fetched_at": "2026-08-27T08:20:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
       "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
       "verified_at": "2026-08-18"
+    },
+    {
+      "claim_id": "split-shipment-72-hours",
+      "claim": "Two or more parcels sent from the same supplier to the same customer less than 72 hours apart are treated as a single split shipment, and import taxes are computed on their combined value.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%96%D7%9B%D7%95%D7%AA%D7%95%D7%9F_%D7%91%D7%A0%D7%95%D7%A9%D7%90_%D7%99%D7%91%D7%95%D7%90_%D7%90%D7%99%D7%A9%D7%99_(%D7%97%D7%91%D7%99%D7%9C%D7%95%D7%AA_%D7%9E%D7%97%D7%95%22%D7%9C)",
+      "raw_snippet": "ייחשבו כמשלוח אחד שפוצל",
+      "fetched_at": "2026-08-27T07:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "import-exchange-rate",
+      "claim": "For goods priced in foreign currency the exchange rate applied is the Bank of Israel representative rate plus 0.5%.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%96%D7%9B%D7%95%D7%AA%D7%95%D7%9F_%D7%91%D7%A0%D7%95%D7%A9%D7%90_%D7%99%D7%91%D7%95%D7%90_%D7%90%D7%99%D7%A9%D7%99_(%D7%97%D7%91%D7%99%D7%9C%D7%95%D7%AA_%D7%9E%D7%97%D7%95%22%D7%9C)",
+      "raw_snippet": "שער המטבע יחושב לפי השער היציג של בנק ישראל בתוספת 0",
+      "fetched_at": "2026-08-27T07:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "payngo-is-machsanei-hashmal",
+      "claim": "Machsanei Hashmal's website is payngo.co.il; the chain was founded in 1993 and acquired by Electra Consumer Products in 2007, and operates around 50 branches. machsaneihashmal.co.il has no DNS record and mhashmal.co.il belongs to a different company, so the domain must not be guessed from the chain's name. payngo.co.il returns 403 to plain fetches and needs a browser.",
+      "source_url": "https://www.payngo.co.il/about-us",
+      "raw_snippet": "רשת מחסני חשמל הוקמה בשנת 1993 והחלה את דרכה כחנות אחת בלבד. היא הראשונה בישראל שאימצה ויישמה את קונספט המחסנים, ובעקבותיה הלכו רשתות אחרות בתחומי צריכה שונים. ב-2007 נרכשה הרשת על ידי חברת אלקטרה מוצרי צריכה.",
+      "fetched_at": "2026-08-27T07:55:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-08-27T07:55:00+00:00",
+      "note": "Verified in a real browser (curl gets a Cloudflare 403). DNS checked against 8.8.8.8: machsaneihashmal.co.il returns no record; mhashmal.co.il resolves to a site titled 'דהן אלקטריק מערכות חשמל ותחזוקה'.",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "ikea-israel-url",
+      "claim": "IKEA Israel's site is ikea.com/il/he; ikea.co.il redirects to it.",
+      "source_url": "https://www.ikea.com/il/he/",
+      "raw_snippet": "איקאה ישראל",
+      "fetched_at": "2026-08-27T07:55:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-08-27T07:55:00+00:00",
+      "note": "Navigating to ikea.co.il in a browser lands on https://www.ikea.com/il/he/.",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "instore-packaging-not-a-precondition",
+      "claim": "Returning the product in its original packaging is treated as proof it was not used, but opening the packaging does not itself count as use or as damaging the product unless proven otherwise. In-store refunds are due within 7 business days.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A8%D7%9B%D7%99%D7%A9%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%91%D7%99%D7%AA_%D7%94%D7%A2%D7%A1%D7%A7_%D7%95%D7%94%D7%97%D7%96%D7%A8%D7%AA_%D7%94%D7%9E%D7%95%D7%A6%D7%A8",
+      "raw_snippet": "פתיחת האריזה לא נחשבת כשימוש או כפגימה במוצר, אלא אם כן יוכח אחרת",
+      "fetched_at": "2026-08-27T08:05:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "remote-sale-statutory-basis-14c",
+      "claim": "The remote-sale cancellation right sits in the Consumer Protection Law 5741-1981, sections 14C, 14C2, 14E and 14I, together with the Consumer Protection (Cancellation of Transaction) Regulations 5771-2010.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98_%D7%90%D7%95_%D7%91%D7%98%D7%9C%D7%A4%D7%95%D7%9F",
+      "raw_snippet": "חוק הגנת הצרכן, תשמ\"א–1981 - סעיפים 14ג, 14ג2, 14ה, 14ט",
+      "fetched_at": "2026-08-27T08:08:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     }
   ]
 }
