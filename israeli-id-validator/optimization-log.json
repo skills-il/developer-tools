@@ -41,6 +41,17 @@
         "CARRY: the 2017 information-security regulations (database tiering basic/medium/high, access logging, segregation, annual review) are what actually govern a database of ID numbers and are absent, as is the narrowed database-registration duty and the extraterritorial reach to non-Israeli processors.",
         "CARRY: no golden test-vector table in references/id-formats.md (known-valid, transposition, off-by-one check digit, all-zeros, 8-digit-with-dropped-zero), and no note that a TZ is not a safe immutable primary key."
       ]
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-08-27",
+      "lessons": [
+        "The prose was right and the code was wrong, which is why nothing caught this for two cycles. Reading SKILL.md tells you the all-zeros sentinel is a trap; only RUNNING the script showed the script falls into it.",
+        "The defect was in input handling, not in the algorithm. A deterministic algorithm invites the assumption that a deterministic script is fine. Test the BOUNDARY of the input domain, not the middle: empty, whitespace, letters, punctuation, over-length, and a decimal point.",
+        "Stripping every non-digit with a regex is the natural-looking one-liner and it is the bug. It deletes offending characters instead of reporting them, so the validator accepts garbage silently. The skill recommended it in Troubleshooting, so the bad pattern was being taught, not just used.",
+        "A single boolean return cannot express three outcomes. Separating malformed input from a failed check digit needed an exit-code contract (0 valid, 1 bad check digit, 2 malformed), and the library already held the information the CLI was discarding.",
+        "Cross-checking against an independently written implementation of the same published algorithm is cheap, and is what allowed the arithmetic to be declared sound by evidence rather than by inspection."
+      ]
     }
   ]
 }

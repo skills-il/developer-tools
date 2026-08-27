@@ -20,14 +20,52 @@ import re
 import sys
 
 
+# Characters a human or a spreadsheet legitimately puts INSIDE an ID for legibility.
+# Anything else is garbage and must be reported, not silently deleted: stripping
+# every non-digit turns "62819482.1" into a VALID teudat zehut, which is worse than
+# rejecting it, because the caller never learns the input was malformed.
+SEPARATORS = " -\u2013\u2014\t\u00a0"
+
+
+def parse_id(id_number) -> tuple:
+    """Classify raw input. Returns (digits_or_None, error_or_None).
+
+    Distinguishes the three things the old normalize_id() collapsed into one:
+    an empty field, a malformed string, and a real ID that fails its check digit.
+    A caller that cannot tell those apart shows the user the wrong message.
+    """
+    if id_number is None:
+        return None, "empty input: no ID supplied"
+    raw = str(id_number)
+    if raw.strip() == "":
+        return None, "empty input: no ID supplied"
+
+    # Only the documented separators may be discarded.
+    stripped = "".join(c for c in raw if c not in SEPARATORS)
+    bad = sorted({c for c in stripped if not ("0" <= c <= "9")})
+    if bad:
+        return None, ("contains characters that are not digits or separators: "
+                      + " ".join(repr(c) for c in bad))
+    if stripped == "":
+        return None, "empty input: separators only, no digits"
+    if len(stripped) > 9:
+        return None, f"too long: {len(stripped)} digits (an Israeli ID is at most 9)"
+    return stripped.zfill(9), None
+
+
 def normalize_id(id_number: str) -> str:
-    """Strip every non-ASCII-digit character and left-pad to 9 digits.
+    """Strip separators and left-pad to 9 digits.
 
     Uses an explicit ASCII class rather than str.isdigit(), which is True for
     Arabic-Indic digits and superscripts. Those either crash int() or silently
     validate as a different value than the one stored downstream.
+
+    Kept for backward compatibility. Prefer parse_id(), which tells you WHY an
+    input was rejected instead of silently returning "000000000" for an empty
+    string, for "abc", and for a row of punctuation.
     """
-    return re.sub(r'[^0-9]', '', id_number).zfill(9)
+    digits, _ = parse_id(id_number)
+    return digits if digits is not None else re.sub(r'[^0-9]', '', str(id_number or "")).zfill(9)
 
 
 def validate_israeli_id(id_number: str) -> bool:
@@ -99,8 +137,10 @@ def identify_id_type(id_number: str) -> str:
     Returns:
         String describing the ID type
     """
-    id_str = normalize_id(id_number)
-    return CORPORATE_PREFIXES.get(id_str[:2], "Teudat Zehut (Personal ID)")
+    digits, error = parse_id(id_number)
+    if error is not None:
+        return "Unrecognised (not a well-formed Israeli ID)"
+    return CORPORATE_PREFIXES.get(digits[:2], "Teudat Zehut (Personal ID)")
 
 
 def generate_test_id(prefix: str = "") -> str:
@@ -163,24 +203,29 @@ def validate_with_details(id_number: str) -> dict:
     Returns:
         Dictionary with validation results and details
     """
-    id_str = normalize_id(id_number)
+    digits, error = parse_id(id_number)
 
+    if error is not None:
+        return {
+            "input": id_number,
+            "normalized": None,
+            "formatted": None,
+            "valid": False,
+            "type": "Unrecognised (not a well-formed Israeli ID)",
+            "error": error,
+            "details": [f"Malformed input: {error}"],
+        }
+
+    id_str = digits
     result = {
         "input": id_number,
         "normalized": id_str,
         "formatted": format_id(id_str),
         "valid": False,
         "type": identify_id_type(id_str),
+        "error": None,
         "details": []
     }
-
-    if len(id_str) != 9:
-        result["details"].append(f"Invalid length: {len(id_str)} (expected 9)")
-        return result
-
-    if not id_str.isdigit():
-        result["details"].append("Contains non-digit characters")
-        return result
 
     if id_str == "000000000":
         result["details"].append("Placeholder ID (all zeros): passes Luhn but is never a real ID")
@@ -240,6 +285,11 @@ def main():
         if args.verbose:
             result = validate_with_details(args.id_number)
             print(f"Input:      {result['input']}")
+            if result.get("error"):
+                print(f"Type:       {result['type']}")
+                print(f"Valid:      False")
+                print(f"Error:      {result['error']}")
+                sys.exit(2)
             print(f"Normalized: {result['normalized']}")
             print(f"Formatted:  {result['formatted']}")
             print(f"Type:       {result['type']}")
@@ -248,11 +298,20 @@ def main():
             for detail in result["details"]:
                 print(f"  {detail}")
         else:
-            is_valid = validate_israeli_id(args.id_number)
-            id_type = identify_id_type(args.id_number)
-            status = "VALID" if is_valid else "INVALID"
-            print(f"{status} - {id_type}: {format_id(args.id_number)}")
-            sys.exit(0 if is_valid else 1)
+            result = validate_with_details(args.id_number)
+            if result.get("error"):
+                # Exit 2, not 1: "you gave me something that is not an ID" is a
+                # different outcome from "this ID fails its check digit", and a
+                # caller scripting against this needs to tell them apart.
+                print(f"MALFORMED - {result['error']}")
+                sys.exit(2)
+            status = "VALID" if result["valid"] else "INVALID"
+            print(f"{status} - {result['type']}: {result['formatted']}")
+            if not result["valid"] and result["details"]:
+                reason = result["details"][0]
+                if not reason.startswith("Digit "):
+                    print(f"  reason: {reason}")
+            sys.exit(0 if result["valid"] else 1)
 
     elif args.command == "generate":
         print(f"Generating {args.count} test ID(s)"
@@ -264,11 +323,15 @@ def main():
             print(f"  {format_id(test_id)}  ({id_type})")
 
     elif args.command == "identify":
+        digits, err = parse_id(args.id_number)
         id_type = identify_id_type(args.id_number)
         is_valid = validate_israeli_id(args.id_number)
         print(f"Type:  {id_type}")
         print(f"Valid: {is_valid}")
-        norm = args.id_number.replace('-', '').replace(' ', '').zfill(9)
+        if err is not None:
+            print(f"Error: {err}")
+            sys.exit(2)
+        norm = digits
         if norm[:2] in CORPORATE_PREFIXES:
             print("Note:  Prefix typing is heuristic. A 9-digit number starting with 5 is "
                   "usually a registered entity, but a personal ID cannot be ruled out by "

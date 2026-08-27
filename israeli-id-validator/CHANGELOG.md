@@ -1,0 +1,14 @@
+# Changelog
+
+## 1.3.0 - 2026-08-27
+
+The check-digit algorithm was correct. The input handling around it was not, which is the failure mode an "evergreen" skill hides best: the prose was right while the code silently accepted garbage.
+
+- **`62819482.1` validated as a real teudat zehut.** `normalize_id()` stripped *every* non-digit character, so any punctuation-laced string collapsed onto a valid 9-digit ID. The skill's documented intent was to discard dashes and spaces; the implementation discarded everything. Now only a named separator set (space, hyphen, en dash, em dash, tab, non-breaking space) is discarded and anything else is reported as malformed. This is the difference between a validator and a filter, and it is the single defect on this page that could pass bad data into a form.
+- **Empty input, `abc` and `!!!!!!!!!` were all reported as the ID `000000000`.** The caller could not tell "the user left the field blank" from "the user typed letters" from "this ID fails its check digit", so a form built on it shows the wrong message. Worse, the skill's own Gotchas already warn that an empty string "zero-pads straight into" the all-zeros sentinel; the bundled script was the thing falling into the trap it documents.
+- **Over-length input was not rejected.** `0000000018` and `123456789012` were reported as invalid IDs rather than as not-an-ID, sending the user to hunt a typo that was not there. An Israeli ID is at most 9 digits.
+- **`identify` typed garbage.** It answered "Teudat Zehut (Personal ID)" for `abc`, for an empty string, and for 10-digit input. It now answers "Unrecognised" and gives the reason.
+- **The CLI hid a diagnosis the library already had.** `validate_with_details()` knew about "Invalid length: 10 (expected 9)" and about the all-zeros sentinel, and the plain `validate` command printed neither. It now prints the reason and, more usefully, separates the outcomes by **exit code: 0 valid, 1 a well-formed ID that fails its check digit, 2 malformed input.** Script the exit code, not the text.
+- The Troubleshooting entry that recommended `re.sub(r'[^0-9]', '', id)` has been corrected, in both languages and in the inline code sample. That one-liner was the source of the false positive, and it is exactly the shape an agent copies because it looks obviously right.
+
+**What was verified and is unchanged.** The check-digit arithmetic was cross-checked against an independently written implementation over 24 random 9-digit inputs with zero mismatches, and 40 generated test IDs all pass that independent check. Leading-zero handling is correct: `18` and `000000018` both validate, and `12345678` correctly pads to `012345678`. The all-zeros sentinel is correctly rejected. Formatted corporate numbers (`51-530820-3`, `628 194 821`) still validate identically to their raw-digit forms.

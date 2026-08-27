@@ -43,13 +43,20 @@ import re
 
 def validate_israeli_id(id_number: str) -> bool:
     """Validate Israeli ID number (TZ, company, amuta, etc.)"""
-    # Strip every non-ASCII-digit character, then pad to 9 digits.
-    # Do NOT gate on str.isdigit(): it is True for Arabic-Indic digits and
-    # superscripts, which either crash int() or validate as a different value.
-    id_str = re.sub(r'[^0-9]', '', id_number).zfill(9)
+    # Discard ONLY the separators a human or a spreadsheet legitimately puts
+    # inside an ID. Do NOT strip every non-digit: that silently turns
+    # "62819482.1" into the VALID id 628194821, and turns "", "abc" and a row
+    # of punctuation into "000000000". A validator that accepts garbage is
+    # worse than one that rejects a real ID, because nobody finds out.
+    # Do NOT gate on str.isdigit() either: it is True for Arabic-Indic digits
+    # and superscripts, which either crash int() or validate as another value.
+    SEPARATORS = " -\u2013\u2014\t\u00a0"
+    stripped = ''.join(c for c in id_number if c not in SEPARATORS)
 
-    if not re.fullmatch(r'[0-9]{9}', id_str):
-        return False
+    if stripped == '' or not re.fullmatch(r'[0-9]{1,9}', stripped):
+        return False        # malformed input, NOT an invalid ID
+
+    id_str = stripped.zfill(9)
 
     if id_str == '000000000':   # passes Luhn but is never a real ID
         return False
@@ -136,6 +143,8 @@ Result: Generate 10 valid IDs with 51- prefix for testing.
 - A self-employed person's business number (mispar osek, whether osek murshe or osek patur) IS their personal 9-digit Teudat Zehut, not a 5x registered-entity number. A "business number" field that accepts only 5x numbers rejects every osek patur in the country, which is the most common defect in Israeli invoicing and supplier forms. Accept both shapes wherever you ask for a business number.
 - The IDF personal number (mispar ishi) is a separate, IDF-issued identifier and is out of scope for this skill. Do not run it through the civilian check-digit algorithm: this skill documents no check digit for it, so a pass or fail result would be meaningless.
 - `000000000` passes the Luhn check (its digit sum is 0, divisible by 10) but is never a real ID. It is the most common sentinel / empty-field false positive: an empty string or a numeric-default column zero-pads straight into it. Reject all-zeros explicitly before trusting a "valid" result.
+- **Stripping every non-digit before validating is the bug that produces false positives.** It is the natural-looking one-liner, and it makes `62819482.1` validate as `628194821`. Discard a named separator set only, and treat anything else as malformed input rather than deleting it. This is the difference between a validator and a filter.
+- **An Israeli ID is at most 9 digits, so reject longer input rather than letting it fail the checksum.** `0000000018` is not "an invalid ID", it is not an ID at all, and telling the user their ID is invalid sends them looking for a typo that is not there.
 - Do not reject a personal ID by its leading digit. There is no documented "temporary resident vs permanent" prefix for the 9-digit Luhn-checked Teudat Zehut; validate the format only and pad with `zfill(9)` rather than filtering by range.
 
 ## Troubleshooting
@@ -154,7 +163,13 @@ Solution: Always store IDs as strings. On read, left-pad to 9 with `zfill(9)` (P
 
 ### Error: "Invalid input, dashes or spaces in ID"
 Cause: User pasted a formatted company or amuta number such as `51-530820-3` or `58 012345 3`.
-Solution: Strip every non-ASCII-digit character (`re.sub(r'[^0-9]', '', id)`) before length checks. Use the explicit `[^0-9]` class, not `\D` or `str.isdigit()`, both of which treat Arabic-Indic digits as digits. Both human-formatted and raw-digit forms must validate identically.
+Solution: Discard only the separator characters (space, hyphen, en dash, em dash, tab, non-breaking space) before the length check, then `zfill(9)`. Both the human-formatted and the raw-digit form must validate identically.
+
+**Do not strip every non-digit.** `re.sub(r'[^0-9]', '', id)` looks like the same thing and is not: it deletes the offending characters instead of reporting them, so `62819482.1` becomes the **valid** ID `628194821`, and `""`, `"abc"` and `"!!!!!!!!!"` all become `000000000`. Use an explicit separator set, and reject anything else as malformed. Do not use `\D` or `str.isdigit()` for the digit test either; both are true for Arabic-Indic digits.
+
+### Error: "Cannot tell an empty field from a bad ID"
+Cause: The validator returns a single boolean, so "the user left this blank", "the user typed letters" and "this ID fails its check digit" all arrive as `False`, and the form shows the wrong message.
+Solution: Return the reason, not just the verdict. `scripts/validate_id.py` distinguishes the three with exit codes: **0** valid, **1** a well-formed ID that fails its check digit, **2** malformed input, with the reason on stdout (`MALFORMED - too long: 10 digits`, `MALFORMED - empty input`, `MALFORMED - contains characters that are not digits or separators: '.'`). Script the exit code, not the text.
 
 ### Error: "9-digit input but algorithm fails"
 Cause: Common cause is a transposition or single-digit typo in the body of the ID, not the check digit itself. Other causes: copy-paste from a Hebrew RTL source where digit order was reversed, or the value is a military `mispar ishi` (which does not share the civilian Luhn algorithm).

@@ -102,6 +102,20 @@
       "source_fetched_at": "2026-07-26T00:00:00Z",
       "raw_snippet": "על גופים ציבוריים ועל מחזיקים במאגריהם, על גופים העוסקים בסחר במידע שבמאגרם מידע אישי על יותר מ-10,000 בני אדם, על גופים שעיסוקם כרוך בניטור שוטף ושיטתי של בני אדם, ועל בעלי שליטה ומחזיקים שעיסוקם העיקרי כולל עיבוד בהיקף ניכר של מידע בעל רגישות מיוחדת",
       "confidence": "high"
+    },
+    {
+      "claim_id": "separator-only-stripping",
+      "claim": "DESIGN RULE, verified by executing the bundled script rather than quoted from an external source. Stripping every non-digit character before validating an Israeli ID produces false positives: the input 62819482.1 becomes the valid ID 628194821, and an empty string, a word, or a row of punctuation all become 000000000. scripts/validate_id.py therefore discards only a named separator set (space, hyphen, en dash, em dash, tab, non-breaking space), rejects anything else as malformed, rejects input longer than 9 digits, and distinguishes the three outcomes by exit code: 0 valid, 1 a well-formed ID failing its check digit, 2 malformed input.",
+      "source_url": "https://www.gov.il/he/departments/population_and_immigration_authority",
+      "raw_snippet": "DERIVED FROM EXECUTION, not from a published page. Reproduce with: python3 scripts/validate_id.py validate 62819482.1 (expect exit 2 MALFORMED), validate 628194821 (expect exit 0 VALID), validate 12345678 (expect exit 1 INVALID), validate 0000000018 (expect exit 2, too long), validate \"\" (expect exit 2, empty input).",
+      "verified_via": "executed the bundled script against a battery of edge cases and cross-checked the check-digit arithmetic against an independently written implementation on 24 random 9-digit inputs, 0 mismatches",
+      "verified_at": "2026-08-27T00:00:00Z",
+      "fetched_at": "2026-08-27T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/validate_id.py"
+      ]
     }
   ]
 }
