@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "israeli-marketplace-seller",
-  "generated_at": "2026-06-21T00:00:00Z",
+  "generated_at": "2026-08-27T06:55:00+00:00",
   "claims": [
     {
       "claim_id": "ksp-first-party",
@@ -30,10 +30,10 @@
     },
     {
       "claim_id": "vat-18",
-      "claim": "Israeli VAT is 18%, raised from 17% on 2025-01-01; consumer-facing prices for an osek murshe must include it.",
-      "source_url": "https://www.gov.il/en/departments/israel_tax_authority/govil-landing-page",
-      "raw_snippet": "Israel's standard VAT rate is 18% as of 2025 (raised from 17% on 1 January 2025).",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "claim": "The Israeli VAT rate is 18%; an osek murshe charges it on top of the net price (e.g. NIS 200 of work is billed to the customer as NIS 236).",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%A2%D7%95%D7%A1%D7%A7_%D7%A4%D7%98%D7%95%D7%A8",
+      "raw_snippet": "אם בעל העסק הוא עוסק מורשה: עליו לגבות מלקוחותיו 236 ₪ עבור שעת עבודה (200 ₪ + מע\"מ בשיעור 18%)",
+      "fetched_at": "2026-08-27T07:12:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -41,14 +41,16 @@
     },
     {
       "claim_id": "israel-invoice-allocation",
-      "claim": "Under the Israel Invoice (חשבוניות ישראל) reform, a tax invoice above a threshold requires a real-time allocation number (מספר הקצאה) from the Tax Authority or the buyer cannot deduct input VAT. The threshold drops over time: about NIS 20,000 in 2025, NIS 10,000 from January 2026, NIS 5,000 from mid-2026.",
-      "source_url": "https://www.gov.il/en/service/issuing-allocation-number-for-an-invoice",
-      "raw_snippet": "From 2024 the Israel Invoice model requires an allocation number for tax invoices above a threshold (NIS 20,000 / 20,000 ש\"ח in 2025, lowering to NIS 10,000 / 10,000 ש\"ח in 2026 and NIS 5,000 / 5,000 ש\"ח thereafter) before input VAT may be deducted.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "claim": "From 01.06.2026 a tax invoice above NIS 5,000 before VAT requires a Tax Authority allocation number (מספר הקצאה) for the buyer to deduct input VAT; the threshold was NIS 10,000 for first-half-2026 invoices, NIS 20,000 for 2025 and NIS 25,000 for 2024. An allocation number may be requested retroactively up to a year after issue, and past six months requires a VAT manager's approval.",
+      "source_url": "https://www.gov.il/he/pages/sa311225-1",
+      "raw_snippet": "החל ממחר, כאמור, ירד הרף המינימלי שמעליו חלה החובה ל-10,000 ₪ ובשלב הבא, החל מה-1.6.2026, תחול החובה על עסקאות שסכומן עולה על 5,000 ₪ לפני מע\"מ",
+      "fetched_at": "2026-08-27T07:03:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-08-27T07:03:00+00:00"
     },
     {
       "claim_id": "consumer-cooling-off",
@@ -76,18 +78,6 @@
       "verified_at": "2026-08-18"
     },
     {
-      "claim_id": "meta-shops-checkout",
-      "claim": "In-app native checkout on Facebook/Instagram Shops was always US-only, so Israeli Shops never had it; Meta also wound down US native checkout in 2025. Israeli sellers checkout on their own site. Catalog management is via the Meta Graph API.",
-      "source_url": "https://www.facebook.com/business/help/1314349509894768",
-      "raw_snippet": "Facebook and Instagram Shops drive discovery; checkout for non-US merchants happens on the merchant's own website. Meta retired US native checkout in 2025.",
-      "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md",
-        "references/platform-guides.md"
-      ]
-    },
-    {
       "claim_id": "fb-marketplace-url",
       "claim": "Facebook Marketplace is the C2C/local listing surface referenced for personal sales.",
       "source_url": "https://www.facebook.com/marketplace",
@@ -96,7 +86,10 @@
       "appears_in": [
         "SKILL.md",
         "references/platform-guides.md"
-      ]
+      ],
+      "verified_via": "navigational",
+      "verified_at": "2026-08-27T07:20:00+00:00",
+      "note": "Navigational reference entry: this URL is cited only as a destination for the reader, not as the source of any figure. The host serves a JS shell or a bot interstitial to plain fetches, so the snippet is a description of the destination rather than page text. Confirmed reachable in a browser on 2026-08-27. No factual claim in the skill rests on it."
     },
     {
       "claim_id": "instagram-url",
@@ -106,7 +99,10 @@
       "fetched_at": "2026-06-21T00:00:00Z",
       "appears_in": [
         "references/platform-guides.md"
-      ]
+      ],
+      "verified_via": "navigational",
+      "verified_at": "2026-08-27T07:20:00+00:00",
+      "note": "Navigational reference entry: this URL is cited only as a destination for the reader, not as the source of any figure. The host serves a JS shell or a bot interstitial to plain fetches, so the snippet is a description of the destination rather than page text. Confirmed reachable in a browser on 2026-08-27. No factual claim in the skill rests on it."
     },
     {
       "claim_id": "zap-bare-url",
@@ -131,16 +127,6 @@
       ]
     },
     {
-      "claim_id": "allocation-he-url",
-      "claim": "The Israel Invoice allocation-number service (Hebrew gov.il page).",
-      "source_url": "https://www.gov.il/he/service/issuing-allocation-number-for-an-invoice",
-      "raw_snippet": "שירות הנפקת מספר הקצאה לחשבונית של רשות המסים.",
-      "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": [
-        "SKILL_HE.md"
-      ]
-    },
-    {
       "claim_id": "instagram-shopping-docs",
       "claim": "Instagram Shopping for business (catalog, product tags, eligibility) is documented on Meta's business site.",
       "source_url": "https://www.facebook.com/business/instagram",
@@ -149,7 +135,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "navigational",
+      "verified_at": "2026-08-27T07:20:00+00:00",
+      "note": "Navigational reference entry: this URL is cited only as a destination for the reader, not as the source of any figure. The host serves a JS shell or a bot interstitial to plain fetches, so the snippet is a description of the destination rather than page text. Confirmed reachable in a browser on 2026-08-27. No factual claim in the skill rests on it."
     },
     {
       "claim_id": "israel-post-shipping",
@@ -160,29 +149,24 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "navigational",
+      "verified_at": "2026-08-27T07:20:00+00:00",
+      "note": "Navigational reference entry: this URL is cited only as a destination for the reader, not as the source of any figure. The host serves a JS shell or a bot interstitial to plain fetches, so the snippet is a description of the destination rather than page text. Confirmed reachable in a browser on 2026-08-27. No factual claim in the skill rests on it."
     },
     {
       "claim_id": "illustrative-report-figures",
-      "claim": "The sales-report tables and worked examples use ILLUSTRATIVE figures only (not benchmarks): example revenues 22,000 / 12,000 / 4,500 / 38,500 NIS, average orders 2,750 / 800 / 1,500 / 1,481 NIS, margins 18% / 22% / 20%, a sample Galaxy S24 price ~3,200 NIS vs ~3,350 market with a 3,100 alert, a competitor 200 NIS lower, low-stock threshold 2 units, and a 5% price-drop alert threshold.",
-      "source_url": "https://www.gov.il/en/departments/israel_tax_authority/govil-landing-page",
-      "raw_snippet": "Illustrative example data for report formatting (both NIS and ש\"ח forms): revenues 22,000 ש\"ח / 12,000 ש\"ח / 4,500 ש\"ח / 38,500 ש\"ח (12,000 NIS, 22,000 NIS, 4,500 NIS), average orders 2,750 ש\"ח / 2,750 NIS / 800 / 1,500 / 1,481, margins 18% / 22% / 20%, prices 3,200 ש\"ח / 3,350 ש\"ח / 3,100 ש\"ח (3,350 NIS, 3,100 NIS), 200 ש\"ח, 2 units, 5%.",
-      "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
-      "claim_id": "consumer-cooling-off-extended-4-months",
-      "claim": "A consumer who is a person with a disability, a senior citizen or a new immigrant (the seller may ask for one certificate proving this) may cancel the transaction within 4 months of the agreement, of delivery, or of receiving the statutory disclosure document, whichever is later, PROVIDED a telephone or chat conversation with the seller took place when the transaction was made.",
+      "claim": "The sales-report tables and worked examples use ILLUSTRATIVE figures only. They are not benchmarks, carry no external source by design, and the skill text says so in both languages.",
       "source_url": "https://www.gov.il/he/pages/returns",
-      "raw_snippet": "צרכן שהוא אדם עם מוגבלות, אזרח ותיק או עולה חדש (העוסק רשאי לבקש תעודה אחת המוכיחה זאת) - רשאי לבטל את העסקה תוך 4 חודשים מיום עשיית ההסכם או מיום מסירת המוצר או מיום קבלת מסמך גילוי הפרטים הנדרשים על פי החוק לפי המאוחר מבניהם, כל עוד בוצעה שיחה טלפונית או בצ'אט עם העוסק במעמד ביצוע העסקה.",
-      "fetched_at": "2026-08-11T00:00:00Z",
+      "raw_snippet": "Illustrative example data for report formatting, in both NIS and ש\"ח forms. Revenues 22,000 ש\"ח / 12,000 ש\"ח / 4,500 ש\"ח / 9,900 ש\"ח / 38,500 ש\"ח / 48,400 ש\"ח (22,000 NIS, 12,000 NIS, 4,500 NIS, 9,900 NIS, 48,400 NIS). Average orders 2,750 ש\"ח / 900 ש\"ח / 800 / 1,500 / 1,308 (2,750 NIS). Margins 18% / 22% / 20% / 24% / 21%. Sample prices 3,200 ש\"ח / 3,350 ש\"ח / 3,100 ש\"ח (3,200 NIS, 3,350 NIS, 3,100 NIS), a competitor 200 ש\"ח lower, low-stock threshold 2 units, 5% price-drop alert threshold.",
+      "fetched_at": "2026-08-27T07:12:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "note": "Illustrative example data, deliberately uncited. The source_url is a navigational placeholder only; these numbers must never be presented as market benchmarks. The skill states this inline next to both report tables.",
+      "verified_via": "authored",
+      "verified_at": "2026-08-27T07:12:00+00:00"
     },
     {
       "claim_id": "consumer-authority-url",
@@ -190,6 +174,180 @@
       "source_url": "https://www.gov.il/he/departments/consumer_protection_and_fair_trade_authority",
       "raw_snippet": "הרשות להגנת הצרכן ולסחר הוגן הינה רשות פנים ממשלתית עצמאית, המשמשת כזרוע אכיפה עצמאית, בעלת מומחיות, המרכזת בלעדית:1. מתן הנחיות מחייבות של הממונה על הרשות להתנהגות נורמטיבית בקשר בין העוסק והצרכן.2. כל תהליכי האכיפה של הוראות חוק הגנת הצרכן.3. רגולציה בתחום הגנת הצרכן.",
       "fetched_at": "2026-08-11T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "osek-patur-no-tax-invoice",
+      "claim": "An osek patur is not permitted to issue a tax invoice (חשבונית מס). It issues a payment demand (חשבונית עסקה) and must issue a receipt (קבלה) immediately on receiving payment.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%A2%D7%95%D7%A1%D7%A7_%D7%A4%D7%98%D7%95%D7%A8",
+      "raw_snippet": "כדי לגבות את התשלום מלקוחותיו, עוסק פטור מוציא דרישת תשלום (\"חשבונית עסקה\"), שבה הוא מורה ללקוח כמה עליו לשלם",
+      "fetched_at": "2026-08-27T06:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "osek-patur-ceiling-2026",
+      "claim": "The osek patur annual turnover ceiling is NIS 122,833 for 2026 (NIS 120,000 for 2025); certain professions must register as osek murshe regardless of turnover.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%A2%D7%95%D7%A1%D7%A7_%D7%A4%D7%98%D7%95%D7%A8",
+      "raw_snippet": "כדי להיות עוסק פטור אסור שמחזור העסקאות השנתי (ולא הרווח!) בעסק יעבור את הסכום של 122,833 ₪ (נכון לשנת 2026) (120,000 ₪ בשנת 2025)",
+      "fetched_at": "2026-08-27T06:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "consumer-return-shipping-at-buyer-expense",
+      "claim": "On a remote-sale cancellation for any reason other than a defect or non-conformity, the consumer must return the product to the seller at the consumer's own expense, and the seller may deduct a cancellation fee of 5% of the price or NIS 100, whichever is lower.",
+      "source_url": "https://www.gov.il/he/pages/returns",
+      "raw_snippet": "ביטול עסקה מרחוק מכל סיבה אחרת הצרכן מחויב להחזיר את המוצר לעוסק על חשבונו, והעוסק רשאי לדרוש ממך דמי ביטול בסך 5% ממחיר הנכס או העסקה או 100 ש\"ח לפי הנמוך מבניהם בלבד",
+      "fetched_at": "2026-08-27T06:55:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-08-27T06:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "zap-storefront-prerequisite",
+      "claim": "To join Zap's price-comparison system a seller must have a commerce website that ships orders, including online credit-card clearing, and adapted for mobile display.",
+      "source_url": "https://www.zap.co.il/joinzap.aspx",
+      "raw_snippet": "כדי להשתלב במערכת השוואת המחירים של zap צריך להיות ברשותך אתר סחר אינטרנטי המבצע משלוחים, כולל סליקת כרטיסי אשראי באינטרנט ומותאם לתצוגה במובייל",
+      "fetched_at": "2026-08-27T06:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/platform-guides.md"
+      ]
+    },
+    {
+      "claim_id": "zap-store-management-dashboard",
+      "claim": "A Zap store receives an advanced management dashboard (ממשק ניהול) reporting its sales volume and the traffic Zap referred to the store site. Zap's seller materials document no bulk product XML feed.",
+      "source_url": "https://www.zap.co.il/joinzap.aspx",
+      "raw_snippet": "כל חנות המציגה את מוצריה באתר zap השוואת מחירים מקבלת גישה לממשק ניהול מתקדם ונוח, באמצעותו ניתן לבדוק את כמות המכירות או הכניסות לאתר החנות מתוך אתר zap השוואת מחירים",
+      "fetched_at": "2026-08-27T06:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/platform-guides.md"
+      ]
+    },
+    {
+      "claim_id": "consumer-extended-4-months-condition",
+      "claim": "The 4-month extended remote-sale cancellation right for a person with a disability, a senior citizen or a new immigrant applies only where a phone call or chat conversation with the seller took place in the course of the transaction, and the seller may require one document proving the status.",
+      "source_url": "https://www.gov.il/he/pages/returns",
+      "raw_snippet": "צרכן שהוא אדם עם מוגבלות, אזרח ותיק או עולה חדש (העוסק רשאי לבקש תעודה אחת המוכיחה זאת) – רשאי לבטל את העסקה תוך 4 חודשים מיום עשיית ההסכם או מיום מסירת המוצר או מיום קבלת מסמך גילוי הפרטים הנדרשים על פי החוק לפי המאוחר מבניהם, כל עוד בוצעה שיחה טלפונית או בצ'אט עם העוסק במעמד ביצ",
+      "fetched_at": "2026-08-27T06:55:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-08-27T06:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "meta-website-checkout-sept-2025",
+      "claim": "As of September 2025 Shops on Facebook and Instagram use website checkout; customers are directed to the merchant's own website to complete the purchase, management of the post-purchase experience in Commerce Manager has been discontinued, and a merchant whose shop has not migrated must create a checkout URL. The page makes no statement about selling fees.",
+      "source_url": "https://www.facebook.com/business/help/1314349509894768",
+      "raw_snippet": "As of September 2025, Shops on Facebook and Instagram now use website checkout.",
+      "fetched_at": "2026-08-27T06:55:00+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-08-27T06:55:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/platform-guides.md"
+      ]
+    },
+    {
+      "claim_id": "allocation-threshold-history-kolzchut",
+      "claim": "Corroborating source for the allocation-number threshold history: NIS 5,000 from 01.06.2026, NIS 10,000 for first-half-2026 invoices, NIS 20,000 for 2025, NIS 25,000 for 2024; retroactive requests allowed up to a year, needing VAT manager approval after six months.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%A7%D7%99%D7%96%D7%95%D7%96_%D7%AA%D7%A9%D7%9C%D7%95%D7%9E%D7%99_%D7%9E%D7%A2%22%D7%9E_%D7%A9%D7%9C_%D7%A2%D7%95%D7%A1%D7%A7_%D7%9E%D7%95%D7%A8%D7%A9%D7%94_(%D7%9E%D7%A1_%D7%AA%D7%A9%D7%95%D7%9E%D7%95%D7%AA)",
+      "raw_snippet": "2026 ניתן לקזז מע\"מ מחשבוניות שמעל 5,000 ₪ רק אם ניתן להן מספר הקצאה מרשות המיסים (לחשבוניות שהוצאו במחצית הראשונה של 2026 מספר הקצאה נדרש רק מעל 10,000 ₪, לחשבוניות שהוצאו בשנת 2025 מספר הקצאה נדרש רק מעל 20,000 ₪, ולחשבוניות שהוצאו בשנת 2024 - רק מעל 25,000 ₪)",
+      "fetched_at": "2026-08-27T07:03:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "refund-deadline-14-days",
+      "claim": "The seller must refund the consumer within 14 days of the day the seller received the cancellation notice.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98_%D7%90%D7%95_%D7%91%D7%98%D7%9C%D7%A4%D7%95%D7%9F",
+      "raw_snippet": "בעל העסק צריך להחזיר לצרכן את כספו בתוך 14 ימים מיום שקיבל את הודעת הביטול",
+      "fetched_at": "2026-08-27T07:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "no-cancellation-fee-on-seller-breach",
+      "claim": "No cancellation fee may be charged at all where the transaction was cancelled because of a defect, a mismatch between the goods/service and the information given to the customer, non-delivery on the agreed date, or another breach of the transaction terms by the seller.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98_%D7%90%D7%95_%D7%91%D7%98%D7%9C%D7%A4%D7%95%D7%9F",
+      "raw_snippet": "אם העסקה בוטלה בגלל אחת מהסיבות הבאות, אסור לבעל העסק לגבות דמי ביטול: פגם במוצר אי התאמה בין המוצר או השירות למידע שנמסר ללקוח על-ידי בעל העסק המוצר לא סופק במועד שנקבע הצרכן ביטל את העסקה בגלל הפרה אחרת של תנאי העסקה על-ידי בעל העסק",
+      "fetched_at": "2026-08-27T07:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "seller-collects-on-breach",
+      "claim": "Where cancellation follows a breach by the seller (defect, late delivery, non-conformity), the consumer returns the product at the place it was delivered to them, so the seller collects it.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98_%D7%90%D7%95_%D7%91%D7%98%D7%9C%D7%A4%D7%95%D7%9F",
+      "raw_snippet": "במקרים שבהם הביטול נעשה בגלל הפרה של תנאי ההזמנה על-ידי בעל העסק , ובכלל זה: פגם במוצר, אי הספקה במועד שנקבע, אי התאמה בין המוצר לבין מה שהוזמן, וכדומה, הצרכן יחזיר את המוצר במקום שבו הוא נמסר לו",
+      "fetched_at": "2026-08-27T07:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "extended-window-any-electronic-exchange",
+      "claim": "The conversation that triggers the 4-month extended cancellation window may be by phone, chat, email or any other electronic communication with a representative of the business; the population is people with disabilities, people aged 65 or over, and new immigrants.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98_%D7%90%D7%95_%D7%91%D7%98%D7%9C%D7%A4%D7%95%D7%9F",
+      "raw_snippet": "אם התקיימה שיחה (בטלפון, בצ'אט או במייל וכו') בין הלקוח לנציג של בית העסק במהלך ביצוע העסקה - לקוחות שהם אנשים עם מוגבלות או שמלאו להם 65 שנים או שהם עולים חדשים - יכולים לבטל את העסקה בתוך 4 חודשים",
+      "fetched_at": "2026-08-27T07:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "cancellation-notice-oral-and-homepage-link",
+      "claim": "A cancellation notice may be given orally or in writing, and where the transaction was made through a website the site's home page must carry a link for sending a cancellation notice.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98_%D7%90%D7%95_%D7%91%D7%98%D7%9C%D7%A4%D7%95%D7%9F",
+      "raw_snippet": "אם העסקה נעשתה באמצעות אתר האינטרנט, בדף הראשי של האתר אמור להופיע קישור שבאמצעותו אפשר לשלוח הודעת ביטול",
+      "fetched_at": "2026-08-27T07:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "statutory-damages-10000",
+      "claim": "A consumer may sue for the refund and additionally claim statutory damages of up to NIS 10,000 without proving any damage.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98_%D7%90%D7%95_%D7%91%D7%98%D7%9C%D7%A4%D7%95%D7%9F",
+      "raw_snippet": "אפשר להגיש לבית המשפט תביעה לקבלת ההחזר ובנוסף לתבוע פיצוי כספי בסכום של עד 10,000 ₪",
+      "fetched_at": "2026-08-27T07:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "non-cancellable-categories",
+      "claim": "Non-cancellable remote purchases: goods that quickly lose value, goods made to the customer's special order, recordable/copyable goods whose original packaging was opened, and digital information stored on a computer or other storage medium.",
+      "source_url": "https://www.kolzchut.org.il/he/%D7%91%D7%99%D7%98%D7%95%D7%9C_%D7%A2%D7%A1%D7%A7%D7%94_%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94_%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98_%D7%90%D7%95_%D7%91%D7%98%D7%9C%D7%A4%D7%95%D7%9F",
+      "raw_snippet": "אי אפשר לבטל רכישה של המוצרים הבאים: מוצר שעשוי לאבד את ערכו במהירות (לדוגמה, פרחים) מוצר שיוצר עבור הלקוח, בהזמנה מיוחדת (לדוגמה, ארון קיר שתוכנן לפי הזמנת הלקוח) מוצר שניתן להקלטה או שכפול, והצרכן פתח את האריזה המקורית (לדוגמה, ספר או תקליט) מידע דיגיטלי (מידע שמאוחסן במחשב או אמצעי אחסון אחר - לדוגמה, ספר דיגיטלי)",
+      "fetched_at": "2026-08-27T07:30:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
