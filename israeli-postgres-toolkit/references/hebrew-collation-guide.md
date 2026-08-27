@@ -6,19 +6,19 @@ PostgreSQL supports ICU collations that handle Hebrew text sorting correctly. Th
 
 ## ICU Collation Basics
 
-ICU (International Components for Unicode) provides locale-aware string comparison. For Hebrew, the key locale is `he-IL-x-icu`.
+ICU (International Components for Unicode) provides locale-aware string comparison. For Hebrew the locale tag is `he-IL`. Note the distinction: `he-IL-x-icu` is the NAME of the collation PostgreSQL pre-creates in `pg_collation`, while its `colllocale` is plain `he-IL`. Pass `he-IL` to `CREATE COLLATION`; passing the collation name adds a `-x-icu` private-use subtag that ICU accepts and ignores, and it misleads anyone who then builds a keyword variant such as `he-IL-x-icu-u-ks-level1`.
 
 ### Creating the Collation
 
 ```sql
 CREATE COLLATION IF NOT EXISTS hebrew_icu (
   provider = icu,
-  locale = 'he-IL-x-icu',
+  locale = 'he-IL',
   deterministic = false
 );
 ```
 
-**Why non-deterministic?** A non-deterministic ICU collation can compare strings while ignoring differences below a chosen strength. At a reduced strength (a collation built with `u-ks-level1`) it treats strings as equal ignoring BOTH nikud AND final-vs-base (sofit) letter forms, so `'שָׁלוֹם' = 'שלום'` and `'מ' = 'ם'` both compare equal. At the DEFAULT (tertiary) strength, nikud and sofit are both significant, so `'שָׁלוֹם'` does NOT equal `'שלום'`. There is no strength that ignores nikud while keeping sofit distinct. Consequences: (1) for reliable nikud-insensitive matching prefer the `strip_nikud()` function (collation-based folding also collapses sofit and case, which you usually do not want); (2) a non-deterministic collation cannot be used with `LIKE`/pattern matching (PostgreSQL raises `nondeterministic collations are not supported for LIKE`); `UNIQUE` constraints and plain `btree` indexes do work on such a column, they just lose B-tree deduplication, so keep a deterministic column or expression for prefix search.
+**Why non-deterministic?** A non-deterministic ICU collation can compare strings while ignoring differences below a chosen strength. At a reduced strength (a collation built with `u-ks-level1`) it treats strings as equal ignoring BOTH nikud AND final-vs-base (sofit) letter forms, so `'שָׁלוֹם' = 'שלום'` and `'מ' = 'ם'` both compare equal. At the DEFAULT (tertiary) strength, nikud and sofit are both significant, so `'שָׁלוֹם'` does NOT equal `'שלום'`. There is no strength that ignores nikud while keeping sofit distinct. Measured on PostgreSQL 18.6: at `u-ks-level1` both nikud and sofit fold; at `u-ks-level2` nikud is significant again but sofit still folds; at the default tertiary strength both are significant. Consequences: (1) for reliable nikud-insensitive matching prefer the `strip_nikud()` function (every collation strength that folds nikud also collapses sofit and case, which you usually do not want); (2) pattern matching is version-dependent, `ILIKE` and regular expressions error on every version including 18, while plain `LIKE` errored up to PostgreSQL 17 and was allowed in 18 (release notes: "Allow LIKE with nondeterministic collations ... These used to generate an error"). `UNIQUE` constraints and plain `btree` indexes work on such a column on every version, they just lose B-tree deduplication. Keep a deterministic column or expression for prefix search regardless, because even where `LIKE` is accepted the planner uses the index only as a filter, never as a prefix range scan.
 
 ### Deterministic vs Non-Deterministic
 
@@ -27,12 +27,13 @@ CREATE COLLATION IF NOT EXISTS hebrew_icu (
 | Hebrew sorting | Incorrect for some cases | Correct |
 | UNIQUE constraints | Supported | Supported |
 | btree indexes | Supported | Supported (no deduplication) |
-| Pattern matching (LIKE) | Supported | NOT supported |
+| `LIKE` | Supported (index-assisted prefix scan) | Errors on PG <= 17; allowed on PG 18+, but filter-only, no prefix index |
+| `ILIKE`, regular expressions | Supported | NOT supported (all versions, including 18) |
 | Equality comparison | Byte-level | Linguistic |
 
 ### Pattern: deterministic column + Hebrew sorting in ORDER BY
 
-Pattern matching (`LIKE`) is the operation a non-deterministic collation actually blocks. Keep the column deterministic so `LIKE` and prefix search keep working, and apply the Hebrew collation only in `ORDER BY`:
+Case-insensitive and regex matching are the operations a non-deterministic collation blocks on every version, and even `LIKE` (allowed from PG 18) loses its prefix index. Keep the column deterministic so `LIKE`, `ILIKE` and prefix search all keep working, and apply the Hebrew collation only in `ORDER BY`:
 
 ```sql
 CREATE TABLE products (
@@ -136,6 +137,10 @@ The default similarity threshold (0.3) may be too high for Hebrew due to morphol
 SET pg_trgm.similarity_threshold = 0.2;
 ```
 
+### `%` vs `<%`: pick by column length, not by taste
+
+`similarity()` / `%` compares whole strings, so the score falls as the column grows even when the term appears verbatim, while `word_similarity()` does not. Measured on PostgreSQL 18.6 against a 104-character Hebrew body containing `והחשבונית`: `similarity()` = 0.067 (`%` false), `word_similarity()` = 0.750 (`<%` true). On the 15-character title `והחשבונית נשלחה` the same term scores 0.333 and clears the default 0.3 threshold, which is why `%` passes testing on short rows and then quietly stops matching real body text. Use `%` on titles and names, `<%` on body and description columns, `<<%` when you want whole-word boundaries. One `gin_trgm_ops` index serves all three, so a body trigram index paired only with `%` is dead weight.
+
 ### Index Types for Hebrew Trigrams
 
 ```sql
@@ -152,9 +157,9 @@ GIN is recommended for most use cases. Use GiST if you need the `<->` distance o
 
 1. **Mixing collations in JOINs**: If two columns use different collations, JOINs will fail. Explicitly specify collation: `a.name = b.name COLLATE "default"`.
 
-2. **Index not used**: Non-deterministic collation indexes are not used for LIKE queries. Use trigram indexes instead.
+2. **Index not used**: a btree index on a non-deterministic column is never used as a prefix range scan for `LIKE`, on PG 18 the plan shows the pattern as a `Filter` over a full scan. Use a `pg_trgm` GIN index instead.
 
-3. **Sorting with mixed scripts**: When sorting mixed Hebrew/English content, ICU sorts Hebrew characters after Latin by default. If you need custom ordering, consider a sort key column.
+3. **Sorting with mixed scripts**: the order depends on the locale, and it is the opposite of what people usually assume. Under `he-IL` ICU reorders Hebrew FIRST, measured on PostgreSQL 18.6: `123 < אבא < בית < apple < zebra`. Under the root locale `und-x-icu` Latin comes first: `apple < zebra < אבא < בית`. Decide deliberately, and if you need a different order use an explicit sort-key column.
 
 4. **JSON/JSONB**: Collation does not apply inside JSON values. Extract to text columns for proper sorting.
 

@@ -21,8 +21,8 @@ license: MIT
 עבדו לפי הסדר הזה כשמקימים או סוקרים בסיס נתונים PostgreSQL לאפליקציה ישראלית:
 
 1. **קודם כל בדקו קידוד ואזור זמן.** הריצו `SHOW server_encoding;` (חייב להיות `UTF8`, לעולם לא `SQL_ASCII` או `LATIN1`) ו-`SHOW timezone;`. הגדירו את אזור הזמן עם `ALTER DATABASE your_db SET timezone = 'Asia/Jerusalem';`. טעות בשניים האלה משחיתה עברית ומסיטה כל timestamp, ותיקון מאוחר מחייב מיגרציית נתונים.
-2. **בחרו אסטרטגיית collation.** החליטו לכל עמודה אם צריך מיון תצוגה עברי (ICU לא דטרמיניסטי, `he-IL-x-icu`) או ייחודיות ואינדקס `btree` (collation דטרמיניסטי). collation לא דטרמיניסטי כן תומך באילוץ `UNIQUE` ובאינדקס `btree` (נבדק על PostgreSQL 17), אבל הוא לא נתמך עם `LIKE` והתאמת תבניות, ולכן שמרו עמודה או ביטוי דטרמיניסטיים לחיפוש תחילית.
-3. **בחרו גישת חיפוש.** להתאמה מדויקת ולתחילית השתמשו ב-`btree`. לחיפוש מטושטש וסובלני לשגיאות בעברית השתמשו ב-`pg_trgm`. לחיפוש מדורג רב-שדות השתמשו בחיפוש טקסט מלא עם הקונפיגורציה `simple` (ראו "חיפוש טקסט מלא בעברית" למטה). להתאמה שמתעלמת מניקוד השתמשו בפונקציה `strip_nikud()` שלמטה; `unaccent` מסיר רק דיאקריטיקה לטינית, לא ניקוד עברי.
+2. **בחרו אסטרטגיית collation.** החליטו לכל עמודה אם צריך מיון תצוגה עברי (ICU לא דטרמיניסטי, מהלוקאל `he-IL`) או חיפוש תחילית מדויק (ה-collation הדטרמיניסטי שהוא ברירת המחדל). collation לא דטרמיניסטי תומך באילוץ `UNIQUE` ובאינדקס `btree`. החל מ-PostgreSQL 18 הוא תומך גם ב-`LIKE`, אבל `ILIKE` וביטויים רגולריים עדיין נכשלים, ו-`LIKE` לא יכול לנצל אינדקס `btree` לחיפוש תחילית. עיינו בטבלת האופרטורים למטה לפני שבוחרים.
+3. **בחרו גישת חיפוש.** להתאמה מדויקת ולתחילית השתמשו ב-`btree`. לחיפוש מטושטש וסובלני לשגיאות בעברית השתמשו ב-`pg_trgm`. לחיפוש מדורג רב-שדות השתמשו בחיפוש טקסט מלא עם הקונפיגורציה `simple` (ראו "חיפוש טקסט מלא בעברית" למטה). להתאמה עברית שמתעלמת מניקוד, מקף וגרשיים השתמשו בפונקציה `normalize_hebrew()` שלמטה, והחילו אותה גם על העמודה וגם על השאילתה; `unaccent` מסיר רק דיאקריטיקה לטינית, לא ניקוד עברי.
 4. **החילו אילוצים על טיפוסי נתונים ישראליים.** השתמשו באילוצי ה-`CHECK` ובפונקציות העזר מ-`scripts/israeli-data-types.sql` (תעודת זהות, טלפון, מיקוד, מספר עוסק, IBAN) וקראו ל-`validate_teudat_zehut()` לבדיקת ספרת הביקורת של תעודת הזהות במקום לממש אותה מחדש בקוד האפליקציה.
 
 ## אינדוקס טקסט בעברית
@@ -32,10 +32,12 @@ license: MIT
 פוסטגרס תומך ב-ICU collation למיון נכון של טקסט עברי. תמיד צרו collation עברי לעמודות שמכילות טקסט בעברית:
 
 ```sql
--- יצירת collation עברי
+-- יצירת collation עברי.
+-- locale הוא תג ICU/BCP-47, כלומר 'he-IL'. אל תעבירו 'he-IL-x-icu': זה השם של
+-- ה-collation שפוסטגרס יוצר מראש, ו-'-x-icu' הוא תת-תג פרטי ש-ICU מתעלם ממנו.
 CREATE COLLATION IF NOT EXISTS hebrew_icu (
   provider = icu,
-  locale = 'he-IL-x-icu',
+  locale = 'he-IL',
   deterministic = false
 );
 
@@ -50,7 +52,17 @@ CREATE TABLE products (
 SELECT * FROM products ORDER BY name_he COLLATE hebrew_icu;
 ```
 
-**חשוב:** collation לא דטרמיניסטי כן יכול לגבות אילוץ `UNIQUE` ואינדקס `btree`, אבל PostgreSQL דוחה אותו בהתאמת תבניות `LIKE` (השגיאה: `nondeterministic collations are not supported for LIKE`), וב-B-tree אין דדופליקציה על אינדקס כזה. שמרו עמודה דטרמיניסטית לחיפוש תחילית, והשתמשו ב-ICU collation למיון תצוגה ולהשוואת שוויון לשונית.
+**חשוב:** מה ש-collation לא דטרמיניסטי תומך בו השתנה ב-PostgreSQL 18, שאיפשר `LIKE` ופונקציות מיקום טקסט ש"נהגו להחזיר שגיאה" (הערות הגרסה של PG 18). נבדק על PostgreSQL 18.6:
+
+| פעולה על עמודה לא דטרמיניסטית | PG 13-17 | PG 18 ומעלה |
+|---|---|---|
+| אילוץ `UNIQUE`, אינדקס `btree` | עובד (בלי דדופליקציה) | זהה |
+| `LIKE` | `ERROR: nondeterministic collations are not supported for LIKE` | עובד, אבל המתכנן משתמש באינדקס כמסנן בלבד ולא כסריקת טווח תחילית |
+| `ILIKE` | שגיאה | עדיין שגיאה |
+| ביטויים רגולריים (`~`) | שגיאה | עדיין שגיאה |
+| `pg_trgm` (`%`, `<%`) | עובד | עובד |
+
+כלומר ההמלצה לא השתנתה גם אם הנימוק כן: שמרו עמודה **דטרמיניסטית** (או אינדקס `pg_trgm` מסוג GIN) לחיפוש תחילית ולחיפוש מטושטש, והשתמשו ב-ICU collation למיון תצוגה ולהשוואת שוויון לשונית. בנוסף, PostgreSQL 18 דורש שזוג מפתח ראשי/זר ישתמש ב-collations דטרמיניסטיים או באותו collation לא דטרמיניסטי, ותקלה בכך צצה בדרך כלל ככישלון של `pg_upgrade` או `pg_restore` על סכימה ישנה.
 
 ### חיפוש מטושטש בעברית עם Trigram
 
@@ -75,6 +87,16 @@ LIMIT 10;
 SET pg_trgm.similarity_threshold = 0.2;
 ```
 
+השתמשו ב-`<%` (word_similarity) ולא ב-`%` כשהשאילתה קצרה והעמודה ארוכה. הפונקציה `similarity()` משווה מחרוזות שלמות, ולכן הציון יורד ככל שהעמודה גדלה גם כשמילת החיפוש מופיעה בה מילולית, בעוד `word_similarity()` לא מושפעת מכך. ניתן לשחזר על PostgreSQL 18.6 (הגוף הבא הוא בן 104 תווים ומכיל `והחשבונית`):
+
+```sql
+\set body 'קיבלנו אתמול מהספק שלנו את והחשבונית עבור ההזמנה האחרונה של החודש שעבר ואנחנו ממתינים לאישור סופי מהמנהל'
+SELECT similarity(:'body', 'חשבונית'),        -- 0.067  ולכן :'body' %  'חשבונית' הוא FALSE
+       word_similarity('חשבונית', :'body');   -- 0.750  ולכן 'חשבונית' <% :'body' הוא TRUE
+```
+
+נקודת המעבר תלויה באורך ולא בעצם הימצאות המילה: הביטוי `similarity('והחשבונית נשלחה', 'חשבונית')` מחזיר 0.333 על אותו שרת ועובר את סף ברירת המחדל 0.3. לכן `%` נראה תקין בבדיקות על שורות קצרות ואז מפסיק להתאים בשקט ברגע שנטען טקסט גוף אמיתי, וזו בדיוק המלכודת. כלל אצבע: `%` לעמודות קצרות (שמות, כותרות), `<%` לעמודות גוף ותיאור, ו-`<<%` (`strict_word_similarity`) כשרוצים גבולות מילה שלמה. אינדקס `gin_trgm_ops` אחד משרת את שלושתם.
+
 ### חיפוש טקסט מלא בעברית
 
 חיפוש הטקסט המלא של פוסטגרס משתמש בקונפיגורציית `simple` לעברית (כי אין מילון עברי ייעודי). לתוצאות טובות יותר, שלבו עם `pg_trgm`:
@@ -83,8 +105,10 @@ SET pg_trgm.similarity_threshold = 0.2;
 -- הוספת עמודת וקטור חיפוש
 ALTER TABLE products ADD COLUMN search_vector tsvector
   GENERATED ALWAYS AS (
-    setweight(to_tsvector('simple', coalesce(name_he, '')), 'A') ||
-    setweight(to_tsvector('simple', coalesce(description_he, '')), 'B') ||
+    -- normalize_hebrew() על העמודות העבריות (ראו "נרמול לחיפוש בעברית" למטה).
+    -- בלעדיה ניקוד וגרשיים שמורים חוסמים התאמות בשקט.
+    setweight(to_tsvector('simple', normalize_hebrew(coalesce(name_he, ''))), 'A') ||
+    setweight(to_tsvector('simple', normalize_hebrew(coalesce(description_he, ''))), 'B') ||
     setweight(to_tsvector('english', coalesce(name_en, '')), 'A') ||
     setweight(to_tsvector('english', coalesce(description_en, '')), 'B')
   ) STORED;
@@ -92,37 +116,66 @@ ALTER TABLE products ADD COLUMN search_vector tsvector
 -- יצירת אינדקס GIN
 CREATE INDEX idx_products_search ON products USING gin (search_vector);
 
--- שאילתת חיפוש (תומכת גם בעברית וגם באנגלית)
+-- שאילתת חיפוש (תומכת גם בעברית וגם באנגלית).
+-- הווקטור מבצע stemming לעמודות האנגלית ('invoice' נשמר כלקסמה 'invoic'),
+-- ולכן שאילתת 'simple' לבדה לעולם לא תתאים להן. אחדו את שתי הקונפיגורציות.
 SELECT * FROM products
-WHERE search_vector @@ plainto_tsquery('simple', 'חשבונית')
-ORDER BY ts_rank(search_vector, plainto_tsquery('simple', 'חשבונית')) DESC;
+WHERE search_vector @@ (plainto_tsquery('simple', $1) || plainto_tsquery('english', $1))
+ORDER BY ts_rank(search_vector,
+         plainto_tsquery('simple', $1) || plainto_tsquery('english', $1)) DESC;
 ```
 
-### התאמה ללא ניקוד
+הקונפיגורציה `simple` לא מבצעת stemming, והעברית מצמידה את מילות היחס למילה עצמה. לכן `חשבונית`, `בחשבונית` ו-`והחשבונית` הופכות לשלוש לקסמות נפרדות, וחיפוש טקסט מלא לבדו מפספס בשקט את רוב ההטיות. נמדד על PostgreSQL 18.6: `plainto_tsquery('simple','חשבונית')` התאים לשורה אחת מתוך שלוש שמכילות את המילה. אל תסתמכו על FTS לבדו לאחזור בעברית, צרפו לכל ענף FTS ענף `<%` של trigram על אותן עמודות (ראו "חיפוש מטושטש בעברית עם Trigram" למעלה). הסקריפט `scripts/hebrew-search-setup.sql` מספק את `search_hebrew()` בנוי כך.
 
-טקסט עברי לפעמים נושא ניקוד שמשתמשים לא יקלידו בתיבת חיפוש, אז "שָׁלוֹם" חייב עדיין להתאים ל"שלום". **התוסף `unaccent` לא מסיר ניקוד עברי.** כללי ברירת המחדל שלו מכסים רק דיאקריטיקה לטינית/יוונית (סימנים משולבים ב-U+0300-U+0362); בטווח הניקוד העברי (U+0591-U+05C7) הוא לא נוגע, אז `unaccent('שָׁלוֹם')` מחזיר את המחרוזת ללא שינוי. הסירו ניקוד במפורש עם `regexp_replace` על טווח הניקוד העברי, עטוף בפונקציית `IMMUTABLE` כדי שיוכל לגבות עמודה מחושבת ואינדקס:
+### נרמול לחיפוש בעברית (ניקוד, מקף וגרשיים)
+
+שלוש מוסכמות כתיב עבריות שוברות חיפוש, ואת שלושתן צריך לנרמל גם בצד המאוחסן וגם בצד השאילתה, אחרת שני הצדדים לעולם לא נפגשים.
+
+**1. ניקוד.** משתמשים לא יקלידו ניקוד, ולכן "שָׁלוֹם" חייב עדיין להתאים ל"שלום". **התוסף `unaccent` לא מסיר ניקוד עברי.** קובץ הכללים שלו מכסה סימנים משולבים לטיניים ויווניים (U+0300-U+0362) ואין בו אף רשומה לגוש הניקוד העברי, ולכן `unaccent('שָׁלוֹם')` מחזיר את המחרוזת ללא שינוי.
+
+**2. מקף.** אל תסירו את כל הטווח U+0591-U+05C7 כדי להוריד ניקוד. הגוש הזה מכיל גם את U+05BE מקף (קטגוריית יוניקוד `Pd`, כלומר קו מפריד) ואת U+05C0 פסק ו-U+05C3 סוף פסוק (`Po`). אלה מפרידי מילים. מחיקה שלהם מדביקה מילים זו לזו, ולכן `תל־אביב` נשמר כלקסמה אחת `תלאביב` וחיפוש של `תל אביב` לעולם לא יתאים לו. הסירו רק את הסימנים המשולבים (`Mn`), והפכו את המפרידים לרווח.
+
+**3. גרשיים.** מנתח ברירת המחדל של חיפוש הטקסט המלא מסווג גרשיים (U+05F4) כרווח, ולכן `בע״מ` מפורק לשתי לקסמות `בע` ו-`מ`, בזמן שהמשתמש שמחפש את החברה מקליד `בעמ`. נבדק עם `ts_debug('simple','צה״ל')` שמחזיר `צה` (מילה), `״` (רווח), `ל` (מילה). כל שם חברה ישראלי מסתיים ב-בע״מ, וגם צה״ל, ד״ר, ח״כ ו-ש״ח מתנהגים כך, ולכן זה שובר בשקט חלק ניכר מהשאילתות העבריות האמיתיות. הסירו גרש וגרשיים (וגם את `'` ו-`"` הלטיניים שקלט אמיתי מחליף בהם) משני הצדדים.
 
 ```sql
--- הסרת ניקוד עברי + טעמים (U+0591-U+05C7). IMMUTABLE כדי שניתן יהיה לאנדקס.
+-- סימנים משולבים בלבד (Mn). לא כל הגוש U+0591-U+05C7.
 CREATE FUNCTION strip_nikud(text) RETURNS text
-  AS $$ SELECT regexp_replace($1, '[֑-ׇ]', '', 'g') $$
+  AS $$ SELECT regexp_replace($1, '[֑-ֽֿׁ-ׂׄ-ׇׅ]', '', 'g') $$
   LANGUAGE sql IMMUTABLE;
 
--- אימות שהפונקציה באמת מסירה (מחזיר true; unaccent() היה מחזיר false כאן):
-SELECT strip_nikud('שָׁלוֹם') = 'שלום';
+-- נרמול מלא לצד החיפוש. IMMUTABLE כדי שיוכל לגבות עמודה מחושבת ואינדקס ביטוי.
+CREATE FUNCTION normalize_hebrew(text) RETURNS text
+  AS $$
+    SELECT regexp_replace(
+             regexp_replace(
+               regexp_replace($1, '[֑-ֽֿׁ-ׂׄ-ׇׅ]', '', 'g'),  -- ניקוד וטעמים
+               '[־׀׃׆]', ' ', 'g'),                       -- מקף ודומיו הופכים לרווח
+             '[׳״''"]', '', 'g')                          -- גרש וגרשיים
+  $$
+  LANGUAGE sql IMMUTABLE;
 
--- שימוש בו ב-search vector כדי שניקוד שמור לא יחסום התאמות
+-- אימות שלושת ההתנהגויות (כל אחת מחזירה true):
+SELECT strip_nikud('שָׁלוֹם') = 'שלום';                  -- unaccent() היה מחזיר false
+SELECT normalize_hebrew('תל־אביב יפו') = 'תל אביב יפו';  -- המקף הפך לרווח
+SELECT normalize_hebrew('בע״מ') = 'בעמ';                 -- הגרשיים הוסרו
+
+-- שימוש ב-search vector כדי שניקוד וגרשיים שמורים לא יחסמו התאמות
 ALTER TABLE products ADD COLUMN search_vector tsvector
   GENERATED ALWAYS AS (
-    to_tsvector('simple', strip_nikud(coalesce(name_he, '')))
+    to_tsvector('simple', normalize_hebrew(coalesce(name_he, '')))
   ) STORED;
 
--- מסירים ניקוד מהשאילתה באותו אופן
+-- מנרמלים את השאילתה בדיוק באותו אופן
 SELECT * FROM products
-WHERE search_vector @@ plainto_tsquery('simple', strip_nikud('שָׁלוֹם'));
+WHERE search_vector @@ plainto_tsquery('simple', normalize_hebrew($1));
 ```
 
 הערה: `unaccent` עדיין שימושי לדיאקריטיקה לטינית בעמודות האנגלית, רק לא לעברית. אם בכל זאת משתמשים ב-`unaccent()` (שהוא `STABLE`), עטפו אותו ב-`f_unaccent(text)` מסוג `IMMUTABLE` שקורא ל-`unaccent('unaccent', $1)` לפני שימוש בעמודה מחושבת.
+
+שני כללי אינדוקס שנובעים מכך, וקל לטעות בהם:
+
+- אנדקסו בדיוק את הביטוי שאתם שואלים עליו. אינדקס `gin_trgm_ops` על `body_he` לא משרת תנאי שנכתב מול `normalize_hebrew(body_he)` או `coalesce(body_he,'')`. או שמתאימים מול העמודה החשופה, או שבונים את האינדקס על אותו ביטוי בדיוק, אחרת התנאי מתדרדר לסריקה סדרתית בזמן שהוא נראה מאונדקס.
+- לכל אופרטור trigram יש GUC סף משלו, עם ברירות מחדל שונות בכוונה: `%` קורא את `pg_trgm.similarity_threshold` (0.3), `<%` קורא את `pg_trgm.word_similarity_threshold` (0.6), ו-`<<%` קורא את `pg_trgm.strict_word_similarity_threshold` (0.5). הגדרה של הראשון בלבד משאירה ענף `<%` חסום ב-0.6 בלי קשר למה שחשבתם שהגדרתם. גם אל תטייחו את זה בהזנת ערך אחד לשלושתם: `word_similarity` מודדת את מקטע המילה המתאים ביותר ולא את המחרוזת כולה, ולכן היא נעה גבוה יותר, וערך 0.2-0.3 שם מחזיר שורות כמעט לא קשורות.
 
 ## טיפול במטבע (שקל / NIS)
 
@@ -149,19 +202,32 @@ CREATE TABLE invoices (
 מע"מ בישראל עומד על 18% נכון ל-2025. שמרו את השיעור בטבלת קונפיגורציה כדי שאפשר יהיה לעדכן:
 
 ```sql
-CREATE TABLE tax_config (
-  id int PRIMARY KEY DEFAULT 1 CHECK (id = 1),  -- שורה יחידה
-  vat_rate numeric(5, 4) NOT NULL DEFAULT 0.1800,
-  updated_at timestamptz NOT NULL DEFAULT now()
+-- שורה יחידה היא המבנה הלא נכון. השיעור משתנה (17% ל-18% ב-01.01.2025, והשינוי
+-- הבא עוד יגיע), ושורה יחידה מתמחרת מחדש בשקט כל חשבונית היסטורית ברגע שמעדכנים
+-- אותה. שמרו את ההיסטוריה ואתרו את השיעור נכון לתאריך החשבונית, בדיוק כמו בטבלת
+-- שערי החליפין.
+CREATE TABLE vat_rates (
+  rate numeric(5, 4) NOT NULL,
+  effective_from date NOT NULL PRIMARY KEY
 );
+INSERT INTO vat_rates (rate, effective_from)
+VALUES (0.1700, '2013-06-02'), (0.1800, '2025-01-01');
 
--- חישוב מע"מ
+-- חישוב מע"מ לפי השיעור שהיה בתוקף בתאריך החשבונית עצמה
 SELECT
-  amount_nis,
-  round(amount_nis * (SELECT vat_rate FROM tax_config), 2) AS vat,
-  round(amount_nis * (1 + (SELECT vat_rate FROM tax_config)), 2) AS total
-FROM invoices;
+  i.amount_nis,
+  round(i.amount_nis * v.rate, 2)       AS vat,
+  round(i.amount_nis * (1 + v.rate), 2) AS total
+FROM invoices i
+CROSS JOIN LATERAL (
+  SELECT rate FROM vat_rates
+  WHERE effective_from <= i.invoice_date
+  ORDER BY effective_from DESC
+  LIMIT 1
+) v;
 ```
+
+השיעור משתנה גם לפי שורה ולא רק לפי תאריך: שורת ייצוא חייבת במע"מ בשיעור אפס וחלק מהעסקאות פטורות, ולכן עמודת שיעור אחת לכל החשבונית לא יכולה לייצג חשבונית מעורבת. העבירו את השיעור לרמת שורת הפריט ברגע שיש יותר ממחלקת שיעור אחת.
 
 ### עיצוב סכומים בשקלים
 
@@ -187,6 +253,16 @@ CREATE TABLE exchange_rates (
   fetched_at timestamptz NOT NULL DEFAULT now(),
   UNIQUE (currency_code, effective_date)
 );
+```
+
+לעולם אל תאתרו שער לפי תאריך מדויק. בנק ישראל לא מפרסם שער יציג בשבתות ובחגים, ולכן `WHERE effective_date = $1` יחזיר אפס שורות לכל מסמך שתאריכו שבת, ואז עמודת המרה עם `NOT NULL` תפיל את ה-INSERT. גלגלו קדימה את השער האחרון שפורסם:
+
+```sql
+-- השער שהיה בתוקף בתאריך נתון (מגלגל את שער יום שישי דרך השבת)
+SELECT rate_to_ils FROM exchange_rates
+WHERE currency_code = 'USD' AND effective_date <= $1
+ORDER BY effective_date DESC
+LIMIT 1;
 ```
 
 ## טיפול באזור זמן (Asia/Jerusalem)
@@ -227,8 +303,12 @@ FROM events;
 -- אל תקשיחו זמנים בקוד. השתמשו ב-API של זמני שבת ושמרו כ-timestamptz.
 
 -- מציאת אירועים בתאריך ישראלי מסוים
+-- אל תכתבו WHERE (starts_at AT TIME ZONE 'Asia/Jerusalem')::date = '2026-03-14':
+-- עטיפת העמודה מבטלת את האינדקס על starts_at וכופה סריקה סדרתית. השתמשו בטווח
+-- חצי פתוח על העמודה החשופה, מחושב מהתאריך המקומי.
 SELECT * FROM events
-WHERE (starts_at AT TIME ZONE 'Asia/Jerusalem')::date = '2025-03-14';
+WHERE starts_at >= timestamp '2026-03-14 00:00' AT TIME ZONE 'Asia/Jerusalem'
+  AND starts_at <  timestamp '2026-03-15 00:00' AT TIME ZONE 'Asia/Jerusalem';
 ```
 
 ### בדיקת שעות פעילות ישראליות
@@ -291,13 +371,26 @@ FROM events;
 -- הפעלת RLS
 ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
 
--- מדיניות בידוד דיירים
+-- בידוד דיירים. קראו את ה-claim מתוך app_metadata, לא מהרמה העליונה ולא מ-user_metadata:
+--   * Supabase לא מכניס claim מותאם ברמה העליונה של טוקן הגישה אלא אם הוספתם
+--     custom access token hook, ולכן `auth.jwt() ->> 'tenant_id'` הוא NULL והמדיניות
+--     נכשלת סגור לאפס שורות גלויות, מה שנראה כמו באג נתונים.
+--   * user_metadata ניתן לכתיבה על ידי המשתמש עצמו, ולכן קריאת מזהה דייר משם היא
+--     בריחה מהדייר ולא פתרון עוקף.
+-- RESTRICTIVE כדי שמדיניות מתירנית מאוחרת לא תרחיב אותה, ו-TO authenticated כדי
+-- שהיא לא תרוץ גם עבור תפקיד anon.
 CREATE POLICY tenant_isolation ON invoices
-  USING (tenant_id = (auth.jwt() ->> 'tenant_id')::uuid);
+  AS RESTRICTIVE
+  TO authenticated
+  USING (tenant_id = ((select auth.jwt()) -> 'app_metadata' ->> 'tenant_id')::uuid);
+
+-- אנדקסו את העמודה שכל מדיניות מסננת לפיה, אחרת כל בדיקה היא סריקה סדרתית.
+CREATE INDEX idx_invoices_tenant ON invoices (tenant_id);
 
 -- גישת מנהל (מנהלים ישראלים רואים את כל הדיירים)
 CREATE POLICY admin_access ON invoices
   FOR ALL
+  TO authenticated
   USING (
     EXISTS (
       SELECT 1 FROM profiles
@@ -309,8 +402,9 @@ CREATE POLICY admin_access ON invoices
 -- קריאה בלבד לרואה חשבון (נפוץ באפליקציות עסקיות ישראליות)
 CREATE POLICY accountant_read ON invoices
   FOR SELECT
+  TO authenticated
   USING (
-    tenant_id = (auth.jwt() ->> 'tenant_id')::uuid
+    tenant_id = ((select auth.jwt()) -> 'app_metadata' ->> 'tenant_id')::uuid
     AND EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
@@ -346,11 +440,14 @@ CREATE TABLE businesses (
 ```typescript
 // ב-Supabase Edge Functions, תמיד השתמשו בחיבור ה-pooler
 // חיבור ישיר: postgresql://postgres:password@db.xxx.supabase.co:5432/postgres
-// חיבור מאוגם: postgresql://postgres:password@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
+// חיבור מאוגם (מצב transaction): postgresql://postgres:password@aws-[region].pooler.supabase.com:6543/postgres
+// העתיקו את הכתובת המדויקת מחלון ה-Connect של הפרויקט, אל תקבעו קידומת קשיחה.
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-// השתמשו בלקוח service role ל-Edge Functions
+// מפתח ה-service role רץ כתפקיד Postgres עם התכונה bypassrls, ולכן הוא מתעלם
+// מכל מדיניות שלמעלה. לעולם אל תשלחו אותו לדפדפן, ובצעו סינון דיירים במפורש
+// בכל Edge Function שמשתמשת בו.
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
@@ -365,9 +462,9 @@ const supabase = createClient(
 
 לאפליקציות SaaS ישראליות על Supabase, איגום חיבורים הוא קריטי:
 
-- **Supavisor** (ה-pooler המובנה של Supabase): השתמשו בפורט 6543 למצב transaction
-- **PgBouncer**: אם מארחים עצמית, הגדירו ל-transaction pooling
-- קבעו את `pool_size` לפי תוכנית ה-Supabase שלכם (Free: 60, Pro: 200)
+- **Supavisor** (ה-pooler המשותף של Supabase): הכתובת היא `aws-[region].pooler.supabase.com`, פורט **6543** למצב transaction ופורט **5432** למצב session. בתיעוד הכתובת מופיעה עם ה-placeholder ‏`aws-[region]`, ולכן העתיקו את המחרוזת המדויקת מחלון ה-Connect של הפרויקט במקום לקבע קידומת.
+- **PgBouncer**: זמין כ-pooler הייעודי של Supabase, וגם הבחירה הרגילה באחסון עצמי.
+- גודל ה-pool אינו קבוע לפי תוכנית. זו הגדרה אחת ש-Supavisor ו-PgBouncer מתייחסים אליה שניהם, והיא מגבילה את מספר החיבורים שה-pooler פותח לצד השרת מול Postgres. מה שכן משתנה לפי דרגת המחשוב הוא תקרת "max pooler clients" נפרדת, שקובעת כמה לקוחות יכולים להתחבר ל-pooler בו זמנית, ובנוסף `max_connections` של המופע. קראו את המספרים מהפרויקט שלכם במקום לקבע מספר כלשהו.
 
 ### אסטרטגיות אינדוקס לטקסט עברי
 
@@ -467,10 +564,10 @@ CREATE TABLE addresses (
 המשתמש אומר: "אני צריך טבלת מוצרים שתומכת בחיפוש סובלני לשגיאות בעברית ובאנגלית."
 
 פעולות:
-1. `CREATE EXTENSION IF NOT EXISTS pg_trgm;` (ו-`unaccent` לעמודות האנגלית), ואז מגדירים את הפונקציה `strip_nikud(text)` מסוג `IMMUTABLE` לעברית.
-2. יוצרים `products` עם `name_he`, `name_en`, `description_he`, `description_en`, ועמודה מחושבת `search_vector` שמשתמשת ב-`to_tsvector('simple', strip_nikud(...))` לעמודות עבריות וב-`'english'` לעמודות אנגליות.
+1. `CREATE EXTENSION IF NOT EXISTS pg_trgm;` (ו-`unaccent` לעמודות האנגלית), ואז מגדירים את הפונקציה `normalize_hebrew(text)` מסוג `IMMUTABLE` לעברית.
+2. יוצרים `products` עם `name_he`, `name_en`, `description_he`, `description_en`, ועמודה מחושבת `search_vector` שמשתמשת ב-`to_tsvector('simple', normalize_hebrew(...))` לעמודות עבריות וב-`'english'` לעמודות אנגליות.
 3. מוסיפים אינדקס GIN על `search_vector` ואינדקסי GIN `gin_trgm_ops` על `name_he` ו-`name_en`.
-4. שואלים עם `plainto_tsquery('simple', strip_nikud($1))` לתוצאות מדורגות, ונופלים חזרה להתאמת trigram `name_he % $1` לסובלנות שגיאות.
+4. שואלים עם `plainto_tsquery('simple', normalize_hebrew($1))` לתוצאות מדורגות, מאוחד עם `plainto_tsquery('english', $1)` כדי שגם עמודות האנגלית הגזועות יוכלו להתאים, ונופלים חזרה להתאמת trigram `name_he % $1` לסובלנות שגיאות.
 
 תוצאה: משתמשים מוצאים "חשבונית" גם אם הם מקלידים "חשבונ" או כוללים ניקוד, ושאילתות באנגלית עדיין עובדות דרך אותה עמודה.
 
@@ -482,7 +579,7 @@ CREATE TABLE addresses (
 2. יוצרים `invoices` עם `subtotal_nis numeric(12,2)`, `vat_rate numeric(5,4) DEFAULT 0.1800`, `vat_amount numeric(12,2)`, `total_nis numeric(12,2)`.
 3. מוסיפים `CHECK (vat_amount = round(subtotal_nis * vat_rate, 2))` ו-`CHECK (total_nis = subtotal_nis + vat_amount)`.
 4. מוסיפים `customer_teudat_zehut text CHECK (customer_teudat_zehut IS NULL OR validate_teudat_zehut(customer_teudat_zehut))`.
-5. שומרים את שיעור המע"מ בטבלת `tax_config` היחידנית כך ששינוי שיעור הוא עדכון נתונים, לא deploy.
+5. שומרים את שיעורי המע"מ בטבלת `vat_rates` עם תאריך תחילת תוקף, ומאתרים את השיעור נכון לתאריך החשבונית, כך ששינוי שיעור לא מתמחר מחדש חשבוניות היסטוריות.
 
 תוצאה: בסיס הנתונים עצמו דוחה חשבוניות עם חשבון מע"מ שגוי או מספרי תעודת זהות לא תקינים.
 
@@ -510,17 +607,18 @@ CREATE TABLE addresses (
 | מקור | כתובת | מה לבדוק |
 |------|-------|----------|
 | תיעוד Collation של PostgreSQL | https://www.postgresql.org/docs/current/collation.html | ICU collations, דטרמיניסטי מול לא דטרמיניסטי |
+| הערות הגרסה של PostgreSQL 18 | https://www.postgresql.org/docs/release/18.0/ | LIKE הותר עם collations לא דטרמיניסטיים, וכלל ה-collation למפתח ראשי/זר |
 | pg_trgm של PostgreSQL | https://www.postgresql.org/docs/current/pgtrgm.html | אופרטורי trigram, סף דמיון, אינדקסי GIN |
 | unaccent של PostgreSQL | https://www.postgresql.org/docs/current/unaccent.html | הסרת דיאקריטיקה לטינית (לא ניקוד עברי), עטיפת IMMUTABLE |
 | Row Level Security של Supabase | https://supabase.com/docs/guides/database/postgres/row-level-security | מדיניות RLS, auth.jwt(), תבניות רב-דיירים |
 | שערי חליפין של בנק ישראל | https://www.boi.org.il/en/economic-roles/financial-markets/exchange-rates/ | שערים יציגים לטבלת exchange_rates |
-| מזהי Locale של ICU | https://www.postgresql.org/docs/current/collation.html#ICU-CUSTOM-COLLATIONS | תחביר ה-locale he-IL-x-icu |
+| מזהי Locale של ICU | https://www.postgresql.org/docs/current/collation.html#ICU-CUSTOM-COLLATIONS | תחביר locale מסוג BCP-47 ל-CREATE COLLATION (he-IL, he-IL-u-ks-level1) |
 
 ## פתרון בעיות
 
-### שגיאה: "nondeterministic collations are not supported for LIKE"
-סיבה: עמודה שהוגדרה עם ה-collation הלא דטרמיניסטי `hebrew_icu` משמשת עם `LIKE` או אופרטור התאמת תבניות אחר.
-פתרון: בצעו את ההתאמה מול ביטוי דטרמיניסטי, `WHERE name_he COLLATE "default" LIKE 'שלום%'`, או החזיקו עמודה דטרמיניסטית נפרדת (או אינדקס `pg_trgm` מסוג GIN) לחיפוש תחילית ומטושטש. אילוץ `UNIQUE` ואינדקס `btree` רגיל דווקא עובדים על עמודה לא דטרמיניסטית, הם רק מאבדים דדופליקציה של B-tree.
+### שגיאה: "nondeterministic collations are not supported for ILIKE" (או "... for regular expressions")
+סיבה: עמודה שהוגדרה עם ה-collation הלא דטרמיניסטי `hebrew_icu` משמשת עם `ILIKE` או עם אופרטור ביטוי רגולרי. שניהם עדיין נכשלים ב-PostgreSQL 18. אופרטור `LIKE` רגיל על אותה עמודה החזיר שגיאה מקבילה עד PostgreSQL 17 והותר ב-18.
+פתרון: בצעו את ההתאמה מול ביטוי דטרמיניסטי, `WHERE name_he COLLATE "default" ILIKE 'שלום%'`, או החזיקו עמודה דטרמיניסטית נפרדת (או אינדקס `pg_trgm` מסוג GIN) לחיפוש תחילית ומטושטש. שימו לב שגם היכן ש-`LIKE` מותר כעת, המתכנן משתמש באינדקס כמסנן בלבד, ולכן אינדקס `pg_trgm` נשאר המסלול המהיר לחיפוש תחילית. אילוץ `UNIQUE` ואינדקס `btree` רגיל דווקא עובדים על עמודה לא דטרמיניסטית, הם רק מאבדים דדופליקציה של B-tree.
 
 ### שגיאה: "generation expression is not immutable" בעת הוספת עמודת search_vector
 סיבה: `unaccent()` הוא `STABLE` ולא `IMMUTABLE`, לכן אי אפשר להשתמש בו ישירות בתוך ביטוי `GENERATED ALWAYS AS ... STORED`.
@@ -530,5 +628,7 @@ CREATE TABLE addresses (
 
 - טקסט בעברית ב-PostgreSQL דורש קידוד UTF-8. בסיסי נתונים שנוצרו עם SQL_ASCII או LATIN1 ישחיתו תווים עבריים. תמיד יש לוודא קידוד עם SHOW server_encoding.
 - מיון עברית ב-PostgreSQL (he_IL.UTF-8) שונה מאנגלית. סוכנים עלולים להחיל collation ברירת מחדל שממיין טקסט עברי בצורה שגויה בשאילתות ORDER BY.
-- ל-PostgreSQL אין מילון חיפוש טקסט מלא לעברית, ולכן `simple` היא הקונפיגורציה הנכונה לעמודות tsvector בעברית. סוכנים נוטים בטעות לבחור `'english'` (שמסיר מילות עצירה באנגלית וגוזע מילים לטיניות, מה שלא עוזר לעברית) או להמציא קונפיגורציית `'hebrew'` שלא קיימת (וזורקת שגיאה). השתמשו ב-`'simple'` לעמודות עבריות ושלבו עם `pg_trgm` ו-`strip_nikud()` לכיסוי טוב יותר (`unaccent` לא עוזר לכיסוי בעברית, הוא משאיר את הניקוד). שימו לב ש-`'simple'` לא עושה גזירת שורשים, אז קידומות עבריות (ו/ב/כ/ל/ה/מ/ש) וצורות רבים/נסמך הופכות ללקסמות נפרדות; הישענו על נפילה ל-`pg_trgm` לכיסוי צורות מוטות.
+- ל-PostgreSQL אין מילון חיפוש טקסט מלא לעברית, ולכן `simple` היא הקונפיגורציה הנכונה לעמודות tsvector בעברית. סוכנים נוטים בטעות לבחור `'english'` (שמסיר מילות עצירה באנגלית וגוזע מילים לטיניות, מה שלא עוזר לעברית) או להמציא קונפיגורציית `'hebrew'` שלא קיימת (וזורקת שגיאה). השתמשו ב-`'simple'` לעמודות עבריות ושלבו עם `pg_trgm` ו-`normalize_hebrew()` לכיסוי טוב יותר (`unaccent` לא עוזר לכיסוי בעברית, הוא משאיר את הניקוד). שימו לב ש-`'simple'` לא עושה גזירת שורשים, אז קידומות עבריות (ו/ב/כ/ל/ה/מ/ש) וצורות רבים/נסמך הופכות ללקסמות נפרדות, ובמדידה הכיסוי היה שורה אחת מתוך שלוש; תמיד צרפו ל-FTS ענף trigram עם `<%` על אותן עמודות, כולל עמודות גוף, אחרת התאמות בצורות מוטות אובדות.
+- מנתח ברירת המחדל של FTS מתייחס לגרשיים (U+05F4) כרווח, ולכן `בע״מ` הופך לשתי לקסמות `בע` ו-`מ` בזמן שמשתמשים מקלידים `בעמ`. סוכנים שומרים את התו הטיפוגרפי הנכון (וזה נכון) ואז לא מנרמלים אותו לחיפוש (וזה שובר כל ראשי תיבות: בע״מ, צה״ל, ד״ר, ח״כ, ש״ח). הסירו גרש וגרשיים גם בצד המאוחסן וגם בצד השאילתה.
+- אל תסירו את כל הטווח U+0591-U+05C7 כדי להוריד ניקוד. יש בו את U+05BE מקף, קו שמפריד מילים, ולכן `תל־אביב` מתמוטט ללקסמה אחת `תלאביב` ו-`תל אביב` מפסיק להתאים. הסירו רק את הסימנים המשולבים והפכו את המפרידים לרווח.
 - עמודות תאריך ישראליות צריכות לאחסן תאריכים כ-DATE או TIMESTAMPTZ (עם אזור זמן Asia/Jerusalem), לא כ-TEXT בפורמט DD/MM/YYYY. סוכנים עלולים ליצור עמודות טקסט לתאריכים מה ששובר השוואות ומיון.

@@ -43,7 +43,7 @@ const { data, error } = await supabase.auth.signInWithOtp({
 })
 ```
 
-**SMS Providers:** Supabase uses Twilio by default. Verify Twilio supports Israeli numbers and set the sender ID appropriately.
+**SMS Providers:** Supabase phone auth is backed by a third-party SMS provider you configure per project (Twilio is one of the supported options). Check which providers your project offers, confirm the one you pick delivers to Israeli numbers, and set the sender ID appropriately.
 
 ### Social Auth for Israeli Users
 
@@ -113,9 +113,14 @@ CREATE POLICY public_read ON articles
   FOR SELECT
   USING (is_published = true);
 
--- Only admins can modify
+-- Only admins can modify.
+-- Note: a FOR ALL policy needs WITH CHECK to constrain what a row may become.
+-- When WITH CHECK is omitted PostgreSQL reuses the USING expression, which is
+-- what you want here but is worth stating rather than relying on. Add an explicit
+-- `TO authenticated` on any policy that should not also apply to the anon role.
 CREATE POLICY admin_write ON articles
   FOR ALL
+  TO authenticated
   USING (
     EXISTS (
       SELECT 1 FROM profiles
@@ -193,9 +198,10 @@ $$ LANGUAGE plpgsql STABLE;
 Set proper headers for Hebrew content in Edge Functions:
 
 ```typescript
-import { serve } from 'https://deno.land/std/http/server.ts'
-
-serve(async (req: Request) => {
+// Use the built-in Deno.serve. The old std/http/server.ts serve() is marked
+// @deprecated in the current std release ("Use Deno.serve instead"), and the
+// unpinned std/ URL floats to whatever version is latest.
+Deno.serve(async (req: Request) => {
   return new Response(
     JSON.stringify({ message: 'שלום עולם' }),
     {
@@ -230,16 +236,18 @@ const supabase = createClient(
 Common pattern for handling webhooks from Israeli payment providers (Cardcom, Tranzila, etc.):
 
 ```typescript
-serve(async (req: Request) => {
-  // Israeli payment providers often send windows-1255 encoded data
+Deno.serve(async (req: Request) => {
+  // Some older Israeli payment integrations still send windows-1255 rather than
+  // UTF-8. Confirm the encoding against the provider's own docs before decoding.
   const body = await req.text()
 
-  // Verify webhook signature (provider-specific)
-  const signature = req.headers.get('x-webhook-signature')
-
-  // Process payment notification
-  // Israeli payment amounts are in agorot (1/100 shekel)
-  // Convert: amount_nis = webhook_amount / 100
+  // Signature verification is provider-specific. Do NOT assume a header name:
+  // providers differ (some sign a header, some put a key in the body, some use
+  // GET query parameters rather than a JSON POST). Read that provider's docs.
+  //
+  // The amount UNIT is also provider-specific and getting it wrong is a 100x
+  // financial error. Some send agorot (1/100 shekel), others send decimal
+  // shekels. Verify against the provider's API reference before dividing by 100.
 
   return new Response('OK', { status: 200 })
 })
@@ -286,24 +294,33 @@ Hebrew collation sorts are slower than default binary sorts. Optimize:
 3. **Limit result sets** before sorting
 
 ```sql
--- Materialized view for sorted business directory
+-- Materialized view for sorted business directory.
+-- Store an explicit sort key: a matview's own ORDER BY does not guarantee the
+-- order of a later SELECT, so consumers must still ORDER BY something.
 CREATE MATERIALIZED VIEW businesses_sorted AS
-SELECT * FROM businesses
-WHERE is_active = true
-ORDER BY name_he COLLATE hebrew_icu;
+SELECT *, row_number() OVER (ORDER BY name_he COLLATE hebrew_icu) AS sort_key
+FROM businesses
+WHERE is_active = true;
 
--- Refresh periodically
+-- CONCURRENTLY requires a UNIQUE index with no WHERE clause on the view.
+-- Without it the refresh fails with:
+--   ERROR: cannot refresh materialized view "public.businesses_sorted" concurrently
+CREATE UNIQUE INDEX businesses_sorted_pkey ON businesses_sorted (id);
+
+-- Refresh periodically (readers are not blocked)
 REFRESH MATERIALIZED VIEW CONCURRENTLY businesses_sorted;
+
+-- Read it back in order
+SELECT * FROM businesses_sorted ORDER BY sort_key;
 ```
 
 ### Supabase Plan Considerations
 
 For Israeli SaaS applications:
 
-- **Free tier**: 500MB database, suitable for MVP
-- **Pro tier**: 8GB, enough for most Israeli startups
-- **Connection limit**: Free (60), Pro (200). Use pooler mode for Edge Functions.
-- **Region**: Choose `eu-central-1` (Frankfurt) for lowest latency to Israel (~30ms)
+- **Storage and compute quotas** vary by plan and are revised regularly. Read the current limits from supabase.com/pricing or your project's usage page rather than from a document like this one.
+- **Connections**: pool size is not a plan constant. It is a single setting that Supavisor and PgBouncer both reference, capping the server-side connections a pooler opens to Postgres. The tier-dependent ceiling is a separate "max pooler clients" limit on concurrent clients, plus your compute instance's `max_connections`. Read both off your own project instead of hardcoding a number. Use pooler mode for Edge Functions.
+- **Region**: pick the closest available region to your users and measure it, rather than trusting a quoted latency figure. `eu-central-1` (Frankfurt) is the usual European choice for Israeli traffic.
 
 ### Realtime for Hebrew Content
 

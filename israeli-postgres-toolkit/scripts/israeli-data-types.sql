@@ -26,7 +26,9 @@ CREATE TABLE IF NOT EXISTS customers (
   -- Contact
   email text CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'),
   phone_mobile text CHECK (phone_mobile ~ '^05\d{8}$'),
-  phone_landline text CHECK (phone_landline ~ '^0[2-9]\d{7}$'),
+  -- Landline area codes only (02/03/04/08/09), matching SKILL.md. 05X mobile and
+  -- 07X VoIP are 10 digits and belong in phone_mobile / their own column.
+  phone_landline text CHECK (phone_landline ~ '^0[23489]\d{7}$'),
   phone_e164 text CHECK (phone_e164 ~ '^\+972\d{8,9}$'),
 
   -- Preferences
@@ -62,7 +64,10 @@ CREATE TABLE IF NOT EXISTS addresses (
   city_he text NOT NULL,
   city_en text,
   neighborhood_he text,         -- שכונה
-  postal_code text CHECK (postal_code ~ '^\d{7}$'),  -- Israeli: 7 digits
+  -- Israeli postal code (mikud): 7 digits since the 2013 renumbering. Older records
+  -- may still hold the legacy 5-digit code, so migrate or relax this before importing
+  -- historical data, and confirm the current format via Israel Post's mikud lookup.
+  postal_code text CHECK (postal_code ~ '^\d{7}$'),
 
   -- Region classification
   region text CHECK (region IN (
@@ -129,8 +134,12 @@ CREATE TABLE IF NOT EXISTS businesses (
 CREATE TABLE IF NOT EXISTS invoices (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 
-  -- Invoice identity
-  invoice_number serial NOT NULL,
+  -- Invoice identity.
+  -- NOT a serial. Israeli bookkeeping requires each business to keep its OWN
+  -- consecutive series, and a shared sequence gives every tenant a gapped,
+  -- interleaved numbering that also leaks the platform's total invoice volume.
+  -- Allocate per business and enforce it with the UNIQUE constraint below.
+  invoice_number bigint NOT NULL,
   invoice_type text NOT NULL CHECK (invoice_type IN (
     'heshbonit_mas',          -- חשבונית מס (tax invoice)
     'heshbonit_mas_kabala',   -- חשבונית מס / קבלה (tax invoice / receipt)
@@ -145,7 +154,11 @@ CREATE TABLE IF NOT EXISTS invoices (
   customer_id uuid REFERENCES customers(id),
 
   -- Amounts (always in NIS unless otherwise specified)
-  subtotal_nis numeric(12, 2) NOT NULL CHECK (subtotal_nis >= 0),
+  -- Sign is governed by invoice_type, not by a blanket >= 0. A credit invoice
+  -- (חשבונית זיכוי) reverses an issued tax invoice and therefore carries NEGATIVE
+  -- amounts, so a >= 0 CHECK here would enumerate the type above and then reject
+  -- every row of it. See invoices_sign_matches_type below.
+  subtotal_nis numeric(12, 2) NOT NULL,
   vat_rate numeric(5, 4) NOT NULL DEFAULT 0.1800,  -- 18% as of 2025
   vat_amount numeric(12, 2) NOT NULL,
   total_nis numeric(12, 2) NOT NULL,
@@ -176,7 +189,18 @@ CREATE TABLE IF NOT EXISTS invoices (
   -- Metadata
   notes text,
   created_at timestamptz NOT NULL DEFAULT now(),
-  updated_at timestamptz NOT NULL DEFAULT now()
+  updated_at timestamptz NOT NULL DEFAULT now(),
+
+  -- Each business numbers its own invoices independently.
+  UNIQUE (business_id, invoice_number),
+
+  -- Credit invoices are negative, every other type is positive.
+  CONSTRAINT invoices_sign_matches_type CHECK (
+    CASE WHEN invoice_type = 'hashbonit_zikui'
+         THEN subtotal_nis <= 0
+         ELSE subtotal_nis >= 0
+    END
+  )
 );
 
 -- Validate VAT calculation
@@ -196,12 +220,20 @@ CREATE TABLE IF NOT EXISTS tax_config (
   -- Current VAT rate
   vat_rate numeric(5, 4) NOT NULL DEFAULT 0.1800,
 
-  -- VAT exemption threshold for Osek Patur (updated annually)
-  osek_patur_threshold numeric(12, 2) NOT NULL DEFAULT 120000.00,
+  -- Osek Patur annual turnover ceiling. CPI-indexed every January, so treat this
+  -- default as a starting value and re-check it each year against
+  -- https://www.kolzchut.org.il/he/עוסק_פטור  (2026: 122,833; 2025: 120,000).
+  osek_patur_threshold numeric(12, 2) NOT NULL DEFAULT 122833.00,
 
-  -- Social security rates (Bituah Leumi)
-  employee_bituah_leumi_rate numeric(5, 4) NOT NULL DEFAULT 0.0350,
-  employer_bituah_leumi_rate numeric(5, 4) NOT NULL DEFAULT 0.0760,
+  -- Bituah Leumi rates: DELIBERATELY no default, and nullable.
+  -- A single pair of numbers cannot represent these. Both the employee and the
+  -- employer rate change at the reduced/full wage band, and the employee rate also
+  -- varies by age band, pension status and disability status. Storing one value
+  -- here and multiplying by it is how payroll code silently overcharges pensioners
+  -- and minors. Populate per band from the current BTL rate table, or keep the
+  -- calculation in a dedicated payroll component instead of this config row.
+  employee_bituah_leumi_rate numeric(5, 4),
+  employer_bituah_leumi_rate numeric(5, 4),
 
   -- Metadata
   effective_from date NOT NULL DEFAULT CURRENT_DATE,
@@ -241,11 +273,18 @@ CREATE TABLE IF NOT EXISTS bank_accounts (
 
   -- Israeli bank details
   bank_code text NOT NULL CHECK (bank_code ~ '^\d{2}$'),
-  -- Common: 10 (Leumi), 11 (Discount), 12 (Hapoalim), 20 (Mizrahi-Tefahot), 31 (International)
+  -- Bank codes below are the commonly seen ones and are given as orientation only.
+  -- Validate against the Bank of Israel's current bank and branch registry before
+  -- relying on them: a wrong code silently misroutes a payment, and codes change
+  -- when banks merge. Commonly seen: 10 (Leumi), 11 (Discount), 12 (Hapoalim),
+  -- 20 (Mizrahi-Tefahot), 31 (International).
   branch_code text NOT NULL CHECK (branch_code ~ '^\d{3,4}$'),
   account_number text NOT NULL CHECK (account_number ~ '^\d{6,9}$'),
 
   -- IBAN (optional, for international transfers)
+  -- Israeli IBAN: 'IL' plus 21 digits (23 characters total) per the ISO 13616
+  -- national structure. This is a LENGTH/shape check only; it does not validate the
+  -- mod-97 checksum, so do that in the application layer before initiating a transfer.
   iban text CHECK (iban ~ '^IL\d{21}$'),
 
   -- Display
@@ -310,8 +349,8 @@ BEGIN
   IF phone ~ '^05\d{8}$' THEN
     -- Mobile: 050-1234567
     RETURN substr(phone, 1, 3) || '-' || substr(phone, 4);
-  ELSIF phone ~ '^0[2-9]\d{7}$' THEN
-    -- Landline: 02-1234567 or 03-1234567
+  ELSIF phone ~ '^0[23489]\d{7}$' THEN
+    -- Landline: 02-1234567 or 03-1234567 (area codes only, matching the CHECK above)
     RETURN substr(phone, 1, 2) || '-' || substr(phone, 3);
   ELSE
     RETURN phone;
