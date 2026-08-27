@@ -42,6 +42,21 @@
       ],
       "gate_rounds": 5,
       "gate_note": "Judge+Expert panel FAILED rounds 1-4 and PASSED round 5. Three of the round-2/3/4 findings were defects introduced BY the fixes: a non-existent date (2026-02-29, wrong year off npm), a fix applied to the SKILL files but not to references/deployment.md, and an overcorrection that relabelled the FAQ-published 1-msg/sec-per-chat limit as unpublished."
+    },
+    {
+      "version": "1.4.0",
+      "date": "2026-08-27",
+      "lessons": [
+        "Bot API version drift is this skill recurring defect and it recurred again: 10.2 -> 10.3 in six weeks. Check core.telegram.org/bots/api-changelog FIRST every cycle, before reading anything else.",
+        "core.telegram.org returns HTTP 200 with a full-looking page for fabricated paths. Never assert on status there. The reliable existence test is set-matching identifiers against the anchor list extracted from the API reference.",
+        "A blanket string replace of 10.2 -> 10.3 corrupted references/domain-checklist.md in two places: it re-dated the Mini App origin lockdown (a genuine 10.2 item) to 10.3, contradicting the same file own citation, and it produced a footer claiming verification against 10.3 a month before 10.3 existed. Version bumps need per-hit review, not sed.",
+        "The version bump surfaced a fabrication that had nothing to do with versions: paid_media presented as a parameter on sendMessage-style methods. Enumerating every identifier against the live reference is what caught it, not the version work.",
+        "When adding a capability, read the source sentence AFTER the one you quoted. Paid broadcasts were added from the FAQ figures; the eligibility gate (100,000 Stars and 100,000 MAU) was the very next sentence, and omitting it made the advice actively misleading for this skill audience.",
+        "Deferred, MAJOR: setMyCommands with language_code and BotCommandScope* is named in the domain-checklist as the mechanism for bilingual command menus but appears nowhere in the body. For an Israeli-market bot skill this is the most relevant command-surface API and the coverage contract claims it.",
+        "Deferred, MAJOR: the grammY conversations snippets omit ConversationFlavor<Context> and conversation.external(), so the TypeScript will not compile against a plain Context and any DB write inside a conversation is replayed.",
+        "Deferred, MAJOR: the BiometricManager example calls authenticate() without requestAccess(), so the callback returns false when permission was never granted, while gating a Stars payment on it.",
+        "This skill ships no scripts. scripts/ contains only a .gitkeep, so any script gate on it is vacuous and every code sample is inline and unrunnable without a live BOT_TOKEN."
+      ]
     }
   ]
 }

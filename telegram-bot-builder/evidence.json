@@ -1,21 +1,21 @@
 {
   "schemaVersion": "1.0",
   "skill": "telegram-bot-builder",
-  "generated_at": "2026-07-25T19:29:41.664024+00:00",
+  "generated_at": "2026-08-27T00:00:00Z",
   "claims": [
     {
       "claim_id": "bot-api-v10",
-      "claim": "Telegram released Bot API 10.2 on July 14, 2026; Bot API 10.0 was released May 8, 2026.",
-      "source_url": "https://core.telegram.org/bots/api",
-      "raw_snippet": "July 14, 2026 Bot API 10.2",
-      "fetched_at": "2026-07-25T19:03:45.339871+00:00",
+      "claim": "Telegram released Bot API 10.3 on August 24, 2026. Bot API 10.2 was July 14, 2026 and Bot API 10.0 was May 8, 2026.",
+      "source_url": "https://core.telegram.org/bots/api-changelog",
+      "raw_snippet": "August 24, 2026\nBot API 10.3",
+      "fetched_at": "2026-08-27T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "metadata.json"
       ],
-      "verified_via": "browser",
-      "verified_at": "2026-07-25T19:03:45.339871+00:00"
+      "verified_via": "curl against core.telegram.org; NOTE this host returns HTTP 200 with a full-looking page for fabricated paths, so every check here asserts on page CONTENT, never on status",
+      "verified_at": "2026-08-27T00:00:00Z"
     },
     {
       "claim_id": "telegram-botnews",
@@ -187,13 +187,13 @@
       ]
     },
     {
-      "claim_id": "grammy-bot-api-10-2",
-      "claim": "grammY v1.45.0 (July 16, 2026) added support for Bot API 10.2; python-telegram-bot v22.8 supports up to Bot API 10.0.",
-      "source_url": "https://github.com/grammyjs/grammY/releases",
-      "raw_snippet": "Bot API 10.2",
-      "fetched_at": "2026-07-25T19:03:45.339871+00:00",
-      "verified_via": "browser",
-      "verified_at": "2026-07-25T19:03:45.339871+00:00",
+      "claim_id": "grammy-bot-api-10-3",
+      "claim": "grammY v1.46.0 (published 2026-08-26) added support for Bot API 10.3. python-telegram-bot v22.8 supports up to Bot API 10.0, and Telegraf's last release is 4.16.3 (2024-02-29) at Bot API 7.1.",
+      "source_url": "https://github.com/grammyjs/grammY/releases/tag/v1.46.0",
+      "raw_snippet": "feat: support Bot API 10.3",
+      "fetched_at": "2026-08-27T00:00:00Z",
+      "verified_via": "npm registry (registry.npmjs.org/grammy, /telegraf), PyPI (pypi.org/pypi/python-telegram-bot/json), and the grammY GitHub release",
+      "verified_at": "2026-08-27T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -579,12 +579,12 @@
     },
     {
       "claim_id": "broadcast-rate-limits",
-      "claim": "Bots cannot broadcast more than about 30 messages per second without paid broadcasts, and no more than 20 messages per minute in a group.",
+      "claim": "Bots cannot broadcast more than about 30 messages per second on the free tier, and no more than 20 messages per minute to a group, and should avoid more than one message per second in a single chat. Enabling paid broadcasts in @BotFather raises the broadcast limit to 1000 messages per second, with every message above the free 30 per second costing 0.1 Stars from the bot's Stars balance.",
       "source_url": "https://core.telegram.org/bots/faq",
-      "raw_snippet": "bots are not able to broadcast more than about 30 messages per second",
-      "fetched_at": "2026-07-25T20:05:00+00:00",
-      "verified_via": "browser",
-      "verified_at": "2026-07-25T20:05:00+00:00",
+      "raw_snippet": "Enabling paid broadcasts in @BotFather allows a bot to broadcast up to 1000 messages per second . Each message broadcasted over the free amount of 30 per second incurs a cost of 0.1 Stars per message , paid with Telegram Stars from the bot's balance.",
+      "fetched_at": "2026-08-27T00:00:00Z",
+      "verified_via": "curl, asserted on content",
+      "verified_at": "2026-08-27T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -686,6 +686,60 @@
       "fetched_at": "2026-08-09T00:00:00Z",
       "verified_via": "curl (raw.githubusercontent.com/grammyjs/auto-retry/main/README.md)",
       "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "bot-api-10-3-ephemeral-replacement",
+      "claim": "Bot API 10.3 added the class EphemeralMessageParameters and replaced the parameters receiver_user_id and callback_query_id, which 10.2 had introduced, with the single parameter ephemeral_message_parameters across sendMessage, sendAnimation, sendAudio, sendDocument, sendLivePhoto, sendPhoto, sendSticker, sendVideo, sendVideoNote, sendVoice, sendContact, sendLocation and sendVenue. It also added replace_callback_query_message to that class.",
+      "source_url": "https://core.telegram.org/bots/api-changelog",
+      "raw_snippet": "Added the class\nEphemeralMessageParameters\nand replaced the parameters\nreceiver_user_id\nand\ncallback_query_id\nin the methods\nsendMessage",
+      "fetched_at": "2026-08-27T00:00:00Z",
+      "verified_at": "2026-08-27T00:00:00Z",
+      "verified_via": "curl, asserted on content; also confirmed that ephemeral_message_parameters appears 16 times in the live bots/api reference and receiver_user_id survives only on the editEphemeralMessage* methods",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "bot-api-10-3-keyboards",
+      "claim": "Bot API 10.3 added the class DisabledButton and the field disabled to InlineKeyboardButton, and added the field force_reply to both InlineKeyboardMarkup and ReplyKeyboardMarkup. It also added can_send_welcome_messages to ChatAdministratorRights, ChatMemberAdministrator and promoteChatMember, and can_stop and keep_on_stop to sendMessageDraft and sendRichMessageDraft with a new MessageGenerationStopped update.",
+      "source_url": "https://core.telegram.org/bots/api-changelog",
+      "raw_snippet": "Reply markup Added the class DisabledButton and the field disabled to the class InlineKeyboardButton . Added the field force_reply to the classes InlineKeyboardMarkup and ReplyKeyboardMarkup .",
+      "fetched_at": "2026-08-27T00:00:00Z",
+      "verified_at": "2026-08-27T00:00:00Z",
+      "verified_via": "curl, asserted on content; each identifier independently confirmed present in the live bots/api reference",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "bot-subscription-updated",
+      "claim": "Bot API 10.2 added updates about changes to a user payment subscription, represented by the class BotSubscriptionUpdated and the field subscription in the class Update. A successful_payment handler alone sees a renewal charge but never sees a cancellation.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Added updates about changes to a user payment subscription, represented by the class BotSubscriptionUpdated and the field subscription in the class Update .",
+      "fetched_at": "2026-08-27T00:00:00Z",
+      "verified_at": "2026-08-27T00:00:00Z",
+      "verified_via": "curl, asserted on content",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "business-account-setters-are-set-only",
+      "claim": "The Bot API exposes setBusinessAccountName, setBusinessAccountUsername, setBusinessAccountBio and setBusinessAccountGiftSettings with no remove* counterparts. The only remove* method for a business account is removeBusinessAccountProfilePhoto.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "removeBusinessAccountProfilePhoto",
+      "fetched_at": "2026-08-27T00:00:00Z",
+      "verified_at": "2026-08-27T00:00:00Z",
+      "verified_via": "curl, asserted on content: removeBusinessAccountProfilePhoto returns 1 occurrence in the live reference while removeBusinessAccountName and removeBusinessAccountBio return 0",
+      "appears_in": [
+        "references/domain-checklist.md",
         "SKILL.md",
         "SKILL_HE.md"
       ]

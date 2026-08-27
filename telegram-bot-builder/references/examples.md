@@ -269,7 +269,7 @@ async def precheckout(update: Update, context) -> None:
 
 async def successful_payment(update: Update, context) -> None:
     payment = update.message.successful_payment
-    await update.message.reply_text("!תודה על הרכישה! המנוי הופעל")
+    await update.message.reply_text("תודה על הרכישה! המנוי הופעל")
 
 application.add_handler(CommandHandler("buy", buy))
 application.add_handler(PreCheckoutQueryHandler(precheckout))
@@ -340,7 +340,7 @@ bot.on("message:successful_payment", async (ctx) => {
   console.log(`Payment received: ${payment.total_amount} ${payment.currency}`);
   console.log(`Payload: ${payment.invoice_payload}`);
 
-  await ctx.reply("!תודה על הרכישה! המנוי הופעל");
+  await ctx.reply("תודה על הרכישה! המנוי הופעל");
 });
 
 // Handle pre-checkout query (MUST answer within 10 seconds)
@@ -381,3 +381,78 @@ await bot.api.sendGift(
 );
 ```
 
+
+
+## Inline keyboard, Telegraf and python-telegram-bot
+
+**Telegraf:**
+
+```typescript
+import { Markup } from "telegraf";
+
+bot.command("menu", (ctx) => {
+  ctx.reply("בחר אפשרות:", Markup.inlineKeyboard([
+    [Markup.button.callback("אפשרות א׳", "option_a"),
+     Markup.button.callback("אפשרות ב׳", "option_b")],
+    [Markup.button.callback("ביטול", "cancel")]
+  ]));
+});
+
+bot.action("option_a", (ctx) => {
+  ctx.answerCbQuery("בחרת אפשרות א׳!");
+  ctx.editMessageText("בחרת: אפשרות א׳");
+});
+```
+
+**python-telegram-bot:**
+
+```python
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
+async def menu(update: Update, context) -> None:
+    keyboard = [
+        [
+            InlineKeyboardButton("אפשרות א׳", callback_data="option_a"),
+            InlineKeyboardButton("אפשרות ב׳", callback_data="option_b"),
+        ],
+        [InlineKeyboardButton("ביטול", callback_data="cancel")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text("בחר אפשרות:", reply_markup=reply_markup)
+
+
+async def button_handler(update: Update, context) -> None:
+    query = update.callback_query
+    await query.answer()
+
+    if query.data == "option_a":
+        await query.edit_message_text("בחרת: אפשרות א׳")
+    elif query.data == "option_b":
+        await query.edit_message_text("בחרת: אפשרות ב׳")
+    elif query.data == "cancel":
+        await query.delete_message()
+
+# Register handler
+application.add_handler(CallbackQueryHandler(button_handler))
+```
+
+
+## Bot Business: capturing the connection and replying
+
+```typescript
+// Capture the connection (store business_connection_id per business user)
+bot.on("business_connection", async (ctx) => {
+  const conn = ctx.businessConnection;
+  // Permissions live under conn.rights (BusinessBotRights).
+  // There is no top-level conn.can_reply field.
+  console.log(`Connected to business user ${conn.user.id}, can_reply=${conn.rights?.can_reply}`);
+  // Persist conn.id keyed by conn.user.id
+});
+
+// Reply to an incoming business message - echo business_connection_id
+bot.on("business_message", async (ctx) => {
+  await ctx.api.sendMessage(ctx.businessMessage.chat.id, "אני אחזור אליך תוך מספר דקות", {
+    business_connection_id: ctx.businessMessage.business_connection_id,
+  });
+});
+```

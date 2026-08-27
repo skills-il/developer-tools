@@ -25,7 +25,7 @@ const bot = new Bot(token);
 
 // Command handlers
 bot.command("start", async (ctx) => {
-  await ctx.reply("!שלום! אני הבוט שלך");
+  await ctx.reply("שלום! אני הבוט שלך");
 });
 
 bot.command("help", async (ctx) => {
@@ -81,7 +81,7 @@ if (!token) throw new Error("BOT_TOKEN environment variable is required");
 
 const bot = new Telegraf(token);
 
-bot.start((ctx) => ctx.reply("!שלום! אני הבוט שלך"));
+bot.start((ctx) => ctx.reply("שלום! אני הבוט שלך"));
 
 bot.help((ctx) => ctx.reply(
   "הפקודות הזמינות:\n" +
@@ -128,7 +128,7 @@ if not TOKEN:
 
 
 async def start(update: Update, context) -> None:
-    await update.message.reply_text("!שלום! אני הבוט שלך")
+    await update.message.reply_text("שלום! אני הבוט שלך")
 
 
 async def help_command(update: Update, context) -> None:

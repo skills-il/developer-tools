@@ -95,3 +95,54 @@ await bot.api.setChatMenuButton({
 });
 ```
 
+
+
+## The sendData path in full
+
+| Launch path | How data comes back |
+|---|---|
+| Reply-keyboard `web_app` button | `sendData()` -> `message:web_app_data` service message (no server needed) |
+| Inline-keyboard button, menu button, direct link, inline mode | POST to your own backend with `initData`, validated server-side (below) |
+
+For the `sendData` path the button must be a reply keyboard, not an inline one:
+
+```typescript
+import { Keyboard } from "grammy";
+
+const kb = new Keyboard()
+  .webApp("פתח אפליקציה", "https://your-app.com/mini-app")
+  .resized();
+await ctx.reply("לחצו לפתיחה:", { reply_markup: kb });
+```
+
+**In the Mini App (browser-side JavaScript):**
+
+```javascript
+// Telegram WebApp SDK is injected by Telegram
+const tg = window.Telegram.WebApp;
+
+// Send data back to the bot (closes the Mini App)
+tg.sendData(JSON.stringify({
+  action: "order",
+  items: ["item1", "item2"],
+  total: 150,
+}));
+
+// Or use MainButton for a cleaner UX
+tg.MainButton.setText("אישור הזמנה"); // setText(), not MainButton.text =, which never reaches the client
+tg.MainButton.show();
+tg.MainButton.onClick(() => {
+  tg.sendData(JSON.stringify({ confirmed: true }));
+});
+```
+
+**In the bot (receiving the data):**
+
+```typescript
+bot.on("message:web_app_data", async (ctx) => {
+  const data = JSON.parse(ctx.message.web_app_data.data);
+  console.log("Received from Mini App:", data);
+
+  await ctx.reply(`הזמנה התקבלה! סה"כ: ₪${data.total}`);
+});
+```

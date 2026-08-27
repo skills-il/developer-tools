@@ -2,7 +2,7 @@
 
 Coverage contract for this skill. Every "Must cover" item is knowledge whose absence
 causes an agent to emit broken, insecure, or silently-non-working bot code.
-Verified against the live docs on 2026-07-25 (Bot API 10.2, released 2026-07-14).
+Verified against the live docs on 2026-08-27 (Bot API 10.3, released 2026-08-24).
 
 ---
 
@@ -139,7 +139,7 @@ Verified against the live docs on 2026-07-25 (Bot API 10.2, released 2026-07-14)
 
 ### Framework layer
 
-23. **Current versions and their real Bot API coverage**, grammY 1.45.x (tracks 10.2),
+23. **Current versions and their real Bot API coverage**, grammY 1.46.x (tracks 10.3),
     python-telegram-bot 22.8, Telegraf 4.16.3 (last released 2024-02-29, effectively
     dormant, types stuck around Bot API 7.x). A framework table that presents Telegraf as
     a peer choice without stating its dormancy misdirects the user.
@@ -202,10 +202,10 @@ Verified against the live docs on 2026-07-25 (Bot API 10.2, released 2026-07-14)
 10. **Bot API 10.x new surfaces the skill claims in its description:** guest mode
     (`supports_guest_queries`, `guest_message`, `answerGuestQuery`), Managed Bots
     (`ManagedBotUpdated`, `getManagedBotAccessSettings`, `setManagedBotAccessSettings`),
-    Ephemeral Messages (10.2: `receiver_user_id`, `ephemeral_message_id`,
+    Ephemeral Messages (10.2 introduced them; **10.3 replaced `receiver_user_id` and `callback_query_id` with `ephemeral_message_parameters`**; `ephemeral_message_id`,
     `editEphemeralMessage*`, `deleteEphemeralMessage`), Rich Messages
     (`sendRichMessage`, `sendRichMessageDraft` for streaming AI replies), and Communities.
-    Cited by: bots/api "Recent changes" 10.0 / 10.1 / 10.2.
+    Cited by: bots/api "Recent changes" 10.0 / 10.1 / 10.2 / 10.3.
 
 11. **Gifts semantics**, `getAvailableGifts` for the catalogue; **a gift sent by a bot via
     `sendGift` cannot be converted to Stars by the receiver**; `convertGiftToStars` applies
@@ -254,17 +254,17 @@ Verified against the live docs on 2026-07-25 (Bot API 10.2, released 2026-07-14)
 
 | Source | Used for |
 |---|---|
-| https://core.telegram.org/bots/api | Method/type reference, 10.0-10.2 changelog, webhook + local-server + file limits |
+| https://core.telegram.org/bots/api | Method/type reference, 10.0-10.3 changelog, webhook + local-server + file limits |
 | https://core.telegram.org/bots/api-changelog | Historical version attribution |
 | https://core.telegram.org/api/business | Business feature eligibility (Premium vs non-Premium connected bots) |
 | https://core.telegram.org/bots/webapps | Mini Apps SDK, initData HMAC + Ed25519 validation, event list |
 | https://core.telegram.org/bots/features | Privacy mode, deep linking, inline mode, test environment, file_id scoping |
 | https://core.telegram.org/bots/faq | Broadcast rate limits, paid broadcasts |
 | https://core.telegram.org/bots/payments | Payment/pre-checkout flow |
-| https://github.com/tdlib/telegram-bot-api | Self-hosted Bot API server (currently 10.2) |
+| https://github.com/tdlib/telegram-bot-api | Self-hosted Bot API server (track its release notes; the cloud API is on 10.3) |
 | https://grammy.dev/ | grammY 1.45.x core + plugin APIs |
 | https://docs.python-telegram-bot.org/ | python-telegram-bot 22.8, optional extras, v20 async transition |
 | https://telegraf.js.org/ | Telegraf 4.16.3 API surface and maintenance status |
 | https://t.me/botnews | Release announcements |
 
-_Verified 2026-07-25 against Bot API 10.2._
+_Verified 2026-08-27 against Bot API 10.3 (released 2026-08-24)._

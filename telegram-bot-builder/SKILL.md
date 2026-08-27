@@ -1,45 +1,58 @@
 ---
 name: telegram-bot-builder
-description: "Build Telegram bots with grammY, Telegraf, or python-telegram-bot. Covers Bot API v10.2 webhooks vs polling, inline keyboards, commands, middleware patterns, Telegram Stars + Gifts payments, Mini Apps 2.0, Bot Business mode, and Hebrew message handling. Use when building a Telegram bot, setting up webhooks, handling Hebrew/RTL messages in a bot, or integrating Telegram payments. Do NOT use for WhatsApp bots (use israeli-whatsapp-business), voice bots (use hebrew-voice-bot-builder), or general chatbot design patterns (use hebrew-chatbot-builder)."
+description: "Build Telegram bots with grammY, Telegraf, or python-telegram-bot. Covers Bot API v10.3 webhooks vs polling, inline keyboards, commands, middleware patterns, Telegram Stars + Gifts payments, Mini Apps 2.0, Bot Business mode, and Hebrew message handling. Use when building a Telegram bot, setting up webhooks, handling Hebrew/RTL messages in a bot, or integrating Telegram payments. Do NOT use for WhatsApp bots (use israeli-whatsapp-business), voice bots (use hebrew-voice-bot-builder), or general chatbot design patterns (use hebrew-chatbot-builder)."
 license: MIT
 ---
 
 # Telegram Bot Builder
 
-Build production-ready Telegram bots for the Israeli market using grammY, Telegraf, or python-telegram-bot. Covers Bot API v10.2 (July 2026), webhooks vs polling, inline keyboards, Hebrew/RTL text, Telegram Stars + Gifts payments, Mini Apps 2.0, Bot Business mode, and serverless deployment.
+Build production-ready Telegram bots for the Israeli market using grammY, Telegraf, or python-telegram-bot. Covers Bot API v10.3 (24 August 2026), webhooks vs polling, inline keyboards, Hebrew/RTL text, Telegram Stars + Gifts payments, Mini Apps 2.0, Bot Business mode, and serverless deployment.
 
 ## Problem
 
-Building Telegram bots for Israeli users involves several challenges that agents consistently get wrong:
+Building Telegram bots for Israeli users involves several things agents consistently get wrong:
 
-1. **Framework choice confusion** - grammY, Telegraf, and python-telegram-bot have different Bot API version support, plugin ecosystems, and deployment models. Agents often mix their APIs or suggest deprecated patterns.
-2. **Webhook vs polling misconfiguration** - Agents default to polling (good for development) but fail to set up webhooks correctly for production, missing port restrictions (443, 80, 88, 8443 only), SSL requirements, and secret token verification.
-3. **Hebrew/RTL text corruption** - Bidirectional text mixing Hebrew and English (common in Israeli bots) breaks in inline keyboards, callback data, and formatted messages. Agents ignore Unicode control characters and text direction markers.
-4. **Payment integration gaps** - Telegram Stars (the in-app currency) has specific invoice creation flows that differ from traditional payment providers. Agents often generate code for deprecated payment APIs.
-5. **Mini App data exchange** - The communication protocol between a Telegram Mini App (WebApp) and the bot uses `web_app_data` events, not regular messages. Agents frequently implement this incorrectly.
+1. **Framework confusion** - grammY, Telegraf and python-telegram-bot sit on different Bot API versions and mix badly. Agents blend their APIs or emit deprecated patterns.
+2. **Webhook misconfiguration** - agents default to polling and then set webhooks up wrong for production, missing the port restriction (443, 80, 88, 8443 only), SSL, and secret-token verification.
+3. **Hebrew/RTL corruption** - bidirectional text breaks in inline keyboards, callback data and formatted messages when Unicode direction marks are ignored.
+4. **Payment gaps** - Telegram Stars has invoice rules that differ from fiat providers, and agents generate deprecated payment code.
+5. **Mini App data exchange** - the WebApp-to-bot channel depends on how the app was launched, and `sendData` is unavailable from inline-keyboard launches.
+6. **Version drift** - the Bot API ships several times a year and models learn a frozen snapshot. This skill was last verified against Bot API 10.3 on 2026-08-27; check the changelog before trusting any version-specific claim here.
 
 ## Framework Selection
 
-Choose your framework based on your runtime, deployment target, and Bot API version needs:
+Choose by runtime, deployment target and Bot API version:
 
-| Feature | grammY v1.45.1 | Telegraf v4.16.3 | python-telegram-bot v22.8 |
+| Feature | grammY v1.46.0 | Telegraf v4.16.3 | python-telegram-bot v22.8 |
 |---------|----------------|-------------------|---------------------------|
 | Language | TypeScript/JS | TypeScript/JS | Python 3.10+ |
-| Bot API version | Latest (v10.2) | v7.1 | v10.0 |
+| Bot API version | Latest (v10.3) | v7.1 | v10.0 |
 | Install | `npm install grammy` | `npm install telegraf` | `pip install python-telegram-bot` |
 | Plugin ecosystem | Rich (sessions, menus, conversations, i18n) | Moderate (scenes, sessions) | Extensions (JobQueue, persistence) |
-| Serverless support | Vercel, CF Workers, Deno Deploy, Supabase Edge, Fly.io | Express/Fastify/Lambda adapters | ASGI adapters, manual webhook handlers |
-| Middleware model | Composer-based (like Koa) | Composer-based (like Koa) | Handler groups with filters |
+| Serverless | Vercel, CF Workers, Deno Deploy, Supabase Edge, Fly.io | Express/Fastify/Lambda adapters | ASGI adapters, manual handlers |
+| Middleware | Composer (Koa-style) | Composer (Koa-style) | Handler groups with filters |
 | Long polling | `bot.start()` | `bot.launch()` | `application.run_polling()` |
-| Webhook mode | `webhookCallback()` adapter | `bot.launch({ webhook })` or `createWebhook()` | `application.run_webhook()` |
-| TypeScript types | First-class, auto-generated | Good, manual maintenance | N/A (Python type hints) |
-| Recommended for | New projects, serverless, latest API features | Existing Express/Fastify apps | Python shops, data/ML pipelines |
+| Webhook | `webhookCallback()` | `bot.launch({ webhook })` | `application.run_webhook()` |
+| Recommended for | New projects, serverless, latest API | Existing Express/Fastify apps | Python and ML shops |
+
+Full comparison: [references/framework-comparison.md](references/framework-comparison.md).
 
 **Decision guide:**
-- Need Bot API v10.x features (Stars subscriptions, Gifts, Bot Business, Mini Apps 2.0)? Use **grammY** or **python-telegram-bot**.
+- Need Bot API v10.x features (Stars subscriptions, Gifts, Bot Business, Mini Apps 2.0, ephemeral messages)? Use **grammY**, which is the only one of the three currently on 10.3. python-telegram-bot is on 10.0, so the 10.2 ephemeral surface and everything in 10.3 needs raw API calls there.
 - Already have an Express/Fastify server? **Telegraf** integrates cleanly, but note it is effectively dormant: last release 4.16.3 on 2024-02-29 (Bot API 7.1), so it will not see any 10.x surface. Prefer grammY for anything new.
-- Python team or ML/data pipeline? **python-telegram-bot** is the only choice.
-- Deploying to Vercel/Cloudflare Workers/Deno? **grammY** has native adapters for all of them.
+- Python team or ML pipeline? **python-telegram-bot** is the only choice.
+- Vercel, Cloudflare Workers or Deno? **grammY** has native adapters.
+
+## What Bot API 10.3 Changed (24 August 2026)
+
+If you learned this surface on 10.2, four things moved.
+
+- **Ephemeral messages were re-shaped.** 10.2 added `receiver_user_id` and `callback_query_id` to `sendMessage` and twelve sibling send methods. **10.3 replaced both with a single `ephemeral_message_parameters` object** (class `EphemeralMessageParameters`). Code written against the 10.2 shape breaks. The new object also carries `replace_callback_query_message`, which shows the ephemeral message in place of the original rather than as a new one.
+- **Keyboards gained `disabled` / `DisabledButton` and `force_reply`.** See Inline Keyboards below.
+- **`can_send_welcome_messages`** was added to `ChatAdministratorRights`, `ChatMemberAdministrator` and `promoteChatMember`. If you promote admins programmatically, this right now exists.
+- **Draft generation can be stopped.** `sendMessageDraft` and `sendRichMessageDraft` gained `can_stop` and `keep_on_stop`, and `MessageGenerationStopped` (field `stopped_message_generation` on `Update`) fires when the user stops. **If you stream an AI reply into a draft, handle it**, or you keep generating and billing against a user who already pressed stop.
+
+Rich Messages also gained buttons (`RichMessageButton`, `RichTextButton`, `RichBlockButtons`), a document block and an expandable block quotation.
 
 ## Bot Creation with BotFather
 
@@ -74,21 +87,14 @@ Every Telegram bot starts with @BotFather. This is not optional, there is no API
 
 ## Group Privacy Mode
 
-The single most common cause of "my group bot receives nothing". **Privacy mode is ON by default for every bot added to a group.** In that state the bot only sees:
-
-- Commands explicitly addressed to it (`/command@this_bot`).
-- General commands like `/start`, but only if it was the last bot to post in the group.
-- Messages sent via the bot inline.
-- Replies to its own messages.
-
-Regardless of privacy mode, a bot always receives service messages, all private-chat messages, and all channel messages where it is a member.
+The single most common cause of "my group bot receives nothing". **Privacy mode is ON by default for every bot in a group.** In that state the bot sees only commands addressed to it (`/command@this_bot`), general commands like `/start` if it was the last bot to post, messages sent via the bot inline, and replies to its own messages. Regardless of the setting it always gets service messages, all private-chat messages, and channel messages where it is a member.
 
 Two ways out, in order of preference:
 
-1. **Add the bot as a group admin.** Admins always receive every message, no setting change needed.
-2. **Disable privacy mode** via `/setprivacy` in BotFather. **The bot must then be removed and re-added to the group to take effect**, which is the step people miss. Telegram recommends this only when necessary; a force-reply prompt usually solves the same problem.
+1. **Add the bot as a group admin.** Admins receive every message, with no setting change.
+2. **Disable privacy mode** via `/setprivacy` in BotFather, then **remove and re-add the bot to the group**, which is the step people miss. A force-reply prompt usually solves the same problem with less exposure.
 
-The current setting is visible in the group's member list, so this is checkable without touching code.
+The current setting is visible in the group's member list, so it is checkable without touching code.
 
 ## Project Setup
 
@@ -102,7 +108,7 @@ Two things every scaffold needs, in any framework:
 
 ### Inline Keyboards
 
-Inline keyboards attach buttons directly to messages. They are the primary interactive UI element in Telegram bots.
+Inline keyboards attach buttons directly to messages, the primary interactive element in Telegram bots.
 
 **grammY:**
 
@@ -136,65 +142,15 @@ bot.callbackQuery("cancel", async (ctx) => {
 });
 ```
 
-**Critical: Callback data rules:**
-- Maximum 64 bytes (not characters). Each Hebrew character is 2 bytes in UTF-8, so 64 bytes is at most 32 Hebrew characters.
-- Use short English identifiers for callback data, display Hebrew in button text.
-- Pattern: `button text = Hebrew for user`, `callback data = English identifier for code`.
+**Callback data rules:** maximum **64 bytes**, not characters. Hebrew is 2 bytes per character in UTF-8, so that is at most 32 Hebrew characters. Keep Hebrew in the button text and short English identifiers in the callback data.
 
-**Telegraf:**
+The Telegraf and python-telegram-bot equivalents of the same menu, including the `CallbackQueryHandler` registration, are in [references/examples.md](references/examples.md).
 
-```typescript
-import { Markup } from "telegraf";
-
-bot.command("menu", (ctx) => {
-  ctx.reply("בחר אפשרות:", Markup.inlineKeyboard([
-    [Markup.button.callback("אפשרות א׳", "option_a"),
-     Markup.button.callback("אפשרות ב׳", "option_b")],
-    [Markup.button.callback("ביטול", "cancel")]
-  ]));
-});
-
-bot.action("option_a", (ctx) => {
-  ctx.answerCbQuery("בחרת אפשרות א׳!");
-  ctx.editMessageText("בחרת: אפשרות א׳");
-});
-```
-
-**python-telegram-bot:**
-
-```python
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-
-async def menu(update: Update, context) -> None:
-    keyboard = [
-        [
-            InlineKeyboardButton("אפשרות א׳", callback_data="option_a"),
-            InlineKeyboardButton("אפשרות ב׳", callback_data="option_b"),
-        ],
-        [InlineKeyboardButton("ביטול", callback_data="cancel")],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("בחר אפשרות:", reply_markup=reply_markup)
-
-
-async def button_handler(update: Update, context) -> None:
-    query = update.callback_query
-    await query.answer()
-
-    if query.data == "option_a":
-        await query.edit_message_text("בחרת: אפשרות א׳")
-    elif query.data == "option_b":
-        await query.edit_message_text("בחרת: אפשרות ב׳")
-    elif query.data == "cancel":
-        await query.delete_message()
-
-# Register handler
-application.add_handler(CallbackQueryHandler(button_handler))
-```
+**Two 10.3 additions belong on every keyboard you build.** `InlineKeyboardButton` gained a **`disabled`** field with a companion **`DisabledButton`** class, so you can grey a button out in place instead of rebuilding the markup. Both `InlineKeyboardMarkup` and `ReplyKeyboardMarkup` gained **`force_reply`**, previously reachable only through the separate `ForceReply` object. grammY 1.46.0 types both. python-telegram-bot 22.8 sits on Bot API 10.0 and its typed objects reject unknown keyword arguments, so reach them through `Bot.do_api_request`.
 
 ### Middleware Patterns
 
-Middleware runs before handlers and carries logging, auth, rate limiting, and i18n. grammY and Telegraf use a Koa-style `bot.use(async (ctx, next) => ...)` chain; **python-telegram-bot has no middleware** and uses handler groups instead (`group=-1` runs before the default group 0). Worked examples for both, including an `adminOnly` gate, are in [references/middleware.md](references/middleware.md).
+Middleware carries logging, auth, rate limiting and i18n. grammY and Telegraf use a Koa-style `bot.use(async (ctx, next) => ...)` chain; **python-telegram-bot has no middleware** and uses handler groups (`group=-1` runs before the default 0). Examples including an `adminOnly` gate: [references/middleware.md](references/middleware.md).
 
 ### Conversation / Multi-Step Flows
 
@@ -226,17 +182,9 @@ Bot --> Telegram: getUpdates?offset=X+2
 
 ### Webhooks (Production)
 
-Webhooks have Telegram push updates to your server. More efficient, lower latency, required for serverless.
+Telegram pushes updates to your server. Lower latency, required for serverless.
 
-```
-User sends message --> Telegram --> POST https://your-domain.com/webhook --> Your bot
-```
-
-**Requirements:**
-- HTTPS with a valid SSL certificate (self-signed works but not recommended)
-- Public URL accessible from Telegram's servers
-- **Port must be one of: 443, 80, 88, or 8443** (this is a hard Telegram restriction, agents frequently miss this)
-- Secret token for verification (recommended, prevents spoofed requests)
+**Requirements:** HTTPS with a valid certificate (self-signed works but is not recommended); a public URL Telegram can reach; a **port that is 443, 80, 88 or 8443**, which is a hard restriction agents frequently miss; and a secret token to stop spoofed requests.
 
 **grammY webhook setup (Express):**
 
@@ -247,20 +195,16 @@ import { webhookCallback } from "grammy";
 const app = express();
 app.use(express.json());
 
-// The webhook path should include a secret or random string
+// Put a secret in the path as well as in the header
 app.use("/webhook/" + process.env.WEBHOOK_SECRET, webhookCallback(bot, "express"));
+app.listen(443);
 
-app.listen(443, () => {
-  console.log("Webhook server running on port 443");
-});
-
-// Set webhook URL with Telegram
 await bot.api.setWebhook(`https://your-domain.com/webhook/${process.env.WEBHOOK_SECRET}`, {
-  secret_token: process.env.WEBHOOK_SECRET_TOKEN, // Telegram sends this in X-Telegram-Bot-Api-Secret-Token header
+  secret_token: process.env.WEBHOOK_SECRET_TOKEN, // arrives as X-Telegram-Bot-Api-Secret-Token
 });
 ```
 
-Telegraf and python-telegram-bot webhook setups are in [references/deployment.md](references/deployment.md). Note that `application.run_webhook()` needs the `[webhooks]` extra; it fails at runtime after a bare `pip install python-telegram-bot`.
+Telegraf and PTB webhook setups: [references/deployment.md](references/deployment.md). Note `application.run_webhook()` needs the `[webhooks]` extra and fails at runtime after a bare `pip install python-telegram-bot`.
 
 ### Webhook Verification
 
@@ -361,25 +305,21 @@ Full implementation with a `normalizeIsraeliPhone` helper: [references/examples.
 
 ## Rate Limits & File Size Limits
 
-Telegram enforces hard limits on outgoing traffic. Hitting them returns HTTP 429 with `retry_after`; ignore them and your bot gets throttled or banned.
+Hitting these returns HTTP 429 with `retry_after`; ignore them and the bot gets throttled or banned.
 
-**Outgoing message rates:**
-- **30 messages/second** global, across all chats
-- **1 message/second** per individual chat (short bursts may pass before you get 429s)
-- **20 messages/minute** per group chat (broadcasts to the same group)
+**Outgoing message rates:** about **30 messages/second** for bulk broadcasts across all chats, **1 message/second** per individual chat (short bursts may pass before the 429s start), and **20 messages/minute** per group chat.
 
-For grammY use [`@grammyjs/auto-retry`](https://github.com/grammyjs/auto-retry), which honours `retry_after` on a 429 automatically (the older `transformer-throttler` has not been released since 2022). python-telegram-bot ships `AIORateLimiter` via its `[rate-limiter]` extra. For Telegraf, implement a per-chat token bucket or use an external queue (BullMQ, Celery).
+**30/second is the free tier, but the paid tier has an eligibility gate almost no Israeli SMB bot clears.** Paid broadcasts raise the limit to **1000 messages/second** at **0.1 Stars** per message above the free 30/second, but to enable it "a bot must have at least 100,000 Stars on its balance and at least 100,000 monthly active users". Do not architect a fan-out around 1000/second before checking those two numbers. Below the gate, the FAQ's own advice is the answer: spread the broadcast over **8-12 hours** instead of pushing it through at once.
 
-**`file_id` is tied to a single bot id.** The docs: "your test instance cannot use a shared file_id database to quickly send media, files must be individually reuploaded". Never cache `file_id` values and reuse them across bot tokens; a dev-to-prod copy fails with "wrong file identifier".
+For grammY use [`@grammyjs/auto-retry`](https://github.com/grammyjs/auto-retry), which honours `retry_after` on a 429 (the older `transformer-throttler` has not shipped since 2022). python-telegram-bot has `AIORateLimiter` in its `[rate-limiter]` extra. Telegraf needs a per-chat token bucket or an external queue.
 
-**File size limits:**
-- **Bot file upload:** 50 MB (default Bot API server)
-- **Bot file download:** 20 MB
-- **Local Bot API server (any bot, no Premium involved):** downloads with **no size limit**, uploads up to 2000 MB
+**`file_id` is tied to a single bot id.** The docs: "the file_id field is tied to a single bot id, so your test instance cannot use a shared file_id database to quickly send media - files must be individually reuploaded". Never reuse `file_id` values across bot tokens; a dev-to-prod copy fails with "wrong file identifier".
 
-To upload or download files larger than 50 MB, run a self-hosted [Bot API server](https://github.com/tdlib/telegram-bot-api) and point your bot at it via the `apiRoot` (grammY) / `telegram.apiRoot` (Telegraf) / `base_url` (python-telegram-bot) option.
+**File size limits:** upload **50 MB**, download **20 MB** on the default server. A **local Bot API server** (no Premium involved) downloads with **no size limit** and uploads up to **2000 MB**.
 
-**Call `logOut` first, or the bot silently receives nothing.** The docs: "You must log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes." Budget for that 10-minute lockout before you try it in production. Use `close` when moving the bot between local servers, deleting the webhook first.
+For files above 50 MB, run a self-hosted [Bot API server](https://github.com/tdlib/telegram-bot-api) and point the bot at it via `apiRoot` (grammY), `telegram.apiRoot` (Telegraf) or `base_url` (python-telegram-bot).
+
+**Call `logOut` first, or the bot silently receives nothing.** The docs: "You must log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes." Budget for that lockout before trying it in production. Use `close` when moving between local servers, deleting the webhook first.
 
 ## Scheduling Jobs in Asia/Jerusalem
 
@@ -414,70 +354,53 @@ Avoid `setInterval` for daily jobs, it drifts by an hour twice a year on the DST
 
 Introduced in Bot API 7.2 (2024), **Telegram Business** lets a user connect a bot to their personal account so the bot can read and reply to direct messages on their behalf. Israeli users flip this on under Settings > Telegram Business > Chatbots and paste the `@username` of an approved bot.
 
-**Connecting a bot does NOT require Telegram Premium.** Bot API 10.0 (May 2026) "allowed Secretary Bots to manage accounts of users without a Telegram Premium subscription", and the official docs now state that "connected bots are also available to non-Premium users". Premium is still required for the *other* Business features (opening hours, location, quick replies, away/greeting messages, custom start page), so do not gate your bot's onboarding on a Premium check.
+**Connecting a bot does NOT require Telegram Premium.** Bot API 10.0 (May 2026) "allowed Secretary Bots to manage accounts of users without a Telegram Premium subscription" (the changelog words the same item as "Business Bots"), and core.telegram.org/api/business states that "connected bots are also available to non-Premium users". Premium is still required for the *other* Business features (opening hours, location, quick replies, away/greeting messages, custom start page), so do not gate onboarding on a Premium check.
 
 When the user connects the bot, your bot receives a `business_connection` update with a `business_connection_id`. Every message that arrives in one of the user's connected chats then carries that same `business_connection_id` field, and any outgoing call (`sendMessage`, `editMessageText`, etc.) must echo it back so Telegram routes the reply through the user's account rather than the bot's account.
 
 What the bot can do once connected:
 - Read and reply to incoming DMs on behalf of the Telegram Business user.
-- `rights.can_reply` is scoped: it means the bot may send and edit messages **only in private chats that had an incoming message in the last 24 hours**. An off-hours auto-reply is fine; a delayed queue drain or a scheduled follow-up outside that window fails even when `can_reply` is true.
-- Fetch the connection itself with `getBusinessConnection` (there is no method that lists the user's chats; you learn about a chat only when a `business_message` arrives in it).
-- Send messages, edit, and delete on the user's behalf, gated by the `rights` (`BusinessBotRights`) the user granted.
+- `rights.can_reply` is scoped: it lets the bot send and edit **only in private chats that had an incoming message in the last 24 hours**. An off-hours auto-reply is fine; a delayed queue drain outside that window fails even when `can_reply` is true.
+- Fetch the connection with `getBusinessConnection`. There is no method that lists the user's chats; you learn about a chat only when a `business_message` arrives in it.
+- Act on the user's behalf gated by the `rights` (`BusinessBotRights`) they granted. Note the account-management setters are **set-only** except one: `setBusinessAccountName`, `setBusinessAccountUsername`, `setBusinessAccountBio` and `setBusinessAccountGiftSettings` have no `remove*` counterpart. Only `removeBusinessAccountProfilePhoto` exists.
 
-```typescript
-// Capture the connection (store business_connection_id per business user)
-bot.on("business_connection", async (ctx) => {
-  const conn = ctx.businessConnection;
-  // Permissions live under conn.rights (BusinessBotRights).
-  // There is no top-level conn.can_reply field.
-  console.log(`Connected to business user ${conn.user.id}, can_reply=${conn.rights?.can_reply}`);
-  // Persist conn.id keyed by conn.user.id
-});
+The grammY handlers for capturing `business_connection` (permissions live under `conn.rights`, there is no top-level `conn.can_reply`) and for echoing `business_connection_id` back on every reply are in [references/examples.md](references/examples.md).
 
-// Reply to an incoming business message - echo business_connection_id
-bot.on("business_message", async (ctx) => {
-  await ctx.api.sendMessage(ctx.businessMessage.chat.id, "אני אחזור אליך תוך מספר דקות", {
-    business_connection_id: ctx.businessMessage.business_connection_id,
-  });
-});
-```
+Useful for Israeli small-business owners (אופטיקאים, סטודיות יוגה, סוכני ביטוח) who want off-hours auto-replies on their personal Telegram without a separate "bot" persona.
 
-Useful for Israeli small-business owners (אופטיקאים, סטודיות יוגה, סוכני ביטוח) who want auto-replies on their personal Telegram during off-hours without exposing customers to a separate "bot" persona.
-
-Reference: [Telegram Business (API overview)](https://core.telegram.org/api/business) and the [`BusinessConnection`](https://core.telegram.org/bots/api#businessconnection) class in the Bot API reference.
+Reference: [Telegram Business](https://core.telegram.org/api/business) and [`BusinessConnection`](https://core.telegram.org/bots/api#businessconnection).
 
 ## Payments API
 
 Telegram offers three payment paths. Pick by what you sell:
 
-- **Telegram Stars (XTR)** for digital goods, services, and Mini App content. Released in Bot API 7.4 (May 28, 2024). No external provider needed. Invoices are denominated in `XTR`; what an Israeli user pays for a Stars pack is set by their App Store / Google Play account, so do not quote a fixed shekel price for a Stars amount in your copy.
-- **Stars subscriptions** for recurring access (added later in 2024). Same `XTR` currency, with `subscription_period` set on the invoice; users can cancel from Telegram Settings > Stars.
+- **Telegram Stars (XTR)** for digital goods, services and Mini App content. Bot API 7.4 (28 May 2024), no external provider needed. What an Israeli user pays for a Stars pack is set by their App Store or Google Play account, so never quote a fixed shekel price for a Stars amount.
+- **Stars subscriptions** for recurring access. Same `XTR` currency with `subscription_period` on the invoice link; users cancel from Settings > Stars.
 - **Gifts API** (`sendGift`) lets a bot send named gifts to users, which recipients keep on their profile. They **cannot** convert a bot-sent gift back to Stars.
 - **paid_media** lets you attach a Stars price to photos/videos posted in chats and channels (the receiver pays Stars to unlock).
-- **Traditional payment providers** (Stripe LIVE/TEST, etc.) are still supported for physical goods and non-digital services. Configure a provider token via `/mybots > Payments` in BotFather, then pass it as `provider_token` and a fiat currency (`ILS`, `USD`, etc.).
+- **Traditional payment providers** (Stripe and friends) still cover physical goods and non-digital services. Configure a provider token via `/mybots > Payments` in BotFather, then pass `provider_token` plus a fiat currency (`ILS`, `USD`).
 
 ### Creating an Invoice
 
-**Three hard rules for Stars (`XTR`) invoices, each a hard API failure if broken:**
-- `provider_token` must be an **empty string** (it is only for fiat providers).
-- `prices` must contain **exactly one item**. A multi-line breakdown is rejected.
-- `max_tip_amount` is **not supported** for Stars.
+**Three hard rules for Stars (`XTR`) invoices, each an API failure if broken:** `provider_token` must be an **empty string** (fiat only); `prices` must contain **exactly one item**, so no multi-line breakdown; and `max_tip_amount` is **not supported**.
 
 **grammY:**
 
-Worked grammY invoice flow, including the `successful_payment` handler and the `pre_checkout_query` handler (which **must** be answered within 10 seconds), is in [references/examples.md](references/examples.md), Example 6. The python-telegram-bot equivalent is Example 4 in the same file.
+The grammY invoice flow, with the `successful_payment` handler and the `pre_checkout_query` handler (which **must** answer within 10 seconds), is Example 6 in [references/examples.md](references/examples.md); the PTB equivalent is Example 4.
 
 ### Stars Subscriptions (Recurring)
 
-**`subscription_period` exists ONLY on `createInvoiceLink`, not on `sendInvoice` / `replyWithInvoice`.** Passing it to `sendInvoice` does nothing. Create a link and send that instead. The value must currently always be `2592000` (30 days).
+**`subscription_period` is not available on `sendInvoice` / `replyWithInvoice`.** Passing it there does nothing; use `createInvoiceLink` and send the link. It is also required on `createChatSubscriptionInviteLink`, the separate channel-subscription path, and appears on `SuccessfulPayment` and `StarTransaction`. The value must currently always be `2592000` (30 days).
 
 Worked call: [references/examples.md](references/examples.md), Example 7.
 
-Users manage and cancel subscriptions from Telegram Settings > Stars > My Subscriptions. Listen for `message:successful_payment` on each renewal to extend access in your DB.
+Users manage and cancel subscriptions from Telegram Settings > Stars > My Subscriptions.
+
+**Do not drive renewals off `message:successful_payment` alone.** Bot API 10.2 added a dedicated update for this: the class **`BotSubscriptionUpdated`** and the field **`subscription`** on `Update` ("Added updates about changes to a user payment subscription"). That is what tells you a subscription was renewed, cancelled, or expired. A `successful_payment` handler sees the renewal charge but never sees a cancellation, so a bot built only on it keeps serving a user who cancelled.
 
 ### Gifts API
 
-`sendGift` lets the bot send a named gift sticker to a user (paid in Stars from the bot's balance). **The receiver CANNOT convert a bot-sent gift back into Stars** (the API states verbatim: "The gift can't be converted to Telegram Stars by the receiver"). `convertGiftToStars` is a different thing: a business-bot method that needs a `business_connection_id` plus the `can_convert_gifts_to_stars` right, acting on gifts owned by a connected business account. Do not promise users a cash-out path. Useful for loyalty rewards and giveaways as a keepsake, not as currency.
+`sendGift` sends a named gift sticker to a user, paid in Stars from the bot's balance. **The receiver CANNOT convert a bot-sent gift back into Stars**, verbatim: "The gift can't be converted to Telegram Stars by the receiver". `convertGiftToStars` is a different method: a business-bot one needing a `business_connection_id` and the `can_convert_gifts_to_stars` right, acting on gifts owned by a connected business account. Never promise a cash-out path. Treat gifts as keepsakes for loyalty and giveaways, not currency.
 
 Worked call: [references/examples.md](references/examples.md), Example 8. grammY's signature is positional.
 
@@ -485,7 +408,7 @@ Always call `getAvailableGifts` first to fetch the current catalog and pricing.
 
 ### paid_media
 
-Attach a Stars price to a photo or video posted in a chat or channel; the recipient pays Stars to unlock the media. Use `sendPaidMedia` (or the `paid_media` field on `sendMessage`-style methods) with `star_count` set to the price.
+Attach a Stars price to a photo or video in a chat or channel. **`sendPaidMedia` is the only way to send it.** There is no `paid_media` parameter on `sendMessage` or any other send method: in the reference `paid_media` appears only as an incoming field on `Message`, inside `PaidMediaInfo`, and on `StarTransaction`. Set `star_count` on `sendPaidMedia` and read purchases from the `purchased_paid_media` update.
 
 ## Mini Apps (WebApp)
 
@@ -515,50 +438,13 @@ A persistent menu button is set with `setChatMenuButton` ([references/mini-apps.
 | Launch path | How data comes back |
 |---|---|
 | Reply-keyboard `web_app` button | `sendData()` -> `message:web_app_data` service message (no server needed) |
-| Inline-keyboard button, menu button, direct link, inline mode | POST to your own backend with `initData`, validated server-side (below) |
+| Inline-keyboard button, menu button, direct link, inline mode | POST to your own backend with `initData`, validated server-side |
 
-For the `sendData` path the button must be a reply keyboard, not an inline one:
+**`sendData` is capped at 4096 bytes.** A serialised cart with line items crosses that on a real order, silently. If the payload can grow, use the `initData` plus backend route.
 
-```typescript
-import { Keyboard } from "grammy";
+Both flows end to end (the reply-keyboard button, the browser-side `sendData` and `MainButton` calls, the `message:web_app_data` handler, and the server-side `initData` POST) are in [references/mini-apps.md](references/mini-apps.md).
 
-const kb = new Keyboard()
-  .webApp("פתח אפליקציה", "https://your-app.com/mini-app")
-  .resized();
-await ctx.reply("לחצו לפתיחה:", { reply_markup: kb });
-```
-
-**In the Mini App (browser-side JavaScript):**
-
-```javascript
-// Telegram WebApp SDK is injected by Telegram
-const tg = window.Telegram.WebApp;
-
-// Send data back to the bot (closes the Mini App)
-tg.sendData(JSON.stringify({
-  action: "order",
-  items: ["item1", "item2"],
-  total: 150,
-}));
-
-// Or use MainButton for a cleaner UX
-tg.MainButton.text = "אישור הזמנה";
-tg.MainButton.show();
-tg.MainButton.onClick(() => {
-  tg.sendData(JSON.stringify({ confirmed: true }));
-});
-```
-
-**In the bot (receiving the data):**
-
-```typescript
-bot.on("message:web_app_data", async (ctx) => {
-  const data = JSON.parse(ctx.message.web_app_data.data);
-  console.log("Received from Mini App:", data);
-
-  await ctx.reply(`הזמנה התקבלה! סה"כ: ₪${data.total}`);
-});
-```
+**Never trust `initData` without validating the HMAC server-side**; it is trivially forged. The hardened implementation, with the `auth_date` freshness check, is in the same reference.
 
 ### Mini Apps 2.0 Features and initData Validation
 
@@ -604,35 +490,37 @@ No Telegram-specific MCP in the directory yet.
 
 ## Gotchas
 
-These are common failure modes that agents encounter when generating Telegram bot code:
+Common failure modes when generating Telegram bot code:
 
-1. **Mixing framework APIs.** grammY uses `ctx.reply()`, Telegraf uses `ctx.reply()` (looks the same but different Context types), python-telegram-bot uses `update.message.reply_text()`. Agents mix `ctx.reply()` into python-telegram-bot code or use Telegraf's `Markup` with grammY.
+1. **Mixing framework APIs.** grammY and Telegraf both expose `ctx.reply()` but with different Context types; python-telegram-bot uses `update.message.reply_text()`. Agents mix `ctx.reply()` into python-telegram-bot code, or Telegraf's `Markup` into grammY.
 
 2. **Webhook port restriction.** Telegram only delivers webhooks to ports 443, 80, 88, or 8443. Agents often set up webhooks on port 3000 or 8080, which silently fail with no error from Telegram's side.
 
-3. **Forgetting to answer callback queries.** Every `callback_query` update MUST be answered with `answerCallbackQuery()`, even if you have nothing to show (the optional `text` is capped at 0-200 characters). Failure causes a persistent loading spinner on the user's button. Agents often handle the logic but forget the answer call.
+3. **Forgetting to answer callback queries.** Every `callback_query` MUST be answered with `answerCallbackQuery()` even with nothing to show (`text` is capped at 0-200 chars), or the user gets a stuck spinner.
 
-4. **Callback data exceeding 64 bytes.** Agents put Hebrew strings, JSON objects, or long identifiers in callback data. Hebrew characters are 2 bytes each in UTF-8, so 64 bytes is at most 32 Hebrew characters. Use short English keys and store full data in session/database.
+4. **Callback data exceeding 64 bytes.** Hebrew is 2 bytes per character in UTF-8, so 64 bytes is at most 32 Hebrew characters. Use short English keys and keep full data in session or a database.
 
-5. **HTML parse mode escaping.** When using `parse_mode: "HTML"`, the characters `<`, `>`, and `&` in user-provided text MUST be escaped. Agents often echo user input back in HTML mode without escaping, causing parse errors.
+5. **HTML parse mode escaping.** With `parse_mode: "HTML"`, `<`, `>` and `&` in user text MUST be escaped. Echoing user input unescaped is the usual cause of a parse error.
 
-6. **Polling and webhook running simultaneously.** If you forget to call `deleteWebhook()` before starting polling, the bot receives no updates via polling. Telegram only sends updates to one endpoint. This is a silent failure.
+6. **Polling and webhook at once.** Without `deleteWebhook()` before polling, the bot receives nothing. Telegram delivers to one endpoint only, and fails silently.
 
 7. **Pre-checkout query timeout.** The `pre_checkout_query` handler MUST respond within 10 seconds. If the handler does async work (database calls, external APIs) that takes too long, the payment silently fails. Keep the handler lightweight.
 
-8. **grammY session without storage adapter.** The default in-memory session store in grammY resets on every restart. For production, you MUST configure an external session storage (Redis, Supabase, etc.). Agents often skip this and wonder why sessions are lost.
+8. **grammY session without a storage adapter.** The default in-memory store resets on every restart. Production needs external storage (Redis, Supabase).
 
-9. **Telegraf v4 vs v3 API changes.** Agents trained on older data may generate Telegraf v3 code (`telegraf.startPolling()`, `telegraf.webhookCallback()`). In v4, it is `bot.launch()` and `bot.webhookCallback()`.
+9. **Telegraf v4 vs v3.** Older training data generates v3 (`telegraf.startPolling()`). In v4 it is `bot.launch()` and `bot.webhookCallback()`.
 
-10. **python-telegram-bot v20+ async migration.** Versions before v20 used synchronous handlers. v22.8 is fully async. Agents sometimes generate synchronous code (`def handler` instead of `async def handler`) or use the deprecated `Updater` class.
+10. **python-telegram-bot v20+ is fully async.** Pre-v20 training data generates `def handler` instead of `async def handler`, or the deprecated `Updater`.
 
 11. **Hebrew Markdown escaping nightmare.** MarkdownV2 requires escaping: `_`, `*`, `[`, `]`, `(`, `)`, `~`, `` ` ``, `>`, `#`, `+`, `-`, `=`, `|`, `{`, `}`, `.`, `!`. In Hebrew text this is error-prone. Use HTML parse mode instead.
 
-12. **Missing error handler.** Without a `bot.catch()` (grammY) or error handler, unhandled errors crash the bot process silently. In polling mode, this kills the bot. In webhook mode, Telegram retries the update, potentially causing an infinite error loop.
+12. **Missing error handler.** Without `bot.catch()` (grammY) or an equivalent, an unhandled error kills the process in polling mode, and in webhook mode Telegram retries the update into an infinite error loop.
+
+13. **Writing 10.2 ephemeral code against a 10.3 API.** `receiver_user_id` and `callback_query_id` were replaced by `ephemeral_message_parameters`. Any sample dated before 24 August 2026, including anything a model learned from, uses the dead shape.
 
 ## Examples
 
-Five complete end-to-end examples are in [references/examples.md](references/examples.md): a Hebrew menu bot with inline keyboards, a Vercel webhook bot with Hebrew error messages, a python-telegram-bot conversation flow, a Stars invoice in Python, and Israeli phone-number verification.
+Eight complete end-to-end examples are in [references/examples.md](references/examples.md), covering Hebrew menu bots, a Vercel webhook bot, conversation flows, Stars invoices and subscription links, `sendGift`, phone-number verification, the Telegraf and PTB keyboard variants, and the Bot Business handlers.
 
 ## Troubleshooting
 

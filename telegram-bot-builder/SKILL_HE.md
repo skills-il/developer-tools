@@ -1,44 +1,58 @@
 ---
 name: telegram-bot-builder
-description: "בנו בוטים לטלגרם עם grammY, Telegraf או python-telegram-bot. מכסה Bot API v10.2, webhooks מול polling, מקלדות אינליין, פקודות, middleware, תשלומים ב-Telegram Stars + Gifts, Mini Apps 2.0, מצב Bot Business וטיפול בהודעות בעברית עם RTL. השתמשו כשבונים בוט טלגרם, מגדירים webhooks, מטפלים בהודעות בעברית בתוך בוט, או משלבים תשלומים דרך טלגרם. אל תשתמשו לבוטים של וואטסאפ (השתמשו ב-israeli-whatsapp-business), בוטים קוליים (השתמשו ב-hebrew-voice-bot-builder), או עיצוב צ'אטבוטים כללי (השתמשו ב-hebrew-chatbot-builder)."
+description: "בנו בוטים לטלגרם עם grammY, Telegraf או python-telegram-bot. מכסה Bot API v10.3, webhooks מול polling, מקלדות אינליין, פקודות, middleware, תשלומים ב-Telegram Stars + Gifts, Mini Apps 2.0, מצב Bot Business וטיפול בהודעות בעברית עם RTL. השתמשו כשבונים בוט טלגרם, מגדירים webhooks, מטפלים בהודעות בעברית בתוך בוט, או משלבים תשלומים דרך טלגרם. אל תשתמשו לבוטים של וואטסאפ (השתמשו ב-israeli-whatsapp-business), בוטים קוליים (השתמשו ב-hebrew-voice-bot-builder), או עיצוב צ'אטבוטים כללי (השתמשו ב-hebrew-chatbot-builder)."
 license: MIT
 ---
 
 # בניית בוט טלגרם
 
-בנו בוטים מוכנים לפרודקשן לשוק הישראלי עם grammY, Telegraf או python-telegram-bot. המדריך מכסה Bot API v10.2 (שוחרר ב-14.07.2026), ארכיטקטורות webhook ו-polling, מקלדות אינליין, טיפול בטקסט עברי/RTL, תשלומים ב-Telegram Stars ו-Gifts, Mini Apps 2.0, מצב Bot Business, ודיפלוי לפלטפורמות serverless.
+בנו בוטים מוכנים לפרודקשן לשוק הישראלי עם grammY, Telegraf או python-telegram-bot. המדריך מכסה Bot API v10.3 (שוחרר ב-24.08.2026), ארכיטקטורות webhook ו-polling, מקלדות אינליין, טיפול בטקסט עברי/RTL, תשלומים ב-Telegram Stars ו-Gifts, Mini Apps 2.0, מצב Bot Business, ודיפלוי לפלטפורמות serverless.
 
 ## בעיה
 
-בניית בוטים לטלגרם לקהל ישראלי מביאה עמה כמה אתגרים שסוכנים נוטים להיכשל בהם שוב ושוב:
+בניית בוטים לטלגרם לקהל ישראלי מביאה כמה דברים שסוכנים נכשלים בהם שוב ושוב:
 
-1. **בחירת פריימוורק לא מתאים** - grammY, Telegraf ו-python-telegram-bot תומכים בגרסאות שונות של Bot API, יש להם מערכות פלאגינים שונות ומודלי דיפלוי שונים. סוכנים מערבבים בין ה-API-ים או מציעים תבניות מיושנות.
-2. **הגדרת Webhook שגויה** - סוכנים בוחרים polling כברירת מחדל (טוב לפיתוח) אבל לא מגדירים נכון webhook לפרודקשן. חוסר בפורטים מותרים (רק 443, 80, 88, 8443), דרישות SSL ואימות secret token.
-3. **שיבוש טקסט עברי/RTL** - ערבוב טקסט עברי ואנגלי (נפוץ מאוד בבוטים ישראליים) נשבר במקלדות אינליין, callback data והודעות מפורמטות. סוכנים מתעלמים מתווים Unicode לכיווניות.
-4. **חוסרים באינטגרציית תשלומים** - ל-Telegram Stars (המטבע הפנימי) יש flow ספציפי ליצירת חשבוניות שונה מספקי תשלום רגילים. סוכנים מייצרים קוד ל-API-ים ישנים.
-5. **תקשורת לקויה עם Mini App** - הפרוטוקול בין Mini App של טלגרם לבוט משתמש באירועי `web_app_data`, לא בהודעות רגילות. סוכנים מממשים את זה לא נכון.
+1. **בלבול בין פריימוורקים** - grammY, Telegraf ו-python-telegram-bot יושבים על גרסאות Bot API שונות ומתערבבים רע. סוכנים מערבבים את ה-API-ים או פולטים תבניות מיושנות.
+2. **הגדרת Webhook שגויה** - ברירת המחדל היא polling, ואז ההגדרה לפרודקשן יוצאת שגויה: מגבלת הפורטים (רק 443, 80, 88, 8443), SSL, ואימות secret token.
+3. **שיבוש טקסט עברי/RTL** - טקסט דו-כיווני נשבר במקלדות אינליין, ב-callback data ובהודעות מפורמטות כשמתעלמים מתווי הכיווניות של Unicode.
+4. **חוסרים בתשלומים** - ל-Telegram Stars יש כללי חשבונית שונים מספקי פיאט, וסוכנים מייצרים קוד תשלומים מיושן.
+5. **תקשורת לקויה עם Mini App** - ערוץ ההחזרה תלוי באופן שבו האפליקציה נפתחה, ו-`sendData` אינו זמין מפתיחה בכפתור אינליין.
+6. **סחיפת גרסאות** - ה-Bot API משתחרר כמה פעמים בשנה ומודלים לומדים תמונת מצב קפואה. הסקיל הזה אומת מול Bot API 10.3 ב-27.08.2026; בדקו את ה-changelog לפני שסומכים על טענה תלוית גרסה כאן.
 
 ## בחירת פריימוורק
 
-בחרו פריימוורק לפי השפה, יעד הדיפלוי וגרסת Bot API שאתם צריכים:
+בוחרים לפי השפה, יעד הדיפלוי וגרסת Bot API הנדרשת:
 
-| תכונה | grammY v1.45.1 | Telegraf v4.16.3 | python-telegram-bot v22.8 |
+| תכונה | grammY v1.46.0 | Telegraf v4.16.3 | python-telegram-bot v22.8 |
 |--------|----------------|-------------------|---------------------------|
 | שפה | TypeScript/JS | TypeScript/JS | Python 3.10+ |
-| גרסת Bot API | עדכנית (v10.2) | v7.1 | v10.0 |
+| גרסת Bot API | עדכנית (v10.3) | v7.1 | v10.0 |
 | התקנה | `npm install grammy` | `npm install telegraf` | `pip install python-telegram-bot` |
 | פלאגינים | עשיר (sessions, menus, conversations, i18n) | בינוני (scenes, sessions) | הרחבות (JobQueue, persistence) |
-| serverless | Vercel, CF Workers, Deno Deploy, Supabase Edge, Fly.io | Express/Fastify/Lambda adapters | ASGI adapters, webhook ידני |
-| מודל middleware | Composer (כמו Koa) | Composer (כמו Koa) | Handler groups עם filters |
+| serverless | Vercel, CF Workers, Deno Deploy, Supabase Edge, Fly.io | Express/Fastify/Lambda | ASGI, webhook ידני |
+| middleware | Composer (Koa) | Composer (Koa) | Handler groups עם filters |
 | Long polling | `bot.start()` | `bot.launch()` | `application.run_polling()` |
-| מצב webhook | `webhookCallback()` | `bot.launch({ webhook })` או `createWebhook()` | `application.run_webhook()` |
-| כדאי ל... | פרויקטים חדשים, serverless, פיצ'רים חדשים | אפליקציות Express/Fastify קיימות | צוותי Python, ML/data pipelines |
+| webhook | `webhookCallback()` | `bot.launch({ webhook })` | `application.run_webhook()` |
+| כדאי ל... | פרויקטים חדשים, serverless, API עדכני | אפליקציות Express/Fastify קיימות | צוותי Python ו-ML |
+
+השוואה מלאה: [references/framework-comparison.md](references/framework-comparison.md).
 
 **איך בוחרים:**
-- צריכים פיצ'רים של Bot API v10.x (Stars subscriptions, Gifts API, Bot Business, Mini Apps 2.0)? בחרו **grammY** או **python-telegram-bot**.
-- כבר יש לכם שרת Express/Fastify? **Telegraf** משתלב חלק, אבל שימו לב שהוא כמעט לא מתוחזק: הגרסה האחרונה 4.16.3 שוחררה ב-29.02.2024 (Bot API 7.1), והוא לא יקבל שום יכולת מ-10.x. לפרויקט חדש עדיף grammY.
-- צוות Python או פייפליין ML/data? **python-telegram-bot** הבחירה היחידה.
-- דיפלוי ל-Vercel/Cloudflare Workers/Deno? ל-**grammY** יש adapters מובנים.
+- צריכים פיצ'רים של Bot API v10.x (Stars subscriptions, Gifts, Bot Business, Mini Apps 2.0, הודעות אפמרליות)? **grammY** הוא היחיד מהשלושה שנמצא כרגע על 10.3. python-telegram-bot על 10.0, ולכן המשטח האפמרלי של 10.2 וכל מה שב-10.3 דורשים שם קריאות API גולמיות.
+- כבר יש שרת Express/Fastify? **Telegraf** משתלב חלק, אבל הוא רדום: הגרסה האחרונה 4.16.3 היא מ-29.02.2024 (Bot API 7.1) והוא לא יקבל דבר מ-10.x. לחדש עדיף grammY.
+- צוות Python או פייפליין ML? **python-telegram-bot** הבחירה היחידה.
+- Vercel, Cloudflare Workers או Deno? ל-**grammY** יש adapters מובנים.
+
+## מה השתנה ב-Bot API 10.3 (24 באוגוסט 2026)
+
+מי שלמד את המשטח הזה על 10.2 צריך לדעת שארבעה דברים זזו.
+
+- **הודעות אפמרליות שונו.** גרסה 10.2 הוסיפה `receiver_user_id` ו-`callback_query_id` ל-`sendMessage` ולשתים עשרה מתודות שליחה נוספות. **גרסה 10.3 החליפה את שתיהן באובייקט אחד, `ephemeral_message_parameters`** (המחלקה `EphemeralMessageParameters`). קוד שנכתב לפי 10.2 נשבר. האובייקט החדש נושא גם את `replace_callback_query_message`, שמציג את ההודעה האפמרלית במקום המקורית ולא כהודעה נוספת.
+- **מקלדות קיבלו `disabled` / `DisabledButton` ו-`force_reply`.** ר' מקלדות אינליין למטה.
+- **`can_send_welcome_messages`** נוספה למחלקות `ChatAdministratorRights` ו-`ChatMemberAdministrator` ולמתודה `promoteChatMember`. מי שמקדם מנהלים בקוד, ההרשאה הזו קיימת עכשיו.
+- **אפשר לעצור יצירת טיוטה.** `sendMessageDraft` ו-`sendRichMessageDraft` קיבלו `can_stop` ו-`keep_on_stop`, והעדכון `MessageGenerationStopped` (השדה `stopped_message_generation` ב-`Update`) נורה כשהמשתמש עוצר. **מי שמזרים תשובת AI לתוך טיוטה חייב לטפל בו**, אחרת ממשיכים לייצר ולחייב משתמש שכבר לחץ עצור.
+
+גם Rich Messages קיבלו כפתורים (`RichMessageButton`, `RichTextButton`, `RichBlockButtons`), בלוק מסמך, וציטוט מתרחב.
 
 ## יצירת בוט עם BotFather
 
@@ -135,42 +149,11 @@ bot.callbackQuery("cancel", async (ctx) => {
 });
 ```
 
-**חוקי callback data קריטיים:**
-- מקסימום 64 בייטים (לא תווים). כל תו עברי הוא 2 בייטים ב-UTF-8, כלומר 64 בייטים הם לכל היותר 32 תווים בעברית.
-- השתמשו במזהים קצרים באנגלית ל-callback data, הציגו עברית בטקסט הכפתור.
-- כלל אצבע: `טקסט כפתור = עברית למשתמש`, `callback data = מזהה אנגלי לקוד`.
+**חוקי callback data:** מקסימום **64 בייטים**, לא תווים. עברית היא 2 בייטים לתו ב-UTF-8, כלומר לכל היותר 32 תווים. משאירים עברית בטקסט הכפתור ומזהים אנגליים קצרים ב-callback data.
 
-**python-telegram-bot:**
+המקבילה ב-python-telegram-bot, כולל רישום ה-`CallbackQueryHandler`, נמצאת ב-[references/examples.md](references/examples.md).
 
-```python
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-
-async def menu(update: Update, context) -> None:
-    keyboard = [
-        [
-            InlineKeyboardButton("אפשרות א׳", callback_data="option_a"),
-            InlineKeyboardButton("אפשרות ב׳", callback_data="option_b"),
-        ],
-        [InlineKeyboardButton("ביטול", callback_data="cancel")],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("בחרו אפשרות:", reply_markup=reply_markup)
-
-
-async def button_handler(update: Update, context) -> None:
-    query = update.callback_query
-    await query.answer()
-
-    if query.data == "option_a":
-        await query.edit_message_text("בחרתם: אפשרות א׳")
-    elif query.data == "option_b":
-        await query.edit_message_text("בחרתם: אפשרות ב׳")
-    elif query.data == "cancel":
-        await query.delete_message()
-
-# רישום handler
-application.add_handler(CallbackQueryHandler(button_handler))
-```
+**שתי תוספות של 10.3 שייכות לכל מקלדת שאתם בונים.** `InlineKeyboardButton` קיבל שדה **`disabled`** עם מחלקה נלווית **`DisabledButton`**, כך שאפשר להאפיר כפתור במקום, בלי לבנות מחדש את ה-markup. גם `InlineKeyboardMarkup` וגם `ReplyKeyboardMarkup` קיבלו **`force_reply`**, שהיה נגיש קודם רק דרך האובייקט הנפרד `ForceReply`. תמיכת הפריימוורקים מפגרת אחרי ה-API. grammY 1.46.0 מטפס את שניהם. python-telegram-bot 22.8 יושב על Bot API 10.0 והאובייקטים המוטפסים שלו דוחים ארגומנטים לא מוכרים, אז מגיעים אליהם דרך `Bot.do_api_request` ולא דרך הבנאי.
 
 ### תבניות Middleware
 
@@ -389,58 +372,21 @@ await ctx.reply("בחרו מהתפריט:", { reply_markup: hebrewMenu });
 
 הדרך הנקייה ביותר לזהות משתמש לפי מספר טלפון ישראלי היא כפתור `request_contact` במקלדת reply. המשתמש לוחץ, טלגרם מציג חלון אישור, ובאישור הבוט מקבל שדה `contact` עם `phone_number` מאומת. מספרים ישראליים יכולים להגיע עם `+972` או בלעדיו, אז תמיד מנרמלים.
 
-```typescript
-import { Keyboard } from "grammy";
-
-bot.command("verify", async (ctx) => {
-  const kb = new Keyboard()
-    .requestContact("שתפו את מספר הטלפון שלי")
-    .resized()
-    .oneTime();
-  await ctx.reply("כדי להמשיך, שתפו את מספר הטלפון שלכם:", { reply_markup: kb });
-});
-
-function normalizeIsraeliPhone(raw: string): string | null {
-  // הסרת רווחים, מקפים וסוגריים
-  let p = raw.replace(/[\s\-()]/g, "");
-  // +972XXXXXXXXX, 972XXXXXXXXX, 0XXXXXXXXX -> +972XXXXXXXXX
-  if (p.startsWith("+972")) return p;
-  if (p.startsWith("972")) return "+" + p;
-  if (p.startsWith("0")) return "+972" + p.slice(1);
-  return null;
-}
-
-bot.on("message:contact", async (ctx) => {
-  const contact = ctx.message.contact;
-  // אבטחה: לוודא שהאיש קשר שייך לשולח עצמו, לא למישהו אחר שהוא הדביק
-  if (contact.user_id !== ctx.from.id) {
-    return ctx.reply("אנא שתפו את המספר שלכם, לא של אדם אחר.");
-  }
-  const phone = normalizeIsraeliPhone(contact.phone_number);
-  if (!phone) {
-    return ctx.reply("המספר שהתקבל לא נראה כמספר ישראלי תקין.");
-  }
-  await ctx.reply(`תודה! המספר שלך נשמר: ${phone}`);
-});
-```
+הזרימה המלאה (כפתור `requestContact`, נרמול `+972`/`972`/`0`, ובדיקת האבטחה ש-`contact.user_id === ctx.from.id` כדי שלא ישתפו מספר של אדם אחר) נמצאת ב-[references/examples.md](references/examples.md).
 
 ## מגבלות קצב וגדלי קבצים
 
-טלגרם אוכפת מגבלות קשיחות על תעבורה יוצאת. חריגה מחזירה HTTP 429 עם `retry_after`; התעלמות תוביל לחנק או חסימה של הבוט.
+חריגה מחזירה HTTP 429 עם `retry_after`; התעלמות תוביל לחנק או חסימה של הבוט.
 
-**קצב הודעות יוצאות:**
-- **30 הודעות/שנייה** גלובלי, על פני כל הצ'אטים
-- **הודעה אחת לשנייה** לכל צ'אט בודד. מה-FAQ: הימנעו משליחת יותר מהודעה אחת בשנייה; ייתכן שיתאפשרו פרצים קצרים מעבר למגבלה, אבל בסופו של דבר תתחילו לקבל שגיאות 429.
-- **20 הודעות/דקה** לקבוצה (שידור לאותה קבוצה)
+**קצב הודעות יוצאות:** כ-**30 הודעות/שנייה** לשידורים המוניים על פני כל הצ'אטים, **הודעה אחת לשנייה** לכל צ'אט בודד (פרצים קצרים עשויים לעבור לפני שמתחילות שגיאות 429), ו-**20 הודעות/דקה** לקבוצה.
+
+**30 לשנייה זו שכבת החינם, אבל לשכבה בתשלום יש תנאי סף שכמעט אף בוט של עסק ישראלי לא עומד בו.** paid broadcasts מעלים את המגבלה ל-**1000 הודעות/שנייה** בעלות **0.1 כוכבים** לכל הודעה מעל 30 לשנייה, אבל כדי להפעיל את זה הבוט חייב **לפחות 100,000 כוכבים ביתרה ולפחות 100,000 משתמשים פעילים בחודש**. אל תתכננו פיזור סביב 1000 לשנייה לפני שבדקתם את שני המספרים. למי שמתחת לסף, העצה של ה-FAQ עצמו היא לפרוס את השידור על פני **8 עד 12 שעות**.
 
 ל-grammY מומלץ [`@grammyjs/auto-retry`](https://github.com/grammyjs/auto-retry), שמכבד `retry_after` אוטומטית ב-429 (הפלאגין הישן `transformer-throttler` לא שוחרר מאז 2022). ל-python-telegram-bot יש `AIORateLimiter` מובנה דרך התוספת `[rate-limiter]`. ב-Telegraf ממשים token bucket לפי צ'אט או משתמשים בתור חיצוני (BullMQ, Celery).
 
 **השדה `file_id` קשור למזהה בוט אחד.** מהתיעוד: מופע בדיקה לא יכול להשתמש במאגר `file_id` משותף כדי לשלוח מדיה במהירות, וצריך להעלות כל קובץ מחדש. אל תשמרו ערכי `file_id` ותשתמשו בהם מחדש בין טוקנים של בוטים שונים; העתקה מ-dev ל-prod נכשלת עם "wrong file identifier".
 
-**גדלי קבצים:**
-- **העלאת קובץ מהבוט:** 50 MB (שרת Bot API ברירת מחדל)
-- **הורדת קובץ מהבוט:** 20 MB
-- **שרת Bot API מקומי (כל בוט, בלי קשר לפרימיום):** הורדות **ללא הגבלת גודל**, העלאות עד 2000 MB
+**גדלי קבצים:** העלאה **50 MB**, הורדה **20 MB** בשרת ברירת המחדל. **שרת Bot API מקומי** (כל בוט, בלי קשר לפרימיום) מוריד **ללא הגבלת גודל** ומעלה עד **2000 MB**.
 
 להעלאה או הורדה מעל 50 MB, מריצים [שרת Bot API](https://github.com/tdlib/telegram-bot-api) משלכם ומפנים את הבוט אליו דרך `apiRoot` (grammY) / `telegram.apiRoot` (Telegraf) / `base_url` (python-telegram-bot).
 
@@ -479,47 +425,31 @@ cron.schedule("0 9 * * *", sendMorningDigest, {
 
 ב-Bot API 7.2 (31.03.2024) הוצג **Telegram Business**, שמאפשר למשתמש לחבר בוט לחשבון האישי שלו, כך שהבוט קורא ועונה להודעות אישיות בשמו. משתמשים ישראלים מפעילים את זה בהגדרות > Telegram Business > צ'אטבוטים, ומדביקים את ה-`@username` של בוט מאושר.
 
-**חיבור בוט לא דורש מנוי פרימיום.** ב-Bot API 10.0 (מאי 2026) טלגרם אפשרה ל-Secretary Bots לנהל חשבונות של משתמשים בלי מנוי פרימיום, והתיעוד הרשמי מציין היום שבוטים מחוברים זמינים גם למשתמשים ללא פרימיום. פרימיום עדיין נדרש לשאר פיצ'רי ה-Business (שעות פעילות, מיקום, תשובות מהירות, הודעות פתיחה והיעדרות, עמוד פתיחה מותאם), ולכן אל תתנו למסך ההצטרפות של הבוט לחסום משתמשים שאין להם פרימיום.
+**חיבור בוט לא דורש מנוי פרימיום.** ב-Bot API 10.0 (מאי 2026) טלגרם אפשרה ל-Secretary Bots לנהל חשבונות בלי פרימיום (ב-changelog אותו סעיף מופיע עם המונח Business Bots), ו-core.telegram.org/api/business מציין שבוטים מחוברים זמינים גם למשתמשים ללא פרימיום. פרימיום עדיין נדרש לשאר פיצ'רי ה-Business (שעות פעילות, מיקום, תשובות מהירות, הודעות פתיחה והיעדרות, עמוד פתיחה מותאם), ולכן אל תתנו למסך ההצטרפות של הבוט לחסום משתמשים שאין להם פרימיום.
 
 כשהמשתמש מחבר את הבוט, הבוט מקבל עדכון `business_connection` עם `business_connection_id`. כל הודעה שמגיעה לאחד הצ'אטים המחוברים נושאת את אותו `business_connection_id`, וכל קריאה יוצאת (`sendMessage`, `editMessageText` וכו׳) חייבת להחזיר אותו כדי שטלגרם תנתב את התשובה דרך החשבון של המשתמש ולא של הבוט.
 
 מה הבוט יכול לעשות אחרי החיבור:
 - לקרוא ולענות להודעות DM נכנסות בשם משתמש ה-Telegram Business.
-- ההרשאה `rights.can_reply` מוגבלת: היא מתירה לבוט לשלוח ולערוך הודעות **רק בצ'אטים פרטיים שהתקבלה בהם הודעה ב-24 השעות האחרונות**. מענה אוטומטי בזמן אמת בסדר, אבל מעקב מתוזמן או ריקון תור מאוחר יותר ייכשל גם כש-`can_reply` דלוק.
+- ההרשאה `rights.can_reply` מוגבלת ל**צ'אטים פרטיים שהתקבלה בהם הודעה ב-24 השעות האחרונות**. מענה אוטומטי בסדר, אבל ריקון תור מאוחר יותר ייכשל גם כש-`can_reply` דלוק.
 - לשלוף את פרטי החיבור עצמו עם `getBusinessConnection`. אין מתודה שמחזירה את רשימת הצ'אטים של המשתמש, לומדים על צ'אט רק כשמגיעה בו הודעת `business_message`.
-- לשלוח, לערוך ולמחוק הודעות בשם המשתמש, לפי ההרשאות שהמשתמש נתן בשדה `rights` (מסוג `BusinessBotRights`).
+- לפעול בשם המשתמש לפי ההרשאות בשדה `rights` (מסוג `BusinessBotRights`). ה-setters לניהול החשבון הם **set בלבד** חוץ מאחד: ל-`setBusinessAccountName`, `setBusinessAccountUsername`, `setBusinessAccountBio` ו-`setBusinessAccountGiftSettings` אין מקבילת `remove*`. קיים רק `removeBusinessAccountProfilePhoto`.
 
-```typescript
-// תפיסת החיבור (שומרים את business_connection_id לפי המשתמש)
-bot.on("business_connection", async (ctx) => {
-  const conn = ctx.businessConnection;
-  // ההרשאות יושבות תחת conn.rights (BusinessBotRights).
-  // אין שדה conn.can_reply ברמה העליונה.
-  console.log(`Connected to business user ${conn.user.id}, can_reply=${conn.rights?.can_reply}`);
-  // לשמור את conn.id לפי conn.user.id
-});
+המטפלים של grammY ללכידת `business_connection` (ההרשאות תחת `conn.rights`, אין שדה `conn.can_reply` ברמה העליונה) ולהחזרת `business_connection_id` בכל תשובה נמצאים ב-[references/examples.md](references/examples.md).
 
-// תשובה להודעת business נכנסת, חייבים לכלול business_connection_id
-bot.on("business_message", async (ctx) => {
-  await ctx.api.sendMessage(ctx.businessMessage.chat.id, "אני אחזור אליך תוך מספר דקות", {
-    business_connection_id: ctx.businessMessage.business_connection_id,
-  });
-});
-```
+שימושי לבעלי עסקים קטנים בישראל (אופטיקאים, סטודיות יוגה, סוכני ביטוח) שרוצים מענה אוטומטי בטלגרם האישי בשעות לא-פעילות, בלי בוט נפרד.
 
-שימושי לבעלי עסקים קטנים בישראל (אופטיקאים, סטודיות יוגה, סוכני ביטוח) שרוצים מענה אוטומטי בטלגרם האישי שלהם בשעות לא-פעילות, בלי להעביר לקוחות לבוט נפרד.
-
-הפניה: [Telegram Business, סקירת ה-API](https://core.telegram.org/api/business) ומחלקת [`BusinessConnection`](https://core.telegram.org/bots/api#businessconnection) בתיעוד ה-Bot API.
+הפניה: [Telegram Business](https://core.telegram.org/api/business) ו-[`BusinessConnection`](https://core.telegram.org/bots/api#businessconnection).
 
 ## API תשלומים
 
-לטלגרם יש שלושה מסלולי תשלום, בוחרים לפי מה שמוכרים:
+מסלולי התשלום, לפי מה שמוכרים:
 
-- **Telegram Stars (XTR)** - למוצרים דיגיטליים, שירותים ותוכן בתוך Mini App. הושק ב-Bot API 7.4 (28.05.2024). לא צריך ספק תשלום חיצוני. חשבוניות נקובות ב-`XTR`, ומה שמשתמש ישראלי משלם על חבילת כוכבים נקבע בחשבון ה-App Store / Google Play שלו, אז אל תנקבו מחיר קבוע בשקלים לכמות כוכבים בטקסט השיווקי.
-- **Stars subscriptions** - מנויים מתחדשים (התווסף מאוחר יותר ב-2024). אותו מטבע `XTR`, עם `subscription_period` בחשבונית. משתמשים יכולים לבטל דרך הגדרות > Stars.
+- **Telegram Stars (XTR)** - למוצרים דיגיטליים, שירותים ותוכן ב-Mini App. Bot API 7.4 (28.05.2024), בלי ספק חיצוני. מה שמשתמש ישראלי משלם על חבילת כוכבים נקבע בחשבון ה-App Store או Google Play שלו, אז לעולם לא נוקבים מחיר קבוע בשקלים.
+- **Stars subscriptions** - מנויים מתחדשים. אותו מטבע `XTR` עם `subscription_period` בקישור החשבונית; ביטול דרך הגדרות > Stars.
 - **Gifts API** (`sendGift`) - הבוט שולח מתנה למשתמש, והמקבל שומר אותה על הפרופיל. הוא **לא יכול** להמיר מתנה שהבוט שלח בחזרה לכוכבים.
 - **paid_media** - מצמידים מחיר בכוכבים לתמונה/וידאו בצ'אטים וערוצים (המקבל משלם כוכבים כדי לפתוח).
-- **ספקי תשלום מסורתיים** (Stripe LIVE/TEST וכו׳) עדיין נתמכים למוצרים פיזיים ושירותים לא-דיגיטליים. מגדירים provider token דרך BotFather תחת `/mybots > Payments`, ומעבירים אותו כ-`provider_token` עם מטבע פיאט (`ILS`, `USD`).
+- **ספקי תשלום מסורתיים** (Stripe וכדומה) למוצרים פיזיים ושירותים לא-דיגיטליים. מגדירים provider token ב-BotFather תחת `/mybots > Payments`, ומעבירים `provider_token` עם מטבע פיאט (`ILS`, `USD`).
 
 ### יצירת חשבונית
 
@@ -547,7 +477,7 @@ bot.on("message:successful_payment", async (ctx) => {
   console.log(`Payment received: ${payment.total_amount} ${payment.currency}`);
   console.log(`Payload: ${payment.invoice_payload}`);
 
-  await ctx.reply("!תודה על הרכישה! המנוי הופעל");
+  await ctx.reply("תודה על הרכישה! המנוי הופעל");
 });
 
 // טיפול ב-pre-checkout query (חובה לענות תוך 10 שניות)
@@ -562,45 +492,29 @@ bot.on("pre_checkout_query", async (ctx) => {
 
 ### מנויים מתחדשים ב-Stars
 
-**השדה `subscription_period` קיים רק ב-`createInvoiceLink`, ולא ב-`sendInvoice` / `replyWithInvoice`.** העברה שלו ל-`sendInvoice` פשוט לא עושה כלום. במקום זה יוצרים קישור ושולחים אותו. הערך חייב להיות כרגע `2592000` (30 יום).
+**השדה `subscription_period` אינו זמין ב-`sendInvoice` / `replyWithInvoice`.** העברה שלו לשם לא עושה כלום; משתמשים ב-`createInvoiceLink`. הוא גם פרמטר חובה ב-`createChatSubscriptionInviteLink`, מסלול נפרד למנויי ערוץ, ושדה ב-`SuccessfulPayment` וב-`StarTransaction`. במקום זה יוצרים קישור ושולחים אותו. הערך חייב להיות כרגע `2592000` (30 יום).
 
-```typescript
-const link = await bot.api.createInvoiceLink(
-  "מנוי פרימיום",
-  "גישה לכל התכונות, מתחדש מדי חודש",
-  "premium_sub_v1",
-  "",                                       // provider_token: ריק בכוכבים
-  "XTR",
-  [{ label: "מנוי חודשי", amount: 100 }],   // פריט אחד בדיוק
-  { subscription_period: 2592000 },          // 30 יום, הערך היחיד הנתמך
-);
-await ctx.reply(`להצטרפות: ${link}`);
-```
+הקריאה המלאה נמצאת ב-[references/examples.md](references/examples.md), דוגמה 7.
 
-משתמשים מנהלים ומבטלים מנויים דרך הגדרות > Stars > המנויים שלי. האזינו ל-`message:successful_payment` בכל חידוש כדי להאריך גישה ב-DB.
+משתמשים מנהלים ומבטלים מנויים דרך הגדרות > Stars > המנויים שלי.
+
+**לא מנהלים חידושים לפי `message:successful_payment` בלבד.** גרסה 10.2 הוסיפה עדכון ייעודי: המחלקה **`BotSubscriptionUpdated`** והשדה **`subscription`** ב-`Update`. זה מה שמדווח על חידוש, ביטול או פקיעה. מטפל ב-`successful_payment` רואה את חיוב החידוש אבל לעולם לא רואה ביטול, כך שבוט שנשען רק עליו ממשיך לשרת משתמש שכבר ביטל.
 
 ### Gifts API
 
-`sendGift` שולח מדבקת מתנה למשתמש (משלמים בכוכבים מיתרת הבוט). **המקבל לא יכול להמיר מתנה שהבוט שלח בחזרה לכוכבים** (לשון התיעוד: המתנה לא ניתנת להמרה לכוכבים על ידי המקבל). `convertGiftToStars` הוא דבר אחר לגמרי: מתודה של בוט עסקי שדורשת `business_connection_id` ואת ההרשאה `can_convert_gifts_to_stars`, ופועלת על מתנות שבבעלות חשבון עסקי מחובר. אל תבטיחו למשתמשים מסלול פדיון. שימושי לתוכניות נאמנות והגרלות כמזכרת, לא כמטבע.
+`sendGift` שולח מדבקת מתנה למשתמש, בתשלום כוכבים מיתרת הבוט. **המקבל לא יכול להמיר מתנה שהבוט שלח בחזרה לכוכבים**, בלשון התיעוד: "The gift can't be converted to Telegram Stars by the receiver". `convertGiftToStars` היא מתודה אחרת של בוט עסקי, שדורשת `business_connection_id` ואת ההרשאה `can_convert_gifts_to_stars` ופועלת על מתנות בבעלות חשבון עסקי מחובר. לעולם לא מבטיחים מסלול פדיון. מתנות הן מזכרת לנאמנות והגרלות, לא מטבע.
 
-```typescript
-// ב-grammY החתימה של sendGift פוזיציונית: (user_id, gift_id, other?)
-await bot.api.sendGift(
-  ctx.from.id,
-  "<אחד מה-IDs ש-getAvailableGifts מחזיר>",
-  { text: "תודה שאתם איתנו!" }, // הודעה אופציונלית
-);
-```
+החתימה ב-grammY פוזיציונית: `(user_id, gift_id, other?)`. הקריאה המלאה ב-[references/examples.md](references/examples.md), דוגמה 8.
 
-תמיד קוראים ל-`getAvailableGifts` קודם כדי לראות את הקטלוג ואת המחירים העדכניים.
+קוראים ל-`getAvailableGifts` קודם כדי לראות קטלוג ומחירים עדכניים.
 
 ### paid_media
 
-מצמידים מחיר בכוכבים לתמונה או וידאו בצ'אט/ערוץ; המקבל משלם כוכבים כדי לפתוח. משתמשים ב-`sendPaidMedia` (או בשדה `paid_media` במתודות `sendMessage`) עם `star_count` למחיר.
+מצמידים מחיר בכוכבים לתמונה או וידאו בצ'אט או בערוץ; המקבל משלם כוכבים כדי לפתוח. **`sendPaidMedia` היא הדרך היחידה לשלוח את זה.** אין פרמטר `paid_media` ב-`sendMessage` ולא באף מתודת שליחה אחרת: בתיעוד `paid_media` מופיע רק כשדה נכנס ב-`Message` (מסוג `PaidMediaInfo`), בתוך `PaidMediaInfo` עצמו, וב-`StarTransaction`. מגדירים `star_count` ב-`sendPaidMedia`, וקוראים רכישות דרך העדכון `purchased_paid_media`.
 
 ## Mini Apps (WebApp)
 
-Mini Apps מאפשרים להטמיע ממשקי ווב מלאים בתוך טלגרם. הבוט פותח דף ווב, והדף יכול לשלוח נתונים בחזרה לבוט.
+Mini Apps מטמיעים ממשקי ווב מלאים בתוך טלגרם: הבוט פותח דף, והדף שולח נתונים בחזרה.
 
 ### הגדרת כפתור Mini App
 
@@ -637,50 +551,13 @@ await bot.api.setChatMenuButton({
 | דרך הפתיחה | איך הנתונים חוזרים |
 |---|---|
 | כפתור `web_app` במקלדת reply | `sendData()` ואז הודעת שירות `message:web_app_data` (בלי שרת) |
-| כפתור אינליין, כפתור תפריט, קישור ישיר, מצב inline | שליחת POST ל-backend שלכם עם `initData`, עם אימות בצד השרת (למטה) |
+| כפתור אינליין, כפתור תפריט, קישור ישיר, מצב inline | שליחת POST ל-backend שלכם עם `initData`, עם אימות בצד השרת |
 
-בשביל מסלול ה-`sendData` הכפתור חייב להיות מקלדת reply ולא אינליין:
+**`sendData` מוגבל ל-4096 בייטים** לפי התיעוד. עגלת קניות מסודרת עם שורות פריטים חוצה את זה בהזמנה אמיתית, בשקט. אם המטען יכול לגדול, משתמשים במסלול `initData` plus backend.
 
-```typescript
-import { Keyboard } from "grammy";
+שני המסלולים מקצה לקצה (כפתור המקלדת, קריאות `sendData` ו-`MainButton` בצד הדפדפן, המטפל ב-`message:web_app_data`, ושליחת ה-POST עם `initData`) נמצאים ב-[references/mini-apps.md](references/mini-apps.md).
 
-const kb = new Keyboard()
-  .webApp("פתח אפליקציה", "https://your-app.com/mini-app")
-  .resized();
-await ctx.reply("לחצו לפתיחה:", { reply_markup: kb });
-```
-
-**ב-Mini App (JavaScript בצד הדפדפן):**
-
-```javascript
-// Telegram WebApp SDK מוזרק על ידי טלגרם
-const tg = window.Telegram.WebApp;
-
-// שליחת נתונים בחזרה לבוט (סוגר את ה-Mini App)
-tg.sendData(JSON.stringify({
-  action: "order",
-  items: ["item1", "item2"],
-  total: 150,
-}));
-
-// או שימוש ב-MainButton ל-UX נקי יותר
-tg.MainButton.text = "אישור הזמנה";
-tg.MainButton.show();
-tg.MainButton.onClick(() => {
-  tg.sendData(JSON.stringify({ confirmed: true }));
-});
-```
-
-**בבוט (קבלת הנתונים):**
-
-```typescript
-bot.on("message:web_app_data", async (ctx) => {
-  const data = JSON.parse(ctx.message.web_app_data.data);
-  console.log("Received from Mini App:", data);
-
-  await ctx.reply(`הזמנה התקבלה! סה"כ: ₪${data.total}`);
-});
-```
+**לעולם לא סומכים על `initData` בלי לאמת את ה-HMAC בצד השרת.** הוא מגיע מהלקוח וקל לזייף אותו. המימוש המוקשח, כולל בדיקת הטריות של `auth_date`, נמצא באותו קובץ.
 
 ### תכונות Mini Apps 2.0 ואימות initData
 
@@ -729,35 +606,37 @@ bot.on("message:web_app_data", async (ctx) => {
 
 ## מלכודות נפוצות
 
-אלה מצבי כשל שכיחים שסוכנים נתקלים בהם כשמייצרים קוד של בוטים לטלגרם:
+מצבי כשל שכיחים כשמייצרים קוד של בוטים לטלגרם:
 
-1. **ערבוב בין API-ים של פריימוורקים.** grammY משתמש ב-`ctx.reply()`, Telegraf משתמש ב-`ctx.reply()` (נראה אותו דבר אבל Context שונה), python-telegram-bot משתמש ב-`update.message.reply_text()`. סוכנים מערבבים `ctx.reply()` לתוך קוד python-telegram-bot או משתמשים ב-`Markup` של Telegraf עם grammY.
+1. **ערבוב API-ים של פריימוורקים.** גם grammY וגם Telegraf חושפים `ctx.reply()` אבל עם טיפוסי Context שונים; python-telegram-bot משתמש ב-`update.message.reply_text()`. סוכנים מערבבים `ctx.reply()` לקוד PTB, או את `Markup` של Telegraf לתוך grammY.
 
-2. **הגבלת פורט ב-webhook.** טלגרם שולח webhooks רק לפורטים 443, 80, 88 או 8443. סוכנים מגדירים webhooks על פורט 3000 או 8080, שנכשלים בשקט ללא שגיאה מצד טלגרם.
+2. **הגבלת פורט ב-webhook.** טלגרם שולח webhooks רק לפורטים 443, 80, 88 או 8443. הגדרה על 3000 או 8080 נכשלת בשקט בלי שגיאה מצד טלגרם.
 
-3. **שכחה לענות ל-callback queries.** כל עדכון `callback_query` חייב להיענות עם `answerCallbackQuery()`, גם אם אין מה להציג (שדה ה-`text` האופציונלי מוגבל ל-0-200 תווים). אי-מענה גורם לספינר טעינה קבוע על הכפתור של המשתמש. סוכנים מטפלים בלוגיקה אבל שוכחים את קריאת ה-answer.
+3. **שכחה לענות ל-callback queries.** כל `callback_query` חייב להיענות עם `answerCallbackQuery()` גם כשאין מה להציג (`text` מוגבל ל-0-200 תווים), אחרת המשתמש נתקע עם ספינר.
 
-4. **callback data חורג מ-64 בייטים.** סוכנים שמים מחרוזות בעברית, אובייקטי JSON או מזהים ארוכים ב-callback data. כל תו עברי הוא 2 בייטים ב-UTF-8, כלומר 64 בייטים הם לכל היותר 32 תווים. השתמשו במפתחות אנגליים קצרים ושמרו נתונים מלאים ב-session/database.
+4. **callback data חורג מ-64 בייטים.** עברית היא 2 בייטים לתו ב-UTF-8, כלומר 64 בייטים הם לכל היותר 32 תווים. משתמשים במפתחות אנגליים קצרים ושומרים את הנתונים המלאים ב-session או ב-DB.
 
-5. **חוסר escaping ב-HTML parse mode.** כשמשתמשים ב-`parse_mode: "HTML"`, התווים `<`, `>` ו-`&` בטקסט שהמשתמש סיפק חייבים escaping. סוכנים מחזירים קלט משתמש במצב HTML בלי escaping, מה שגורם לשגיאות פרסור.
+5. **חוסר escaping ב-HTML parse mode.** עם `parse_mode: "HTML"` חייבים escaping ל-`<`, `>` ו-`&` בטקסט משתמש. החזרת קלט לא-escaped היא הסיבה הרגילה לשגיאת פרסור.
 
-6. **Polling ו-webhook רצים במקביל.** אם שוכחים לקרוא ל-`deleteWebhook()` לפני הפעלת polling, הבוט לא מקבל עדכונים דרך polling. טלגרם שולח עדכונים רק לנקודת קצה אחת. זה כשל שקט.
+6. **Polling ו-webhook במקביל.** בלי `deleteWebhook()` לפני polling הבוט לא מקבל כלום. טלגרם שולח לנקודת קצה אחת בלבד, ונכשל בשקט.
 
-7. **timeout של pre-checkout query.** ה-handler של `pre_checkout_query` חייב להגיב תוך 10 שניות. אם ה-handler עושה עבודה אסינכרונית (קריאות database, APIs חיצוניים) שלוקחת יותר מדי זמן, התשלום נכשל בשקט. שמרו על handler קליל.
+7. **timeout של pre-checkout query.** ה-handler של `pre_checkout_query` חייב להגיב תוך 10 שניות, אחרת התשלום נכשל בשקט. שומרים אותו קליל.
 
-8. **session ב-grammY בלי storage adapter.** ברירת המחדל של session store בזיכרון ב-grammY מתאפסת בכל הפעלה מחדש. לפרודקשן חובה להגדיר אחסון session חיצוני (Redis, Supabase וכו׳). סוכנים מדלגים על זה ותוהים למה sessions נעלמים.
+8. **session ב-grammY בלי storage adapter.** ברירת המחדל בזיכרון מתאפסת בכל הפעלה מחדש. פרודקשן דורש אחסון חיצוני (Redis, Supabase).
 
-9. **שינויי API בין Telegraf v4 ל-v3.** סוכנים שאומנו על דאטה ישן מייצרים קוד Telegraf v3 (`telegraf.startPolling()`, `telegraf.webhookCallback()`). ב-v4 זה `bot.launch()` ו-`bot.webhookCallback()`.
+9. **Telegraf v4 מול v3.** דאטה ישן מייצר v3 (`telegraf.startPolling()`). ב-v4 זה `bot.launch()` ו-`bot.webhookCallback()`.
 
-10. **מיגרציה ל-async ב-python-telegram-bot v20+.** גרסאות לפני v20 השתמשו ב-handlers סינכרוניים. v22.8 הוא async לחלוטין. סוכנים מייצרים קוד סינכרוני (`def handler` במקום `async def handler`) או משתמשים בקלאס `Updater` המיושן.
+10. **python-telegram-bot v20+ הוא async לחלוטין.** דאטה ישן מייצר `def handler` במקום `async def handler`, או את `Updater` המיושן.
 
-11. **סיוט escaping של Markdown בעברית.** MarkdownV2 דורש escaping ל: `_`, `*`, `[`, `]`, `(`, `)`, `~`, `` ` ``, `>`, `#`, `+`, `-`, `=`, `|`, `{`, `}`, `.`, `!`. בטקסט עברי זה גורם לשגיאות בלי סוף. השתמשו ב-HTML parse mode במקום.
+11. **סיוט escaping של MarkdownV2 בעברית.** נדרש escaping ל-`_`, `*`, `[`, `]`, `(`, `)`, `~`, `` ` ``, `>`, `#`, `+`, `-`, `=`, `|`, `{`, `}`, `.`, `!`. בטקסט עברי זה בלתי אפשרי בפועל. משתמשים ב-HTML.
 
-12. **חוסר error handler.** בלי `bot.catch()` (grammY) או error handler, שגיאות לא מטופלות מפילות את תהליך הבוט בשקט. במצב polling, זה הורג את הבוט. במצב webhook, טלגרם מנסה שוב את העדכון, ועלול לגרום ללולאת שגיאות אינסופית.
+12. **חוסר error handler.** בלי `bot.catch()` (grammY) או מקבילה, שגיאה לא מטופלת הורגת את התהליך ב-polling, וב-webhook טלגרם מנסה שוב לתוך לולאת שגיאות אינסופית.
+
+13. **כתיבת קוד אפמרלי של 10.2 מול API של 10.3.** `receiver_user_id` ו-`callback_query_id` הוחלפו ב-`ephemeral_message_parameters`. כל דוגמה שקדמה ל-24.08.2026, כולל כל מה שמודל למד, משתמשת במבנה המת.
 
 ## דוגמאות
 
-חמש דוגמאות מלאות ומקצה לקצה נמצאות ב-[references/examples.md](references/examples.md): בוט תפריט בעברית עם מקלדות אינליין, בוט webhook על Vercel עם הודעות שגיאה בעברית, תהליך שיחה ב-python-telegram-bot, חשבונית כוכבים ב-python, ואימות מספר טלפון ישראלי.
+דוגמאות מלאות מקצה לקצה נמצאות ב-[references/examples.md](references/examples.md): בוט תפריט בעברית עם מקלדות אינליין, בוט webhook על Vercel עם הודעות שגיאה בעברית, תהליך שיחה ב-python-telegram-bot, חשבונית כוכבים ב-python, אימות מספר טלפון ישראלי, וריאנטי המקלדות ב-Telegraf וב-PTB, והמטפלים של Bot Business.
 
 ## פתרון בעיות
 

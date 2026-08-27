@@ -12,7 +12,7 @@ import { Bot, webhookCallback } from "grammy";
 const bot = new Bot(process.env.BOT_TOKEN!);
 
 // Register all handlers
-bot.command("start", (ctx) => ctx.reply("!שלום"));
+bot.command("start", (ctx) => ctx.reply("שלום!"));
 // ... more handlers
 
 export default webhookCallback(bot, "std/http");
@@ -40,7 +40,7 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const bot = new Bot(env.BOT_TOKEN);
 
-    bot.command("start", (ctx) => ctx.reply("!שלום"));
+    bot.command("start", (ctx) => ctx.reply("שלום!"));
     // ... more handlers
 
     return webhookCallback(bot, "cloudflare-mod")(request);
