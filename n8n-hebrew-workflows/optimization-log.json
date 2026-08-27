@@ -1,41 +1,68 @@
 {
   "cycles": [
     {
-      "version": "2.4.0",
-      "date": "2026-08-01",
+      "version": "2.5.0",
+      "date": "2026-08-27",
+      "holdout_before": null,
+      "holdout_after": null,
       "lessons": [
         {
-          "id": "deferred-whatsapp-section",
-          "status": "deferred",
-          "summary": "The skill has no WhatsApp coverage despite WhatsApp being the most-requested Israeli business automation channel. The only mention is one table cell listing it as an InforUMobile capability: no endpoint, no template-approval flow, no session-window rules. n8n ships a first-class WhatsApp Business Cloud node and a WhatsApp Trigger that the skill never names. Meta's 24-hour customer-service window and pre-approved message templates are what actually break these workflows in production and neither is documented.",
-          "action": "Add a WhatsApp step in the next cycle covering the WhatsApp Business Cloud node, the WhatsApp Trigger, template approval, and the 24-hour session window. Verify node names and parameter names against current n8n docs before writing.",
-          "why_deferred": "Out of scope for the 2.4.0 correctness-only pass."
+          "id": "carry-resolved-whatsapp",
+          "status": "resolved",
+          "summary": "The deferred WhatsApp coverage from 2.4.0 landed. Node types verified against n8n master source (n8n-nodes-base.whatsApp typeVersion 1.1, n8n-nodes-base.whatsAppTrigger), plus the 24-hour customer service window, the three template categories, and per-message pricing (conversation pricing ended 2025-07-01)."
         },
         {
-          "id": "deferred-n8n-3-coverage",
-          "status": "deferred",
-          "summary": "n8n 3.0 is scheduled for October 2026 and has a published breaking-changes page. Confirmed items relevant to this skill: self-hosted n8n will require Docker (npm / npx n8n unsupported); the Function, Function Item and Item Lists nodes are removed; the $getPairedItem expression helper is removed; Execute Workflow node's older behavior is removed.",
-          "action": "Add a v3.0 readiness subsection to Step 6 before October 2026. Source: https://docs.n8n.io/changelog/v30-breaking-changes.md",
-          "why_deferred": "Out of scope for the 2.4.0 correctness-only pass. Not yet urgent, but this skill is reviewed on roughly a 90-day cadence and 3.0 lands inside the next window."
+          "id": "carry-resolved-n8n-3",
+          "status": "resolved",
+          "summary": "The n8n 3.0 readiness subsection landed, sourced from docs.n8n.io/changelog/v30-breaking-changes.md. Beyond the four items the prior cycle listed, 3.0 also removes AI Agent node v1 and every legacy agent mode, which hits Step 7 directly."
         },
         {
-          "id": "deferred-model-recommendation-rewrite",
+          "id": "carry-resolved-model-names",
+          "status": "resolved",
+          "summary": "The hardcoded model names (Claude 3.5 Sonnet, GPT-4o, Opus 4.7) are gone. The prior cycle could not verify the node's model list because it looked at the wrong path; the directory is LMChatAnthropic (capital M) and the current node resolves its model list from the Anthropic API at runtime rather than a hardcoded dropdown. Replaced with a selection principle so this cannot go stale again."
+        },
+        {
+          "id": "deferred-morning-allocation-mechanism",
           "status": "deferred",
-          "summary": "Step 7 recommends Claude 3.5 Sonnet and GPT-4o by name for Hebrew tasks. Both are long superseded as of August 2026. NOT corrected in 2.4.0 because the n8n Anthropic node's actual model list could not be verified: the LmChatAnthropic.node.ts path 404s on master (package layout moved), so any replacement model names would have been unverified guesses.",
-          "action": "Verify the node's current model dropdown against n8n docs in a browser, then replace hard-coded model names with a selection principle plus one dated example. Hard-coded model names will go stale every cycle.",
-          "why_deferred": "Could not verify. Writing unverified model names would have introduced exactly the kind of fabrication this cycle removed."
+          "summary": "The skill states the allocation thresholds, the before-VAT rule and the `עולה על` boundary correctly, and now carries both governing statute limbs verbatim, but it still does not say HOW a Morning-issued document obtains an allocation number, nor what to do when the request is refused. EZCount's path is documented (417 plus four options); Morning's is not. An agent will invent a field name here.",
+          "action": "Next cycle: get the Morning allocation flow from a source that is not a JS-only SPA, or state explicitly that it is undocumented publicly and route to Morning support. Do not guess a field name.",
+          "why_deferred": "developers.morning.co/api is a Redoc SPA behind a CloudFront fallback that serves the shell with HTTP 200 for every path, so no field name could be confirmed this cycle."
+        },
+        {
+          "id": "deferred-hebrew-word-cap",
+          "status": "deferred",
+          "summary": "SKILL_HE.md is 6,079 words against the 5,000 cap. This cycle cut it from 6,967 by moving five sections to references, but it is still over. The English file is at 5,000 exactly.",
+          "action": "Next cycle: move the Morning and EZCount request-body blocks out of SKILL_HE.md into references/israeli-api-endpoints.md, which should clear the remaining ~1,100 words.",
+          "why_deferred": "The cap is a warning rather than an error for the Hebrew file, and this cycle's budget went to twelve CRITICAL correctness findings."
+        },
+        {
+          "id": "deferred-queue-and-drain-pattern",
+          "status": "deferred",
+          "summary": "The skill now warns that `return []` DROPS work rather than deferring it, and says to queue and drain after havdalah, but ships no worked queue-and-drain pattern. shabbat-cron-patterns Pattern 5 gestures at draining a queue that nothing in the skill fills.",
+          "action": "Next cycle: write the queue-and-drain pair as a concrete pattern (static data or DB write on block, post-havdalah drain workflow).",
+          "why_deferred": "Deferred over the Phase 4.1 discretionary cap; the correctness half (do not silently drop) shipped."
         }
       ],
       "persistent_fail": [
         {
           "id": "stale-version-pins",
-          "summary": "v2.3.0 pinned n8n 2.21.4 and cited 2.21.x as stable. By this review the stable line was 2.32.7 and 2.21.4 carried 68 published advisories including three CRITICAL. Notably, those three CRITICAL CVEs were disclosed 2026-05-14, six days BEFORE the v2.3.0 evidence_date of 2026-05-20, so they were already public at the prior review and were missed.",
-          "recurrence_guard": "Every review of this skill must re-query https://registry.npmjs.org/-/package/n8n/dist-tags AND https://api.github.com/advisories?ecosystem=npm&affects=n8n, and must compute which advisories apply to the currently pinned tag rather than trusting the previous cycle's pin. A version-pin claim in evidence.json is only valid for the day it was checked."
+          "summary": "Third consecutive cycle where the pinned version was stale on arrival. v2.3.0 pinned 2.21.4; v2.4.0 pinned 2.32.7 and called it current stable; at this review npm stable is 2.36.7 with beta 2.37.3. The 2.32.1 security FLOOR held (no advisory has a first_patched_version above it), so only the 'current stable' claim was wrong, but it was wrong in both languages and in the Docker Compose image tag.",
+          "recurrence_guard": "Every review must re-query https://registry.npmjs.org/-/package/n8n/dist-tags AND https://api.github.com/advisories?ecosystem=npm&affects=n8n, compute the highest first_patched_version to get the floor, and treat the floor and the current stable as two SEPARATE claims. Then grep BOTH language files and the Compose block for the old number: in this cycle the Hebrew half of a reference file kept 2.32.7 after the English half was corrected."
         },
         {
           "id": "silent-failure-endpoints",
-          "summary": "Three shipped endpoints returned 404 and one code identifier did not exist, all of them plausible-looking. None would have been caught by reading alone; all four were found by executing the request or reading upstream source.",
-          "recurrence_guard": "Every endpoint in this skill must be probed live each cycle. A 401 confirms the path exists; a 404 means it does not. Every library identifier must be checked against upstream source, not recalled. Note that link checks by HTTP status alone are insufficient: docs.n8n.io/2-0-breaking-changes/ returned 200 with a 404 body."
+          "summary": "Held again, and it caught two fabrications this cycle. The MCP Client Tool type `@n8n/n8n-nodes-langchain.toolMcp` does not exist (correct: `mcpClientTool` / `mcpTrigger`), and the EZCount `allocation_status: 'pending'` field does not exist (EZCount returns HTTP 417 with four documented options, and retrying never clears it). Both were plausible-looking and neither would have been caught by reading.",
+          "recurrence_guard": "Every node type string, env var name and API field name in this skill must be checked against upstream SOURCE (the n8n GitHub repo, the vendor's OpenAPI or Postman collection), never recalled. Note that a GET probe is not a test of a POST endpoint: 019sms.co.il/api returns 404 on GET and the documented 200-with-status-3 body on POST, and a reviewer wrongly concluded the endpoint was a marketing page."
+        },
+        {
+          "id": "fabricated-field-semantics",
+          "summary": "New this cycle, and the most serious defect found. The skill documented Cardcom's `ReturnValue` as the success flag ('0 = success'). Cardcom's own v11 OpenAPI defines it as a merchant-supplied pass-through echoed back from CreateLowProfile; the success field is `ResponseCode`. The rest of the callback table was legacy classic-API naming: `DealResponse` has zero occurrences in the v11 spec, so the recommended `InternalDealNumber` dedup key was always undefined and the duplicate-invoice guard never fired. The wrong table was live in SKILL.md, SKILL_HE.md and twice in references/.",
+          "recurrence_guard": "A field name being real is not the same as its SEMANTICS being right, and a field that exists in an older API version is the most dangerous case because it looks verifiable. For every field the skill branches on, read the vendor's machine-readable schema and quote the field's own description, not just its presence. Then grep every file, both languages, for the old field names."
+        },
+        {
+          "id": "gate-logic-never-executed",
+          "summary": "The skill's headline feature, the Shabbat gate, was broken for the exact case it exists to prevent, in every copy of it (SKILL.md, SKILL_HE.md, and two patterns in references/). Taking items.find('candles') and items.find('havdalah') and testing a range fails ON a chag, because Hebcal returns that chag's havdalah BEFORE the next festival's candle lighting, making the test unsatisfiable. Reproduced against the live API for Yom Kippur and Pesach I. The gate also failed OPEN on any Hebcal degradation, and its yomtov branch used a UTC date-equality test that cannot express erev chag.",
+          "recurrence_guard": "Prose correctness is not code correctness: every factual statement ABOUT the Hebcal parameters in this skill was right while the code consuming them was wrong. Any control-flow gate in this skill must be traced against real API responses for the adversarial date (on the chag, on erev chag, at 01:00 Israel time), not just the ordinary one, and must be checked for whether its failure mode is open or closed."
         }
       ]
     }

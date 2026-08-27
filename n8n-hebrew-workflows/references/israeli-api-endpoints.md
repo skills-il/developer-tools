@@ -127,7 +127,7 @@ Same Tax Authority codes as Morning: 10 (price quote), 305 (tax invoice), 320 (t
 
 ### Israel Invoice Reform 2026
 
-EZCount auto-clears qualifying tax invoices against SHAAM and returns the allocation number in the response. If `allocation_status: 'pending'`, retry after 30 seconds before treating the invoice as final. SDK code samples in PHP, Java, .NET, ASP, Ruby, Node, and Python on the EZCount developer portal.
+EZCount handles the SHAAM allocation request as part of document creation. When the Tax Authority has not (yet) allocated a number, the API returns **HTTP status `417`**, verbatim from the docs: "When the document is waiting for the Tax Authority allocation number we will return status `417`". There is no `allocation_status` field and no retry that clears a 417. The docs give four options at that point: skip the allocation number, cancel the document, file a further objection, or reverse charge (cancel and re-issue at zero-rate VAT, with the buyer issuing a self-invoice). You may also set your own allocation number. Where the status is 417 with error code 460, the Tax Authority's Hebrew refusal text must be surfaced to the document creator. Rate limit: 250 requests per 10 seconds, sequential rather than parallel.
 
 ### Common Response Fields
 
@@ -138,7 +138,6 @@ EZCount auto-clears qualifying tax invoices against SHAAM and returns the alloca
 | `docNum` | string | Document number |
 | `pdfLink` | string | Public PDF URL |
 | `allocation_number` | string | SHAAM-issued mispar haktza'a (Invoice Reform 2026) |
-| `allocation_status` | string | `cleared` / `pending` / `not_required` |
 
 **Amounts are in decimal shekels.** Same convention as Morning.
 
@@ -155,12 +154,23 @@ Base URL: `https://data.gov.il/api/3`
 | `/action/datastore_search` | GET | Search within a dataset | `resource_id`, `q`, `filters`, `limit`, `offset`, `sort` |
 | `/action/package_show` | GET | Get dataset metadata | `id` (dataset name or UUID) |
 | `/action/resource_show` | GET | Get resource details | `id` (resource UUID) |
+| `/action/datastore_search_sql` | GET | Run SQL against a resource | `sql` |
 
-Unlike a stock CKAN install, data.gov.il does **not** expose
-`datastore_search_sql`: `help_show?name=datastore_search_sql` returns
-`Action function not found`, and the WAF additionally blocks any request
-carrying SQL in the query string. Use `datastore_search` with `filters` and
-`q` instead; there is no SQL path on this instance.
+**`datastore_search_sql` DOES work on data.gov.il.** An earlier version of this
+reference stated it was unavailable and that a WAF blocked SQL in the query
+string. Both are false: `help_show?name=datastore_search_sql` returns the real
+CKAN docstring ("Execute SQL queries on the DataStore"), and a live query
+against the amutot resource returns records with HTTP 200. Quote the resource id
+and URL-encode the statement:
+
+```
+GET https://data.gov.il/api/3/action/datastore_search_sql?sql=SELECT%20*%20FROM%20%22be5b7935-3922-45d4-9638-08871b17ec95%22%20LIMIT%201
+```
+
+Note the opposite quirk on this instance: `help_show?name=datastore_search`
+returns a broken Python `partial(func, *args, **keywords)` docstring rather than
+the action's own documentation, so use the `datastore_search_sql` help entry or
+upstream CKAN docs when you need the parameter reference.
 
 ### Useful Resource IDs
 
@@ -292,17 +302,20 @@ Documentation: `https://www.cardcom.solutions/`
 
 `https://secure.cardcom.solutions/api/v11` is a base path and returns 404 on its own. Always append the operation.
 
-Callback fields:
+Callback fields, from the v11 `LowProfileResult` schema (`https://secure.cardcom.solutions/swagger/v11/swagger.json`):
 
-| Field | Type | Description |
-|-------|------|-------------|
-| ReturnValue | string | "0" = success |
-| InternalDealNumber | string | Cardcom transaction ID |
-| DealResponse | string | Human-readable response (Hebrew) |
-| CardOwnerID | string | Customer teudat zehut (9 digits) |
-| NumOfPayments | string | Installment count |
-| Sum | string | Amount charged |
-| Token | string | Card token for future charges |
+| Field | Description |
+|-------|-------------|
+| `ResponseCode` | **`0` = success**, anything else is a failure; read `Description` |
+| `Description` | Response description |
+| `LowProfileId` | Hosted-payment-page id |
+| `TranzactionId` | Cardcom transaction id, and the correct dedup key |
+| `ReturnValue` | Your OWN pass-through value, echoed back. **Not a status.** |
+| `TranzactionInfo` | Nested: `CardOwnerIdentityNumber` (teudat zehut), `NumberOfPayments`, `ApprovalNumber`, amount |
+| `DocumentInfo` | Document details where Cardcom also issued the invoice |
+| `TokenInfo` | Card token for future charges |
+
+`ReturnValue` is documented by Cardcom on the request as "A string of data to save on the transaction, usually send your unique order Id, you will get it back in the WebHook URL" and on the result as "Same value that was sent on the CreateLowProfile request". `DealResponse` does not exist in v11 (zero occurrences in the spec), and `InternalDealNumber` / `CardOwnerID` / `NumOfPayments` are legacy classic-API names absent from the result object.
 
 ### Tranzila
 
@@ -470,3 +483,473 @@ Base URL: `https://www.hebcal.com`
 | Holiday-aware scheduling | Schedule -> HTTP -> IF -> Execute | Schedule, HTTP, IF, Code | Hebcal |
 | AI-powered categorization | Schedule -> Code -> AI Agent -> DB | Schedule, Code, AI Agent, Postgres | israeli-bank-scrapers + LLM |
 | Invoice Reform compliance | Webhook -> Code -> HTTP -> HTTP | Webhook, Code, HTTP | Morning + Tax Authority allocation |
+
+
+---
+
+# Israeli Payment Gateway Callbacks (moved from SKILL.md Step 5)
+
+## Cardcom
+
+**`ReturnValue` is NOT the success flag.** Cardcom's v11 spec defines it on the request as "A string of data to save on the transaction, usually send your unique order Id, you will get it back in the WebHook URL", and on the result as "Same value that was sent on the CreateLowProfile request". It is your own pass-through. Branching on `ReturnValue == 0` approves declined payments whenever the merchant happened to send something else. The success field is **`ResponseCode`** ("if equel zero then success").
+
+The v11 `LowProfileResult` delivered to your `WebHookUrl` carries:
+
+| Field | Description |
+|-------|-------------|
+| `ResponseCode` | **`0` = success**, anything else is a failure; read `Description` for detail |
+| `LowProfileId` | The hosted-payment-page id; use with `TranzactionId` as the dedup key |
+| `TranzactionId` | Cardcom transaction id |
+| `ReturnValue` | Your own order id, echoed back. Not a status. |
+| `TranzactionInfo` | Nested object carrying `CardOwnerIdentityNumber` (teudat zehut), `NumberOfPayments`, `ApprovalNumber` |
+| `DocumentInfo` | Document details when Cardcom also issued the invoice |
+
+There is no `DealResponse` field in v11 (zero occurrences in the spec), and `InternalDealNumber` / `CardOwnerID` / `NumOfPayments` are legacy classic-API names that do not appear in the result object. A dedup key built from `InternalDealNumber` is always `undefined`, so the duplicate-invoice guard never fires. Use `TranzactionId`.
+
+Use the Cardcom API v11. `https://secure.cardcom.solutions/api/v11` is the **base path**, not a callable endpoint (it returns 404 on its own); append the operation, for example `POST https://secure.cardcom.solutions/api/v11/LowProfile/Create` to open a hosted payment page or `POST .../api/v11/Transactions/Transaction` for a direct charge. v11 also lets you register webhooks for document-creation events. URLs must be HTTPS and publicly routable (no `localhost`; use ngrok or Cloudflare Tunnel in dev). Full docs: `https://secure.cardcom.solutions/api/v11/DOCS`.
+
+## Tranzila
+
+Tranzila callbacks deliver GET parameters:
+
+```
+https://your-n8n.example.com/webhook/tranzila-callback?Response=000&index=12345&sum=100.00&currency=1
+```
+
+`Response=000` is approved. Currency: `1` = ILS, `2` = USD, `3` = GBP, `7` = EUR. `Rone` = installments.
+
+**Tranzila API v2** offers modern server-to-server (SAQ-D) plus iframe / hosted fields. Authentication uses an `X-tranzila-api-app-key` header (header confirmed via Stoplight API explorer at docs.tranzila.com). v2 supports Bit, tokenization, recurring billing, refunds, and 3D Secure (mandatory under SHVA rules). Prefer v2 over the legacy CGI pattern (`tranzila31.cgi`; the older `tranzila71dl.cgi` now 404s). Bit flow: server calls Tranzila v2, response includes a URL to embed in an iframe (QR code + phone push). See `https://docs.tranzila.com/` for the v2 documentation.
+
+## Grow by Meshulam
+
+Grow sends webhooks as POST. **Important:** the Grow API uses `multipart/form-data` (not JSON). After receiving a webhook, call `approveTransaction` to finalize the payment.
+
+Webhook payload includes: `webhookKey`, `transactionCode`, `transactionType`, `asmachta` (transaction reference), `paymentSum`, `paymentDate`, `fullName`, `payerPhone`, `payerEmail`, `cardSuffix`, `cardBrand`, `paymentsNum`.
+
+## Bit Payments
+
+Bit is Israel's most popular mobile payment method, available through Tranzila (API v2) and Grow by Meshulam, not as a standalone API. Via Tranzila v2: create a payment page with `bit: true`; the customer scans a QR code or is redirected to Bit. Via Grow: enable Bit in the merchant dashboard; Bit transactions appear in the same webhook flow with a different `transactionType`.
+
+
+
+---
+
+# Israeli SMS Gateways (moved from SKILL.md Step 2)
+
+## Israeli SMS Gateways
+
+| Gateway | Host | Auth | Best For |
+|---------|------|------|----------|
+| 019 Telzar | `019sms.co.il` | Bearer token, or username + password | Bulk marketing, transactional |
+| InforUMobile | `capi.inforu.co.il` | Bearer token (IP allowlist enforced) | OTP, transactional |
+| Nexmo/Vonage IL | `rest.nexmo.com` | API key + secret | International + local |
+
+019 Telzar example:
+
+```
+POST https://019sms.co.il/api
+Headers: Authorization: Bearer {{$env.SMS_019_TOKEN}}
+Body: { "from": "MyBusiness", "to": "{{$json.phone}}", "message": "{{$json.text}}" }
+```
+
+**019 returns HTTP 200 even when the send fails.** An auth failure comes back as `200 {"status":3,"message":"Username or password is incorrect or Expired and API token is invalid"}`, so an HTTP Request node with default settings treats it as success and the workflow continues with no SMS delivered. Enable **Always Output Data** on the node and branch on `$json.status` (0 = sent) with an IF node, not on the HTTP status code.
+
+InforUMobile enforces an IP allowlist in addition to the token: a request from an unlisted IP returns `401 {"StatusId": -2, "StatusDescription": "Authentication failed or illegal IP address"}`. Whitelist your n8n egress IP in the InforU dashboard alongside Cardcom and Tranzila (Step 5).
+
+Phone numbers must be international format `972XXXXXXXXX` (drop leading 0). Normalize in a Code node:
+
+```javascript
+const phone = $input.first().json.phone.replace(/[-\s]/g, '');
+const formatted = phone.startsWith('0') ? '972' + phone.slice(1)
+                : phone.startsWith('+972') ? phone.slice(1) : phone;
+return [{ json: { ...$input.first().json, phone: formatted } }];
+```
+
+## Before You Issue Anything: Three Israeli Rules That Gate the Whole Workflow
+
+**1. Not every business may issue a tax invoice.** An עוסק פטור (osek patur) may not issue a חשבונית מס (types 305 / 320) and may not charge VAT at all; they issue a קבלה or a חשבונית עסקה. Ask the business's VAT status before choosing a document type, and never hardcode 305/320. Building an osek patur a workflow that charges 18% VAT makes them charge tax unlawfully and produces an invalid document. Zero-rated cases (exports, services to a foreign resident) and the Eilat free-trade-zone exemption also change the rate, so `vat_type` / `vatType` is a per-transaction decision, not a constant.
+
+**2. Automated commercial messaging is regulated.** תיקון 40 לחוק התקשורת governs every SMS and WhatsApp send this skill can build: it requires prior consent from the recipient, identification of the sender, the word `פרסומת` on a commercial message, and a working opt-out in the same channel. Statutory damages reach 1,000 NIS per message with no proof of damage, which is exactly the exposure profile of a bulk loop. Meta's 24-hour window is a platform rule, not the legal one, and clearing it does not clear consent. Build the opt-out and the consent check into the workflow, not into a later phase.
+
+**3. The data these workflows touch is regulated personal data.** Teudat zehut from a payment callback, live bank credentials, and Hebrew transaction descriptions piped into a third-party LLM all fall under the Privacy Protection Law as amended (Amendment 13, in force August 2025) and the 2017 security regulations. Minimise what you persist (do not store a teudat zehut you do not need), treat the Google Sheet as a regulated database with a retention rule, and do not send identifiable customer data to a foreign model without a lawful basis.
+
+Also note the bookkeeping rules the API will not enforce for you: document numbering is sequential and immutable, a mistaken invoice is cancelled with a credit note (330) and never deleted, and the document itself must be retained for seven years, so persist the PDF rather than storing an expiring link.
+
+
+
+---
+
+# israeli-bank-scrapers in a Code Node (moved from SKILL.md Step 2)
+
+## israeli-bank-scrapers via Code Node
+
+n8n has no native Israeli bank node. Use a Code node to run `israeli-bank-scrapers` programmatically (it is a Node.js library, NOT a CLI). Requires Node.js >= 22.22.2.
+
+Two n8n 2.x settings gate this (see Step 6). `NODE_FUNCTION_ALLOW_EXTERNAL=israeli-bank-scrapers` so `require()` resolves, and a working route to the secrets.
+
+**The secret route needs care, because "use the credential store" is not implementable from inside a Code node.** The n8n Code node declares no credentials, so there is no `$credentials` to read there. `$env` is separately blocked by default in 2.x. That leaves three real options: set `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` **on the task runner** and keep the `$env` pattern; or pass the secret in from a preceding credential-bearing node, accepting that it then appears in execution data; or use external secrets on an enterprise plan. Pick one deliberately. The variables below are placeholders for whichever route you chose, not globals that exist by themselves.
+
+```javascript
+const { createScraper, CompanyTypes } = require('israeli-bank-scrapers');
+const scraper = createScraper({
+  companyId: CompanyTypes.hapoalim,
+  startDate: new Date('2026-01-01'),
+  combineInstallments: false,
+  showBrowser: false
+});
+// Hapoalim's login fields are userCode + password. Other banks differ, see below.
+const password = BANK_PASS; // Hapoalim uses userCode + password
+const result = await scraper.scrape({ userCode: BANK_USER, password });
+if (!result.success) throw new Error(`${result.errorType}: ${result.errorMessage}`);
+return result.accounts.flatMap(a => a.txns.map(txn => ({ json: txn })));
+```
+
+Supported scrapers (`CompanyTypes` members): hapoalim, leumi, discount, mercantile, mizrahi, otsarHahayal, beinleumi, union, massad, yahav, behatsdaa, beyahadBishvilha, oneZero, pagi, visaCal, max (formerly Leumi Card), isracard, amex.
+
+**Login fields vary per bank.** There is no universal credential shape. See the per-bank table in `references/israeli-api-endpoints.md`; read `SCRAPERS[companyId].loginFields` before wiring credentials.
+**Cloudflare blocking (2026):** Cloudflare's bot detection blocks headless browsers on Amex and Isracard. The maintained fork `@sergienko4/israeli-bank-scrapers` uses Camoufox as a workaround: `npm install @sergienko4/israeli-bank-scrapers`.
+
+Store credentials in n8n's credential store, never in workflow JSON.
+
+
+
+---
+
+# Hebrew Data Handling in n8n (moved from SKILL.md Step 3)
+
+## Handle Hebrew Data in n8n Nodes
+
+n8n Code nodes process strings as UTF-8, so Hebrew works natively. Problems arise at boundaries (API responses, CSV exports, email templates):
+
+| Issue | Where | Fix |
+|-------|-------|-----|
+| Reversed Hebrew in CSV | Spreadsheet File export | Set encoding to UTF-8-BOM |
+| Broken nikud | HTTP Request response | Set response encoding to UTF-8 explicitly |
+| Mixed RTL/LTR in emails | Send Email node | Wrap Hebrew in `<div dir="rtl">` |
+| Hebrew JSON keys | data.gov.il responses | Normalize keys in Code node |
+| Truncated Hebrew | String length checks | Use `Array.from(str).length`, not `.length` |
+
+**NIS currency formatting:**
+
+```javascript
+new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', minimumFractionDigits: 2 }).format(amount);
+// 12345.60  ->  12,345.60 ₪
+```
+
+**Date parsing:** Israeli docs use DD/MM/YYYY. Morning API returns ISO 8601, but government datasets often return DD/MM/YYYY:
+
+```javascript
+function parseIsraeliDate(s) { const [d, m, y] = s.split('/').map(Number); return new Date(y, m - 1, d); }
+const hebrewMonths = { 'ינואר': 0, 'פברואר': 1, 'מרץ': 2, 'אפריל': 3, 'מאי': 4, 'יוני': 5,
+                        'יולי': 6, 'אוגוסט': 7, 'ספטמבר': 8, 'אוקטובר': 9, 'נובמבר': 10, 'דצמבר': 11 };
+```
+
+
+
+---
+
+# שערי תשלום ישראליים (הועבר מ-SKILL.md שלב 5)
+
+## Cardcom
+
+Cardcom שולח POST עם נתונים בפורמט form-encoded:
+
+שדות ה-callback לפי סכימת `LowProfileResult` ב-v11 (`https://secure.cardcom.solutions/swagger/v11/swagger.json`):
+
+| שדה | תיאור |
+|-----|-------|
+| `ResponseCode` | **`0` = הצלחה**, כל ערך אחר הוא כישלון; הפירוט ב-`Description` |
+| `Description` | תיאור התגובה |
+| `LowProfileId` | מזהה דף התשלום המתארח |
+| `TranzactionId` | מזהה העסקה ב-Cardcom, וזהו מפתח הדה-דופליקציה הנכון |
+| `ReturnValue` | הערך שאתם עצמכם שלחתם, חוזר אליכם. **אינו סטטוס.** |
+| `TranzactionInfo` | אובייקט מקונן: `CardOwnerIdentityNumber` (תעודת זהות), `NumberOfPayments`, `ApprovalNumber`, סכום |
+| `DocumentInfo` | פרטי המסמך כאשר Cardcom הפיקה גם את החשבונית |
+
+השדה `DealResponse` אינו קיים ב-v11 כלל, והשדות `InternalDealNumber` / `CardOwnerID` / `NumOfPayments` הם שמות של ה-API הישן שאינם מופיעים באובייקט התוצאה.
+
+Code node לוולידציה אחרי ה-Webhook. שימו לב שהוא **אינו** מסיים את הבדיקה: אף שער ישראלי לא חותם על המטען, ולכן חובה לקרוא את העסקה מחדש מול Cardcom לפי `TranzactionId` לפני הפקת מסמך כלשהו.
+
+```javascript
+const data = $input.first().json.body ?? $input.first().json;
+
+if (Number(data.ResponseCode) !== 0) {
+  return [{ json: { success: false, error: data.Description, lowProfileId: data.LowProfileId } }];
+}
+
+const info = data.TranzactionInfo ?? {};
+return [{
+  json: {
+    success: true,
+    transactionId: data.TranzactionId,      // מפתח הדה-דופליקציה
+    orderId: data.ReturnValue,              // המזהה שלכם, לא סטטוס
+    installments: info.NumberOfPayments,
+    customerId: info.CardOwnerIdentityNumber
+  }
+}];
+```
+
+**ממשק Cardcom API v11:** לאינטגרציות חדשות, מגדירים את ה-webhook URL דרך Cardcom API v11 במקום לוח הבקרה הישן. הכתובת `https://secure.cardcom.solutions/api/v11` היא נתיב בסיס ולא נקודת קצה שאפשר לקרוא לה (היא מחזירה 404 בפני עצמה), ולכן מוסיפים אחריה את הפעולה, למשל `POST https://secure.cardcom.solutions/api/v11/LowProfile/Create` לפתיחת דף תשלום מתארח או `POST .../api/v11/Transactions/Transaction` לחיוב ישיר. נקודת ה-v11 גם מאפשרת רישום webhooks לאירועי יצירת מסמכים (קבלות, חשבוניות) בנוסף לקריאות חיוב. ה-webhook חייב להיות HTTPS וזמין לאינטרנט (לא `localhost`, השתמשו ב-ngrok או Cloudflare Tunnel בפיתוח). תיעוד מלא: `https://secure.cardcom.solutions/api/v11/DOCS`.
+
+## Tranzila
+
+Tranzila משתמש בתבנית callback עם פרמטרי GET:
+
+| שדה | תיאור | ערכים |
+|-----|-------|-------|
+| `Response` | קוד סטטוס | `000` = אושר, `001`-`999` = שגיאות |
+| `index` | אינדקס עסקה | מספרי |
+| `sum` | סכום שחויב | עשרוני (שקלים אם `currency=1`) |
+| `currency` | קוד מטבע | `1` = ILS, `2` = USD, `3` = GBP, `7` = EUR |
+| `Rone` | תשלומים | מספר |
+
+**Tranzila API v2:** Tranzila מציעה אינטגרציית server-to-server (SAQ-D) פלוס iframe ושדות מתארחים לציות PCI. אימות דרך header בשם `X-tranzila-api-app-key` (לא Basic Auth, לא פרמטרי query). ה-v2 API תומך בתשלומי ביט, טוקניזציה, חיוב חוזר, החזרים, ו-3D Secure (חובה לכרטיסי אשראי ישראליים לפי כללי שב"א). לאינטגרציות חדשות, עדיף v2 על פני תבנית ה-CGI הישנה (`tranzila31.cgi`, שכן `tranzila71dl.cgi` כבר מחזיר 404). זרימת ביט: השרת קורא ל-Tranzila v2, התגובה כוללת URL להטמעה ב-iframe (שמציג קוד QR וטלפון להתראת push). תיעוד: `https://docs.tranzila.com/`.
+
+## Grow by Meshulam
+
+Grow by Meshulam שולח התראות webhook כבקשות POST. **חשוב:** ה-API של Grow משתמש ב-`multipart/form-data` לבקשות (לא JSON). אחרי קבלת webhook, חובה לקרוא ל-`approveTransaction` כדי לסיים את העסקה.
+
+שדות ב-webhook payload:
+
+| שדה | תיאור |
+|-----|-------|
+| `webhookKey` | מפתח אימות webhook |
+| `transactionCode` | קוד עסקה ייחודי |
+| `transactionType` | סוג העסקה |
+| `asmachta` | מספר אסמכתא |
+| `paymentSum` | סכום שחויב |
+| `paymentDate` | תאריך התשלום |
+| `fullName` | שם מלא של הלקוח |
+| `payerPhone` | טלפון הלקוח |
+| `payerEmail` | אימייל הלקוח |
+| `cardSuffix` | 4 ספרות אחרונות של הכרטיס |
+| `cardBrand` | מותג הכרטיס (Visa, Mastercard וכו') |
+| `paymentsNum` | מספר תשלומים |
+
+Code node לעיבוד webhook של Grow ואישור:
+
+```javascript
+const data = $input.first().json;
+
+const payment = {
+  transactionCode: data.transactionCode,
+  asmachta: data.asmachta,
+  amount: parseFloat(data.paymentSum),
+  customerName: data.fullName,
+  customerPhone: data.payerPhone,
+  customerEmail: data.payerEmail,
+  installments: parseInt(data.paymentsNum) || 1
+};
+
+// חובה לקרוא ל-approveTransaction אחרי קבלת ה-webhook
+// זה נעשה ב-HTTP Request node הבא עם multipart/form-data
+return [{ json: payment }];
+```
+
+**רשימת IP לבנה:** Cardcom ו-Tranzila דורשים שה-IP של שרת ה-webhook יהיה ברשימה המורשית בלוח הבקרה שלהם. באירוח עצמי השתמשו ב-IP קבוע או reverse proxy עם כתובת יציאה קבועה.
+
+## תשלומי ביט
+
+ביט הוא אמצעי התשלום הנייד הפופולרי ביותר בישראל. תשלומי ביט זמינים דרך Tranzila (API v2) ו-Grow by Meshulam, לא כ-API עצמאי.
+
+ביט דרך Tranzila v2: יוצרים דף תשלום עם `bit: true` בבקשה. הלקוח סורק QR או מופנה לביט. ה-webhook callback משתמש באותם שדות כמו עסקאות כרטיס אשראי.
+
+ביט דרך Grow by Meshulam: מפעילים ביט בלוח הבקרה של Grow. עסקאות ביט מופיעות באותו תהליך webhook כמו עסקאות כרטיס, עם ערך `transactionType` שונה.
+
+
+
+---
+
+# טיפול בנתונים בעברית ב-n8n (הועבר מ-SKILL.md שלב 3)
+
+## טקסט RTL ב-Code Nodes
+
+ב-n8n צמתי Code מעבדים מחרוזות כ-UTF-8, אז עברית עובדת באופן טבעי. הבעיות מופיעות בממשקים: תגובות API, ייצוא CSV, תבניות מייל.
+
+| בעיה | איפה קורה | פתרון |
+|------|-----------|-------|
+| עברית הפוכה ב-CSV | ייצוא Spreadsheet File node | הגדרת encoding ל-UTF-8-BOM |
+| ניקוד שבור | פרסור תגובת HTTP Request | הגדרת encoding ל-UTF-8 מפורשות |
+| ערבוב RTL/LTR במיילים | Send Email node | עטיפת טקסט עברי ב-`<div dir="rtl">` |
+| מפתחות JSON בעברית | תגובות data.gov.il | נרמול מפתחות ב-Code node |
+| עברית קטועה | בדיקות אורך מחרוזת | שימוש ב-`Array.from(str).length` במקום `.length` |
+
+## פורמט מטבע שקלים
+
+Code node לעיצוב סכומים בשקלים:
+
+```javascript
+function formatNIS(amount) {
+  return new Intl.NumberFormat('he-IL', {
+    style: 'currency',
+    currency: 'ILS',
+    minimumFractionDigits: 2
+  }).format(amount);
+}
+
+// קלט:  12345.60
+// פלט: 12,345.60 ₪
+```
+
+**לגבי Morning API:** סכומים ב-API הם בשקלים עשרוניים (לא אגורות). `price: 50` זה 50.00 ש"ח. אין צורך להמיר אגורות לשקלים כשעובדים עם Morning API.
+
+## פרסור תאריכים ישראליים
+
+מסמכים ישראליים משתמשים בפורמט DD/MM/YYYY. חשוב לפרסר נכון:
+
+```javascript
+// פרסור תאריך ישראלי DD/MM/YYYY
+function parseIsraeliDate(dateStr) {
+  const [day, month, year] = dateStr.split('/').map(Number);
+  return new Date(year, month - 1, day);
+}
+
+// פרסור שמות חודשים בעברית (נפוץ במסמכי ממשלה)
+const hebrewMonths = {
+  'ינואר': 0, 'פברואר': 1, 'מרץ': 2, 'אפריל': 3,
+  'מאי': 4, 'יוני': 5, 'יולי': 6, 'אוגוסט': 7,
+  'ספטמבר': 8, 'אוקטובר': 9, 'נובמבר': 10, 'דצמבר': 11
+};
+```
+
+
+
+---
+
+# israeli-bank-scrapers ב-Code Node (הועבר מ-SKILL.md שלב 2)
+
+## israeli-bank-scrapers דרך Code Node
+
+ל-n8n אין node מובנה לבנקים ישראליים. משתמשים ב-Code node להרצת `israeli-bank-scrapers` בצורה פרוגרמטית. החבילה היא ספריית Node.js (לא כלי CLI), לכן חייבים להשתמש ב-`createScraper()`:
+
+**חשוב:** דורש Node.js >= 22.22.2 בסביבת n8n.
+
+שתי הגדרות ב-n8n 2.x חייבות להיות במקום לפני שהקוד הזה רץ בכלל (פירוט בשלב 6): הגדרת `NODE_FUNCTION_ALLOW_EXTERNAL=israeli-bank-scrapers` כדי ש-`require()` יצליח, ושליפת פרטי ההתחברות מ-credential store במקום מ-`$env` (גישה למשתני סביבה מתוך Code node חסומה כברירת מחדל ב-2.x).
+
+```javascript
+// ב-Code node (ב-n8n 2.0: רץ ב-task runner מבודד)
+const { createScraper, CompanyTypes } = require('israeli-bank-scrapers');
+
+const scraper = createScraper({
+  companyId: CompanyTypes.hapoalim,
+  startDate: new Date('2026-01-01'),
+  combineInstallments: false,
+  showBrowser: false
+});
+
+// שדות ההתחברות של הפועלים הם userCode ו-password. בבנקים אחרים השדות שונים.
+const credentials = {
+  userCode: BANK_USER,
+  password
+};
+const result = await scraper.scrape(credentials);
+
+if (result.success) {
+  return result.accounts.flatMap(account =>
+    account.txns.map(txn => ({ json: txn }))
+  );
+} else {
+  throw new Error(`Scraping failed: ${result.errorType} - ${result.errorMessage}`);
+}
+```
+
+סורקים נתמכים (חברי ה-enum בשם `CompanyTypes`): הפועלים (hapoalim), לאומי (leumi), דיסקונט (discount), מרכנתיל (mercantile), מזרחי (mizrahi), אוצר החייל (otsarHahayal), בינלאומי (beinleumi), יוניון (union), מסד (massad), יהב (yahav), בהצדעה (behatsdaa), ביחד בשבילה (beyahadBishvilha), oneZero, פאג"י (pagi), ויזה כאל (visaCal), מקס (max, לשעבר לאומי קארד), ישראכרט (isracard), אמקס (amex).
+
+**שדות ההתחברות שונים מבנק לבנק.** אין מבנה אחיד לפרטי ההתחברות. בדקו את `SCRAPERS[companyId].loginFields` לפני שמחברים credentials:
+
+| בנק | שדות נדרשים |
+|------|-------------|
+| הפועלים | `userCode`, `password` |
+| לאומי, מזרחי, אוצר החייל, מקס, ויזה כאל, יוניון, בינלאומי, מסד, יהב | `username`, `password` |
+| דיסקונט, מרכנתיל | `id`, `password`, `num` |
+| ישראכרט, אמקס | `id`, `card6Digits`, `password` |
+
+**חסימת Cloudflare (2026):** מתחילת 2026, Cloudflare חוסם דפדפנים headless באתרי אמקס וישראכרט. הפורק המתוחזק `@sergienko4/israeli-bank-scrapers` משתמש ב-Camoufox כפתרון עוקף. אם נתקלים בכשלונות סריקה מתמשכים עם ספקים אלה:
+
+```bash
+npm install @sergienko4/israeli-bank-scrapers
+```
+
+**אבטחה:** פרטי התחברות נשמרים ב-credential store של n8n, לא בתוך ה-workflow JSON. משתמשים במשתני סביבה לערכים רגישים.
+
+
+
+---
+
+# שערי SMS ישראליים (הועבר מ-SKILL.md שלב 2)
+
+## שערי SMS ישראליים
+
+| שער | שרת | אימות | מתאים ל |
+|-----|------|-------|---------|
+| 019 Telzar | `019sms.co.il` | Bearer token, או שם משתמש וסיסמה | שיווק המוני, הודעות עסקיות |
+| InforUMobile | `capi.inforu.co.il` | Bearer token (עם רשימת IP מורשים) | OTP, הודעות עסקיות |
+| Nexmo/Vonage IL | `rest.nexmo.com` | API key + secret | בינלאומי + מקומי |
+
+דוגמת 019 Telzar SMS ב-HTTP Request node:
+
+```
+Method: POST
+URL: https://019sms.co.il/api
+Headers:
+  Content-Type: application/json
+  Authorization: Bearer {{$env.SMS_019_TOKEN}}
+Body:
+{
+  "from": "MyBusiness",
+  "to": "{{$json.phone}}",
+  "message": "{{$json.text}}"
+}
+```
+
+**שער 019 מחזיר HTTP 200 גם כשהשליחה נכשלת.** כשל אימות חוזר כ-`200 {"status":3,"message":"Username or password is incorrect or Expired and API token is invalid"}`, כך ש-HTTP Request node בהגדרות ברירת המחדל מפרש את זה כהצלחה וה-workflow ממשיך בלי שנשלחה שום הודעה. מפעילים **Always Output Data** על ה-node ומסתעפים לפי `$json.status` (הערך 0 מציין שליחה מוצלחת) ב-IF node, ולא לפי קוד ה-HTTP.
+
+שער InforUMobile אוכף רשימת IP מורשים בנוסף לטוקן. פנייה מכתובת שאינה ברשימה מקבלת `401 {"StatusId": -2, "StatusDescription": "Authentication failed or illegal IP address"}`. מוסיפים את כתובת ה-IP היוצאת של n8n לרשימה בלוח הבקרה של InforU, לצד Cardcom ו-Tranzila (שלב 5).
+
+פורמט מספרי טלפון ישראליים: תמיד שולחים בפורמט בינלאומי `972XXXXXXXXX` (מורידים את ה-0 הפותח). Code node לפני ה-SMS node מטפל בזה:
+
+```javascript
+const phone = $input.first().json.phone;
+const cleaned = phone.replace(/[-\s]/g, '');
+const formatted = cleaned.startsWith('0')
+  ? '972' + cleaned.slice(1)
+  : cleaned.startsWith('+972')
+    ? cleaned.slice(1)
+    : cleaned;
+return [{ json: { ...$input.first().json, phone: formatted } }];
+```
+
+
+
+---
+
+# WhatsApp Business Cloud in n8n (detail)
+
+## WhatsApp Business Cloud
+
+WhatsApp is the dominant Israeli business messaging channel and n8n ships first-class nodes: **`n8n-nodes-base.whatsApp`** ("WhatsApp Business Cloud", typeVersion 1.1, credential `whatsAppApi`) for sending, and **`n8n-nodes-base.whatsAppTrigger`** for inbound messages. Message operations are Send, Send Template, and Send and Wait for Response; message types cover text, image, document, audio, video, location and contacts. A separate Media resource handles upload / URL-get / delete.
+
+Two Meta platform rules break these workflows in production, and neither is an n8n concern:
+
+- **The 24-hour customer service window.** A user messaging (or calling) your number opens a 24-hour window; inside it you may send free-form messages. Outside it, only a pre-approved template will deliver. A scheduled Israeli workflow, by definition, fires outside the window, so it must use Send Template.
+- **Templates need prior approval in one of three categories:** Marketing, Utility, Authentication. Approval takes real time and Hebrew templates are reviewed like any other, so approve the template before the workflow ships, not on launch day.
+
+Pricing is per delivered message (conversation-based pricing was replaced on July 1, 2025), so a fan-out loop costs money per item. Rate-limit deliberately.
+
+
+
+---
+
+# WhatsApp Business Cloud ב-n8n (פירוט)
+
+## WhatsApp Business Cloud
+
+וואטסאפ הוא ערוץ ההודעות העסקי הדומיננטי בישראל, ול-n8n יש צמתים ייעודיים: **`n8n-nodes-base.whatsApp`** ("WhatsApp Business Cloud", typeVersion 1.1, credential בשם `whatsAppApi`) לשליחה, ו-**`n8n-nodes-base.whatsAppTrigger`** לקליטת הודעות נכנסות. פעולות ההודעה הן Send, Send Template ו-Send and Wait for Response, וסוגי ההודעה כוללים טקסט, תמונה, מסמך, אודיו, וידאו, מיקום ואנשי קשר. משאב Media נפרד מטפל בהעלאה, קבלת URL ומחיקה.
+
+שני כללים של מטא שוברים את התהליכים האלה בפרודקשן, ושניהם לא בשליטת n8n:
+
+- **חלון שירות הלקוחות של 24 שעות.** משתמש ששולח לכם הודעה (או מתקשר) פותח חלון של 24 שעות שבתוכו אפשר לשלוח הודעות חופשיות. מחוצה לו רק תבנית מאושרת מראש תגיע ליעד. תהליך מתוזמן ישראלי, מעצם הגדרתו, רץ מחוץ לחלון, ולכן חייב להשתמש ב-Send Template.
+- **תבניות דורשות אישור מראש באחת משלוש קטגוריות:** Marketing, Utility, Authentication. האישור לוקח זמן אמיתי ותבניות בעברית נבדקות כמו כל תבנית אחרת, אז אשרו את התבנית לפני שהתהליך עולה לאוויר ולא ביום ההשקה.
+
+התמחור הוא לפי הודעה שנמסרה (התמחור לפי שיחה הוחלף ב-1.7.2025), ולכן לולאת פיזור עולה כסף על כל פריט. הגבילו קצב במכוון.
+
