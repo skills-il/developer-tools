@@ -68,10 +68,11 @@ class ArtifactoryClient:
         # fail on the first throttle. Retries are split across two sessions
         # because retrying is only safe for some of them.
         #
-        # self.session retries idempotent methods only. deploy_artifact streams an open file handle, so a retried PUT would
+        # self.session retries idempotent methods only. deploy_artifact
+        # streams an open file handle, so a retried PUT would
         # re-send a body already at EOF against the original Content-Length,
         # which can land a truncated artifact under a 201. POST is excluded
-        # here because creating a repo or promoting a build must not repeat.
+        # here because promoting a build must not repeat.
         #
         # self._read_session additionally retries POST, but on 429 ALONE and
         # never on 5xx: a 429 means the request was rejected without being
@@ -79,6 +80,8 @@ class ArtifactoryClient:
         # exactly the case where the server may have acted and only the
         # response failed. Only search_aql is routed through it.
         self._read_session = requests.Session()
+        # Snapshot, not a shared object: a future caller that refreshes the
+        # token by mutating self.session.headers must update both sessions.
         self._read_session.headers.update(self.session.headers)
         try:
             from requests.adapters import HTTPAdapter

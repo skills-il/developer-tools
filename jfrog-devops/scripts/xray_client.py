@@ -67,7 +67,8 @@ class XrayClient:
         # fail on the first throttle. Retries are split across two sessions
         # because retrying is only safe for some of them.
         #
-        # self.session retries idempotent methods only. This client issues no PUT and no upload; POST is excluded because
+        # self.session retries idempotent methods only. This client
+        # issues no PUT and no upload; POST is excluded because
         # creating a policy or watch, or triggering a scan, must not repeat if
         # the server processed the first request and only the response failed.
         #
@@ -78,6 +79,8 @@ class XrayClient:
         # response failed. get_artifact_summary, get_scan_status and get_violations are routed
         # through it: all three are reads that happen to use POST.
         self._read_session = requests.Session()
+        # Snapshot, not a shared object: a future caller that refreshes the
+        # token by mutating self.session.headers must update both sessions.
         self._read_session.headers.update(self.session.headers)
         try:
             from requests.adapters import HTTPAdapter
