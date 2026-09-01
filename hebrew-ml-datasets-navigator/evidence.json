@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "hebrew-ml-datasets-navigator",
-  "generated_at": "2026-05-20T00:00:00Z",
+  "generated_at": "2026-09-02T00:00:00Z",
   "claims": [
     {
       "claim_id": "ivrit-ai-org",
@@ -242,6 +242,210 @@
         "SKILL_HE.md"
       ],
       "verified_via": "curl (raw README / HuggingFace API / vendor site)"
+    },
+    {
+      "claim_id": "hebarabnlp-licence-undeclared",
+      "claim": "As of 2026-09 HebArabNlpProject/HebrewSentiment and HebArabNlpProject/HebNLI declare license: other with no license_name, and HebArabNlpProject/HebSummaries and biunlp/HeSum declare no licence field at all. An undeclared or unnamed licence is not a grant.",
+      "source_url": "https://huggingface.co/api/datasets/HebArabNlpProject/HebrewSentiment",
+      "raw_snippet": "\"license\": \"other\"",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/license-quick-guide.md",
+        "scripts/find_dataset.py"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "verified against the HuggingFace Hub API (huggingface.co/api/{models|datasets}/<id>) on 2026-09-02; the cardData.license / license_name / gated fields are quoted."
+    },
+    {
+      "claim_id": "ivrit-datasets-gated",
+      "claim": "24 of the 28 ivrit-ai datasets on the HuggingFace Hub are gated with auto-approval and carry license_name ivrit.ai; the four exceptions as of 2026-09 are ivrit-ai/jpress2, ivrit-ai/audio-v2-40s, ivrit-ai/tts-arena-preferences and ivrit-ai/jbd. At least one dataset (ivrit-ai/eval-whatsapp) carries license_name ivrit.ai-v2. The ivrit-ai MODELS are not gated.",
+      "source_url": "https://huggingface.co/api/datasets?author=ivrit-ai&limit=100",
+      "raw_snippet": "\"gated\": \"auto\"",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/dataset-catalog.md",
+        "references/license-quick-guide.md",
+        "scripts/find_dataset.py"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "Enumerated the whole org rather than generalising from one card, which is how the earlier version of this claim became a false universal. Counted gated!=false across all 28 dataset records returned by the org listing on 2026-09-02."
+    },
+    {
+      "claim_id": "dictalm-declared-licences",
+      "claim": "Declared licences on the dicta-il repos as of 2026-09: the DictaLM-3.0 24B and 1.7B families declare apache-2.0; the DictaLM-3.0 Nemotron-12B family declares license: other with license_name nvidia-open-model-license; all dictabert* models declare cc-by-4.0. The full DictaLM 3.0 family on the hub is 24 repos.",
+      "source_url": "https://huggingface.co/api/models/dicta-il/DictaLM-3.0-Nemotron-12B-Instruct",
+      "raw_snippet": "\"license_name\": \"nvidia-open-model-license\"",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/model-catalog.md",
+        "references/license-quick-guide.md"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "verified against the HuggingFace Hub API (huggingface.co/api/{models|datasets}/<id>) on 2026-09-02; the cardData.license / license_name / gated fields are quoted."
+    },
+    {
+      "claim_id": "culturax-no-declared-licence",
+      "claim": "uonlp/CulturaX is gated (gated: auto) and its HuggingFace metadata declares no licence field. The previously stated Apache 2.0 licence could not be verified.",
+      "source_url": "https://huggingface.co/api/datasets/uonlp/CulturaX",
+      "raw_snippet": "\"gated\": \"auto\"",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "verified against the HuggingFace Hub API (huggingface.co/api/{models|datasets}/<id>) on 2026-09-02; the cardData.license / license_name / gated fields are quoted."
+    },
+    {
+      "claim_id": "oscar-2301-gate-state",
+      "claim": "oscar-corpus/OSCAR-2301 is gated with manual approval, declares cc0-1.0 for the OSCAR distribution, and has a lastModified of 2025-08-06. No evidence was found for the previously stated claim that access was suspended pending legal clarification.",
+      "source_url": "https://huggingface.co/api/datasets/oscar-corpus/OSCAR-2301",
+      "raw_snippet": "\"gated\": \"manual\"",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "verified against the HuggingFace Hub API (huggingface.co/api/{models|datasets}/<id>) on 2026-09-02; the cardData.license / license_name / gated fields are quoted."
+    },
+    {
+      "claim_id": "crawl-corpora-odc-by",
+      "claim": "HuggingFaceFW/fineweb-2 and allenai/MADLAD-400 both declare the odc-by licence, which carries an attribution obligation on derived databases.",
+      "source_url": "https://huggingface.co/api/datasets/HuggingFaceFW/fineweb-2",
+      "raw_snippet": "\"license\": \"odc-by\"",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "verified against the HuggingFace Hub API (huggingface.co/api/{models|datasets}/<id>) on 2026-09-02; the cardData.license / license_name / gated fields are quoted."
+    },
+    {
+      "claim_id": "voxknesset",
+      "claim": "ivrit-ai/VoxKnesset is a large-scale longitudinal Hebrew speech dataset for aging speaker modelling, published on the Hub under the bespoke ivrit.ai licence and gated with auto-approval, last modified 2026-03-03. The accompanying paper is arXiv 2603.01270.",
+      "source_url": "https://arxiv.org/abs/2603.01270",
+      "raw_snippet": "VoxKnesset: A Large-Scale Longitudinal Hebrew Speech Dataset for Aging Speaker Modeling",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/dataset-catalog.md"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "Title read from the arXiv abstract page on 2026-09-02 (the arXiv export API returned no entries for any id, including a known-good control, so the abs page was used). Hub record verified via the datasets API: gated auto, license_name ivrit.ai."
+    },
+    {
+      "claim_id": "knesset-two-resources",
+      "claim": "Two distinct Knesset resources exist. ivrit-ai/knesset-plenums and ivrit-ai/knesset-committees are parliamentary AUDIO under the bespoke ivrit.ai licence and gated. HaifaCLGroup/KnessetCorpus is an annotated TEXT corpus of parliamentary proceedings, licensed cc-by-sa-4.0 and not gated. The accompanying paper is arXiv 2405.18115.",
+      "source_url": "https://arxiv.org/abs/2405.18115",
+      "raw_snippet": "The Knesset Corpus: An Annotated Corpus of Hebrew Parliamentary Proceedings",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "Title read from the arXiv abstract page on 2026-09-02. Licence and gating for both resources verified via the HuggingFace datasets API: HaifaCLGroup/KnessetCorpus license cc-by-sa-4.0 gated false; ivrit-ai/knesset-plenums license_name ivrit.ai gated auto."
+    },
+    {
+      "claim_id": "ivrit-tts-preferences",
+      "claim": "ivrit-ai/tts-arena-preferences is a Hebrew TTS preference dataset added to the Hub in August 2026 (lastModified 2026-08-28). It declares no licence and is not gated.",
+      "source_url": "https://huggingface.co/api/datasets/ivrit-ai/tts-arena-preferences",
+      "raw_snippet": "\"lastModified\": \"2026-08-28",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "verified against the HuggingFace Hub API (huggingface.co/api/{models|datasets}/<id>) on 2026-09-02; the cardData.license / license_name / gated fields are quoted."
+    },
+    {
+      "claim_id": "heq-mirror-etelis",
+      "claim": "Etelis/HeQ_v1 resolves on the HuggingFace Hub, declares cc-by-4.0 and is not gated, so it is commercially usable with attribution. The previously cited mirror pig4431/HeQ_v1 returns 404 and has been removed from this skill.",
+      "source_url": "https://huggingface.co/api/datasets/Etelis/HeQ_v1",
+      "raw_snippet": "\"license\": \"cc-by-4.0\"",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/dataset-catalog.md",
+        "scripts/find_dataset.py"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "verified against the HuggingFace Hub API (huggingface.co/api/{models|datasets}/<id>) on 2026-09-02; the cardData.license / license_name / gated fields are quoted."
+    },
+    {
+      "claim_id": "ivrit-models-undeclared-licence",
+      "claim": "Two ivrit.ai serving artefacts recommended by this skill, ivrit-ai/whisper-large-v3-turbo-onnx and ivrit-ai/yi-whisper-large-v3-ct2, declare no licence field on their model cards, so the undeclared-licence rule applies to them even though the organisation is permissive by design.",
+      "source_url": "https://huggingface.co/api/models/ivrit-ai/whisper-large-v3-turbo-onnx",
+      "raw_snippet": "\"modelId\": \"ivrit-ai/whisper-large-v3-turbo-onnx\"",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "references/license-quick-guide.md",
+        "references/model-catalog.md"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "cardData carries no license key on either repo. Note the org LIST endpoint omits cardData entirely, so per-id calls are the authoritative check for licence."
+    },
+    {
+      "claim_id": "opus-100-unknown-licence",
+      "claim": "Helsinki-NLP/opus-100 declares license: unknown on its HuggingFace card.",
+      "source_url": "https://huggingface.co/api/datasets/Helsinki-NLP/opus-100",
+      "raw_snippet": "\"license\": [\n      \"unknown\"\n    ]",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "scripts/find_dataset.py"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "Replaced the script's previous unsourced 'mostly permissive' description."
+    },
+    {
+      "claim_id": "parashoot-hf-mirror",
+      "claim": "ParaShoot has no public HuggingFace repo at omrikeren/ParaShoot (the API returns 401, i.e. no public repo); the source is the GitHub repo github.com/omrikeren/ParaShoot and the loadable HuggingFace mirror is imvladikon/parashoot, which declares no licence.",
+      "source_url": "https://huggingface.co/api/datasets/imvladikon/parashoot",
+      "raw_snippet": "\"id\": \"imvladikon/parashoot\"",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/license-quick-guide.md"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z"
+    },
+    {
+      "claim_id": "dicta-corpora-odc-by",
+      "claim": "dicta-il/hebrew-space-restoration-corpus and dicta-il/dictalm2.0-quant-calib-dataset both declare the odc-by licence on the HuggingFace Hub and are not gated.",
+      "source_url": "https://huggingface.co/api/datasets/dicta-il/hebrew-space-restoration-corpus",
+      "raw_snippet": "\"license\": \"odc-by\"",
+      "fetched_at": "2026-09-02T00:00:00Z",
+      "appears_in": [
+        "scripts/find_dataset.py"
+      ],
+      "verified_via": "api",
+      "verified_at": "2026-09-02T00:00:00Z",
+      "source_note": "The script previously hedged one of these as 'Check dataset card' while hardcoding odc-by for its sibling, i.e. identical Hub licences given opposite treatment in one file."
     }
   ]
 }

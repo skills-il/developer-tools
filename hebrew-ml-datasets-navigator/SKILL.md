@@ -19,10 +19,10 @@ Different Hebrew ML tasks need different datasets. Match your task to a dataset 
 | Task | Primary data type | Dataset families to check first |
 |------|-------------------|--------------------------------|
 | Speech-to-text (Hebrew ASR) | Audio + transcripts | ivrit.ai (crowd-transcribe, crowd-recital, audio-v2) |
-| Text-to-speech (Hebrew TTS) | Text + studio audio | Public-domain audio with permissive licenses (limited; often requires custom recording) |
+| Text-to-speech (Hebrew TTS) | Text + studio audio | Still thin, and usually needs custom recording, but see `ivrit-ai/tts-arena-preferences` (Hebrew TTS preference judgements, no licence declared) |
 | Hebrew LLM pre-training | Large Hebrew text corpus | Dicta's corpora, `allenai/MADLAD-400` Hebrew subset, `oscar-corpus/OSCAR-2301` Hebrew, `uonlp/CulturaX` Hebrew slice, `HuggingFaceFW/fineweb-2` `heb_Hebr` filter, mC4 (Hebrew quality is weak), Hebrew Wikipedia, Knesset Plenums |
 | Hebrew LLM instruction tuning | Prompt-response pairs in Hebrew | Dicta instruction datasets, translated Alpaca-style datasets, custom |
-| Reading comprehension / QA | Text + Q&A pairs | HeQ (`Etelis/HeQ_v1` HF mirror, canonical at `github.com/NNLP-IL/Hebrew-Question-Answering-Dataset`); `omrikeren/ParaShoot` (~3K few-shot QA examples) |
+| Reading comprehension / QA | Text + Q&A pairs | HeQ (`Etelis/HeQ_v1` HF mirror, canonical at `github.com/NNLP-IL/Hebrew-Question-Answering-Dataset`); ParaShoot (~3K few-shot QA examples; source repo `github.com/omrikeren/ParaShoot`, loadable HF mirror `imvladikon/parashoot`, which declares no licence) |
 | Sentiment classification | Hebrew text + labels | HebrewSentiment (`HebArabNlpProject/HebrewSentiment`) |
 | Natural language inference | Hebrew premise-hypothesis pairs | HebNLI (`HebArabNlpProject/HebNLI`) |
 | Named entity recognition | Hebrew text + entity tags | Dicta NER datasets, historical NNLP-IL releases |
@@ -44,69 +44,90 @@ Bookmark and subscribe to updates from these organizations. They are the authori
 Non-profit focused on Hebrew speech resources. As of 2025-2026 they host the world's largest public Hebrew audio corpus (20,000+ hours) under permissive licenses that explicitly allow commercial training.
 
 Key artifacts:
-- `ivrit-ai/crowd-transcribe-v5` ,  latest crowd-sourced Hebrew ASR dataset
-- `ivrit-ai/crowd-recital` ,  Hebrew audio with careful recital
-- `ivrit-ai/audio-v2` and `audio-v2-opus` ,  bulk Hebrew audio corpus
-- `ivrit-ai/whisper-large-v3` ,  Hebrew-tuned Whisper ASR (full precision)
-- `ivrit-ai/whisper-large-v3-ct2` ,  CTranslate2-optimized for fast inference
-- `ivrit-ai/whisper-large-v3-turbo-ct2` ,  turbo variant, fastest
-- `ivrit-ai/whisper-large-v3-ggml` ,  GGML-quantized for CPU inference
-- `ivrit-ai/pyannote-speaker-diarization-3.1` ,  Hebrew-tuned speaker diarization
-- `ivrit-ai/yi-whisper-large-v3` ,  Yiddish ASR
-- Knesset Plenums dataset ,  Hebrew parliamentary speeches (large-scale)
+- `ivrit-ai/crowd-transcribe-v5` - latest crowd-sourced Hebrew ASR dataset
+- `ivrit-ai/crowd-recital` - Hebrew audio with careful recital
+- `ivrit-ai/audio-v2` and `audio-v2-opus` - bulk Hebrew audio corpus
+- `ivrit-ai/whisper-large-v3` - Hebrew-tuned Whisper ASR (full precision)
+- `ivrit-ai/whisper-large-v3-ct2` - CTranslate2-optimized for fast inference
+- `ivrit-ai/whisper-large-v3-turbo-ct2` - turbo variant, fastest
+- `ivrit-ai/whisper-large-v3-ggml` - GGML-quantized for CPU inference
+- `ivrit-ai/pyannote-speaker-diarization-3.1` - Hebrew-tuned speaker diarization
+- `ivrit-ai/yi-whisper-large-v3` - Yiddish ASR
+- `ivrit-ai/knesset-plenums` and `ivrit-ai/knesset-committees` - Hebrew parliamentary **audio**
+- `ivrit-ai/VoxKnesset` - large-scale longitudinal Hebrew speech dataset built for aging-speaker modelling (arXiv 2603.01270), added March 2026
+- `ivrit-ai/jpress2` - historical Jewish press archive (no licence declared, and not gated)
+- `ivrit-ai/eval-d1` and `ivrit-ai/eval-whatsapp` - held-out ASR evaluation sets; use these rather than carving a test split out of the training corpora
 
-License posture: permissive, commercial use explicitly allowed. Always check the specific dataset card for attribution requirements.
+License posture: the ivrit.ai licence is bespoke (the card reports `license_name: ivrit.ai`, and at least one dataset carries `ivrit.ai-v2`), permissive by design and intended to allow commercial training. It is not an OSI licence, so read it rather than mapping it onto CC-BY.
+
+**Gating (this breaks pipelines):** **most** ivrit.ai *datasets* are gated with auto-approval, while the *models* are not gated at all. Check the individual card rather than assuming either way. As a snapshot of why that matters: as of 2026-09 it was 24 of 28, the four exceptions being `jpress2`, `audio-v2-40s`, `tts-arena-preferences` and `jbd`. **Both the count and those four names go stale** - the org is actively publishing, and a dataset that is ungated today can be gated later. So the model half of a build downloads fine and the dataset half returns 401 on a machine whose token has not accepted the gate. Acceptance is per HuggingFace account, so a laptop can work while a shared training account fails. Click Agree on each dataset page with the same account whose `HF_TOKEN` the trainer uses, and note that accepting is the act that binds you to the licence terms.
 
 #### Dicta: The Israel Center for Text Analysis (`huggingface.co/dicta-il`)
 
 The leading Hebrew LLM and BERT organization in Israel. Publishes both base and instruction-tuned models plus BERT variants for downstream tasks.
 
 Key artifacts (verified on huggingface.co/dicta-il):
-- `dicta-il/DictaLM-3.0-24B-Base` ,  flagship Hebrew base LLM (24B, Mistral-adapted)
-- `dicta-il/DictaLM-3.0-24B-Thinking` ,  reasoning-tuned 24B variant
-- `dicta-il/DictaLM-3.0-Nemotron-12B-Instruct` ,  instruction-tuned mid-size (12B, Nemotron base)
-- `dicta-il/DictaLM-3.0-1.7B-Thinking-GGUF` ,  small reasoning model, runnable on consumer hardware
+- `dicta-il/DictaLM-3.0-24B-Base` - flagship Hebrew base LLM (24B, Mistral-adapted)
+- `dicta-il/DictaLM-3.0-24B-Thinking` - reasoning-tuned 24B variant
+- `dicta-il/DictaLM-3.0-Nemotron-12B-Instruct` - instruction-tuned mid-size (12B, Nemotron base)
+- `dicta-il/DictaLM-3.0-1.7B-Thinking-GGUF` - small reasoning model, runnable on consumer hardware
 - Quantized variants for production: `*-FP8`, `*-W4A16`, `*-GGUF` (e.g. `DictaLM-3.0-Nemotron-12B-Instruct-FP8`, `DictaLM-3.0-24B-Thinking-GGUF`)
-- `dicta-il/dictalm2.0-instruct` ,  previous generation, 7B Mistral-7B-based, instruct fine-tuned (Zephyr recipe). Also `dictalm2.0-instruct-GGUF`, `-AWQ`, `-GPTQ`
-- `dicta-il/dictabert` ,  baseline Hebrew BERT (fill-mask)
-- `dicta-il/dictabert-seg` ,  Hebrew word segmentation
-- `dicta-il/dictabert-morph` ,  Hebrew morphological analysis
-- `dicta-il/dictabert-heq` ,  fine-tuned for Hebrew reading comprehension
-- `dicta-il/dictabert-sentiment` ,  Hebrew sentiment classification
-- `dicta-il/neodictabert-bilingual-embed` ,  Hebrew-English sentence embeddings
+- `dicta-il/dictalm2.0-instruct` - previous generation, 7B Mistral-7B-based, instruct fine-tuned (Zephyr recipe). Also `dictalm2.0-instruct-GGUF`, `-AWQ`, `-GPTQ`
+- `dicta-il/dictabert` - baseline Hebrew BERT (fill-mask)
+- `dicta-il/dictabert-seg` - Hebrew word segmentation
+- `dicta-il/dictabert-morph` - Hebrew morphological analysis
+- `dicta-il/dictabert-heq` - fine-tuned for Hebrew reading comprehension
+- `dicta-il/dictabert-sentiment` - Hebrew sentiment classification
+- `dicta-il/neodictabert-bilingual-embed` - Hebrew-English sentence embeddings
 
-License posture: check each model card individually. Many permit commercial use but with attribution. DictaLM 3.0 sizes derive from different base models (Mistral for the 24B, NVIDIA Nemotron for the 12B, smaller variants vary) which inherit their upstream licenses.
+License posture (declared on the repos as of 2026-09, not inferred from the base models):
+- **24B family and 1.7B family: `apache-2.0`.** Dicta declares Apache on its own repos, so there is no licence hunt to do for these.
+- **Nemotron-12B family: `license: other`, `license_name: nvidia-open-model-license`.** This is the one variant to route past legal before shipping.
+- **All `dictabert*` models: `cc-by-4.0`.**
+
+Dicta declaring Apache on an adapted base is Dicta setting the terms of *its* distribution. If you are redistributing weights rather than serving outputs, verify the upstream base-model grant as well. The full DictaLM 3.0 family on the hub is 24 repos: 1.7B, 24B and Nemotron-12B, in Base / Instruct / Thinking variants where applicable, each with FP8, W4A16 and GGUF quantizations.
 
 #### Israeli National NLP Program (`huggingface.co/HebArabNlpProject`)
 
 National initiative for Hebrew and Arabic NLP infrastructure, sponsored by DDR&D IMOD and supported by Dicta and Webiks.
 
 Key artifacts:
-- `HebArabNlpProject/HebrewSentiment` ,  labeled Hebrew sentiment samples across train/validation/test splits; check the dataset card for current license and exact sample counts before commercial use
-- `HebArabNlpProject/HebNLI` ,  Hebrew natural language inference
+- `HebArabNlpProject/HebrewSentiment` - labeled Hebrew sentiment samples across train/validation/test splits; check the dataset card for current license and exact sample counts before commercial use
+- `HebArabNlpProject/HebNLI` - Hebrew natural language inference
 - Paraphrase datasets, NER datasets, and other Hebrew benchmarks
 
-License posture: generally permissive with CC-BY-4.0 or similar. Most are commercial-friendly with attribution.
+License posture: **do not assume CC-BY.** As of 2026-09, `HebrewSentiment` and `HebNLI` declare `license: other` with no named licence, and `HebSummaries` declares no licence field at all. That is not a grant. Treat an undeclared or unnamed licence as all rights reserved, and obtain written permission from the depositor (via the HuggingFace Community tab or NNLP-IL) before any commercial training. Log the reply.
 
 #### NNLP-IL on GitHub (`github.com/NNLP-IL`)
 
 Resource curation and benchmark dataset hosting.
 
 Key repositories:
-- `NNLP-IL/Hebrew-Resources` ,  comprehensive list of Hebrew NLP datasets, models, tools
-- `NNLP-IL/Hebrew-Question-Answering-Dataset` ,  HeQ source repo
-- `NNLP-IL/HebNLI` ,  HebNLI source repo
-- `NNLP-IL/NNLP-IL` ,  program meta-repository
+- `NNLP-IL/Hebrew-Resources` - comprehensive list of Hebrew NLP datasets, models, tools
+- `NNLP-IL/Hebrew-Question-Answering-Dataset` - HeQ source repo
+- `NNLP-IL/HebNLI` - HebNLI source repo
+- `NNLP-IL/NNLP-IL` - program meta-repository
+
+#### Two different Knesset resources, two different licences
+
+These are commonly confused because they share a name and a subject.
+
+| Resource | What it is | Licence | Gated |
+|---|---|---|---|
+| `ivrit-ai/knesset-plenums`, `ivrit-ai/knesset-committees`, `ivrit-ai/VoxKnesset` | Parliamentary **audio** published by ivrit.ai | bespoke `ivrit.ai` | Yes (auto) |
+| `HaifaCLGroup/KnessetCorpus` | Annotated **text** corpus of parliamentary proceedings, an academic release (arXiv 2405.18115) | `cc-by-sa-4.0` | No |
+
+The ShareAlike term on the Haifa text corpus is the one to notice: CC-BY-**SA** propagates to derived databases, which is a materially different obligation from the CC-BY the rest of this skill discusses. Do not inherit ivrit.ai's permissive posture onto the text corpus, or the Haifa licence onto the audio.
 
 #### Multilingual web-scale corpora with Hebrew slices
 
 Use these for LLM pre-training when you need scale that no Hebrew-only corpus can provide. Always filter to the Hebrew-script subset and re-deduplicate against your domain data.
 
-- `uonlp/CulturaX` ,  6.3T tokens across 167 languages, combining mC4 v3.1.0 with OSCAR releases through 2023-01. Heavy cleaning and deduplication. Pull the Hebrew subset by language code. Apache 2.0 (terms tied to the underlying mC4/OSCAR licenses; check before commercial training).
-- `HuggingFaceFW/fineweb-2` ,  ~20TB across 1,868 language-script pairs. Hebrew available as `heb_Hebr`. Higher-quality filtering than CulturaX. Sourced from CommonCrawl 2013 to April 2024.
-- `allenai/MADLAD-400` ,  document-level multilingual corpus across 419 languages. Two variants: noisy (LangID only) and clean (filtered). Hebrew is included; pull by language code.
-- `oscar-corpus/OSCAR-2301` ,  CommonCrawl-derived multilingual corpus, Hebrew slice available. Note `OSCAR-2301` is gated behind a HuggingFace agreement, and as of mid-2026 access is **temporarily SUSPENDED** (the maintainers paused new access grants pending a legal clarification). Use `uonlp/CulturaX` (also gated, but grantable) or `HuggingFaceFW/fineweb-2` for the same Hebrew web-scale need until OSCAR access reopens.
-- `mC4` (Hebrew slice) ,  not deprecated, but the Hebrew partition has been criticized for noisier text and weaker filtering than newer corpora. Prefer FineWeb-2 or CulturaX where you can.
+- `uonlp/CulturaX` - 6.3T tokens across 167 languages, combining mC4 v3.1.0 with OSCAR releases through 2023-01. Heavy cleaning and deduplication. Pull the Hebrew subset by language code. Gated (auto-approval). **The HuggingFace metadata declares no licence**, so nothing here is pre-cleared: the composite terms follow the upstream mC4 and OSCAR corpora, and neither confers rights in the crawled source pages. Read the card after the gate is granted and take it to counsel before commercial pre-training.
+- `HuggingFaceFW/fineweb-2` - ~20TB across 1,868 language-script pairs. Hebrew available as `heb_Hebr`. Higher-quality filtering than CulturaX. Sourced from CommonCrawl 2013 to April 2024. Licensed **ODC-BY**, which carries an attribution obligation on derived databases, not just on the model card.
+- `allenai/MADLAD-400` - document-level multilingual corpus across 419 languages. Two variants: noisy (LangID only) and clean (filtered). Hebrew is included; pull by language code. Licensed **ODC-BY**, same attribution obligation as FineWeb-2.
+- `oscar-corpus/OSCAR-2301` - CommonCrawl-derived multilingual corpus, Hebrew slice available. Gated with **manual** approval (the card declares CC0-1.0 for the OSCAR distribution itself, which does not extend to the crawled pages). The repo has not been modified since 2025-08-06 and approval latency is widely reported as long or unanswered, so do not put it on a project critical path: submit the request if you want it, and build against `uonlp/CulturaX` or `HuggingFaceFW/fineweb-2` meanwhile. Re-check the card for the current state rather than trusting any second-hand claim about the gate, including this one.
+- `mC4` (Hebrew slice) - not deprecated, but the Hebrew partition has been criticized for noisier text and weaker filtering than newer corpora. Prefer FineWeb-2 or CulturaX where you can.
 
 Always re-tokenize and re-deduplicate when combining corpora; CulturaX already incorporates mC4 + OSCAR through 2023, so layering them on top creates substantial duplication.
 
@@ -133,7 +154,7 @@ A "Hebrew dataset" is not homogeneous. Before training on it, understand what ki
 | Spoken / colloquial | Podcasts, YouTube, WhatsApp corpora | Conversational AI, voice interfaces, customer support |
 | Academic / formal | Dicta academic corpora, legal texts | Legal, scientific, government applications |
 | Religious / classical | Tanakh, Talmud, rabbinic texts | Religious tools, historical text processing |
-| Knesset plenary speech | Parliamentary records (via ivrit.ai) | Political NLP, civic tech, sentiment on public discourse |
+| Knesset plenary speech | Parliamentary records: `ivrit-ai/knesset-plenums` for audio, `HaifaCLGroup/KnessetCorpus` for annotated text | Political NLP, civic tech, sentiment on public discourse |
 | Mixed Hebrew-English | Tech discussions, code-switching corpora | Startup-facing products, developer tools |
 
 A customer-support chatbot trained only on Wikipedia will feel robotic. A religious-text model trained only on spoken podcasts will miss the entire target domain. Match register to use case.
@@ -145,13 +166,31 @@ For many tasks, the best approach is to use a published model as a starting poin
 | Task | Starting model | Fine-tune on | Notes |
 |------|----------------|--------------|-------|
 | Sentiment | `dicta-il/dictabert` | `HebArabNlpProject/HebrewSentiment` | Dicta published `dictabert-sentiment` using exactly this recipe |
-| QA / reading comprehension | `dicta-il/dictabert` | `pig4431/HeQ_v1` | Dicta published `dictabert-heq` using exactly this recipe |
+| QA / reading comprehension | `dicta-il/dictabert` | `Etelis/HeQ_v1` | Dicta published `dictabert-heq` using exactly this recipe |
 | Hebrew ASR | `ivrit-ai/whisper-large-v3` | Your domain-specific audio | Use the turbo-ct2 variant in production for latency |
 | Yiddish ASR | `ivrit-ai/yi-whisper-large-v3` | Your Yiddish audio | Tight niche; limited data |
 | Hebrew LLM instruction-following | `dicta-il/DictaLM-3.0-Nemotron-12B-Instruct` | Your instruction pairs | Use LoRA to save compute |
 | Hebrew sentence embeddings | `dicta-il/neodictabert-bilingual-embed` | Your pairs | Strong Hebrew-English bilingual baseline |
 
-### Step 6: Verify before training
+### Step 6: Hebrew-specific data hygiene
+
+These are the defects that silently degrade a Hebrew training run. They are invisible in a terminal and survive most generic cleaning pipelines.
+
+**Script and orthography**
+- **Niqqud** (vowel points, Unicode U+05B0 to U+05C7) is present in religious and poetic corpora and absent from web text. Decide once whether to strip it and apply that decision to every corpus you mix, otherwise the same word appears as two unrelated token sequences.
+- **Final (sofit) forms** - ך ם ן ף ץ - are distinct codepoints from their medial forms. Any exact-match metric, dedup hash or vocabulary comparison treats them as different characters, which is part of why Exact Match is brittle on Hebrew QA.
+- **Geresh and gershayim** (׳ U+05F3, ״ U+05F4) mark acronyms and abbreviations and are routinely replaced by ASCII `'` and `"` during scraping. Normalise deliberately, in one direction.
+- **Maqaf** (־ U+05BE) is a Hebrew joiner, not an ASCII hyphen.
+- **Subword fertility**: multilingual tokenizers split Hebrew into noticeably more subword tokens per word than a Hebrew-native vocabulary does. That is a throughput and context-cost decision as well as a quality one, and it is a reason to prefer a Hebrew-vocabulary model such as DictaBERT over a general multilingual encoder for Hebrew-only workloads. Measure fertility on your own corpus before committing.
+
+**Bidirectional text**
+- Scraped Hebrew frequently carries invisible Unicode bidi controls (U+200E, U+200F, and the embedding and override characters U+202A to U+202E). They survive HTML extraction and become stray tokens.
+- Strip them before hashing. The de-duplication this skill recommends elsewhere (sha256 of normalised text) silently fails when half a corpus carries stray marks, because identical text hashes differently.
+- Legacy PDF and HTML sources sometimes store Hebrew in visual rather than logical order, producing reversed strings that look plausible in a terminal and are garbage to a model. Spot-check by reading samples in a proper RTL renderer, not a log file.
+
+Apply normalisation before dedup, and record the exact normalisation in your data card, since it determines whether your numbers are comparable to anyone else's.
+
+### Step 7: Verify before training
 
 Before committing compute to fine-tuning:
 
@@ -163,31 +202,31 @@ Before committing compute to fine-tuning:
 6. Check the license compatibility for your specific commercial use
 7. Identify attribution requirements and plan how to comply
 
-### Step 7: Missing benchmarks for Hebrew
+### Step 8: Missing benchmarks for Hebrew
 
-The Hebrew NLP ecosystem has gaps. Note that the DictaLM 3.0 release (Feb 2026) shipped its own benchmark suite covering Translation, Summarization, Winograd-style schemas, Israeli Trivia, and Hebrew Diacritization, narrowing the gap for those tasks. The list below is what is still missing as of May 2026: if your task is in this list, expect to either build evaluation data yourself or pair the closest existing benchmark with domain-specific human evaluation.
+The Hebrew NLP ecosystem has gaps. Note that the DictaLM 3.0 release (Feb 2026) shipped its own benchmark suite covering Translation, Summarization, Winograd-style schemas, Israeli Trivia, and Hebrew Diacritization, narrowing the gap for those tasks. The list below is what is still missing as of September 2026: if your task is in this list, expect to either build evaluation data yourself or pair the closest existing benchmark with domain-specific human evaluation.
 
-- **Hebrew safety / red-team evals** ,  no public Hebrew counterpart to ToxicChat, HarmBench. Build internal red-team prompts.
-- **Hebrew code generation** ,  no Hebrew-language docstring or comment benchmark. Use English HumanEval/MBPP and accept the language mismatch.
-- **Hebrew long-context evals** ,  no Hebrew Needle-in-a-Haystack or LongBench. Construct internally from Hebrew Wikipedia or Knesset transcripts.
-- **Hebrew tool-use / function-calling** ,  no public Hebrew benchmark. Translate BFCL prompts to Hebrew if needed.
-- **Hebrew preference / RLHF data** ,  scarce. Most Hebrew-aligned preference signal is private (Dicta, AI21, Hebrew-Mistral teams).
-- **Spoken Hebrew dialogue evals** ,  ivrit.ai covers ASR but there is no public dialogue-quality benchmark. Build internal eval from real conversations.
-- **Hebrew multimodal (vision-language)** ,  almost nothing public. Document understanding for Hebrew documents is largely covered only by commercial OCR + translation pipelines.
+- **Hebrew safety / red-team evals** - no public Hebrew counterpart to ToxicChat, HarmBench. Build internal red-team prompts.
+- **Hebrew code generation** - no Hebrew-language docstring or comment benchmark. Use English HumanEval/MBPP and accept the language mismatch.
+- **Hebrew long-context evals** - no Hebrew Needle-in-a-Haystack or LongBench. Construct internally from Hebrew Wikipedia or Knesset transcripts.
+- **Hebrew tool-use / function-calling** - no public Hebrew benchmark. Translate BFCL prompts to Hebrew if needed.
+- **Hebrew preference / RLHF data** - still scarce for text. Most Hebrew-aligned preference signal is private (Dicta, AI21, Hebrew-Mistral teams). One public exception is `ivrit-ai/tts-arena-preferences` (added 2026-08), which is speech-synthesis preference data, not text alignment.
+- **Spoken Hebrew dialogue evals** - ivrit.ai covers ASR but there is no public dialogue-quality benchmark. Build internal eval from real conversations.
+- **Hebrew multimodal (vision-language)** - almost nothing public. Document understanding for Hebrew documents is largely covered only by commercial OCR + translation pipelines.
 
 Known to exist but limited:
-- **HEBREW-MMLU** ,  Hebrew-translated MMLU referenced by the Open Hebrew LLM Leaderboard ecosystem; multiple community translations exist with different qualities. Verify the active mirror before publishing comparable numbers. `openai/MMMLU` covers 14 languages but Hebrew is not in that official set.
-- **Hebrew Winograd** ,  community port of Winograd Schema Challenge, fewer than 300 items. High variance in single-run evals.
+- **HEBREW-MMLU** - Hebrew-translated MMLU referenced by the Open Hebrew LLM Leaderboard ecosystem; multiple community translations exist with different qualities. Verify the active mirror before publishing comparable numbers. `openai/MMMLU` covers 14 languages but Hebrew is not in that official set.
+- **Hebrew Winograd** - community port of Winograd Schema Challenge, fewer than 300 items. High variance in single-run evals.
 
-### Step 8: Academic Hebrew NLP resources
+### Step 9: Academic Hebrew NLP resources
 
 Beyond ivrit.ai, Dicta, and the Israeli National NLP Program, several university labs release Hebrew NLP work that is worth tracking:
 
-- **BIU NLP Lab (Bar-Ilan University)** ,  group behind HeSum (`biunlp/HeSum`), original AlephBERT, and many Hebrew tagging benchmarks. Papers and resources at `nlp.biu.ac.il`.
-- **Open University of Israel** ,  Hebrew corpora and historical text resources (e.g. Knesset corpora prior to ivrit.ai's release).
-- **Technion / NLPH Lab** ,  Hebrew NLP papers, Hebrew tokenization and morphology research.
-- **Hebrew University of Jerusalem (HUJI)** ,  Open University collaborations on Hebrew syntax, morphology, and historical Hebrew. The original Winograd-HE port (vshwartz) traces back here.
-- **Reichman University / IDC NLP** ,  occasional Hebrew benchmark releases tied to industry collaborations.
+- **BIU NLP Lab (Bar-Ilan University)** - group behind HeSum (`biunlp/HeSum`), original AlephBERT, and many Hebrew tagging benchmarks. Papers and resources at `nlp.biu.ac.il`.
+- **Open University of Israel** - Hebrew corpora and historical text resources (e.g. Knesset corpora prior to ivrit.ai's release).
+- **Technion / NLPH Lab** - Hebrew NLP papers, Hebrew tokenization and morphology research.
+- **Hebrew University of Jerusalem (HUJI)** - Open University collaborations on Hebrew syntax, morphology, and historical Hebrew. The original Winograd-HE port (vshwartz) traces back here.
+- **Reichman University / IDC NLP** - occasional Hebrew benchmark releases tied to industry collaborations.
 
 Tracking strategy: subscribe to the `NNLP-IL/Hebrew-Resources` repo for community curation; for primary releases follow the labs' own pages and the authors on Hugging Face.
 
@@ -199,7 +238,7 @@ User says: "We need to classify sentiment in Hebrew customer support messages fo
 
 Actions:
 1. Task: sentiment classification on conversational Hebrew
-2. Check `HebArabNlpProject/HebrewSentiment` ,  Hebrew sentiment samples across train/validation/test, includes some spoken register. Verify the current license posture on the dataset card before relying on it for commercial use.
+2. Check `HebArabNlpProject/HebrewSentiment` - Hebrew sentiment samples across train/validation/test, includes some spoken register. Verify the current license posture on the dataset card before relying on it for commercial use.
 3. Check `dicta-il/dictabert-sentiment` as a ready baseline before fine-tuning anything
 4. Start with the Dicta sentiment model and evaluate on a held-out set of real customer support chats
 5. If the baseline is insufficient, fine-tune `dicta-il/dictabert` on HebrewSentiment + your labeled data
@@ -213,10 +252,10 @@ User says: "We want to transcribe Hebrew podcasts for a new product. Which ASR m
 
 Actions:
 1. Task: Hebrew speech-to-text on conversational audio
-2. Check ivrit.ai models ,  `whisper-large-v3` family is SOTA for Hebrew ASR
+2. Check ivrit.ai models - `whisper-large-v3` family is SOTA for Hebrew ASR
 3. For production latency, use `whisper-large-v3-turbo-ct2` (CTranslate2-optimized)
 4. For diarized podcasts (multi-speaker), pair with `pyannote-speaker-diarization-3.1`
-5. Verify ivrit.ai's permissive license allows commercial use ,  it does, by design
+5. Verify ivrit.ai's permissive license allows commercial use - it does, by design
 6. Plan attribution per the dataset card
 7. Consider fine-tuning on a small set of your own podcast audio if domain mismatch is significant
 
@@ -225,7 +264,7 @@ Result: Launch-ready ASR stack with the right open-weight models and clear licen
 ## Bundled Resources
 
 ### Scripts
-- `scripts/find_dataset.py` -- Interactive dataset finder. Filters the curated catalog by task, license, register, and Hebrew/Yiddish/mixed. Prints recommended datasets with HuggingFace IDs and license notes. Run: `python scripts/find_dataset.py --help`
+- `scripts/find_dataset.py` -- Command-line dataset finder (not interactive). `--verify-licences` is a developer check that fetches every catalog entry's HuggingFace card and asserts the recorded licence matches; it needs network and reports unreachable separately from mismatched, because a check that could not run has not passed. Filters the curated catalog by task, license, register, and Hebrew/Yiddish/mixed, flags datasets that are gated, and prints the reason whenever `--commercial` excludes something. Run: `python3 scripts/find_dataset.py --help`
 
 ### References
 - `references/dataset-catalog.md` -- Comprehensive catalog of Hebrew and Yiddish datasets with HuggingFace IDs, license info, sample counts, and register notes. Consult when picking datasets.
@@ -262,15 +301,15 @@ No MCP server is required for navigating datasets. Pair with the HuggingFace Hub
 
 - "Hebrew dataset" is not a single thing. Register (modern, religious, spoken, academic) matters more than total size. A 10GB modern-news corpus is useless for a religious-text product. Agents often quote dataset size without checking register alignment.
 - ivrit.ai uses a bespoke permissive license that explicitly allows commercial use. Many agents default to citing CC-BY-NC out of habit for scraped audio. Read the specific ivrit.ai dataset card.
-- DictaLM 3.0 comes in multiple sizes derived from DIFFERENT base models (Mistral, Nemotron, Qwen). Upstream licenses differ. Do not assume one license applies to all DictaLM variants. Check each model card.
+- DictaLM 3.0 sizes derive from different base models (Mistral, Nemotron, Qwen) and the declared licences differ accordingly: the 24B and 1.7B repos declare `apache-2.0`, the Nemotron-12B repos declare `nvidia-open-model-license`. Do not assume one licence covers all DictaLM variants, and do not assume the base-model vendor is the licensor of Dicta's repo.
 - HeQ's primary metric should be F1, not Exact Match. Hebrew morphology and sofit forms make EM brittle. Agents reporting raw EM on HeQ understate model performance systematically.
 - Yiddish and Hebrew share an alphabet but are DIFFERENT languages with different models. Do not train a Hebrew model on Yiddish data or vice versa without explicit cross-lingual transfer planning. ivrit.ai maintains separate `yi-whisper` models for exactly this reason.
-- The HuggingFace HeQ mirrors (`pig4431/HeQ_v1`, `Etelis/HeQ_v1`) are community-maintained. The canonical source is `NNLP-IL/Hebrew-Question-Answering-Dataset` on GitHub. Verify current versioning before publishing benchmark results.
+- The HuggingFace HeQ mirrors (`Etelis/HeQ_v1`) are community-maintained. The canonical source is `NNLP-IL/Hebrew-Question-Answering-Dataset` on GitHub. Verify current versioning before publishing benchmark results.
 - Layering CulturaX on top of mC4 + OSCAR-2301 introduces heavy duplication. CulturaX already incorporates mC4 v3.1.0 and OSCAR through 2023-01. Either pick one corpus, or de-dup explicitly (sha256 of normalized text) before training.
 - mC4 is NOT deprecated, but its Hebrew slice has weaker filtering than FineWeb-2 or CulturaX. If you need pre-2024 web Hebrew, prefer CulturaX over raw mC4.
 - HEBREW-MMLU references float around with multiple community translations and forks. Verify the active dataset ID before publishing benchmark results; numbers from different translations are not directly comparable. `openai/MMMLU` covers 14 languages but Hebrew is not included in that official set.
 - DictaLM 3.0 release naming includes both base/thinking/instruct families AND quantization variants (FP8, W4A16, GGUF). When citing benchmark results, log the exact model ID from the HF page including any quantization suffix; numbers do not transfer across quantizations.
-- `oscar-corpus/OSCAR-2301` is gated on HuggingFace, and as of mid-2026 access is **temporarily suspended** (no new grants). Do not build a pipeline that depends on it right now; use CulturaX or FineWeb-2 instead. `uonlp/CulturaX` is also gated (contact-info agreement) but grants are being processed.
+- `oscar-corpus/OSCAR-2301` is gated with manual approval and the repo has not been modified since 2025-08-06, with approval latency reported as long. Do not put it on a critical path; build against CulturaX or FineWeb-2 and re-check the card for the current state. `uonlp/CulturaX` is gated too, with auto-approval.
 
 ## Troubleshooting
 

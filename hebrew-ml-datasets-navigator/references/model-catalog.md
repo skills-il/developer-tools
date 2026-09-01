@@ -15,10 +15,11 @@ Organization: `huggingface.co/ivrit-ai`
 | whisper-large-v3-turbo-ct2 | `ivrit-ai/whisper-large-v3-turbo-ct2` | Turbo + CT2 | Production latency, most popular |
 | whisper-large-v3-ggml | `ivrit-ai/whisper-large-v3-ggml` | GGML-quantized | Consumer hardware, CPU inference |
 | whisper-large-v3-turbo-onnx | `ivrit-ai/whisper-large-v3-turbo-onnx` | ONNX | Cross-platform serving |
-| whisper-v2-d3-e3 | `ivrit-ai/whisper-v2-d3-e3` | Older variant | Backward compatibility |
 
 Selection guide:
 - For production with latency constraints: `whisper-large-v3-turbo-ct2`
+
+**The CT2 and GGML artefacts are inference-only.** CTranslate2 and GGML are serving formats: you cannot fine-tune them. Train from the `transformers` checkpoint (`ivrit-ai/whisper-large-v3`) and re-convert to CT2 or GGML afterwards for deployment. Two further Hebrew-specific notes when fine-tuning Whisper: set the language token to `he` explicitly rather than relying on auto-detection, and do not score with Whisper's built-in English normalizer, which strips characters in a way that is wrong for Hebrew. Define a Hebrew normalisation pass and report WER against it.
 - For highest accuracy (non-real-time): `whisper-large-v3`
 - For CPU-only or edge: `whisper-large-v3-ggml`
 
@@ -58,7 +59,7 @@ Selection guide:
 - Balanced: Nemotron-12B-Instruct (best for instruction-following)
 - Consumer hardware: 1.7B-Thinking-GGUF
 
-License note: each variant inherits from its upstream base model. Mistral license, NVIDIA license, Qwen license apply respectively. Check the model card before commercial use.
+License note (declared on the repos, verified 2026-09, not inferred from the base model): the **24B and 1.7B families declare `apache-2.0`** and the **Nemotron-12B family declares `license: other` / `license_name: nvidia-open-model-license`**. All `dictabert*` models declare `cc-by-4.0`. Dicta declaring Apache on an adapted base sets the terms of Dicta's distribution; if you redistribute weights rather than serve outputs, verify the upstream base grant too. Two ivrit.ai serving artefacts, `whisper-large-v3-turbo-onnx` and `yi-whisper-large-v3-ct2`, declare **no licence at all**, so the undeclared-licence rule in `license-quick-guide.md` applies to them.
 
 ### AI21 Jamba (Israeli, hosted)
 
@@ -84,6 +85,7 @@ Organization: `huggingface.co/dicta-il`
 |-------|---------------|------|-------|
 | dictabert | `dicta-il/dictabert` | Fill-mask | Baseline Hebrew BERT |
 | dictabert-seg | `dicta-il/dictabert-seg` | Word segmentation | Hebrew morpheme splitting |
+| dictabert-char-spacefix | `dicta-il/dictabert-char-spacefix` | Character-level spacing correction | Cleaning Hebrew text with broken word boundaries |
 | dictabert-morph | `dicta-il/dictabert-morph` | Morphological analysis | POS, features |
 | dictabert-heq | `dicta-il/dictabert-heq` | Question answering | Fine-tuned on HeQ |
 | dictabert-sentiment | `dicta-il/dictabert-sentiment` | Sentiment classification | Fine-tuned on HebrewSentiment |
@@ -110,7 +112,7 @@ Organization: `huggingface.co/dicta-il`
 | Hebrew sentiment | `dicta-il/dictabert-sentiment` (use directly) | HebrewSentiment + your data |
 | Hebrew QA | `dicta-il/dictabert-heq` (use directly) | HeQ + your data |
 | Hebrew NER | `dicta-il/dictabert` | Your labeled NER data |
-| Hebrew ASR | `ivrit-ai/whisper-large-v3-turbo-ct2` | Your domain audio |
+| Hebrew ASR | `ivrit-ai/whisper-large-v3` (the transformers checkpoint) | Your domain audio |
 | Hebrew instruction LLM | `dicta-il/DictaLM-3.0-Nemotron-12B-Instruct` | Your instruction pairs (LoRA recommended) |
 | Hebrew base LLM | `dicta-il/DictaLM-3.0-24B-Base` | Your pre-training data |
 | Hebrew embeddings | `dicta-il/neodictabert-bilingual-embed` | Your paired data |

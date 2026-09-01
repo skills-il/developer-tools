@@ -18,9 +18,16 @@ Organization: `huggingface.co/ivrit-ai`
 | audio-v2-opus | `ivrit-ai/audio-v2-opus` | Hebrew | Opus-encoded variant | Smaller file size for bulk processing |
 | crowd-whatsapp-yi | `ivrit-ai/crowd-whatsapp-yi` | Yiddish | Text | Yiddish written corpus |
 | crowd-recital-yi | `ivrit-ai/crowd-recital-yi` | Yiddish | Audio | Yiddish speech training |
-| Knesset Plenums | via `ivrit-ai` spaces | Hebrew | Large | Political speech, formal Hebrew |
+| Knesset Plenums (audio) | `ivrit-ai/knesset-plenums` | Hebrew | Large | Political speech, formal Hebrew. Gated, bespoke ivrit.ai licence |
+| Knesset Committees (audio) | `ivrit-ai/knesset-committees` | Hebrew | Large | Gated, bespoke ivrit.ai licence |
+| VoxKnesset | `ivrit-ai/VoxKnesset` | Hebrew | Large | Longitudinal speech, aging-speaker modelling (arXiv 2603.01270). Gated |
+| Knesset Corpus (annotated text) | `HaifaCLGroup/KnessetCorpus` | Hebrew | Large | Academic text corpus (arXiv 2405.18115). `cc-by-sa-4.0`, NOT gated. ShareAlike propagates to derived databases |
 
-License posture: permissive, commercial use explicitly allowed per ivrit.ai's stated mission. Confirm on each dataset card before production use.
+License posture: the ivrit.ai licence is bespoke (`license_name: ivrit.ai`, and `ivrit.ai-v2` on at least one dataset), permissive by design and intended to allow commercial training. It is not an OSI licence.
+
+**Gating:** 24 of the 28 ivrit.ai datasets on the Hub are gated with auto-approval (the exceptions as of 2026-09 are `jpress2`, `audio-v2-40s`, `tts-arena-preferences` and `jbd`); the models are not gated. Accept the terms with the same HuggingFace account whose `HF_TOKEN` your trainer uses, and note that accepting is what binds you to the licence.
+
+**Undeclared licences:** `HebArabNlpProject/HebrewSentiment` and `HebNLI` declare `license: other` with no name; `HebSummaries`, `biunlp/HeSum`, `uonlp/CulturaX`, `imvladikon/parashoot` and `ivrit-ai/tts-arena-preferences` declare none at all. An undeclared or unnamed licence is not a grant. Treat it as all rights reserved and ask the depositor.
 
 ## Text (Classification, Inference, QA)
 
@@ -30,14 +37,14 @@ Organization: `huggingface.co/HebArabNlpProject`
 
 | Dataset | HuggingFace ID | Task | Size | License |
 |---------|---------------|------|------|---------|
-| HebrewSentiment | `HebArabNlpProject/HebrewSentiment` | Sentiment (3-class) | Check dataset card (split across train/validation/test) | Check dataset card |
-| HebNLI | `HebArabNlpProject/HebNLI` | Natural language inference | Check card | Check card |
+| HebrewSentiment | `HebArabNlpProject/HebrewSentiment` | Sentiment (3-class) | Split across train/validation/test; verify totals on the card | `other`, no license_name declared. **Not a grant** |
+| HebNLI | `HebArabNlpProject/HebNLI` | Natural language inference | Verify on the card | `other`, no license_name declared. **Not a grant** |
 
 ### Hebrew Question Answering
 
 | Dataset | Source | Task | Size | License |
 |---------|--------|------|------|---------|
-| HeQ | `pig4431/HeQ_v1` (HF), `NNLP-IL/Hebrew-Question-Answering-Dataset` (GitHub canonical) | Extractive QA | 30,147 questions (21,784 answerable + 8,363 unanswerable) | Check dataset card |
+| HeQ | `Etelis/HeQ_v1` (HF), `NNLP-IL/Hebrew-Question-Answering-Dataset` (GitHub canonical) | Extractive QA | 30,147 questions (21,784 answerable + 8,363 unanswerable) | `cc-by-4.0`, not gated |
 
 HeQ paragraphs come from Hebrew Wikipedia and Geektime (Israeli tech news). Register: modern standard written Hebrew.
 

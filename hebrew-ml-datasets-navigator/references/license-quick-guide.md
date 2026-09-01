@@ -31,6 +31,14 @@ Plain-English summary of the most common licenses in the Hebrew ML ecosystem and
 - **Common uses:** Many HuggingFace models and some datasets
 - **What to do:** Include a NOTICE file if the upstream distribution has one
 
+### The rule for an undeclared licence
+
+If a HuggingFace card declares no licence, or declares `other` with no name, that is **not** a grant. There is no implied permission and no public-domain default: treat it as all rights reserved under the depositor's national copyright law and ask the depositor in writing. As of 2026-09 this applies to `HebArabNlpProject/HebSummaries`, `biunlp/HeSum`, `uonlp/CulturaX`, `imvladikon/parashoot` and `ivrit-ai/tts-arena-preferences` (no licence field), and to `HebArabNlpProject/HebrewSentiment` and `HebArabNlpProject/HebNLI` (`other`, unnamed). It also applies to two ivrit.ai serving artefacts this skill recommends, `ivrit-ai/whisper-large-v3-turbo-onnx` and `ivrit-ai/yi-whisper-large-v3-ct2`, which declare no licence even though the org is permissive by design: the org posture is not a licence on a specific repo.
+
+### ivrit.ai license (bespoke, not OSI)
+
+This is an organisation-specific licence, reported as `license_name: ivrit.ai` and, on at least one dataset, `ivrit.ai-v2`. It is permissive by design and intended to allow commercial training, but it is not one of the standard licences below and its text is not reproduced here. Read it on the dataset page at the point you accept the gate, because accepting is what binds you.
+
 ### ivrit.ai permissive license
 
 - **Commercial use:** Yes (explicitly, by design)
@@ -80,7 +88,11 @@ Plain-English summary of the most common licenses in the Hebrew ML ecosystem and
 
 ## Model-specific licenses
 
-### Mistral license (applies to DictaLM-3.0-24B derivatives)
+### Upstream base licences (context only, NOT the operative grant for DictaLM 3.0)
+
+The DictaLM 3.0 24B and 1.7B repos declare `apache-2.0` on their own cards, and the Nemotron-12B repos declare `nvidia-open-model-license`. Those declarations are what govern your use of Dicta's distribution. Read the upstream terms below only if you are redistributing weights rather than serving outputs.
+
+### Mistral license (base of DictaLM-3.0-24B; the Dicta repo itself declares apache-2.0)
 
 - **Commercial use:** Varies by specific Mistral license variant. DictaLM-3.0-24B adapts Mistral-Small-3.1; check both Mistral's and Dicta's terms.
 - **What to do:** Read Mistral AI's current license and Dicta's DictaLM terms together.
@@ -90,7 +102,7 @@ Plain-English summary of the most common licenses in the Hebrew ML ecosystem and
 - **Commercial use:** Check NVIDIA's terms. Nemotron models typically allow commercial use but may have specific conditions.
 - **What to do:** Verify both NVIDIA's and Dicta's distributions.
 
-### Qwen license (applies to DictaLM-3.0-1.7B derivatives)
+### Qwen license (base of DictaLM-3.0-1.7B; the Dicta repo itself declares apache-2.0)
 
 - **Commercial use:** Qwen models generally allow commercial use under Qwen's own license.
 - **What to do:** Check Qwen license terms in the model card.
