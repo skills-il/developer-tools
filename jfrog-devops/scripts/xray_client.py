@@ -70,7 +70,14 @@ class XrayClient:
             from urllib3.util.retry import Retry
             retry = Retry(total=4, backoff_factor=1.5,
                           status_forcelist=(429, 500, 502, 503, 504),
-                          allowed_methods=frozenset(["GET", "POST", "PUT", "DELETE"]),
+                          # Only idempotent methods are retried. A PUT upload streams an
+                          # open file handle, so a retry would re-send a body already at
+                          # EOF against the original Content-Length: that can land a
+                          # truncated artifact under a 201. POST is excluded because
+                          # creating a policy or watch, or promoting a build, is not safe
+                          # to repeat when the server processed the first request and only
+                          # the response failed.
+                          allowed_methods=frozenset(["GET", "HEAD", "OPTIONS"]),
                           respect_retry_after_header=True)
             self.session.mount("https://", HTTPAdapter(max_retries=retry))
             self.session.mount("http://", HTTPAdapter(max_retries=retry))
