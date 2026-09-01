@@ -63,24 +63,36 @@ class XrayClient:
             "Content-Type": "application/json"
         })
         # JFrog SaaS rate-limits per subscription tier and answers 429 with
-        # Retry-After. Without a retry policy a burst of calls from a CI job
-        # fails on the first throttle rather than backing off.
+        # Retry-After, so calls made in a CI loop need to back off rather than
+        # fail on the first throttle. Retries are split across two sessions
+        # because retrying is only safe for some of them.
+        #
+        # self.session retries idempotent methods only. This client issues no PUT and no upload; POST is excluded because
+        # creating a policy or watch, or triggering a scan, must not repeat if
+        # the server processed the first request and only the response failed.
+        #
+        # self._read_session additionally retries POST, but on 429 ALONE and
+        # never on 5xx: a 429 means the request was rejected without being
+        # processed, so repeating it is safe, whereas a 5xx on a POST is
+        # exactly the case where the server may have acted and only the
+        # response failed. get_artifact_summary, get_scan_status and get_violations are routed
+        # through it: all three are reads that happen to use POST.
+        self._read_session = requests.Session()
+        self._read_session.headers.update(self.session.headers)
         try:
             from requests.adapters import HTTPAdapter
             from urllib3.util.retry import Retry
-            retry = Retry(total=4, backoff_factor=1.5,
-                          status_forcelist=(429, 500, 502, 503, 504),
-                          # Only idempotent methods are retried. A PUT upload streams an
-                          # open file handle, so a retry would re-send a body already at
-                          # EOF against the original Content-Length: that can land a
-                          # truncated artifact under a 201. POST is excluded because
-                          # creating a policy or watch, or promoting a build, is not safe
-                          # to repeat when the server processed the first request and only
-                          # the response failed.
-                          allowed_methods=frozenset(["GET", "HEAD", "OPTIONS"]),
-                          respect_retry_after_header=True)
-            self.session.mount("https://", HTTPAdapter(max_retries=retry))
-            self.session.mount("http://", HTTPAdapter(max_retries=retry))
+            safe = Retry(total=4, backoff_factor=1.5,
+                         status_forcelist=(429, 500, 502, 503, 504),
+                         allowed_methods=frozenset(["GET", "HEAD", "OPTIONS"]),
+                         respect_retry_after_header=True)
+            read_only = Retry(total=4, backoff_factor=1.5,
+                              status_forcelist=(429,),
+                              allowed_methods=frozenset(["GET", "HEAD", "OPTIONS", "POST"]),
+                              respect_retry_after_header=True)
+            for scheme in ("https://", "http://"):
+                self.session.mount(scheme, HTTPAdapter(max_retries=safe))
+                self._read_session.mount(scheme, HTTPAdapter(max_retries=read_only))
         except Exception:  # urllib3 too old; run without retries rather than fail
             pass
 
@@ -97,7 +109,7 @@ class XrayClient:
             Vulnerability summary. An empty "artifacts" array means Xray has no
             scan data for that path, NOT that the artifact is clean.
         """
-        r = self.session.post(
+        r = self._read_session.post(
             f"{self.base_url}/api/v2/summary/artifact",
             json={"paths": repo_paths},
             timeout=self.timeout
@@ -136,7 +148,7 @@ class XrayClient:
         Use this to tell "scanned and clean" apart from "never scanned", which
         the summary endpoint cannot distinguish for you.
         """
-        r = self.session.post(
+        r = self._read_session.post(
             f"{self.base_url}/api/v1/artifact/status",
             json={"repo": repo, "path": path},
             timeout=self.timeout
@@ -263,7 +275,7 @@ class XrayClient:
         if severity:
             filters.setdefault("filters", {})["severity"] = severity
 
-        r = self.session.post(
+        r = self._read_session.post(
             f"{self.base_url}/api/v1/violations",
             json=filters,
             timeout=self.timeout
