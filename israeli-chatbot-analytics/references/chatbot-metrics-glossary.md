@@ -177,9 +177,7 @@ A comprehensive glossary of chatbot analytics metrics with Hebrew translations a
 | Loop Rate / לולאות | < 3% | 3-5% | > 5% |
 
 
-## WhatsApp Business Platform pricing (relocated from SKILL.md)
-
-## WhatsApp Business Platform pricing notes
+## WhatsApp Business Platform pricing
 
 Many Israeli chatbots run on WhatsApp Cloud API, where send-out cost is a first-class analytics dimension. Pricing changed on July 1, 2025 from a per-conversation model to **per-message billing across 4 categories**:
 
@@ -199,3 +197,66 @@ Meta may update pricing only on the first day of a quarter (January 1, April 1, 
 
 Meta's own term for the click-to-WhatsApp window is the free entry point (FEP) window. Add `template_category` (marketing/utility/authentication/service) and `arrived_via_ctw_ad` boolean to your conversation log schema so finance and product can split CSAT/resolution by paid vs. free interaction. Israeli rates are not published per-country in the public docs, pull your specific Israel rate from the Meta Business Manager pricing tool or your BSP (e.g. Twilio, 360dialog, Vonage) when sizing campaigns.
 
+
+## Anti-spam compliance: what to track
+
+Operational tracking for the Section 30A opt-in regime described in SKILL.md.
+
+Practical analytics tracking:
+
+- **Tag every send as `opt_in_basis`**: "explicit_form" / "ctw_ad_click" / "service_reply" / "transactional". This is your audit trail if a complaint reaches the Ministry of Communications.
+- **Track unsubscribe path success rate.** Marketing messages must include the word "advertisement" (פרסומת), the sender's name and address, and a working opt-out path. Measure the time-to-unsubscribe and the success rate of the opt-out flow as a compliance KPI.
+- **Service vs. marketing split.** Run completion-rate and CSAT separately for opt-in marketing flows vs. user-initiated service flows, they behave very differently and combining them masks both.
+- Cross-reference: `gws-hebrew-email-automation` and `israeli-telegram-business-bot` cover the same opt-in regime for email and Telegram. Use those skills if you also operate those channels.
+
+
+## Default alert rules
+
+Set up alerts to catch problems before they affect too many users:
+
+```python
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+
+@dataclass
+class AlertRule:
+    """Define an alerting rule for chatbot metrics."""
+    name: str
+    metric: str
+    operator: str          # "gt" (greater than), "lt" (less than)
+    threshold: float
+    window_minutes: int    # Rolling window
+    severity: str          # "critical", "warning", "info"
+    description_he: str    # Hebrew description for ops team
+
+
+# Recommended alert rules for Hebrew chatbots
+# AlertRule(name, metric, operator, threshold, window_minutes, severity, description_he)
+DEFAULT_ALERT_RULES = [
+    AlertRule("high_escalation_rate", "escalation_rate", "gt", 0.35, 60, "warning",
+              "שיעור הסלמה גבוה מ-35% בשעה האחרונה"),
+    AlertRule("satisfaction_drop", "avg_csat", "lt", 3.0, 120, "critical",
+              "שביעות רצון ממוצעת ירדה מתחת ל-3.0 בשעתיים האחרונות"),
+    AlertRule("high_abandonment", "abandonment_rate", "gt", 0.40, 60, "critical",
+              "שיעור נטישה גבוה מ-40% בשעה האחרונה"),
+    AlertRule("high_fallback_rate", "fallback_rate", "gt", 0.25, 30, "warning",
+              "שיעור fallback גבוה מ-25% בחצי שעה האחרונה"),
+    AlertRule("slow_response", "p95_response_time_ms", "gt", 3000, 15, "warning",
+              "זמן תגובה P95 חורג מ-3 שניות ברבע השעה האחרון"),
+    AlertRule("new_unrecognized_intents", "new_unknown_intents_count", "gt", 20, 60,
+              "info", "יותר מ-20 כוונות לא מזוהות חדשות בשעה האחרונה"),
+]
+
+
+```
+
+
+## Privacy and consent: practical rules
+
+Practical rules:
+
+- **Consent and notice.** Get consent to store and analyze chat content, and tell users in your privacy notice that conversations are retained and analyzed for quality. Sentiment analysis on user messages is a processing purpose that should be disclosed.
+- **Pseudonymize `user_id`.** Do not analyze raw phone numbers, emails, or Teudat Zehut as the identifier. Hash or tokenize `user_id` before it reaches the analytics pipeline, and keep the mapping table separate and access-controlled. Retention and A/B-test bucketing still work on a stable pseudonymous ID.
+- **Minimize and redact.** Strip or mask entities you do not need for analytics (ID numbers, full names, card numbers) before storing transcripts. You rarely need the raw PII to measure drop-off or sentiment.
+- **Retention limits.** Set an explicit retention window for raw transcripts (for example 90 days) and keep only aggregated metrics long-term. Document the window and delete on schedule.
+- **Access control and location.** Restrict who can read raw conversations, log access, and confirm where the data is stored and processed. Note that the Data Security Regulations require access logs for medium and high security databases to be retained for at least 24 months, which is a separate obligation from transcript retention.

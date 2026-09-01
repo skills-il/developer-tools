@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "israeli-chatbot-analytics",
-  "generated_at": "2026-08-02T02:55:00+00:00",
+  "generated_at": "2026-09-01T21:10:22+00:00",
   "claims": [
     {
       "claim_id": "dialogflow-cx-hebrew-code",
@@ -40,7 +40,9 @@
         "SKILL_HE.md"
       ],
       "confidence": "high",
-      "verification": "Read from the rendered Meta pricing page via Playwright. The page is JS-rendered and returns an error body to plain curl, so browser rendering was required."
+      "verification": "Read from the rendered Meta pricing page via Playwright. The page is JS-rendered and returns an error body to plain curl, so browser rendering was required.",
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:02:17+00:00"
     },
     {
       "claim_id": "whatsapp-service-window-free",
@@ -53,7 +55,9 @@
         "SKILL_HE.md"
       ],
       "confidence": "high",
-      "verification": "Verbatim from the rendered Meta pricing page via Playwright."
+      "verification": "Verbatim from the rendered Meta pricing page via Playwright.",
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:02:17+00:00"
     },
     {
       "claim_id": "whatsapp-utility-free-in-csw",
@@ -66,7 +70,9 @@
         "SKILL_HE.md"
       ],
       "confidence": "medium",
-      "verification": "Verbatim from the rendered Meta pricing page. The same page also states: 'The pricing explainer PDF outlines how Meta charges businesses, in PDF form, and reflects updates launching October 1, 2026'. Several BSP guides claim in-window utility templates start being charged on 2026-10-01, but Meta's own page does not say so, so the skill carries it as a watch item."
+      "verification": "Verbatim from the rendered Meta pricing page. The same page also states: 'The pricing explainer PDF outlines how Meta charges businesses, in PDF form, and reflects updates launching October 1, 2026'. Several BSP guides claim in-window utility templates start being charged on 2026-10-01, but Meta's own page does not say so, so the skill carries it as a watch item.",
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:02:17+00:00"
     },
     {
       "claim_id": "whatsapp-fep-72h-free",
@@ -79,7 +85,9 @@
         "SKILL_HE.md"
       ],
       "confidence": "high",
-      "verification": "Verbatim from the rendered Meta pricing page. The page also states 'FEP windows remain open for 72 hours.'"
+      "verification": "Verbatim from the rendered Meta pricing page. The page also states 'FEP windows remain open for 72 hours.'",
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:02:17+00:00"
     },
     {
       "claim_id": "whatsapp-quarterly-pricing-calendar",
@@ -92,7 +100,9 @@
         "SKILL_HE.md"
       ],
       "confidence": "high",
-      "verification": "Verbatim from the rendered Meta pricing page, under the 'Pricing calendar' heading."
+      "verification": "Verbatim from the rendered Meta pricing page, under the 'Pricing calendar' heading.",
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:02:17+00:00"
     },
     {
       "claim_id": "dictalm-3-release",
@@ -118,7 +128,9 @@
         "SKILL_HE.md"
       ],
       "confidence": "high",
-      "verification": "Fetched the model's raw config.json over HTTP and read id2label directly. This is the source of the critical correction in this version: the previous instructions hardcoded a label list that inverted every sentiment reading."
+      "verification": "Fetched the model's raw config.json over HTTP and read id2label directly. This is the source of the critical correction in this version: the previous instructions hardcoded a label list that inverted every sentiment reading.",
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:02:17+00:00"
     },
     {
       "claim_id": "dictabert-sentiment-model-card",
@@ -214,13 +226,14 @@
     },
     {
       "claim_id": "mixpanel-mcp-server",
-      "claim": "Mixpanel ships AI-powered conversational analytics including a Model Context Protocol (MCP) integration, so an ops team can query Mixpanel conversationally.",
-      "source_url": "https://mixpanel.com/ai/info-page",
-      "raw_snippet": "AI / Conversational Analytics — AI-powered analysis through Model Context Protocol (MCP), Copilot, AI Metric Trees, and automated summaries for conversational data exploration and insight generation.",
-      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "claim": "Mixpanel provides a hosted Model Context Protocol server giving AI assistants direct access to Mixpanel data (events, funnels, flows, retention, session replay).",
+      "source_url": "https://docs.mixpanel.com/docs/mcp",
+      "raw_snippet": "Mixpanel provides a hosted Model Context Protocol (MCP) server that gives AI assistants direct access to your Mixpanel data.",
+      "fetched_at": "2026-09-01T21:00:20+00:00",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/analytics-stack-notes.md"
       ],
       "confidence": "high",
       "verification": "Fetched Mixpanel's AI info page and quoted the capability line verbatim."
@@ -251,19 +264,6 @@
       ],
       "confidence": "high",
       "verification": "Verified behaviourally as well: the bundled script parses Z-suffixed timestamps correctly on Python 3.13.5, and the two former bare except handlers would have swallowed the 3.10 ValueError and silently emptied durations and traffic patterns. Those handlers now warn to stderr."
-    },
-    {
-      "claim_id": "ga4-ai-assistant-channel",
-      "claim": "GA4 ships a dedicated AI Assistant channel that automatically categorizes visits from ChatGPT, Gemini and Claude using Medium `ai-assistant`, removing the need for custom regex referrer filters. Coverage of Perplexity and Copilot is not confirmed by Google.",
-      "source_url": "https://martech.org/ga4-now-tracks-ai-chatbot-traffic-automatically/",
-      "raw_snippet": "GA4 now tracks AI chatbot traffic automatically",
-      "fetched_at": "2026-08-02T03:05:00+00:00",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "confidence": "high",
-      "verification": "Rendered in a real browser via Playwright, where the article body reads: 'GA4 now includes a dedicated “AI Assistant” channel that automatically tracks visits coming from tools like ChatGPT, Gemini, and Claude', and assigns 'Medium: ai-assistant. Channel Group: AI Assistant.' The raw_snippet recorded here is the headline, which is the portion also present in the plain-fetch body. The same article states Google has not published a full list of supported referrers beyond ChatGPT, Gemini and Claude, leaving Perplexity and Copilot coverage uncertain, which supports the hedge the skill carries."
     },
     {
       "claim_id": "chatbot-benchmark-thresholds-are-conventions",
@@ -426,6 +426,175 @@
       ],
       "confidence": "high",
       "verification": "Fetched; HTTP 200, page title read from the document."
+    },
+    {
+      "claim_id": "ga4-ai-assistant-channel",
+      "claim": "GA4 has a default AI Assistant channel group that assigns Medium `ai-assistant` and a reserved `(ai-assistant)` campaign value. Google names ChatGPT, Gemini and Claude as examples and has not published the full recognized-referrer list.",
+      "source_url": "https://www.searchenginejournal.com/google-analytics-adds-ai-assistant-as-default-channel-group/574974/",
+      "raw_snippet": "it assigns “ai-assistant” as the medium value",
+      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/analytics-stack-notes.md"
+      ]
+    },
+    {
+      "claim_id": "ga4-ai-assistant-referrer-list-unpublished",
+      "claim": "Google has not published which AI assistants are on the GA4 recognized-referrer list beyond the three named examples, so coverage of any particular assistant (Perplexity included) cannot be assumed.",
+      "source_url": "https://www.searchenginejournal.com/google-analytics-adds-ai-assistant-as-default-channel-group/574974/",
+      "raw_snippet": "Google hasn’t published which AI assistants are on the recognized referrer list beyond the three named examples",
+      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/analytics-stack-notes.md"
+      ]
+    },
+    {
+      "claim_id": "mixpanel-spark-renamed-agent",
+      "claim": "Mixpanel's AI query builder Spark has been superseded by Mixpanel Agent; the Spark documentation page directs readers to the Agent page.",
+      "source_url": "https://docs.mixpanel.com/docs/features/spark",
+      "raw_snippet": "Looking for Spark? This is the right page. Mixpanel Agent is the next evolution of Spark.",
+      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/analytics-stack-notes.md"
+      ]
+    },
+    {
+      "claim_id": "mixpanel-agent-doc",
+      "claim": "Mixpanel Agent is an AI analyst built into Mixpanel that interprets a prompt and selects the right tools automatically.",
+      "source_url": "https://docs.mixpanel.com/docs/mixpanel-agent",
+      "raw_snippet": "Mixpanel Agent is an AI analyst built into Mixpanel.",
+      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/analytics-stack-notes.md"
+      ]
+    },
+    {
+      "claim_id": "statsig-amplitude-2026",
+      "claim": "On 5 May 2026 Amplitude took on the Statsig brand and customers and now maintains the Statsig platform, while the Statsig team remained at OpenAI.",
+      "source_url": "https://amplitude.com/blog/amplitude-and-statsig-partnership",
+      "raw_snippet": "Amplitude will take on Statsig's brand and customers.",
+      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/analytics-stack-notes.md"
+      ]
+    },
+    {
+      "claim_id": "statsig-openai-2025",
+      "claim": "OpenAI acquired Statsig, announced 2 September 2025, with Vijaye Raji becoming CTO of Applications.",
+      "source_url": "https://openai.com/index/vijaye-raji-to-become-cto-of-applications-with-acquisition-of-statsig/",
+      "raw_snippet": "Vijaye Raji to become CTO of Applications",
+      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/analytics-stack-notes.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:02:17+00:00"
+    },
+    {
+      "claim_id": "whatsapp-ai-providers-pricing-2026",
+      "claim": "Meta introduced a separate pricing policy for AI Providers on the WhatsApp Business Platform, effective 16 February 2026 and updated as of 12 May 2026.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "new pricing policy for “AI Providers” leveraging WhatsApp Business Platform, which is effective February 16, 2026, and updated as of May 12, 2026",
+      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:02:17+00:00"
+    },
+    {
+      "claim_id": "whatsapp-marketing-max-price",
+      "claim": "Businesses integrated with the Marketing Messages API can set a max price per marketing message delivery; Meta then charges that max price or lower.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "can choose to set a max-price per marketing message delivery",
+      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:02:17+00:00"
+    },
+    {
+      "claim_id": "otel-genai-semconv-moved",
+      "claim": "The OpenTelemetry GenAI semantic conventions moved to a dedicated repository and the pages under opentelemetry.io/docs/specs/semconv/gen-ai/ are no longer maintained.",
+      "source_url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/index.md",
+      "raw_snippet": "GenAI semantic conventions have moved to the",
+      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "appears_in": [
+        "references/llm-bot-observability.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:02:17+00:00"
+    },
+    {
+      "claim_id": "otel-genai-semconv-repo",
+      "claim": "The OpenTelemetry GenAI semantic conventions are maintained at github.com/open-telemetry/semantic-conventions-genai.",
+      "source_url": "https://github.com/open-telemetry/semantic-conventions-genai",
+      "raw_snippet": "semantic-conventions-genai",
+      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/llm-bot-observability.md"
+      ]
+    },
+    {
+      "claim_id": "dictalm-3-0-17b-instruct-id",
+      "claim": "dicta-il/DictaLM-3.0-1.7B-Instruct is the published Hugging Face model id for the 1.7B instruct model of the Dicta-LM 3.0 collection, initialized from Qwen3-1.7B-Base.",
+      "source_url": "https://huggingface.co/dicta-il/DictaLM-3.0-1.7B-Instruct/raw/main/README.md",
+      "raw_snippet": "This is the 1.7-billion-parameter instruct model, with full precision (BF16), originally initialized from",
+      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "appears_in": [
+        "references/llm-bot-observability.md"
+      ]
+    },
+    {
+      "claim_id": "rasa-oss-maintenance-mode",
+      "claim": "Rasa Open Source is in maintenance mode; Rasa states the future of building AI agents with Rasa is Hello Rasa and CALM. No calendar date for entering maintenance mode is published on the repository.",
+      "source_url": "https://github.com/RasaHQ/rasa",
+      "raw_snippet": "Rasa Open Source is currently in maintenance mode. The future of building AI agents with Rasa is Hello Rasa and CALM",
+      "fetched_at": "2026-09-01T21:10:22+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/platform-integrations.md"
+      ]
+    },
+    {
+      "claim_id": "dicta-org-identity",
+      "claim": "DICTA is an independent Israeli non-profit, The Israel Center for Text Analysis, not a Bar-Ilan University lab. Bar-Ilan is the correct affiliation for the ONLP Lab behind AlephBERT.",
+      "source_url": "https://huggingface.co/dicta-il",
+      "raw_snippet": "DICTA: The Israel Center for Text Analysis",
+      "fetched_at": "2026-09-01T21:10:22+00:00",
+      "appears_in": [
+        "SKILL_HE.md",
+        "references/hebrew-sentiment-guide.md"
+      ]
+    },
+    {
+      "claim_id": "dialogflow-docs-host-redirect",
+      "claim": "Bare cloud.google.com/dialogflow/... documentation URLs return HTTP 301 to docs.cloud.google.com.",
+      "source_url": "https://cloud.google.com/dialogflow/cx/docs/reference/language",
+      "raw_snippet": "location: https://docs.cloud.google.com/dialogflow/cx/docs/reference/language",
+      "fetched_at": "2026-09-01T21:10:22+00:00",
+      "appears_in": [
+        "references/platform-integrations.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:10:22+00:00"
     }
   ]
 }

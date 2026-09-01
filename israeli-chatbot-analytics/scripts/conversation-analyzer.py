@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 """Analyze chatbot conversation logs for key metrics.
 
-Reads conversation logs in JSON format and produces a comprehensive
-analytics report covering drop-off points, sentiment distribution,
-resolution rates, and more.
+Reads conversation logs in JSON format and produces an analytics report
+covering core outcome rates, drop-off points, conversation loops, intent
+confidence, response-time percentiles, Israeli traffic patterns and
+Hebrew/English code-switching.
+
+This script deliberately does NOT compute sentiment. Sentiment requires the
+DictaBERT path in Step 4 of SKILL.md (torch + transformers, ~500MB); keeping
+this script pure standard library is what lets it run anywhere with no
+install. See references/hebrew-sentiment-guide.md to build that layer.
 
 Usage:
-    python conversation-analyzer.py --input conversations.json
-    python conversation-analyzer.py --input conversations.json --output report.json
-    python conversation-analyzer.py --input conversations.json --format markdown
-    python conversation-analyzer.py --help
+    python3 conversation-analyzer.py --input conversations.json
+    python3 conversation-analyzer.py --input conversations.json --output report.json
+    python3 conversation-analyzer.py --input conversations.json --format markdown
+    python3 conversation-analyzer.py --help
 
 Requires Python 3.11 or newer: datetime.fromisoformat only parses the full
 ISO-8601 range (including a trailing "Z") from 3.11 onward. On 3.10 the
@@ -46,8 +52,9 @@ Input Format:
 
 import argparse
 import json
-import sys
+import math
 import statistics
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -297,17 +304,24 @@ def analyze_response_times(conversations: list[dict]) -> dict:
         return {"total_responses": 0}
 
     sorted_rt = sorted(response_times)
-    p50_idx = int(len(sorted_rt) * 0.50)
-    p95_idx = int(len(sorted_rt) * 0.95)
-    p99_idx = int(len(sorted_rt) * 0.99)
+
+    def percentile(pct: float) -> float:
+        """Nearest-rank percentile.
+
+        `int(n * 0.95)` truncates, so on n=20 it returns index 19, the maximum,
+        and reports it as p95. Israeli bots often have exactly this kind of
+        small sample, which is where the error is largest and least visible.
+        """
+        rank = math.ceil(pct * len(sorted_rt))
+        return sorted_rt[max(0, min(rank - 1, len(sorted_rt) - 1))]
 
     return {
         "total_responses": len(response_times),
         "avg_ms": round(statistics.mean(response_times), 1),
         "median_ms": round(statistics.median(response_times), 1),
-        "p50_ms": sorted_rt[min(p50_idx, len(sorted_rt) - 1)],
-        "p95_ms": sorted_rt[min(p95_idx, len(sorted_rt) - 1)],
-        "p99_ms": sorted_rt[min(p99_idx, len(sorted_rt) - 1)],
+        "p50_ms": percentile(0.50),
+        "p95_ms": percentile(0.95),
+        "p99_ms": percentile(0.99),
         "max_ms": sorted_rt[-1],
         "min_ms": sorted_rt[0],
     }
@@ -354,6 +368,8 @@ def analyze_language(conversations: list[dict]) -> dict:
     hebrew_msg_count = 0
     english_msg_count = 0
     mixed_msg_count = 0
+    unclassifiable_msg_count = 0
+    classifiable_messages = 0
     total_user_messages = 0
 
     for convo in conversations:
@@ -368,24 +384,40 @@ def analyze_language(conversations: list[dict]) -> dict:
             english_chars = len(re.findall(r'[a-zA-Z]', text))
             total_chars = hebrew_chars + english_chars
 
+            # Messages with no Hebrew or Latin letters at all (emoji, digits,
+            # an image caption) are not classifiable and must not inflate the
+            # denominator, or every rate below is computed against a larger
+            # base than the buckets can ever fill.
             if total_chars == 0:
+                unclassifiable_msg_count += 1
                 continue
 
+            classifiable_messages += 1
             he_ratio = hebrew_chars / total_chars
 
-            if 0.2 < he_ratio < 0.8:
-                mixed_msg_count += 1
-            elif he_ratio >= 0.5:
+            # Primary language uses the SAME rule as detect_message_language()
+            # in Step 9 of SKILL.md: >= 0.5 Hebrew characters is a Hebrew
+            # message. The mixed band is a SEPARATE, overlapping measure of
+            # code-switching, not a third primary-language bucket, so a
+            # message can be both Hebrew and mixed. Reporting them as three
+            # mutually exclusive buckets is what made the script and the
+            # skill disagree on the same log.
+            if he_ratio >= 0.5:
                 hebrew_msg_count += 1
             else:
                 english_msg_count += 1
 
+            if 0.2 < he_ratio < 0.8:
+                mixed_msg_count += 1
+
     return {
         "total_user_messages": total_user_messages,
+        "classifiable_messages": classifiable_messages,
+        "unclassifiable_messages": unclassifiable_msg_count,
         "hebrew_messages": hebrew_msg_count,
         "english_messages": english_msg_count,
         "mixed_messages": mixed_msg_count,
-        "mixed_rate": round(mixed_msg_count / total_user_messages, 4) if total_user_messages > 0 else 0,
+        "mixed_rate": round(mixed_msg_count / classifiable_messages, 4) if classifiable_messages > 0 else 0,
     }
 
 
@@ -528,6 +560,29 @@ def format_markdown(report: dict) -> str:
         lines.append(f"| P50 | {perf['p50_ms']:.0f}ms |")
         lines.append(f"| P95 | {perf['p95_ms']:.0f}ms |")
         lines.append(f"| P99 | {perf['p99_ms']:.0f}ms |")
+
+    traffic = report.get("traffic_patterns") or {}
+    if traffic:
+        lines.append("\n## Traffic Patterns\n")
+        lines.append("| Dimension | Value |")
+        lines.append("|-----------|-------|")
+        if traffic.get("peak_hour") is not None:
+            lines.append(f"| Peak hour (Israel Time) | {traffic['peak_hour']}:00 |")
+        if traffic.get("busiest_day"):
+            lines.append(f"| Busiest day | {traffic['busiest_day']} |")
+        for label, value in (traffic.get("by_channel") or {}).items():
+            lines.append(f"| Channel: {label} | {value} |")
+
+    lang = report.get("language_analysis") or {}
+    if lang.get("classifiable_messages"):
+        lines.append("\n## Language Distribution\n")
+        lines.append("| Bucket | Messages |")
+        lines.append("|--------|----------|")
+        lines.append(f"| Hebrew (primary) | {lang['hebrew_messages']:,} |")
+        lines.append(f"| English (primary) | {lang['english_messages']:,} |")
+        lines.append(f"| Code-switching (20-80% Hebrew) | {lang['mixed_messages']:,} |")
+        lines.append(f"| Unclassifiable (no letters) | {lang['unclassifiable_messages']:,} |")
+        lines.append(f"\nCode-switching rate: {lang['mixed_rate']:.1%} of classifiable messages.")
 
     return "\n".join(lines)
 

@@ -363,14 +363,14 @@ def analyze_mixed_sentiment(text: str, he_analyzer, en_analyzer) -> dict:
 
 ### DictaBERT (dicta-il/dictabert)
 - **Type**: BERT-based Hebrew language model
-- **Developer**: Dicta, Bar-Ilan University
+- **Developer**: DICTA: The Israel Center for Text Analysis (an independent Israeli non-profit, dicta.org.il), not Bar-Ilan University
 - **Strengths**: Strong Hebrew language understanding, good for fine-tuning
 - **Sentiment variant**: `dicta-il/dictabert-sentiment`, fine-tuned on the HebrewSentiment dataset released by the Israeli National Program for Hebrew and Arabic NLP, CC-BY-4.0. Read its labels from `model.config.id2label` (`{0: "Positive", 1: "Negative", 2: "Neutral"}`), never from a hardcoded list.
 - **URL**: https://huggingface.co/dicta-il
 
 ### Dicta-LM 3.0 (dicta-il/DictaLM-3.0-*)
 - **Type**: Generative language model family for Hebrew, February 2026
-- **Developer**: Dicta, Bar-Ilan University
+- **Developer**: DICTA: The Israel Center for Text Analysis (an independent Israeli non-profit, dicta.org.il), not Bar-Ilan University
 - **Sizes**: 24B (from Mistral-Small-3.1), 12B (from NVIDIA Nemotron Nano V2), 1.7B (from Qwen3-1.7B), each with a 65k native context and a chat variant with tool-calling support
 - **Strengths**: Zero-shot sentiment classification via prompting, plus Hebrew summarization in the same call
 - **Usage**: 1.7B for per-message classification at volume, 24B for offline conversation summaries. DictaLM 2.0 (7B, July 2024) is the previous generation.
@@ -397,3 +397,55 @@ def analyze_mixed_sentiment(text: str, he_analyzer, en_analyzer) -> dict:
 4. **For sarcasm**: No automated approach is fully reliable. Build a sarcasm flag based on the detection strategy above and route flagged messages for human review.
 
 5. **For evolving slang**: Review the lexicon quarterly. Israeli slang evolves with pop culture, social media trends, and news events. Assign someone to update the slang dictionary.
+
+## DictaBERT sentiment: full usage
+
+The simplest path resolves label names off the model config for you:
+
+```python
+from transformers import pipeline
+oracle = pipeline("sentiment-analysis", model="dicta-il/dictabert-sentiment")
+```
+
+Driving the model directly, for batching control:
+
+```python
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import torch
+
+tok = AutoTokenizer.from_pretrained("dicta-il/dictabert-sentiment")
+model = AutoModelForSequenceClassification.from_pretrained(
+    "dicta-il/dictabert-sentiment"
+).eval()
+
+# Label order is model metadata, NOT a convention, and NOT alphabetical.
+# Here config.id2label is {0: "Positive", 1: "Negative", 2: "Neutral"}.
+id2label = {int(k): v.lower() for k, v in model.config.id2label.items()}
+
+
+def analyze(texts: list[str]) -> list[dict]:
+    inputs = tok(texts, return_tensors="pt", truncation=True,
+                 max_length=512, padding=True)
+    with torch.no_grad():
+        probs = torch.softmax(model(**inputs).logits, dim=-1)
+    out = []
+    for row in probs:
+        idx = int(row.argmax())
+        out.append({
+            "label": id2label[idx],
+            "score": float(row[idx]),
+            "scores": {id2label[i]: float(p) for i, p in enumerate(row)},
+        })
+    return out
+
+
+def analyze_batch(texts: list[str], batch_size: int = 32) -> list[dict]:
+    results = []
+    for i in range(0, len(texts), batch_size):
+        results.extend(analyze(texts[i:i + batch_size]))
+    return results
+```
+
+Never hardcode `["negative", "neutral", "positive"]`. That literal is wrong for
+this model at every index, and a version of this skill that used it reported
+every frustration spike as a satisfaction spike.

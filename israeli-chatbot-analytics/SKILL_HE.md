@@ -11,7 +11,7 @@ description: >-
   (יש hebrew-nlp-toolkit), הקמת מערכת תמיכה (יש israeli-customer-support-automator),
   או פיתוח בוט קולי (יש hebrew-voice-bot-builder).
 license: MIT
-compatibility: Requires Python 3.11+. Works with Claude Code, Cursor, Windsurf.
+compatibility: Requires Python 3.11+ for the bundled script (standard library only). Step 4 sentiment additionally needs torch + transformers.
 ---
 
 # אנליטיקת צ'אטבוטים ישראלית
@@ -53,14 +53,29 @@ conversation_log = {
 }
 ```
 
+שני שדות בסכמה הזו נושאים כל מספר מרכזי בסקיל, ואף אחד מהם לא מגיע בייצוא. הגדירו את שניהם במפורש לפני שאתם מחשבים משהו.
+
+**גזירת `outcome` (עשו את זה קודם).** שיעור השלמה, הסלמה, נטישה, ניתוח נטישה, ציון שביעות הרצון המורכב והעלות לשיחה שנפתרה, כולם נשענים על התווית הזו. ייצואים של פלטפורמות לא מכילים אותה: הפרסור של Dialogflow CX כותב `unknown`, ולזרם webhook של WhatsApp אין מושג של תוצאה בכלל. אם תריצו את הסקריפט בלי לגזור אותה, תקבלו דשבורד של אפסים. כתבו את הכלל ותייגו לו גרסה:
+
+| תוצאה | ממה גוזרים |
+|-------|------------|
+| `escalated` | אירוע העברה לנציג (Rasa `action_human_handoff`, העברה לצ'אט אנושי, פתיחת קריאה) |
+| `resolved` | אירוע היעד שלכם התרחש (הזמנה בוצעה, תור נקבע, טופס נשלח), או שהמשתמש הגיע לכוונת סיום חיובית, או CSAT בערך 4 ומעלה |
+| `abandoned` | הסשן נסגר בטיימאאוט חוסר הפעילות שלמטה, בלי אירוע יעד ובלי העברה לנציג |
+| `unknown` | כל השאר. דווחו על החלק הזה במפורש. דלי `unknown` גדול מבטל את כל השיעורים שמעליו |
+
+לעולם אל תיקחו `outcome` שהבוט כותב על עצמו ("הזרימה הושלמה") כתוצאה. זו האמונה של הבוט על עצמו, והתייחסות אליה כאמת מוחלטת היא בדיוק אותה שגיאה כמו קריאת `high_confidence_rate` בתור `intent_accuracy` (שלב 8).
+
+**הגדרת גבול הסשן.** השדות `session_id`, `started_at` ו-`ended_at` קיימים ב-Dialogflow CX וב-Rasa. ב-WhatsApp Cloud API, הערוץ הישראלי הדומיננטי, אין אובייקט סשן בכלל, רק זרם webhook שטוח. אתם חייבים לחתוך אותו בעצמכם בטיימאאוט של חוסר פעילות, **והטיימאאוט שתבחרו קובע מכנית את שיעור הנטישה ואת זמן הטיפול הממוצע שלכם**. משתמש שעונה למחרת בבוקר הוא סשן אחד ארוך שנפתר תחת חיתוך של 24 שעות, וסשן שננטש ועוד סשן חדש תחת חיתוך של 30 דקות. שני המספרים יגיעו להנהלה. בחרו אחד (30 דקות הוא ברירת מחדל סבירה לתמיכה), כתבו אותו לתוך שלב הנרמול, ואל תשנו אותו בלי להצהיר מחדש על ההיסטוריה. חלון השירות של 24 שעות וחלון ה-FEP של 72 שעות ב-WhatsApp הם חלונות **חיוב**: אל תמחזרו אותם כגבולות שיחה.
+
 אם הפלטפורמה שלכם לא מייצאת בפורמט הזה, כתוב transformer שינרמל את הלוגים. פלטפורמות נפוצות:
 
 | פלטפורמה | שיטת ייצוא | פורמט |
 |-----------|------------|-------|
 | Conversational Agents (לשעבר Dialogflow CX) | ייצוא BigQuery | שורות JSON עם הקשר סשן. השתמשו בקוד שפה `he-il` בסוכנים חדשים, בטבלת השפות `iw` מסומן כ-Hebrew (deprecated) עם פחות יכולות נתמכות (ראו https://docs.cloud.google.com/dialogflow/cx/docs/reference/language). קונסולת Dialogflow CX העצמאית הוסרה ב-31 באוקטובר 2025 והמוצר נקרא היום Conversational Agents, אבל ה-API והתיעוד עדיין תחת הנתיב dialogflow/cx. |
 | Rasa Pro / CALM | דשבורד אנליטיקה + אירועי tracker | אירועי שלב-בזרימה (Rasa Pro 3.x עם CALM מבוסס-דיאלוג ולא מבוסס-כוונות, ולכן מדדי דיוק כוונות ממופים שם אחרת). |
-| Rasa Open Source (ישן) | Tracker Store (SQL/Mongo) | רשימת אירועים לכל שיחה. נכנס למצב תחזוקה ב-2025, ראו https://legacy-docs-oss.rasa.com/docs/rasa/. |
-| Botpress | ייצוא שיחות / DB | JSON. עברית מופיעה כשפה נתמכת אבל יישור RTL בווידג'ט ברירת המחדל עדיין לא שלם נכון ל-2026, בדקו את היישור של בועות ההודעות לפני שאתם מדווחים על התפלגות שפה. |
+| Rasa Open Source (ישן) | Tracker Store (SQL/Mongo) | רשימת אירועים לכל שיחה. נמצא במצב תחזוקה (https://github.com/RasaHQ/rasa); תיעוד ה-OSS הישן ב-https://legacy-docs-oss.rasa.com/docs/rasa/. |
+| Botpress | ייצוא שיחות / DB | JSON. עברית היא שפה נתמכת, אבל לא אימתנו את יישור ה-RTL בווידג'ט ברירת המחדל, אז בדקו את יישור בועות ההודעות בווידג'ט שלכם לפני שאתם מדווחים על התפלגות שפה. |
 | בוטים מותאמים | לוגי אפליקציה | משתנה (לנרמל לסכמה למעלה) |
 | WhatsApp Cloud API | לוגי Webhook | אובייקטי הודעות עם metadata. ראו את הסעיף על תמחור WhatsApp למטה. |
 | ManyChat | ייצוא קהל + flow | CSV/JSON. עלויות שליחה ב-WhatsApp עוברות דרך התעריף לפי הודעה של Meta. |
@@ -69,66 +84,9 @@ conversation_log = {
 
 ניתוח מדדים ברמת הסשן כדי להבין את בריאות הצ'אטבוט:
 
-```python
-from dataclasses import dataclass, field
-from datetime import datetime
-from collections import Counter
-import statistics
+בנו dataclass בשם `ConversationMetrics` שעוקב אחרי `total_sessions`, `completed_sessions`, `escalated_sessions`, `abandoned_sessions`, `session_lengths` (מספר הודעות לסשן) ו-`session_durations` (שניות). גזרו מאפייני שיעור (`completion_rate`, `escalation_rate`, `abandonment_rate`) כ-`count / total_sessions`, ואת `avg_session_length` ו-`median_session_duration_seconds` משדות הרשימה.
 
-@dataclass
-class ConversationMetrics:
-    """חישוב מדדים ברמת סשן מלוגים של שיחות."""
-
-    total_sessions: int = 0
-    completed_sessions: int = 0
-    escalated_sessions: int = 0
-    abandoned_sessions: int = 0
-
-    session_lengths: list = field(default_factory=list)    # מספרי הודעות
-    session_durations: list = field(default_factory=list)  # שניות
-
-    @property
-    def completion_rate(self) -> float:
-        if self.total_sessions == 0:
-            return 0.0
-        return self.completed_sessions / self.total_sessions
-
-    @property
-    def escalation_rate(self) -> float:
-        if self.total_sessions == 0:
-            return 0.0
-        return self.escalated_sessions / self.total_sessions
-
-    @property
-    def abandonment_rate(self) -> float:
-        if self.total_sessions == 0:
-            return 0.0
-        return self.abandoned_sessions / self.total_sessions
-
-
-def compute_flow_metrics(conversations: list[dict]) -> ConversationMetrics:
-    """ניתוח זרימת שיחה מלוגים מובנים."""
-    metrics = ConversationMetrics()
-
-    for convo in conversations:
-        metrics.total_sessions += 1
-        msg_count = len(convo.get("messages", []))
-        metrics.session_lengths.append(msg_count)
-
-        started = datetime.fromisoformat(convo["started_at"])
-        ended = datetime.fromisoformat(convo.get("ended_at", convo["started_at"]))
-        metrics.session_durations.append((ended - started).total_seconds())
-
-        outcome = convo.get("outcome", "unknown")
-        if outcome == "resolved":
-            metrics.completed_sessions += 1
-        elif outcome == "escalated":
-            metrics.escalated_sessions += 1
-        elif outcome == "abandoned":
-            metrics.abandoned_sessions += 1
-
-    return metrics
-```
+`compute_flow_metrics(conversations)` עוברת פעם אחת על הלוגים המובנים, מקדמת את מונה התוצאה הנכון (`resolved` / `escalated` / `abandoned`), מוסיפה את מספר ההודעות ואת `(ended_at - started_at).total_seconds()`, ומחזירה את אובייקט המדדים.
 
 **בנצ'מרקים כלליים לצ'אטבוטי תמיכה (יש להפעיל שיקול דעת בהתאמה לבוט בעברית):**
 
@@ -146,130 +104,21 @@ def compute_flow_metrics(conversations: list[dict]) -> ConversationMetrics:
 
 זיהוי המקומות שבהם משתמשים נוטשים את השיחה. זה חושף בעיות UX, הודעות מבלבלות, או יכולות חסרות:
 
-```python
-def detect_drop_off_points(conversations: list[dict]) -> dict:
-    """מציאת נקודות נטישה נפוצות.
+`detect_drop_off_points(conversations)` מסננת ל-`outcome == "abandoned"` ומחזירה שלוש פרוסות `Counter.most_common`: נטישה לפי עומק השיחה (מספר הודעות), לפי הכוונה הפעילה ברגע הנטישה (הליכה מהסוף אחורה עד ההודעה הראשונה שנושאת כוונה), ולפי הודעת הבוט האחרונה (100 התווים הראשונים, הליכה מהסוף אחורה עד ה-`sender == "bot"` האחרון).
 
-    מחזיר מיפוי של (כוונה, אינדקס הודעה) לספירת נטישות.
-    """
-    drop_offs = Counter()
-    intent_at_drop = Counter()
-    last_bot_messages = Counter()
+השאירו את `fallback` בתוך דלי הכוונות. fallback ואז נטישה הוא דפוס הנטישה האמיתי הנפוץ ביותר, ולכן סינון שלו מרוקן את הדוח בדיוק עבור הסשנים שהכי חשוב לכם לראות.
 
-    for convo in conversations:
-        if convo.get("outcome") != "abandoned":
-            continue
-
-        messages = convo.get("messages", [])
-        if not messages:
-            continue
-
-        # איפה בזרימה הם עזבו?
-        drop_index = len(messages)
-        drop_offs[drop_index] += 1
-
-        # מה הייתה ההודעה האחרונה של הבוט?
-        for msg in reversed(messages):
-            if msg.get("sender") == "bot":
-                last_bot_messages[msg.get("text", "")[:100]] += 1
-                break
-
-        # איזו כוונה הייתה פעילה? משאירים fallback בפנים:
-        # נטישה אחרי fallback היא דפוס הנטישה הנפוץ ביותר,
-        # וסינון שלו מרוקן את הדוח בדיוק בסשנים שהכי חשוב לראות.
-        for msg in reversed(messages):
-            if msg.get("intent"):
-                intent_at_drop[msg["intent"]] += 1
-                break
-
-    return {
-        "drop_off_by_depth": dict(drop_offs.most_common(20)),
-        "drop_off_by_intent": dict(intent_at_drop.most_common(10)),
-        "drop_off_by_last_bot_msg": dict(last_bot_messages.most_common(10)),
-    }
-
-
-def detect_conversation_loops(conversations: list[dict], threshold: int = 3) -> list[dict]:
-    """זיהוי שיחות שבהן הבוט חוזר על אותה תגובה (המשתמש תקוע בלולאה).
-
-    Args:
-        conversations: רשימת שיחות.
-        threshold: מספר חזרות שמסמנות לולאה.
-    """
-    looped_sessions = []
-
-    for convo in conversations:
-        bot_messages = [
-            m["text"] for m in convo.get("messages", [])
-            if m["sender"] == "bot"
-        ]
-
-        repeat_count = 1
-        for i in range(1, len(bot_messages)):
-            if bot_messages[i] == bot_messages[i - 1]:
-                repeat_count += 1
-                if repeat_count >= threshold:
-                    looped_sessions.append({
-                        "session_id": convo["session_id"],
-                        "repeated_message": bot_messages[i][:100],
-                        "repeat_count": repeat_count,
-                    })
-                    break
-            else:
-                repeat_count = 1
-
-    return looped_sessions
-```
+`detect_conversation_loops(conversations, threshold=3)` מסמנת סשנים שבהם הבוט חוזר על אותו `text` לפחות `threshold` פעמים ברצף, על ידי סריקת זרם הודעות הבוט ומעקב אחרי מונה חזרות רצופות. פלטו `{session_id, repeated_message, repeat_count, total_messages}` לכל סשן לולאתי.
 
 ### שלב 4: ניתוח רגשות בעברית
 
 ניתוח רגשות בעברית דורש טיפול מיוחד בגלל המורפולוגיה המורכבת, דפוסי שלילה, וסלנג. משתמשים ב-DictaBERT (אנקודר לסיווג) לניקוד סנטימנט בסביבת ייצור, AlephBERT (`onlplab/alephbert-base` מ-ONLP Lab של אוניברסיטת בר-אילן) כאלטרנטיבת אנקודר, או בגישה מבוססת מילון לניתוח קל. כשצריך מודל אחד שמסווג סנטימנט וגם מסכם את השיחה בפרוזה עברית לצוות התפעול, עוברים ל-Dicta-LM 3.0 (פברואר 2026), משפחת המודלים העדכנית של Dicta: 24B (מבוסס Mistral-Small-3.1), 12B (מבוסס NVIDIA Nemotron Nano V2) ו-1.7B (מבוסס Qwen3-1.7B), כל אחד עם חלון הקשר של 65k וגרסת צ'אט עם תמיכה ב-tool calling. הווריאנט 1.7B מתאים לסיווג הודעה-הודעה בנפח גבוה, ו-24B לסיכומים אופליין. DictaLM 2.0 (יולי 2024, 7B, מבוסס Mistral) הוא הדור הקודם ועדיין עובד, אבל בנייה חדשה מתחילה מ-3.0.
 
-**שימוש ב-DictaBERT (כדאי לייצור):**
+**שימוש ב-DictaBERT (כדאי לייצור).** המסלול הפשוט הוא `pipeline("sentiment-analysis", model="dicta-il/dictabert-sentiment")`, שמוציא את שמות התוויות מקונפיג המודל בשבילכם. אם אתם מריצים את המודל ישירות לשליטה ב-batching, עטפו `AutoTokenizer` ו-`AutoModelForSequenceClassification`, טוקנזו עם `truncation=True, max_length=512, padding=True`, הריצו softmax על ה-logits ומפו כל שורה דרך `id2label`.
 
-```python
-# DictaBERT: מודל BERT לעברית של דיקטה (אוניברסיטת בר-אילן)
-# https://huggingface.co/dicta-il/dictabert
-#
-# הדרך הבטוחה ביותר היא pipeline, שקורא את שמות התוויות מקונפיג המודל:
-#     from transformers import pipeline
-#     oracle = pipeline("sentiment-analysis", model="dicta-il/dictabert-sentiment")
+קריטי: קראו את שמות התוויות מ-`model.config.id2label`, לעולם לא מרשימה קשיחה. סדר התוויות הוא מטא-דאטה של המודל, לא מוסכמה, והוא לא אלפביתי. עבור `dicta-il/dictabert-sentiment` הוא `{0: "Positive", 1: "Negative", 2: "Neutral"}`. גרסה של הסקיל הזה שקיבעה `["negative","neutral","positive"]` הייתה שגויה בכל אינדקס ודיווחה על כל זינוק בתסכול כזינוק בשביעות רצון.
 
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-import torch
-
-class HebrewSentimentAnalyzer:
-    """ניתוח רגשות בעברית באמצעות מודל DictaBERT."""
-
-    def __init__(self, model_name: str = "dicta-il/dictabert-sentiment"):
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForSequenceClassification.from_pretrained(model_name)
-        self.model.eval()
-        # סדר התוויות הוא מטא-דאטה של המודל, לא מוסכמה, והוא לא לפי סדר אלפביתי.
-        # במודל הזה config.id2label הוא {0: "Positive", 1: "Negative", 2: "Neutral"}.
-        self.labels = [
-            self.model.config.id2label[i].lower()
-            for i in range(len(self.model.config.id2label))
-        ]
-
-    def analyze(self, text: str) -> dict:
-        """ניתוח רגשות של טקסט בעברית."""
-        inputs = self.tokenizer(
-            text, return_tensors="pt", truncation=True, max_length=512, padding=True,
-        )
-        with torch.no_grad():
-            outputs = self.model(**inputs)
-            probabilities = torch.softmax(outputs.logits, dim=-1)
-
-        scores = {
-            label: round(prob.item(), 4)
-            for label, prob in zip(self.labels, probabilities[0])
-        }
-        best_label = max(scores, key=scores.get)
-        return {"label": best_label, "score": scores[best_label], "scores": scores}
-```
-
-קריטי: אסור לקבע את הרשימה `["negative","neutral","positive"]`. הליטרל הזה שגוי במודל הזה בכל אינדקס, וסקיל שהשתמש בו דיווח על כל זינוק בתסכול כאילו היה זינוק בשביעות רצון. תמיד קוראים את התוויות דרך `model.config.id2label`.
+הקוד המלא, עוטף ה-batching והמסלול מבוסס-המילון: `references/hebrew-sentiment-guide.md`.
 
 **אתגרים ייחודיים בניתוח רגשות בעברית:**
 
@@ -293,69 +142,12 @@ class HebrewSentimentAnalyzer:
 
 מעקב אחרי רמת הדיוק של הצ'אטבוט בהבנת בקשות משתמשים:
 
-```python
-from collections import defaultdict, Counter
-import statistics
+בנו `IntentAccuracyTracker` שמתעד `(predicted, actual, confidence, timestamp)` לכל ניבוי וחושף:
 
-class IntentAccuracyTracker:
-    """מעקב וניתוח דיוק זיהוי כוונות."""
-
-    def __init__(self):
-        self.predictions = []
-        self.daily_accuracy = defaultdict(list)
-
-    def log_prediction(self, predicted_intent: str, actual_intent: str,
-                       confidence: float, timestamp: str):
-        """רישום תחזית כוונה בודדת לניתוח."""
-        correct = predicted_intent == actual_intent
-        self.predictions.append({
-            "predicted": predicted_intent,
-            "actual": actual_intent,
-            "confidence": confidence,
-            "correct": correct,
-            "timestamp": timestamp,
-        })
-        self.daily_accuracy[timestamp[:10]].append(correct)
-
-    def confusion_matrix(self) -> dict:
-        """בניית מטריצת בלבול לסיווג כוונות."""
-        matrix = defaultdict(lambda: defaultdict(int))
-        intents = set()
-        for pred in self.predictions:
-            matrix[pred["actual"]][pred["predicted"]] += 1
-            intents.add(pred["actual"])
-            intents.add(pred["predicted"])
-        sorted_intents = sorted(intents)
-        return {
-            "matrix": {
-                actual: {pred: matrix[actual][pred] for pred in sorted_intents}
-                for actual in sorted_intents
-            },
-            "intents": sorted_intents,
-        }
-
-    def misclassification_report(self, min_count: int = 5) -> list[dict]:
-        """זיהוי הטעויות הנפוצות ביותר בסיווג."""
-        misclass = Counter()
-        for pred in self.predictions:
-            if not pred["correct"]:
-                misclass[(pred["actual"], pred["predicted"])] += 1
-        return [
-            {"actual_intent": a, "predicted_as": p, "count": c}
-            for (a, p), c in misclass.most_common() if c >= min_count
-        ]
-
-    def accuracy_trend(self) -> list[dict]:
-        """מגמת דיוק יומית לגרף."""
-        return [
-            {
-                "date": date,
-                "accuracy": round(sum(r) / len(r), 4),
-                "sample_count": len(r),
-            }
-            for date, r in sorted(self.daily_accuracy.items())
-        ]
-```
+- `confusion_matrix()`: מטריצה דו-ממדית `{actual: {predicted: count}}` על פני יקום הכוונות הממוין.
+- `misclassification_report(min_count=5)`: זוגות `(actual, predicted)` המובילים שבהם `predicted != actual`.
+- `low_confidence_intents(threshold=0.6)`: כוונות שהביטחון הממוצע שלהן נמוך מ-`threshold`, עם `sample_count` ו-`below_threshold_pct`.
+- `accuracy_trend()`: סדרה יומית `{date, accuracy, sample_count}` לשרטוט (קיבוץ לפי `timestamp[:10]`).
 
 **איך להשיג תיוגים אמיתיים (ground truth):**
 
@@ -367,142 +159,25 @@ class IntentAccuracyTracker:
 
 שילוב מספר סיגנלים לציון שביעות רצון מורכב:
 
-```python
-from dataclasses import dataclass
+בנו dataclass בשם `SatisfactionSignals` שנושא משוב ישיר (`csat_score` בסקאלה 1-5, `thumbs_rating` בערך "up" או "down"), סיגנלים התנהגותיים (`session_resolved`, `escalated_to_human`, `abandoned`, `repeated_fallbacks`, `loop_detected`) וסיגנלי רגשות (`final_sentiment` בערך positive/neutral/negative, `sentiment_trend` בערך improving/stable/declining).
 
-@dataclass
-class SatisfactionSignals:
-    """שילוב סיגנלי שביעות רצון לציון מורכב."""
-
-    # משוב ישיר
-    csat_score: float | None = None      # סקאלה 1-5
-    thumbs_rating: str | None = None     # "up" או "down"
-
-    # סיגנלים התנהגותיים
-    session_resolved: bool = False
-    escalated_to_human: bool = False
-    abandoned: bool = False
-    repeated_fallbacks: int = 0
-    loop_detected: bool = False
-
-    # סיגנלי רגשות
-    final_sentiment: str = "neutral"
-    sentiment_trend: str = "stable"      # improving/stable/declining
-
-    def composite_score(self) -> float:
-        """חישוב ציון שביעות רצון מורכב (0.0 עד 1.0)."""
-        score = 0.5  # התחלה ניטרלית
-
-        if self.csat_score is not None:
-            return round((self.csat_score - 1) / 4, 2)
-
-        if self.thumbs_rating == "up":
-            score = 0.8
-        elif self.thumbs_rating == "down":
-            score = 0.2
-
-        if self.session_resolved:
-            score += 0.15
-        if self.escalated_to_human:
-            score -= 0.1
-        if self.abandoned:
-            score -= 0.2
-        if self.repeated_fallbacks > 2:
-            score -= 0.15
-        if self.loop_detected:
-            score -= 0.2
-
-        sentiment_adj = {"positive": 0.1, "neutral": 0.0, "negative": -0.15}
-        score += sentiment_adj.get(self.final_sentiment, 0)
-
-        return round(max(0.0, min(1.0, score)), 2)
-```
+המתודה `composite_score() -> float` מחזירה 0.0 עד 1.0. אם `csat_score` קיים, מחזירים `(csat_score - 1) / 4` ועוצרים. אחרת מתחילים מ-0.5 (או 0.8 / 0.2 עבור thumbs up / down), ואז מוסיפים: 0.15+ נפתר, 0.1- הוסלם, 0.2- ננטש, 0.15- אם `repeated_fallbacks > 2`, 0.2- זוהתה לולאה, 0.15-0.1-/+ לפי `final_sentiment`, 0.1-0.05-/+ לפי `sentiment_trend`. לבסוף מגבילים לטווח [0, 1].
 
 **תבנית סקר אחרי שיחה בעברית:**
 
-```python
-post_chat_survey = {
-    "title": "נשמח לשמוע מה חשבת",
-    "questions": [
-        {
-            "id": "satisfaction",
-            "type": "rating",
-            "text": "עד כמה הצ'אטבוט עזר לך?",
-            "scale": {"min": 1, "max": 5},
-            "labels": {
-                1: "לא עזר בכלל",
-                2: "עזר מעט",
-                3: "עזר בינוני",
-                4: "עזר טוב",
-                5: "עזר מצוין",
-            },
-        },
-        {
-            "id": "understood",
-            "type": "yes_no",
-            "text": "האם הצ'אטבוט הבין את מה שרצית?",
-        },
-        {
-            "id": "open_feedback",
-            "type": "free_text",
-            "text": "רוצה לשתף עוד משהו? (לא חובה)",
-            "required": False,
-        },
-    ],
-    "submit_label": "שלח משוב",
-    "thank_you": "תודה על המשוב! זה עוזר לנו להשתפר.",
-}
-```
+ספקו `collect_post_chat_survey_he()` שמחזירה סקר עברי לסיום שיחה: כותרת "נשמח לשמוע מה חשבת", דירוג 1-5 על "עד כמה הצ'אטבוט עזר לך?", שאלת כן/לא על "האם הצ'אטבוט הבין את מה שרצית?", ושדה פתוח לא חובה "רוצה לשתף עוד משהו?". תווית השליחה היא "שלח משוב".
 
 ### שלב 7: בדיקות A/B לווריאציות תגובה בעברית
 
 בדיקת ניסוחים שונים, רמות רשמיות, ואסטרטגיות מגדר:
 
-```python
-import hashlib
-from collections import defaultdict
+בנו `HebrewABTestManager` עם שלוש אחריויות:
 
-class HebrewABTestManager:
-    """ניהול בדיקות A/B לתגובות צ'אטבוט בעברית."""
+1. **רישום בדיקה.** `create_test(test_id, variants: {name: response_text}, traffic_split=None)`. ברירת המחדל היא פיצול אחיד בין הווריאנטים. שמרו `{variants, traffic_split, created_at}` לכל test_id. דוגמה לווריאנטים: `formal` בערך "שלום וברוכים הבאים. כיצד נוכל לסייע לכם?", `casual` בערך "היי! איך אפשר לעזור?", `gender_neutral` בערך "שלום! ניתן לבחור מהאפשרויות הבאות:".
 
-    def __init__(self):
-        self.active_tests = {}
-        self.results = defaultdict(lambda: {
-            "impressions": 0, "completions": 0,
-            "satisfaction_scores": [], "escalations": 0,
-        })
+2. **Bucketing דטרמיניסטי.** `assign_variant(test_id, user_id)` מבצעת hash ל-`f"{user_id}:{test_id}"` עם `hashlib.md5`, ממפה לדלי בטווח `[0, 1)`, ומהלכת על ה-`traffic_split` המצטבר, כך שאותו משתמש תמיד מקבל את אותו וריאנט. השתמשו בזה בתוך `get_response(...)` וקדמו מונה `impressions` באותה נשימה.
 
-    def create_test(self, test_id: str, variants: dict[str, str],
-                    traffic_split: dict[str, float] | None = None):
-        """יצירת בדיקת A/B חדשה.
-
-        דוגמה:
-            create_test("welcome_message", variants={
-                "formal": "שלום וברוכים הבאים. כיצד נוכל לסייע לכם?",
-                "casual": "היי! איך אפשר לעזור?",
-                "gender_neutral": "שלום! ניתן לבחור מהאפשרויות הבאות:",
-            })
-        """
-        if traffic_split is None:
-            n = len(variants)
-            traffic_split = {name: 1.0 / n for name in variants}
-        self.active_tests[test_id] = {
-            "variants": variants,
-            "traffic_split": traffic_split,
-        }
-
-    def assign_variant(self, test_id: str, user_id: str) -> str:
-        """שיוך דטרמיניסטי של משתמש לווריאנט. אותו משתמש תמיד רואה את אותו ווריאנט."""
-        test = self.active_tests[test_id]
-        hash_val = int(hashlib.md5(f"{user_id}:{test_id}".encode()).hexdigest(), 16)
-        bucket = (hash_val % 1000) / 1000.0
-        cumulative = 0.0
-        for variant_name, split in test["traffic_split"].items():
-            cumulative += split
-            if bucket < cumulative:
-                return variant_name
-        return list(test["traffic_split"].keys())[-1]
-```
+3. **מעקב תוצאות.** `record_outcome(test_id, variant, completed=False, satisfaction=None, escalated=False)` ו-`get_test_results(test_id)` שמחזירה לכל וריאנט `{impressions, completion_rate, avg_satisfaction, escalation_rate}`.
 
 **ממדים נפוצים לבדיקות A/B בעברית:**
 
@@ -517,55 +192,17 @@ class HebrewABTestManager:
 
 מדדים מרכזיים לדשבורד:
 
-```python
-from dataclasses import dataclass
+בנו dataclass בשם `ChatbotDashboard` שמקבץ את השדות הבאים, ובנוסף `to_report_dict()` שמעצב אותם לפי קבוצות (שיעורים כאחוזים, זמנים כמילישניות):
 
-@dataclass
-class ChatbotDashboard:
-    """מדדים מרכזיים לדשבורד ביצועי צ'אטבוט."""
+| קבוצה | שדות |
+|-------|------|
+| ליבה | `total_conversations`, `resolution_rate`, `first_contact_resolution`, `avg_handle_time_seconds`, `escalation_rate`, `abandonment_rate` |
+| שביעות רצון | `avg_csat` (1-5), `nps_score` (100- עד 100), `thumbs_up_ratio` |
+| איכות זיהוי כוונות | `high_confidence_rate`, `intent_accuracy` (`float \| None`, דורש תיוג ידני), `fallback_rate` |
+| ביצועים | `avg_response_time_ms`, `p95_response_time_ms` |
+| נפח | `conversations_per_day`, `peak_hour` (0-23), `busiest_day` |
 
-    total_conversations: int = 0
-    resolution_rate: float = 0.0        # אחוז שנפתר בלי הסלמה
-    first_contact_resolution: float = 0.0  # אחוז שנפתר בסשן הראשון
-    avg_handle_time_seconds: float = 0.0
-    escalation_rate: float = 0.0
-    abandonment_rate: float = 0.0
-
-    avg_csat: float = 0.0               # סקאלה 1-5
-    high_confidence_rate: float = 0.0   # אחוז ניבויים מעל סף הביטחון
-    intent_accuracy: float | None = None  # אחוז סיווג נכון, דורש תיוג ידני
-    fallback_rate: float = 0.0          # אחוז הודעות שהגיעו ל-fallback
-
-    avg_response_time_ms: float = 0.0
-    conversations_per_day: float = 0.0
-    peak_hour: int = 0                  # 0-23
-    busiest_day: str = ""
-
-    def to_report_dict(self) -> dict:
-        """עיצוב מדדים לדיווח."""
-        return {
-            "ליבה": {
-                "סה\"כ שיחות": f"{self.total_conversations:,}",
-                "שיעור פתרון": f"{self.resolution_rate:.1%}",
-                "שיעור הסלמה": f"{self.escalation_rate:.1%}",
-                "שיעור נטישה": f"{self.abandonment_rate:.1%}",
-            },
-            "שביעות רצון": {
-                "CSAT ממוצע": f"{self.avg_csat:.1f}/5",
-            },
-            "דיוק": {
-                "שיעור ניבויים בביטחון גבוה": f"{self.high_confidence_rate:.1%}",
-                "דיוק זיהוי כוונות": (
-                    f"{self.intent_accuracy:.1%}"
-                    if self.intent_accuracy is not None
-                    else "n/a"
-                ),
-                "שיעור fallback": f"{self.fallback_rate:.1%}",
-            },
-        }
-```
-
-**דפוסי תנועה ישראליים שכדאי לצפות:**
+**דפוסי תנועה ישראליים שכדאי לצפות.** הדפוסים האלה נגזרים משבוע העבודה א'-ה' והם הנחות עבודה, לא מדידה. אמתו כל אחד מהם מול הלוגים שלכם לפני שאתם בונים עליו כלל איוש או התראה.
 - שעות שיא: בדרך כלל 10:00-12:00 ו-19:00-22:00 (שעון ישראל)
 - יום ראשון הוא היום העמוס ביותר (יום עבודה ראשון בשבוע הישראלי)
 - שישי אחר הצהריים ושבת עם תנועה מינימלית
@@ -630,285 +267,41 @@ def compute_retention_metrics(conversations: list[dict]) -> dict:
 
 כשמציגים דשבורדים אנליטיים עם טקסט בעברית, טפלו בנושאי RTL:
 
-```python
-# matplotlib לא תומך ב-RTL באופן מקורי
-# עדיף להשתמש ב-Plotly שתומך בעברית טוב יותר:
-
-import plotly.graph_objects as go
-
-def create_hebrew_chart(data: dict[str, float], title: str) -> go.Figure:
-    """יצירת גרף אינטראקטיבי עם תמיכה בעברית באמצעות Plotly."""
-    fig = go.Figure(data=[
-        go.Bar(
-            y=list(data.keys()),
-            x=list(data.values()),
-            orientation="h",
-            marker_color="#4F46E5",
-            text=[f"{v:.1%}" for v in data.values()],
-            textposition="outside",
-        )
-    ])
-    fig.update_layout(
-        title=dict(text=title, font=dict(size=16)),
-        xaxis=dict(tickformat=".0%"),
-        font=dict(family="Heebo, Arial, sans-serif"),
-        height=400,
-        margin=dict(l=150),  # מרווח שמאלי נוסף לתוויות בעברית
-    )
-    return fig
-```
+הגדירו `matplotlib.rcParams["font.family"] = ["DejaVu Sans", "Arial", "Heebo"]` כדי שאותיות עבריות ייווצרו בכלל, ואז החילו `bidi.algorithm.get_display()` (מהחבילה `python-bidi`) על כל תווית לפני הציור, כי ל-matplotlib אין תמיכת RTL מקורית. העדיפו גרפי עמודות אופקיים, כך שתוויות בעברית יושבות על ציר ה-y ונקראות באופן טבעי. לדשבורדים אינטראקטיביים Plotly מטפל ב-RTL טוב יותר מ-matplotlib: השתמשו ב-`font-family: "Heebo, Arial, sans-serif"` והוסיפו שוליים נוספים בצד ההתחלה עבור התוויות.
 
 #### טוקניזציה של מילים בעברית לענני מילים
 
 טוקניזציה רגילה לפי רווחים לא עובדת טוב בעברית בגלל תחיליות (ב, ה, ו, ל, מ, כ, ש):
 
-```python
-HEBREW_PREFIXES = ["ב", "ה", "ו", "ל", "מ", "כ", "ש", "וה", "של", "לה"]
-
-def simple_hebrew_tokenize(text: str) -> list[str]:
-    """טוקנייזר פשוט לעברית עם הסרת תחיליות.
-
-    לסביבת ייצור, השתמשו ב-YAP (Yet Another Parser):
-    https://github.com/OnlpLab/yap
-    """
-    import re
-    tokens = re.findall(r'[\u0590-\u05FF]+', text)
-
-    cleaned = []
-    for token in tokens:
-        stripped = token
-        if len(token) > 3:
-            for prefix in sorted(HEBREW_PREFIXES, key=len, reverse=True):
-                if token.startswith(prefix) and len(token) - len(prefix) >= 2:
-                    stripped = token[len(prefix):]
-                    break
-        cleaned.append(stripped)
-    return cleaned
-```
+טוקניזציה לפי רווחים לא עובדת טוב בעברית בגלל אותיות השימוש (ב, ה, ו, ל, מ, כ, ש). לייצור השתמשו ב-YAP (https://github.com/OnlpLab/yap), או קלפו תחיליות נפוצות מתוך `["ב", "ה", "ו", "ל", "מ", "כ", "ש", "וה", "של", "לה"]`, וזאת רק כשהמילה ארוכה מ-3 תווים והשארית באורך 2 תווים לפחות. לענני מילים החילו את אלגוריתם ה-bidi לתצוגה והסירו מילות עצירה (של, את, על, עם, אני, זה, כי, גם, לא, יש, אין, מה). קוד הטוקניזציה המלא נמצא ב-`references/hebrew-sentiment-guide.md`.
 
 #### טיפול בשאילתות מעורבות עברית-אנגלית
 
 משתמשים ישראליים מערבבים שפות לעתים קרובות. עקבו אחרי התפלגות השפות:
 
-```python
-import re
-
-def detect_message_language(text: str) -> dict:
-    """זיהוי הרכב שפתי של הודעה."""
-    hebrew_chars = len(re.findall(r'[\u0590-\u05FF]', text))
-    english_chars = len(re.findall(r'[a-zA-Z]', text))
-    total = hebrew_chars + english_chars
-
-    if total == 0:
-        return {"primary_language": "unknown", "hebrew_ratio": 0, "english_ratio": 0}
-
-    he_ratio = hebrew_chars / total
-    return {
-        "primary_language": "he" if he_ratio >= 0.5 else "en",
-        "hebrew_ratio": round(he_ratio, 2),
-        "english_ratio": round(1 - he_ratio, 2),
-        "is_mixed": 0.2 < he_ratio < 0.8,
-    }
-```
+זהו את שפת ההודעה על ידי ספירת תווים עבריים (`[\u0590-\u05FF]`) מול תווים אנגליים (`[a-zA-Z]`): החזירו `"unknown"` כשאין אף אחד מהם, אחרת `"he"` כשחלק העברית הוא 0.5 ומעלה מהסך, ו-`"en"` אחרת. עקבו גם אחרי שיעור השפה המעורבת, כלומר הודעות שבהן 20% עד 80% מהתווים עבריים. משתמשים ישראלים מחליפים שפה בתוך משפט בתדירות גבוהה.
 
 ### שלב 10: התראות וזיהוי חריגים
 
 הגדירו התראות כדי לתפוס בעיות לפני שהן משפיעות על יותר מדי משתמשים:
 
-```python
-from dataclasses import dataclass
+הגדירו dataclass בשם `AlertRule` עם `name`, `metric`, `operator` (בערך `"gt"` או `"lt"`), `threshold`, `window_minutes`, `severity` (בערך `critical` / `warning` / `info`) ו-`description_he`, הטקסט בעברית שצוות התפעול באמת יקרא. שלושת הכללים שתופסים הכי הרבה תקלות אמיתיות הם `satisfaction_drop` (`avg_csat` lt 3.0 על פני 120 דקות, critical), `high_abandonment` (`abandonment_rate` gt 0.40 על פני 60 דקות, critical) ו-`high_fallback_rate` (`fallback_rate` gt 0.25 על פני 30 דקות, warning). מערך שישת הכללים המלא עם התיאורים בעברית נמצא ב-`references/chatbot-metrics-glossary.md`.
 
-@dataclass
-class AlertRule:
-    """הגדרת כלל התראה למדדי צ'אטבוט."""
-    name: str
-    metric: str
-    operator: str          # "gt" (גדול מ) או "lt" (קטן מ)
-    threshold: float
-    window_minutes: int    # חלון מתגלגל
-    severity: str          # "critical", "warning", "info"
-    description_he: str    # תיאור בעברית לצוות תפעול
-
-# כללי התראה מומלצים לצ'אטבוטים בעברית
-DEFAULT_ALERT_RULES = [
-    AlertRule(
-        name="high_escalation_rate",
-        metric="escalation_rate",
-        operator="gt", threshold=0.35, window_minutes=60,
-        severity="warning",
-        description_he="שיעור הסלמה גבוה מ-35% בשעה האחרונה",
-    ),
-    AlertRule(
-        name="satisfaction_drop",
-        metric="avg_csat",
-        operator="lt", threshold=3.0, window_minutes=120,
-        severity="critical",
-        description_he="שביעות רצון ממוצעת ירדה מתחת ל-3.0 בשעתיים האחרונות",
-    ),
-    AlertRule(
-        name="high_abandonment",
-        metric="abandonment_rate",
-        operator="gt", threshold=0.40, window_minutes=60,
-        severity="critical",
-        description_he="שיעור נטישה גבוה מ-40% בשעה האחרונה",
-    ),
-    AlertRule(
-        name="high_fallback_rate",
-        metric="fallback_rate",
-        operator="gt", threshold=0.25, window_minutes=30,
-        severity="warning",
-        description_he="שיעור fallback גבוה מ-25% בחצי שעה האחרונה",
-    ),
-    AlertRule(
-        name="slow_response",
-        metric="p95_response_time_ms",
-        operator="gt", threshold=3000, window_minutes=15,
-        severity="warning",
-        description_he="זמן תגובה P95 חורג מ-3 שניות ברבע השעה האחרון",
-    ),
-]
-```
+הספים האלה הם רף פתיחה ולא בנצ'מרק: החליפו כל אחד מהם בבסיס שלכם אחרי ארבעה שבועות של מדידה. הם גם מניחים בוט מנוהל-דיאלוג. בבוט מבוסס LLM כלל ה-`slow_response` על p95 של 3 שניות יידלק כל הזמן ויושתק, וייקח איתו את אות ההשהיה האמיתי, אז החליפו אותו בכלל ה-time-to-first-token שב-`references/llm-bot-observability.md`.
 
 ### שלב 11: תבניות דיווח
 
 הפקת דוחות תקופתיים שמסכמים ביצועי צ'אטבוט:
 
-```python
-def generate_weekly_report(
-    dashboard: ChatbotDashboard,
-    previous_dashboard: ChatbotDashboard | None = None,
-    period_start: str = "",
-    period_end: str = "",
-) -> str:
-    """הפקת דוח שבועי בעברית."""
+ממשו `generate_weekly_report(dashboard, previous_dashboard=None, period_start, period_end)`:
 
-    def trend_arrow(current: float, previous: float, higher_is_better: bool = True) -> str:
-        if previous == 0:
-            return ""
-        diff = current - previous
-        pct = (diff / previous) * 100
-        if abs(pct) < 1:
-            return "(ללא שינוי)"
-        arrow = "+" if diff > 0 else ""
-        good = (diff > 0) == higher_is_better
-        indicator = "[v]" if good else "[!]"
-        return f"{indicator} {arrow}{pct:.1f}%"
-
-    prev = previous_dashboard
-    lines = [
-        f"# דוח ביצועי צ'אטבוט שבועי",
-        f"## תקופה: {period_start} עד {period_end}",
-        "",
-        "## מדדים מרכזיים",
-        "",
-        f"| מדד | ערך | שינוי |",
-        f"|------|------|--------|",
-        f"| שיחות | {dashboard.total_conversations:,} | "
-        f"{trend_arrow(dashboard.total_conversations, prev.total_conversations if prev else 0)} |",
-        f"| שיעור פתרון | {dashboard.resolution_rate:.1%} | "
-        f"{trend_arrow(dashboard.resolution_rate, prev.resolution_rate if prev else 0)} |",
-        f"| שביעות רצון | {dashboard.avg_csat:.1f}/5 | "
-        f"{trend_arrow(dashboard.avg_csat, prev.avg_csat if prev else 0)} |",
-        f"| שיעור הסלמה | {dashboard.escalation_rate:.1%} | "
-        f"{trend_arrow(dashboard.escalation_rate, prev.escalation_rate if prev else 0, False)} |",
-        f"| שיעור נטישה | {dashboard.abandonment_rate:.1%} | "
-        f"{trend_arrow(dashboard.abandonment_rate, prev.abandonment_rate if prev else 0, False)} |",
-        f"| שיעור ניבויים בביטחון גבוה | {dashboard.high_confidence_rate:.1%} | "
-        f"{trend_arrow(dashboard.high_confidence_rate, prev.high_confidence_rate if prev else 0)} |",
-        "",
-        "## תנועה",
-        f"- ממוצע שיחות ביום: {dashboard.conversations_per_day:.0f}",
-        f"- שעת שיא: {dashboard.peak_hour}:00",
-        f"- יום עמוס ביותר: {dashboard.busiest_day}",
-    ]
-
-    return "\n".join(lines)
-```
+- פונקציית עזר `trend_arrow(current, previous, higher_is_better)`: מחזירה `(ללא שינוי)` כשהפער קטן מ-1%, ואחרת פולטת `[v] +X.X%` (כיוון טוב) או `[!] +X.X%` (כיוון רע).
+- פלטו כותרת `# דוח ביצועי צ'אטבוט שבועי`, תת-כותרת עם התקופה, וטבלת markdown בפורמט `| מדד | ערך | שינוי מהשבוע הקודם |` על: שיחות, שיעור פתרון, CSAT, שיעור הסלמה (נמוך יותר עדיף), שיעור נטישה (נמוך יותר עדיף), שיעור ניבויים בביטחון גבוה, זמן תגובה ממוצע (נמוך יותר עדיף). שורת `דיוק זיהוי כוונות` מוצגת רק כשתיוג ידני הפיק `intent_accuracy` אמיתי.
+- הוסיפו בלוק `## תנועה` עם `conversations_per_day`, `peak_hour`, `busiest_day`.
 
 ### שלב 12: אינטגרציה עם פלטפורמות צ'אטבוט
 
-#### Conversational Agents (Dialogflow CX)
-
-```python
-from collections import defaultdict
-
-def parse_dialogflow_cx_logs(bigquery_rows: list[dict]) -> list[dict]:
-    """המרת ייצוא BigQuery של Dialogflow CX לפורמט שיחות סטנדרטי."""
-    sessions = defaultdict(lambda: {"messages": [], "started_at": None, "ended_at": None})
-
-    for row in bigquery_rows:
-        session_id = row["session_id"]
-        timestamp = row["request_time"]
-        session = sessions[session_id]
-
-        if session["started_at"] is None or timestamp < session["started_at"]:
-            session["started_at"] = timestamp
-        if session["ended_at"] is None or timestamp > session["ended_at"]:
-            session["ended_at"] = timestamp
-
-        if row.get("query_text"):
-            session["messages"].append({
-                "timestamp": timestamp, "sender": "user",
-                "text": row["query_text"],
-                "intent": row.get("matched_intent", ""),
-                "intent_confidence": row.get("intent_confidence", 0),
-            })
-        if row.get("response_text"):
-            session["messages"].append({
-                "timestamp": timestamp, "sender": "bot",
-                "text": row["response_text"],
-            })
-
-    return [
-        {"session_id": sid, **s, "outcome": "unknown", "language": "he"}
-        for sid, s in sessions.items()
-    ]
-```
-
-#### Rasa Tracker Store
-
-הערה: Rasa Open Source נמצאת במצב תחזוקה. אנליטיקת ה-tracker-store מבוססת-הכוונות שלמטה רלוונטית לפריסות Rasa OSS קיימות; בנייה חדשה ב-Rasa משתמשת ב-CALM (Conversational AI with Language Models) שהיא מבוססת-דיאלוג ולא מבוססת-כוונות, ולכן מדדי דיוק כוונות ממופים שם אחרת. ראו את תיעוד ה-OSS הישן ב-https://legacy-docs-oss.rasa.com/docs/rasa/ לפרטי tracker-store.
-
-```python
-def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
-    """המרת אירועי Tracker Store של Rasa לפורמט שיחות סטנדרטי."""
-    conversations = []
-    current = {"messages": [], "started_at": None, "ended_at": None}
-
-    for event in tracker_events:
-        event_type = event.get("event")
-        timestamp = event.get("timestamp", "")
-
-        if event_type == "session_started":
-            if current["messages"]:
-                conversations.append(current)
-            current = {"session_id": "", "messages": [], "started_at": timestamp,
-                       "ended_at": None, "outcome": "unknown", "language": "he"}
-
-        elif event_type == "user":
-            current["ended_at"] = timestamp
-            intent_data = event.get("parse_data", {}).get("intent", {})
-            current["messages"].append({
-                "timestamp": timestamp, "sender": "user",
-                "text": event.get("text", ""),
-                "intent": intent_data.get("name", ""),
-                "intent_confidence": intent_data.get("confidence", 0),
-            })
-
-        elif event_type == "bot":
-            current["ended_at"] = timestamp
-            current["messages"].append({
-                "timestamp": timestamp, "sender": "bot",
-                "text": event.get("text", ""),
-            })
-
-        elif event_type == "action" and event.get("name") == "action_human_handoff":
-            current["outcome"] = "escalated"
-
-    if current["messages"]:
-        conversations.append(current)
-    return conversations
-```
+כל פלטפורמה מייצאת שיחות במבנה משלה. נרמלו כל אחת מהן לסכמה של שלב 1 וכל המדדים שלמעלה יעבדו בלי שינוי. מתכוני הפרסור לייצוא BigQuery של Conversational Agents (Dialogflow CX) ול-Rasa Tracker Store, יחד עם ההערות על קוד השפה העברי ועל גרסת Rasa, נמצאים ב-`references/platform-integrations.md`. ל-Botpress, ל-ManyChat, ללוגי webhook של WhatsApp ולבוטים מותאמים אין מבנה ייצוא קנוני, ויש למפות אותם ידנית.
 
 ## תמחור WhatsApp Business Platform
 
@@ -926,37 +319,32 @@ def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
 - א. **חלון שירות של 24 שעות.** כשמשתמש שולח הודעה נכנסת, אפשר להגיב בטקסט חופשי (בלי תבנית, בלי חיוב) במשך 24 השעות הבאות. אופטימיזציה של אנליטיקה ל"האם פתרנו בתוך חלון השירות?" יכולה להוריד שורה שלמה של עלות תבניות בזרימות תמיכה תגובתיות. ראו https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing.
 - ב. **חלון 72 שעות מלחיצה על מודעת click-to-WhatsApp או CTA של פייסבוק.** כשמשתמש מגיע מקליק על מודעת click-to-WhatsApp או על כפתור CTA בעמוד פייסבוק, כל ההודעות (כולל תבניות) חינם ב-72 השעות הבאות.
 
-הוסיפו `template_category` (marketing/utility/authentication/service) ו-`arrived_via_ctw_ad` בוליאני לסכמת ה-conversation log שלכם, כדי שכספים ומוצר יוכלו לפצל CSAT והשלמה לפי אינטראקציה בתשלום מול חינמית. תעריפים ספציפיים לישראל לא מתפרסמים במסמכי הציבור, הוציאו את התעריף שלכם מ-Meta Business Manager או מה-BSP (Twilio / 360dialog / Vonage) לפני שמודדים קמפיין.
+הוסיפו `template_category` (marketing/utility/authentication/service) ו-`arrived_via_ctw_ad` בוליאני לסכמת ה-conversation log שלכם, כדי שכספים ומוצר יוכלו לפצל CSAT והשלמה לפי אינטראקציה בתשלום מול חינמית. תעריפים ספציפיים לישראל לא מתפרסמים במסמכי הציבור, הוציאו את התעריף שלכם מ-Meta Business Manager או מה-BSP (Twilio / 360dialog / Vonage) לפני שמודדים קמפיין. שני שינויים מ-2026 שכדאי לתקצב: מדיניות תמחור נפרדת ל-**AI Providers** על הפלטפורמה נכנסה לתוקף ב-16 בפברואר 2026 (עודכנה ב-12 במאי 2026), אז בדקו אם הבוט שלכם נופל תחתיה לפני שאתם מודלים עלות לשיחה. בנוסף, עסקים שמשולבים ב-Marketing Messages API יכולים להגדיר מחיר מקסימלי לכל שליחת הודעת שיווק, מה שהופך את עלות ההודעה למשתנה בשליטתכם, ולכן כדאי לתעד אותו.
 
 ## תאימות אנטי-ספאם (חוק התקשורת, סעיף 30א)
 
 אם הצ'אטבוט שלכם שולח הודעות שיווקיות (broadcast, תבניות פרסום ב-WhatsApp, קמפיינים בטלגרם, ריטרגטינג ב-SMS), סעיף 30א לחוק התקשורת (בזק ושידורים), התשמ"ב-1982 חל עליכם. החוק דורש **הסכמה מפורשת מראש** לפני שליחת דברי פרסומת. סיכום DLA Piper לישראל מתאר את החוק כאוסר "advertising by means of automated dialing, fax or text messages" בלי הסכמת opt-in מוקדמת של הנמען, ועם דרך הסרה בכל הודעה. השאלה אם זה חל גם על WhatsApp וטלגרם תלויה באופן שבו בתי המשפט בישראל קוראים את המונח "מסרון", ולא בלשון מפורשת בחוק, ולא הצלחנו לאמת פסיקה ספציפית. התייחסו ל-broadcast באפליקציות הודעות כאל בתחולה לצורכי תכנון ציות, והתייעצו עם עורך דין לפני שתסתמכו על ההפך. המונח "דבר פרסומת" מפורש בהרחבה, וכל הודעה שאינה תפעולית טהורה עלולה להיחשב לפרסומת.
 
-מעקב אנליטיקה מעשי:
-
-- **תייגו כל שליחה ב-`opt_in_basis`**: "explicit_form" / "ctw_ad_click" / "service_reply" / "transactional". זה ה-audit trail שלכם אם תלונה מגיעה למשרד התקשורת.
-- **עקבו אחרי שיעור הצלחה של נתיב ההסרה.** הודעות פרסומת חייבות לכלול את המילה "פרסומת", את שם השולח וכתובתו, ונתיב הסרה פעיל. מדדו את הזמן עד הסרה ואת שיעור ההצלחה של זרימת ההסרה כ-KPI תאימות.
-- **פיצול שירות מול שיווק.** הריצו שיעור השלמה ו-CSAT בנפרד לזרימות שיווק עם opt-in מול זרימות שירות ביוזמת משתמש, הן מתנהגות שונה לחלוטין ושילוב שלהן מסתיר את שתיהן.
-- הצלבה: `gws-hebrew-email-automation` ו-`israeli-telegram-business-bot` מכסים את אותו משטר opt-in לאימייל וטלגרם. השתמשו בהם אם אתם מפעילים גם את הערוצים האלה.
+תייגו כל שליחה ב-`opt_in_basis` (בערך "explicit_form" / "ctw_ad_click" / "service_reply" / "transactional") כ-audit trail, עקבו אחרי שיעור ההצלחה של נתיב ההסרה כ-KPI תאימות, ופצלו שיעור השלמה ו-CSAT בין זרימות שיווק עם opt-in לבין זרימות שירות ביוזמת המשתמש, כי שילוב שלהן מסתיר את שתיהן. הפירוט וההפניות לסקילים בערוצים האחרים: `references/chatbot-metrics-glossary.md`.
 
 זו הנחיה הנדסית, לא ייעוץ משפטי. הדין הישראלי קובע פיצוי סטטוטורי להודעת פרסומת לא רצויה בלי הוכחת נזק, אז broadcast שגוי אפילו לכמה מאות נמענים שלא הסכימו יכול להפוך לאירוע כספי משמעותי. לא הצלחנו לאמת את גובה הסכום העדכני מול מקור ראשוני, אז אמתו את הסכום ואת החשיפה שלכם מול עו"ד פרטיות לפני שאתם מתמחרים את הסיכון.
 
-## פלטפורמות ניסוי לצ'אטבוטים בעברית
+## מחסנית ניסויים ואנליטיקה
 
-כשגולשים מעבר ל-`HebrewABTestManager` (bucketing בתהליך, תוצאות בזיכרון) וצריך ניתוח סטטיסטי אמיתי עם sequential testing והפחתת שונות CUPED, פלטפורמות ה-feature-flag והניסויים המרכזיות עובדות מצוין עם צ'אטבוטים בעברית, אף אחת מהן לא מתעניינת באיזו שפה ה-`variant_text` שלכם. בחרו לפי התאמת צוות ותשתית:
+`HebrewABTestManager` (שלב 7) עושה bucketing בתהליך עם תוצאות בזיכרון. כשצריך sequential testing או הפחתת שונות CUPED, עוברים ל-Statsig, ל-LaunchDarkly או ל-GrowthBook. אף אחת מהן לא מתעניינת באיזו שפה כתוב ה-`variant_text`. GrowthBook היא היחידה שלא אוספת את נתוני האירועים שלכם, כך שתמלילים בעברית נשארים ב-warehouse שלכם, וזה משמעותי לעמדת data residency לפי תיקון 13. תכננו בדיקות של שבועיים ומעלה ו-200 חשיפות ומעלה לכל וריאנט. בסיסי המשתמשים הישראליים קטנים ושבוע העבודה א'-ה' הופך בדיקות של שבוע אחד ללא אמינות.
 
-| פלטפורמה | התאמה | הערות לצוותי צ'אטבוט בעברית |
-|----------|--------|---------------------------------|
-| Statsig | צוותים שרוצים flags + ניסויים + אנליטיקת מוצר במחסנית אחת | ה-free tier נדיב ומספיק לבוטים ישראליים קטנים. |
-| LaunchDarkly | צוותי אנטרפרייז בוגרים שצריכים אישורים, audit logs, RBAC | הבחירה ה"בטוחה" לאנטרפרייז; שלבו עם האנליטיקה הקיימת לחישובים. |
-| GrowthBook | צוותים עם data warehouse (BigQuery, Snowflake, Postgres) שרוצים להריץ סטטיסטיקה על הנתונים שלהם | open source; לא אוסף נתוני אירועים, אז תמלילים בעברית אף פעם לא יוצאים מה-warehouse שלכם, שימושי לעמדה של תיקון 13 לגבי data residency. |
+בצד האנליטיקה, ל-GA4 יש היום קבוצת ערוצים מובנית `AI Assistant` (Medium בערך `ai-assistant`) לתנועה שהופנתה מ-LLM, ובונה השאילתות של Mixpanel שונה שמו מ-Spark ל-**Mixpanel Agent**, ולצדו שרת MCP שהסוכן שלכם יכול לתשאל ישירות.
 
-לגבי gotchas ספציפיים לעברית, צפו למשך בדיקה ארוך יותר (שבועיים+, 200+ חשיפות לווריאנט), בסיסי משתמשים ישראליים קטנים יותר וסזונליות שבועית (א'-ה' שבוע עבודה) הופכת בדיקות של שבוע אחד לא אמינות.
+פרטי בעלות, מדרגות תמחור, שמות עדכניים ורשימת ה-referrers המוכרים, כולל אילו טענות ספק אי אפשר לאמת כרגע: `references/analytics-stack-notes.md`. במיוחד Statsig, שהחליפה ידיים פעמיים בין ספטמבר 2025 למאי 2026, אז אל תסתמכו על הערה ישנה לגבי מי מפעילה אותה.
 
-## הערות על מחסנית אנליטיקה מודרנית (GA4 + Mixpanel, 2026)
+## תצפיתיות לבוטים מבוססי LLM ו-RAG
 
-- **ערוץ "AI Assistant" ב-GA4.** GA4 מספק היום `Channel Group: AI Assistant` מובנה (Medium `ai-assistant`) שמסווג אוטומטית תנועה מ-ChatGPT, Gemini, Claude ו-Perplexity. אם משבצים את הבוט באתר שיווקי, זו הדרך הקלה ביותר לייחס תנועה נכנסת שהופנתה מ-LLM לפאנל הבוט, בלי regex מותאם (https://martech.org/ga4-now-tracks-ai-chatbot-traffic-automatically/).
-- **Mixpanel Spark + MCP Server.** Mixpanel שחררה את Spark (בונה שאילתות AI) ו-MCP server ב-2025-2026 שמאפשרים ל-Claude / ChatGPT / Cursor לתשאל את Mixpanel בשיחה. לדשבורדים בעברית זה רלוונטי כי אפשר לשאול שאלות המשך בעברית ו-Spark מנתב אותן לאירוע/תכונה הנכונים, שימושי כשצוות התפעול לא שולט בממשק שאילתת המשפך.
+אם הבוט שלכם מייצר תשובות עם LLM במקום להתאים כוונות, שלבים 5 ו-8 מודדים את הדברים הלא נכונים: אין תווית כוונה לנקד, אין fallback לספור, ותשובה שגויה ורהוטה נרשמת כסשן שהושלם. המדדים ברמת הסשן (נטישה, הסלמה, CSAT, שימור) ממשיכים לחול בלי שינוי. מה שמוסיפים מעליהם הוא groundedness, שיעור פגיעה באחזור, שיעור הצלחה של קריאות כלים, ועלות לכל שיחה **שנפתרה**. הפרוקסי הזול ביותר להזיות לא דורש מודל שופט בכלל: תעדו את מזהי הקטעים שאוחזרו ואת מזהי הקטעים שהתשובה באמת ציטטה, ועקבו אחרי הפער ביניהם.
+
+מנגנון LLM-as-judge הוא ברירת המחדל כשאין ground truth, אבל כיילו אותו מול מתייגים אנושיים דוברי עברית לפני שאתם מציגים את הפלט שלו כדיוק, והריצו אותו על מדגם שבועי ולא על כל תור. האזהרה משלב 8, שביטחון אינו דיוק, חלה על ציוני שופט באותה עוצמה בדיוק.
+
+תוספות ברמת הסכמה, ארבעת המדדים שכדאי לבנות ראשונים, נוהל כיול השופט, מוסכמות ה-tracing של OpenTelemetry GenAI וכללי ההתראה הייעודיים ל-LLM: `references/llm-bot-observability.md`.
+
 
 ## דוגמאות
 
@@ -1013,10 +401,13 @@ def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
 ## משאבים מצורפים
 
 ### סקריפטים
-- `scripts/conversation-analyzer.py` -- ניתוח לוגי שיחות צ'אטבוט למדדים מרכזיים (נטישה, רגשות, פתרון). הרצה: `python scripts/conversation-analyzer.py --help`
+- `scripts/conversation-analyzer.py` -- ספרייה סטנדרטית בלבד, בלי pip install. מחשב שיעורי תוצאה, נקודות נטישה, לולאות שיחה, ביטחון בזיהוי כוונות, אחוזוני זמן תגובה, דפוסי תנועה ישראליים והחלפת שפה עברית-אנגלית. הוא **לא** מחשב סנטימנט: לזה צריך את מסלול DictaBERT משלב 4. הרצה: `python3 scripts/conversation-analyzer.py --help`
 
 ### מסמכי עזר
 - `references/chatbot-metrics-glossary.md` -- מילון מונחי אנליטיקת צ'אטבוט עם תרגומים לעברית ובנצ'מרקים ענפיים. לשימוש בהגדרת KPIs או הסבר מדדים לבעלי עניין דוברי עברית.
+- `references/analytics-stack-notes.md` -- פרטי ספקים למחסנית הניסויים והאנליטיקה (Statsig / LaunchDarkly / GrowthBook, ערוץ AI Assistant ב-GA4, Mixpanel Agent ו-MCP). לעיון לפני בחירה או תמחור של כלי.
+- `references/platform-integrations.md` -- מתכוני פרסור שממירים את ייצוא השיחות של כל ספק (BigQuery של Conversational Agents / Dialogflow CX, Rasa Tracker Store) לסכמה הסטנדרטית. לעיון בהטמעת לוגים מפלטפורמה חדשה.
+- `references/llm-bot-observability.md` -- שכבת המדידה לבוטים מבוססי LLM ו-RAG: תוספות לסכמת הלוג, מדדי groundedness ואחזור, כיול LLM-as-judge, tracing וכללי התראה ייעודיים. לעיון כשהבוט מייצר תשובות במקום להתאים כוונות.
 - `references/hebrew-sentiment-guide.md` -- מדריך לאתגרי ניתוח רגשות בעברית כולל שלילה, סרקזם, סלנג, וטיפול בשפה מעורבת. לשימוש בבנייה או כוונון של מודלי סנטימנט בעברית.
 
 ## מלכודות נפוצות
@@ -1030,13 +421,8 @@ def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
 
 הסקיל הזה קולט תמלילי שיחות מלאים וערכי `user_id`, ומריץ ניתוח רגשות על הודעות משתמשים. טקסט שיחה הוא מידע אישי ולעתים קרובות מכיל תוכן רגיש (בריאות, כספים, תלונות). טפלו בו תחת חוק הגנת הפרטיות הישראלי, כולל תיקון 13 (נכנס לתוקף באוגוסט 2025), שהחמיר את חובות ההסכמה, היידוע, האחריותיות וצמצום המידע.
 
-כללים מעשיים:
+כללים מעשיים, במלואם ב-`references/chatbot-metrics-glossary.md`: קבלו הסכמה לאחסן ולנתח תוכן שיחה וגלו שניתוח רגשות הוא מטרת עיבוד; פסבדונימיזציה של `user_id` לפני שהוא מגיע לצינור, עם טבלת מיפוי נפרדת ומוגנת (שימור ו-bucketing של A/B עובדים מצוין על מזהה פסבדונימי יציב); הסירו או מסכו ישויות שאתם לא צריכים (מספרי ת"ז, שמות, מספרי כרטיס); הגדירו חלון שימור מפורש לתמלילים גולמיים, למשל 90 יום, ושמרו רק אגרגטים לטווח ארוך; הגבילו ותעדו גישה, ודעו איפה הנתונים מאוחסנים ומעובדים. שימו לב שתקנות אבטחת המידע דורשות שמירת יומני גישה למאגרים ברמת אבטחה בינונית וגבוהה למשך 24 חודשים לפחות, וזו חובה נפרדת משימור התמלילים.
 
-- הסכמה ויידוע: קבלו הסכמה לאחסון ולניתוח של תוכן השיחה, וציינו בהצהרת הפרטיות שלכם ששיחות נשמרות ומנותחות לצורכי איכות. ניתוח רגשות על הודעות משתמשים הוא מטרת עיבוד שצריך לחשוף.
-- פסבדונימיזציה של `user_id`: אל תנתחו מספרי טלפון, אימיילים או תעודות זהות גולמיים כמזהה. גבבו או טוקנו את ה-`user_id` לפני שהוא מגיע לצינור האנליטיקה, ושמרו את טבלת המיפוי בנפרד ובגישה מבוקרת. שימור ושיוך לבדיקות A/B עדיין עובדים על מזהה פסבדונימי יציב.
-- צמצום והסתרה: הסירו או מסכו ישויות שאתם לא צריכים לאנליטיקה (מספרי זהות, שמות מלאים, מספרי כרטיס) לפני אחסון תמלילים. נדיר שצריך את ה-PII הגולמי כדי למדוד נטישה או סנטימנט.
-- הגבלות שימור: הגדירו חלון שימור מפורש לתמלילים גולמיים (למשל 90 יום) ושמרו לטווח ארוך רק מדדים מצרפיים. תעדו את החלון ומחקו לפי לוח זמנים.
-- בקרת גישה ומיקום: הגבילו מי יכול לקרוא שיחות גולמיות, תעדו גישה, וודאו היכן המידע מאוחסן ומעובד.
 - זו הנחיה הנדסית, לא ייעוץ משפטי. אמתו את החובות הספציפיות שלכם מול איש מקצוע בתחום הפרטיות.
 
 ## שרתי MCP מומלצים
@@ -1060,6 +446,9 @@ def parse_rasa_tracker_events(tracker_events: list[dict]) -> list[dict]:
 | מודלים בעברית ב-HuggingFace | https://huggingface.co/models?language=he | סקירת קטלוג המודלים המלא בעברית |
 | Mixpanel help | https://mixpanel.com/help | ניתוח משפך, שימור קבוצות לזרימות צ'אט |
 | Matomo analytics | https://matomo.org/docs/ | מעקב אירועים עצמי, ידידותי לפרטיות |
+| קבוצת הערוצים AI Assistant ב-GA4 (Search Engine Journal) | https://www.searchenginejournal.com/google-analytics-adds-ai-assistant-as-default-channel-group/574974/ | הערך `ai-assistant` ב-Medium, ערך הקמפיין השמור, ואילו עוזרים גוגל באמת נקבה בשמם |
+| Mixpanel Agent (לשעבר Spark) | https://docs.mixpanel.com/docs/mixpanel-agent | השם והיכולות העדכניים של בונה השאילתות המבוסס AI |
+| מוסכמות סמנטיות של OpenTelemetry ל-GenAI | https://github.com/open-telemetry/semantic-conventions-genai | שמות תכונות ה-span למודל, לספירת טוקנים ולקריאות כלים ב-tracing של בוט LLM |
 | תיקון 13 לחוק הגנת הפרטיות (IAPP) | https://iapp.org/news/a/israel-marks-a-new-era-in-privacy-law-amendment-13-ushers-in-sweeping-reform | בתוקף 14 באוגוסט 2025: הסכמה, יידוע, הגבלות שימור, מנגנוני מחיקה |
 | מדריך לסעיף 30א (DLA Piper) | https://www.dlapiperdataprotection.com/index.html?t=electronic-marketing&c=IL | משטר opt-in לשיווק ב-SMS / אימייל / אפליקציות הודעות בישראל |
 
