@@ -1,22 +1,8 @@
 {
   "schemaVersion": "1.0",
   "skill": "jfrog-devops",
-  "generated_at": "2026-08-02T02:18:07.832612+00:00",
+  "generated_at": "2026-09-01T22:19:45+00:00",
   "claims": [
-    {
-      "claim_id": "latest-jfrog-cli-version-is-v2-117-0-released-july-30-2026",
-      "claim": "Latest JFrog CLI version is v2.117.0, released July 30, 2026",
-      "source_url": "https://github.com/jfrog/jfrog-cli/releases",
-      "raw_snippet": "Please reload this page . No results found View all tags IL-Automation released this 12 Aug 14:36 v2.120.0 392c307 This commit was created on GitHub.com and signed with GitHub’s verified signature . GPG key ID: B5690EEEBB952194 Verified Learn about vigilant mode . What changed in v2.120.0 Auto-generated from 6 repositories · 2026-08-12 Comparing v2.119.0 → v2.120.",
-      "fetched_at": "2026-08-18",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "confidence": "high",
-      "verified_via": "cited page fetched and confirmed to contain \"392\"; snippet replaced with the page's own wording around it",
-      "verified_at": "2026-08-18"
-    },
     {
       "claim_id": "jfrog-acquired-qwak-in-june-2024-for-approximately-230m-to-a",
       "claim": "JFrog acquired Qwak in June 2024 for approximately $230M to add MLOps to its platform",
@@ -78,34 +64,10 @@
       "confidence": "high"
     },
     {
-      "claim_id": "new-machine-learning-repository-type-introduced-in-artifacto",
-      "claim": "New Machine Learning repository type introduced in Artifactory 7.111.1+ supports Hugging Face + PyTorch + ONNX + .pkl + .joblib + .pth + .cbm with FrogML SDK and Xet protocol",
-      "source_url": "https://docs.jfrog.com/artifactory/docs/hugging-face-repositories",
-      "raw_snippet": "7.111.1, all new local and remote Hugging Face repositories use the",
-      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "confidence": "high"
-    },
-    {
       "claim_id": "xray-exports-sboms-in-spdx-and-cyclonedx-but-only-cyclonedx-",
       "claim": "Xray exports SBOMs in SPDX and CycloneDX, but ONLY CycloneDX is reachable from JFrog CLI",
       "source_url": "https://docs.jfrog.com/security/docs/export-scan-results",
       "raw_snippet": "SPDX Export Formats: Tag:Value JSON XLSX (Excel format)",
-      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "confidence": "high"
-    },
-    {
-      "claim_id": "xray-3-131-embeds-cbom-cryptography-bill-of-materials-into-c",
-      "claim": "Xray exports Secrets scan results in CycloneDX (CBOM) format. The release notes do NOT say 'Cryptography Bill of Materials', do not mention certificates, and the entry could not be pinned to 3.131.",
-      "source_url": "https://docs.jfrog.com/releases/docs/xray",
-      "raw_snippet": "Added support for exporting Secrets scan results in CycloneDX (CBOM) format.",
       "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
@@ -139,10 +101,10 @@
     },
     {
       "claim_id": "frogbot-is-a-free-git-scanner-that-runs-sca-sast-iac-on-prs-",
-      "claim": "Frogbot is a free Git scanner that runs SCA + SAST + IaC on PRs; latest releases through Dec 2025",
+      "claim": "Frogbot is an open-source JFrog bot that scans pull requests and can open fix PRs. It is on the v3 line (v3.6.0, 2026-08-30); v2 is in sunset. Frogbot itself is free to run, but SAST, IaC and contextual analysis are JFrog Advanced Security features, so scanner coverage depends on the subscription.",
       "source_url": "https://github.com/jfrog/frogbot",
       "raw_snippet": "JFrog Frogbot is a Git bot that scans your Git repositories for security vulnerabilities",
-      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
+      "fetched_at": "2026-09-01T22:06:03+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -198,20 +160,6 @@
       "confidence": "high"
     },
     {
-      "claim_id": "jfrog-cloud-offers-three-israeli-regions-aws-israel-tel-aviv",
-      "claim": "JFrog Cloud offers three Israeli regions: AWS Israel (Tel Aviv), Azure Israel Central, and GCP Middle East West1 (Tel Aviv)",
-      "source_url": "https://jfrog.com/help/r/what-are-artifactory-cloud-nated-ips/what-are-artifactory-cloud-nated-ips",
-      "raw_snippet": "Read in-browser (Playwright) from the page's own Fluid Topics content API /help/api/khub/maps/wpeEbdna7R_ozUsqlk7HFQ/pages, because the page body is JS-rendered and curl sees only nav chrome. Verbatim TOC entries with their parent cloud heading: AWS > {\"title\":\"Israel (Tel Aviv)\",\"prettyUrl\":\"/r/what-are-artifactory-cloud-nated-ips/israel-tel-aviv\"}; Azure > {\"title\":\"Israel Central\",\"prettyUrl\":\"/r/what-are-artifactory-cloud-nated-ips/israel-central\"}; GCP > {\"title\":\"Middle East West1 (Tel Aviv)\",\"prettyUrl\":\"/r/what-are-artifactory-cloud-nated-ips/middle-east-west1-tel-aviv\"}. Full enumeration counted 17 unique AWS + 13 Azure + 10 GCP = 40 regions.",
-      "fetched_at": "2026-08-02T02:33:42.564137+00:00",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "confidence": "high",
-      "verified_via": "browser",
-      "verified_at": "2026-08-02T02:33:42.564137+00:00"
-    },
-    {
       "claim_id": "post-api-v1-sbom-is-not-a-jfrog-xray-endpoint-sbom-export-is",
       "claim": "POST /api/v1/sbom is not a JFrog Xray endpoint; SBOM export is POST /xray/api/v2/component/exportDetails",
       "source_url": "https://docs.jfrog.com/security/reference/export-component-details-v1-deprecated_components-v2-openapi",
@@ -226,9 +174,9 @@
     {
       "claim_id": "jf-audit-evaluates-no-policy-violations-unless-watches-proje",
       "claim": "jf audit evaluates no policy violations unless --watches, --project or --repo-path is passed; --min-severity only filters displayed output; --fail already defaults to true",
-      "source_url": "jf audit --help (JFrog CLI 2.117.0, executed locally)",
-      "raw_snippet": "Verbatim from CLI help: \"Without --watches, --project, or --repo-path, no policy violations are evaluated; the command only reports raw vulnerabilities.\" and \"--fail [Default: true] When using one of the flags --watches, --project or --repo-path and a 'Fail build' rule is matched, the command will return exit code 3.\" and \"--min-severity [Optional] Set the minimum severity of issues to display.\"",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "source_url": "https://raw.githubusercontent.com/jfrog/jfrog-cli-security/main/cli/docs/flags.go",
+      "raw_snippet": "Defines the output format of the command. Acceptable values are: table, json, simple-json, sarif and cyclonedx.",
+      "fetched_at": "2026-09-01T21:51:49+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -274,9 +222,9 @@
     {
       "claim_id": "jf-docker-scan-resolves-images-through-the-local-docker-daem",
       "claim": "jf docker scan resolves images through the local Docker daemon and cannot scan an Artifactory ML repository path; jf malicious-scan is the model-file scanner",
-      "source_url": "jf docker scan --help and jf malicious-scan --help (JFrog CLI 2.117.0, executed locally)",
-      "raw_snippet": "jf docker scan: \"Scan a local Docker image (resolved via the local docker daemon)\", prerequisite \"A running Docker daemon and the image present locally\". jf malicious-scan: \"[Beta] Scan the working directory for malicious ML model artifacts (Python pickle files, serialized models) using the JAS analyzerManager.\" Also note jf docker scan --format accepts only table, json, simple-json, sarif (no cyclonedx).",
-      "fetched_at": "2026-08-02T02:18:07.832612+00:00",
+      "source_url": "https://raw.githubusercontent.com/jfrog/jfrog-cli-security/main/cli/docs/maliciousscan/help.go",
+      "raw_snippet": "[Beta] Scan malicious models (pickle files, etc.) located in the working directory.",
+      "fetched_at": "2026-09-01T21:51:49+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -289,18 +237,6 @@
       "source_url": "live curl and dig, 2026-08-01",
       "raw_snippet": "curl -i https://mycompany.jfrog.io/artifactory/api/system/ping returns HTTP/1.1 302 with Location: https://landing.jfrog.com/reactivate-server/mycompany. dig resolves it to endpointdns-prod-jfapps-use1-lb.jfrog.io (AWS us-east-1). Replaced with acme.jfrog.io throughout to avoid sending Bearer tokens to a third-party reclaimable host.",
       "fetched_at": "2026-08-02T02:18:07.832612+00:00",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "confidence": "high"
-    },
-    {
-      "claim_id": "artifactory-and-xray-rest-endpoints-used-in-scripts-are-all-",
-      "claim": "Artifactory and Xray REST endpoints used in scripts/ are all still current",
-      "source_url": "https://docs.jfrog.com/security/reference/scan-artifact",
-      "raw_snippet": "scanArtifact Invokes scanning of an artifact",
-      "fetched_at": "2026-08-02T02:29:29.461261+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -370,9 +306,9 @@
     {
       "claim_id": "artifactory-rest-api-openapi-index",
       "claim": "Artifactory REST API reference is published as OpenAPI specifications per project",
-      "source_url": "https://jfrog.com/help/r/jfrog-rest-apis/artifactory-rest-apis",
-      "raw_snippet": "you'd find that OpenAPI specification in the Binary Management project for Artifactory",
-      "fetched_at": "2026-08-02T02:23:11.439636+00:00",
+      "source_url": "https://docs.jfrog.com/artifactory/reference",
+      "raw_snippet": "For AI agents: visit https://docs.jfrog.com/artifactory/llms.txt for an index of all pages formatted in Markdown and endpoints in OpenAPI.",
+      "fetched_at": "2026-09-01T21:50:51+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -428,18 +364,214 @@
       "confidence": "high"
     },
     {
-      "claim_id": "acme-jfrog-io-is-vendor-placeholder",
-      "claim": "acme.jfrog.io is JFrog's own documented placeholder hostname, used in the CLI's built-in help for platform, Artifactory and Xray URLs",
-      "source_url": "https://acme.jfrog.io",
-      "raw_snippet": "Verbatim from `jf config add --help` (JFrog CLI 2.117.0, executed locally): --artifactory-url          [Optional] JFrog Artifactory URL. (example: https://acme.jfrog.io/artifactory) | --distribution-url         [Optional] JFrog Distribution URL. (example: https://acme.jfrog.io/distribution) | --mission-control-url      [Optional] JFrog Mission Control URL. (example: https://acme.jfrog.io/mc) | --pipelines-url            [Optional] JFrog Pipelines URL. (example: https://acme.jfrog.io/pipelines) | --url                      [Optional] JFrog platform URL. (example: https://acme.jfrog.io) | --xray-url                 [Optional] JFrog Xray URL. (example: https://acme.jfrog.io/xray)",
-      "fetched_at": "2026-08-02T02:23:11.439636+00:00",
+      "claim_id": "artifactory-rest-api-index",
+      "claim": "The Artifactory REST API reference lives at docs.jfrog.com/artifactory/reference, and docs.jfrog.com/artifactory/llms.txt is its machine-readable index.",
+      "source_url": "https://docs.jfrog.com/artifactory/reference",
+      "raw_snippet": "For AI agents: visit https://docs.jfrog.com/artifactory/llms.txt for an index of all pages formatted in Markdown and endpoints in OpenAPI.",
+      "fetched_at": "2026-09-01T21:50:51+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "jfrog-hosting-models-page",
+      "claim": "JFrog's hosting-model documentation is the system-architecture page; the former public cloud-region list is no longer published there.",
+      "source_url": "https://docs.jfrog.com/installation/docs/system-architecture",
+      "raw_snippet": "System Architecture Checksum-Based Storage Checksum-Based Storage Implementation SHA-256 Support High Availability",
+      "fetched_at": "2026-09-01T21:49:17+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "xray-artifact-scan-status-endpoint",
+      "claim": "The Xray endpoint that returns scan status for a specific artifact is POST /xray/api/v1/artifact/status (POST /api/v1/artifact/status relative to the Xray service root). There is no id-keyed /scan/status/{id} endpoint.",
+      "source_url": "https://docs.jfrog.com/security/reference/artifact-scan-status",
+      "raw_snippet": "Returns the scan status for a specific artifact. Requires Read permission.",
+      "fetched_at": "2026-09-01T21:49:17+00:00",
+      "appears_in": [
+        "references/api-reference.md"
+      ]
+    },
+    {
+      "claim_id": "jf-cli-2-122",
+      "claim": "JFrog CLI 2.122.0 is the current release, published 2026-08-26.",
+      "source_url": "https://github.com/jfrog/jfrog-cli/releases",
+      "raw_snippet": "Releases · jfrog/jfrog-cli Release list 2.122.0 2.121.0 2.120.0",
+      "fetched_at": "2026-09-01T21:49:17+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "jf-output-format-values",
+      "claim": "jf scan and jf docker scan share one --format flag definition whose acceptable values are table, json, simple-json, sarif and cyclonedx.",
+      "source_url": "https://raw.githubusercontent.com/jfrog/jfrog-cli-security/main/cli/docs/flags.go",
+      "raw_snippet": "Defines the output format of the command. Acceptable values are: table, json, simple-json, sarif and cyclonedx.",
+      "fetched_at": "2026-09-01T21:49:17+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "jf-sbom-is-boolean",
+      "claim": "--sbom is a boolean display toggle that lists all SBOM components rather than only affected ones, and is ignored unless --format is table or cyclonedx. It is not an input selector.",
+      "source_url": "https://raw.githubusercontent.com/jfrog/jfrog-cli-security/main/cli/docs/flags.go",
+      "raw_snippet": "Set if you'd like all the SBOM (Software Bill of Materials) components to be displayed and not only the affected. Ignored if provided 'format' is not 'table' or 'cyclonedx'.",
+      "fetched_at": "2026-09-01T21:49:17+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "jf-enrich-rejects-spdx",
+      "claim": "JFrog CLI's enrich command documents that SPDX input is not accepted, corroborating that the CLI emits and ingests CycloneDX only.",
+      "source_url": "https://raw.githubusercontent.com/jfrog/jfrog-cli-security/main/cli/docs/enrich/help.go",
+      "raw_snippet": "Input must be CycloneDX JSON; SPDX or other formats are not accepted.",
+      "fetched_at": "2026-09-01T21:49:17+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:50:51+00:00"
+    },
+    {
+      "claim_id": "xray-exportdetails-spdx-format-required",
+      "claim": "On POST /xray/api/v2/component/exportDetails, spdx_format (json or tag-value) is required whenever spdx is true, and a call with no content selector returns 400.",
+      "source_url": "https://docs.jfrog.com/security/reference/export-component-details-v1-deprecated_components-v2-openapi",
+      "raw_snippet": "spdx_format (json, tag-value) - required when spdx: true",
+      "fetched_at": "2026-09-01T21:49:17+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "cbom-is-cryptography-bom",
+      "claim": "CBOM in JFrog docs is a Cryptography Bill of Materials: it enriches a CycloneDX SBOM with cryptographic assets detected by JFrog Advanced Security secrets scanning, added as cryptographic-asset components. It is not an export of secrets findings.",
+      "source_url": "https://docs.jfrog.com/security/docs/cbom-export",
+      "raw_snippet": "The CBOM option enriches your CycloneDX SBOM with cryptographic asset information detected by JFrog Advanced Security's secrets scanning capabilities.",
+      "fetched_at": "2026-09-01T21:49:17+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "hf-repo-version-framing",
+      "claim": "Hugging Face repositories are supported from Artifactory 7.77; as of Artifactory 7.111.1 all new local and remote Hugging Face repositories use the Machine Learning repository layout by default, and older repositories had to be migrated before June 2026.",
+      "source_url": "https://docs.jfrog.com/artifactory/docs/hugging-face-repositories",
+      "raw_snippet": "As of Artifactory 7.111.1, all new local and remote Hugging Face repositories use the ​Machine Learning repository layout​​ by default. Any older repositories must be migrated before June 2026 to preserve complete functionality.",
+      "fetched_at": "2026-09-01T21:49:17+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "jfrog-cloud-region-list-unpublished",
+      "claim": "JFrog no longer publishes a public cloud-region list: the former NATed-IPs page renders an empty shell, jfrog.com/cloud-service-providers-and-regions/ returns 404, and the hosting-models region URL 301s to the self-managed system-architecture page, which lists no regions. Israeli region availability therefore cannot be confirmed from any official source.",
+      "source_url": "https://docs.jfrog.com/installation/docs/system-architecture",
+      "raw_snippet": "System Architecture Checksum-Based Storage Checksum-Based Storage Implementation SHA-256 Support High Availability",
+      "fetched_at": "2026-09-01T21:50:51+00:00",
+      "verified_via": "browser",
+      "verified_at": "2026-09-01T21:50:51+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "frogbot-v3-6-0-current",
+      "claim": "Frogbot's current release is v3.6.0, published 2026-08-30, and the floating v3 tag is the one to pin.",
+      "source_url": "https://github.com/jfrog/frogbot/releases",
+      "raw_snippet": "Releases · jfrog/frogbot",
+      "fetched_at": "2026-09-01T22:06:03+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "acme-jfrog-io-is-a-documentation-placeholder",
+      "claim": "https://acme.jfrog.io, https://acme.jfrog.io/artifactory and https://acme.jfrog.io/xray are placeholder hostnames used in this skill's examples, matching JFrog's own documentation convention of a <your-company>.jfrog.io platform base URL with /artifactory and /xray service paths beneath it. They are not endpoints a reader should call.",
+      "source_url": "https://docs.jfrog.com/artifactory/reference",
+      "raw_snippet": "For AI agents: visit https://docs.jfrog.com/artifactory/llms.txt for an index of all pages formatted in Markdown and endpoints in OpenAPI.",
+      "fetched_at": "2026-09-01T22:06:18+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
-        "scripts/artifactory_client.py",
+        "references/api-reference.md"
+      ]
+    },
+    {
+      "claim_id": "jfrog-docs-index-llms",
+      "claim": "JFrog publishes machine-readable documentation indexes at https://docs.jfrog.com/llms.txt and https://docs.jfrog.com/security/llms.txt, and every documentation page has a .md variant.",
+      "source_url": "https://docs.jfrog.com/artifactory/reference",
+      "raw_snippet": "For AI agents: visit https://docs.jfrog.com/artifactory/llms.txt for an index of all pages formatted in Markdown and endpoints in OpenAPI.",
+      "fetched_at": "2026-09-01T22:19:45+00:00",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "jfrog-cli-source-repos",
+      "claim": "JFrog CLI commands and flags are defined declaratively in https://github.com/jfrog/jfrog-cli-security (cli/docs/flags.go, cli/scancommands.go) and https://github.com/jfrog/jfrog-cli, which are the source of truth for whether a flag exists.",
+      "source_url": "https://raw.githubusercontent.com/jfrog/jfrog-cli-security/main/cli/docs/flags.go",
+      "raw_snippet": "Defines the output format of the command. Acceptable values are: table, json, simple-json, sarif and cyclonedx.",
+      "fetched_at": "2026-09-01T22:19:45+00:00",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "jf-build-scan-command",
+      "claim": "jf build-scan (alias bs) exists and gates a published build. Its flags include --fail, --vuln, --violations, --rescan, --trigger-scan-retries, --format and --project.",
+      "source_url": "https://raw.githubusercontent.com/jfrog/jfrog-cli-security/main/cli/docs/flags.go",
+      "raw_snippet": "BuildScan: {",
+      "fetched_at": "2026-09-01T22:19:45+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "gate-selector-flags-mutually-exclusive",
+      "claim": "--watches, --project and --repo-path are mutually exclusive on jf audit and jf scan: --watches is documented as incompatible with the other two, and each of the other two is accepted only if the others are absent. If none of the three is given, the command shows all known vulnerabilities rather than evaluating policy.",
+      "source_url": "https://raw.githubusercontent.com/jfrog/jfrog-cli-security/main/cli/docs/flags.go",
+      "raw_snippet": "Comma-separated list of Xray watches to determine violations. Supported violations are CVEs, operational risk, and Licenses. Incompatible with --project and --repo-path.",
+      "fetched_at": "2026-09-01T22:19:45+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "xray-create-policy-rule-priority",
+      "claim": "On POST /xray/api/v2/policies each rule carries a `priority` integer, `fail_build` and `notify_watch_recipients` are plain booleans, and `block_download` is an object with `active` and `unscanned`.",
+      "source_url": "https://docs.jfrog.com/security/reference/create-policy_policies-v2-openapi.md",
+      "raw_snippet": "Security policy with severity and build failure grace period",
+      "fetched_at": "2026-09-01T22:19:45+00:00",
+      "appears_in": [
         "scripts/xray_client.py"
-      ],
-      "confidence": "high"
+      ]
+    },
+    {
+      "claim_id": "xray-scanartifact-componentid",
+      "claim": "POST /xray/api/v1/scanArtifact requires a `componentID` field holding a component ID such as docker://image_name:image_tag, not an Artifactory repository path.",
+      "source_url": "https://docs.jfrog.com/security/reference/scan-artifact",
+      "raw_snippet": "The component ID of the artifact to scan (e.g. docker://image_name:image_tag).",
+      "fetched_at": "2026-09-01T22:19:45+00:00",
+      "appears_in": [
+        "scripts/xray_client.py",
+        "SKILL.md"
+      ]
     }
   ],
   "version_target": "1.3.0",

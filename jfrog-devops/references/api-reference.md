@@ -63,7 +63,7 @@
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | /api/v1/scanArtifact | Scan artifact |
-| GET | /api/v1/scan/status/{id} | Scan status |
+| POST | /api/v1/artifact/status | Scan status for a specific artifact (requires Read). There is no id-keyed `/scan/status/{id}` endpoint: `scanArtifact` is fire-and-forget and returns no scan id |
 | POST | /api/v2/summary/artifact | Vulnerability summary |
 | POST | /api/v2/component/exportDetails | Export SBOM (SPDX or CycloneDX). The only programmatic SPDX path |
 

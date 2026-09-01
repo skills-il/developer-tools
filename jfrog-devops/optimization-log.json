@@ -135,5 +135,26 @@
       "https://www.vendr.com/marketplace/jfrog (403 to automated fetch)"
     ],
     "note": "jfrog.com/help/r/* now 301-redirects cross-host through docs-redirect.jfrog.com to docs.jfrog.com/*. Links resolve but the doc site is mid-migration; expect these paths to churn again next pass."
-  }
+  },
+  "cycles": [
+    {
+      "version": "1.4.0",
+      "date": "2026-09-02",
+      "lessons": [
+        "Expert CRITICAL deferred to next cycle (recorded in references/domain-checklist.md 'Not covered'): permissions and access model (Permission Targets, Read/Annotate/Deploy/Delete/Manage, scoped vs platform tokens). Most real failures on this skill's happy path are permission failures, and Troubleshooting still answers 401 with 'generate a new token', which is wrong for the more common 403 shape.",
+        "Expert CRITICAL deferred: Release Bundles v2 / Lifecycle / Distribution and AppTrust + Evidence (jf rbv2, jf evd). This was ALREADY the top deferred item before this cycle and has now survived two, so under the Phase 5.9 rule it is [CARRY-STALE] and must be fixed next cycle or explicitly moved to Out of scope. Step 4 currently presents build-info promotion as the promotion model with no forward pointer.",
+        "Expert MAJOR deferred: virtual repository resolution ORDER and locals-first, default deployment repository, remote caching and missed-retrieval TTLs, exclude patterns as dependency-confusion mitigation. Example 1 tells the reader to build a virtual repo and explains none of it.",
+        "Expert MAJOR deferred: checksum-based storage and deduplication, DELETE not freeing space until garbage collection, the trash can, and built-in Cleanup Policies. Example 4 promises a dry-run cleanup script that does not exist. Pair with the AQL caveat that stat.downloaded is empty for never-downloaded artifacts, so the documented 'find unused artifacts' query misses exactly those.",
+        "Expert MAJOR deferred: Projects. --project is offered as a gate selector in Step 5 with no explanation of what a project key is.",
+        "Expert MAJOR deferred: REST pagination. The clients now set timeouts and retry on 429, but they still do not walk pages; get_violations caps at the API's 100-per-page and reports it as a total.",
+        "Expert MINOR deferred: Example 1 names 'jcenter-remote pointing to Maven Central'. JCenter shut down in 2021; rename to maven-remote.",
+        "Expert MINOR deferred: allowed-tools frontmatter is space-separated where the field expects a comma-separated list, and does not declare pip3 although both scripts need `requests`. Claude-Code-specific.",
+        "Expert MINOR deferred: SKILL.md inlines ~60 lines of the bundled artifactory_client.py class, which will drift from the file. Replace with a pointer.",
+        "Expert MINOR deferred: `jf xr scan` in the Step 1 table and the cheatsheet is the deprecated v1-era alias; the current command is top-level `jf scan`.",
+        "Process lesson: the researcher reported that the AI Catalog does not cover Anthropic and that no launch date is published. Both were WRONG: the press release the skill already cites names Anthropic and Nemotron and is dated 2025-09-09. Verify a reviewer's negative claim as carefully as a positive one.",
+        "Process lesson: the Expert reported that POST /api/v2/summary/artifact needs a `default/<repo>/<path>` prefix. The v2 OpenAPI example uses a bare `docker-local/nginx/latest/manifest.json`, so the script's format was already right and 'fixing' it would have broken it.",
+        "Process lesson: the Israeli cloud-regions claim rested on a URL that now renders an empty shell. Retiring it in one bullet while a neighbouring bullet still asserted 'the in-country cloud regions above' produced a live self-contradiction that only the Judge caught. When you retire a claim, grep for every place that depends on it."
+      ]
+    }
+  ]
 }

@@ -9,22 +9,26 @@ Requirements:
     pip install requests
 
 Usage:
-    python artifactory_client.py --url https://acme.jfrog.io/artifactory \
-        --token YOUR_TOKEN ping
+    export JFROG_URL="https://acme.jfrog.io/artifactory"
+    export JFROG_ACCESS_TOKEN="..."          # never pass a token on argv
 
-    python artifactory_client.py --url https://acme.jfrog.io/artifactory \
-        --token YOUR_TOKEN list-repos
-
-    python artifactory_client.py --url https://acme.jfrog.io/artifactory \
-        --token YOUR_TOKEN upload --repo libs-release-local \
+    python3 artifactory_client.py ping
+    python3 artifactory_client.py list-repos
+    python3 artifactory_client.py upload --repo libs-release-local \
         --path com/myapp/1.0/app.jar --file ./app.jar
-
-    python artifactory_client.py --url https://acme.jfrog.io/artifactory \
-        --token YOUR_TOKEN search --aql 'items.find({"repo":"libs-release-local"})'
+    python3 artifactory_client.py search --aql 'items.find({"repo":"libs-release-local"}).limit(100)'
 
 Environment variables:
     JFROG_URL: Artifactory base URL
     JFROG_ACCESS_TOKEN: Access token for authentication
+
+The token is read from the environment only. It is deliberately NOT accepted as a
+command-line flag: argv is world-readable through `ps` and /proc on a shared build
+agent, so a flag would leak a platform-scoped JFrog token to every user on the host.
+
+AQL returns a bounded page, and this client does not paginate. Always put an explicit
+`.limit()` in your query and read `range.total` in the response before acting on the
+result, or a cleanup script will silently operate on a subset of what it matched.
 """
 
 import argparse
@@ -43,19 +47,36 @@ except ImportError:
 class ArtifactoryClient:
     """Client for JFrog Artifactory REST API."""
 
-    def __init__(self, base_url: str, access_token: str):
+    def __init__(self, base_url: str, access_token: str, timeout: int = 60):
         """Initialize Artifactory client.
 
         Args:
             base_url: Artifactory base URL (e.g., https://acme.jfrog.io/artifactory)
             access_token: JFrog access token
+            timeout: per-request timeout in seconds. Never leave this unset:
+                a hung connection blocks a CI job indefinitely.
         """
         self.base_url = base_url.rstrip('/')
+        self.timeout = timeout
         self.session = requests.Session()
         self.session.headers.update({
             "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/json"
         })
+        # JFrog SaaS rate-limits per subscription tier and answers 429 with
+        # Retry-After. Without a retry policy a burst of calls from a CI job
+        # fails on the first throttle rather than backing off.
+        try:
+            from requests.adapters import HTTPAdapter
+            from urllib3.util.retry import Retry
+            retry = Retry(total=4, backoff_factor=1.5,
+                          status_forcelist=(429, 500, 502, 503, 504),
+                          allowed_methods=frozenset(["GET", "POST", "PUT", "DELETE"]),
+                          respect_retry_after_header=True)
+            self.session.mount("https://", HTTPAdapter(max_retries=retry))
+            self.session.mount("http://", HTTPAdapter(max_retries=retry))
+        except Exception:  # urllib3 too old; run without retries rather than fail
+            pass
 
     def ping(self) -> bool:
         """Health check - verify connection to Artifactory.
@@ -63,7 +84,7 @@ class ArtifactoryClient:
         Returns:
             True if Artifactory is reachable
         """
-        r = self.session.get(f"{self.base_url}/api/system/ping")
+        r = self.session.get(f"{self.base_url}/api/system/ping", timeout=self.timeout)
         return r.text.strip() == "OK"
 
     def version(self) -> dict:
@@ -72,7 +93,7 @@ class ArtifactoryClient:
         Returns:
             Version info dictionary
         """
-        r = self.session.get(f"{self.base_url}/api/system/version")
+        r = self.session.get(f"{self.base_url}/api/system/version", timeout=self.timeout)
         r.raise_for_status()
         return r.json()
 
@@ -82,7 +103,7 @@ class ArtifactoryClient:
         Returns:
             Storage information dictionary
         """
-        r = self.session.get(f"{self.base_url}/api/storageinfo")
+        r = self.session.get(f"{self.base_url}/api/storageinfo", timeout=self.timeout)
         r.raise_for_status()
         return r.json()
 
@@ -98,7 +119,7 @@ class ArtifactoryClient:
         params = {}
         if repo_type:
             params["type"] = repo_type
-        r = self.session.get(f"{self.base_url}/api/repositories", params=params)
+        r = self.session.get(f"{self.base_url}/api/repositories", params=params, timeout=self.timeout)
         r.raise_for_status()
         return r.json()
 
@@ -123,7 +144,8 @@ class ArtifactoryClient:
         }
         r = self.session.put(
             f"{self.base_url}/api/repositories/{repo_key}",
-            json=config
+            json=config,
+            timeout=self.timeout
         )
         r.raise_for_status()
         return {"status": "created", "repo": repo_key}
@@ -149,7 +171,8 @@ class ArtifactoryClient:
         with open(file_path, "rb") as f:
             r = self.session.put(
                 url, data=f,
-                headers={"Content-Type": "application/octet-stream"}
+                headers={"Content-Type": "application/octet-stream"},
+                timeout=self.timeout
             )
         r.raise_for_status()
         return r.json()
@@ -165,7 +188,7 @@ class ArtifactoryClient:
         Returns:
             Destination path
         """
-        r = self.session.get(f"{self.base_url}/{repo_key}/{path}", stream=True)
+        r = self.session.get(f"{self.base_url}/{repo_key}/{path}", stream=True, timeout=self.timeout)
         r.raise_for_status()
         with open(dest_path, "wb") as f:
             for chunk in r.iter_content(chunk_size=8192):
@@ -182,7 +205,7 @@ class ArtifactoryClient:
         Returns:
             True if deleted
         """
-        r = self.session.delete(f"{self.base_url}/{repo_key}/{path}")
+        r = self.session.delete(f"{self.base_url}/{repo_key}/{path}", timeout=self.timeout)
         r.raise_for_status()
         return True
 
@@ -198,7 +221,8 @@ class ArtifactoryClient:
         r = self.session.post(
             f"{self.base_url}/api/search/aql",
             data=aql_query,
-            headers={"Content-Type": "text/plain"}
+            headers={"Content-Type": "text/plain"},
+            timeout=self.timeout
         )
         r.raise_for_status()
         return r.json()
@@ -216,7 +240,7 @@ class ArtifactoryClient:
         params = {"name": name}
         if repos:
             params["repos"] = repos
-        r = self.session.get(f"{self.base_url}/api/search/artifact", params=params)
+        r = self.session.get(f"{self.base_url}/api/search/artifact", params=params, timeout=self.timeout)
         r.raise_for_status()
         return r.json()
 
@@ -231,7 +255,8 @@ class ArtifactoryClient:
             Properties dictionary
         """
         r = self.session.get(
-            f"{self.base_url}/api/storage/{repo_key}/{path}?properties"
+            f"{self.base_url}/api/storage/{repo_key}/{path}?properties",
+            timeout=self.timeout
         )
         r.raise_for_status()
         return r.json()
@@ -250,7 +275,8 @@ class ArtifactoryClient:
         """
         prop_str = ";".join(f"{k}={v}" for k, v in properties.items())
         r = self.session.put(
-            f"{self.base_url}/api/storage/{repo_key}/{path}?properties={prop_str}"
+            f"{self.base_url}/api/storage/{repo_key}/{path}?properties={prop_str}",
+            timeout=self.timeout
         )
         r.raise_for_status()
         return True
@@ -266,7 +292,8 @@ class ArtifactoryClient:
             Build info dictionary
         """
         r = self.session.get(
-            f"{self.base_url}/api/build/{build_name}/{build_number}"
+            f"{self.base_url}/api/build/{build_name}/{build_number}",
+            timeout=self.timeout
         )
         r.raise_for_status()
         return r.json()
@@ -280,13 +307,13 @@ class ArtifactoryClient:
         Returns:
             List of build runs
         """
-        r = self.session.get(f"{self.base_url}/api/build/{build_name}")
+        r = self.session.get(f"{self.base_url}/api/build/{build_name}", timeout=self.timeout)
         r.raise_for_status()
         return r.json()
 
     def promote_build(self, build_name: str, build_number: str,
                       target_repo: str, status: str = "released",
-                      copy: bool = False) -> dict:
+                      copy: bool = True, source_repo: str = None) -> dict:
         """Promote a build to a target repository.
 
         Args:
@@ -294,20 +321,31 @@ class ArtifactoryClient:
             build_number: Build number
             target_repo: Target repository for promotion
             status: Build status after promotion
-            copy: If True, copy artifacts; if False, move them
+            copy: True copies the artifacts (the default, and almost always what
+                you want). False MOVES them out of the source repository, which
+                breaks every existing resolution against that repo and is not
+                undone by promoting again. Moving also requires Delete
+                permission on the source, not just Deploy on the target.
+            source_repo: the repository to promote FROM. Set it whenever more
+                than one repository could hold the build's artifacts, otherwise
+                the promotion target is ambiguous.
 
         Returns:
             Promotion response
         """
+        payload = {
+            "status": status,
+            "targetRepo": target_repo,
+            "copy": copy,
+            "artifacts": True,
+            "dependencies": False
+        }
+        if source_repo:
+            payload["sourceRepo"] = source_repo
         r = self.session.post(
             f"{self.base_url}/api/build/promote/{build_name}/{build_number}",
-            json={
-                "status": status,
-                "targetRepo": target_repo,
-                "copy": copy,
-                "artifacts": True,
-                "dependencies": False
-            }
+            json=payload,
+            timeout=self.timeout
         )
         r.raise_for_status()
         return r.json()
@@ -319,8 +357,8 @@ def main():
     )
     parser.add_argument("--url", default=os.environ.get("JFROG_URL", ""),
                         help="Artifactory base URL (or set JFROG_URL env var)")
-    parser.add_argument("--token", default=os.environ.get("JFROG_ACCESS_TOKEN", ""),
-                        help="Access token (or set JFROG_ACCESS_TOKEN env var)")
+    # No --token flag on purpose: argv leaks via ps on a shared build agent.
+    # The token is read from JFROG_ACCESS_TOKEN below.
 
     subparsers = parser.add_subparsers(dest="command", help="Command to execute")
 
@@ -367,14 +405,26 @@ def main():
     pr.add_argument("--number", required=True, help="Build number")
     pr.add_argument("--target-repo", required=True, help="Target repository")
     pr.add_argument("--status", default="released", help="Status after promotion")
-    pr.add_argument("--copy", action="store_true", help="Copy instead of move")
+    pr.add_argument("--move", action="store_true",
+                    help="MOVE artifacts out of the source repo instead of copying. "
+                         "Copying is the default; moving breaks existing resolution "
+                         "against the source repo and needs Delete permission on it.")
+    pr.add_argument("--source-repo", help="Repository to promote FROM (set this when "
+                                          "more than one repo could hold the artifacts)")
 
     args = parser.parse_args()
 
+    args.token = os.environ.get("JFROG_ACCESS_TOKEN", "")
+
     if not args.url or not args.token:
-        print("ERROR: --url and --token required (or set JFROG_URL and "
-              "JFROG_ACCESS_TOKEN environment variables)", file=sys.stderr)
+        print("ERROR: set JFROG_URL (or pass --url) and JFROG_ACCESS_TOKEN. "
+              "The token is read from the environment only, never from argv.",
+              file=sys.stderr)
         sys.exit(1)
+
+    if not args.command:
+        parser.print_help(sys.stderr)
+        sys.exit(2)
 
     client = ArtifactoryClient(args.url, args.token)
 
@@ -426,7 +476,8 @@ def main():
         elif args.command == "promote":
             result = client.promote_build(
                 args.name, args.number, args.target_repo,
-                status=args.status, copy=args.copy
+                status=args.status, copy=not args.move,
+                source_repo=args.source_repo
             )
             print(f"Promoted: {args.name}/{args.number} -> {args.target_repo}")
             print(json.dumps(result, indent=2))
