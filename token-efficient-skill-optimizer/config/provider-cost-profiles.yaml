@@ -1,0 +1,132 @@
+# Provider cost profiles — token-efficient-skill-optimizer
+# Every figure here is a PRICE SNAPSHOT, not a live value. Anything computed from
+# this file must carry the snapshot_date and be labeled "estimated (pricing
+# snapshot <date>)". Update via the skill's "Refresh Evidence" mode.
+#
+# Units: USD per 1,000,000 tokens (per MTok) unless stated otherwise.
+# null = value not published by the provider. NEVER invent or derive a rate.
+
+snapshot:
+  snapshot_date: "2026-07-24"
+  anthropic_source: "https://platform.claude.com/docs/en/about-claude/pricing (fetched 2026-07-24; evidence record S-C02)"
+  openai_source: "https://developers.openai.com/api/docs/pricing (fetched 2026-07-24; evidence record S-C04)"
+  notes:
+    - "Output tokens are NOT universally more expensive than input by a fixed factor;
+       use per-model rates below, never a hard-coded multiplier."
+    - "Anthropic reasoning/thinking tokens bill as output tokens; not a separately
+       priced category. Do not add a separate reasoning line item."
+    - "effective_start / effective_end bound a row's validity. cost_model.py
+       refuses to cost a row whose window excludes the costing date rather than
+       silently using a superseded price (adopted from the GPT/Codex reference,
+       2026-07-25). Absent fields mean 'no known bound' - not 'valid forever'."
+    - "Model rows are as published on the snapshot date. api_model_id is the
+       canonical API string where unambiguous; null when the pricing page's display
+       name has no confirmed API id in our sources (do not guess ids)."
+
+anthropic:
+  cache_economics:
+    cache_read_multiplier: 0.1        # x base input price (hits & refreshes)
+    cache_write_multiplier_5m: 1.25   # x base input price, 5-minute TTL
+    cache_write_multiplier_1h: 2.0    # x base input price, 1-hour TTL
+    breakeven_note: "5m caching breaks even after 1 read; 1h after 2 (S-C02)"
+    min_cacheable_prefix_tokens_range: [512, 4096]   # varies by model (S-C01)
+  batch_discount: 0.5                 # Batch API = 50% off input and output
+  inference_geo_us_multiplier: 1.1    # 'us' geo = 1.1x all token categories (Claude 4.6+)
+  models:
+    - display_name: "Claude Fable 5"
+      api_model_id: claude-fable-5
+      input_per_mtok: 10.00
+      output_per_mtok: 50.00
+      cache_write_5m_per_mtok: 12.50
+      cache_write_1h_per_mtok: 20.00
+      cache_read_per_mtok: 1.00
+    - display_name: "Claude Opus 5"
+      api_model_id: null   # listed on pricing page; API id not confirmed in our sources
+      input_per_mtok: 5.00
+      output_per_mtok: 25.00
+      cache_write_5m_per_mtok: 6.25
+      cache_write_1h_per_mtok: 10.00
+      cache_read_per_mtok: 0.50
+    - display_name: "Claude Opus 4.8"
+      api_model_id: claude-opus-4-8
+      input_per_mtok: 5.00
+      output_per_mtok: 25.00
+      cache_write_5m_per_mtok: 6.25
+      cache_write_1h_per_mtok: 10.00
+      cache_read_per_mtok: 0.50
+    - display_name: "Claude Sonnet 5 (introductory, through 2026-08-31)"
+      api_model_id: claude-sonnet-5
+      effective_start: "2026-01-01"
+      effective_end: "2026-08-31"
+      input_per_mtok: 2.00
+      output_per_mtok: 10.00
+      cache_write_5m_per_mtok: 2.50
+      cache_write_1h_per_mtok: 4.00
+      cache_read_per_mtok: 0.20
+    - display_name: "Claude Sonnet 5 (from 2026-09-01)"
+      api_model_id: claude-sonnet-5
+      effective_start: "2026-09-01"
+      effective_end: null
+      input_per_mtok: 3.00
+      output_per_mtok: 15.00
+      cache_write_5m_per_mtok: 3.75
+      cache_write_1h_per_mtok: 6.00
+      cache_read_per_mtok: 0.30
+    - display_name: "Claude Sonnet 4.6"
+      api_model_id: claude-sonnet-4-6
+      input_per_mtok: 3.00
+      output_per_mtok: 15.00
+      cache_write_5m_per_mtok: 3.75
+      cache_write_1h_per_mtok: 6.00
+      cache_read_per_mtok: 0.30
+    - display_name: "Claude Haiku 4.5"
+      api_model_id: claude-haiku-4-5
+      input_per_mtok: 1.00
+      output_per_mtok: 5.00
+      cache_write_5m_per_mtok: 1.25
+      cache_write_1h_per_mtok: 2.00
+      cache_read_per_mtok: 0.10
+
+openai:
+  cache_economics:
+    cache_read_note: "Cached input listed per model (uniformly 10% of input on listed models)."
+    cache_write_note: "No per-MTok write price published. Caching guide: writes on
+      GPT-5.6+ billed at 1.25x uncached input; no additional fee on earlier families.
+      Retention: GPT-5.6+ >= 30 min; older 5-10 min inactivity, max 1 hour.
+      Minimum cacheable prompt: 1024 tokens. (S-C03)"
+  models:
+    - display_name: gpt-5.6-sol
+      input_per_mtok: 5.00
+      output_per_mtok: 30.00
+      cache_write_per_mtok: null
+      cache_read_per_mtok: 0.50
+    - display_name: gpt-5.6-terra
+      input_per_mtok: 2.50
+      output_per_mtok: 15.00
+      cache_write_per_mtok: null
+      cache_read_per_mtok: 0.25
+    - display_name: gpt-5.6-luna
+      input_per_mtok: 1.00
+      output_per_mtok: 6.00
+      cache_write_per_mtok: null
+      cache_read_per_mtok: 0.10
+    - display_name: gpt-5.5
+      input_per_mtok: 5.00
+      output_per_mtok: 30.00
+      cache_write_per_mtok: null
+      cache_read_per_mtok: 0.50
+    - display_name: gpt-5.4
+      input_per_mtok: 2.50
+      output_per_mtok: 15.00
+      cache_write_per_mtok: null
+      cache_read_per_mtok: 0.25
+    - display_name: gpt-5.4-mini
+      input_per_mtok: 0.75
+      output_per_mtok: 4.50
+      cache_write_per_mtok: null
+      cache_read_per_mtok: 0.075
+    - display_name: gpt-5.4-nano
+      input_per_mtok: 0.20
+      output_per_mtok: 1.25
+      cache_write_per_mtok: null
+      cache_read_per_mtok: 0.02
