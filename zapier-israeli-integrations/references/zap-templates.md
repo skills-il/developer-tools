@@ -15,24 +15,27 @@ All Israeli payment processors (Cardcom, Tranzila, Grow, Morning) send amounts i
 | 1. Trigger | Webhooks by Zapier | Catch Hook | Pass the webhook URL as `WebHookUrl` on your Cardcom `CreateLowProfile` request |
 | 2. Filter | Filter by Zapier | Only Continue If | `ResponseCode` = 0 (successful payment) |
 | 3. Format | Formatter by Zapier | Date/Time > Format | Input: current date, To Format: `DD/MM/YYYY` |
-| 4. Action | Webhooks by Zapier | Custom Request | POST to Morning API: Create Document type 400 (Receipt) |
+| 4. Action | Webhooks by Zapier | Custom Request | Fetch a Morning token, then POST to Morning API: Create Document type 320 (חשבונית מס/קבלה) |
 | 5. Action | Gmail | Send Email | Send receipt link to customer |
 
 **Morning API field mapping (Step 4):**
 
 | Morning API Field | Source | Notes |
 |-------------------|--------|-------|
-| `type` | Static: `400` | Receipt (kabala) |
+| `type` | Static: `320` | חשבונית מס/קבלה. Use 320 rather than a bare 400 receipt for an osek murshe card sale: 320 is the tax invoice the customer deducts input VAT against, and the document an allocation number attaches to. |
+| `lang` | Static: `he` | **Required.** The most commonly omitted field; without it the request 400s. |
 | `client.name` | Step 1: `UIValues.CardOwnerName` | Hebrew names pass through as-is |
 | `client.emails` | Step 1: `UIValues.CardOwnerEmail` | Array: `[UIValues.CardOwnerEmail]` |
-| `items[].description` | Static or custom | e.g., "תשלום עבור שירות" |
-| `items[].unitPrice` | Step 1: `Amount` | Already in decimal ILS (e.g., 150.50). Use as-is. |
-| `items[].quantity` | Static: `1` | |
-| `vatType` | Static: `0` (before VAT) or `1` (included) | Ask user preference |
-| `currency` | Static: `ILS` | |
+| `income[].description` | Static or custom | e.g., "תשלום עבור שירות". Required per row. |
+| `income[].price` | Step 1: `TranzactionInfo.Amount` | The callback has NO top-level `Amount`. Already decimal ILS, use as-is. Required per row. |
+| `income[].quantity` | Static: `1` | Required per row. |
+| `income[].currency` | Static: `ILS` | Required per row. |
+| `income[].vatType` | Static: `0` (before VAT) or `1` (included) | Required per row. |
+| `vatType` | Static: `0` (before VAT) or `1` (included) | **Required** at document level too. Ask user preference. |
+| `currency` | Static: `ILS` | **Required.** |
 
 **Customization options:**
-- If the pre-VAT amount exceeds 5,000 ILS, verify the Morning API response includes an Invoice Reform allocation number (required since June 2026). Divide the gateway total by 1.18 before comparing: the threshold is measured before VAT.
+- If the pre-VAT amount exceeds 5,000 ILS an Invoice Reform allocation number is required (since June 2026). Divide the gateway total by 1.18 before comparing: the threshold is measured before VAT. Note the create-document response does NOT return the allocation number; check `taxAuthorityConfirmationInitiated` / `taxAuthorityConfirmationLastError` on it, then read `allocationNumber` from a follow-up `GET /documents/{id}` or the `document/created` webhook.
 - Add a Slack notification step for payments above a threshold
 - For installment payments (tashlumim), include `UIValues.NumOfPayments` in the description
 - Use Zapier Tables instead of Gmail for logging (simpler, no external auth needed)
@@ -65,7 +68,7 @@ All Israeli payment processors (Cardcom, Tranzila, Grow, Morning) send amounts i
 | Total Amount | Step 1: `total` | |
 | Payment Status | Step 1: `status` | Paid / Unpaid / Partially Paid |
 | VAT Period | Step 1: derive from date | e.g., "Jan-Feb 2026" |
-| Allocation Number | Step 1: `allocationNumber` | Required for invoices > 5,000 NIS before VAT since Jun 2026 |
+| Allocation Number | `allocationNumber`, from `GET /documents/{id}` or the `document/created` webhook, NOT from the create response | Required for invoices > 5,000 NIS before VAT since Jun 2026 |
 
 **VAT period derivation:**
 Use Formatter > Date/Time to extract the month number, then use a Lookup Table:
@@ -287,7 +290,7 @@ Subject: "סיכום תקופת מע"מ {{period}} {{year}}"
     <tr><td>סה"כ מע"מ</td><td>{{totalVAT}} ש"ח</td></tr>
     <tr><td>סה"כ כולל מע"מ</td><td>{{totalWithVAT}} ש"ח</td></tr>
   </table>
-  <p><em>תזכורת: מועד הדיווח - 15 לחודש (19 בדיווח מקוון)</em></p>
+  <p><em>תזכורת: מועד הדיווח לתקופה זו - {{deadlineDate}} (קראו אותו מטבלת המועדים השנתית, אל תקבעו את ה-15 בקוד)</em></p>
   <p><em>דוח זה נוצר אוטומטית. נא לאמת מול הנתונים במערכת.</em></p>
 </div>
 ```
@@ -323,7 +326,7 @@ Subject: "סיכום תקופת מע"מ {{period}} {{year}}"
 |--------|---------------|-----------------|-------------|----------------|
 | Date | Webhook timestamp | Webhook timestamp | Webhook timestamp | Document date |
 | Source | Static: "Cardcom" | Static: "Tranzila" | Static: "Grow" | Static: "Morning" |
-| Amount (ILS) | `Amount` | `sum` | `amount` | `total` |
+| Amount (ILS) | `TranzactionInfo.Amount` | `sum` | `amount` | `total` |
 | Customer | `UIValues.CardOwnerName` | `contact` | `customer_name` | `client.name` |
 | Reference | `TranzactionId` | `index` | `transaction_id` | Document number |
 | Payment Method | Static: "Credit Card" | Static: "Credit Card" | `payment_method` | N/A |
@@ -350,7 +353,7 @@ Subject: "סיכום תקופת מע"מ {{period}} {{year}}"
 **Template 3: Payment-to-receipt (Cardcom)**
 1. Trigger: Webhooks by Zapier (Cardcom `WebHookUrl` JSON POST callback)
 2. Filter: `ResponseCode` = 0 (successful payment only)
-3. Action: Morning API > Create Document (type: 400 Receipt). Amount field uses the `Amount` value directly (already in decimal shekels).
+3. Action: fetch a Morning token (POST `grant_type=client_credentials` to `https://api.morning.co/idp/v1/oauth/token`; it expires in 1 hour, so fetch per run), then Morning API > Create Document (type: 320 חשבונית מס/קבלה). Map the price from `TranzactionInfo.Amount`, already decimal shekels; there is no top-level `Amount`.
 4. Action: Send email with receipt PDF link to customer
 5. Action: Log to Zapier Tables for reconciliation
 
@@ -389,7 +392,7 @@ Cardcom v11 uses a `WebHookUrl` callback. When a transaction completes, Cardcom 
 | `TranzactionId` | Credit-card transaction ID | `12345678` |
 | `LowProfileId` | Unique ID of the low-profile transaction | `a1b2c3d4-...` |
 | `ReturnValue` | Whatever you sent on the request, typically your order ID | `Z12332X` |
-| `Amount` | Payment amount in decimal shekels | `150.50` (= 150.50 ILS) |
+| `TranzactionInfo.Amount` | Payment amount in decimal shekels. There is NO top-level `Amount` on the callback; `TranzactionInfo` is null outside `ChargeOnly` / `ChargeAndCreateToken`. | `150.50` (= 150.50 ILS) |
 | `UIValues.CardOwnerName` | Cardholder name | `ישראל ישראלי` |
 | `UIValues.CardOwnerEmail` | Customer email | `israel@example.com` |
 | `UIValues.CardOwnerPhone` | Customer phone | `0541234567` |
@@ -423,4 +426,20 @@ Grow supports credit cards, Bit, Apple Pay, and Google Pay. Sends JSON POST webh
 - Grow by Meshulam (native Bit support via their checkout page)
 - Tranzila (Bit integration available)
 - Direct Bit Business API (requires separate merchant agreement)
+
+
+
+## Zap pattern index (relocated from SKILL.md Step 1)
+
+Match the Israeli business need to the correct Zap architecture.
+
+| Business Need | Zap Trigger | Action Chain | Israeli Apps |
+|---------------|-------------|--------------|--------------|
+| Auto-receipt after payment | Cardcom/Tranzila webhook | Parse payment -> Create Morning doc -> Email customer | Cardcom, Morning |
+| Invoice-to-bookkeeping sync | Morning new document webhook | Map fields -> Create entry in Zapier Tables or accounting tool -> Tag VAT period | Morning, Zapier Tables |
+| Payment reminder (freelancer) | Schedule trigger (bimonthly) | Query unpaid invoices -> Filter overdue -> Send Hebrew reminder | Morning, email/SMS provider |
+| E-commerce order processing | WooCommerce/Shopify new order | Create invoice in Morning -> Send email confirmation -> Update Monday.com board | Morning, Monday.com |
+| WhatsApp order confirmation | Payment webhook | Format Hebrew message -> Send via Twilio WhatsApp Business API | Twilio (WhatsApp Business) |
+| Lead capture with CRM | Form submission (Typeform, Google Forms) | Extract Hebrew name -> Create CRM contact -> Send email follow-up | Monday.com, HubSpot |
+| Multi-gateway consolidation | Multiple webhooks (Cardcom, Tranzila, Grow) | Normalize amounts -> Log to unified Zapier Table | Cardcom, Tranzila, Grow |
 

@@ -15,6 +15,27 @@
       "title": "Deferred: add Zapier Canvas to the product taxonomy",
       "detail": "Step 8 covers Copilot, Agents, Chatbots and MCP but omits Canvas (zapier.com/canvas, live). Zapier's own suite framing includes Canvas for process mapping, which is the natural entry point for a non-technical owner mapping an invoicing flow before building it. Deferred as an addition rather than a correction.",
       "scope": "coverage"
+    },
+    {
+      "date": "2026-09-02",
+      "version": "3.1.0",
+      "scope": "coverage",
+      "title": "Carried forward: Zapier Canvas still absent from the product taxonomy",
+      "detail": "Re-litigated this cycle and deliberately kept deferred. Step 8 is now at the SKILL.md word cap and the cycle's budget went to four CRITICAL correctness defects. Canvas remains the natural entry point for a non-technical owner mapping an invoicing flow before building it. Add it next cycle, in references/zapier-platform-notes.md rather than the body."
+    },
+    {
+      "date": "2026-09-02",
+      "version": "3.1.0",
+      "scope": "structural",
+      "title": "Resolved: Step 2 is now a native-first ladder",
+      "detail": "Carried from the 2026-08-01 deferral. Step 2 now leads with the native-app list (SUMIT, Priority ERP, InforUMobile, Responder and Responder Live, Monday.com, Wix), then Webhooks by Zapier as the fallback, with the per-vendor connection table relocated to references/israeli-zapier-apps.md. Two new native Israeli apps, Responder and Responder Live (רב מסר), were found and added."
+    },
+    {
+      "date": "2026-09-02",
+      "version": "3.1.0",
+      "scope": "coverage",
+      "title": "Deferred: no Bituach Leumi advance schedule",
+      "detail": "The expert review found that Step 4 covers VAT, mikdamot, withholding, the detailed report and the annual filing, but an osek murshe also owes monthly Bituach Leumi advances on a separate schedule, which a reminder Zap built from this skill silently misses. A pointer was added to references/israeli-zapier-apps.md, but no dates or rate bands were encoded because btl.gov.il was not reached this cycle. Verify at btl.gov.il and encode next cycle, or route explicitly to israeli-freelancer-ops."
     }
   ],
   "persistent_fail": [
@@ -41,6 +62,18 @@
       "title": "Third-party platform drift outran the review interval",
       "detail": "Between v2.2.0 (2026-05-20) and this review, Zapier's plan lineup, WhatsApp app surface, app count and Israeli-vendor app coverage all moved, and Cardcom's documented webhook mechanism turned out to have been wrong since creation rather than drifted. For platform-wrapper skills, verify vendor API shape against a machine-readable spec (OpenAPI/swagger JSON) rather than a KB article: the spec is greppable, self-dating, and lets you prove a field name is ABSENT, which prose cannot.",
       "scope": "process"
+    },
+    {
+      "date": "2026-09-02",
+      "scope": "process",
+      "title": "Four CRITICAL API-shape defects survived every prior gate because the gates check values, not field paths",
+      "detail": "The published v3.0.1 told builders to map a Cardcom top-level `Amount` (the callback has none; it is TranzactionInfo.Amount), to send Morning `items[].unitPrice` (the schema is income[].price and has no items property), to read the allocation number off the create-document response (it is not there; allocationNumber is on the Document schema), and never mentioned that the Morning token expires in one hour, so no recipe fetched one. Every fact-freshness and rate-table gate passed, because each checks whether a stated VALUE is current, not whether a stated FIELD PATH exists in the vendor schema. The fix that generalises: for any skill that maps vendor payloads, fetch the OpenAPI/JSON spec and assert every field path the skill names actually exists in the named schema, and that required-field lists are complete. A field path is falsifiable cheaply and mechanically; nothing in the pipeline was doing it."
+    },
+    {
+      "date": "2026-09-02",
+      "scope": "process",
+      "title": "A reviewer finding is a lead, not a fact, in both directions",
+      "detail": "The Independent Judge reported the WhatsApp Notifications 'only messages your own number' claim as unsourced, having checked the app directory page. Acting on it would have weakened a correct, well-sourced statement: Zapier's help article (updated 2026-05-29) says verbatim 'send yourself WhatsApp messages to your WhatsApp account', lists the seven prefilled templates and states 'Custom templates cannot be created'. The claim was restored and strengthened instead. Separately the judge proposed 'correcting' the 67(א2)(1) / 20(ג)(1) citations, which this cycle had just fixed and which are right. Always verify a finding against the primary source before acting, including findings that propose a deletion."
     }
   ],
   "unverified": [
@@ -73,6 +106,21 @@
       "date": "2026-08-01",
       "item": "Morning document type codes 10/305/320/330/400",
       "detail": "Not contradicted by any source, but not re-verified against the relocated docs either."
+    },
+    {
+      "date": "2026-09-02",
+      "title": "Zapier Central to Agents rename has no citable Zapier statement",
+      "detail": "The rename is evidenced only by redirects (zapier.com/central -> /agents, central.zapier.com -> agents.zapier.com). No changelog or announcement stating it was located. The skill now says so explicitly rather than attributing the rename to Zapier."
+    },
+    {
+      "date": "2026-09-02",
+      "title": "Cardcom webhook has no signature mechanism we could find",
+      "detail": "A grep of the v11 spec found no HMAC, signature or checksum on the callback, so a Catch Hook URL is forgeable. The skill documents mitigations (re-fetch by LowProfileId, echo a secret through ReturnValue) and states this is 'none found in the spec' rather than a guarantee. Confirm with Cardcom support."
+    },
+    {
+      "date": "2026-09-02",
+      "title": "Zapier monthly-billing prices are not published",
+      "detail": "zapier.com/pricing renders annual pricing only. A previously stated $29.99/month monthly figure could not be confirmed and was removed from all files; the verified annual $19.99 and $69 figures were kept."
     }
   ]
 }
