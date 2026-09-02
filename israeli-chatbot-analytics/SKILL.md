@@ -176,7 +176,7 @@ Implement `build_dashboard(conversations, period_days=7)` to populate the datacl
 - Outcome rates from `Counter(c["outcome"])` / `n`.
 - `avg_handle_time_seconds` from `(ended_at - started_at).total_seconds()` per session.
 - `avg_csat` from `satisfaction_score` where present.
-- `avg_response_time_ms` / `p95_response_time_ms` from bot messages with `response_time_ms` (p95 via `sorted_rts[int(len * 0.95)]`).
+- `avg_response_time_ms` / `p95_response_time_ms` from bot messages with `response_time_ms` (p95 by nearest rank, `sorted_rts[math.ceil(0.95 * n) - 1]`).
 - `high_confidence_rate` = share of user messages with `intent_confidence > 0.7`. `fallback_rate` = share of user messages with `intent == "fallback"`.
 - `intent_accuracy` stays `None` unless you have ground-truth labels. Populate it only from `IntentAccuracyTracker` (Step 5) and render `n/a` otherwise. Model confidence is not accuracy: a confident but wrong classifier scores 100% on confidence and can be wrong on every prediction, and this is the number most likely to be quoted to management.
 - `conversations_per_day = n / period_days`. `peak_hour` and `busiest_day` from `Counter` over `started_at` hour and weekday.
@@ -253,7 +253,7 @@ Vendor ownership, pricing tiers, current names and the recognized-referrer cavea
 
 ## LLM and RAG bot observability
 
-If your bot generates answers with an LLM rather than matching intents, Steps 5 and 8 measure the wrong things: there is no intent label to score, no fallback to count, and a fluent wrong answer registers as a completed session. The session-level metrics (drop-off, escalation, CSAT, retention) still apply unchanged; what you add on top is groundedness, retrieval hit rate, tool-call success rate, and cost per **resolved** conversation. The cheapest hallucination proxy needs no judge model at all: log the retrieved chunk ids and the chunk ids the answer actually cited, and watch the two diverge.
+If your bot generates answers with an LLM rather than matching intents, Steps 5 and 8 measure the wrong things: there is no intent label to score, no fallback to count, and a fluent wrong answer registers as a completed session. The session-level metrics (drop-off, escalation, CSAT, retention) still apply unchanged; what you add on top is groundedness, retrieval hit rate, tool-call success rate, and cost per **resolved** conversation. Log retrieved chunk ids against the ids the answer cited. This is a citation-compliance canary, not groundedness. See `references/llm-bot-observability.md`.
 
 An LLM-as-judge scorer is the standard fallback where you have no ground truth, but calibrate it against Hebrew-speaking human annotators before quoting its output as accuracy, and run it on a weekly sample rather than on every turn. The Step 8 warning about confidence being mistaken for accuracy applies to judge scores with equal force.
 
