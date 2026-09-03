@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "sumit-api-integration",
+  "generated_at": "2026-06-28T00:00:00Z",
+  "claims": [
+    {
+      "claim_id": "base-url-and-post-convention",
+      "claim": "The SUMIT REST API base URL is https://api.sumit.co.il and every operation is an HTTP POST with a JSON body, including reads such as list and get.",
+      "source_url": "https://app.sumit.co.il/swagger/v1/swagger.json",
+      "raw_snippet": "\"servers\": [ { \"url\": \"https://api.sumit.co.il\" } ] ... \"post\"",
+      "fetched_at": "2026-06-28T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/api-endpoints.md"]
+    },
+    {
+      "claim_id": "credentials-in-body",
+      "claim": "Authentication is a Credentials object (CompanyID and APIKey) placed inside the JSON request body, not in an HTTP Authorization header.",
+      "source_url": "https://app.sumit.co.il/swagger/v1/swagger.json",
+      "raw_snippet": "Core_APICredentials: required [APIKey, CompanyID]",
+      "fetched_at": "2026-06-28T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "scripts/sumit_client.py"]
+    },
+    {
+      "claim_id": "response-envelope",
+      "claim": "Every response uses one envelope with Status (Success, BusinessError, TechnicalError), UserErrorMessage, TechnicalErrorDetails, and Data. HTTP 200 can still carry a BusinessError, so callers must check Status.",
+      "source_url": "https://app.sumit.co.il/swagger/v1/swagger.json",
+      "raw_snippet": "Teva.Common.ResponseStatus enum: Success (0), BusinessError (1), TechnicalError (2)",
+      "fetched_at": "2026-06-28T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "scripts/sumit_client.py"]
+    },
+    {
+      "claim_id": "document-types",
+      "claim": "The SUMIT documents/create operation accepts 23 document types numbered 0 to 22, including Invoice (0), InvoiceAndReceipt (1), Receipt (2), PriceQuotation (12), and expense types ExpenseInvoiceReceipt (15), ExpenseInvoice (16), ExpenseReceipt (17).",
+      "source_url": "https://app.sumit.co.il/swagger/v1/swagger.json",
+      "raw_snippet": "Accounting_Typed_DocumentType enum: Invoice (0) ... SupplierPayment (22)",
+      "fetched_at": "2026-06-28T00:00:00Z",
+      "appears_in": ["SKILL.md", "references/document-types-and-enums.md"]
+    },
+    {
+      "claim_id": "payments-js-tokenization",
+      "claim": "Credit-card charging uses a browser tokenization flow: payments.js with OfficeGuy.Payments.BindFormSubmit (CompanyID + APIPublicKey) produces a single-use og-token, which the server passes as SingleUseToken to billing/payments/charge, so raw card data never reaches the server.",
+      "source_url": "https://help.sumit.co.il/he/articles/5893615-payments-javascript-api",
+      "raw_snippet": "OfficeGuy.Payments.BindFormSubmit ... og-token ... SingleUseToken",
+      "fetched_at": "2026-06-28T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/payments-and-tokenization.md"]
+    }
+  ]
+}
