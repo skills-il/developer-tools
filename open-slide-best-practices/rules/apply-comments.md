@@ -1,6 +1,6 @@
 # apply-comments (open-slide reference)
 
-> Adapted from [1weiho/open-slide MIT, packages/core/skills/apply-comments/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/apply-comments/SKILL.md). Hebrew/RTL pointers added by skills-il.
+> Adapted from [1weiho/open-slide MIT, packages/core/skills/apply-comments/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/apply-comments/SKILL.md). Mirrored from `@open-slide/core@1.19.1`. Hebrew/RTL pointers added by skills-il. Links are pinned to the 1.19.1 release commit, not `main`, because `main` now serves 2.0.0-beta docs.
 
 # Apply slide comments
 
@@ -8,7 +8,7 @@ The open-slide editor has an inspector tool that lets the user click on a render
 
 Your job: read those markers, perform the described edits, and delete the markers.
 
-> **Before making any page edit**, consult the [./slide-authoring.md](./slide-authoring.md) reference — it is the technical reference for how `slides/<id>/index.tsx` is structured (canvas, type scale, palette, assets, file contract). A comment like *"make this bigger"* or *"change the accent colour"* should be applied in a way that stays consistent with those rules.
+> **Before making any page edit**, consult the [./slide-authoring.md](./slide-authoring.md) reference, it is the technical reference for how `slides/<id>/index.tsx` is structured (canvas, type scale, palette, assets, file contract). A comment like *"make this bigger"* or *"change the accent colour"* should be applied in a way that stays consistent with those rules.
 
 ## Marker format
 
@@ -18,7 +18,7 @@ Your job: read those markers, perform the described edits, and delete the marker
 
 - Always sits on its own line as the **first child inside** the JSX element it refers to (i.e. between that element's opening `>` and its other children). The marker is dropped *into* its target, not floated above it.
 - `text` is base64url-encoded JSON: `{"note": "...", "hint"?: "..."}`.
-- Detection regex (authoritative — use exactly this):
+- Detection regex (authoritative, use exactly this):
 
   ```
   /\{\/\*\s*@slide-comment\s+id="(c-[a-f0-9]+)"\s+ts="([^"]+)"\s+text="([A-Za-z0-9_\-]+={0,2})"\s*\*\/\}/g
@@ -27,7 +27,7 @@ Your job: read those markers, perform the described edits, and delete the marker
 ## Procedure
 
 1. **Identify the target slide(s).**
-   - If the user names one (`example-slide`, `youbike-3-survey`, etc.), work on that single `slides/<slideId>/index.tsx`.
+   - If the user names one (`getting-started`, `q2-roadmap`, etc.), work on that single `slides/<slideId>/index.tsx`.
    - If they say "all" or don't specify, scan every `slides/*/index.tsx`. Process each slide one at a time.
 
 2. **Read the file and find all markers.**
@@ -37,7 +37,7 @@ Your job: read those markers, perform the described edits, and delete the marker
    - If there are no markers, tell the user and stop.
 
 3. **Understand each comment in context.**
-   - The targeted JSX element is the **enclosing** element of the marker — i.e. read upward from the marker line until you reach the unclosed JSX opening tag whose body the marker lives in. That element is the target. (For self-closing elements like `<img />`, the inspector hoists the marker to the nearest non-self-closing ancestor; in that case the comment usually refers to a child of the enclosing element rather than the enclosing element itself — use the `note` text to disambiguate.)
+   - The targeted JSX element is the **enclosing** element of the marker, i.e. read upward from the marker line until you reach the unclosed JSX opening tag whose body the marker lives in. That element is the target. (For self-closing elements like `<img />`, the inspector hoists the marker to the nearest non-self-closing ancestor; in that case the comment usually refers to a child of the enclosing element rather than the enclosing element itself, use the `note` text to disambiguate.)
    - Read enough surrounding code (parent element, sibling elements, inline styles) to apply the change faithfully. A comment inside a `<div>` with an inline `background` style usually refers to that element's styling, for example.
    - If the `note` is ambiguous, do the smallest reasonable interpretation and mention the assumption in your summary.
 
@@ -47,11 +47,11 @@ Your job: read those markers, perform the described edits, and delete the marker
 
 5. **Remove each marker after applying its edit.**
    - Delete the entire marker line including its trailing `\n`.
-   - Never leave a marker behind for an edit you applied, that signals a failure. Markers you deliberately skipped per the edge cases below stay in place.
+   - Never leave a marker behind for an edit you applied, that signals a failure. Markers deliberately skipped per the edge cases below stay in place.
 
 6. **Verify.**
-   - After all edits, re-read the file and confirm zero remaining markers.
-   - Confirm the edited JSX is well-formed (balanced tags, no dangling attributes). If the project's `package.json` has typecheck/lint scripts, run them with the project's package manager. A scaffolded open-slide project ships NEITHER TypeScript nor a linter (its only scripts are `dev`, `build`, `preview`, `sync:skills`), so `pnpm tsc --noEmit` and `pnpm biome check` will simply fail there; rely on the running dev server or `npm run build` to surface compile errors instead. Fix any errors you introduced.
+   - After all edits, re-read the file and confirm the only remaining markers are ones you reported as skipped.
+   - Confirm the edited JSX is well-formed (balanced tags, no dangling attributes). If the project's `package.json` has typecheck/lint scripts, run them with the project's package manager; scaffolded projects ship neither TypeScript nor a linter, there, rely on the running dev server (or the `build` script) to surface compile errors. Fix any errors you introduced.
 
 7. **Report.**
    - Summarise: `N applied, M skipped` plus a one-line description of each change (including the slide id).
@@ -69,9 +69,8 @@ You can run this inline via `node -e '...'` if you need to inspect a payload; ot
 
 ## Edge cases
 
-- **Marker with no enclosing JSX element** (shouldn't happen — the inspector won't write one — but if you find one): delete it and note as orphan.
-- **Multiple markers stacked on consecutive lines inside the same element**: they all refer to that enclosing element. Apply them in source order but still delete each line individually.
-- **`_debugSource` used SWC instead of Babel**: not your problem — the marker line is authoritative.
+- **Marker with no enclosing JSX element** (shouldn't happen, the inspector won't write one, but if you find one): delete it and note as orphan.
+- **Multiple markers stacked on consecutive lines inside the same element**: they all refer to that enclosing element. Read their notes in source order to understand the combined intent, then apply and delete them bottom-up per step 4.
 - **Comment asks for something outside the target element's scope** (e.g. "add a new page"): do the closest-reasonable edit and mention the scope expansion in your summary.
 - **Can't resolve the comment** (e.g. truly ambiguous, or the file changed shape such that the target element doesn't exist): leave the marker in place and report it as skipped. Don't guess.
 
@@ -79,9 +78,8 @@ You can run this inline via `node -e '...'` if you need to inspect a payload; ot
 
 - Do not touch `package.json`, `open-slide.config.ts`, or files outside `slides/`.
 - Do not add dependencies.
-- Do not re-introduce markers or leave `TODO` breadcrumbs — the user already has a record in git.
-
+- Do not re-introduce markers or leave `TODO` breadcrumbs, the user already has a record in git.
 
 ## Hebrew and RTL note
 
-Comments may be in Hebrew (e.g. `text` field decoded to "תגדיל את הכותרת" / "make the heading bigger"). The marker format is unaffected — `text` is base64url-encoded JSON and base64url is byte-safe for any Unicode payload. Decode normally; the Hebrew renders fine in your reasoning. When applying the edit, follow the rules in [./slide-authoring.md](./slide-authoring.md) and [./hebrew-rtl.md](./hebrew-rtl.md) — e.g. a "make this heading bigger" comment in a Hebrew slide should also factor in Hebrew's wider per-character width when picking the new font-size.
+Comments may be in Hebrew (e.g. `text` field decoded to "תגדיל את הכותרת" / "make the heading bigger"). The marker format is unaffected, `text` is base64url-encoded JSON and base64url is byte-safe for any Unicode payload. Decode normally; the Hebrew renders fine in your reasoning. When applying the edit, follow the rules in [./slide-authoring.md](./slide-authoring.md) and [./hebrew-rtl.md](./hebrew-rtl.md), e.g. a "make this heading bigger" comment in a Hebrew slide should also factor in Hebrew's wider per-character width when picking the new font-size.

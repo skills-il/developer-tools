@@ -1,6 +1,6 @@
 # slide-authoring (open-slide reference)
 
-> Adapted from [1weiho/open-slide MIT, packages/core/skills/slide-authoring/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/SKILL.md). Hebrew/RTL pointers added by skills-il.
+> Adapted from [1weiho/open-slide MIT, packages/core/skills/slide-authoring/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/SKILL.md). Hebrew/RTL pointers added by skills-il.
 >
 > **For Hebrew or bilingual decks, always pair this with [./hebrew-rtl.md](./hebrew-rtl.md) before writing any code.** The rules below assume Latin text and physical-CSS positioning. The Hebrew companion explains how to translate them to logical properties, Hebrew Google Fonts, and bidi-safe markup.
 
@@ -22,15 +22,15 @@ Upstream split its own `slide-authoring` skill into per-primitive reference file
 
 | Primitive | Upstream file |
 | --- | --- |
-| Stepped reveals (`<Steps>` / `<Step>`) | [references/steps.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/steps.md) |
-| Page transitions (`SlideTransition`) | [references/transitions.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/transitions.md) |
-| Shared-element / magic-move (`MorphElement`) | [references/morph.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/morph.md) |
-| Page numbers (`useSlidePageNumber`) | [references/page-numbers.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/page-numbers.md) |
-| Design tokens (`design` const, `var(--osd-X)`) | [references/design-system.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/design-system.md) |
-| Assets | [references/assets.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/assets.md) |
-| Webfonts | [references/webfonts.md](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/webfonts.md) |
+| Stepped reveals (`<Steps>` / `<Step>`) | [references/steps.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/steps.md) |
+| Page transitions (`SlideTransition`) | [references/transitions.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/transitions.md) |
+| Shared-element / magic-move (`MorphElement`) | [references/morph.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/morph.md) |
+| Page numbers (`useSlidePageNumber`) | [references/page-numbers.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/page-numbers.md) |
+| Design tokens (`design` const, `var(--osd-X)`) | [references/design-system.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/design-system.md) |
+| Assets | [references/assets.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/assets.md) |
+| Webfonts | [references/webfonts.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/webfonts.md) |
 
-For Hebrew webfont loading specifically, [./hebrew-rtl.md](./hebrew-rtl.md) section 3 applies the webfonts rule to Heebo / Rubik / Assistant with `subset=hebrew`.
+For Hebrew webfont loading specifically, [./hebrew-rtl.md](./hebrew-rtl.md) section 3 applies the webfonts rule to Heebo / Rubik / Assistant loaded by head injection.
 
 ## Hard rules
 
@@ -49,17 +49,23 @@ import type { Page, SlideMeta } from '@open-slide/core';
 const Cover: Page = () => <div>…</div>;
 const Body: Page = () => <div>…</div>;
 
-export const meta: SlideMeta = { title: 'My slide' };
+export const meta: SlideMeta = {
+  title: 'My slide',
+  createdAt: '2026-05-16T12:00:00Z',
+};
 export default [Cover, Body] satisfies Page[];
 ```
 
 - `export default` is a **non-empty array of zero-prop React components**, one per page, in order.
 - `meta.title` (optional) shows in the slide header. Default is the folder name.
-- The slide id is the kebab-case folder name. Pick something short and descriptive (`q2-roadmap`, `team-offsite-2026`).
+- The slide id is the kebab-case folder name. Pick something short and descriptive (`q2-roadmap`, `team-offsite-2026`). It must also be ASCII, see the id rule in the parent skill.
+- `meta.theme` (optional) marks the slide as built from a theme under `themes/`. The id must match a `<id>.md` basename. Surfaces a back-link chip on the slide card and lists the slide on `/themes/<id>`. Omit if the slide isn't derived from a registered theme.
+- `meta.createdAt` is an **ISO 8601 string literal** (e.g. `'2026-05-16T12:00:00Z'`) set once when the slide is scaffolded. The home page uses it for the default "newest first" sort. Always include it on new slides: **immediately before writing the file, run `node -e "console.log(new Date().toISOString())"` and paste the exact output** as the value. Don't type a timestamp from memory, you will get the date or time wrong. It must be a plain string literal (no `new Date(...)` and no imports in the slide itself), because the framework reads it with a regex at build time rather than evaluating the module.
+- `notes` (optional) is the speaker-notes export, index-aligned with the default array. See **Speaker notes** below.
 
 ## Editing an existing slide
 
-A finished slide commonly runs 1000–1800 lines. When you only need to touch one page, **don't read the whole file**, locate the page first, then read just that range:
+A finished slide commonly runs 1000-1800 lines. When you only need to touch one page, **don't read the whole file**, locate the page first, then read just that range:
 
 ```bash
 grep -n ": Page = " slides/<id>/index.tsx
@@ -79,17 +85,17 @@ Every page renders into a **fixed 1920 × 1080** canvas. The framework scales it
 
 | Element          | Size       |
 | ---------------- | ---------- |
-| Hero title       | 140–200px  |
-| Section heading  | 80–120px   |
-| Page heading     | 56–80px    |
-| Body text        | 32–44px    |
-| Caption / label  | 22–28px    |
+| Hero title       | 140-200px  |
+| Section heading  | 80-120px   |
+| Page heading     | 56-80px    |
+| Body text        | 32-44px    |
+| Caption / label  | 22-28px    |
 
 ### Spacing
 
-- Content padding: **100–160px** from canvas edges. Never let text touch the edge.
-- Line-height: 1.2 for headings, 1.5–1.7 for body.
-- Breathing room between elements: 32–64px.
+- Content padding: **100-160px** from canvas edges. Never let text touch the edge.
+- Line-height: 1.2 for headings, 1.5-1.7 for body.
+- Breathing room between elements: 32-64px.
 
 ### Vertical budget, content MUST fit 1080px
 
@@ -97,7 +103,7 @@ The canvas does **not** scroll. Anything below 1080px is silently cropped. Befor
 
 **Usable height** = `1080 − top_padding − bottom_padding`. With 120px padding on each side that's **840px**. With 160px each side, **760px**. Pick the padding first, then design within that budget.
 
-**Element height** = `font_size × line_height × number_of_lines`. A bullet that wraps to 2 lines counts as 2 lines. Add the gap below it (32–64px) before summing the next element.
+**Element height** = `font_size × line_height × number_of_lines`. A bullet that wraps to 2 lines counts as 2 lines. Add the gap below it (32-64px) before summing the next element.
 
 **Worked example, single content page, 120px padding (budget = 840px):**
 
@@ -117,8 +123,8 @@ Swap the heading to 120px or add a 6th bullet and you're over. **Verify every pa
 
 - One heading + body OR one heading + ≤5 short bullets. Not both blocks of body copy *and* a long bullet list.
 - A bullet should fit on one line at the chosen font size. If it wraps, either shorten the copy or move it to its own page.
-- Hero title pages (140–200px) carry a title + 1 subtitle + maybe an eyebrow, nothing else.
-- Section headings (80–120px) need almost nothing else on the page.
+- Hero title pages (140-200px) carry a title + 1 subtitle + maybe an eyebrow, nothing else.
+- Section headings (80-120px) need almost nothing else on the page.
 - If you find yourself raising padding, shrinking type below the scale's lower bound, or tightening line-height under 1.4 to make things fit, **split into two pages instead**. Splitting is always the right answer when the budget is tight.
 
 **Never** use `overflow: auto/scroll`, negative margins, or transforms to hide overflow. The canvas is fixed; cropped content is gone.
@@ -128,7 +134,7 @@ Swap the heading to 120px or add a 6th bullet and you're over. **Verify every pa
 Pick a coherent look and hold it across every page:
 
 - **Palette**, 1 background, 1 primary text, 1 accent, 1 muted. Define as constants at the top of the file.
-- **Typography**, one display font + one body font. System stack unless the user specifies. Heavy weight for headlines (800–900), normal for body (400–500).
+- **Typography**, one display font + one body font. System stack unless the user specifies. Heavy weight for headlines (800-900), normal for body (400-500).
 - **Layout grid**, pick a single content padding (e.g. 120px) and stick to it. Left-aligned content feels editorial; centered feels ceremonial.
 - **Aesthetic commitment**, choose ONE: minimal, maximalist, editorial, retro, brutalist, soft/pastel, neon, paper/print. Don't mix.
 
@@ -247,7 +253,7 @@ const Content: Page = () => (
     </h2>
     <ul style={{ fontSize: 'var(--osd-size-body)', lineHeight: 1.6, marginTop: 64, paddingLeft: 48 }}>
       <li>One clear point per line</li>
-      <li>Keep to 3–5 bullets</li>
+      <li>Keep to 3-5 bullets</li>
       <li>Let the space breathe</li>
     </ul>
   </div>
@@ -368,6 +374,39 @@ Reach for stepped reveals when the *order* of ideas is the point (a list whose p
 
 Also recompute the 1080px vertical budget for the **fully-composed** state: a forward-entered stepped page must also render complete when reached via the `O` overview grid or backward, so size it for every `<Step>` revealed at once (at the bumped Hebrew type scale a page that fits beat-by-beat can overflow when fully shown). See [./hebrew-rtl.md](./hebrew-rtl.md).
 
+## Page numbers
+
+If a footer shows the current page (`03 / 12`), read it from `useSlidePageNumber()`, **never hardcode** `n` / `TOTAL`. A hardcoded counter goes stale the moment a page is inserted or removed. See the pinned [references/page-numbers.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/page-numbers.md) for the hook's contract and where it can be called.
+
+In an RTL footer, wrap the digits in `<bdi>` so the counter does not reorder against the Hebrew chrome around it.
+
+## Speaker notes (`notes` export)
+
+The framework has built-in speaker notes. An optional `notes` export in `index.tsx`, index-aligned with the default page array, is rendered in the viewer's notes drawer and beside the timer in present mode.
+
+`SlideModule` (from `@open-slide/core`) declares it as:
+
+```ts
+notes?: (string | undefined)[];   // index-aligned with `default`
+```
+
+```tsx
+export const notes: (string | undefined)[] = [
+  'Open with the analyst quote, then introduce yourself.',
+  undefined,
+  `Walk through the three pillars, one beat each.
+Pause for questions before moving on.`,
+];
+
+export default [Cover, Agenda, Pillars];
+```
+
+- One entry per page, same order as the default export. Use `undefined` to skip a page; never shorten the array, or every later note misaligns.
+- **When the user asks for a speech script, talk track, or presenter notes, in any language, it goes here.** A `script.md` or `notes.md` is invisible to the runtime. This is the single most common miss on this framework.
+- A slide is one `index.tsx` plus `assets/`. Do not create sibling prose files for notes.
+
+> Note for mirrors: the `notes` runtime exists in `@open-slide/core@1.19.1`, but none of the skills bundled with that release documents it; upstream added those docs after the 1.19.1 publish. This section is written from the shipped `SlideModule` type in `packages/core/src/app/lib/sdk.ts`, not from the bundled docs.
+
 ## Runtime behavior you get for free
 
 - Home page lists every folder under `slides/`.
@@ -386,8 +425,8 @@ Every concrete style example in the rules above uses physical CSS (`paddingLeft:
 - Replace `left` / `right` (in absolute positioning) with `insetInlineStart` / `insetInlineEnd`.
 - Replace `text-align: 'left'` / `'right'` with `'start'` / `'end'`.
 - Set `dir="rtl"` on the **page component's root `<div>` only**, not on `<html>` (the dev server chrome must stay LTR).
-- Swap `fonts.display` and `fonts.body` for Hebrew Google Fonts (Heebo, Rubik, Assistant, Noto Sans Hebrew). System stacks fall back to David / Times for Hebrew, which looks weak at 140–200px.
-- Bump hero type by ~10–15% for Hebrew, since Hebrew renders wider per character at the same px size.
+- Swap `fonts.display` and `fonts.body` for Hebrew Google Fonts (Heebo, Rubik, Assistant, Noto Sans Hebrew). System stacks fall back to David / Times for Hebrew, which looks weak at 140-200px.
+- Bump hero type by ~10-15% for Hebrew, since Hebrew renders wider per character at the same px size.
 
 See [./hebrew-rtl.md](./hebrew-rtl.md) for the full Hebrew adaptation, including the bidi rules for mixed Hebrew+Latin runs.
 
@@ -409,7 +448,7 @@ See [./hebrew-rtl.md](./hebrew-rtl.md) for the full Hebrew adaptation, including
 ## Anti-patterns
 
 - ❌ Walls of text. If a page has more than ~40 words, split it.
-- ❌ Using the full canvas for body copy. Respect 100–160px padding.
+- ❌ Using the full canvas for body copy. Respect 100-160px padding.
 - ❌ Overflowing 1080px vertically. Cropped content is invisible, split the page.
 - ❌ `overflow: auto` / `overflow: scroll` / `overflow: hidden` to "hide" too much content. The canvas doesn't scroll; you've just hidden the bug.
 - ❌ Shrinking type below the scale's lower bound, or padding below 100px, to cram more in. Split instead.

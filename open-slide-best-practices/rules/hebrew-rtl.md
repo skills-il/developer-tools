@@ -9,7 +9,7 @@ For a Hebrew or bilingual `slides/<id>/index.tsx`:
 1. Set `dir="rtl"` on the **page component's root `<div>`** only (never on `<html>`, that breaks the dev server chrome).
 2. Use **logical CSS** everywhere: `paddingInline`, `paddingInlineStart`, `marginInlineStart`, `insetInlineStart`, `text-align: 'start'`. Never physical (`paddingLeft`, `marginLeft`, `left`, `text-align: 'left'`) inside the page root.
 3. Load **Hebrew Google Fonts** (Heebo, Rubik, Assistant, Noto Sans Hebrew, Frank Ruhl Libre, Suez One) by injecting the stylesheet **once into `<head>` from module top level**, with an element id keyed to the slide. Never from inside the page component. List the family first in `DesignSystem.fonts.display` / `fonts.body`, with the system stack as fallback.
-4. **Bump the type scale by ~10–15%** for Hebrew (Hebrew renders wider per character at the same px size).
+4. **Bump the type scale by ~10-15%** for Hebrew (Hebrew renders wider per character at the same px size).
 5. Wrap any Latin run inside Hebrew copy in `<bdi>` to prevent bidi punctuation glitches: `השתמשו ב-<bdi>React Router</bdi>`.
 6. The 1080px **vertical budget rule still applies**, but recompute it for Hebrew at the larger heading sizes you picked in step 4.
 
@@ -110,17 +110,17 @@ Note: `letterSpacing` is direction-agnostic in CSS, but in Hebrew, **wide letter
 
 ## 3. Hebrew Google Fonts
 
-The upstream `DesignSystem.fonts` defaults to system stacks. macOS resolves Hebrew to Helvetica or Arial Hebrew, which is acceptable for body text but looks weak at the upstream hero scale (140–200px). For decks that ship beyond a dev machine, use Google Fonts.
+The upstream `DesignSystem.fonts` defaults to system stacks. macOS resolves Hebrew to Helvetica or Arial Hebrew, which is acceptable for body text but looks weak at the upstream hero scale (140-200px). For decks that ship beyond a dev machine, use Google Fonts.
 
 ### Recommended families (Hebrew subset)
 
 | Family                | Style              | Weights commonly available | Use for                          |
 | --------------------- | ------------------ | -------------------------- | -------------------------------- |
-| **Heebo**             | Geometric sans     | 100–900                    | General workhorse, body + display |
-| **Rubik**             | Friendly geometric | 300–900                    | Decks with playful or warm tone   |
-| **Assistant**         | Humanist sans      | 200–800                    | Body copy where Heebo feels cold  |
-| **Noto Sans Hebrew**  | Neutral sans       | 100–900                    | Maximum compatibility, multilingual decks |
-| **Frank Ruhl Libre**  | Serif (editorial)  | 300–900                    | Editorial/Q-deck headings; classy |
+| **Heebo**             | Geometric sans     | 100-900                    | General workhorse, body + display |
+| **Rubik**             | Friendly geometric | 300-900                    | Decks with playful or warm tone   |
+| **Assistant**         | Humanist sans      | 200-800                    | Body copy where Heebo feels cold  |
+| **Noto Sans Hebrew**  | Neutral sans       | 100-900                    | Maximum compatibility, multilingual decks |
+| **Frank Ruhl Libre**  | Serif (editorial)  | 300-900                    | Editorial/Q-deck headings; classy |
 | **Suez One**          | Slab display       | 400 only                   | Hero-only, single weight          |
 
 Avoid: David Libre (system-y, looks dated at large sizes), VarelaRound (cute but the round terminals fight large hero sizes).
@@ -137,7 +137,7 @@ The reason is specific to this framework: every page of a slide is mounted live 
 
 ```tsx
 const FONT_HREF =
-  'https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap&subset=hebrew';
+  'https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap';
 const FONT_LINK_ID = 'osd-webfont-hebrew-cover'; // suffix = this slide's folder id
 
 if (typeof document !== 'undefined' && !document.getElementById(FONT_LINK_ID)) {
@@ -157,7 +157,9 @@ const Cover: Page = () => (
 
 Top-level statements, not inside a component and not inside an effect. The `typeof document !== 'undefined'` guard keeps it safe during the static build.
 
-**List only the weights you actually use.** Each extra weight multiplies the number of `@font-face` rules. The `subset=hebrew` URL parameter ships only the Hebrew glyph subset (smaller payload); drop it if the deck mixes Latin and you want the same font for both. Upstream's `&text=<unique chars>` trick works for Hebrew too when a hero uses only a handful of characters.
+**List only the weights you actually use.** Each extra weight multiplies the number of `@font-face` rules.
+
+**Do not add `&subset=hebrew` to a `css2` URL.** It is a v1-API parameter and the `css2` endpoint ignores it: the response is byte-identical with and without it. You do not need it anyway, because `css2` already splits the family into `unicode-range`-scoped `@font-face` blocks, one of which is Hebrew (`U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F`), and the browser downloads only the ranges the page actually uses. The real subsetting lever is `&text=<unique chars>`, which works well for Hebrew when a hero uses only a handful of characters.
 
 **The old `<style>@import</style>`-inside-the-page pattern is no longer correct.** Earlier versions of this skill recommended it; it still renders, but it re-registers the font set per mounted page and upstream now explicitly forbids it.
 
@@ -170,18 +172,20 @@ export const design: DesignSystem = {
     display: 'Heebo, system-ui, -apple-system, sans-serif',
     body: 'Heebo, system-ui, -apple-system, sans-serif',
   },
-  typeScale: { hero: 200, body: 40 },   // bumped from upstream 180/36 for Hebrew
+  typeScale: { hero: 200, body: 40 },   // bumped from the runtime default 168/36 for Hebrew
   radius: 12,
 };
 ```
 
 Pair this with the head injection from Option A, since `DesignSystem.fonts` only declares the CSS `font-family` value, it does NOT load the font file. (The Design panel reads `DesignSystem.fonts` to render its preview; it does not own font loading.)
 
-**Option C: Project-level injection.** If you control the project (not just `slides/`), add `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Rubik:wght@400;700;900&display=swap&subset=hebrew">` to the project's `index.html` template once. Per-slide work then just references the family name. The upstream "do not touch package.json or open-slide.config.ts" rule does NOT cover `index.html`, but when in doubt, prefer Option A, it keeps the slide self-contained and matches the documented mechanism.
+**Option C: Project-level injection.** If you control the project (not just `slides/`), add `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Rubik:wght@400;700;900&display=swap">` to the project's `index.html` template once. Per-slide work then just references the family name. The upstream "do not touch package.json or open-slide.config.ts" rule does NOT cover `index.html`, but when in doubt, prefer Option A, it keeps the slide self-contained and matches the documented mechanism.
 
 ### Exporting to PDF / PPTX
 
-Recent open-slide builds stopped force-loading every registered font into the export root and subset webfonts instead, so an export only embeds the glyphs a deck actually uses. For Hebrew decks this matters: keep the `&subset=hebrew` parameter on the Google Fonts URL (Option A/C above) so the PDF/PPTX export embeds the Hebrew glyph set cleanly rather than falling back to a system Hebrew face (David / Times) in the exported file. If a hero uses only a handful of Hebrew characters, the tighter `&text=...` parameter subsets even further. Verify the exported PDF renders Hebrew in the intended webfont, not a fallback serif, before sharing it.
+PDF and PPTX export **rasterise** the rendered canvas, they do not embed text or fonts. `export-pptx.ts` clones each frame with `html-to-image` and packs the resulting PNGs into the deck, and the only typeface names in the produced file are the boilerplate Office theme. So there is no font-embedding step to get right, and no risk of the export silently substituting a system Hebrew face for your webfont.
+
+What DOES matter is that the Hebrew webfont has finished loading **before** you trigger the export. If you export while the font is still in flight, the rasteriser captures the fallback face and bakes it into the image permanently. Open the deck, let it settle, then export. If you want a genuinely smaller download, the `&text=...` parameter on the Google Fonts URL is the real subsetting lever; `&subset=` is a v1-API parameter that the `css2` endpoint ignores outright.
 
 ## 3.5. Code blocks inside Hebrew slides
 
@@ -212,7 +216,7 @@ Card labels above code blocks (e.g., "אחרי · RTL מלא, פונט עברי"
 
 ## 4. Hebrew-aware type scale
 
-Hebrew letters at the same `font-size` render approximately 10–15% wider per character than Latin in the same family (because Hebrew has no ascenders/descenders pulling it taller, the design space is mostly horizontal). Effects:
+Hebrew letters at the same `font-size` render approximately 10-15% wider per character than Latin in the same family (because Hebrew has no ascenders/descenders pulling it taller, the design space is mostly horizontal). Effects:
 
 - A hero title that fits on one line in English at 140px may wrap to two in Heebo at the same size.
 - A bullet that fits on one line at 40px in English wraps in Hebrew if the copy length is matched.
@@ -224,11 +228,11 @@ Take the upstream type scale and apply a Hebrew tax:
 
 | Element          | Upstream (Latin) | Hebrew suggestion |
 | ---------------- | ---------------- | ----------------- |
-| Hero title       | 140–200px        | 160–220px (+10–15%) |
-| Section heading  | 80–120px         | 88–132px (+10%)     |
-| Page heading     | 56–80px          | 60–88px (+8%)       |
-| Body text        | 32–44px          | 32–44px (unchanged) |
-| Caption / label  | 22–28px          | 22–28px (unchanged) |
+| Hero title       | 140-200px        | 160-220px (+10-15%) |
+| Section heading  | 80-120px         | 88-132px (+10%)     |
+| Page heading     | 56-80px          | 60-88px (+8%)       |
+| Body text        | 32-44px          | 32-44px (unchanged) |
+| Caption / label  | 22-28px          | 22-28px (unchanged) |
 
 Body and caption sizes are unchanged because at small sizes the per-character width difference is negligible relative to the line being long anyway. The bump is concentrated at hero / section sizes where line-wrapping is binary (1 line vs 2).
 
@@ -278,13 +282,13 @@ Hebrew cover budget at 232px × 0.98 line-height × 3 lines = 682px. Add eyebrow
 </h1>
 ```
 
-2 lines × 240 × 0.95 = 456px. Same visual punch, fits the canvas. **A 3-line Hebrew hero almost always overflows. Default to 1–2 lines on covers and section dividers.**
+2 lines × 240 × 0.95 = 456px. Same visual punch, fits the canvas. **A 3-line Hebrew hero almost always overflows. Default to 1-2 lines on covers and section dividers.**
 
 ### Line-height for Hebrew
 
 Hebrew benefits from slightly tighter line-height than the upstream defaults at hero sizes (Hebrew has no ascenders/descenders so the optical line gap looks larger than Latin):
 
-- Hero (160–220px): `lineHeight: 1.1` (upstream default 1.05, a touch too tight)
+- Hero (160-220px): `lineHeight: 1.1` (upstream default 1.05, a touch too tight)
 - Section heading: `lineHeight: 1.15`
 - Page heading: `lineHeight: 1.2` (unchanged)
 - Body: `lineHeight: 1.5` (a touch tighter than upstream's 1.6, feels right in Hebrew)
@@ -318,10 +322,47 @@ Use `<bdi>` for:
 **You do NOT need `<bdi>` for:**
 - Pure Latin runs (English-only paragraphs)
 - Pure Hebrew runs (Hebrew-only paragraphs)
-- Numbers in Hebrew financial copy (e.g. "₪1,500" or "1,500 ש״ח", the bidi algorithm handles these correctly)
+- Unsigned numbers in Hebrew copy (`₪1,500`, `1,500 ש״ח`, `5 km`, `20°C`, `1.5 מיליון`). **Signed** numbers are the exception, see the rule directly below.
 - Logos as `<img>` (they're not text, no bidi to worry about)
 
 CSS alternative: `unicode-bidi: isolate` on a `<span>` does the same thing. `<bdi>` is the semantic shortcut.
+
+### Signed numbers reorder in Hebrew text
+
+A **sign attached to a number** (`-5`, `5+`, a negative delta on a stats slide) does not stay where you
+put it. Measured in Chromium with `dir="rtl"`, the sign moves to the opposite side of the digits:
+
+| Source | Renders as |
+| --- | --- |
+| `ירידה של -5 נקודות` | the minus lands after the digit (`5-`) |
+| `טווח 5+ שנים` | the plus lands before the digit (`+5`) |
+
+**Why:** a separator only fuses into a number when it sits *between two digits* (UAX#9 W4). A leading
+`-` or a trailing `+` has no digit on its other side, so it stays a neutral, resolves to the
+surrounding RTL direction, and jumps to the far side of the number.
+
+**Fix:** wrap the signed number in `<bdi>`.
+
+```jsx
+// ❌ the minus ends up on the wrong side
+<p>ירידה של -5 נקודות ברבעון</p>
+
+// ✅
+<p>ירידה של <bdi>-5</bdi> נקודות ברבעון</p>
+```
+
+This is the most commonly missed case on a Hebrew stats slide, because a negative KPI looks like a
+single number and nothing errors.
+
+> **Scope note, read before extending this section.** Only the signed-number case above is asserted
+> here, because it is the only one that reproduced identically under every method tried (`fribidi`,
+> and two independent Chromium geometry measurements). Ranges (`2020 - 2024`, `2020-2024`), time
+> ranges, slashes, spaced and unspaced percent signs, and `₪` on either side of a figure gave
+> **inconsistent** results across those methods, so this skill deliberately makes no claim about
+> them. If you need to settle one, measure it in a real browser by comparing the client-rect
+> geometry of the two tokens, and be aware that reading `fribidi`'s visual output by eye is not a
+> reliable substitute: it reports display order, not reading order, and it is easy to mistake one
+> for the other in both directions.
 
 ## 6. RTL flexbox layouts
 
@@ -413,7 +454,7 @@ If your deck quotes biblical text, poetry, or children's content, you may have v
 
 Most Hebrew Google Fonts render nikkud, but quality varies. **Heebo, Frank Ruhl Libre, and Noto Sans Hebrew handle nikkud well.** Rubik and Assistant are weaker, the marks may collide with consonants at small sizes.
 
-If you're using nikkud at body size (40px), test with a real sample. At hero size (160–220px) all listed fonts handle nikkud cleanly.
+If you're using nikkud at body size (40px), test with a real sample. At hero size (160-220px) all listed fonts handle nikkud cleanly.
 
 ### Sofit letters
 
@@ -470,9 +511,9 @@ mode: dark
 | muted | `#94a3b8` | טקסט משני, קווים מפרידים |
 
 ## טיפוגרפיה
-- Display: Heebo, weight 800–900
-- Body: Heebo, weight 400–500
-- Hero: 200px (ב-Hebrew, מוגדל מהדיפולט של 180px)
+- Display: Heebo, weight 800-900
+- Body: Heebo, weight 400-500
+- Hero: 200px (בעברית, מוגדל מברירת המחדל של הרנטיים, 168px)
 - Body: 40px
 
 ## רכיבים קבועים
@@ -498,16 +539,17 @@ Add these to the upstream "Self-review before finishing" checklist:
 
 - [ ] Page root carries `dir="rtl"` (every page that renders Hebrew).
 - [ ] No physical-axis CSS inside the page root: `paddingLeft`, `paddingRight`, `marginLeft`, `marginRight`, `left`, `right`, `borderLeft`, `borderRight`, `text-align: 'left'`, `text-align: 'right'` are absent (or only used in symmetric-equivalent shorthand like `padding: '120px 160px'` where the H/V split is unambiguous).
-- [ ] Hebrew fonts loaded via `@import` or project-level `<link>`. `DesignSystem.fonts.display` and `fonts.body` start with the Hebrew family.
-- [ ] Type scale bumped 10–15% at hero/section sizes vs the upstream defaults.
+- [ ] Hebrew fonts loaded by **module-level, slide-keyed head injection** (the mechanism section 3 requires), NOT by a `<style>@import</style>` or a `<link>` returned from a `Page` component, which re-registers the whole `@font-face` set once per mounted page. `DesignSystem.fonts.display` and `fonts.body` start with the Hebrew family.
+- [ ] Hero/section size chosen **deliberately** and the vertical budget recomputed at that value. The +10-15% bump in this skill is a skills-il editorial calibration, not a framework rule. Hebrew is wider per character at the same size, but equivalent copy is closer to a wash because Hebrew needs fewer characters to say the same thing, so bumping reflexively can cause the very wrapping it is meant to prevent. Decide per deck and measure the result.
 - [ ] Vertical budget recomputed at the bumped sizes; every page sums under 1080px.
-- [ ] Hero on covers/section dividers fits 1–2 lines (3 lines at the bumped Hebrew scale almost always overflows).
+- [ ] Hero on covers/section dividers fits 1-2 lines (3 lines at the bumped Hebrew scale almost always overflows).
 - [ ] Latin runs inside Hebrew copy wrapped in `<bdi>` (brand names, code, URLs, version numbers, file extensions). **Audit your own prose recursively**, a skill author writing about `<bdi>` will miss it in their own examples.
 - [ ] Embedded code blocks: `<pre dir="ltr">` with `textAlign: 'start'`. Verified the code reads LTR while the surrounding slide stays RTL.
 - [ ] No mis-translated technical terms (themes ≠ ערכאות; resolution ≠ רזולוציית; authoring ≠ אוטרינג).
 - [ ] Hebrew tone is direct/Israeli, not government-formal (avoid `ניתן ל...` / `יש לבדוק` / `במידה ו` patterns).
 - [ ] No nikkud quality issues at the chosen font + size (test with a real sample if you used nikkud).
 - [ ] Numbers are Latin digits (`1, 2, 3`), currency uses `₪` or `ש״ח`.
+- [ ] **Signed numbers audited.** A leading `-` or trailing `+` on a number reorders inside Hebrew text (`-5` renders as `5-`). Grep the page for a `-` or `+` immediately before or after a digit and wrap each in `<bdi>`. Negative KPIs are the usual miss.
 - [ ] Footer / page-counter / breadcrumb chrome flips correctly in `dir="rtl"` (use `insetInline` shorthand, `flexDirection: 'row'` with `justifyContent: 'space-between'` flips automatically, don't double-flip with `row-reverse`).
 - [ ] If the deck follows a brand palette: no invented gradients between non-adjacent brand colors (e.g., Israeli Blue → Magenta blends through purple, which is off-brand).
 

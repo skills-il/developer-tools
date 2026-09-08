@@ -44,9 +44,28 @@ npm run dev
 
 הריצו `npm run sync:skills` אחרי כל שדרוג של `@open-slide/core`, אחרת הסוכן ממשיך לקרוא את עותקי הסקילים מהגרסה שאיתה יצרתם את הפרויקט.
 
+### על איזו גרסה אתם
+
+כוונו ל-<bdi>@open-slide/core</bdi> בגרסה <bdi>1.19.x</bdi>. זו הגרסה ש-<bdi>npx @open-slide/cli init</bdi> מתקין היום, וכל מה שכתוב בסקיל הזה נבדק מול <bdi>1.19.1</bdi>.
+
+קיימת גם גרסת **<bdi>2.0.0 beta</bdi>** (<bdi>React 19</bdi>, <bdi>Vite 8</bdi>, <bdi>TypeScript 7</bdi>). מדובר בגרסת טרום-שחרור: התג <bdi>latest</bdi> ב-npm עדיין מצביע על <bdi>1.19.x</bdi>, והביטא יושבת מאחורי תג <bdi>beta</bdi> נפרד, כך שתגיעו ל-v2 רק אם תבקשו אותה (<bdi>@open-slide/cli@2.0.0-beta.1</bdi> או <bdi>@beta</bdi>). אל תבנו עליה עבודה אמיתית, ואל תניחו שפרט API כלשהו בה יציב.
+
+קוד השקפים שלכם **אינו הבעיה**. מדריך המעבר הרשמי אומר במפורש ששקפים שנכתבו ב-v1 לא דורשים שינוי, ושכל המעבר מצטמצם ל-<bdi>package.json</bdi>, לגרסת Node ולהגדרות הפריסה. כל מה שהסקיל הזה מלמד על מבנה הקובץ, הקאנבס, סקאלת הטיפוגרפיה, ערכות הנושא ועברית/RTL נשאר תקף.
+
+**הדבר היחיד שנשבר בשדרוג.** פרויקט שנוצר ב-v1 מכיל <bdi>vite</bdi> ב-<bdi>devDependencies</bdi>, ואילו <bdi>core 2.x</bdi> מביא <bdi>Vite 8</bdi> משלו פנימית. אם תשאירו את השורה הישנה, גם שרת הפיתוח וגם ה-build מסרבים לעלות:
+
+```
+✖ @tailwindcss/vite resolves vite@5.4.21 (node_modules/vite), but @open-slide/core ships
+vite@8.2.2 (node_modules/@open-slide/core/node_modules/vite).
+A `vite` entry in your package.json (v1 workspaces had one) shadows the copy core depends on.
+Remove it and reinstall.
+```
+
+מחקו את <bdi>vite</bdi> מ-<bdi>devDependencies</bdi> והתקינו מחדש. פרויקטים חדשים ב-v2 לא כוללים אותו מלכתחילה ולכן לא מושפעים. מדריך המעבר: <https://open-slide.dev/docs/migrate-to-v2>.
+
 ### מזהי תיקיות השקפים חייבים להיות באנגלית (שמות בעברית נזרקים בשקט)
 
-**אל תקראו לתיקיית שקף בעברית.** מנגנון הגילוי מסנן כל תיקייה תחת `slides/` דרך `SLIDE_ID_RE = /^[a-z0-9_-]+$/i` ומדלג על השאר, כך שתיקייה כמו `slides/פתיחה/` לא מגיעה לסרגל הצד, לדפדפן, או ל-build. נבדק על <bdi>@open-slide/core@1.18.0</bdi>:
+**אל תקראו לתיקיית שקף בעברית.** מנגנון הגילוי מסנן כל תיקייה תחת `slides/` דרך `SLIDE_ID_RE = /^[a-z0-9_-]+$/i` ומדלג על השאר, כך שתיקייה כמו `slides/פתיחה/` לא מגיעה לסרגל הצד, לדפדפן, או ל-build. נבדק מחדש על <bdi>@open-slide/core@1.19.1</bdi> (גרסת ה-<bdi>stable</bdi> הנוכחית), על ידי יצירת פרויקט והרצת <bdi>npm run build</bdi>:
 
 ```
 [plugin:open-slide] [plugin open-slide] Ignoring slide folder "פתיחה": slide ids must match
@@ -70,7 +89,7 @@ npm run dev
 
 לכל מצגת בעברית או דו-לשונית, טענו קודם את [./rules/hebrew-rtl.md](./rules/hebrew-rtl.md). הוא מכסה:
 
-- פונטים עבריים מ-Google Fonts (Heebo, Rubik, Assistant, Noto Sans Hebrew) עם `subset=hebrew`
+- פונטים עבריים מ-Google Fonts (Heebo, Rubik, Assistant, Noto Sans Hebrew) שנטענים בהזרקה ל-head
 - הגדרת `dir="rtl"` הנכונה ברמת רכיב הדף, ולא על `<html>` (אחרת ה-chrome של שרת הפיתוח נשבר)
 - מאפייני CSS לוגיים (`paddingInlineStart`, `marginInlineStart`, `insetInlineStart`) במקום `paddingLeft`/`marginLeft`/`left`
 - `flexDirection: 'row-reverse'` מול הגדרת `dir` על הקונטיינר הפלקס
@@ -88,9 +107,9 @@ npm run dev
 
 | קובץ ה-reference במקור | הפרימיטיב | למה זה משנה במצגת בעברית |
 | --- | --- | --- |
-| [`references/steps.md`](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/steps.md) | חשיפה מדורגת עם `<Steps>` / `<Step>` | חשיפה מדורגת מאפשרת לשמור כל פסקה עברית קצרה במקום להעמיס עמוד אחד צפוף |
-| [`references/page-numbers.md`](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/page-numbers.md) | ה-hook בשם `useSlidePageNumber()` | קראו `{ current, total }` מה-hook במקום לקודד מונה בפוטר; עטפו את הספרות הלטיניות ב-`<bdi>` בתוך פוטר RTL |
-| [`references/morph.md`](https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/morph.md) | מעברי אלמנט משותף עם `MorphElement` ("magic move") | ה-morph מבצע אינטרפולציה של מיקום וגודל לאורך המעבר, ולכן אלמנט שזז בין עמוד LTR לעמוד RTL צריך אותו `id` בשניהם |
+| [`references/steps.md`](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/steps.md) | חשיפה מדורגת עם `<Steps>` / `<Step>` | חשיפה מדורגת מאפשרת לשמור כל פסקה עברית קצרה במקום להעמיס עמוד אחד צפוף |
+| [`references/page-numbers.md`](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/page-numbers.md) | ה-hook בשם `useSlidePageNumber()` | קראו `{ current, total }` מה-hook במקום לקודד מונה בפוטר; עטפו את הספרות הלטיניות ב-`<bdi>` בתוך פוטר RTL |
+| [`references/morph.md`](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/morph.md) | מעברי אלמנט משותף עם `MorphElement` ("magic move") | ה-morph מבצע אינטרפולציה של מיקום וגודל לאורך המעבר, ולכן אלמנט שזז בין עמוד LTR לעמוד RTL צריך אותו `id` בשניהם |
 
 ### כתיבת מצגת חדשה
 
@@ -98,7 +117,7 @@ npm run dev
 
 ### יצירת ערכת נושא
 
-כשהמשתמש מבקש "תיצור ערכת נושא" / "תכין תמה בשם X" / "תוציא ערכת נושא מהשקף הזה", טענו את [./rules/create-theme.md](./rules/create-theme.md). כל ערכת נושא היא קובץ markdown יחיד תחת `themes/<id>.md` עם סעיפי פלטה / טיפוגרפיה / לאיאוט / רכיבים קבועים / תנועה / אסתטיקה.
+כשהמשתמש מבקש "תיצור ערכת נושא" / "תכין תמה בשם X" / "תוציא ערכת נושא מהשקף הזה", טענו את [./rules/create-theme.md](./rules/create-theme.md). ערכת נושא היא **צמד קבצים**: `themes/<id>.md` (פלטה / טיפוגרפיה / לאיאוט / רכיבים קבועים / תנועה / אסתטיקה) יחד עם מודול דמו תואם, <bdi>themes/&lt;id&gt;.demo.tsx</bdi> (גם <bdi>.jsx</bdi>, <bdi>.ts</bdi> ו-<bdi>.js</bdi> מתקבלים), מיני-שקף רץ של 2 עד 3 עמודים שפאנל ה-<bdi>Themes</bdi> מציג כתצוגה המקדימה החיה. אם תכתבו רק את קובץ ה-markdown, לערכת הנושא תהיה כרטיסיית תצוגה מקדימה ריקה.
 
 ### החלת הערות מהאינספקטור
 
@@ -106,7 +125,49 @@ npm run dev
 
 ### פיענוח הפניות דייקטיות ("העמוד הזה", "השקף שאני נמצא עליו")
 
-כשהמשתמש מתייחס לשקף הנוכחי בלי לקרוא לו בשם, טענו את [./rules/current-slide.md](./rules/current-slide.md) **קודם**. הקובץ מסביר איך לקרוא את הסמן החי ב-`node_modules/.open-slide/current.json`, אילו שדות יש בו, וכללי טריות. **קראו אותו מחדש בכל תור דייקטי** — המשתמש מנווט בין תורים, אז ערך שקראתם מקודם כמעט תמיד כבר לא עדכני.
+כשהמשתמש מתייחס לשקף הנוכחי בלי לקרוא לו בשם, טענו את [./rules/current-slide.md](./rules/current-slide.md) **קודם**. הקובץ מסביר איך לקרוא את הסמן החי ב-`node_modules/.open-slide/current.json`, אילו שדות יש בו, וכללי טריות. **קראו אותו מחדש בכל תור דייקטי**, המשתמש מנווט בין תורים, אז ערך שקראתם מקודם כמעט תמיד כבר לא עדכני.
+
+### הערות המרצה נכתבות ב-<bdi>notes</bdi>, אף פעם לא בקובץ markdown
+
+ל-open-slide יש מנגנון מובנה להערות מרצה, וסוכני קוד מפספסים אותו כמעט תמיד: מבקשים מהם תסריט הרצאה, והם כותבים <bdi>script.md</bdi> או <bdi>notes.md</bdi> ליד השקף, קובץ שהרנטיים בכלל לא קורא. תצוגת המרצה נשארת ריקה, והמשתמש מסיק שאין פיצ'ר כזה.
+
+ההערות הן ייצוא <bdi>notes</bdi> אופציונלי בתוך <bdi>slides/&lt;id&gt;/index.tsx</bdi>, **מיושר לפי אינדקס** למערך העמודים שמיוצא כברירת מחדל. <bdi>SlideModule</bdi> מגדיר אותו כ-<bdi>notes?: (string | undefined)[]</bdi>. כדי לדלג על עמוד השתמשו ב-<bdi>undefined</bdi> במקום להזיז את המערך:
+
+```tsx
+const Cover: Page = () => <div dir="rtl">שלום</div>;
+const Agenda: Page = () => <div dir="rtl">סדר היום</div>;
+
+export const notes: (string | undefined)[] = [
+  'פתחו בציטוט של הלקוח, ואז הציגו את עצמכם.',
+  undefined,
+  `שלושה עמודי תווך, פסקה לכל אחד.
+עצרו לשאלות לפני המעבר.`,
+];
+
+export default [Cover, Agenda, Pillars];
+```
+
+כללים:
+
+- ערך אחד לכל עמוד, באותו סדר של ייצוא ברירת המחדל. ערך חסר מזיז בשקט את כל ההערות שאחריו.
+- הערות מרובות שורות עובדות, השתמשו ב-template literal.
+- **<bdi>notes</bdi> חייב להיות מערך ליטרלי.** שרת הפיתוח כותב הערות בחזרה לתוך הקוד שלכם (<bdi>PUT /__notes</bdi>), והפרסר שלו דוחה כל דבר שהוא לא יכול לערוך במקום: מערך מחושב, spread, קבוע מיובא או <bdi>.map()</bdi> יחזירו <bdi>422</bdi> וישברו לצמיתות את עריכת ההערות מהמגירה. כתבו את המערך ידנית.
+- **הערות בעברית מיושרות ל-LTR ואי אפשר לתקן את זה מתוך השקף.** מגירת ההערות ותצוגת המרצה לא מגדירות <bdi>dir</bdi> בכלל, ולכן ההערות יורשות את כיוון ממשק המציג. אין שום נקודת אחיזה לכותב. כתבו הערות קצרות ושברו שורות ידנית כדי שהיישור המשונה יישאר קריא.
+- אף פעם אל תמסרו תסריט הרצאה כקובץ נפרד. אם המשתמש מבקש "תסריט" או "הערות מרצה", זה נכנס לייצוא הזה.
+
+**גרסת ה-stable מביאה את הפיצ'ר בלי תיעוד.** הרנטיים של <bdi>notes</bdi> קיים ב-<bdi>1.19.1</bdi>, אבל אף אחד מחמשת הסקילים המצורפים לגרסה הזו לא מתעד אותו. המילה <bdi>notes</bdi> אמנם מופיעה בהם, בכותרת של עמודה בטבלה, בשורה על רשת עזר ובשורה על סמני אינספקטור, אבל אף פעם לא בהקשר של הייצוא הזה. לכן גם <bdi>sync:skills</bdi> לא ילמד את הסוכן שהפיצ'ר קיים. הפער הזה הוא בדיוק הסיבה שהסעיף הזה קיים.
+
+### מה קורה בשרת הפיתוח
+
+אלה יכולות של המציג ולא ממשקי כתיבה, אבל משתמשים שואלים עליהן, וסוכן שיודע שהן קיימות לא בונה אותן מחדש ביד:
+
+| יכולת | מה היא עושה |
+| --- | --- |
+| מגירת הערות ותצוגת מרצה | מציגה את ייצוא ה-<bdi>notes</bdi> שלמעלה. במצב הצגה ההערות מופיעות לצד הטיימר. |
+| תפריט פקודות | פלטת פקודות מהמקלדת למעבר בין שקפים ולהפעלת פעולות. |
+| החלפת מצגות מחלון המרצה | חלון המרצה יכול להחליף מצגת בלי לאבד את סשן ההצגה. |
+| פאנל ערכות הנושא | מרנדר את <bdi>&lt;id&gt;.demo.tsx</bdi> של כל ערכת נושא. ערכה בלי קובץ דמו מציגה כרטיסייה ריקה. |
+| <bdi>allowedHosts</bdi> | הקובץ <bdi>open-slide.config.ts</bdi> מקבל <bdi>allowedHosts?: string[] \| true</bdi>, נחוץ כשמגישים את שרת הפיתוח דרך מנהרה או דומיין שאינו localhost. |
 
 ### תזכורת לתקציב האנכי (גורם ה-#1 לשקפים שבורים)
 
@@ -131,8 +192,8 @@ npm run dev
 | MDN: CSS logical properties | https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values | CSS מודע ל-RTL, `inset-inline-start`, `padding-inline` |
 | MDN: רכיב `<bdi>` | https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdi | בידוד דו-כיווני לערבוב עברית-לועזית |
 | Google Fonts (תת-קבוצה עברית) | https://fonts.google.com/?subset=hebrew | פונטי web עבריים: Heebo, Rubik, Assistant, Noto Sans Hebrew |
-| ה-regex של מזהי השקפים במקור (`slide-ops.ts`) | https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/src/editing/slide-ops.ts | `SLIDE_ID_RE`, האם מזהי תיקיות שאינם ASCII עדיין מסוננים החוצה |
-| כללי טעינת פונטי web במקור | https://raw.githubusercontent.com/1weiho/open-slide/main/packages/core/skills/slide-authoring/references/webfonts.md | הדרך הנתמכת לטעון פונט web (הזרקה ל-head, מזהה לפי שקף) |
+| ה-regex של מזהי השקפים במקור (`slide-ops.ts`) | https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/src/editing/slide-ops.ts | `SLIDE_ID_RE`, האם מזהי תיקיות שאינם ASCII עדיין מסוננים החוצה |
+| כללי טעינת פונטי web במקור | https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/webfonts.md | הדרך הנתמכת לטעון פונט web (הזרקה ל-head, מזהה לפי שקף) |
 
 ## שרתי MCP מומלצים
 
@@ -150,7 +211,7 @@ npm run dev
 
 4. **טעינת הפונט העברי מתוך רכיב העמוד.** בלוק `<style>@import ...</style>` או `<link>` שמרונדר בתוך `Page` רושם מחדש את כל סט ה-`@font-face` פעם אחת לכל עמוד שמורכב, ועמוד הבית, מסילת התמונות הממוזערות, תצוגת הרשת וה-root של הדפסת ה-PDF מרכיבים את כל העמודים בו-זמנית. הכלל במקור הוא להזריק את גיליון הסגנון פעם אחת ל-`<head>` מרמת המודול של `index.tsx`, עם מזהה אלמנט שקשור לשקף (`osd-webfont-<slide-id>`) כדי שהפונטים של שקף אחד לא יחסמו את של האחרים. ראו את `hebrew-rtl.md` בפרק 3.
 
-5. **רק stack של פונטים מערכתיים.** התבנית המקורית משתמשת ב-`system-ui, -apple-system, sans-serif` הן ל-display והן ל-body. ב-macOS זה מתורגם ל-Helvetica / SF Pro לעברית, שזה עובד אבל לא ברמת display בגדלים של 140-200px. למצגות שמיועדות לקהל מעבר למחשב הפיתוח, טענו Heebo או Rubik דרך Google Fonts (`?subset=hebrew`) ושימו אותם ראשונים ב-stack עם הפונטים המערכתיים כ-fallback. ראו `hebrew-rtl.md`.
+5. **פונט ברירת המחדל ל-display הוא סריף בלי אותיות עבריות.** <bdi>defaultDesign.fonts.display</bdi> הוא <bdi>Georgia, "Times New Roman", serif</bdi> ו-<bdi>fonts.body</bdi> הוא <bdi>-apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif</bdi>. ל-Georgia אין גליפים עבריים, ולכן כותרת עברית ללא עיצוב נופלת בשקט לסריף מערכתי כלשהו (מסוג David או Times). זו הסיבה האמיתית לתסמין "המצגת שלי בעברית נראית בסריף מיושן", ולא ה-stack של ה-body. למצגות שמיועדות לקהל מעבר למחשב הפיתוח, טענו Heebo או Rubik דרך Google Fonts (דרך <bdi>css2</bdi>, בלי פרמטר <bdi>subset</bdi>, הוא ממילא לא נקרא) ושימו אותם ראשונים ב-stack עם הפונטים המערכתיים כ-fallback. ראו `hebrew-rtl.md`.
 
 6. **אותה סקאלת טיפוגרפיה כמו באנגלית.** 140-200px hero ב-Inter יוצא צפוף בקצה התחתון (140) לעברית, כי הגובה של אותיות עבריות יושב בגובה ה-cap-height של פונטים לטיניים עם x-height גדול. עברית ב-140px נקראת כמו לטינית ב-120px. או הגדילו את ה-hero ל-160-220px לעברית, או הורידו את מספר השורות.
 
@@ -160,7 +221,7 @@ npm run dev
 
 9. **התעלמות מ-`node_modules/.open-slide/current.json`.** כשהמשתמש אומר "תקן את הכותרת בעמוד הזה", הדייקטיב "הזה" ממופה בדיוק כמו ה-"this" באנגלית, אתם חייבים לקרוא את `current.json` כדי למצוא על איזה שקף הוא נמצא. קראו מחדש בכל תור. ראו `current-slide.md`.
 
-10. **תקציב אנכי בסקאלה המוגדלת לעברית.** שקף שמתאים לכותרת על שלוש שורות בגובה 200px ב-LTR (3 × 200 × 0.95 = 570px) יחרוג מ-1080 אם תשמרו על שלוש שורות ותגדילו ל-232px לעברית (3 × 232 × 0.95 = 661px) — ברגע שמוסיפים padding וכותרת משנה, עוברים את הגבול. או הצמידו לשורה אחת או שתיים בעברית, או חשבו מחדש את כל התקציב עם הערכים המוגדלים לפני שאתם מתחייבים. פיצול הוא תמיד התשובה הנכונה.
+10. **תקציב אנכי בסקאלה המוגדלת לעברית.** שקף שמתאים לכותרת על שלוש שורות בגובה 200px ב-LTR (3 × 200 × 0.95 = 570px) יחרוג מ-1080 אם תשמרו על שלוש שורות ותגדילו ל-232px לעברית (3 × 232 × 0.95 = 661px), ברגע שמוסיפים padding וכותרת משנה, עוברים את הגבול. או הצמידו לשורה אחת או שתיים בעברית, או חשבו מחדש את כל התקציב עם הערכים המוגדלים לפני שאתם מתחייבים. פיצול הוא תמיד התשובה הנכונה.
 
 11. **מונחים טכניים שתורגמו לא נכון בתוך תוכן השקף.** שירותי תרגום וסוכני AI נופלים בעברית טכנית. מלכודות נפוצות:
    - **"themes" → "ערכאות"** (זה מונח משפטי שמשמעותו 'בתי משפט'). נכון: **"ערכות נושא"** או **"תמות"**.
@@ -169,16 +230,19 @@ npm run dev
    - **"tuned scale" → "סקאלה מכוונת"** (תרגום מילולי שנשמע רובוטי). עדיף: **"סקאלה מותאמת"**.
    תמיד אמתו מונחים טכניים בעברית מול דובר ילידי או מול קהילת המפתחים בעברית לפני שאתם שולחים החוצה.
 
-12. **שילוב צבעי מותג כגרדיאנט יוצר גוון ביניים שאינו במותג.** גרדיאנט לינארי מ-Israeli Blue (`#003286`) ל-YooTech Magenta (`#bc46a2`) עובר דרך סגול רווי — שלא קיים בפלטה של agentskills.co.il. אם לפרויקט יש פלטת מותג, בדקו כל שילוב: השתמשו בצבעי המותג כצבעים מוצקים בלבד, ועשו גרדיאנט רק בין גוונים סמוכים (למשל Israeli Blue → Israeli Blue Light) או דעיכה לנייטרל (cream / navy). צבע מוצק אחד עדיף על גרדיאנט מאולץ.
+12. **שילוב צבעי מותג כגרדיאנט יוצר גוון ביניים שאינו במותג.** גרדיאנט לינארי מ-Israeli Blue (`#003286`) ל-YooTech Magenta (`#bc46a2`) עובר דרך סגול רווי, שלא קיים בפלטה של agentskills.co.il. אם לפרויקט יש פלטת מותג, בדקו כל שילוב: השתמשו בצבעי המותג כצבעים מוצקים בלבד, ועשו גרדיאנט רק בין גוונים סמוכים (למשל Israeli Blue → Israeli Blue Light) או דעיכה לנייטרל (cream / navy). צבע מוצק אחד עדיף על גרדיאנט מאולץ.
 
-13. **בדקו את הטקסט שלכם עצמכם ב-bidi. גם בסקיל הזה.** סקיל שמזהיר על `<bdi>` חסר יפספס את ה-`<bdi>` שלו עצמו בתוך משפטים כמו "השתמשו ב-RTL" שאמור להיות "השתמשו ב-`<bdi>`RTL`</bdi>`". כשאתם כותבים טקסט, שקפים, או דוגמאות, סרקו ידנית כל מילה לטינית בתוך טקסט עברי ועטפו ב-`<bdi>`. מזהי קוד, שמות מותגים, גרסאות, סיומות קבצים — כולם צריכים בידוד. מי שכותב את הכלל לא פטור מהכלל.
+13. **בדקו את הטקסט שלכם עצמכם ב-bidi. גם בסקיל הזה.** סקיל שמזהיר על `<bdi>` חסר יפספס את ה-`<bdi>` שלו עצמו בתוך משפטים כמו "השתמשו ב-RTL" שאמור להיות "השתמשו ב-`<bdi>`RTL`</bdi>`". כשאתם כותבים טקסט, שקפים, או דוגמאות, סרקו ידנית כל מילה לטינית בתוך טקסט עברי ועטפו ב-`<bdi>`. מזהי קוד, שמות מותגים, גרסאות, סיומות קבצים, כולם צריכים בידוד. מי שכותב את הכלל לא פטור מהכלל.
 
 ## פתרון בעיות
 
 | תופעה | סיבה סבירה | תיקון |
 | --- | --- | --- |
 | טקסט עברי מיושר לשמאל | חסר `dir="rtl"` בשורש הדף | הוסיפו `dir="rtl"` ל-`<div>` החיצוני של העמוד, או הגדירו `direction: 'rtl'` ב-inline style |
-| עברית מרנדרת ב-serif אבל רציתם sans | הדפדפן נפל ל-fallback של פונט עברי מערכתי (David, Times) | טענו Heebo/Rubik/Assistant דרך Google Fonts ושימו אותם ראשונים ב-`fonts.body` / `fonts.display` |
+| כותרת בעברית מרנדרת ב-serif אבל רציתם sans | סיבה מאומתת: <bdi>defaultDesign.fonts.display</bdi> הוא <bdi>Georgia, "Times New Roman", serif</bdi>, ול-Georgia אין גליפים עבריים, ולכן מערכת ההפעלה מחליפה אותו בסריף עברי מערכתי | הגדירו <bdi>fonts.display</bdi> (לא רק <bdi>fonts.body</bdi>) למשפחה עברית וטענו אותה בהזרקה ל-head |
+| עריכת הערה מהמגירה נכשלת, או שהמגירה מפסיקה לשמור | הייצוא <bdi>notes</bdi> אינו מערך ליטרלי, ולכן הכתיבה חזרה מהשרת מחזירה <bdi>422</bdi>. מערך מחושב, spread, ייבוא או <bdi>.map()</bdi> כולם גורמים לזה | כתבו את <bdi>notes</bdi> כמערך ליטרלי פשוט |
+| הערות מרצה בעברית מיושרות לשמאל בתצוגת המרצה | מגירת ההערות ותצוגת המרצה לא מגדירות <bdi>dir</bdi>, ולכן ההערות יורשות את כיוון ממשק המציג. אין תיקון מצד הכותב | כתבו הערות קצרות ושברו שורות ידנית, זו התנהגות של המציג ולא באג בשקף שלכם |
+| מספר עם סימן נקרא הפוך בשקף עברי (<bdi>-5</bdi> מוצג כ-<bdi>5-</bdi>) | לסימן אין ספרה בצד השני, ולכן כלל W4 ב-UAX#9 לא יכול לצרף אותו למספר; הוא נשאר ניטרלי וקופץ לצד הרחוק | עטפו את המספר עם הסימן ב-<bdi>&lt;bdi&gt;</bdi>. הטעות הנפוצה היא KPI שלילי, הוא נראה כמו מספר בודד |
 | שם מותג כמו "skills-il" עם המקף בצד הלא נכון | ערבוב עברית-לטינית בלי בידוד דו-כיווני | עטפו את הריצה הלטינית ב-`<bdi>` |
 | כותרת hero גולשת לשורה שנייה בעברית אבל לא באנגלית | עברית רחבה יותר פר תו | או הגדילו את גודל ה-hero ב-15% או קצרו את הכותרת |
 | `paddingLeft: 160` דוחף תוכן לקצה הימני בשקף RTL | CSS פיזי בקונטיינר RTL | החליפו ב-`paddingInline: 160` או `paddingInlineStart: 160` |
