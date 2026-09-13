@@ -51,11 +51,11 @@ ln -sf /usr/local/bin/ffmpeg-static /usr/local/bin/ffmpeg
 
 ## Fix option B: Third-party Homebrew tap
 
-Homebrew removed feature flags from the main `ffmpeg` formula years ago (no `brew install ffmpeg --with-libass`). The `homebrew-ffmpeg/ffmpeg` tap re-introduces them:
+Homebrew removed feature flags from the main `ffmpeg` formula years ago (no `brew install ffmpeg --with-libass`). The `homebrew-ffmpeg/ffmpeg` tap builds FFmpeg with libass and fontconfig included (no extra install flags needed):
 
 ```bash
 brew tap homebrew-ffmpeg/ffmpeg
-brew install homebrew-ffmpeg/ffmpeg/ffmpeg --with-libass --with-fontconfig --with-libharfbuzz
+brew install homebrew-ffmpeg/ffmpeg/ffmpeg
 ```
 
 This installs to `/opt/homebrew/bin/ffmpeg` (Apple Silicon) or `/usr/local/bin/ffmpeg` (Intel) and shadows the default formula. Slower to install than option A (compiles from source), but the binary is dynamically linked and updates with Homebrew's normal cadence.

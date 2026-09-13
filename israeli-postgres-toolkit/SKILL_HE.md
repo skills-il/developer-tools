@@ -439,8 +439,8 @@ CREATE TABLE businesses (
 
 ```typescript
 // ב-Supabase Edge Functions, תמיד השתמשו בחיבור ה-pooler
-// חיבור ישיר: postgresql://postgres:password@db.xxx.supabase.co:5432/postgres
-// חיבור מאוגם (מצב transaction): postgresql://postgres:password@aws-[region].pooler.supabase.com:6543/postgres
+// חיבור ישיר: postgresql://postgres:${DB_PASSWORD}@db.${PROJECT_REF}.supabase.co:5432/postgres
+// חיבור מאוגם (מצב transaction): postgresql://postgres.${PROJECT_REF}:${DB_PASSWORD}@aws-${N}-${REGION}.pooler.supabase.com:6543/postgres
 // העתיקו את הכתובת המדויקת מחלון ה-Connect של הפרויקט, אל תקבעו קידומת קשיחה.
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'

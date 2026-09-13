@@ -77,7 +77,8 @@ log() { printf '[burn-hebrew-captions] %s\n' "$*"; }
 log "Pre-flight: verifying ffmpeg has libass + fontconfig"
 if ! "$FFMPEG" -version 2>/dev/null | grep -q 'enable-libass'; then
   log "ERROR: $FFMPEG was not built with --enable-libass. See references/macos-ffmpeg-setup.md."
-  log "       Quick fix on macOS: curl -L https://evermeet.cx/ffmpeg/getrelease/zip -o /tmp/ff.zip && unzip /tmp/ff.zip -d /tmp/ && /tmp/ffmpeg -version | head -1"
+  log "       Quick fix on macOS: brew tap homebrew-ffmpeg/ffmpeg && brew install homebrew-ffmpeg/ffmpeg/ffmpeg"
+  log "       (the default Homebrew ffmpeg formula lacks libass). Other options are in references/macos-ffmpeg-setup.md."
   exit 1
 fi
 

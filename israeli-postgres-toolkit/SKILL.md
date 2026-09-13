@@ -459,8 +459,8 @@ For Supabase Edge Functions connecting to the database:
 
 ```typescript
 // In Supabase Edge Functions, always use the pooler connection.
-// Direct connection: postgresql://postgres:password@db.xxx.supabase.co:5432/postgres
-// Pooled (transaction mode): postgresql://postgres:password@aws-[region].pooler.supabase.com:6543/postgres
+// Direct connection: postgresql://postgres:${DB_PASSWORD}@db.${PROJECT_REF}.supabase.co:5432/postgres
+// Pooled (transaction mode): postgresql://postgres.${PROJECT_REF}:${DB_PASSWORD}@aws-${N}-${REGION}.pooler.supabase.com:6543/postgres
 // Copy the exact host from the project's Connect dialog; do not hardcode a prefix.
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'

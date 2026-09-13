@@ -14,13 +14,13 @@ Requirements:
 Environment Variables:
   WHATSAPP_VERIFY_TOKEN   - Token for webhook verification
   WHATSAPP_APP_SECRET     - App secret for signature verification
-  WHATSAPP_ACCESS_TOKEN   - Access token for sending messages
+  FACEBOOK_ACCESS_TOKEN   - Access token for sending messages
   WHATSAPP_PHONE_ID       - Phone number ID from Meta dashboard
 
 Usage:
   export WHATSAPP_VERIFY_TOKEN=your_verify_token
   export WHATSAPP_APP_SECRET=your_app_secret
-  export WHATSAPP_ACCESS_TOKEN=your_access_token
+  export FACEBOOK_ACCESS_TOKEN=your_access_token
   export WHATSAPP_PHONE_ID=your_phone_number_id
   python whatsapp-webhook-handler.py
 """
@@ -40,7 +40,7 @@ from flask import Flask, jsonify, request
 # Configuration
 VERIFY_TOKEN = os.environ.get("WHATSAPP_VERIFY_TOKEN", "")
 APP_SECRET = os.environ.get("WHATSAPP_APP_SECRET", "")
-ACCESS_TOKEN = os.environ.get("WHATSAPP_ACCESS_TOKEN", "")
+ACCESS_TOKEN = os.environ.get("FACEBOOK_ACCESS_TOKEN", "")
 PHONE_NUMBER_ID = os.environ.get("WHATSAPP_PHONE_ID", "")
 # Meta retires a Graph API version about two years after release; v25.0 (Feb 2026) is
 # supported until 29 Jul 2028. Keep this in one place and check the changelog before
@@ -174,11 +174,11 @@ def mark_as_read(message_id: str) -> dict:
 def _send_message(payload: dict) -> dict:
     """Send a message via the WhatsApp Cloud API."""
     headers = {
-        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Authorization": f"Bearer {os.environ.get('FACEBOOK_ACCESS_TOKEN', '')}",
         "Content-Type": "application/json",
     }
     try:
-        response = requests.post(GRAPH_API_URL, json=payload, headers=headers, timeout=10)
+        response = requests.post(f"https://graph.facebook.com/{GRAPH_API_VERSION}/{PHONE_NUMBER_ID}/messages", json=payload, headers=headers, timeout=10)
         response.raise_for_status()
         return response.json()
     except requests.RequestException as e:
@@ -485,7 +485,7 @@ if __name__ == "__main__":
     if not APP_SECRET:
         missing.append("WHATSAPP_APP_SECRET")
     if not ACCESS_TOKEN:
-        missing.append("WHATSAPP_ACCESS_TOKEN")
+        missing.append("FACEBOOK_ACCESS_TOKEN")
     if not PHONE_NUMBER_ID:
         missing.append("WHATSAPP_PHONE_ID")
 
