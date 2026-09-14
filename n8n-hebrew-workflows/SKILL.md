@@ -1,9 +1,9 @@
 ---
 name: n8n-hebrew-workflows
-description: Build n8n 2.x automation workflows (stable 2.36) with Israeli API integrations including Morning (Green Invoice), EZCount, israeli-bank-scrapers, data.gov.il, SMS gateways, Cardcom v11, Tranzila v2, Grow by Meshulam. Use when user asks to "create n8n workflow for Israeli business", "connect Morning to n8n", "automate hashbonit", "Shabbat-aware schedule trigger", "n8n AI agent", or integrate Israeli payment gateways. Covers Hebrew data handling, NIS formatting, Hebcal scheduling, n8n 2.x security patches (CVE-2026-44789 chain), AI Agent nodes with LangChain + RAG, MCP Client Tool and MCP Server Trigger, Israel Invoice Reform 2026 (allocation numbers, 5,000 NIS threshold from June 2026). Do NOT use for invoice management outside an n8n workflow (use green-invoice-il), general n8n tutorials without Israeli context, or Hebrew NLP (use hebrew-nlp-toolkit).
+description: Build n8n 2.x automation workflows (stable 2.38) with Israeli API integrations including Morning (Green Invoice), EZCount, israeli-bank-scrapers, data.gov.il, SMS gateways, Cardcom v11, Tranzila v2, Grow by Meshulam. Use when user asks to "create n8n workflow for Israeli business", "connect Morning to n8n", "automate hashbonit", "Shabbat-aware schedule trigger", "n8n AI agent", or integrate Israeli payment gateways. Covers Hebrew data handling, NIS formatting, Hebcal scheduling, n8n 2.x security patches (CVE-2026-44789 chain), AI Agent nodes with LangChain + RAG, MCP Client Tool and MCP Server Trigger, Israel Invoice Reform 2026 (allocation numbers, 5,000 NIS threshold from June 2026). Do NOT use for invoice management outside an n8n workflow (use green-invoice-il), general n8n tutorials without Israeli context, or Hebrew NLP (use hebrew-nlp-toolkit).
 license: MIT
 allowed-tools: Bash(n8n:*) Bash(curl:*) Bash(node:*) Bash(npx:*) Bash(docker:*)
-compatibility: Requires n8n 2.32.1 or later (patches the CVE-2026-44789/44790/44791 chain); current stable 2.36.7. Node.js 22.22.2+ for israeli-bank-scrapers. Docker recommended for self-hosting. Works with Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex, Gemini CLI.
+compatibility: Requires n8n 2.32.1 or later (patches the CVE-2026-44789/44790/44791 chain); current stable 2.38.7. Node.js 22.22.2+ for israeli-bank-scrapers. Docker recommended for self-hosting. Works with Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex, Gemini CLI.
 ---
 
 # n8n Hebrew Workflows
@@ -189,7 +189,7 @@ n8n's Webhook node supports four auth modes: None, Basic Auth, Header Auth, JWT 
 
 #### n8n 2.x Security Line and Version Pinning
 
-n8n 2.0 shipped in December 2025; current stable is 2.36.7 as of August 2026. **Pin >= 2.32.1** and never `n8nio/n8n:latest`. Three CRITICAL vulnerabilities (CVE-2026-44789 HTTP Request node prototype pollution to RCE, CVE-2026-44790 Git node arbitrary file read, CVE-2026-44791 XML node patch bypass) were disclosed 2026-05-14 and fixed in 2.22.1; HIGH-severity credential-exfiltration and sandbox-escape fixes landed through 2.31.5 and 2.32.1. CVE-2026-44789 sits on this skill's critical path, since every Israeli integration here is an HTTP Request node, and every payment-gateway workflow adds a public Webhook node.
+n8n 2.0 shipped in December 2025; current stable is 2.38.7 as of September 2026. **Pin >= 2.32.1** and never `n8nio/n8n:latest`. Three CRITICAL vulnerabilities (CVE-2026-44789 HTTP Request node prototype pollution to RCE, CVE-2026-44790 Git node arbitrary file read, CVE-2026-44791 XML node patch bypass) were disclosed 2026-05-14 and fixed in 2.22.1; HIGH-severity credential-exfiltration and sandbox-escape fixes landed through 2.31.5 and 2.32.1. CVE-2026-44789 sits on this skill's critical path, since every Israeli integration here is an HTTP Request node, and every payment-gateway workflow adds a public Webhook node.
 
 Two settings from the 2.0 breaking changes gate this skill's code, and with task runners on (the 2.0 default) both belong on the **runner**, not the main container:
 
@@ -260,7 +260,7 @@ Schedule Trigger, then the Hebcal request and the paired-scan gate from Step 4 (
 
 ## Gotchas
 
-- **Agents pin `:latest` or a stale 2.1x/2.2x tag.** 2.21.4 alone carries 68 published advisories, three of them CRITICAL (the CVE-2026-44789/44790/44791 chain, fixed in 2.22.1), plus HIGH-severity credential-exfiltration fixes through 2.32.1. Any public Webhook node widens the exposure. Pin >= 2.32.1; current stable is 2.36.7.
+- **Agents pin `:latest` or a stale 2.1x/2.2x tag.** 2.21.4 alone carries 68 published advisories, three of them CRITICAL (the CVE-2026-44789/44790/44791 chain, fixed in 2.22.1), plus HIGH-severity credential-exfiltration fixes through 2.32.1. Any public Webhook node widens the exposure. Pin >= 2.32.1; current stable is 2.38.7.
 - **Agents write `@n8n/n8n-nodes-langchain.toolMcp` for the MCP Client Tool.** No such node exists. The types are `mcpClientTool` and `mcpTrigger`.
 - **Agents send a free-form WhatsApp message from a scheduled workflow.** Meta's 24-hour customer service window has closed by then, so only an approved template delivers. Use Send Template, and get the template approved before the workflow ships.
 - **Agents retry an EZCount 417 as if it were a transient error.** 417 means the Tax Authority has not allocated a number; retrying never clears it. There is no `allocation_status` field. Branch on the 417 and surface the four documented options.

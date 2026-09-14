@@ -6,7 +6,7 @@ dist-tags (`https://registry.npmjs.org/-/package/n8n/dist-tags`) and the advisor
 
 ## n8n 2.x Security Patches and Breaking Changes
 
-n8n 2.0 shipped in December 2025; current stable is 2.36.7 as of August 2026 (beta on 2.37.x, new minor most weeks). Pin a specific tag in production, never `n8nio/n8n:latest`.
+n8n 2.0 shipped in December 2025; current stable is 2.38.7 as of September 2026 (beta on 2.39.x, new minor most weeks). Pin a specific tag in production, never `n8nio/n8n:latest`.
 
 **CRITICAL security patch (pin >= 2.32.1).** Three CRITICAL vulnerabilities were disclosed 2026-05-14 and patched in 2.22.1:
 
@@ -16,7 +16,7 @@ n8n 2.0 shipped in December 2025; current stable is 2.36.7 as of August 2026 (be
 | CVE-2026-44790 | GHSA-57g9-58c2-xjg3 | Arbitrary file read via Git node |
 | CVE-2026-44791 | GHSA-wrwr-h859-xh2r | XML node prototype pollution patch bypass |
 
-CVE-2026-44789 sits on this skill's critical path: every Israeli integration here is an HTTP Request node. Further HIGH-severity fixes landed through 2.31.5 and 2.32.1 (credential exfiltration via shared workflows, cross-tenant credential takeover, expression sandbox escapes), so **2.32.1 is the practical minimum**. No advisory published since patches above 2.32.1, so the floor is unchanged; 2.36.7 is the current stable and is what you should actually run.
+CVE-2026-44789 sits on this skill's critical path: every Israeli integration here is an HTTP Request node. Further HIGH-severity fixes landed through 2.31.5 and 2.32.1 (credential exfiltration via shared workflows, cross-tenant credential takeover, expression sandbox escapes), so **2.32.1 is the practical minimum**. No advisory published since patches above 2.32.1, so the floor is unchanged; 2.38.7 is the current stable and is what you should actually run.
 
 Two earlier issues are often cited and frequently misdescribed:
 
@@ -86,8 +86,8 @@ Israel's Privacy Protection Authority (PPA) does not mandate that all data stay 
 ```yaml
 services:
   n8n:
-    # Must be >= 2.32.1 for the CVE-2026-44789/44790/44791 critical chain. 2.36.7 is current stable.
-    image: n8nio/n8n:2.36.7
+    # Must be >= 2.32.1 for the CVE-2026-44789/44790/44791 critical chain. 2.38.7 is current stable.
+    image: n8nio/n8n:2.38.7
     restart: unless-stopped
     ports: ["5678:5678"]
     environment:
@@ -118,7 +118,7 @@ Notes:
 
 ## שינויים משמעותיים ב-n8n 2.0 (דצמבר 2025) + עדכוני אבטחה (2026)
 
-גרסה n8n 2.0 שוחררה בדצמבר 2025; הגרסה היציבה הנוכחית היא 2.36.7 נכון לאוגוסט 2026 (בטא על 2.37.x, עם minor חדש כמעט כל שבוע). נעלו תג ספציפי בפרודקשן במקום `n8nio/n8n:latest`.
+גרסה n8n 2.0 שוחררה בדצמבר 2025; הגרסה היציבה הנוכחית היא 2.38.7 נכון לספטמבר 2026 (בטא על 2.39.x, עם minor חדש כמעט כל שבוע). נעלו תג ספציפי בפרודקשן במקום `n8nio/n8n:latest`.
 
 **טלאי אבטחה קריטי, חובה לעבור ל-2.32.1 לפחות.** שלוש חולשות ברמת CRITICAL פורסמו ב-14.5.2026 ותוקנו ב-2.22.1:
 
@@ -128,7 +128,7 @@ Notes:
 | CVE-2026-44790 | GHSA-57g9-58c2-xjg3 | קריאת קבצים שרירותית דרך צומת Git |
 | CVE-2026-44791 | GHSA-wrwr-h859-xh2r | עקיפת הטלאי לזיהום prototype בצומת XML |
 
-חולשת CVE-2026-44789 נמצאת בדיוק על הנתיב הקריטי של הסקיל הזה, מפני שכל אינטגרציה ישראלית כאן היא HTTP Request node. תיקונים נוספים ברמת HIGH נחתו לאורך 2.31.5 ו-2.32.1 (דליפת credentials דרך workflows משותפים, השתלטות על credentials בין דיירים, ובריחה מארגז החול של הביטויים), ולכן **2.32.1 היא רצפת המינימום המעשית** ו-2.36.7 היא הגרסה היציבה הנוכחית.
+חולשת CVE-2026-44789 נמצאת בדיוק על הנתיב הקריטי של הסקיל הזה, מפני שכל אינטגרציה ישראלית כאן היא HTTP Request node. תיקונים נוספים ברמת HIGH נחתו לאורך 2.31.5 ו-2.32.1 (דליפת credentials דרך workflows משותפים, השתלטות על credentials בין דיירים, ובריחה מארגז החול של הביטויים), ולכן **2.32.1 היא רצפת המינימום המעשית** ו-2.38.7 היא הגרסה היציבה הנוכחית.
 
 שתי חולשות מוקדמות יותר מצוטטות הרבה ולרוב מתוארות לא נכון:
 
@@ -185,7 +185,7 @@ services:
   n8n:
     # נועלים תג ספציפי. אסור :latest בפרודקשן.
     # חייב להיות לפחות 2.32.1 כדי להיות מטולא נגד שרשרת CVE-2026-44789/44790/44791.
-    image: n8nio/n8n:2.36.7
+    image: n8nio/n8n:2.38.7
     restart: unless-stopped
     ports:
       - "5678:5678"

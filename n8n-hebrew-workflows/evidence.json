@@ -346,15 +346,16 @@
     {
       "id": "n8n-sustainable-use-license",
       "claim": "n8n's Sustainable Use License grants free use, modification, derivative works and redistribution subject to three limitations, the first being use only for your own internal business purposes or non-commercial/personal use.",
-      "source_url": "https://docs.n8n.io/sustainable-use-license/",
-      "raw_snippet": "You may use or modify the software only for your own internal business purposes or for non-commercial or personal use.",
+      "source_url": "https://raw.githubusercontent.com/n8n-io/n8n/master/LICENSE.md",
+      "raw_snippet": "You may use or modify the software only for your own internal business purposes or for non-commercial or",
       "verified": "2026-08-13",
       "claim_id": "n8n-sustainable-use-license",
-      "fetched_at": "2026-08-13",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verification_note": "docs.n8n.io/sustainable-use-license/ now returns 404; re-cited to the license text in the n8n repo (HTTP 200). The sentence wraps across a line break in LICENSE.md, so the snippet is the single contiguous source line that carries the internal-business-purposes limitation."
     },
     {
       "id": "n8n-cloud-eu-hosting",
@@ -490,7 +491,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "GET re-run 2026-09-14 with a desktop Chrome UA: HTTP 401, body matches raw_snippet byte for byte."
     },
     {
       "id": "morning-api-token-post-only",
@@ -503,7 +507,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "GET re-run 2026-09-14: HTTP 405, body matches raw_snippet."
     },
     {
       "id": "morning-api-docs-page",
@@ -517,7 +524,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "curl 2026-09-14 with a desktop Chrome UA: HTTP 200, title 'Morning API Documentation' present in raw bytes."
     },
     {
       "id": "ezcount-createdoc",
@@ -531,7 +541,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "GET re-run 2026-09-14: HTTP 200 JSON, errMsg matches raw_snippet."
     },
     {
       "id": "tranzila-v2-credit-card",
@@ -545,7 +558,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "Re-run 2026-09-14: GET HTTP 405 body matches raw_snippet; unauthenticated POST HTTP 401 {\"code\":401,\"message\":\"Unauthorized\"}."
     },
     {
       "id": "tranzila-v2-bit-init",
@@ -559,7 +575,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "Re-run 2026-09-14: GET HTTP 405 body matches raw_snippet; POST HTTP 401; /v1/bit/init and /v1/transaction/create both HTTP 404."
     },
     {
       "id": "tranzila-legacy-cgi",
@@ -572,7 +591,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "GET re-run 2026-09-14: HTTP 200, <title>Tranzila Alert</title> in raw bytes."
     },
     {
       "id": "tranzila-docs-portal",
@@ -613,7 +635,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "GET re-run 2026-09-14: HTTP 404, title matches raw_snippet."
     },
     {
       "id": "cardcom-v11-lowprofile-live",
@@ -627,7 +652,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "Re-run 2026-09-14: GET HTTP 405 body matches raw_snippet; a bodiless POST gets HTTP 411 Length Required (the route accepts POST)."
     },
     {
       "id": "cardcom-v11-transactions-live",
@@ -640,7 +668,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "Re-run 2026-09-14: GET HTTP 405 body matches raw_snippet; a bodiless POST gets HTTP 411 Length Required (the route accepts POST)."
     },
     {
       "id": "cardcom-legacy-chargetoken",
@@ -653,7 +684,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "GET re-run 2026-09-14: HTTP 200, body matches raw_snippet exactly."
     },
     {
       "id": "cardcom-legacy-createinvoice",
@@ -666,21 +700,27 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "GET re-run 2026-09-14: HTTP 200, body matches raw_snippet exactly."
     },
     {
       "id": "inforu-host",
       "claim": "InforUMobile's API host is capi.inforu.co.il, not api.inforu.co.il, and `/api/v2/SMS/SendSms` there rejects an unauthenticated call with StatusId -1.",
       "source_url": "https://capi.inforu.co.il/api/v2/SMS/SendSms",
-      "raw_snippet": "\"StatusDescription\": \"Authorization empty or not exist [516]\"",
+      "raw_snippet": "\"StatusDescription\": \"Authorization empty or not exist [518]\"",
       "verified": "2026-08-13",
       "note": "Live probe 2026-08-13: https://api.inforu.co.il/api/v2/SMS/SendSms returns an IIS '404 - File or directory not found.' page. A call with a bad token returns 'Authentication failed or illegal IP address', which is how the IP-allowlist behaviour surfaces. `/api/v2/SMS/GetSmsStatus` returned 404 on both GET and POST and is NOT evidenced.",
       "claim_id": "inforu-host",
-      "fetched_at": "2026-08-13",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "GET and POST re-run 2026-09-14 (twice): HTTP 401, StatusId -1; the bracketed code is now [518] (was [516]), snippet updated to the current bytes."
     },
     {
       "id": "sms019-status-in-body",
@@ -694,7 +734,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "POST https://019sms.co.il/api re-run 2026-09-14 with header 'Authorization: Bearer invalid' and a JSON send body: HTTP 200, body matches raw_snippet byte for byte (including the double space)."
     },
     {
       "id": "hebcal-rate-limit",
@@ -792,30 +835,32 @@
     },
     {
       "id": "datagov-actions",
-      "claim": "The CKAN actions `/action/datastore_search` and `/action/resource_show` are live on data.gov.il and reject a call with a missing parameter, and `/action/package_show` answers for a dataset id.",
-      "source_url": "https://data.gov.il/api/3/action/resource_show",
-      "raw_snippet": "\"help\": \"https://data.gov.il/api/3/action/help_show?name=resource_show\"",
+      "claim": "The CKAN actions `/action/datastore_search` and `/action/resource_show` are live on data.gov.il and return JSON for a real resource id, and `/action/package_show` answers for a dataset id. A call with a missing or invalid id now gets the site's generic 404 HTML page instead of a CKAN JSON error.",
+      "source_url": "https://data.gov.il/api/3/action/resource_show?id=be5b7935-3922-45d4-9638-08871b17ec95",
+      "raw_snippet": "{\"help\": \"https://data.gov.il/api/3/action/help_show?name=resource_show\", \"success\": true",
       "verified": "2026-08-13",
       "note": "/action/datastore_search_sql did NOT answer as a CKAN action on 2026-08-13 (it served a generic error page), so that row of references/israeli-api-endpoints.md is not evidenced here.",
       "claim_id": "datagov-actions",
-      "fetched_at": "2026-08-13",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verification_note": "Re-run 2026-09-14: resource_show?id=be5b7935-3922-45d4-9638-08871b17ec95 and datastore_search?resource_id=be5b7935-3922-45d4-9638-08871b17ec95&limit=1 return HTTP 200 JSON success; bare resource_show, resource_show?id=x, package_show?id=x and datastore_search without resource_id all return HTTP 404 HTML. Old wording 'reject a call with a missing parameter' no longer held and was removed from the claim (it was not in the skill text)."
     },
     {
       "id": "datagov-package-show",
       "claim": "The CKAN `/action/package_show` action is live on data.gov.il.",
-      "source_url": "https://data.gov.il/api/3/action/package_show?id=x",
-      "raw_snippet": "\"help\": \"https://data.gov.il/api/3/action/help_show?name=package_show\"",
+      "source_url": "https://data.gov.il/api/3/action/package_show?id=c5ac01fb-c7ef-4e5e-ba81-e9e11c6f7bd9",
+      "raw_snippet": "{\"help\": \"https://data.gov.il/api/3/action/help_show?name=package_show\", \"success\": true",
       "verified": "2026-08-13",
       "claim_id": "datagov-package-show",
-      "fetched_at": "2026-08-13",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verification_note": "package_show?id=x now returns 404 HTML; re-cited to the real package id c5ac01fb-c7ef-4e5e-ba81-e9e11c6f7bd9 (the amutot dataset), HTTP 200 JSON success."
     },
     {
       "id": "grow-payments-docs",
@@ -828,7 +873,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "curl 2026-09-14 with a desktop Chrome UA: HTTP 200, snippet present in raw bytes."
     },
     {
       "id": "ibs-company-types",
@@ -1097,10 +1145,12 @@
       "source_url": "https://data.gov.il/api/3/action/help_show?name=datastore_search_sql",
       "raw_snippet": "The datastore_search_sql action allows a user to search data in a resource",
       "fetched_at": "2026-08-14",
-      "verified_at": "2026-08-14",
+      "verified_at": "2026-09-14",
       "appears_in": [
         "references/israeli-api-endpoints.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verification_note": "GET re-run 2026-09-14: HTTP 200 JSON, snippet present in the result text."
     },
     {
       "claim_id": "morning-decimal-amounts",
@@ -1141,16 +1191,17 @@
       ]
     },
     {
-      "claim_id": "n8n-stable-2367",
-      "claim": "n8n current stable release is 2.36.7 (beta line 2.37.x) as of 2026-08-27",
-      "source_url": "https://api.github.com/repos/n8n-io/n8n/releases/tags/n8n%402.36.7",
-      "raw_snippet": "\"html_url\": \"https://github.com/n8n-io/n8n/releases/tag/n8n%402.36.7\"",
-      "fetched_at": "2026-08-27T18:52:02.730644+00:00",
+      "claim_id": "n8n-stable-2387",
+      "claim": "n8n current stable release is 2.38.7 (beta line 2.39.x) as of 2026-09-14",
+      "source_url": "https://api.github.com/repos/n8n-io/n8n/releases/tags/n8n%402.38.7",
+      "raw_snippet": "\"html_url\": \"https://github.com/n8n-io/n8n/releases/tag/n8n%402.38.7\"",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/n8n-version-migration.md"
-      ]
+      ],
+      "verification_note": "gh api releases 2026-09-14: n8n@2.38.7 published 2026-09-11, prerelease=false, and the npm dist-tag stable=2.38.7; beta is n8n@2.39.5 (prerelease). Replaces the stale 2.36.7 pin."
     },
     {
       "claim_id": "n8n-floor-2321",
@@ -1195,7 +1246,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-09-14",
+      "verification_note": "Playwright 2026-09-14: the cited URL redirects to https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/send-messages; location.href asserted; snippet read in the rendered page text."
     },
     {
       "claim_id": "meta-template-categories",
@@ -1206,7 +1260,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-09-14",
+      "verification_note": "Playwright 2026-09-14: the cited URL redirects to https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing; location.href asserted; Marketing, Utility and Authentication all present in the rendered text."
     },
     {
       "claim_id": "meta-per-message-pricing",
@@ -1217,14 +1274,17 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-09-14",
+      "verification_note": "Playwright 2026-09-14: the cited URL redirects to https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing; location.href asserted; the exact snippet is present in the rendered text."
     },
     {
       "claim_id": "n8n-30-docker-only",
       "claim": "n8n 3.0 (scheduled October 2026) drops support for self-hosted npm/npx installs; Docker only",
       "source_url": "https://docs.n8n.io/changelog/v30-breaking-changes.md",
-      "raw_snippet": "Self-hosted n8n will require a Docker-based deployment. Installations run via `npm` / `npx n8n` will no longer be supported.",
-      "fetched_at": "2026-08-27T18:52:02.730644+00:00",
+      "raw_snippet": "Self-hosted n8n will require a Docker-based deployment. n8n 3.0 will no longer support installations run using `npm` or `npx n8n`.",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -1235,8 +1295,8 @@
       "claim_id": "n8n-30-removed-nodes",
       "claim": "n8n 3.0 removes the Function, Function Item and Item Lists nodes, the $getPairedItem helper, and AI Agent node v1",
       "source_url": "https://docs.n8n.io/changelog/v30-breaking-changes.md",
-      "raw_snippet": "The deprecated `$getPairedItem` expression helper is being removed.",
-      "fetched_at": "2026-08-27T18:52:02.730644+00:00",
+      "raw_snippet": "n8n 3.0 removes the deprecated `$getPairedItem` expression helper.",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -1264,7 +1324,10 @@
         "SKILL.md",
         "SKILL_HE.md",
         "references/israeli-api-endpoints.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "curl 2026-09-14 with a desktop Chrome UA: HTTP 200, snippet present in raw bytes."
     },
     {
       "claim_id": "ezcount-rate-limit",
@@ -1276,7 +1339,10 @@
         "SKILL.md",
         "SKILL_HE.md",
         "references/israeli-api-endpoints.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "curl 2026-09-14 with a desktop Chrome UA: HTTP 200, snippet present in raw bytes."
     },
     {
       "claim_id": "ezcount-vat-type-default",
@@ -1287,7 +1353,10 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "curl 2026-09-14 with a desktop Chrome UA: HTTP 200, snippet present in raw bytes."
     },
     {
       "claim_id": "vat-s38a1-buyer-deduction",
@@ -1354,17 +1423,21 @@
         "SKILL.md",
         "SKILL_HE.md",
         "references/israeli-api-endpoints.md"
-      ]
+      ],
+      "verified_via": "probe",
+      "verified_at": "2026-09-14",
+      "verification_note": "GET re-run 2026-09-14: HTTP 200 JSON, snippet present in the result text."
     },
     {
       "claim_id": "npm-dist-tags-endpoint",
-      "claim": "The npm registry publishes n8n dist-tags at the /-/package/n8n/dist-tags endpoint, used to re-check the current stable pin each cycle",
+      "claim": "The npm registry dist-tags endpoint for the package, cited in the migration reference, serves its dist-tags as JSON, so the current stable pin can be re-checked there each cycle rather than trusted from a previous cycle",
       "source_url": "https://registry.npmjs.org/-/package/n8n/dist-tags",
-      "raw_snippet": "\"latest\": \"2.36.7\" and \"stable\": \"2.36.7\" are served by this endpoint; re-query it every cycle rather than trusting a previous pin.",
-      "fetched_at": "2026-08-27T18:52:56.521835+00:00",
+      "raw_snippet": "{\"latest\":\"2.38.7\",\"stable\":\"2.38.7\"",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
       "appears_in": [
         "references/n8n-version-migration.md"
-      ]
+      ],
+      "verification_note": "Raw endpoint bytes 2026-09-14 (HTTP 200). The registry serves compact JSON with no whitespace on every endpoint and Accept header, so a byte-exact quote is necessarily one token; this entry therefore asserts no figure. The version figure itself is backed by n8n-stable-2387 (GitHub releases API)."
     },
     {
       "claim_id": "cardcom-returnvalue-passthrough",
@@ -1482,10 +1555,10 @@
     },
     {
       "claim_id": "datagovil-sql-live-query",
-      "claim": "A live datastore_search_sql query against the data.gov.il amutot resource returns records with HTTP 200, refuting the earlier claim that the action and SQL queries are blocked",
+      "claim": "The CKAN action path /action/datastore_search_sql is live on data.gov.il: a query against the amutot resource returns HTTP 200 with \"success\": true and a records array, refuting the earlier claim that the action and SQL queries are blocked",
       "source_url": "https://data.gov.il/api/3/action/datastore_search_sql?sql=SELECT%20*%20FROM%20%22be5b7935-3922-45d4-9638-08871b17ec95%22%20LIMIT%201",
-      "raw_snippet": "The CKAN action path /action/datastore_search_sql is live on this instance: the query returns \"success\": true with a records array.",
-      "fetched_at": "2026-08-27T19:38:39.849871+00:00",
+      "raw_snippet": "\"success\": true, \"result\": {\"sql\": \"SELECT * FROM \\\"be5b7935-3922-45d4-9638-08871b17ec95\\\" LIMIT 1\", \"records\": [",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
       "appears_in": [
         "references/israeli-api-endpoints.md"
       ]
