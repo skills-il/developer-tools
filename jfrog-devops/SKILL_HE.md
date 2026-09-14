@@ -354,7 +354,7 @@ items.find({
 |------|-------|----------|
 | Artifactory REST API | https://docs.jfrog.com/artifactory/reference | נקודות קצה, תחביר שאילתות, AQL. האינדקס הקריא-למכונה נמצא ב-https://docs.jfrog.com/artifactory/llms.txt |
 | תיעוד Xray | https://jfrog.com/xray/ | סריקת פגיעויות, ציות רישוי, מדיניות, SBOM ו-VEX |
-| JFrog CLI Releases | https://github.com/jfrog/jfrog-cli/releases | גרסה אחרונה של ה-CLI (2.122.0 נכון לאוגוסט 2026), changelog |
+| JFrog CLI Releases | https://github.com/jfrog/jfrog-cli/releases | גרסה אחרונה של ה-CLI (2.124.0 נכון לספטמבר 2026), changelog |
 | JFrog Docker Registry | https://jfrog.com/help/r/jfrog-artifactory-documentation/docker-repositories | ניהול אימג'י Docker, פרוקסי Docker Hub |
 | JFrog ML | https://jfrog.com/jfrog-ml/ | פלטפורמת MLOps (מרכישת Qwak), model registry, FrogML SDK |
 | JFrog AI Catalog | https://jfrog.com/press-room/jfrog-launches-ai-catalog-to-secure-and-govern-ai-model-delivery/ | Governance ל-OpenAI, Anthropic, NVIDIA NIM ו-Hugging Face |

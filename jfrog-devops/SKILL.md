@@ -3,7 +3,7 @@ name: jfrog-devops
 description: Manage JFrog Artifactory repositories, artifacts, Docker registry, build info, ML model registry (JFrog ML / AI Catalog), and Xray security scanning for DevOps and MLOps workflows. Use when user asks about JFrog, Artifactory, Xray, Curation, Frogbot, JFrog ML, AI Catalog, artifact management, "deploy artifact", Docker registry with Artifactory, Hugging Face / MLflow model registry, build promotion, vulnerability scanning, SBOM (SPDX/CycloneDX/VEX), or DevOps artifact pipeline. Covers REST API operations, JFrog CLI usage, Docker registry configuration, OIDC with GitHub Actions, and security scanning patterns. Do NOT use for general Docker or CI/CD questions unrelated to JFrog.
 license: MIT
 allowed-tools: Bash(curl:*) Bash(jf:*) Bash(docker:*) Bash(python3:*)
-compatibility: Requires network access to JFrog instance (SaaS or self-hosted). JFrog CLI 2.75.0+ (jf) is the floor for OIDC; 2.122.0 is current as of August 2026.
+compatibility: Requires network access to JFrog instance (SaaS or self-hosted). JFrog CLI 2.75.0+ (jf) is the floor for OIDC; 2.124.0 is current as of September 2026.
 ---
 
 # JFrog DevOps
@@ -364,7 +364,7 @@ Result: Use AQL to find artifacts not downloaded in 90+ days, identify snapshot 
 |--------|-----|---------------|
 | Artifactory REST API | https://docs.jfrog.com/artifactory/reference | Endpoints, query syntax, AQL. The machine-readable index is https://docs.jfrog.com/artifactory/llms.txt |
 | Xray Documentation | https://jfrog.com/xray/ | Vulnerability scanning, license compliance, policies, SBOM/VEX |
-| JFrog CLI Releases | https://github.com/jfrog/jfrog-cli/releases | Latest CLI version (2.122.0 as of August 2026), changelog |
+| JFrog CLI Releases | https://github.com/jfrog/jfrog-cli/releases | Latest CLI version (2.124.0 as of September 2026), changelog |
 | JFrog Docker Registry | https://jfrog.com/help/r/jfrog-artifactory-documentation/docker-repositories | Docker image management, Docker Hub proxy |
 | JFrog ML | https://jfrog.com/jfrog-ml/ | MLOps platform (from Qwak acquisition), model registry, FrogML SDK |
 | JFrog AI Catalog | https://jfrog.com/press-room/jfrog-launches-ai-catalog-to-secure-and-govern-ai-model-delivery/ | Governance for OpenAI, Anthropic, NVIDIA NIM, Hugging Face |

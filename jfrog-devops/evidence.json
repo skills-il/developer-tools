@@ -319,8 +319,8 @@
       "claim_id": "jfrog-ml-single-source-of-truth",
       "claim": "JFrog ML governs AI models, agent skills and MCP servers in a single source of truth",
       "source_url": "https://jfrog.com/jfrog-ml/",
-      "raw_snippet": "JFrog governs every AI model, agent skill, MCP server, AI-generated code, and assembled artifact in a single source of truth",
-      "fetched_at": "2026-08-02T02:23:11.439636+00:00",
+      "raw_snippet": "every AI model, agent skill, plugin, MCP server, package, and AI-generated artifact, governed in a single source of truth",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -397,10 +397,10 @@
     },
     {
       "claim_id": "jf-cli-2-122",
-      "claim": "JFrog CLI 2.122.0 is the current release, published 2026-08-26.",
+      "claim": "JFrog CLI 2.124.0 is the current release, published 2026-09-07.",
       "source_url": "https://github.com/jfrog/jfrog-cli/releases",
-      "raw_snippet": "Releases · jfrog/jfrog-cli Release list 2.122.0 2.121.0 2.120.0",
-      "fetched_at": "2026-09-01T21:49:17+00:00",
+      "raw_snippet": "Releases · jfrog/jfrog-cli Release list 2.124.0 2.123.0 2.122.0",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"

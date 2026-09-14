@@ -167,11 +167,15 @@
     },
     {
       "id": "h100-hyperscaler-pricing",
-      "claim": "Hyperscaler H100 on-demand pricing in 2026 is roughly $6.50-$7.00/GPU-hr on AWS p5.48xlarge, $9.00-$11.50 on GCP a3-highgpu-8g and $11.00-$13.00 on Azure ND96isr H100 v5. SKILL.md line 298's Azure figure of ~$6.98 (East US) is well below this source's Azure band and should be re-checked; the AWS ~$6.88 and GCP ~$10-11 figures sit inside it.",
+      "claim": "AWS p5.48xlarge (8x H100) lists at $55.04/hour on-demand, about $6.88 per GPU-hour. Azure's single-GPU Standard_NC40ads_H100_v5 is $6.98/hour Linux on-demand in East US (Azure Retail Prices API, checked 2026-09-14).",
       "source_url": "https://www.cloudzero.com/blog/cloud-gpu-pricing-comparison/",
-      "raw_snippet": "AWS p5.48xlarge 8x H100 ~$6.50–$7.00 ~$2.00–$3.00 ~$3.50–$4.50",
+      "raw_snippet": "the 8x H100 p5.48xlarge lists at $55.04/hour (about $6.88 per GPU)",
       "verified": true,
-      "confidence": "medium"
+      "confidence": "medium",
+      "fetched_at": "2026-09-14T00:00:00+00:00",
+      "verified_via": "api",
+      "verified_at": "2026-09-14",
+      "verification_note": "AWS figure: raw CloudZero page text (dateModified 2026-09-04); the older table with GCP and Azure bands was removed from that page. Azure figure: prices.azure.com retail API, armRegionName=eastus, Standard_NC40ads_H100_v5, Consumption, retailPrice 6.98 per 1 Hour."
     },
     {
       "id": "h100-specialty-pricing",
