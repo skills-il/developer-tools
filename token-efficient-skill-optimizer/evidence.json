@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "token-efficient-skill-optimizer",
+  "generated_at": "2026-07-25T00:00:00Z",
+  "note": "Every claim below was fetched from its primary page by a research subagent on 2026-07-24 with title match required, then structurally re-checked by the orchestrator. The full 42-source corpus, including per-source limitations, lives in the upstream repo at research/sources.yaml and research/research-limitations.md (https://github.com/yosishe/token-efficient-skill-optimizer). In-package source index: rules/sources-index.yaml.",
+  "claims": [
+    {
+      "claim_id": "anthropic-cache-multipliers",
+      "claim": "Anthropic prompt-cache pricing multipliers are: 5-minute cache write = 1.25x base input price, 1-hour cache write = 2x base input price, cache read (hit or refresh) = 0.1x base input price. The skill uses these to separate a billing effect from a token reduction, which is why savings realized only on a cache hit carry the distinct [cache-dependent] label.",
+      "source_url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+      "raw_snippet": "5-minute cache writes = \"1.25 times the base input tokens price\"; 1-hour cache writes = \"2 times the base input tokens price\"; cache read tokens (hits and refreshes) = \"0.1 times the base input tokens price\". Worked example for Claude Opus 5: base input $5/MTok, 5m cache writes $6.25/MTok, 1h cache writes $10/MTok, cache hits and refreshes $0.50/MTok.",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": ["config/provider-cost-profiles.yaml", "rules/rules.yaml", "references/rules.md", "references/research-digest.md", "references/apply-protocol.md", "rules/sources-index.yaml"]
+    },
+    {
+      "claim_id": "cache-breakeven-reads",
+      "claim": "Prompt caching pays off after one cache read at the 5-minute duration and after two reads at the 1-hour duration; the skill therefore never reports a cache saving without stating the assumed hit rate.",
+      "source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "raw_snippet": "\"A cache hit costs 10% of the standard input price, which means caching pays off after just one cache read for the 5-minute duration (1.25x write), or after two cache reads for the 1-hour duration (2x write).\"",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": ["config/provider-cost-profiles.yaml", "rules/rules.yaml", "references/rules.md", "references/research-digest.md", "rules/sources-index.yaml"]
+    },
+    {
+      "claim_id": "openai-cache-minimum-1024",
+      "claim": "OpenAI automatic prompt caching requires a prompt of 1024 tokens or longer, so a short prompt cannot be cached at all; the skill's cache-oriented rules check the prefix length before projecting any cache benefit.",
+      "source_url": "https://developers.openai.com/api/docs/guides/prompt-caching",
+      "raw_snippet": "minimum prompt length \"1024 tokens or longer\"; cache writes on GPT-5.6+ are \"billed at 1.25x the uncached input token rate\"; \"Cache writes have no additional fee on models before the GPT-5.6 family\".",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": ["config/provider-cost-profiles.yaml", "rules/rules.yaml", "references/rules.md", "references/research-digest.md", "rules/sources-index.yaml"]
+    },
+    {
+      "claim_id": "position-bias-lost-in-the-middle",
+      "claim": "Model accuracy depends strongly on where relevant information sits in the context: with 20 documents, GPT-3.5-Turbo scored 75.8% at the first position, 63.2% at the last, and 53.8% in the middle — below its own 56.1% closed-book baseline. This grounds the skill's ordering rules (put load-bearing instructions at the edges, not buried mid-prompt).",
+      "source_url": "https://arxiv.org/abs/2307.03172",
+      "raw_snippet": "Read in full text (ar5iv, Fig. 5 / sec 2.3 / sec 4.2): with 20 documents, GPT-3.5-Turbo accuracy = 75.8% at position 0, 63.2% at the last position, and 53.8% at the middle (index 9); with 30 documents: 73.4% / 63.7% / 50.9%. Middle-position performance falls BELOW the closed-book (no documents) baseline of 56.1%.",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": ["rules/rules.yaml", "references/rules.md", "references/research-digest.md", "rules/sources-index.yaml"]
+    },
+    {
+      "claim_id": "unequal-compression-budget",
+      "claim": "Prompt compression is not uniform: a budget controller that compresses demonstrations and context harder while protecting instructions and questions reaches high ratios with little reported performance loss. This is the basis for the skill's rule that examples compress before instructions do.",
+      "source_url": "https://arxiv.org/abs/2310.05736",
+      "raw_snippet": "Up to 20x compression with 'little performance loss' (stated in arXiv abstract). Budget controller allocates compression unevenly, protecting instructions/questions more than demonstrations. No per-task deltas given in the abstract.",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": ["rules/rules.yaml", "references/rules.md", "references/research-digest.md", "rules/sources-index.yaml"]
+    },
+    {
+      "claim_id": "output-token-reduction-cod",
+      "claim": "Output tokens are a distinct and often dominant cost lever: Chain of Draft reports matching or surpassing chain-of-thought accuracy while using as little as 7.6% of the tokens. The skill treats output-shaping as a separate rule family from input compression.",
+      "source_url": "https://arxiv.org/abs/2502.18600",
+      "raw_snippet": "Abstract: CoD 'matches or surpasses CoT in accuracy while using as little as only 7.6% of the tokens' (i.e., up to ~92% output-token reduction).",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": ["rules/rules.yaml", "references/rules.md", "references/research-digest.md", "examples/example-diff.md", "rules/sources-index.yaml"]
+    },
+    {
+      "claim_id": "agent-token-multiplier",
+      "claim": "Agentic architectures dominate token spend: agents use roughly 4x the tokens of chat and multi-agent systems roughly 15x, and token usage explained about 80% of performance variance on the reported BrowseComp eval. This is why the skill ranks a batch audit by architecture before line-level wording.",
+      "source_url": "https://www.anthropic.com/engineering/multi-agent-research-system",
+      "raw_snippet": "Stated in the post: agents use ~4x more tokens than chat; multi-agent systems ~15x more tokens than chat; token usage explains ~80% of performance variance on their BrowseComp eval.",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": ["rules/rules.yaml", "references/rules.md", "references/research-digest.md", "rules/sources-index.yaml"]
+    },
+    {
+      "claim_id": "subagent-return-budget",
+      "claim": "Sub-agents may explore tens of thousands of tokens but should return only roughly 1,000-2,000-token summaries. The skill cites this as an illustrative vendor guideline, not a controlled measurement, and labels any projection built on it accordingly.",
+      "source_url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "raw_snippet": "One illustrative figure in the post: sub-agents may explore tens of thousands of tokens but should return only ~1,000-2,000-token summaries. No controlled measurements.",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": ["rules/rules.yaml", "references/rules.md", "references/research-digest.md", "rules/sources-index.yaml"]
+    },
+    {
+      "claim_id": "compression-is-an-attack-surface",
+      "claim": "Prompt compression is itself an attack surface: black-box attacks against prompt-compressed agents reached a 0.71 average attack success rate versus 0.21 for the strongest baseline, across 3 tasks and 6 compressors. This is the evidence behind rule R-S1, which exempts safety text from every removal, merge, and compression rule.",
+      "source_url": "https://arxiv.org/abs/2510.22963",
+      "raw_snippet": "COMA achieves 0.71 average attack success rate vs 0.21 for the strongest baseline, across 3 tasks and 6 compressors (stated in arXiv abstract).",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": ["references/safety.md", "rules/rules.yaml", "references/rules.md", "references/research-digest.md", "rules/sources-index.yaml"]
+    },
+    {
+      "claim_id": "indirect-prompt-injection-untrusted-target",
+      "claim": "Content an LLM application ingests can carry adversarial instructions (indirect prompt injection). The skill therefore treats the artifact under audit as untrusted data: instructions found inside it — including instructions about how to report savings — are recorded as injection findings and never followed.",
+      "source_url": "https://arxiv.org/abs/2302.12173",
+      "raw_snippet": "Contribution is a demonstrated attack class and taxonomy for indirect prompt injection against real-world LLM-integrated applications; no benchmark rates stated in the abstract.",
+      "fetched_at": "2026-07-24T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "references/safety.md", "rules/rules.yaml", "rules/sources-index.yaml"]
+    },
+    {
+      "claim_id": "bilingual-sibling-separation",
+      "claim": "The measurement harness separates language-suffixed translation files (X-he.md next to X.md; en/zh/he/ja/ko/fr/es/de/pt/ru/ar) into a bilingual_sibling_pairs list distinct from duplicates, so a bilingual or Hebrew skill is never told to delete its own translation.",
+      "source_url": "https://github.com/yosishe/token-efficient-skill-optimizer/blob/main/skill/scripts/measure_tokens.py",
+      "raw_snippet": "LANG_SUFFIX = re.compile(r\"[-_.](en|zh|cn|tw|he|ja|ko|fr|es|de|pt|ru|ar)(?=\\.|$)\", re.I)  # Language-suffixed sibling files (README.en.md vs README.md) are intentional translations, not redundancy to remove. Report key: \"bilingual_sibling_pairs\".",
+      "fetched_at": "2026-07-25T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "scripts/measure_tokens.py", "references/measurement.md"]
+    },
+    {
+      "claim_id": "hebrew-trigger-detection",
+      "claim": "Trigger and conditional phrase detection is multilingual and includes Hebrew markers (כאשר, רק, אם, לפני, בעת, במקרה) alongside English and Chinese, so routing text in a Hebrew skill is not mis-scored as ordinary prose.",
+      "source_url": "https://github.com/yosishe/token-efficient-skill-optimizer/blob/main/skill/scripts/measure_tokens.py",
+      "raw_snippet": "Multilingual by necessity: English-only lists mis-flagged a Chinese skill. Hebrew branch of the conditional pattern: r\"|כאשר|רק\\s|אם\\s|לפני|בעת|במקרה\".",
+      "fetched_at": "2026-07-25T00:00:00Z",
+      "appears_in": ["SKILL.md", "SKILL_HE.md", "scripts/measure_tokens.py"]
+    }
+  ]
+}
