@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "israeli-postgres-toolkit",
-  "generated_at": "2026-08-27T04:23:05Z",
+  "generated_at": "2026-09-14T09:00:00Z",
   "claims": [
     {
       "claim_id": "unaccent-not-nikud",
@@ -156,29 +156,28 @@
     },
     {
       "claim_id": "supabase-supavisor-hosts",
-      "claim": "Supabase's shared pooler (Supavisor) is reached at aws-[region].pooler.supabase.com, port 6543 for transaction mode and 5432 for session mode. The docs write the host with an aws-[region] placeholder; the older aws-0- prefix no longer appears on the connection page.",
+      "claim": "Supabase's shared pooler (Supavisor) is reached at aws-[INDEX]-[REGION].pooler.supabase.com, port 5432 for session mode and 6543 for transaction mode. The docs write the host with an [INDEX] pooler-cluster placeholder that cannot be derived from the region, so a fixed aws-0- prefix must not be hardcoded.",
       "source_url": "https://supabase.com/docs/guides/database/connecting-to-postgres",
-      "raw_snippet": "Shared pooler (Supavisor) - session mode aws-[region].pooler.supabase.com:5432",
-      "fetched_at": "2026-08-27T04:23:05Z",
+      "raw_snippet": "Shared pooler, session mode aws-[INDEX]-[REGION].pooler.supabase.com:5432 IPv4 IPv4 IPv4 Shared pooler, transaction mode aws-[INDEX]-[REGION].pooler.supabase.com:6543",
+      "fetched_at": "2026-09-14T09:00:00Z",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md",
-        "references/supabase-israel-patterns.md"
+        "SKILL_HE.md"
       ],
-      "verified_at": "2026-08-27"
+      "verified_at": "2026-09-14"
     },
     {
       "claim_id": "supabase-pool-size-not-a-plan-constant",
-      "claim": "Supabase pool size is a single setting shared by Supavisor and PgBouncer that caps the server-side connections a pooler opens to Postgres. It is not a per-plan constant; the tier-dependent ceiling is a separate 'max pooler clients' limit on how many clients may connect to a pooler at once.",
-      "source_url": "https://supabase.com/docs/guides/database/connecting-to-postgres",
-      "raw_snippet": "Supavisor and PgBouncer work independently, but both reference the same pool size setting. For example, If you set the pool size to 30, Supavisor can open up to 30 server side connections to Postgres.",
-      "fetched_at": "2026-08-27T04:23:05Z",
+      "claim": "Supabase pool size is an adjustable Dashboard setting (Database settings) that caps the connections a pooler opens to Postgres; Supavisor and PgBouncer read the same setting but apply it independently. The compute-size-dependent limit is a separate 'max pooler clients' limit on concurrent client connections.",
+      "source_url": "https://supabase.com/docs/guides/database/connecting-to-postgres/pooling-and-limits",
+      "raw_snippet": "Pool size sets how many connections a pooler is allowed to open to Postgres. You can adjust it in Database settings in the Supabase Dashboard. Supavisor and PgBouncer read the same setting but apply it independently, so raising it raises the ceiling for both.",
+      "fetched_at": "2026-09-14T09:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/supabase-israel-patterns.md"
       ],
-      "verified_at": "2026-08-27"
+      "verified_at": "2026-09-14"
     },
     {
       "claim_id": "osek-patur-ceiling-2026",

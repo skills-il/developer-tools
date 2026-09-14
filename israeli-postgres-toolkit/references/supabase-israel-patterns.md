@@ -319,7 +319,7 @@ SELECT * FROM businesses_sorted ORDER BY sort_key;
 For Israeli SaaS applications:
 
 - **Storage and compute quotas** vary by plan and are revised regularly. Read the current limits from supabase.com/pricing or your project's usage page rather than from a document like this one.
-- **Connections**: pool size is not a plan constant. It is a single setting that Supavisor and PgBouncer both reference, capping the server-side connections a pooler opens to Postgres. The tier-dependent ceiling is a separate "max pooler clients" limit on concurrent clients, plus your compute instance's `max_connections`. Read both off your own project instead of hardcoding a number. Use pooler mode for Edge Functions.
+- **Connections**: pool size is not a plan constant. It is an adjustable setting (Database settings in the Dashboard) that Supavisor and PgBouncer both read but apply independently, capping the connections a pooler opens to Postgres. The tier-dependent ceiling is a separate "max pooler clients" limit on concurrent clients, plus your compute instance's `max_connections`. Read both off your own project instead of hardcoding a number. Use pooler mode for Edge Functions.
 - **Region**: pick the closest available region to your users and measure it, rather than trusting a quoted latency figure. `eu-central-1` (Frankfurt) is the usual European choice for Israeli traffic.
 
 ### Realtime for Hebrew Content

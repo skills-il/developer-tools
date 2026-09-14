@@ -483,9 +483,9 @@ const supabase = createClient(
 
 For Israeli SaaS apps on Supabase, connection pooling is critical:
 
-- **Supavisor** (Supabase's shared pooler): `aws-[region].pooler.supabase.com` on port **6543** for transaction mode, port **5432** for session mode. Supabase writes the host as the `aws-[region]` placeholder, copy the exact string from your project's Connect dialog rather than hardcoding a prefix.
+- **Supavisor** (Supabase's shared pooler): `aws-[INDEX]-[REGION].pooler.supabase.com` on port **6543** for transaction mode, port **5432** for session mode. `[INDEX]` is a pooler cluster index that cannot be worked out from the region, so copy the exact string from your project's Connect dialog rather than hardcoding a prefix such as `aws-0-`.
 - **PgBouncer**: available as Supabase's dedicated pooler, and the usual choice when self-hosting.
-- **Pool size is not a plan constant.** It is one setting that Supavisor and PgBouncer both reference, capping the server-side connections a pooler opens to Postgres. What varies by compute tier is a separate "max pooler clients" ceiling on how many clients may connect to a pooler at once, alongside your instance's Postgres `max_connections`. Read the current numbers off your own project rather than hardcoding any figure.
+- **Pool size is not a plan constant.** It is an adjustable setting (Database settings in the Dashboard) that Supavisor and PgBouncer both read but apply independently, capping the connections a pooler opens to Postgres. What varies by compute tier is a separate "max pooler clients" ceiling on how many clients may connect to a pooler at once, alongside your instance's Postgres `max_connections`. Read the current numbers off your own project rather than hardcoding any figure.
 
 ### Index Strategies for Hebrew Text
 
