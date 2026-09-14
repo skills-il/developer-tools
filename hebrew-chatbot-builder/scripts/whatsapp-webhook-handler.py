@@ -52,6 +52,14 @@ GRAPH_API_URL = f"https://graph.facebook.com/{GRAPH_API_VERSION}/{PHONE_NUMBER_I
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("whatsapp-bot")
 
+# WHATSAPP_ACCESS_TOKEN was renamed to FACEBOOK_ACCESS_TOKEN and is no longer read.
+# Checked at import time so it is logged under gunicorn as well as the dev server.
+if not ACCESS_TOKEN and os.environ.get("WHATSAPP_ACCESS_TOKEN"):
+    logger.error(
+        "WHATSAPP_ACCESS_TOKEN was renamed to FACEBOOK_ACCESS_TOKEN and is no longer read. "
+        "Rename the variable in your environment and restart."
+    )
+
 # Flask app
 app = Flask(__name__)
 
@@ -486,6 +494,7 @@ if __name__ == "__main__":
         missing.append("WHATSAPP_APP_SECRET")
     if not ACCESS_TOKEN:
         missing.append("FACEBOOK_ACCESS_TOKEN")
+
     if not PHONE_NUMBER_ID:
         missing.append("WHATSAPP_PHONE_ID")
 

@@ -1001,3 +1001,7 @@ And reference documents in `references/`:
 **RTL chat widget text aligns left despite `direction: rtl`**
 - Cause: A child element overrides the direction, or the CSS is applied to the wrong container. Common when using a UI framework that sets `direction: ltr` at the body level.
 - Solution: Set `dir="rtl"` on the outermost chat container HTML element (not just CSS). Also add `direction: rtl` to the input field and any message bubble containers individually. Inspect with browser DevTools to find where the override occurs.
+
+**Webhook handler logs "WHATSAPP_ACCESS_TOKEN was renamed to FACEBOOK_ACCESS_TOKEN"**
+- Cause: Renamed environment variable. The bundled `scripts/whatsapp-webhook-handler.py` used to read `WHATSAPP_ACCESS_TOKEN`; it now reads only `FACEBOOK_ACCESS_TOKEN`, so a server configured with the old name has no access token. The error is logged at startup; the local dev server then exits, while under gunicorn or another WSGI server the app keeps running and every outgoing message fails with an authentication error.
+- Solution: Rename the variable wherever it is set (shell profile, `.env`, systemd unit, container or hosting secrets) to `FACEBOOK_ACCESS_TOKEN` and restart. The token value itself does not change.

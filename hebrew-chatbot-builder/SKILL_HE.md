@@ -737,3 +737,7 @@ async def handoff_to_human(user_id: str, context: dict):
 **טקסט RTL בווידג'ט צ'אט מיושר שמאלה למרות `direction: rtl`**
 - סיבה: אלמנט צאצא דורס את הכיוון, או שה-CSS מוחל על המכולה הלא נכונה. נפוץ בשימוש עם framework שמגדיר `direction: ltr` ברמת ה-body.
 - פתרון: הגדירו `dir="rtl"` על אלמנט ה-HTML של מכולת הצ'אט החיצונית (לא רק ב-CSS). הוסיפו גם `direction: rtl` לשדה הקלט ולכל מכולות בועות ההודעות בנפרד. בדקו עם DevTools בדפדפן היכן הדריסה מתרחשת.
+
+**סקריפט ה-webhook רושם ללוג "WHATSAPP_ACCESS_TOKEN was renamed to FACEBOOK_ACCESS_TOKEN"**
+- סיבה: שם משתנה הסביבה השתנה. הסקריפט `scripts/whatsapp-webhook-handler.py` קרא בעבר את `WHATSAPP_ACCESS_TOKEN`, ועכשיו הוא קורא רק את `FACEBOOK_ACCESS_TOKEN`, ולכן לשרת שהוגדר עם השם הישן אין access token. השגיאה נרשמת ללוג בעלייה. שרת הפיתוח המקומי נעצר מיד, אבל תחת gunicorn או שרת WSGI אחר האפליקציה ממשיכה לרוץ וכל הודעה יוצאת נכשלת בשגיאת הרשאה.
+- פתרון: שנו את שם המשתנה בכל מקום שבו הוא מוגדר (פרופיל ה-shell, קובץ `.env`, יחידת systemd, סודות של הקונטיינר או של האחסון) ל-`FACEBOOK_ACCESS_TOKEN` והפעילו מחדש. הערך של הטוקן עצמו לא משתנה.

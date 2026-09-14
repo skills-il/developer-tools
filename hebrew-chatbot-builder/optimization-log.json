@@ -30,6 +30,13 @@
         "Deferred (MINOR, Expert): dead code in the Telegram scaffold (State.WAITING_FEEDBACK unreachable, MAIN_MENU and LANGUAGE_SELECT never assigned, order_not_found and goodbye never referenced, four unused imports); unknown callback_data is silent; four ungrammatical rows in references/hebrew-chatbot-phrases.md, which 1.4.0 made the single source of truth for Hebrew phrasing ('מה מעניינת אותך', 'באיזה עיר', 'קיבלתי, טיפול', and two rows printing identical strings as a masculine/feminine pair); physical CSS (text-align:left, border-bottom-right-radius, unconditional scaleX(-1)) in the web widget breaks when the skill's own detectDirection flips a bubble to LTR; the detect_intent confidence is phrase-length over text-length, so long informative Hebrew messages score lowest; the nikud caveat is documented but the strip is not wired into the function; the Graph version constant is honoured in scripts/ but SKILL.md and the reference guide still hardcode v25.0 in six places.",
         "Process note: the Phase 5.6 Independent Judge could not be dispatched this cycle (the subagent call was refused by the permission layer). Substituted deterministically: verify-evidence.py --check-sources --allow-unreachable exited 0 with 0 FAILED snippets, every version fact was re-fetched from the vendor's own changelog, and the Expert independently re-confirmed Bot API 10.3 and the v25.0 support window against primary sources. Disclosed rather than treated as a pass."
       ]
+    },
+    {
+      "version": "1.5.2",
+      "date": "2026-09-14",
+      "lessons": [
+        "Env var rename (Cisco CORRELATED_SENSITIVE_NETWORK_FLOW remediation) broke users on the old name. A fallback that reads both names re-triggers HIGH because the correlation analyzer unions provider tokens from every contributing env name and requires exactly one; shipped a migration error message plus a troubleshooting entry instead."
+      ]
     }
   ]
 }
