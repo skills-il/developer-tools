@@ -1,0 +1,30 @@
+{
+  "cycles": [
+    {
+      "version": "1.1.0",
+      "date": "2026-09-20",
+      "holdout_before": 1.0,
+      "holdout_after": 1.0,
+      "buckets": {
+        "improved": [],
+        "regressed": [],
+        "persistent_fail": [],
+        "stable_success": [
+          "My fixed accessibility button jumps to the bottom of the page when I turn on high contrast",
+          "Is my small business exempt from the Israeli website accessibility regulations?",
+          "I need a self-hosted accessibility menu instead of paying for AccessiBe on my Israeli site"
+        ]
+      },
+      "lessons": [
+        "First review of this skill since it was contributed. The legal floor was wrong: it presented WCAG 2.1 AA as equal to ת\"י 5568, which is WCAG 2.0-based (May 2021 Part 1). Corrected, with 2.1/2.2 framed as a stricter target.",
+        "The statement contents were misaligned with תקנה 35ה: the one item that applies to everyone (a contact route for reporting a missing adaptation) was missing, while the coordinator was presented as universal though the law requires one only from 25 employees (s.19מב).",
+        "Widget-equals-compliance framing removed from the body, both descriptions and the statement template, which had the site assert full WCAG 2.1 AA conformance unconditionally. Template now defaults to partial conformance with placeholders (Tier C safe harbour) and cites the FTC accessiBe order.",
+        "Five code defects found by review and two more by the arithmetic pass: persist-before-restore wiped saved settings on every load; the RTL thumb had no physical anchor; the on-offset was 21px where 44-18-3=23; textLarge/textSmall could both be set; var(--red) was undefined so focus outlines silently vanished; the toggle was sized in rem while the widget itself changes the root font size; and contrast mode blacked out the widget's own switches.",
+        "Lesson for any widget skill: a feature that changes the root font size cannot size its own controls in rem, and a mode that recolours everything must exempt the control surface that operates it.",
+        "Overlap with israeli-accessibility-compliance measured 0.757 before the description was narrowed. The boundary now names that slug for exemptions, enforcement and full-site audits, and overlap fell below the warn threshold.",
+        "Deferred over the batch discretionary cap: a worked axe/keyboard/screen-reader verification walkthrough; i18n of the panel labels (currently Hebrew only); prefers-contrast and forced-colors handling; background-image and box-shadow survival in contrast mode; the 3 cosmetic round-2 nits were fixed rather than deferred.",
+        "Not verified this cycle: whether an edition of ת\"י 5568 later than May 2021 adopts WCAG 2.1 (sii.org.il was not reachable for a paid standard). Re-check next cycle before changing the WCAG-version statement."
+      ]
+    }
+  ]
+}

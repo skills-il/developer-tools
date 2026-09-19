@@ -1,7 +1,7 @@
 {
   "name": "wcag-accessibility-widget",
   "author": "Tura2",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "category": "developer-tools",
   "tags": {
     "he": [
@@ -28,8 +28,8 @@
     "en": "WCAG Accessibility Widget"
   },
   "display_description": {
-    "he": "בנה ווידג'ט נגישות עצמאי לאתרי אינטרנט ישראליים בהתאם ל-WCAG 2.1 AA / ת\"י 5568. השתמשו כשבונים ווידג'ט נגישות, מיישמים דרישות חוק שוויון זכויות לאנשים עם מוגבלות, יוצרים דף הצהרת נגישות, או מאבחנים אלמנטים position:fixed שנשברים בעת שימוש ב-CSS filter. מכסה ניגודיות גבוהה, גודל גופן, ניווט מקלדת, גופן קריא, סימון כותרות וקישורים — ללא שירות צד שלישי. אל תשתמשו עבור שירותי accessibility overlay כמו UserWay או AccessiBe.",
-    "en": "Build a self-hosted floating accessibility widget for Israeli websites compliant with WCAG 2.1 AA / ת\"י 5568 (Israeli Standard). Use when building an accessibility widget, implementing Israeli accessibility law (חוק שוויון זכויות לאנשים עם מוגבלות), creating an הצהרת נגישות (accessibility declaration) page, or debugging position:fixed elements that break under CSS filter. Covers high contrast, font size scaling, keyboard nav highlighting, readable font, heading/link markers — no third-party service required. Do NOT use for third-party accessibility overlays (UserWay, AccessiBe) or non-Israeli WCAG audits."
+    "en": "Not legal advice. Build a self-hosted accessibility preferences widget for Israeli React or Next.js websites (high contrast, font size, keyboard focus highlighting, readable font, heading and link markers, stop animations) and the הצהרת נגישות statement page, framed correctly against the Israeli legal floor (ת\"י 5568 at level AA, based on WCAG 2.0). Use when building an accessibility widget or toolbar, adding the accessibility statement page, making the toggles work in RTL, or debugging position:fixed elements that break under CSS filter. The widget is a comfort tool and does not by itself make a site compliant. Do NOT use for third-party overlay services (UserWay, AccessiBe), non-Israeli WCAG audits, or exemption, enforcement and full-site compliance questions (use israeli-accessibility-compliance).",
+    "he": "אינו ייעוץ משפטי. בניית ווידג'ט העדפות נגישות עצמאי לאתרי React או Next.js ישראליים (ניגודיות גבוהה, גודל גופן, הדגשת פוקוס מקלדת, גופן קריא, סימון כותרות וקישורים, עצירת אנימציות) ודף הצהרת נגישות, במסגור נכון מול הרף החוקי בישראל (ת\"י 5568 ברמה AA, מבוסס WCAG 2.0). השתמשו כשבונים ווידג'ט או סרגל נגישות, מוסיפים דף הצהרת נגישות, מתקנים מתגים שנשברים ב-RTL, או מאבחנים אלמנטים position:fixed שנשברים תחת CSS filter. הווידג'ט הוא כלי נוחות ואינו הופך אתר לנגיש כדין בפני עצמו. אל תשתמשו עבור שירותי overlay של צד שלישי (UserWay, AccessiBe), ביקורות WCAG שאינן ישראליות, או שאלות של פטורים, אכיפה ובדיקת ציות מלאה של אתר (השתמשו ב-israeli-accessibility-compliance)."
   },
   "supported_agents": [
     "claude-code",

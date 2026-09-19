@@ -1,153 +1,417 @@
 {
   "schemaVersion": "1.0",
-  "version": "1.0",
   "skill": "wcag-accessibility-widget",
-  "verified_date": "2026-08",
+  "generated_at": "2026-09-20T00:30:00Z",
   "claims": [
     {
-      "id": "claim-001",
+      "claim_id": "claim-001",
       "claim": "WCAG 2.1 Level AA requires normal text contrast ratio of at least 4.5:1",
       "source_url": "https://www.w3.org/TR/WCAG21/#contrast-minimum",
-      "source_title": "W3C WCAG 2.1 - Success Criterion 1.4.3 Contrast (Minimum)",
       "raw_snippet": "The visual presentation of text and images of text has a contrast ratio of at least 4.5:1",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "claim-002",
+      "claim_id": "claim-002",
       "claim": "WCAG 2.1 Level AA requires large text contrast ratio of at least 3:1",
       "source_url": "https://www.w3.org/TR/WCAG21/#contrast-minimum",
-      "source_title": "W3C WCAG 2.1 - Success Criterion 1.4.3 Contrast (Minimum)",
       "raw_snippet": "Large-scale text and images of large-scale text have a contrast ratio of at least 3:1",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "claim-005",
+      "claim_id": "claim-005",
       "claim": "CSS filter on an ancestor changes the containing block of a position:fixed element, so the fixed element is positioned relative to that ancestor instead of the viewport",
       "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/position",
-      "source_title": "MDN Web Docs - CSS position (fixed positioning containing block)",
       "raw_snippet": "unless any ancestor has transform , perspective , or filter property set to something other than none",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "claim-006",
+      "claim_id": "claim-006",
       "claim": "The default human language of the page must be programmatically determinable, which is what the html lang attribute provides (WCAG 2.1 SC 3.1.1)",
       "source_url": "https://www.w3.org/TR/WCAG21/#language-of-page",
-      "source_title": "W3C WCAG 2.1 - Success Criterion 3.1.1 Language of Page",
       "raw_snippet": "The default human language of each web page can be programmatically determined",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "claim-007",
+      "claim_id": "claim-007",
       "claim": "All interactive elements must be operable by keyboard per WCAG 2.1 Success Criterion 2.1.1",
       "source_url": "https://www.w3.org/TR/WCAG21/#keyboard",
-      "source_title": "W3C WCAG 2.1 - Success Criterion 2.1.1 Keyboard",
       "raw_snippet": "All functionality of the content is operable through a keyboard interface without requiring specific timings for individual keystrokes",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "claim-008",
+      "claim_id": "claim-008",
       "claim": "Purely decorative non-text content must be implemented so assistive technology can ignore it (WCAG 2.1 SC 1.1.1)",
       "source_url": "https://www.w3.org/TR/WCAG21/#non-text-content",
-      "source_title": "W3C WCAG 2.1 - Success Criterion 1.1.1 Non-text Content",
       "raw_snippet": "is used only for visual formatting, or is not presented to users, then it is implemented in a way that it can be ignored by assistive technology",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "claim-009",
+      "claim_id": "claim-009",
       "claim": "localStorage persists data across browser sessions, so it can hold user accessibility preferences",
       "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage",
-      "source_title": "MDN Web Docs - Window.localStorage",
       "raw_snippet": "the stored data is saved across browser sessions",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "ref-001",
-      "claim": "Reference: the full WCAG 2.1 specification is published by W3C at https://www.w3.org/TR/WCAG21/",
+      "claim_id": "ref-001",
+      "claim": "Reference: the WCAG 2.1 specification is published by W3C at https://www.w3.org/TR/WCAG21/",
       "source_url": "https://www.w3.org/TR/WCAG21/",
-      "source_title": "W3C - Web Content Accessibility Guidelines (WCAG) 2.1",
       "raw_snippet": "Web Content Accessibility Guidelines (WCAG) 2.1 covers a wide range of recommendations for making web content more accessible.",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "ref-002",
+      "claim_id": "ref-002",
       "claim": "Reference: W3C WAI publishes a customizable quick reference of WCAG success criteria and techniques",
       "source_url": "https://www.w3.org/WAI/WCAG21/quickref/",
-      "source_title": "W3C WAI - How to Meet WCAG (Quick Reference)",
       "raw_snippet": "A customizable quick reference to Web Content Accessibility Guidelines (WCAG) 2 requirements (success criteria) and techniques.",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "ref-003",
+      "claim_id": "ref-003",
       "claim": "Reference: W3C WAI publishes informative Understanding documents that explain each WCAG 2.1 success criterion",
       "source_url": "https://www.w3.org/WAI/WCAG21/Understanding/",
-      "source_title": "W3C WAI - Understanding WCAG 2.1",
       "raw_snippet": "Understanding documents provide detailed explanations for Web Content Accessibility Guidelines (WCAG) guidelines and success criteria.",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "ref-004",
+      "claim_id": "ref-004",
       "claim": "Reference: the CSS Filter Effects specification states that filter creates a stacking context the same way opacity does",
       "source_url": "https://www.w3.org/TR/filter-effects/#FilterProperty",
-      "source_title": "W3C - Filter Effects Module Level 1, the filter property",
       "raw_snippet": "the same way that CSS opacity does. All the elements descendants are rendered together as a group with the filter effect applied to the group as a whole.",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "ref-005",
+      "claim_id": "ref-005",
       "claim": "Reference: MDN's stacking context page lists filter (with a value other than none) among the properties that create a stacking context",
       "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context",
-      "source_title": "MDN Web Docs - Stacking context",
       "raw_snippet": "Stacking context is a three-dimensional conceptualization of HTML elements along an imaginary z-axis relative to the user",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "ref-006",
+      "claim_id": "ref-006",
       "claim": "Reference: WAVE (WebAIM) is a suite of web accessibility evaluation tools",
       "source_url": "https://wave.webaim.org/",
-      "source_title": "WAVE Web Accessibility Evaluation Tools",
       "raw_snippet": "is a suite of evaluation tools that helps authors make their web content more accessible to individuals with dis",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "ref-007",
+      "claim_id": "ref-007",
       "claim": "Reference: Deque's axe DevTools provides automated accessibility testing for web and mobile",
       "source_url": "https://www.deque.com/axe/devtools/",
-      "source_title": "Deque - Axe DevTools",
       "raw_snippet": "Automated accessibility testing for web and mobile",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "ref-008",
+      "claim_id": "ref-008",
       "claim": "Reference: the Colour Contrast Analyser (CCA) is a free color contrast checker for WCAG color checking",
       "source_url": "https://www.tpgi.com/color-contrast-checker/",
-      "source_title": "Vispero (TPGi) - Colour Contrast Analyser (CCA)",
       "raw_snippet": "One color contrast tool for all your WCAG color checking needs",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "ref-009",
+      "claim_id": "ref-009",
       "claim": "Reference: NV Access develops the NVDA screen reader for blind and vision impaired computer users",
       "source_url": "https://www.nvaccess.org/",
-      "source_title": "NV Access - home of the NVDA screen reader",
       "raw_snippet": "We believe that every Blind + Vision Impaired person Deserves the right to freely & easily access a computer!",
-      "verified": "2026-08"
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/README.md"
+      ]
     },
     {
-      "id": "ref-010",
-      "claim": "Reference: the Standards Institution of Israel is the body that publishes Israeli standards, including the web accessibility standard",
-      "source_url": "https://www.sii.org.il/",
-      "source_title": "מכון התקנים הישראלי - Standards Institution of Israel",
-      "raw_snippet": "שירותי מכון התקנים הישראלי הכל תחת קורת גג אחת!",
-      "verified": "2026-08"
+      "claim_id": "il-reg35-standard-5568",
+      "claim": "Regulation 35 defines the web accessibility standard as Israeli Standard 5568. (תקנה 35)",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA_%28%D7%94%D7%AA%D7%90%D7%9E%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA_%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%29",
+      "raw_snippet": "תקן ישראלי 5568 – קווים מנחים לנגישות תכנים באינטרנט",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
     },
     {
-      "claim_id": "equal-rights-commission-page",
-      "claim": "The Equal Rights Commission for People with Disabilities is at gov.il/he/departments/moj_disability_rights; the old justice.gov.il deep link now redirects to the ministry homepage and no longer serves this page.",
-      "source_url": "https://www.gov.il/he/departments/moj_disability_rights",
-      "raw_snippet": "נציבות שוויון זכויות לאנשים עם מוגבלות",
-      "fetched_at": "2026-08-15",
-      "verified_via": "playwright navigation (page load and h1 read, not fetch status)",
-      "verified_at": "2026-08-15",
+      "claim_id": "il-reg35a-level-aa",
+      "claim": "Regulation 35א(א) requires web services to meet the standard at level AA.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA_%28%D7%94%D7%AA%D7%90%D7%9E%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA_%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%29",
+      "raw_snippet": "בהתאם לקווים המנחים הקבועים בו, ברמה AA",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-reg35a-documents-2017",
+      "claim": "A document such as a PDF prepared from 26 October 2017 and uploaded to the site must be accessible (35א(ג)).",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA_%28%D7%94%D7%AA%D7%90%D7%9E%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA_%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%29",
+      "raw_snippet": "מסמך שהוכן מיום ו׳ בחשוון התשע״ח (26 באוקטובר 2017) ואילך, כגון מסמך pdf",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-reg35a-60-days",
+      "claim": "A deviation is not a breach unless notice was sent and not fixed within a reasonable time, no later than 60 days (35א(ד)).",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA_%28%D7%94%D7%AA%D7%90%D7%9E%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA_%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%29",
+      "raw_snippet": "לא יאוחר מ־60 ימים מיום קבלת ההודעה",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-reg35d-captions-5m",
+      "claim": "Captions (SC 1.2.2) for prerecorded video apply to public authorities and to businesses with average turnover above 5 million NIS that edit or produce recorded video (35ד).",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA_%28%D7%94%D7%AA%D7%90%D7%9E%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA_%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%29",
+      "raw_snippet": "חייב שהמחזור הממוצע שלו עולה על 5 מיליון שקלים העורך או מפיק תוכני וידיאו מוקלטים",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-reg35d-caption-sc",
+      "claim": "The captions requirement is SC 1.2.2 Captions (Prerecorded).",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA_%28%D7%94%D7%AA%D7%90%D7%9E%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA_%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%29",
+      "raw_snippet": "בסעיף 1.2.2 Captions (Prerecorded)",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-reg35vav-exempt-100k",
+      "claim": "An osek patur or a business with average annual turnover not exceeding 100,000 NIS is exempt from the web accessibility chapter (35ו(ז)).",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA_%28%D7%94%D7%AA%D7%90%D7%9E%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA_%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%29",
+      "raw_snippet": "שהמחזור השנתי הממוצע שלו אינו עולה על 100,000 שקלים חדשים, יהיה פטור",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-reg35vav-exemption-in-statement",
+      "claim": "A holder of a 35ו exemption must provide alternative accessibility and publish the exemption and alternatives in the accessibility statement (35ו(ג)).",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA_%28%D7%94%D7%AA%D7%90%D7%9E%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA_%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%29",
+      "raw_snippet": "יספק נגישות חלופית ויפרסם בהצהרת הנגישות",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-reg35he-statement-prominent",
+      "claim": "Regulation 35ה requires an accessibility statement in a prominent place on the site and in any app.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA_%28%D7%94%D7%AA%D7%90%D7%9E%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA_%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%29",
+      "raw_snippet": "חייב יציין במקום בולט באתר האינטרנט שלו",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-reg35he-statement-contents",
+      "claim": "The statement includes the adaptations made, the coordinator's details if one must be appointed, and contact details for reporting a missing adaptation or requesting one.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA_%28%D7%94%D7%AA%D7%90%D7%9E%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA_%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%29",
+      "raw_snippet": "ופרטים המאפשרים יצירת קשר לצורך הודעה על העדר התאמות נגישות",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-reg35he-coordinator-if-obliged",
+      "claim": "The coordinator's details are required only if the owner is obliged to appoint one.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA_%28%D7%94%D7%AA%D7%90%D7%9E%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA_%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%29",
+      "raw_snippet": "אם מחויב למנותו",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-law-19mb-coordinator-25",
+      "claim": "A public-service provider employing at least 25 employees must appoint an accessibility coordinator (s.19מב). (סעיף 19מב)",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA",
+      "raw_snippet": "המעסיק 25 עובדים לפחות ימנה מקרב עובדיו",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-law-19na-50000",
+      "claim": "A court may award up to 50,000 NIS without proof of damage for a breach of the accessibility provisions (s.19נא(ב)). (סעיף 19נא)",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA",
+      "raw_snippet": "פיצויים בסכום שלא יעלה על 50,000 שקלים חדשים, בלא הוכחת נזק",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "il-law-19na-indexed",
+      "claim": "The 50,000 NIS amount is updated annually by the consumer price index.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%A9%D7%95%D7%95%D7%99%D7%95%D7%9F_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%9E%D7%95%D7%92%D7%91%D7%9C%D7%95%D7%AA",
+      "raw_snippet": "יעודכן אחת לשנה בהתאם לשיעור עליית המדד",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "is-5568-2021-wcag20",
+      "claim": "ת\"י 5568 Part 1 (May 2021) replaced the March 2013 edition and adopts WCAG 2.0 (December 2008) with national changes.",
+      "source_url": "https://www.isoc.org.il/files/docs/5568.pdf",
+      "raw_snippet": "Web Content Accessibility Guidelines (WCAG) 2.0",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "pdf",
+      "verified_at": "2026-09-20"
+    },
+    {
+      "claim_id": "wcag22-backward",
+      "claim": "W3C: content that conforms to WCAG 2.2 also conforms to WCAG 2.0 and WCAG 2.1.",
+      "source_url": "https://www.w3.org/TR/WCAG22/",
+      "raw_snippet": "Content that conforms to WCAG 2.2 also conforms to WCAG 2.0 and WCAG 2.1",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "ftc-accessibe-final-order",
+      "claim": "In April 2025 the FTC approved a final order requiring accessiBe to pay $1 million over claims that accessWidget could make any website WCAG-compliant.",
+      "source_url": "https://www.ftc.gov/news-events/news/press-releases/2025/04/ftc-approves-final-order-requiring-accessibe-pay-1-million",
+      "raw_snippet": "The order prohibits accessiBe from making misleading claims and requires the company to pay $1 million",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "tailwind-v3-grays",
+      "claim": "Tailwind v3 gray-400 is #9ca3af, gray-500 #6b7280, gray-800 #1f2937, gray-900 #111827; computed WCAG contrast: gray-500 on gray-900 3.67:1, on gray-800 3.04:1; gray-400 on gray-900 6.99:1. The track geometry 44 - 18 - 3 = 23px gives the on offset.",
+      "source_url": "https://v3.tailwindcss.com/docs/customizing-colors",
+      "raw_snippet": "400 #9ca3af 500 #6b7280 600 #4b5563 700 #374151 800 #1f2937 900 #111827",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "wcag-1-4-4-200",
+      "claim": "WCAG SC 1.4.4 Resize Text: text can be resized up to 200% without loss of content or functionality.",
+      "source_url": "https://www.w3.org/TR/WCAG21/",
+      "raw_snippet": "can be resized without assistive technology up to 200 percent without loss of content or functionality",
+      "fetched_at": "2026-09-20T00:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "font-steps-are-design-choices",
+      "claim": "The widget's font-size steps (88% and 115% on the root element) are implementation choices of this skill, not values required by any standard. The standard requirement is WCAG SC 1.4.4, resize up to 200 percent, which browser zoom provides.",
+      "source_url": "https://www.w3.org/TR/WCAG21/",
+      "raw_snippet": "can be resized without assistive technology up to 200 percent without loss of content or functionality",
+      "fetched_at": "2026-09-20T00:30:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
