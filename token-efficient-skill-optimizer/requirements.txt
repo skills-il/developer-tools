@@ -1,0 +1,4 @@
+pyyaml>=6.0,<7.0
+# optional - enables the tiktoken rung of the token ladder;
+# without it measure_tokens falls back to the heuristic rung and says so.
+# tiktoken>=0.7

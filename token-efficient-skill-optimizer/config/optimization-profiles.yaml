@@ -1,0 +1,30 @@
+# Optimization profiles — which rule tiers apply, and how strictly gated.
+profiles:
+  conservative:
+    rule_tiers: [1, S]
+    tier2_allowed: false
+    tier3_allowed: false
+    require_validation_per_change: true
+    description_changes: require_user_signoff
+    use_when:
+      - accuracy-critical or regulated domain
+      - little or no eval data for the target
+      - target already measures as efficient
+  balanced:
+    default: true
+    rule_tiers: [1, 2, S]
+    tier2_allowed: true          # each application gated by its validation_test
+    tier3_allowed: false
+    require_validation_per_change: true
+    description_changes: flag_separately
+  aggressive:
+    rule_tiers: [1, 2, 3, S]
+    tier2_allowed: true
+    tier3_allowed: true          # only with explicit user opt-in AND an eval
+    require_validation_per_change: true
+    require_benchmark: true
+    require_rollback_plan: true
+    description_changes: flag_separately
+    disclosure: "must state uncertainty and tradeoffs in the report"
+
+# Safety tier S is active in EVERY profile and cannot be disabled by config.
