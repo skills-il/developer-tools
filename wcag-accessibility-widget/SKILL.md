@@ -233,7 +233,7 @@ html.a11y-contrast select, html.a11y-contrast button {
 html.a11y-contrast ::placeholder { color: #d9d9d9 !important; opacity: 1; }
 /* The widget must stay readable in its own mode: keep the switch visible.
    State is carried by thumb position and aria-checked, not by colour alone. */
-html.a11y-contrast { --a11y-mark: #ff5252; }
+html.a11y-contrast { --a11y-mark: #ff5252; background-color: #000 !important; }
 html.a11y-contrast [role="switch"] > span[aria-hidden="true"] {
   /* box-shadow, not border: a border would be drawn inside the 44x24 track
      under box-sizing: border-box and shift the thumb */
@@ -247,8 +247,16 @@ html.a11y-contrast [role="switch"] > span[aria-hidden="true"] > span {
 html.a11y-font-lg { font-size: 115%; }
 html.a11y-font-sm { font-size: 88%; }
 
-/* Readable font: leave icon fonts and code alone */
-html.a11y-readable body *:not(i):not(svg):not(svg *):not(code):not(pre):not([class*="icon"]) {
+/* Readable font: leave icon fonts and bare <code> / <pre> text alone.
+   Simple selectors only inside :not(). A complex argument such as
+   :not(svg *) invalidates the WHOLE rule on an older engine without
+   Selectors 4 support, and the mode then silently does nothing, which is
+   worse than the thing it guards against. Two consequences to know:
+   text inside an <svg> gets the readable font (SVG <text> is real content,
+   and a chart that sets its own font is overridden), and the spans inside a
+   highlighted code block are matched even though <code> and <pre> are not,
+   so a syntax-highlighted block renders mixed. */
+html.a11y-readable body *:not(i):not(svg):not(code):not(pre):not([class*="icon"]) {
   font-family: Arial, Helvetica, sans-serif !important;
   letter-spacing: 0.015em;
 }
