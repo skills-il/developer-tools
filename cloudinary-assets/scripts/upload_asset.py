@@ -14,6 +14,7 @@ Usage:
     python upload_asset.py responsive --public-id products/photo
     python upload_asset.py list --type image --max 30
     python upload_asset.py delete --public-id products/photo
+    python upload_asset.py transform --public-id clips/intro --resource-type video
 
 Environment variables:
     CLOUDINARY_URL: cloudinary://API_KEY:API_SECRET@CLOUD_NAME
@@ -45,8 +46,12 @@ except ImportError:
 HTTP_TIMEOUT = (10, 180)
 
 
-def get_cloudinary_config():
+def get_cloudinary_config(require_secret: bool = True):
     """Get Cloudinary configuration from environment variables.
+
+    Args:
+        require_secret: False for the pure URL builders (transform,
+            responsive), which need the cloud name only.
 
     Returns:
         Dictionary with cloud_name, api_key, api_secret
@@ -65,7 +70,8 @@ def get_cloudinary_config():
             "api_key": urllib.parse.unquote(parsed.username or ""),
             "api_secret": urllib.parse.unquote(parsed.password or ""),
         }
-        missing = [k for k, v in cfg.items() if not v]
+        missing = [k for k, v in cfg.items()
+                   if not v and (require_secret or k == "cloud_name")]
         if missing:
             print(f"ERROR: CLOUDINARY_URL is missing {', '.join(missing)}. "
                   "Expected cloudinary://API_KEY:API_SECRET@CLOUD_NAME",
@@ -100,9 +106,27 @@ def generate_signature(params: dict, api_secret: str) -> str:
     """
     sorted_params = "&".join(
         f"{k}={v}" for k, v in sorted(params.items())
-        if v is not None and k not in ("file", "cloud_name", "api_key", "resource_type")
+        if v is not None
+        and k not in ("file", "cloud_name", "api_key", "resource_type", "signature")
     )
     return hashlib.sha1(f"{sorted_params}{api_secret}".encode()).hexdigest()
+
+
+# Cloudinary requires chunked upload (the SDKs' upload_large) for any file over
+# 100 MB. A single multipart POST of a bigger file fails, so refuse it up front.
+MAX_SINGLE_REQUEST_BYTES = 100 * 1024 * 1024
+
+
+def check_single_request_size(file_path: str) -> None:
+    size = os.path.getsize(file_path)
+    if size > MAX_SINGLE_REQUEST_BYTES:
+        raise ValueError(
+            f"{file_path} is {size / 1048576:.0f} MB. Files over 100 MB must use "
+            "chunked upload: the official SDK's upload_large "
+            "(cloudinary.uploader.upload_large in Python, "
+            "cloudinary.v2.uploader.upload_large in Node), passing "
+            "resource_type='video' for a video (upload_large otherwise falls "
+            "back to raw). Chunking does not raise your plan's max file size.")
 
 
 def upload_image(file_path: str, config: dict, folder: str = "",
@@ -126,6 +150,7 @@ def upload_image(file_path: str, config: dict, folder: str = "",
     Returns:
         Upload response from Cloudinary
     """
+    check_single_request_size(file_path)
     timestamp = str(int(time.time()))
 
     params = {"timestamp": timestamp}
@@ -172,6 +197,7 @@ def upload_video(file_path: str, config: dict, folder: str = "",
     Returns:
         Upload response
     """
+    check_single_request_size(file_path)
     timestamp = str(int(time.time()))
 
     params = {"timestamp": timestamp}
@@ -202,18 +228,41 @@ def upload_video(file_path: str, config: dict, folder: str = "",
     return response.json()
 
 
+# g_face / g_faces are only valid with these crop modes; anything else is a
+# guaranteed HTTP 400 ("Face gravity can only be used with crop, fill, thumb,
+# lfill, fill_pad, auto, auto_pad").
+FACE_GRAVITY_CROPS = {"crop", "fill", "thumb", "lfill", "fill_pad", "auto", "auto_pad"}
+
+
+def encode_public_id(public_id: str) -> str:
+    """Percent-encode a public ID for a delivery URL, keeping folder slashes.
+
+    A raw space or Hebrew character makes the URL malformed (curl exits 3).
+    """
+    return urllib.parse.quote(public_id, safe="/")
+
+
 def build_transform_url(cloud_name: str, public_id: str,
-                         transformations: dict) -> str:
+                         transformations: dict,
+                         resource_type: str = "image") -> str:
     """Build a Cloudinary transformation URL.
 
     Args:
         cloud_name: Cloudinary cloud name
         public_id: Asset public ID
         transformations: Dict of transformation parameters
+        resource_type: image or video. A video public ID under /image/upload/
+            is a different (non-existent) asset and returns 404.
 
     Returns:
         Complete transformation URL
     """
+    gravity = transformations.get("gravity", "")
+    crop = transformations.get("crop")
+    if gravity in ("face", "faces") and crop not in FACE_GRAVITY_CROPS:
+        raise ValueError(
+            f"g_{gravity} is only valid with c_ one of "
+            f"{', '.join(sorted(FACE_GRAVITY_CROPS))}; got c_{crop}")
     parts = []
     if "width" in transformations:
         parts.append(f"w_{transformations['width']}")
@@ -226,7 +275,12 @@ def build_transform_url(cloud_name: str, public_id: str,
     if "quality" in transformations:
         parts.append(f"q_{transformations['quality']}")
     if "format" in transformations:
-        parts.append(f"f_{transformations['format']}")
+        fmt = transformations["format"]
+        # A video URL without an extension needs f_auto:video, or a browser
+        # whose Accept header lists image types gets an AVIF still instead.
+        if fmt == "auto" and resource_type == "video":
+            fmt = "auto:video"
+        parts.append(f"f_{fmt}")
     if "radius" in transformations:
         parts.append(f"r_{transformations['radius']}")
     if "effect" in transformations:
@@ -235,11 +289,12 @@ def build_transform_url(cloud_name: str, public_id: str,
         parts.append(f"dpr_{transformations['dpr']}")
 
     transform_str = ",".join(parts) if parts else ""
-    base = f"https://res.cloudinary.com/{cloud_name}/image/upload"
+    base = f"https://res.cloudinary.com/{cloud_name}/{resource_type}/upload"
+    pid = encode_public_id(public_id)
 
     if transform_str:
-        return f"{base}/{transform_str}/{public_id}"
-    return f"{base}/{public_id}"
+        return f"{base}/{transform_str}/{pid}"
+    return f"{base}/{pid}"
 
 
 def get_responsive_urls(cloud_name: str, public_id: str,
@@ -258,13 +313,18 @@ def get_responsive_urls(cloud_name: str, public_id: str,
         widths = [320, 640, 960, 1280, 1920]
 
     base = f"https://res.cloudinary.com/{cloud_name}/image/upload"
+    pid = encode_public_id(public_id)
     urls = {}
     for w in widths:
-        urls[w] = f"{base}/w_{w},q_auto,f_auto/{public_id}"
+        # c_limit: never upscale a small original. Without it w_1920 on an
+        # 864px source delivers a 1920px image, wasting bytes.
+        urls[w] = f"{base}/w_{w},c_limit,q_auto,f_auto/{pid}"
 
     srcset = ", ".join(f"{url} {w}w" for w, url in urls.items())
 
-    default_url = f"{base}/w_800,q_auto,f_auto/{public_id}"
+    # Reuse a srcset entry for src so it does not create one more derived asset.
+    default_w = min(widths, key=lambda w: abs(w - 800))
+    default_url = urls[default_w]
     html = (
         f'<img\n'
         f'  src="{default_url}"\n'
@@ -327,7 +387,7 @@ def list_assets(config: dict, resource_type: str = "image",
 
 
 def delete_asset(public_id: str, config: dict,
-                 resource_type: str = "image") -> dict:
+                 resource_type: str = "image", invalidate: bool = True) -> dict:
     """Delete an asset from Cloudinary.
 
     The destroy endpoint is per resource type. Calling the image endpoint for a
@@ -338,20 +398,23 @@ def delete_asset(public_id: str, config: dict,
         public_id: Asset public ID
         config: Cloudinary config dict
         resource_type: image, video or raw. Must match how it was uploaded.
+        invalidate: Also purge CDN copies. Without it, delivered versions can
+            stay cached on the CDN for up to 30 days after deletion.
 
     Returns:
         Deletion response
     """
     timestamp = str(int(time.time()))
     params = {"public_id": public_id, "timestamp": timestamp}
+    if invalidate:
+        params["invalidate"] = "true"  # signed like every other parameter
     signature = generate_signature(params, config["api_secret"])
 
     url = (f"https://api.cloudinary.com/v1_1/{config['cloud_name']}"
            f"/{resource_type}/destroy")
     response = requests.post(url, data={
-        "public_id": public_id,
+        **params,
         "api_key": config["api_key"],
-        "timestamp": timestamp,
         "signature": signature,
     }, timeout=HTTP_TIMEOUT)
     response.raise_for_status()
@@ -379,9 +442,11 @@ def main():
     tr.add_argument("--public-id", required=True, help="Asset public ID")
     tr.add_argument("--width", type=int, help="Width")
     tr.add_argument("--height", type=int, help="Height")
-    tr.add_argument("--crop", default="fill",
-                    choices=["fill", "fit", "limit", "pad", "thumb", "crop"],
-                    help="Crop mode")
+    tr.add_argument("--crop", default=None,
+                    choices=["fill", "fit", "limit", "pad", "thumb", "crop", "scale"],
+                    help="Crop mode (default: fill, applied only when a width or height is set)")
+    tr.add_argument("--resource-type", default="image", choices=["image", "video"],
+                    help="Delivery type of the asset")
     tr.add_argument("--gravity", help="Gravity (face, center, auto, etc.)")
     tr.add_argument("--quality", default="auto", help="Quality (auto, 80, etc.)")
     tr.add_argument("--format", default="auto", help="Format (auto, webp, jpg, etc.)")
@@ -406,6 +471,8 @@ def main():
     dl.add_argument("--type", default="image",
                     choices=["image", "video", "raw"],
                     help="Resource type; must match how the asset was uploaded")
+    dl.add_argument("--no-invalidate", action="store_true",
+                    help="Do not purge CDN copies (they can stay cached up to 30 days)")
 
     args = parser.parse_args()
 
@@ -413,11 +480,12 @@ def main():
         parser.print_help()
         return
 
-    config = get_cloudinary_config()
+    url_only = args.command in ("transform", "responsive")
+    config = get_cloudinary_config(require_secret=not url_only)
     # transform and responsive are pure URL builders: they need cloud_name only,
     # never the API secret. Requiring full credentials for them locked users out
     # of generating delivery URLs for a public cloud.
-    if not config and args.command in ("transform", "responsive"):
+    if not config and url_only:
         cloud_only = os.environ.get('CLOUDINARY_CLOUD_NAME')
         if cloud_only:
             config = {"cloud_name": cloud_only, "api_key": "", "api_secret": ""}
@@ -452,7 +520,8 @@ def main():
             opt_url = build_transform_url(
                 config["cloud_name"],
                 result.get("public_id", ""),
-                {"quality": "auto", "format": "auto"}
+                {"quality": "auto", "format": "auto"},
+                resource_type="video" if args.video else "image",
             )
             print(f"\nOptimized:  {opt_url}")
 
@@ -462,8 +531,11 @@ def main():
                 transforms["width"] = args.width
             if args.height:
                 transforms["height"] = args.height
-            if args.crop:
-                transforms["crop"] = args.crop
+            if args.width or args.height:
+                # A crop mode without a dimension is a no-op; only emit c_ when sized.
+                transforms["crop"] = args.crop or "fill"
+            elif args.crop:
+                print("WARNING: --crop ignored without --width/--height", file=sys.stderr)
             if args.gravity:
                 transforms["gravity"] = args.gravity
             if args.quality:
@@ -471,7 +543,8 @@ def main():
             if args.format:
                 transforms["format"] = args.format
 
-            url = build_transform_url(config["cloud_name"], args.public_id, transforms)
+            url = build_transform_url(config["cloud_name"], args.public_id, transforms,
+                                      resource_type=args.resource_type)
             print(f"Transformation URL:\n{url}")
 
         elif args.command == "responsive":
@@ -499,7 +572,8 @@ def main():
                       f"{r.get('width', '')}x{r.get('height', '')}")
 
         elif args.command == "delete":
-            result = delete_asset(args.public_id, config, resource_type=args.type)
+            result = delete_asset(args.public_id, config, resource_type=args.type,
+                                  invalidate=not args.no_invalidate)
             status = result.get("result", "unknown")
             print(f"Delete {args.public_id}: {status}")
 
@@ -507,15 +581,22 @@ def main():
             parser.print_help()
 
     except requests.exceptions.HTTPError as e:
-        print(f"HTTP Error: {e.response.status_code} - {e.response.text}",
+        # Delivery and many API errors put the reason in X-Cld-Error, not the body.
+        reason = e.response.headers.get("X-Cld-Error", "")
+        print(f"HTTP Error: {e.response.status_code} - {e.response.text}"
+              + (f" (X-Cld-Error: {reason})" if reason else ""),
               file=sys.stderr)
+        if e.response.status_code in (420, 429):
+            print("Rate limited: back off and retry (Admin API: hourly limit; "
+                  "Upload API: reduce concurrency).", file=sys.stderr)
         sys.exit(1)
     except requests.exceptions.RequestException as e:
         print(f"Network error: {e}", file=sys.stderr)
         sys.exit(1)
     except ValueError as e:
-        print(f"Could not parse the Cloudinary response as JSON: {e}",
-              file=sys.stderr)
+        # Raised by our own input checks (file size, face gravity) and by
+        # response.json() on a non-JSON body.
+        print(f"ERROR: {e}", file=sys.stderr)
         sys.exit(1)
     except FileNotFoundError as e:
         print(f"File not found: {e}", file=sys.stderr)

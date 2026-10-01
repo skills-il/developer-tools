@@ -1,6 +1,22 @@
 {
   "cycles": [
     {
+      "version": "1.3.0",
+      "date": "2026-10-01",
+      "lessons": [
+        "CRITICAL fixed: Example 3 called q_auto on .m3u8 'adaptive streaming'; it returns a single-rendition playlist. sp_auto + .m3u8/.mpd is the only adaptive path (live: sp_auto/dog.m3u8 has 3 STREAM-INF variants).",
+        "CRITICAL fixed: references/optimization-guide.md put f_auto in an incoming transformation (docs: never) and in eager (no effect); rewritten to REST form (pipe-separated, signed, eager_async).",
+        "CRITICAL fixed: no browser/Next.js upload path. Added next-cloudinary CldUploadWidget signatureEndpoint + api_sign_request route; CORS gotcha that cited a non-existent 'Allowed CORS origins' setting replaced with the documented fix.",
+        "CRITICAL fixed (judge+expert round 1): the 2026-08-26 cycle wrongly marked per-plan file-size caps 'unpublished'; cloudinary.com/pricing/compare-plans lists Free 10 MB image/100 MB video. Lesson: an aggregator-style pricing compare page can hold numbers the docs pages do not; check it before declaring a figure unpublished.",
+        "CRITICAL fixed: upload_large must get resource_type='video'; SDK source (npm 2.11.0, pycloudinary 1.46.2) falls back to raw, while the docs say image. Code and docs disagree; the skill avoids relying on either default.",
+        "Fixed: unsigned presets have NO per-preset file-size limit (skill said 'lock down max file size'); destroy now sends invalidate=true; c_limit on srcset; 420/429; @google fonts with numeric weight (David Libre/Noto Sans Hebrew ARE usable that way); gen_replace unparenthesized; webhook eddsa_v2; video per-second and sp_auto transformation counts; overwrite+invalidate.",
+        "Script fixes from running it: video URLs went to /image/upload and used bare f_auto (browser gets AVIF); c_fit+g_face produced guaranteed-400 URLs; public IDs not encoded; X-Cld-Error not shown; c_ emitted with no dimension; >100 MB uploads now refused with upload_large guidance.",
+        "[CARRY] resolved: domain-checklist.md bootstrapped; deferred MINORs (eager snippet, l_watermark placeholder, fl_layer_apply, f_auto:video in image table) all resolved.",
+        "[CARRY] Deferred: manual REST chunked upload (Content-Range + X-Unique-Upload-Id) not documented; script still has no chunked path. Public IDs with slashes delivered without /v1/ not invalidated by default (expert claim, unverified this cycle).",
+        "Verified current: npm cloudinary 2.11.0 (adds 429 handling), PyPI 1.46.2, @cloudinary/url-gen 1.22.0 import paths, Free 25 credits, Plus $99/$89 225 credits, Admin API 500/2000 per hour, g_track_person deprecated 2026-08-29 (not used by skill)."
+      ]
+    },
+    {
       "version": "1.2.0",
       "date": "2026-08-26",
       "lessons": [

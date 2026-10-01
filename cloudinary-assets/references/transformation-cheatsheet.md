@@ -65,7 +65,7 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 | e_saturation:{level} | Adjust saturation |
 | e_background_removal | Background removal, built-in (no add-on subscription; not free, bills via special transformation counting) |
 | e_gen_remove:prompt_(text) | AI generative remove |
-| e_gen_replace:from_(a);to_(b) | AI generative replace |
+| e_gen_replace:from_a;to_b | AI generative replace (documented form is unparenthesized; 400 `Invalid input for gen_replace` usually means the `from` object was not found) |
 | e_gen_background_replace:prompt_text | AI generative background swap. NOT parenthesized: prompt_(text) returns HTTP 500 General Error |
 | e_gen_restore | AI restore old/blurry/damaged photos |
 
@@ -73,7 +73,8 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 
 | Parameter | Description |
 |-----------|-------------|
-| l_{public_id} | Image overlay |
+| l_{public_id} | Image overlay (must be a public ID that exists in your account) |
+| fl_layer_apply | Closes a layer component; put the overlay's position (`g_`, `x_`, `y_`) here so the overlay can be transformed separately from the base |
 | l_text:{style}:{text} | Text overlay |
 | o_{0-100} | Opacity of overlay |
 | g_{position} | Overlay position |
@@ -85,7 +86,7 @@ https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_i
 | Parameter | Description |
 |-----------|-------------|
 | dpr_auto | Automatic device pixel ratio. NOT effective inside a named transformation (`t_*`); use it in the inline transformation string |
-| dpr_{1.0-5.0} | Manual DPR |
+| dpr_{value} | Manual DPR (a positive number, e.g. dpr_2.0) |
 | w_auto | Automatic width (needs client hints). NOT effective inside a named transformation (`t_*`); use it in the inline transformation string |
 | fl_progressive | Progressive JPEG |
 | fl_lossy | Allow lossy for PNG/GIF |
@@ -123,12 +124,13 @@ w_50,h_50,c_fill,e_blur:1000,q_10,f_auto
 ```
 
 ### Watermark Overlay
+Replace `{your_logo_public_id}` with a real public ID; a literal `l_watermark` on an account without that asset returns 400 `Resource not found - watermark`.
 ```
-l_watermark,w_200,o_50,g_south_east,x_10,y_10
+l_{your_logo_public_id},w_200,o_50/fl_layer_apply,g_south_east,x_10,y_10
 ```
 
 ### Hebrew Text Overlay
-URL-encode Hebrew characters and pick a Hebrew-capable built-in font: Heebo, Assistant, Rubik, Frank Ruhl Libre, Suez One, Secular One. `David Libre` and `Noto Sans Hebrew` are NOT Cloudinary font families and return HTTP 400 `Unsupported font family`.
+URL-encode Hebrew characters and pick a Hebrew-capable built-in font: Heebo, Assistant, Rubik, Frank Ruhl Libre, Suez One, Secular One. Other Google Fonts (`David Libre`, `Noto Sans Hebrew`) are not built in: the bare name returns HTTP 400 `Unsupported font family`, but `David%20Libre@google_40_700` loads it from Google Fonts. The `@google` form needs a numeric weight (`700`, not `bold`).
 ```
 # "שלום" in Heebo 40 bold, white, bottom of image
 l_text:Heebo_40_bold:%D7%A9%D7%9C%D7%95%D7%9D,co_white,g_south,y_30
@@ -147,7 +149,8 @@ e_gen_remove:prompt_(person)/e_gen_background_replace:prompt_modern%20office
 | h_{height} | Video height |
 | c_fill | Fill and crop |
 | q_auto | Auto quality |
-| f_auto | Auto format (mp4/webm) |
+| f_auto:video | Auto format (mp4/webm); use the `:video` form when the URL has no extension, or an image-Accept request gets an image |
+| sp_auto | Adaptive bitrate streaming; requires a `.m3u8` (HLS) or `.mpd` (DASH) extension. `q_auto` alone on `.m3u8` is a single rendition, not adaptive |
 | so_{seconds} | Start offset |
 | eo_{seconds} | End offset |
 | du_{seconds} | Duration |
@@ -161,7 +164,7 @@ https://res.cloudinary.com/{cloud}/video/upload/so_5,w_800,h_450,c_fill,q_auto,f
 
 ## Rate Limits
 
-The Free plan is rate-limited to 500 Admin API requests per hour and 25 monthly credits shared across transformations, storage and bandwidth (each credit equals 1,000 transformations or 1 GB managed storage or 1 GB IMAGE bandwidth; video bandwidth is 2 GB per credit and paid plans only). Cloudinary's published Admin API doc states paid plans "begin at 2,000 requests per hour" and rise per tier; check the current pricing page or your plan dashboard for the exact limit on Plus, Advanced, and Enterprise tiers.
+The Free plan is rate-limited to 500 Admin API requests per hour and 25 monthly credits shared across transformations, storage and bandwidth (each credit equals 1,000 transformations or 1 GB managed storage or 1 GB IMAGE bandwidth; video bandwidth is 2 GB per credit and paid plans only). Cloudinary's Admin API doc states that the hourly rate limit for paid plans begins at 2000 requests and rises per tier; check the current pricing page or your plan dashboard for the exact limit on Plus, Advanced, and Enterprise tiers.
 
 ## Environment Setup
 

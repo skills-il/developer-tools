@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "cloudinary-assets",
-  "generated_at": "2026-08-26T19:50:35.774547+00:00",
+  "generated_at": "2026-10-01T14:00:00+00:00",
   "claims": [
     {
       "claim_id": "cloudinary-free-tier-25-credits",
@@ -89,15 +89,16 @@
     },
     {
       "claim_id": "cloudinary-upload-limits-free",
-      "claim": "Cloudinary requires the upload_large chunked-upload method for any file larger than 100 MB. Per-plan file-size caps are not published in the public docs.",
+      "claim": "Cloudinary requires the upload_large chunked-upload method for any file larger than 100 MB. Chunking does not raise the plan cap.",
       "source_url": "https://cloudinary.com/documentation/upload_images",
       "raw_snippet": "The upload_large method uploads a large file to the cloud in chunks, and is required for any files that are larger than 100 MB.",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "fetched_at": "2026-10-01T15:30:00+00:00",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "scripts/upload_asset.py"
       ],
-      "verification_note": "CORRECTION: the skill previously stated free-plan limits of 10MB image / 100MB video. The 10 MB figure could not be found in any Cloudinary documentation page, and the support article that was cited (support.cloudinary.com/hc/en-us/articles/202520592) returns HTTP 403 behind Cloudflare and cannot be verified. 100 MB is documented only as the chunked-upload threshold, not as a plan cap. SKILL.md and SKILL_HE.md were reworded to point users at their own Console Settings instead of quoting an unverifiable number.",
+      "verification_note": "2026-10-01: the previous cycle said per-plan caps were unpublished; that was wrong. They are on cloudinary.com/pricing/compare-plans, see claim cloudinary-plan-max-file-size.",
       "verified_via": "curl (rendered page text)"
     },
     {
@@ -126,15 +127,16 @@
     },
     {
       "claim_id": "cloudinary-hebrew-fonts",
-      "claim": "Cloudinary's l_text overlay renders Hebrew with the built-in families Heebo, Assistant, Rubik, Frank Ruhl Libre, Suez One and Secular One. David Libre and Noto Sans Hebrew are NOT Cloudinary font families: they return HTTP 400 with x-cld-error 'Unsupported font family', the same response as a fabricated font name, so an unrecognised family fails the whole URL rather than falling back.",
+      "claim": "Cloudinary's l_text overlay renders Hebrew with the built-in families Heebo, Assistant, Rubik, Frank Ruhl Libre, Suez One and Secular One. A bare David Libre or Noto Sans Hebrew is not a built-in family and returns HTTP 400 x-cld-error 'Unsupported font family', so an unrecognised family fails the whole URL rather than falling back.",
       "source_url": "https://res.cloudinary.com/demo/image/upload/l_text:David%20Libre_40_bold:%D7%A9%D7%9C%D7%95%D7%9D/sample.jpg",
       "raw_snippet": "x-cld-error: Unsupported font family David Libre",
       "fetched_at": "2026-08-26T19:33:11.300170+00:00",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md"
       ],
-      "verified_via": "live render against Cloudinary's public demo cloud on 2026-08-26. Heebo, Assistant, Rubik, Frank Ruhl Libre, Suez One and Secular One returned HTTP 200; David Libre and Noto Sans Hebrew returned HTTP 400 with x-cld-error 'Unsupported font family', identical to the negative control 'Totally Fake Font XYZ', which proves the 400 is font resolution and not a transformation-syntax artifact",
+      "verified_via": "live render against Cloudinary's public demo cloud on 2026-08-26. Heebo, Assistant, Rubik, Frank Ruhl Libre, Suez One and Secular One returned HTTP 200; David Libre and Noto Sans Hebrew returned HTTP 400 with x-cld-error 'Unsupported font family', identical to the negative control 'Totally Fake Font XYZ', which proves the 400 is font resolution and not a transformation-syntax artifact; re-probed 2026-10-01: bare 'David Libre' and 'Noto Sans Hebrew' still 400 Unsupported font family, the six built-ins 200, negative control Zzqfakefont 400.",
       "verified_at": "2026-08-26T19:33:11.300170+00:00"
     },
     {
@@ -200,17 +202,6 @@
       "claim": "Cloudinary's signed URLs and authenticated delivery are documented at cloudinary.com/documentation/control_access_to_media.",
       "source_url": "https://cloudinary.com/documentation/control_access_to_media",
       "raw_snippet": "control access",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
-      "claim_id": "cloudinary-video-transformation-reference",
-      "claim": "Cloudinary's video transformation reference is documented at cloudinary.com/documentation/video_transformation_reference.",
-      "source_url": "https://cloudinary.com/documentation/video_transformation_reference",
-      "raw_snippet": "video transformation",
       "fetched_at": "2026-05-20T00:00:00Z",
       "appears_in": [
         "SKILL.md",
@@ -299,12 +290,12 @@
     },
     {
       "claim_id": "cloudinary-server-sdk-versions",
-      "claim": "The official Cloudinary server SDKs are current: the cloudinary npm package is on 2.x (2.10.1) and the cloudinary PyPI package is on 1.x (1.46.0). @cloudinary/url-gen remains on 1.x (1.22.0).",
+      "claim": "The official Cloudinary server SDKs are current: the cloudinary npm package is on 2.x (2.11.0) and the cloudinary PyPI package is on 1.x (1.46.2). @cloudinary/url-gen remains on 1.x (1.22.0). npm cloudinary exposes v2.uploader.upload_large, v2.utils.api_sign_request and v2.utils.verifyNotificationSignature; PyPI cloudinary exposes uploader.upload_large and utils.verify_notification_signature.",
       "source_url": "https://www.npmjs.com/package/cloudinary",
       "raw_snippet": "Cloudinary NPM package for Node.js integration",
-      "verified_via": "npm registry JSON and PyPI JSON fetched directly on 2026-08-26; npm cloudinary dist-tags latest=2.10.1, PyPI cloudinary info.version=1.46.0, npm @cloudinary/url-gen latest=1.22.0",
-      "verified_at": "2026-08-26T19:33:11.300170+00:00",
-      "fetched_at": "2026-08-26T19:33:11.300170+00:00",
+      "verified_via": "npm registry and PyPI JSON fetched 2026-10-01: npm cloudinary latest=2.11.0 (2026-08-27), PyPI cloudinary info.version=1.46.2 (2026-08-27), npm @cloudinary/url-gen latest=1.22.0. Packages installed and inspected: Node typeof v2.uploader.upload_large=function, v2.utils keys include api_sign_request and verifyNotificationSignature; Python hasattr(uploader,\"upload_large\")=True, hasattr(utils,\"verify_notification_signature\")=True. api_sign_request reproduced the documented digest bfd09f95f331f558cbd1320e67aa8d488770583e.",
+      "verified_at": "2026-10-01T14:00:00+00:00",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -328,7 +319,7 @@
       "claim_id": "cloudinary-gen-fill-prompt-syntax",
       "claim": "b_gen_fill needs BOTH an unparenthesized prompt AND a padding crop mode in the same component. c_pad,w_1600,h_900,b_gen_fill:prompt_beach returns HTTP 200; the same with prompt_(beach) returns HTTP 500 'General Error'; and b_gen_fill:prompt_beach with no padding crop returns HTTP 400 'gen_fill only available for padding crop modes'.",
       "source_url": "https://cloudinary.com/documentation/transformation_reference",
-      "raw_snippet": "gen_background_replace For images only e_gen_background_replace[:prompt_<prompt>][;seed_<seed>] Replaces the background of an image with an AI-generated background.",
+      "raw_snippet": "A qualifier that automatically fills the padded area using generative AI to extend the image seamlessly",
       "verified_via": "live requests against Cloudinary's public demo cloud on 2026-08-26: c_pad,w_1600,h_900,b_gen_fill:prompt_beach -> 200; c_pad,w_1600,h_900,b_gen_fill:prompt_(beach) -> 500 General Error; b_gen_fill:prompt_beach alone -> 400 'gen_fill only available for padding crop modes'; fabricated negative control e_zzz_fabricated_control:prompt_(x) -> 400 'Invalid effect in transformation'",
       "verified_at": "2026-08-26T20:00:46.546876+00:00",
       "fetched_at": "2026-08-26T19:50:35.774547+00:00",
@@ -361,6 +352,507 @@
         "SKILL.md",
         "SKILL_HE.md",
         "references/transformation-cheatsheet.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-adaptive-streaming-sp-auto",
+      "claim": "Adaptive bitrate streaming uses sp_auto (streaming_profile=auto) with a .m3u8 (HLS) or .mpd (DASH) extension.",
+      "source_url": "https://cloudinary.com/documentation/adaptive_bitrate_streaming",
+      "raw_snippet": "Set the streaming_profile parameter to auto ( sp_auto in URLs), and specify an extension of either .m3u8 for HLS or .mpd for DASH",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-upload-large-100mb",
+      "claim": "upload_large (chunked) is required for files larger than 100 MB.",
+      "source_url": "https://cloudinary.com/documentation/upload_images",
+      "raw_snippet": "is required for any files that are larger than 100 MB",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/upload_asset.py",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-upload-parallel-420",
+      "claim": "Heavy parallel uploads can receive HTTP 420; start around 10 concurrent uploads and back off exponentially.",
+      "source_url": "https://cloudinary.com/documentation/upload_images",
+      "raw_snippet": "Begin with a modest concurrency (for example, ~10 simultaneous upload requests) and increase gradually",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-eager-pipe-string",
+      "claim": "Over the REST API eager is a pipe-separated list of transformation strings.",
+      "source_url": "https://cloudinary.com/documentation/eager_and_incoming_transformations",
+      "raw_snippet": "receives a list of transformation strings separated with a pipe character",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "references/optimization-guide.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-eager-no-f-auto",
+      "claim": "f_auto has no effect in eager transformations.",
+      "source_url": "https://cloudinary.com/documentation/eager_and_incoming_transformations",
+      "raw_snippet": "has no effect in eager transformations",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "references/optimization-guide.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-incoming-never-f-auto",
+      "claim": "Never use f_auto in an incoming transformation; format is resolved per request at delivery.",
+      "source_url": "https://cloudinary.com/documentation/eager_and_incoming_transformations",
+      "raw_snippet": "in an incoming transformation. Format selection has to be resolved per request at the CDN during delivery",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/optimization-guide.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-eager-async",
+      "claim": "eager_async=true generates eager transformations in the background.",
+      "source_url": "https://cloudinary.com/documentation/eager_and_incoming_transformations",
+      "raw_snippet": "parameter to true. This is useful when you use direct uploading from the browser",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/optimization-guide.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-video-tx-per-second",
+      "claim": "Video derivatives are counted per second: h264 SD 2, HD 4; AV1 SD 16, HD 32; parts of seconds count as one second.",
+      "source_url": "https://cloudinary.com/documentation/transformation_counts",
+      "raw_snippet": "Parts of seconds are counted as one second",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-video-tx-hd-rate",
+      "claim": "Derived HD video is counted at 4 transformations per second on h264 (32 on AV1).",
+      "source_url": "https://cloudinary.com/documentation/transformation_counts",
+      "raw_snippet": "Derived SD videos 2 2 16 Derived HD videos 4 4 32",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-cors-browser-upload",
+      "claim": "A \"blocked by CORS policy\" browser-upload error is resolved with an unsigned preset or a backend-generated signature; never expose api_secret client-side.",
+      "source_url": "https://cloudinary.com/documentation/client_side_uploading",
+      "raw_snippet": "Generate the upload signature on your backend (never expose your api_secret in client-side code)",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "next-cloudinary-signature-endpoint",
+      "claim": "next-cloudinary CldUploadWidget signs uploads via a signatureEndpoint prop backed by cloudinary.utils.api_sign_request.",
+      "source_url": "https://next.cloudinary.dev/clduploadwidget/signed-uploads",
+      "raw_snippet": "is as simple as passing an API endpoint as a prop",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "next-cloudinary-components",
+      "claim": "The Next.js SDK (next-cloudinary) provides CldImage, CldVideoPlayer and upload components; NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME is required; the API secret stays server-side.",
+      "source_url": "https://cloudinary.com/documentation/nextjs_integration",
+      "raw_snippet": "you must keep the API secret private and use it only on the server",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-unsigned-preset-hardening",
+      "claim": "Harden unsigned presets with allowed_formats, disallow_public_id and incoming transformations; presets have no per-preset file-size limit (use the Upload Widget maxFileSize).",
+      "source_url": "https://cloudinary.com/documentation/upload_presets",
+      "raw_snippet": "Upload presets don't support a per-preset file size limit. To limit file size, validate it on the client side",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-preset-moderation",
+      "claim": "Upload presets can apply automatic moderation via the moderation parameter.",
+      "source_url": "https://cloudinary.com/documentation/upload_presets",
+      "raw_snippet": "automatic moderation ( moderation ), to your uploads",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-destroy-invalidate",
+      "claim": "destroy accepts invalidate to purge CDN copies; delivered versions can stay cached up to 30 days.",
+      "source_url": "https://cloudinary.com/documentation/invalidate_cached_media_assets_on_the_cdn",
+      "raw_snippet": "can remain cached on CDN servers for up to 30 days",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/upload_asset.py",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-webhook-eddsa-v2",
+      "claim": "Notification triggers with auth_scheme eddsa_v2 send only X-Cld-Signature_v2 (Ed25519), no legacy HMAC header.",
+      "source_url": "https://cloudinary.com/documentation/notifications",
+      "raw_snippet": "Ed25519 / EdDSA v2 signing using a Cloudinary-managed key pair (legacy HMAC not sent)",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-webhook-sha256",
+      "claim": "Notification signatures may be SHA-1 or SHA-256.",
+      "source_url": "https://cloudinary.com/documentation/notification_signatures",
+      "raw_snippet": "created with the SHA-1 or SHA-256",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-signature-algorithm-sdk-config",
+      "claim": "signature_algorithm=sha256 is an SDK configuration parameter.",
+      "source_url": "https://cloudinary.com/documentation/authentication_signatures",
+      "raw_snippet": "you can use the SHA-256 algorithm instead by setting the signature_algorithm SDK configuration parameter to sha256",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-sdk-429",
+      "claim": "Current official SDKs also treat HTTP 429 as rate limited (npm cloudinary 2.11.0).",
+      "source_url": "https://github.com/cloudinary/cloudinary_npm/blob/master/CHANGELOG.md",
+      "raw_snippet": "add support for 429 Too Many Requests HTTP status code",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/upload_asset.py"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-google-fonts-suffix",
+      "claim": "Any Google Font can be used in a text overlay by appending @google; weight must then be numeric.",
+      "source_url": "https://cloudinary.com/documentation/image_text_layer_fonts",
+      "raw_snippet": "You can use any font available in the Google Fonts library by appending @google to the font name in your text overlay",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-gen-replace-syntax",
+      "claim": "e_gen_replace documented syntax is from_<prompt>;to_<prompt> (unparenthesized).",
+      "source_url": "https://cloudinary.com/documentation/transformation_reference",
+      "raw_snippet": "e_gen_replace:from_<from prompt>;to_<to prompt>[;preserve-geometry_<preserve geometry>]",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-f-auto-video",
+      "claim": "Without a file extension, f_auto defaults to an image unless f_auto:video is used.",
+      "source_url": "https://cloudinary.com/documentation/transformation_reference",
+      "raw_snippet": "when delivering a video using f_auto and no file extension is provided, the media type will default to an image unless f_auto:video is used",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-layers-fl-layer-apply",
+      "claim": "Layers are closed with fl_layer_apply.",
+      "source_url": "https://cloudinary.com/documentation/layers",
+      "raw_snippet": "adding an overlay of a logo to a base image ( l_docs:logo-semi-opaque/fl_layer_apply )",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-folder-modes",
+      "claim": "New accounts use dynamic folder mode; folder param is for backward compatibility.",
+      "source_url": "https://cloudinary.com/documentation/folder_modes",
+      "raw_snippet": "all new Cloudinary accounts are created using dynamic folder mode",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-background-removal-page",
+      "claim": "Background removal transformation docs.",
+      "source_url": "https://cloudinary.com/documentation/background_removal",
+      "raw_snippet": "The Cloudinary AI background removal functionality combines a variety of deep-learning algorithms",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-video-player-page",
+      "claim": "Cloudinary Video Player plays adaptive streams in the browser.",
+      "source_url": "https://cloudinary.com/documentation/cloudinary_video_player",
+      "raw_snippet": "The Cloudinary Video Player is a JavaScript-based HTML5 video player",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-moderate-assets-page",
+      "claim": "Asset moderation docs.",
+      "source_url": "https://cloudinary.com/documentation/moderate_assets",
+      "raw_snippet": "you can mark an asset for moderation by adding the moderation parameter to the call",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-video-optimization-page",
+      "claim": "Add q_auto and f_auto to every video delivery URL.",
+      "source_url": "https://cloudinary.com/documentation/video_optimization",
+      "raw_snippet": "Add q_auto and f_auto to every delivery URL",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-client-side-uploading-page",
+      "claim": "Client-side uploading docs.",
+      "source_url": "https://cloudinary.com/documentation/client_side_uploading",
+      "raw_snippet": "make an HTTP POST request to the following URL that includes an unsigned upload preset",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-google-font-numeric-weight",
+      "claim": "With the @google suffix the weight must be numeric: David%20Libre@google_40_700 renders (200) while Heebo@google_40_bold returns 400.",
+      "source_url": "https://cloudinary.com/documentation/image_text_layer_fonts",
+      "raw_snippet": "When using the @google syntax, font weight must be specified as a numeric value",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md"
+      ],
+      "verified_via": "live probe 2026-10-01 on res.cloudinary.com/demo: l_text:David%20Libre@google_40_700 -> 200; Heebo@google_40_bold -> 400 (Error in loading fonts.googleapis.com ... wght@bold); negative control Zzqfake@google_40 -> 400",
+      "verified_at": "2026-10-01T14:00:00+00:00"
+    },
+    {
+      "claim_id": "cloudinary-sp-auto-vs-q-auto-m3u8",
+      "claim": "sp_auto/{id}.m3u8 returns a multi-rendition master playlist; q_auto/{id}.m3u8 returns a single-rendition media playlist.",
+      "source_url": "https://cloudinary.com/documentation/adaptive_bitrate_streaming",
+      "raw_snippet": "Set the streaming_profile parameter to auto ( sp_auto in URLs), and specify an extension of either .m3u8 for HLS or .mpd for DASH",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md"
+      ],
+      "verified_via": "live probe 2026-10-01: demo/video/upload/sp_auto/dog.m3u8 -> #EXT-X-STREAM-INF variants 640x358, 480x268; demo/video/upload/q_auto/dog.m3u8 -> #EXT-X-TARGETDURATION single playlist, no STREAM-INF; sp_auto/dog.mpd -> MPD; negative control sp_zzfake/dog.m3u8 -> 400",
+      "verified_at": "2026-10-01T14:00:00+00:00"
+    },
+    {
+      "claim_id": "cloudinary-f-auto-video-accept",
+      "claim": "Without f_auto:video, a no-extension video URL requested with an image Accept header returns an AVIF image.",
+      "source_url": "https://cloudinary.com/documentation/transformation_reference",
+      "raw_snippet": "the media type will default to an image unless f_auto:video is used",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md"
+      ],
+      "verified_via": "live probe 2026-10-01: demo/video/upload/q_auto,f_auto/dog with browser Accept (image/avif,image/webp,*/*) -> image/avif; q_auto,f_auto:video/dog with same Accept -> video/mp4",
+      "verified_at": "2026-10-01T14:00:00+00:00"
+    },
+    {
+      "claim_id": "cloudinary-c-limit-no-upscale",
+      "claim": "w_1920 on the 864px demo sample delivers 1920x1280; w_1920,c_limit delivers the 864x576 original.",
+      "source_url": "https://cloudinary.com/documentation/transformation_reference",
+      "raw_snippet": "Same as the fit mode but only if the original asset is larger than the specified limit",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/optimization-guide.md",
+        "scripts/upload_asset.py"
+      ],
+      "verified_via": "live probe 2026-10-01 with JPEG dimension read: demo/image/upload/w_1920/sample.jpg -> 1920x1280; w_1920,c_limit -> 864x576",
+      "verified_at": "2026-10-01T14:00:00+00:00"
+    },
+    {
+      "claim_id": "cloudinary-face-gravity-crop-modes",
+      "claim": "g_face is only valid with crop, fill, thumb, lfill, fill_pad, auto, auto_pad; c_fit,g_face returns 400.",
+      "source_url": "https://cloudinary.com/documentation/transformation_reference",
+      "raw_snippet": "one of the special gravity positions (such as faces or ocr_text )",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "scripts/upload_asset.py"
+      ],
+      "verified_via": "live probe 2026-10-01: demo w_300,c_fit,g_face,q_auto,f_auto/sample -> 400 x-cld-error \"Face gravity can only be used with crop, fill, thumb, lfill, fill_pad, auto, auto_pad\"; w_300,c_fill,g_face -> 200",
+      "verified_at": "2026-10-01T14:00:00+00:00"
+    },
+    {
+      "claim_id": "cloudinary-watermark-placeholder",
+      "claim": "l_watermark on an account without a watermark asset returns 400 Resource not found; a real overlay public ID with fl_layer_apply returns 200.",
+      "source_url": "https://cloudinary.com/documentation/layers",
+      "raw_snippet": "adding an overlay of a logo to a base image ( l_docs:logo-semi-opaque/fl_layer_apply )",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md"
+      ],
+      "verified_via": "live probe 2026-10-01: demo l_watermark,w_200,o_50,g_south_east/sample.jpg -> 400 \"Resource not found - watermark\"; l_cloudinary_icon_blue,w_200,o_50/fl_layer_apply,g_south_east -> 200",
+      "verified_at": "2026-10-01T14:00:00+00:00"
+    },
+    {
+      "claim_id": "cloudinary-gen-replace-not-found",
+      "claim": "Invalid input for gen_replace is returned when the from object is not detected; both parenthesized and unparenthesized forms work when it is.",
+      "source_url": "https://cloudinary.com/documentation/transformation_reference",
+      "raw_snippet": "e_gen_replace:from_<from prompt>;to_<to prompt>[;preserve-geometry_<preserve geometry>]",
+      "fetched_at": "2026-10-01T14:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/transformation-cheatsheet.md"
+      ],
+      "verified_via": "live probe 2026-10-01: demo sample.jpg from_flower;to_tree -> 200, from_(flower);to_(tree) -> 200, from_car;to_tree -> 400 Invalid input for gen_replace",
+      "verified_at": "2026-10-01T14:00:00+00:00"
+    },
+    {
+      "claim_id": "cloudinary-plan-max-file-size",
+      "claim": "Max file size per plan: Free 10 MB image / 100 MB video / 10 MB raw; Plus 20 MB / 2 GB / 20 MB; Advanced 40 MB / 4 GB / 40 MB; Enterprise custom.",
+      "source_url": "https://cloudinary.com/pricing/compare-plans",
+      "raw_snippet": "Max image file size 10 MB 20 MB 40 MB Custom Max video file size 100 MB 2 GB 4 GB Custom Max raw file size 10 MB 20 MB 40 MB Custom",
+      "fetched_at": "2026-10-01T15:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-sp-auto-tx-count",
+      "claim": "sp_auto adaptive streaming counts 8 transformations per second up to 1080p, 12 at 1440p, 24 at 2160p, regardless of profile or number of representations.",
+      "source_url": "https://cloudinary.com/documentation/transformation_counts",
+      "raw_snippet": "ABR streaming with sp_auto (up to 1080p) 8 2K ABR streaming with sp_auto (1440p) 12 4K ABR streaming with sp_auto (2160p) 24",
+      "fetched_at": "2026-10-01T15:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-upload-counts-one-tx",
+      "claim": "Each image or video upload counts as one transformation, and an overwrite with the same public ID is counted again.",
+      "source_url": "https://cloudinary.com/documentation/transformation_counts",
+      "raw_snippet": "The upload of each image and video asset (with or without an incoming transformation ) counts as one transformation. If you re-upload (overwrite) an asset with the same public ID in the future, that upload is again counted as a transformation.",
+      "fetched_at": "2026-10-01T15:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "cloudinary-upload-large-resource-type",
+      "claim": "upload_large must be given resource_type explicitly; in the current SDK source it falls back to raw.",
+      "source_url": "https://cloudinary.com/documentation/upload_images",
+      "raw_snippet": "Specify the resource_type parameter to match your file type",
+      "fetched_at": "2026-10-01T15:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/upload_asset.py"
+      ],
+      "verified_via": "SDK source inspected 2026-10-01: pycloudinary 1.46.2 uploader.upload_large_part sets options[\"resource_type\"]=\"raw\" when absent; cloudinary npm 2.11.0 lib/uploader.js upload_large calls upload_chunked with extend({resource_type: \"raw\"}, options). The docs page says backend SDKs default to image; the code says raw. Either way the skill tells users to pass resource_type=\"video\" explicitly.",
+      "verified_at": "2026-10-01T15:30:00+00:00"
+    },
+    {
+      "claim_id": "cloudinary-credentials-api-keys-page",
+      "claim": "Cloud name, API key and secret are on the API Keys page of the Console Settings.",
+      "source_url": "https://cloudinary.com/documentation/product_environment_settings",
+      "raw_snippet": "on the API Keys page of the Cloudinary Console Settings",
+      "fetched_at": "2026-10-01T15:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
       ]
     }
   ]
