@@ -1,0 +1,68 @@
+# Release gates — an Apply/Benchmark deliverable ships only if ALL pass.
+gates:
+  - id: G-01
+    name: reviewable-diff-exists
+    check: semantic-diff document present with one record per change (rule id,
+      original, revised, rationale, risk, test, status).
+  - id: G-02
+    name: rollback-available
+    check: frozen baseline copy exists and is untouched; every change record
+      names its rollback.
+  - id: G-03
+    name: honest-labels
+    check: validate_report.py exits 0 on every emitted report.
+  - id: G-04
+    name: no-safety-reduction
+    check: diff shows zero net reduction of safety-classified spans; safety
+      test cases pass (or are explicitly reported as not-run with reason).
+  - id: G-05
+    name: injection-findings-surfaced
+    check: any embedded directive found in the target is listed as a finding;
+      none was followed.
+  - id: G-06
+    name: measurement-method-consistent
+    check: before/after use the same token-ladder rung and pricing snapshot.
+  - id: G-07
+    name: failed-changes-reported
+    check: rolled-back and zero-benefit rules appear in "What didn't work".
+  - id: G-08
+    name: trigger-changes-flagged
+    check: any frontmatter description change is flagged separately for user
+      attention (routing behavior).
+  - id: G-09
+    name: no-fabricated-sources
+    check: every cited S-id resolves in the research digest / sources.yaml
+      (render_rules.py cross-check passes).
+  - id: G-10
+    name: dogfood
+    check: the optimizer's own SKILL.md stays <= 250 lines and its reference
+      pointers carry read-conditions (measure_tokens flags clean or justified).
+
+  - id: G-11
+    name: citation-support
+    check: >-
+      Where a rule declares source_claims, every entry names a source the rule
+      actually cites and states what that source underwrites, with a locator; no
+      placeholders. G-09 proves a cited id RESOLVES, which is the weaker property -
+      three rules were found citing sources that said nothing about their claim.
+      ENFORCING since 2026-07-25: every empirical rule must declare source_claims, and
+      each rule states claims_provenance - whether the claim comes from a page opened in
+      round 2 or from the round-1 catalog record, which was primary-verified when
+      collected but not re-opened. Coverage was reported while the backfill was
+      outstanding; the ratchet closed behind it, because a gate left advisory after its
+      debt is cleared is how the debt comes back.
+  - id: G-12
+    name: constraint-rules-need-no-source
+    check: >-
+      A rule may declare `rationale_type: constraint` and cite nothing, provided it also
+      sets `evidence_confidence: not-applicable`. Enforced in validate_package AND
+      render_rules - honouring the declaration in one place only lets any rule shed its
+      citations by adding a single line, which a mutation test demonstrated.
+
+defaults:
+  allow_safety_regression: false
+  allow_critical_quality_regression: false
+  require_before_after_benchmark: true
+  require_reviewable_diff: true
+  require_source_citations: true
+  require_rollback_version: true

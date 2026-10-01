@@ -1,0 +1,384 @@
+note: In-skill source index. Generated from the project's output/research/sources.yaml; carries only what
+  the citation cross-check and Explain mode need. Full records (setup, findings, limitations) stay in
+  the project file.
+generated_from: output/research/sources.yaml
+tier: DEEP
+collected: '2026-07-24'
+records:
+- id: S-A01
+  title: 'LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models'
+  url: https://arxiv.org/abs/2310.05736
+  source_type: peer-reviewed
+  confidence: high
+- id: S-A02
+  title: 'LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression'
+  url: https://arxiv.org/abs/2310.06839
+  source_type: peer-reviewed
+  confidence: high
+- id: S-A03
+  title: 'LLMLingua-2: Data Distillation for Efficient and Faithful Task-Agnostic Prompt Compression'
+  url: https://arxiv.org/abs/2403.12968
+  source_type: peer-reviewed
+  confidence: high
+- id: S-A04
+  title: Learning to Compress Prompts with Gist Tokens
+  url: https://arxiv.org/abs/2304.08467
+  source_type: peer-reviewed
+  confidence: high
+- id: S-A05
+  title: '500xCompressor: Generalized Prompt Compression for Large Language Models'
+  url: https://arxiv.org/abs/2408.03094
+  source_type: peer-reviewed
+  confidence: high
+- id: S-A06
+  title: 'Prompt Compression for Large Language Models: A Survey'
+  url: https://arxiv.org/abs/2410.12388
+  source_type: peer-reviewed
+  confidence: high
+- id: S-A07
+  title: Characterizing Prompt Compression Methods for Long Context Inference
+  url: https://arxiv.org/abs/2407.08892
+  source_type: preprint
+  confidence: medium
+- id: S-A08
+  title: Understanding and Improving Information Preservation in Prompt Compression for LLMs
+  url: https://arxiv.org/abs/2503.19114
+  source_type: peer-reviewed
+  confidence: high
+- id: S-A09
+  title: 'When Compression Becomes an Attack Surface: Black-Box Attacks on Prompt-Compressed LLM Agents
+    (formerly ''CompressionAttack'')'
+  url: https://arxiv.org/abs/2510.22963
+  source_type: preprint
+  confidence: medium
+- id: S-A10
+  title: 'Separating Constraint Compliance from Semantic Accuracy: A Novel Benchmark for Evaluating Instruction-Following
+    Under Compression'
+  url: https://arxiv.org/abs/2512.17920
+  source_type: preprint
+  confidence: low
+- id: S-B01
+  title: 'Lost in the Middle: How Language Models Use Long Contexts'
+  url: https://arxiv.org/abs/2307.03172
+  source_type: peer-reviewed-journal
+  confidence: high
+- id: S-B02
+  title: 'NoLiMa: Long-Context Evaluation Beyond Literal Matching'
+  url: https://arxiv.org/abs/2502.05167
+  source_type: conference-paper
+  confidence: high
+- id: S-B03
+  title: 'Context Rot: How Increasing Input Tokens Impacts LLM Performance'
+  url: https://www.trychroma.com/research/context-rot
+  source_type: technical-report
+  confidence: medium
+- id: S-B04
+  title: Context Length Alone Hurts LLM Performance Despite Perfect Retrieval
+  url: https://arxiv.org/abs/2510.05381
+  source_type: conference-paper
+  confidence: high
+- id: S-B05
+  title: LLMs Get Lost In Multi-Turn Conversation
+  url: https://arxiv.org/abs/2505.06120
+  source_type: arxiv-preprint
+  confidence: medium
+- id: S-B06
+  title: Compressing Context to Enhance Inference Efficiency of Large Language Models (Selective Context)
+  url: https://arxiv.org/abs/2310.06201
+  source_type: conference-paper
+  confidence: medium
+- id: S-B07
+  title: 'LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression'
+  url: https://arxiv.org/abs/2310.06839
+  source_type: conference-paper
+  confidence: high
+- id: S-B08
+  title: 'RECOMP: Improving Retrieval-Augmented LMs with Compression and Selective Augmentation'
+  url: https://arxiv.org/abs/2310.04408
+  source_type: conference-paper
+  confidence: medium
+- id: S-B09
+  title: 'The Power of Noise: Redefining Retrieval for RAG Systems'
+  url: https://arxiv.org/abs/2401.14887
+  source_type: conference-paper
+  confidence: medium
+- id: S-B10
+  title: Is Semantic Chunking Worth the Computational Cost?
+  url: https://arxiv.org/abs/2410.13070
+  source_type: conference-paper
+  confidence: medium
+- id: S-C01
+  title: Prompt caching (Anthropic official documentation)
+  url: https://platform.claude.com/docs/en/build-with-claude/prompt-caching
+  source_type: provider-doc
+  confidence: high
+- id: S-C02
+  title: Pricing (Anthropic official pricing page)
+  url: https://platform.claude.com/docs/en/about-claude/pricing
+  source_type: provider-doc
+  confidence: high
+- id: S-C03
+  title: Prompt caching (OpenAI official documentation — automatic prompt caching)
+  url: https://developers.openai.com/api/docs/guides/prompt-caching
+  source_type: provider-doc
+  confidence: high
+- id: S-C04
+  title: Pricing (OpenAI official API pricing page)
+  url: https://developers.openai.com/api/docs/pricing
+  source_type: provider-doc
+  confidence: high
+- id: S-C05
+  title: 'FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance'
+  url: https://arxiv.org/abs/2305.05176
+  source_type: paper
+  confidence: high
+- id: S-C06
+  title: 'RouteLLM: Learning to Route LLMs with Preference Data'
+  url: https://arxiv.org/abs/2406.18665
+  source_type: paper
+  confidence: high
+- id: S-C07
+  title: 'Prompt Cache: Modular Attention Reuse for Low-Latency Inference'
+  url: https://arxiv.org/abs/2311.04934
+  source_type: paper
+  confidence: high
+- id: S-C08
+  title: 'SGLang: Efficient Execution of Structured Language Model Programs (RadixAttention)'
+  url: https://arxiv.org/abs/2312.07104
+  source_type: paper
+  confidence: high
+- id: S-C09
+  title: 'GPTCache: An Open-Source Semantic Cache for LLM Applications Enabling Faster Answers and Cost
+    Savings'
+  url: https://aclanthology.org/2023.nlposs-1.24/
+  source_type: paper
+  confidence: medium
+- id: S-C10
+  title: 'AutoMix: Automatically Mixing Language Models'
+  url: https://arxiv.org/abs/2310.12963
+  source_type: paper
+  confidence: high
+- id: S-D01
+  title: 'Concise Thoughts: Impact of Output Length on LLM Reasoning and Cost'
+  url: https://arxiv.org/abs/2407.19825
+  source_type: preprint
+  confidence: medium
+- id: S-D02
+  title: Token-Budget-Aware LLM Reasoning
+  url: https://arxiv.org/abs/2412.18547
+  source_type: preprint
+  confidence: medium
+- id: S-D03
+  title: 'Chain of Draft: Thinking Faster by Writing Less'
+  url: https://arxiv.org/abs/2502.18600
+  source_type: preprint
+  confidence: medium
+- id: S-D04
+  title: Let Me Speak Freely? A Study on the Impact of Format Restrictions on Performance of Large Language
+    Models
+  url: https://arxiv.org/abs/2408.02442
+  source_type: preprint
+  confidence: medium
+- id: S-D05
+  title: 'The Danger of Overthinking: Examining the Reasoning-Action Dilemma in Agentic Tasks'
+  url: https://arxiv.org/abs/2502.08235
+  source_type: preprint
+  confidence: high
+- id: S-D06
+  title: An LLM Compiler for Parallel Function Calling
+  url: https://arxiv.org/abs/2312.04511
+  source_type: peer-reviewed
+  confidence: high
+- id: S-D07
+  title: How we built our multi-agent research system
+  url: https://www.anthropic.com/engineering/multi-agent-research-system
+  source_type: engineering-report
+  confidence: high
+- id: S-D08
+  title: Building effective agents
+  url: https://www.anthropic.com/engineering/building-effective-agents
+  source_type: engineering-report
+  confidence: high
+- id: S-D09
+  title: Effective context engineering for AI agents
+  url: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+  source_type: engineering-report
+  confidence: high
+- id: S-D10
+  title: Equipping agents for the real world with Agent Skills
+  url: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
+  source_type: provider-doc
+  confidence: high
+- id: S-D11
+  title: 'Not what you''ve signed up for: Compromising Real-World LLM-Integrated Applications with Indirect
+    Prompt Injection'
+  url: https://arxiv.org/abs/2302.12173
+  source_type: preprint
+  confidence: high
+- id: S-D12
+  title: Design Patterns for Securing LLM Agents against Prompt Injections
+  url: https://arxiv.org/abs/2506.08837
+  source_type: preprint
+  confidence: high
+# ---- ROUND 2, collected 2026-07-25 (research-2026-07-25/DOSSIER.md) ----
+# Controlled enums for source_type / access_level / generalizes_across_models / verification.
+# Round-1 records above use free text for source_type; that flaw is disclosed in
+# research/README.md and is NOT retro-fixed here, because normalising it means re-deriving 42
+# judgements from the pages actually read - a re-verification, not a relabelling.
+# Known round-1 defect, recorded not silently fixed: S-A02 and S-B07 are the SAME work
+# (LongLLMLingua, arXiv 2310.06839), so round 1 holds 41 distinct works under 42 ids.
+- id: S-R01
+  title: 'Quantifying Language Models'' Sensitivity to Spurious Features in Prompt Design'
+  url: https://arxiv.org/abs/2310.11324
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R02
+  title: 'State of What Art? A Call for Multi-Prompt LLM Evaluation'
+  url: https://aclanthology.org/2024.tacl-1.52/
+  source_type: peer-reviewed-journal
+  confidence: high
+- id: S-R03
+  title: 'The Butterfly Effect of Altering Prompts'
+  url: https://aclanthology.org/2024.findings-acl.275/
+  source_type: peer-reviewed-findings
+  confidence: high
+- id: S-R04
+  title: 'Flaw or Artifact? Rethinking Prompt Sensitivity in Evaluating LLMs'
+  url: https://arxiv.org/abs/2509.01790
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R05
+  title: 'Same Task, More Tokens'
+  url: https://aclanthology.org/2024.acl-long.818/
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R06
+  title: 'Rethinking the Role of Demonstrations'
+  url: https://aclanthology.org/2022.emnlp-main.759/
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R07
+  title: 'What Makes Good In-Context Examples for GPT-3?'
+  url: https://aclanthology.org/2022.deelio-1.10/
+  source_type: peer-reviewed-workshop
+  confidence: high
+- id: S-R08
+  title: 'Many-Shot In-Context Learning'
+  url: https://arxiv.org/abs/2404.11018
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R09
+  title: 'Revisiting Chain-of-Thought Prompting: Zero-shot Can Be Stronger than Few-shot'
+  url: https://aclanthology.org/2025.findings-emnlp.729/
+  source_type: peer-reviewed-findings
+  confidence: high
+- id: S-R10
+  title: 'Towards Compute-Optimal Many-Shot In-Context Learning'
+  url: https://arxiv.org/abs/2507.16217
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R11
+  title: 'Executable Code Actions Elicit Better LLM Agents'
+  url: https://proceedings.mlr.press/v235/wang24h.html
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R12
+  title: 'RedCode: Risky Code Execution and Generation Benchmark for Code Agents'
+  url: https://arxiv.org/abs/2411.07781
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R13
+  title: 'Long-Context LLMs Meet RAG'
+  url: https://arxiv.org/abs/2410.05983
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R14
+  title: 'JSONSchemaBench: A Rigorous Benchmark of Structured Outputs for Language Models'
+  url: https://arxiv.org/abs/2501.10868
+  source_type: preprint
+  confidence: medium
+- id: S-R15
+  title: 'Let Me Speak Freely? A Study On The Impact Of Format Restrictions'
+  url: https://aclanthology.org/2024.emnlp-industry.91/
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R16
+  title: 'Learning To Retrieve Prompts for In-Context Learning'
+  url: https://aclanthology.org/2022.naacl-main.191/
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R17
+  title: 'CRANE: Reasoning with constrained LLM generation'
+  url: https://arxiv.org/abs/2502.09061
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R18
+  title: 'Benchmarking Complex Instruction-Following with Multiple Constraints Composition'
+  url: https://arxiv.org/abs/2407.03978
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R19
+  title: 'With Little Power Comes Great Responsibility'
+  url: https://aclanthology.org/2020.emnlp-main.745/
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R20
+  title: 'The Hitchhiker''s Guide to Testing Statistical Significance in NLP'
+  url: https://aclanthology.org/P18-1128/
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R21
+  title: 'Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena'
+  url: https://proceedings.neurips.cc/paper_files/paper/2023/hash/91f18a1287b398d378ef22505bf41832-Abstract-Datasets_and_Benchmarks.html
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R22
+  title: 'Large Language Models are not Fair Evaluators'
+  url: https://aclanthology.org/2024.acl-long.511/
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R23
+  title: 'LLMs instead of Human Judges? A Large Scale Empirical Study across 20 NLP Evaluation Tasks'
+  url: https://aclanthology.org/2025.acl-short.20/
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R24
+  title: 'A Sober Look at Progress in Language Model Reasoning'
+  url: https://arxiv.org/abs/2504.07086
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R25
+  title: 'LLM Evaluators Recognize and Favor Their Own Generations'
+  url: https://proceedings.neurips.cc/paper_files/paper/2024/hash/7f1f0218e45f5414c79c0679633e47bc-Abstract-Conference.html
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R26
+  title: 'On Prompt-Driven Safeguarding for Large Language Models'
+  url: https://proceedings.mlr.press/v235/zheng24n.html
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R27
+  title: 'The Art of Defending'
+  url: https://aclanthology.org/2024.findings-acl.776/
+  source_type: peer-reviewed-findings
+  confidence: high
+- id: S-R28
+  title: 'Fine-tuning Aligned Language Models Compromises Safety, Even When Users Do Not Intend To!'
+  url: https://arxiv.org/abs/2310.03693
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R29
+  title: 'AgentDojo'
+  url: https://proceedings.neurips.cc/paper_files/paper/2024/hash/97091a5177d8dc64b1da8bf3e1f6fb54-Abstract-Datasets_and_Benchmarks_Track.html
+  source_type: peer-reviewed-conference
+  confidence: high
+- id: S-R30
+  title: 'Adaptive Attacks Break Defenses Against Indirect Prompt Injection Attacks on LLM Agents'
+  url: https://aclanthology.org/2025.findings-naacl.395/
+  source_type: peer-reviewed-findings
+  confidence: high
+- id: S-R31
+  title: 'Formalizing and Benchmarking Prompt Injection Attacks and Defenses'
+  url: https://www.usenix.org/conference/usenixsecurity24/presentation/liu-yupei
+  source_type: peer-reviewed-conference
+  confidence: high

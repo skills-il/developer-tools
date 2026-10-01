@@ -1,0 +1,20 @@
+# Default settings — token-efficient-skill-optimizer
+defaults:
+  profile: balanced
+  mode_when_unclear: analyze
+  token_method: auto          # api if ANTHROPIC_API_KEY present, else tiktoken, else heuristic
+  model_for_api_counts: claude-opus-4-8
+  cost_scenario:
+    sessions: 100
+    trigger_rate: 0.3
+    ref_read_rate: 0.5
+  apply:
+    max_revision_rounds: 3
+    marginal_savings_floor: 0.02   # stop when next rule's expected savings < 2% of footprint
+  quality_tolerance: no_statistically_meaningful_regression
+  live_runs: false            # never spend API budget without explicit user approval
+paths:
+  rules: rules/rules.yaml
+  pricing: config/provider-cost-profiles.yaml
+  gates: config/release-gates.yaml
+  tests: tests/cases.jsonl
