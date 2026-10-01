@@ -5,8 +5,8 @@ This reference covers the full implementation of Shabbat and Jewish holiday depl
 ## How Shabbat Times Work
 
 Shabbat begins at candle lighting time on Friday and ends at havdalah on Saturday night. These times vary by:
-- **Week**: Candle lighting ranges from about 15:55 (Jerusalem, early-to-mid December) to about 19:30 (Tel Aviv, June). Jerusalem lights roughly 20 minutes earlier than the coastal cities.
-- **City**: Jerusalem lights 40 minutes before sunset, Tel Aviv 20-30 minutes before, Haifa 22 minutes before
+- **Week**: Candle lighting ranges from about 15:55 (Jerusalem, early-to-mid December) to about 19:30 (Tel Aviv, June). Jerusalem lights roughly 20 minutes earlier than Tel Aviv, about 10 earlier than Haifa.
+- **City**: hebcal's defaults are 18 minutes before sundown, 40 for Jerusalem and 30 for Haifa (and Zikhron Ya'akov); Tel Aviv uses the 18-minute default
 - **Custom**: Some communities add extra minutes before candle lighting
 
 There is no fixed time. Do not hardcode "Friday 18:00" or any other static time.
@@ -23,7 +23,7 @@ GET https://www.hebcal.com/shabbat?cfg=json&geonameid={ID}&M=on
 Parameters:
 - `cfg=json` -- JSON response format
 - `geonameid` -- GeoNames ID for the city
-- `M=on` -- Include havdalah time
+- `M=on` -- havdalah at nightfall (tzeit hakochavim) rather than a fixed number of minutes after sundown
 
 Common Israeli city IDs:
 
@@ -59,19 +59,11 @@ Common Israeli city IDs:
 }
 ```
 
-**Holiday times endpoint:**
-```
-GET https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&year={YEAR}&month={MONTH}&geo=geoname&geonameid={ID}
-```
-
-Parameters:
-- `maj=on` -- Major holidays only (Rosh Hashana, Yom Kippur, Sukkot, Pesach, Shavuot)
-- `min=on` -- Include minor holidays (Purim, Chanukah, etc.)
-- Add `yto=on` for Yom Tov only (days with work restrictions)
+**Holidays come from the same endpoint.** Add `maj=on` and pass `gy`/`gm`/`gd` for today and `/shabbat` returns `holiday` items (including the erev entries such as Erev Yom Kippur) together with the candle-lighting and havdalah that bound each chag. Each full yom tov carries `yomtov: true`; chol hamoed, fast days and Shabbat Shuva do not. One call therefore covers Shabbat and holidays, which is what the action below relies on. The month-wide `/hebcal` endpoint lists the same holidays (erev entries included) and is handy for browsing a calendar, but the gate only needs the few days around today, which `/shabbat` returns in one small response with the candle-lighting and havdalah times already attached.
 
 ## Full Composite Action Implementation
 
-This action handles Shabbat, holidays, and pre-Shabbat Friday buffer:
+This is the SKILL.md Step 2 gate with two inputs added: a city and a pre-Shabbat buffer. The freeze logic is identical (single `/shabbat?maj=on` feed for TODAY in `Asia/Jerusalem`, epoch-second comparison, earliest unclosed candle-lighting, `yomtov` rule for a chag already in progress, fail closed on any error), so the two files cannot drift apart again. If you change one, change both.
 
 ```yaml
 # .github/actions/shabbat-check/action.yml
@@ -79,14 +71,11 @@ name: 'Shabbat/Holiday Deploy Freeze Check'
 description: 'Determines if deployment should be frozen due to Shabbat or Israeli holidays'
 inputs:
   city:
-    description: 'Israeli city for Shabbat times'
+    description: 'Israeli city for Shabbat times (jerusalem, tel-aviv, haifa, beer-sheva, eilat)'
     default: 'jerusalem'
   pre_shabbat_buffer_minutes:
-    description: 'Minutes before candle lighting to start freeze'
+    description: 'Minutes before candle lighting to start the freeze'
     default: '60'
-  check_holidays:
-    description: 'Also check for Jewish holidays'
-    default: 'true'
 outputs:
   is_frozen:
     description: 'true if deploys should be frozen'
@@ -95,122 +84,97 @@ outputs:
     description: 'Reason for freeze (Shabbat, holiday name, or none)'
     value: ${{ steps.check.outputs.reason }}
   next_window:
-    description: 'When the next deploy window opens (ISO 8601)'
+    description: 'When the current freeze ends (havdalah, ISO 8601), empty if not frozen'
     value: ${{ steps.check.outputs.next_window }}
 runs:
   using: 'composite'
   steps:
-    - id: resolve-city
-      shell: bash
-      run: |
-        case "${{ inputs.city }}" in
-          jerusalem) echo "geonameid=281184" >> $GITHUB_OUTPUT ;;
-          tel-aviv|telaviv) echo "geonameid=293397" >> $GITHUB_OUTPUT ;;
-          haifa) echo "geonameid=294801" >> $GITHUB_OUTPUT ;;
-          beer-sheva|beersheva) echo "geonameid=295530" >> $GITHUB_OUTPUT ;;
-          eilat) echo "geonameid=295277" >> $GITHUB_OUTPUT ;;
-          *) echo "geonameid=281184" >> $GITHUB_OUTPUT ;;  # Default to Jerusalem
-        esac
-
     - id: check
       shell: bash
+      env:
+        CITY: ${{ inputs.city }}
+        BUFFER: ${{ inputs.pre_shabbat_buffer_minutes }}
       run: |
-        GEONAMEID="${{ steps.resolve-city.outputs.geonameid }}"
-        BUFFER="${{ inputs.pre_shabbat_buffer_minutes }}"
+        case "$CITY" in
+          tel-aviv|telaviv) GEONAMEID=293397 ;;
+          haifa) GEONAMEID=294801 ;;
+          beer-sheva|beersheva) GEONAMEID=295530 ;;
+          eilat) GEONAMEID=295277 ;;
+          *) GEONAMEID=281184 ;;  # Jerusalem: the earliest candle-lighting, so the safest default
+        esac
+        case "$BUFFER" in ''|*[!0-9]*) BUFFER=60 ;; esac
 
-        # Fetch Shabbat times. A deploy freeze is a SAFETY gate, so it must fail CLOSED:
-        # if hebcal is unreachable we freeze rather than risk deploying during Shabbat.
-        # Capture curl's exit WITHOUT letting `set -e` abort the step (composite bash runs with -eo pipefail),
-        # so the fail-closed branch below actually runs on an outage.
+        freeze() {
+          { echo "frozen=true"; echo "reason=$1"; echo "next_window=$2"; } >> "$GITHUB_OUTPUT"
+          { echo "### Deploy Frozen"; echo "**Reason:** $1"; } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+        }
+
+        # Today in Israel time: runners are UTC, so a bare `date` is still yesterday
+        # between 00:00 and 03:00 Israel time and would miss the chag.
+        export TZ=Asia/Jerusalem
         CURL_OK=0
-        SHABBAT_JSON=$(curl -sf --max-time 10 --retry 2 "https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on") || CURL_OK=$?
+        FEED=$(curl -sf --max-time 10 --retry 2 \
+          "https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on&maj=on&gy=$(date +%Y)&gm=$(date +%-m)&gd=$(date +%-d)") || CURL_OK=$?
 
-        CANDLE=$(echo "$SHABBAT_JSON" | jq -r '.items[] | select(.category=="candles") | .date' | head -1)
-        HAVDALAH=$(echo "$SHABBAT_JSON" | jq -r '.items[] | select(.category=="havdalah") | .date' | head -1)
+        # Fail CLOSED on an outage AND on a 200 with an unexpected shape.
+        if [ "$CURL_OK" -ne 0 ] || [ -z "$FEED" ]; then
+          freeze "Could not reach hebcal; failing closed. Override with force_deploy." ""
+        fi
+        # A real feed always has a candle-lighting or a havdalah (not always both: the week
+        # before Rosh Hashana returns only the two candle-lightings), so require one of them.
+        ITEM_COUNT=$(echo "$FEED" | jq -r '[.items[]? | select(.category=="candles" or .category=="havdalah")] | length' 2>/dev/null || echo 0)
+        if [ -z "$ITEM_COUNT" ] || [ "$ITEM_COUNT" = "0" ] || [ "$ITEM_COUNT" = "null" ]; then
+          freeze "hebcal returned no calendar items; failing closed. Override with force_deploy." ""
+        fi
 
         NOW_EPOCH=$(date +%s)
+        TODAY=$(date +%Y-%m-%d)
 
-        FROZEN="false"
-        REASON="none"
-        NEXT_WINDOW=""
-
-        # Fail CLOSED: if the API call failed or returned no candle-lighting time, block the deploy.
-        # The workflow_dispatch force_deploy input is the documented escape hatch for a genuine incident.
-        if [ "$CURL_OK" -ne 0 ] || [ -z "$CANDLE" ]; then
-          echo "frozen=true" >> $GITHUB_OUTPUT
-          echo "reason=Could not reach hebcal to verify the Shabbat window; failing closed (deploy blocked). Override with force_deploy." >> $GITHUB_OUTPUT
-          echo "next_window=" >> $GITHUB_OUTPUT
-          echo "### Deploy Frozen (fail-closed)" >> $GITHUB_STEP_SUMMARY
-          echo "**Reason:** could not reach the hebcal API to verify the Shabbat/holiday window. Deploy blocked; use force_deploy to override." >> $GITHUB_STEP_SUMMARY
-          exit 0
-        fi
-
-        if [ -n "$CANDLE" ] && [ -n "$HAVDALAH" ]; then
-          # Convert to epoch for comparison
-          CANDLE_EPOCH=$(date -d "$CANDLE" +%s 2>/dev/null || date -jf "%Y-%m-%dT%H:%M:%S%z" "$CANDLE" +%s 2>/dev/null)
-          HAVDALAH_EPOCH=$(date -d "$HAVDALAH" +%s 2>/dev/null || date -jf "%Y-%m-%dT%H:%M:%S%z" "$HAVDALAH" +%s 2>/dev/null)
-
-          # Apply pre-Shabbat buffer
-          FREEZE_START=$((CANDLE_EPOCH - BUFFER * 60))
-
-          if [ "$NOW_EPOCH" -ge "$FREEZE_START" ] && [ "$NOW_EPOCH" -le "$HAVDALAH_EPOCH" ]; then
-            FROZEN="true"
-
-            if [ "$NOW_EPOCH" -lt "$CANDLE_EPOCH" ]; then
-              REASON="Pre-Shabbat buffer (candle lighting in less than ${BUFFER} minutes)"
-            else
-              REASON="Shabbat"
-            fi
-
-            NEXT_WINDOW=$(date -d "@$HAVDALAH_EPOCH" --iso-8601=seconds 2>/dev/null || date -r "$HAVDALAH_EPOCH" +%Y-%m-%dT%H:%M:%S%z 2>/dev/null)
+        # Rule 1: a full yom tov dated today, until today's closing havdalah.
+        YOMTOV=$(echo "$FEED" | jq -r --arg d "$TODAY" '[.items[] | select(.yomtov == true and (.date | startswith($d)))] | first | .title // empty')
+        if [ -n "$YOMTOV" ]; then
+          END_TODAY=$(echo "$FEED" | jq -r --arg d "$TODAY" '[.items[] | select(.category=="havdalah" and (.date | startswith($d)))] | first | .date // empty')
+          END_EPOCH=""
+          [ -n "$END_TODAY" ] && END_EPOCH=$(date -d "$END_TODAY" +%s 2>/dev/null || echo "")
+          if [ -z "$END_EPOCH" ] || [ "$NOW_EPOCH" -le "$END_EPOCH" ]; then
+            freeze "$YOMTOV (yom tov)" "$END_TODAY"
           fi
         fi
 
-        # Check holidays (if enabled and not already frozen)
-        if [ "$FROZEN" = "false" ] && [ "${{ inputs.check_holidays }}" = "true" ]; then
-          # Israel time, not the runner's UTC: between 00:00 and 03:00 Israel time a bare
-          # `date` is still yesterday and the holiday lookup silently misses the chag.
-          export TZ=Asia/Jerusalem
-          YEAR=$(date +%Y)
-          MONTH=$(date +%-m)
-          DAY=$(date +%-d)
-          # Fail CLOSED here too. Substituting an empty item list on an outage makes
-          # "hebcal is down" indistinguishable from "no holiday today" and the deploy ships.
-          HOL_OK=0
-          HOLIDAYS_JSON=$(curl -sf --max-time 10 --retry 2 "https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on&maj=on&gy=$YEAR&gm=$MONTH&gd=$DAY") || HOL_OK=$?
-          if [ "$HOL_OK" -ne 0 ] || [ -z "$HOLIDAYS_JSON" ]; then
-            echo "frozen=true" >> $GITHUB_OUTPUT
-            echo "reason=Could not reach hebcal to verify the holiday calendar; failing closed. Override with force_deploy." >> $GITHUB_OUTPUT
-            echo "next_window=" >> $GITHUB_OUTPUT
-            exit 0
-          fi
+        # Rule 2: inside [candle-lighting minus buffer, havdalah], keeping the EARLIEST
+        # unclosed candle-lighting so a two-day chag is frozen from its first evening.
+        START=""; LABEL="Shabbat"; PENDING="Shabbat"
+        while IFS=$'\t' read -r CAT WHEN TITLE; do
+          case "$CAT" in
+            holiday) PENDING="$TITLE" ;;
+            candles) if [ -z "$START" ]; then START="$WHEN"; LABEL="$PENDING"; fi ;;
+            havdalah)
+              EE=$(date -d "$WHEN" +%s)
+              if [ -z "$START" ]; then
+                # Window opened before this feed's range: already inside it.
+                [ "$NOW_EPOCH" -le "$EE" ] && freeze "$PENDING (in progress)" "$WHEN"
+              else
+                SE=$(date -d "$START" +%s)
+                if [ "$NOW_EPOCH" -ge $((SE - BUFFER * 60)) ] && [ "$NOW_EPOCH" -le "$EE" ]; then
+                  if [ "$NOW_EPOCH" -lt "$SE" ]; then
+                    freeze "Pre-$LABEL buffer (candle lighting at $START)" "$WHEN"
+                  fi
+                  freeze "$LABEL" "$WHEN"
+                fi
+              fi
+              START=""; LABEL="Shabbat"; PENDING="Shabbat"
+              ;;
+          esac
+        done < <(echo "$FEED" | jq -r '.items[] | [.category, .date, .title] | @tsv')
 
-          TODAY=$(date +%Y-%m-%d)
-          HOLIDAY_TODAY=$(echo "$HOLIDAYS_JSON" | jq -r ".items[] | select(.date | startswith(\"$TODAY\")) | .title" | head -1)
-
-          if [ -n "$HOLIDAY_TODAY" ]; then
-            FROZEN="true"
-            REASON="Holiday: $HOLIDAY_TODAY"
-            # Holidays typically end at the same time as Shabbat (havdalah)
-            NEXT_WINDOW="Check hebcal for holiday end time"
-          fi
+        # A candle-lighting with no havdalah after it: the window runs past the feed's range.
+        if [ -n "$START" ] && [ "$NOW_EPOCH" -ge $(( $(date -d "$START" +%s) - BUFFER * 60 )) ]; then
+          freeze "$LABEL (from $START, end not in feed)" ""
         fi
 
-        echo "frozen=$FROZEN" >> $GITHUB_OUTPUT
-        echo "reason=$REASON" >> $GITHUB_OUTPUT
-        echo "next_window=$NEXT_WINDOW" >> $GITHUB_OUTPUT
-
-        # Summary for Actions UI
-        if [ "$FROZEN" = "true" ]; then
-          echo "### Deploy Frozen" >> $GITHUB_STEP_SUMMARY
-          echo "**Reason:** $REASON" >> $GITHUB_STEP_SUMMARY
-          if [ -n "$NEXT_WINDOW" ]; then
-            echo "**Next window:** $NEXT_WINDOW" >> $GITHUB_STEP_SUMMARY
-          fi
-        else
-          echo "### Deploy Window Open" >> $GITHUB_STEP_SUMMARY
-          echo "No Shabbat or holiday restrictions at this time." >> $GITHUB_STEP_SUMMARY
-        fi
+        { echo "frozen=false"; echo "reason=none"; echo "next_window="; } >> "$GITHUB_OUTPUT"
+        { echo "### Deploy Window Open"; echo "No Shabbat or holiday restrictions at this time."; } >> "$GITHUB_STEP_SUMMARY"
 ```
 
 ## Multi-Environment Strategy
@@ -219,8 +183,8 @@ Different environments may have different freeze policies:
 
 | Environment | Freeze Policy | Rationale |
 |-------------|---------------|-----------|
-| Production | Full freeze (Shabbat + holidays + 60 min buffer) | No one available for incident response |
-| Staging | Shabbat only (no buffer) | Lower risk, developers may test Friday afternoon |
+| Production | Shabbat + holidays + 60 min buffer | No one available for incident response |
+| Staging | Shabbat + holidays, no buffer | Lower risk, developers may test Friday afternoon |
 | Development | No freeze | Internal only, no user impact |
 
 Implement with environment-specific inputs:
@@ -237,7 +201,6 @@ jobs:
         uses: ./.github/actions/shabbat-check
         with:
           pre_shabbat_buffer_minutes: ${{ github.ref == 'refs/heads/main' && '60' || '0' }}
-          check_holidays: ${{ github.ref == 'refs/heads/main' && 'true' || 'false' }}
 ```
 
 ## Emergency Override
@@ -319,85 +282,65 @@ Many Israeli teams stop work before candle lighting. The `pre_shabbat_buffer_min
 
 ### Two-Day Holidays
 
-Some holidays span two days (Rosh Hashana, first two days of Sukkot, first two days of Pesach, last two days of Pesach). When a holiday falls on Thursday-Friday, it extends directly into Shabbat, creating a three-day freeze.
+In Israel only Rosh Hashana is a two-day yom tov; Sukkot, Shmini Atzeret, Pesach and Shavuot are one day each (the second days are a diaspora custom). A chag can still sit next to Shabbat, for example Rosh Hashana on Thursday and Friday running straight into Shabbat, which makes a three-day freeze.
 
-The hebcal API reports each day separately. The current action checks only today's date. For multi-day holidays, the check runs on each day and will correctly freeze on each day independently.
+Either way the feed emits more than one candle-lighting before a single havdalah. The action keeps the EARLIEST unclosed candle-lighting, so the freeze starts on the first evening. An implementation that overwrites it on each candles item tests only the last night and deploys freely through day one.
 
 ### Yom Kippur
 
-Yom Kippur starts before sunset (like Shabbat) and is the strictest holiday. Deploy freezes should start earlier, ideally by noon on Erev Yom Kippur. Consider adding special handling:
+Yom Kippur starts at candle lighting like any yom tov, and the action freezes from then until havdalah. Many teams want a longer lead time before it. `pre_shabbat_buffer_minutes` applies to every window, Shabbat included, so either set it to the lead time you want everywhere, or cover the erev-Yom-Kippur afternoon with a one-off manual hold (for example disabling the deploy workflow, or a required reviewer on the `production` environment). Do not match on holiday titles to special-case it: titles are display strings and change with transliteration.
+
+## Catching Up After Shabbat
+
+A frozen push is not lost, it is just not deployed yet. The reliable catch-up is to re-run the REAL pipeline after havdalah, so lint, tests, build and the gate all run again: a commit whose tests failed must not ship unattended on Saturday night. (A `repository_dispatch` "queue" fires immediately, during Shabbat; it is not a queue.)
 
 ```yaml
-# In the holiday check section:
-if echo "$HOLIDAY_TODAY" | grep -qi "yom kippur\|erev yom kippur"; then
-  FROZEN="true"
-  REASON="Yom Kippur (extended freeze)"
-fi
-```
-
-## Queuing Deploys for After Shabbat
-
-Instead of dropping frozen deploys, queue them for automatic deployment after havdalah:
-
-```yaml
-- name: Queue deploy for after Shabbat
-  if: steps.shabbat.outputs.is_frozen == 'true'
-  uses: peter-evans/repository-dispatch@v4
-  with:
-    event-type: queued-deploy
-    client-payload: |
-      {
-        "ref": "${{ github.sha }}",
-        "queued_by": "${{ github.actor }}",
-        "queued_at": "${{ github.event.head_commit.timestamp }}",
-        "deploy_after": "${{ steps.shabbat.outputs.next_window }}"
-      }
-```
-
-Then create a separate workflow that polls for queued deploys:
-
-```yaml
-# .github/workflows/process-queued-deploys.yml
-name: Process Queued Deploys
+# .github/workflows/post-shabbat-catchup.yml
+name: Post-Shabbat catch-up
 
 on:
   schedule:
-    # Check every hour on Saturday evening and Sunday morning (UTC)
-    - cron: '0 16-22 * * 6'  # Saturday 18:00-00:00 Israel (winter)
-    - cron: '0 5-8 * * 0'    # Sunday morning Israel (winter)
+    # Saturday 19:00 UTC = 21:00 Israel winter / 22:00 summer. The latest havdalah in
+    # Israel is about 20:35 IDT, so this is after havdalah all year.
+    - cron: '0 19 * * 6'
 
 jobs:
-  check-queue:
-    runs-on: ubuntu-latest
+  redispatch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: write   # needed to dispatch another workflow
     steps:
-      - uses: actions/checkout@v7
-      - id: shabbat
-        uses: ./.github/actions/shabbat-check
-      - name: Process queue
-        if: steps.shabbat.outputs.is_frozen != 'true'
-        run: |
-          # Fetch queued deploy events and trigger them
-          echo "Processing queued deploys..."
-          # Implementation depends on your queue mechanism
+      # workflow_dispatch is one of the two events a GITHUB_TOKEN may trigger.
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run ci-cd.yml --repo "$GITHUB_REPOSITORY" --ref main
 ```
+
+This re-runs Template 1 (`ci-cd.yml`) on `main`; its own gate still applies, so a Saturday night that is also erev chag, or a chag running from Saturday into Sunday, stays frozen. Re-run the pipeline by hand once that ends, or after a chag that ends on a weekday. It redeploys `main` even when nothing was frozen that week, which is harmless because a deploy of the same commit is idempotent.
 
 ## Testing the Freeze Locally
 
-Use the `act` CLI to test the shabbat-check action locally:
+`act` runs each step inside a Docker container, so wrapping it in `faketime` changes the host clock, not the container's, and the test silently uses the real time. Test the gate's `run:` script directly instead, with stub `date` and `curl` commands first on `PATH`:
 
 ```bash
-# Install act
-brew install act
+# fakebin/date: everything except `date -d ...` answers as if it were $FAKE_NOW
+cat > fakebin/date <<'EOF'
+#!/bin/bash
+for a in "$@"; do case "$a" in -d|-d*|--date*) exec /usr/bin/date "$@";; esac; done
+exec /usr/bin/date -d "@$FAKE_NOW" "$@"
+EOF
+chmod +x fakebin/date
 
-# Test the action with a mock time
-act -j check-deploy-window --env TZ=Asia/Jerusalem
-
-# Simulate a Friday evening run
-TZ=Asia/Jerusalem faketime '2026-03-20 18:00:00' act -j check-deploy-window
+# Friday 2026-03-20 18:00 Israel time, with the step's script saved as gate.sh
+FAKE_NOW=$(TZ=Asia/Jerusalem date -d '2026-03-20 18:00' +%s) \
+  GITHUB_OUTPUT=/dev/stdout GITHUB_STEP_SUMMARY=/dev/null \
+  PATH="$PWD/fakebin:$PATH" bash -eo pipefail gate.sh
 ```
 
-Without `act`, test the hebcal API directly:
+Point a stub `curl` at a saved response (or make it `exit 7`) to test the fail-closed paths. Use GNU `date` (Linux, or `gdate` on macOS).
 
+Without a harness, check the hebcal feed directly:
 ```bash
 # Check current Shabbat times for Jerusalem
 curl -s "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on" | jq '.items[] | {category, date, title}'

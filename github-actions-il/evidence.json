@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "github-actions-il",
-  "generated_at": "2026-08-26T00:00:00Z",
+  "generated_at": "2026-10-01T14:12:25Z",
   "claims": [
     {
       "claim_id": "action-version-pins",
@@ -47,29 +47,14 @@
     },
     {
       "claim_id": "hebcal-holidays-endpoint-concrete",
-      "claim": "The Hebcal holidays JSON endpoint for a given year/month and geonameid (281184 = Jerusalem) returns major holidays. Also covers: https://api.monday.com/v2",
+      "claim": "The /hebcal month endpoint (maj=on, geonameid=281184) returns the major holidays for the month, erev entries included.",
       "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&year=2026&month=3&geo=geoname&geonameid=281184",
       "raw_snippet": "tude\":35.21633,\"cc\":\"IL\",\"country\":\"Israel\",\"elevation\":786,\"admin1\":\"Jerusalem\",\"asciiname\":\"Jerusalem\",\"geo\":\"geoname\",\"geonameid\":281184},\"range\":{\"start\":\"2026-03-02\",\"end\":\"2026-03-28\"},\"items\":[{\"title\":\"Erev Purim\",\"date\":\"2026-03-02\",\"hdate\":\"13 Adar 5786\",\"category\":\"holiday\",\"subcat\":\"major\",\"hebrew\":\"ערב פורים\",\"leyning\":{\"torah\":\"Esther 1:1-10:3\"},\"link\":\"https://hebcal.com/h/purim-2026?i=on&us=js&um=api\",\"memo\":\"Celebration of Jewish deliverance as told by Megilat Esther.",
-      "fetched_at": "2026-08-18",
+      "fetched_at": "2026-10-01T14:12:25Z",
       "appears_in": [
         "SKILL.md",
         "references/shabbat-deploy-freeze.md"
-      ],
-      "verified_via": "cited page fetched and confirmed to contain \"281184\"; snippet replaced with the page's own wording around it",
-      "verified_at": "2026-08-26"
-    },
-    {
-      "claim_id": "hebcal-holidays-endpoint-templated",
-      "claim": "Templated Hebcal holidays endpoint examples use placeholders for year/month/geonameid that the workflow substitutes at runtime.",
-      "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&year={YEAR}&month={MONTH}&geo=geoname&geonameid={ID}",
-      "raw_snippet": "The /hebcal endpoint accepts year, month and geonameid parameters; examples show {YEAR}/{MONTH}/{ID} placeholders.",
-      "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": [
-        "SKILL.md",
-        "references/shabbat-deploy-freeze.md"
-      ],
-      "verified_via": "browser",
-      "verified_at": "2026-08-26"
+      ]
     },
     {
       "claim_id": "hebcal-holidays-endpoint-shellvars",
@@ -84,29 +69,15 @@
       "verified_at": "2026-08-26"
     },
     {
-      "claim_id": "hebcal-holidays-endpoint-datecmd",
-      "claim": "Hebcal holidays endpoint with the year derived from the shell date command.",
-      "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&year=$(date",
-      "raw_snippet": "The /hebcal endpoint year parameter can be set from $(date +%Y) in a bash step.",
-      "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": [
-        "references/shabbat-deploy-freeze.md"
-      ],
-      "verified_via": "browser",
-      "verified_at": "2026-08-26"
-    },
-    {
       "claim_id": "hebcal-shabbat-281184",
       "claim": "The Hebcal Shabbat endpoint for geonameid 281184 (Jerusalem) returns candle-lighting and havdalah times as JSON.",
       "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184",
-      "raw_snippet": "The /shabbat endpoint with cfg=json and geonameid returns Shabbat candle-lighting and havdalah times.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "raw_snippet": "Candle lighting:",
+      "fetched_at": "2026-10-01T14:12:25Z",
       "appears_in": [
         "SKILL.md",
         "references/shabbat-deploy-freeze.md"
-      ],
-      "verified_via": "browser",
-      "verified_at": "2026-08-26"
+      ]
     },
     {
       "claim_id": "hebcal-shabbat-281184-m",
@@ -122,40 +93,24 @@
       "verified_at": "2026-08-26"
     },
     {
-      "claim_id": "hebcal-shabbat-templated",
-      "claim": "Templated Hebcal Shabbat endpoint with an {ID} geonameid placeholder.",
-      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid={ID}&M=on",
-      "raw_snippet": "The /shabbat endpoint geonameid is shown as an {ID} placeholder to be substituted per city.",
-      "fetched_at": "2026-06-21T00:00:00Z",
-      "appears_in": [
-        "SKILL.md"
-      ],
-      "verified_via": "browser",
-      "verified_at": "2026-08-26"
-    },
-    {
       "claim_id": "hebcal-shabbat-shellvar",
-      "claim": "Shell-variable Hebcal Shabbat endpoint used inside bash steps.",
-      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on",
-      "raw_snippet": "The /shabbat endpoint geonameid is set from the $GEONAMEID shell variable inside a workflow step.",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "claim": "Shabbat API date parameters gy/gm/gd default to today when omitted; the skill passes them explicitly in Israel time. Covers the templated calls https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on and https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on&maj=on&gy=$(date and https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on&maj=on&gy=$(date",
+      "source_url": "https://www.hebcal.com/home/197/shabbat-times-rest-api",
+      "raw_snippet": "If unspecified, defaults to today",
+      "fetched_at": "2026-10-01T14:12:25Z",
       "appears_in": [
         "references/shabbat-deploy-freeze.md"
-      ],
-      "verified_via": "browser",
-      "verified_at": "2026-08-26"
+      ]
     },
     {
       "claim_id": "sii-he",
-      "claim": "The Standards Institution of Israel Hebrew site documents IS 5568.",
+      "claim": "The Standards Institution of Israel (publisher of Israeli standards such as IS 5568) has a Hebrew site at this URL.",
       "source_url": "https://www.sii.org.il/he/",
       "raw_snippet": "מכון התקנים הישראלי דלג לתוכן העמוד חלון חיפוש תפריט האתר קישורים תחתונים קצת עלינו אודותינו מדיניות הבטיחות, הבריאות התעסוקתית ואיכות הסביבה",
-      "fetched_at": "2026-06-21T00:00:00Z",
+      "fetched_at": "2026-10-01T14:12:25Z",
       "appears_in": [
         "SKILL_HE.md"
-      ],
-      "verified_via": "browser",
-      "verified_at": "2026-08-26"
+      ]
     },
     {
       "claim_id": "monday-api",
@@ -198,12 +153,10 @@
     },
     {
       "claim_id": "hebcal-shabbat-maj-returns-holidays-with-erev",
-      "claim": "The /shabbat endpoint returns `holiday` items, including EREV entries (Erev Yom Kippur, Erev Rosh Hashana), alongside candle-lighting and havdalah times when gy/gm/gd select a holiday week. Without gy/gm/gd it defaults to the upcoming weekend, which is why a weekday query in an ordinary week returns no holiday items. A two-day yom tov emits TWO candle-lighting items before a single havdalah.",
+      "claim": "The /shabbat endpoint with maj=on and gy/gm/gd returns holiday items including erev entries (e.g. Erev Rosh Hashana), with the candle-lighting and havdalah times of each window; a two-day Rosh Hashana yields two candle-lightings before one havdalah.",
       "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on&maj=on&gy=2026&gm=9&gd=12",
       "raw_snippet": "\"title\": \"Erev Rosh Hashana\"",
-      "fetched_at": "2026-08-26",
-      "verified_via": "browser",
-      "verified_at": "2026-08-26",
+      "fetched_at": "2026-10-01T14:12:25Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -237,27 +190,21 @@
     },
     {
       "claim_id": "supabase-setup-cli-v3",
-      "claim": "supabase/setup-cli's latest release is v3.0.0, published 2026-07-07.",
+      "claim": "supabase/setup-cli latest release is v3.0.1 (major v3 is current).",
       "source_url": "https://api.github.com/repos/supabase/setup-cli/releases/latest",
-      "raw_snippet": "\"tag_name\": \"v3.0.0\"",
-      "fetched_at": "2026-08-26",
-      "verified_via": "browser",
-      "verified_at": "2026-08-26",
+      "raw_snippet": "\"tag_name\": \"v3.0.1\"",
+      "fetched_at": "2026-10-01T14:12:25Z",
       "appears_in": [
         "references/workflow-templates.md"
       ]
     },
     {
       "claim_id": "node-24-active-lts",
-      "claim": "Node.js 24 (Krypton) is the Active LTS line; Node 22 (Jod) entered Maintenance on 2025-10-21, so 24 is the correct default for new CI pipelines.",
+      "claim": "Node.js 24 (Krypton) is supported until 2028-04-30 and enters Maintenance on 2026-10-20; Node 26 becomes LTS on 2026-10-28.",
       "source_url": "https://raw.githubusercontent.com/nodejs/Release/main/schedule.json",
-      "raw_snippet": "\"maintenance\": \"2025-10-21\"",
-      "fetched_at": "2026-08-26",
-      "verified_via": "browser",
-      "verified_at": "2026-08-26",
+      "raw_snippet": "\"maintenance\": \"2026-10-20\"",
+      "fetched_at": "2026-10-01T13:43:50Z",
       "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md",
         "references/workflow-templates.md"
       ]
     },
@@ -314,24 +261,11 @@
       ]
     },
     {
-      "claim_id": "hebcal-holidays-endpoint-datecmd-inline",
-      "claim": "Inline shell form of the Hebcal holidays endpoint, with year and month interpolated from $(date ...), as used in the composite-action bash step.",
-      "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&yto=on&year=$(date",
-      "raw_snippet": "Shell-interpolated form of the verified endpoint https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&yto=on&year=2026&month=9&geo=geoname&geonameid=281184 ; see hebcal-holidays-endpoint-datecmd-yto for the resolved URL and its live response.",
-      "fetched_at": "2026-08-26",
-      "verified_via": "browser",
-      "verified_at": "2026-08-26",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
       "claim_id": "candle-lighting-range-israel",
-      "claim": "Candle-lighting across Israeli cities runs from about 15:55 (Jerusalem, early-to-mid December) to about 19:30 (Tel Aviv, June). Jerusalem lights about 20 minutes earlier than the coastal cities because hebcal applies a 40-minute-before-sunset offset there against 18 minutes elsewhere.",
+      "claim": "Candle lighting in Israel ranges from about 15:55 (Jerusalem, early-to-mid December) to about 19:30 (Tel Aviv, June); hebcal uses 40 minutes before sundown for Jerusalem, 30 for Haifa and Zikhron Ya'akov, and an 18-minute default for other cities including Tel Aviv, so Jerusalem lights about 20 minutes before Tel Aviv and about 10 before Haifa.",
       "source_url": "https://www.hebcal.com/home/197/shabbat-times-rest-api",
       "raw_snippet": "By default, candle lighting time is 18 minutes before sundown (40 minutes for Jerusalem, 30 minutes for Haifa and Zikhron Ya’akov) on Erev Shabbat (Friday)",
-      "fetched_at": "2026-08-26",
+      "fetched_at": "2026-10-01T14:27:13Z",
       "verified_via": "browser",
       "verified_at": "2026-08-26",
       "appears_in": [
@@ -354,31 +288,6 @@
       ]
     },
     {
-      "claim_id": "hebcal-shabbat-maj-shellvars",
-      "claim": "Shell-variable form of the Shabbat+holiday feed used inside the composite action's bash step.",
-      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=$GEONAMEID&M=on&maj=on&gy=$YEAR&gm=$MONTH&gd=$DAY",
-      "raw_snippet": "Shell-interpolated form of the verified endpoint https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&maj=on&gy=2026&gm=9&gd=20 ; see hebcal-shabbat-maj-returns-holidays-with-erev for the resolved URL and its live response.",
-      "fetched_at": "2026-08-26",
-      "verified_via": "browser",
-      "verified_at": "2026-08-26",
-      "appears_in": [
-        "references/shabbat-deploy-freeze.md"
-      ]
-    },
-    {
-      "claim_id": "hebcal-shabbat-maj-datecmd",
-      "claim": "Inline shell form of the Shabbat+holiday feed with the date supplied from $(date) under TZ=Asia/Jerusalem.",
-      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on&maj=on&gy=$(date",
-      "raw_snippet": "Shell-interpolated form of the verified endpoint https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&maj=on&gy=2026&gm=9&gd=20 ; see hebcal-shabbat-maj-returns-holidays-with-erev for the resolved URL and its live response.",
-      "fetched_at": "2026-08-26",
-      "verified_via": "browser",
-      "verified_at": "2026-08-26",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
       "claim_id": "hebcal-shabbat-281184-m-plain",
       "claim": "The Hebcal Shabbat endpoint for Jerusalem with M=on returns candle-lighting and havdalah times for the queried week.",
       "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on",
@@ -388,6 +297,317 @@
       "verified_at": "2026-08-26",
       "appears_in": [
         "references/shabbat-deploy-freeze.md"
+      ]
+    },
+    {
+      "claim_id": "pnpm-action-setup-version-conflict",
+      "claim": "pnpm/action-setup v6 throws \"Multiple versions of pnpm specified\" when the version input differs from the packageManager field in package.json; version is optional when packageManager is set.",
+      "source_url": "https://raw.githubusercontent.com/pnpm/action-setup/v6.1.0/src/install-pnpm/run.ts",
+      "raw_snippet": "Multiple versions of pnpm specified",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "setup-node-cache-pnpm",
+      "claim": "actions/setup-node supports cache: pnpm; caching for pnpm is disabled by default and must be configured with the cache input.",
+      "source_url": "https://raw.githubusercontent.com/actions/setup-node/v7.0.0/README.md",
+      "raw_snippet": "For other package managers, such as Yarn and pnpm, caching is disabled by default and must be configured manually using the `cache` input.",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "ubuntu-latest-2604-rollout",
+      "claim": "The ubuntu-latest label moves to Ubuntu 26.04 in a rollout beginning 2026-10-19 and completing by 2026-11-19.",
+      "source_url": "https://github.com/actions/runner-images/issues/14748",
+      "raw_snippet": "This change will be rolled out over a period of several weeks beginning October 19, 2026",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "ubuntu-2604-tmp-tmpfs",
+      "claim": "On the Ubuntu 26.04 runner /tmp is a RAM-backed tmpfs with a ~7.8G per-user quota; large builds fail with disk quota exceeded.",
+      "source_url": "https://github.com/actions/runner-images/issues/14777",
+      "raw_snippet": "is now a RAM-backed tmpfs with a ~7.8G per-user quota",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "node20-removed-runners",
+      "claim": "GitHub removed Node20 from Actions runners on 2026-09-23; ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION only worked until then.",
+      "source_url": "https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/",
+      "raw_snippet": "This will only work until we upgrade the runner and remove Node20 on September 23rd, 2026.",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "teams-o365-connectors-retired",
+      "claim": "Office 365 Connectors (incoming webhooks) in Teams were disabled in a rollout from May 18 to May 22, 2026; Workflows webhooks are the replacement.",
+      "source_url": "https://devblogs.microsoft.com/microsoft365dev/retirement-of-office-365-connectors-within-microsoft-teams/",
+      "raw_snippet": "After these dates, Office 365 Connectors will no longer function.",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "teams-workflows-webhook-template",
+      "claim": "Teams Workflows webhooks are created from templates such as \"Send webhook alerts to a channel\" and accept the {type: message, attachments: [...]} Adaptive Card envelope.",
+      "source_url": "https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook",
+      "raw_snippet": "Search for and select a template such as Send webhook alerts to a channel",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "monday-auth-header",
+      "claim": "monday.com API authentication passes the API token as the raw Authorization header value (no Bearer prefix). Requests go to https://api.monday.com/v2.",
+      "source_url": "https://developer.monday.com/api-reference/docs/authentication",
+      "raw_snippet": "-H \"Authorization: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "aws-il-central-1-opt-in",
+      "claim": "AWS il-central-1 (Israel, Tel Aviv) has opt-in status Required: a Region introduced after March 20, 2019 must be enabled before you can access it.",
+      "source_url": "https://docs.aws.amazon.com/global-infrastructure/latest/regions/aws-regions.html",
+      "raw_snippet": "il-central-1 Israel (Tel Aviv) 3 Israel Required",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "gh-env-required-reviewers-plans",
+      "claim": "Required reviewers on deployment environments are only available for public repositories on GitHub Free, Pro and Team; deployment branches are available for private repos on Pro and Team.",
+      "source_url": "https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments",
+      "raw_snippet": "If you are on a GitHub Free, GitHub Pro, or GitHub Team plan, required reviewers are only available for public repositories.",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "gh-reusable-workflow-ref",
+      "claim": "Reusable workflows are called as {owner}/{repo}/.github/workflows/{filename}@{ref} from public and private repositories.",
+      "source_url": "https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows",
+      "raw_snippet": "for reusable workflows in public and private repositories.",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "gh-private-repo-actions-access",
+      "claim": "Actions and reusable workflows in a private repository can be shared with other private repositories in the same organization via the Access setting.",
+      "source_url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository",
+      "raw_snippet": "Actions and reusable workflows in your private repositories can be shared with other private repositories owned by the same user or organization.",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "israel-one-day-sukkot",
+      "claim": "In Israel Sukkot I is a single yom tov day followed by chol hamoed (Sukkot II is CH\"M); only Rosh Hashana is two days.",
+      "source_url": "https://www.hebcal.com/shabbat?cfg=json&geonameid=281184&M=on&maj=on&gy=2026&gm=9&gd=24",
+      "raw_snippet": "Sukkot II (CH",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
+      ]
+    },
+    {
+      "claim_id": "ubuntu-2604-tmp-path",
+      "claim": "`/tmp` on Ubuntu 26.04 runners is RAM-backed tmpfs (see ubuntu-2604-tmp-tmpfs).",
+      "source_url": "https://github.com/actions/runner-images/issues/14777",
+      "raw_snippet": "`/tmp` is now a RAM-backed tmpfs",
+      "fetched_at": "2026-10-01T13:43:50Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "hebcal-candle-lighting-minutes",
+      "claim": "hebcal default candle-lighting is 18 minutes before sundown, 40 for Jerusalem, 30 for Haifa and Zikhron Yaakov.",
+      "source_url": "https://www.hebcal.com/home/197/shabbat-times-rest-api",
+      "raw_snippet": "By default, candle lighting time is 18 minutes before sundown (40 minutes for Jerusalem, 30 minutes for Haifa",
+      "fetched_at": "2026-10-01T14:12:25Z",
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
+      ]
+    },
+    {
+      "claim_id": "hebcal-m-on-nightfall",
+      "claim": "M=on selects havdalah at nightfall (tzeit hakochavim).",
+      "source_url": "https://www.hebcal.com/home/197/shabbat-times-rest-api",
+      "raw_snippet": "Havdalah at nightfall",
+      "fetched_at": "2026-10-01T14:12:25Z",
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
+      ]
+    },
+    {
+      "claim_id": "hebcal-latest-havdalah-summer",
+      "claim": "The latest havdalah in Israel is about 20:35 IDT (Haifa, late June 2026), so 19:00 UTC Saturday is after havdalah all year.",
+      "source_url": "https://www.hebcal.com/hebcal?v=1&cfg=json&c=on&M=on&geo=geoname&geonameid=294801&year=2026&month=6",
+      "raw_snippet": "\"title\":\"Havdalah: 20:35\",\"date\":\"2026-06-27T20:35:00+03:00\"",
+      "fetched_at": "2026-10-01T14:12:25Z",
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
+      ],
+      "verified_via": "curl of the JSON response (raw body contains the snippet; verifier text extraction sees JSON as empty)",
+      "verified_at": "2026-10-01T14:13:37Z"
+    },
+    {
+      "claim_id": "vercel-git-deployment-enabled",
+      "claim": "vercel.json git.deploymentEnabled disables Git-triggered deployments for named branches.",
+      "source_url": "https://vercel.com/docs/project-configuration/git-configuration",
+      "raw_snippet": "Specify branches that should not trigger a deployment upon commits.",
+      "fetched_at": "2026-10-01T14:12:25Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "vercel-pull-environment",
+      "claim": "vercel pull --environment=production fetches production env vars and settings; the default environment is development.",
+      "source_url": "https://vercel.com/docs/cli/pull",
+      "raw_snippet": "fetches the latest \"production\" Environment Variables and Project Settings from the cloud.",
+      "fetched_at": "2026-10-01T14:12:25Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "gh-free-environment-secrets",
+      "claim": "On GitHub Free, environment secrets are only available in public repositories.",
+      "source_url": "https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments",
+      "raw_snippet": "If you are using GitHub Free, environment secrets are only available in public repositories.",
+      "fetched_at": "2026-10-01T14:12:25Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "gh-token-readonly-new-only",
+      "claim": "The February 2023 read-only GITHUB_TOKEN default applies to new enterprises, orgs and repos; existing ones were not changed.",
+      "source_url": "https://github.blog/changelog/2023-02-02-github-actions-updating-the-default-github_token-permissions-to-read-only/",
+      "raw_snippet": "This change will not impact any existing enterprises, organizations or repositories.",
+      "fetched_at": "2026-10-01T14:12:25Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "node20-actions-run-on-node24",
+      "claim": "Since Node 20 removal, runners use Node 24 for JavaScript actions (node20-declared actions run on Node 24).",
+      "source_url": "https://github.blog/changelog/2026-09-23-node-20-is-no-longer-available-in-github-actions/",
+      "raw_snippet": "Runners now use Node 24 for JavaScript actions.",
+      "fetched_at": "2026-10-01T14:12:25Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "adaptive-card-rtl-1-5",
+      "claim": "The AdaptiveCard rtl property exists from schema version 1.5.",
+      "source_url": "https://raw.githubusercontent.com/microsoft/AdaptiveCards/main/schemas/1.5.0/adaptive-card.json",
+      "raw_snippet": "When `true` content in this Adaptive Card should be presented right to left.",
+      "fetched_at": "2026-10-01T14:12:25Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "axe-tags-wcag21a",
+      "claim": "axe-core tags WCAG 2.1 Level A rules as wcag21a.",
+      "source_url": "https://raw.githubusercontent.com/dequelabs/axe-core/develop/doc/API.md",
+      "raw_snippet": "WCAG 2.1 Level A",
+      "fetched_at": "2026-10-01T14:12:25Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/workflow-templates.md"
+      ]
+    },
+    {
+      "claim_id": "axe-cli-no-locale",
+      "claim": "@axe-core/cli (4.13.0) has no --locale option; passing it fails with \"unknown option\".",
+      "source_url": "https://raw.githubusercontent.com/dequelabs/axe-core-npm/develop/packages/cli/README.md",
+      "raw_snippet": "axe www.deque.com --tags wcag2a",
+      "fetched_at": "2026-10-01T14:12:25Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "npm package: ran @axe-core/cli 4.13.0 with --locale he -> \"error: unknown option '--locale'\"",
+      "verified_at": "2026-10-01T14:12:25Z"
+    },
+    {
+      "claim_id": "gh-token-can-dispatch",
+      "claim": "Events triggered by GITHUB_TOKEN do not create workflow runs, except workflow_dispatch and repository_dispatch.",
+      "source_url": "https://docs.github.com/en/actions/concepts/security/github_token",
+      "raw_snippet": "workflow_dispatch and repository_dispatch events always create workflow runs.",
+      "fetched_at": "2026-10-01T14:27:13Z",
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
+      ]
+    },
+    {
+      "claim_id": "workflow-dispatch-actions-write",
+      "claim": "Creating a workflow dispatch event requires Actions repository write permission.",
+      "source_url": "https://docs.github.com/en/rest/actions/workflows",
+      "raw_snippet": "\"Actions\" repository permissions (write)",
+      "fetched_at": "2026-10-01T14:27:13Z",
+      "appears_in": [
+        "references/shabbat-deploy-freeze.md"
+      ]
+    },
+    {
+      "claim_id": "runner-chromewebdriver",
+      "claim": "GitHub Ubuntu runner images set CHROMEWEBDRIVER to the bundled ChromeDriver directory.",
+      "source_url": "https://raw.githubusercontent.com/actions/runner-images/main/images/ubuntu/Ubuntu2404-Readme.md",
+      "raw_snippet": "| CHROMEWEBDRIVER   | /usr/local/share/chromedriver-linux64 |",
+      "fetched_at": "2026-10-01T14:27:13Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/workflow-templates.md"
       ]
     }
   ]

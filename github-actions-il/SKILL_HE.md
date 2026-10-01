@@ -28,7 +28,7 @@ license: MIT
 |---------------|----------------|----------------------|
 | הקפאת פריסה בשבת/חג | `shabbat-deploy-freeze.yml` | hebcal API, cron schedule, environment protection |
 | התראות Slack בעברית | `hebrew-notifications.yml` | Slack Incoming Webhook, RTL payload |
-| התראות Teams בעברית | `hebrew-notifications.yml` | Teams Incoming Webhook, Adaptive Card |
+| התראות Teams בעברית | `hebrew-notifications.yml` | Teams Workflows webhook, Adaptive Card |
 | בדיקת נגישות IS-5568 | `compliance-checks.yml` | axe-core, pa11y, כללי IS-5568 |
 | בדיקת פרטיות (GDPR-IL) | `compliance-checks.yml` | סורק מותאם, dependency audit |
 | סנכרון Monday.com | `monday-sync.yml` | Monday.com GraphQL API |
@@ -66,9 +66,9 @@ runs:
       run: |
         # ONE feed covers Shabbat AND holidays. The /shabbat endpoint honours maj=on and
         # returns `holiday` items together with their candle-lighting times, including the
-        # EREV entries (Erev Yom Kippur, Erev Sukkot) that the /hebcal feed omits entirely.
-        # Ask for TODAY in Israel time: runners are UTC, so a bare `date` is still yesterday
-        # between 00:00 and 03:00 Israel time and would miss the chag.
+        # EREV entries (Erev Yom Kippur, Erev Sukkot), so one small call has everything.
+        # Pass TODAY in Israel time explicitly: runners are UTC, so a bare `date` is still
+        # yesterday between 00:00 and 03:00 Israel time and would miss the chag.
         export TZ=Asia/Jerusalem
         CURL_OK=0
         FEED=$(curl -sf --max-time 10 --retry 2 \
@@ -87,7 +87,9 @@ runs:
         # the offset and leaves the gate open for the first hours of every Shabbat.
         # A 200 with an unexpected shape must freeze too: pipefail does not propagate out
         # of the process substitution below, so an empty item list would silently open the gate.
-        ITEM_COUNT=$(echo "$FEED" | jq -r '.items | length' 2>/dev/null || echo 0)
+        # A real feed always has a candle-lighting or a havdalah (not always both: the week
+        # before Rosh Hashana returns only the two candle-lightings), so require one of them.
+        ITEM_COUNT=$(echo "$FEED" | jq -r '[.items[]? | select(.category=="candles" or .category=="havdalah")] | length' 2>/dev/null || echo 0)
         if [ -z "$ITEM_COUNT" ] || [ "$ITEM_COUNT" = "0" ] || [ "$ITEM_COUNT" = "null" ]; then
           echo "frozen=true" >> $GITHUB_OUTPUT
           echo "reason=hebcal returned no calendar items; failing closed. Override with force_deploy." >> $GITHUB_OUTPUT
@@ -164,6 +166,13 @@ runs:
           esac
         done < <(echo "$FEED" | jq -r '.items[] | [.category, .date, .title] | @tsv')
 
+        # A candle-lighting with no havdalah after it in this feed: the window runs past the
+        # feed's range. If it has started, we are inside it, so freeze.
+        if [ "$FROZEN" = false ] && [ -n "$START" ] && [ "$NOW_EPOCH" -ge "$(date -d "$START" +%s)" ]; then
+          FROZEN=true
+          REASON="$LABEL (from $START, end not in feed)"
+        fi
+
         echo "frozen=$FROZEN" >> $GITHUB_OUTPUT
         echo "reason=$REASON" >> $GITHUB_OUTPUT
 ```
@@ -172,22 +181,25 @@ runs:
 
 ```yaml
 jobs:
-  check-deploy-window:
-    runs-on: ubuntu-latest
-    outputs:
-      is_frozen: ${{ steps.shabbat.outputs.is_frozen }}
-      reason: ${{ steps.shabbat.outputs.reason }}
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: production   # מחזיק את סודות הייצור; ראו הסבר בהמשך
     steps:
       - uses: actions/checkout@v7
+      # The gate runs INSIDE the environment-protected job, i.e. after any approval wait.
       - id: shabbat
         uses: ./.github/actions/shabbat-check
-
-  deploy:
-    needs: check-deploy-window
-    if: needs.check-deploy-window.outputs.is_frozen != 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Deploying..."
+      - id: deploy
+        # == 'false', not != 'true': a crashed or empty gate must stay closed.
+        if: steps.shabbat.outputs.is_frozen == 'false'
+        run: echo "Deploying..."
+      - name: Notify frozen
+        if: steps.shabbat.outputs.is_frozen == 'true'
+        env:
+          FREEZE_REASON: ${{ steps.shabbat.outputs.reason }}
+        run: |
+          echo "Deploy frozen: $FREEZE_REASON"
 ```
 
 3. **מנגנון חירום**: הוסיפו `workflow_dispatch` עם אפשרות לדרוס את ההקפאה:
@@ -203,17 +215,19 @@ on:
         default: false
 ```
 
-ושנו את התנאי ב-deploy job:
+ושנו את התנאי של שלב הפריסה (`success()` מפורש מונע מ-GitHub להוסיף אחד מובלע, כך שהדריסה עובדת גם כששלב השער קרס):
 
 ```yaml
 if: >
-  needs.check-deploy-window.outputs.is_frozen != 'true' ||
-  github.event.inputs.force_deploy == 'true'
+  (success() && steps.shabbat.outputs.is_frozen == 'false') ||
+  (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
 ```
 
 > **הערה:** ה-composite action שלמעלה הוא מימוש העבודה המלא: הוא מזווג כל הדלקת נרות עם ההבדלה שאחריה ומשווה בשניות epoch, הוא מבקש מ-hebcal את התאריך של היום לפי `Asia/Jerusalem` ולא לפי שעון ה-UTC של הראנר, והוא נכשל סגור (fail closed) כש-hebcal לא זמין. הקובץ `references/shabbat-deploy-freeze.md` מוסיף באפר מתכוונן לפני שבת, geonameid לכל עיר, אסטרטגיות לריבוי סביבות ואת workflow החירום. שני דברים שהשער הזה לא מכסה: צומות קטנים וחנוכה/פורים (`min=on`) וימי הזיכרון והעצמאות (`mod=on`). צוותים ישראליים רבים מקפיאים גם ביום הזיכרון; הוסיפו את הפרמטר אם אתם מציינים אותם.
 
-למדריך המלא עם מקרי קצה וטיפול באזורי זמן, עיינו ב-`references/shabbat-deploy-freeze.md`.
+**למה `environment: production`.** תנאי `if:` הוא סתם YAML, וכל מי שפותח PR יכול לערוך אותו. שימו את סודות הייצור על deployment environment, והוסיפו כלל deployment-branch כך שרק `main` יכול להשתמש בו. מגבלות תוכנית: ב-Free סודות environment עובדים רק בריפו ציבורי; required reviewers זמינים רק לריפו ציבורי ב-Free, Pro ו-Team; כללי deployment-branch עובדים גם בריפו פרטי עם Pro או Team. השאירו את השער בתוך ה-job הזה: שער ב-job מוקדם יותר יכול לומר "פתוח" ב-13:00, ואישור שנלחץ ב-18:30 יפרוס לתוך השבת.
+
+למדריך המלא עם מקרי קצה וטיפול באזורי זמן, עיינו ב-`references/shabbat-deploy-freeze.md`. כדי לשתף שער אחד בין ריפואים רבים במקום להעתיק אותו לכל אחד, השתמשו ב-reusable workflow שב-`references/workflow-templates.md` (תבנית 6).
 
 ### שלב 3: הגדרת התראות בעברית
 
@@ -246,15 +260,20 @@ if: >
 
     RTL=$'\u200F'
 
-    curl -s -X POST "$SLACK_WEBHOOK" \
-      -H 'Content-Type: application/json' \
-      -d "{\"attachments\": [{\"color\": \"$COLOR\", \"blocks\": [{\"type\": \"section\", \"text\": {\"type\": \"mrkdwn\", \"text\": \"${RTL}*פריסה ${STATUS_HE}*\n${RTL}ריפו: \`${REPO}\`\n${RTL}ענף: \`${BRANCH}\`\n${RTL}מפתח: ${ACTOR}\"}}]}]}"
+    # jq מטפל ב-escaping של מירכאות ושורות חדשות, כך ששם ענף לא ישבור את ה-JSON.
+    jq -n --arg color "$COLOR" --arg rtl "$RTL" --arg st "$STATUS_HE" \
+          --arg repo "$REPO" --arg branch "$BRANCH" --arg actor "$ACTOR" \
+      '{attachments:[{color:$color,blocks:[{type:"section",text:{type:"mrkdwn",
+        text:($rtl+"*פריסה "+$st+"*\n"+$rtl+"ריפו: `"+$repo+"`\n"+$rtl+"ענף: `"+$branch+"`\n"+$rtl+"מפתח: "+$actor)}}]}]}' \
+      | curl -s -X POST "$SLACK_WEBHOOK" -H 'Content-Type: application/json' -d @-
 ```
 
 נקודות חשובות לעברית ב-Slack:
 - הוסיפו את תו ה-RTL mark (U+200F) לפני כל שורה בעברית
 - שמות ריפו, ענפים וזיהויים טכניים נשארים באנגלית
 - עיצוב mrkdwn של Slack עובד עם טקסט עברי
+
+**התראות Teams:** כתובת `TEAMS_WEBHOOK_URL` חייבת להגיע מאפליקציית **Workflows** של Teams (התבנית "Send webhook alerts to a channel"). ה-incoming webhooks של Office 365 Connectors הפסיקו לעבוד במאי 2026, וכתובת connector נכשלת היום, אז החליפו אותה במקום לדבג את ה-payload. Workflows מקבל את אותה מעטפת `attachments` של Adaptive Card. כדי שהכרטיס יוצג מימין לשמאל, הגדירו `version: "1.5"` ו-`rtl: true` (המאפיין קיים רק מסכמה 1.5); הדוגמה המלאה נמצאת בגרסה האנגלית של שלב זה.
 
 **Monday.com:**
 
@@ -280,7 +299,7 @@ if: >
 
 **נגישות IS-5568 (תקן ישראלי)**
 
-תקן IS-5568 הוא תקן הנגישות הישראלי לאתרים, שקיבל תוקף מחייב בתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות). הוא מאמץ את WCAG בתוספת דרישות לתוכן עברי/RTL. מהדורת WCAG שאליה התקן מפנה השתנתה בין גרסאות של התקן, ולכן ודאו מול מכון התקנים הישראלי מול איזו רמה נמדדת החובה שלכם במקום להניח; סריקה מול WCAG 2.1 AA מקיימת גם 2.0 AA כקבוצה מכילה, ולכן תצורת axe שלמטה עוברת את שלוש קבוצות התגיות.
+תקן IS-5568 הוא תקן הנגישות הישראלי לאתרים, שקיבל תוקף מחייב בתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות). הוא מאמץ את WCAG בתוספת דרישות לתוכן עברי/RTL. מהדורת WCAG שאליה התקן מפנה השתנתה בין גרסאות של התקן, ולכן ודאו מול מכון התקנים הישראלי מול איזו רמה נמדדת החובה שלכם במקום להניח; סריקה מול WCAG 2.1 AA מקיימת גם 2.0 AA כקבוצה מכילה, ולכן תצורת axe שלמטה עוברת את תגיות A/AA של 2.0 ו-2.1. ל-`@axe-core/cli` אין אפשרות locale; בדיקת ה-RTL/lang שלמטה מכסה את העברית.
 
 | דרישת IS-5568 | מקביל ב-WCAG | כלל ישראלי נוסף |
 |---------------|--------------|-----------------|
@@ -300,16 +319,15 @@ accessibility-check:
     - uses: actions/setup-node@v7
       with:
         node-version: '24'
-    - name: Install accessibility tools
-      run: npm install -g @axe-core/cli pa11y-ci
-
-    - name: Build and start
-      run: npm run build && npm run start &
+    - run: npm ci
+    - run: npm run build
+    - name: Start server in the background
+      run: npm run start &
     - name: Wait for server
       run: npx wait-on http://localhost:3000 --timeout 60000
 
     - name: Run axe-core scan
-      run: axe http://localhost:3000 --tags wcag2a,wcag2aa,wcag21aa --locale he --exit
+      run: npx @axe-core/cli http://localhost:3000 --chromedriver-path "$CHROMEWEBDRIVER/chromedriver" --tags wcag2a,wcag2aa,wcag21a,wcag21aa --exit
 
     - name: Check RTL and lang (IS-5568)
       run: |
@@ -368,12 +386,15 @@ deploy-vercel:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       run: |
-        npx vercel pull --yes --token=$VERCEL_TOKEN
-        npx vercel build --token=$VERCEL_TOKEN
-        npx vercel deploy --prebuilt --token=$VERCEL_TOKEN --regions fra1
+        # pull defaults to the DEVELOPMENT environment; name production explicitly.
+        npx vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+        npx vercel build --prod --token=$VERCEL_TOKEN
+        npx vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN --regions fra1
 ```
 
-**הרשאות טוקן והקשחת אבטחה.** מאז פברואר 2023 ברירת המחדל של `GITHUB_TOKEN` היא **קריאה בלבד**, אז כל job שכותב (תגובה ל-PR, דחיפת commit, יצירת release) חייב להגדיר בלוק `permissions:` מפורש, ואימות OIDC לענן דורש `id-token: write`. הגדירו הרשאות מינימליות לכל job:
+**כבו את הפריסות של Vercel עצמו מ-Git עבור `main`, אחרת ההקפאה לא עושה כלום.** פרויקט שמחובר דרך אינטגרציית ה-Git של Vercel פורס כל push בעצמו, מחוץ ל-GitHub Actions. הוסיפו `"git": {"deploymentEnabled": {"main": false}}` ל-`vercel.json` כך שייצור יעלה רק מה-workflow המוגן.
+
+**הרשאות טוקן והקשחת אבטחה.** מאז פברואר 2023 ארגונים וריפואים חדשים מקבלים `GITHUB_TOKEN` עם ברירת מחדל של **קריאה בלבד** (ריפואים ותיקים עשויים עדיין להיות קריאה/כתיבה; בדקו ב-Settings > Actions), אז כל job שכותב (תגובה ל-PR, דחיפת commit, יצירת release) חייב להגדיר בלוק `permissions:` מפורש, ואימות OIDC לענן דורש `id-token: write`. הגדירו הרשאות מינימליות לכל job:
 
 ```yaml
 permissions:
@@ -406,48 +427,7 @@ permissions:
 
 בנו ספריית composite actions שמקודדת מוסכמות של סטארטאפים ישראליים. הם נמצאים ב-`.github/actions/` ואפשר לשתף אותם בין ריפואים.
 
-**Hebrew i18n validation action:**
-
-```yaml
-# .github/actions/i18n-validate/action.yml
-name: 'Validate Hebrew i18n'
-description: 'Check that all i18n keys exist in both he and en locales'
-inputs:
-  locales_dir:
-    description: 'Path to locales directory'
-    default: 'src/locales'
-runs:
-  using: 'composite'
-  steps:
-    - shell: bash
-      run: |
-        HE_FILE="${{ inputs.locales_dir }}/he.json"
-        EN_FILE="${{ inputs.locales_dir }}/en.json"
-
-        if [ ! -f "$HE_FILE" ] || [ ! -f "$EN_FILE" ]; then
-          echo "::error::Missing locale files"
-          exit 1
-        fi
-
-        HE_KEYS=$(jq -r '[paths(scalars)] | map(join(".")) | sort[]' "$HE_FILE")
-        EN_KEYS=$(jq -r '[paths(scalars)] | map(join(".")) | sort[]' "$EN_FILE")
-
-        MISSING_HE=$(comm -23 <(echo "$EN_KEYS") <(echo "$HE_KEYS"))
-        MISSING_EN=$(comm -23 <(echo "$HE_KEYS") <(echo "$EN_KEYS"))
-
-        if [ -n "$MISSING_HE" ]; then
-          echo "::error::Keys in en.json missing from he.json:"
-          echo "$MISSING_HE"
-          exit 1
-        fi
-
-        if [ -n "$MISSING_EN" ]; then
-          echo "::warning::Keys in he.json missing from en.json:"
-          echo "$MISSING_EN"
-        fi
-
-        echo "i18n validation passed"
-```
+מועמדים טובים: שער השבת משלב 2, מתריע ה-Slack בעברית משלב 3, ובדיקת i18n שמכשילה PR כשב-`he.json` חסרים מפתחות שקיימים ב-`en.json` (תבנית 3 בקובץ העזר עושה זאת עם `jq paths(scalars)` ו-`comm`). נעצו actions מריפו אחר ל-SHA מלא, והעדיפו reusable workflow (תבנית 6) כשאותו job מועתק לריפואים רבים.
 
 לתבניות workflow מלאות, עיינו ב-`references/workflow-templates.md`.
 
@@ -472,7 +452,7 @@ runs:
 
 פעולות:
 1. הוספת ה-`accessibility-check` job משלב 4 ל-PR workflow
-2. הגדרת axe-core עם WCAG 2.1 AA + locale עברי
+2. הגדרת axe-core עם תגיות A ו-AA של WCAG 2.0/2.1
 3. הוספת בדיקת RTL/lang ספציפית ל-IS-5568
 4. הוספת בדיקת privacy policy route
 5. הגדרת ה-job כ-required status check ב-branch protection
@@ -501,7 +481,7 @@ runs:
 3. הוספת i18n validation (פריטי he.json / en.json)
 4. הוספת IS-5568 accessibility scan ב-PRs
 5. יצירת Vercel deploy workflow עם fra1 region
-6. הקפאת פריסות פרודקשן בשבת/חג
+6. הקפאת פריסות פרודקשן בשבת/חג, והגדרת `git.deploymentEnabled.main: false` ב-`vercel.json`
 7. הוספת התראות Slack בעברית לכל שלבי ה-pipeline
 
 תוצאה: CI/CD מלא שמכבד את תרבות העבודה הישראלית, עם בדיקות תאימות, i18n דו-לשוני והקפאת פריסה בשבת.
@@ -509,8 +489,8 @@ runs:
 ## משאבים מצורפים
 
 ### מסמכי עזר
-- `references/workflow-templates.md` -- תבניות YAML מלאות ומוכנות להעתקה ל-CI/CD של סטארטאפים ישראליים: lint-test-deploy, Supabase migration CI, i18n validation, ו-pipeline תאימות ישראלי. עיינו כשמקימים workflows לפרויקט חדש.
-- `references/shabbat-deploy-freeze.md` -- מדריך יישום מפורט להקפאת פריסה בשבת וחגים, כולל שימוש ב-hebcal API, מקרי קצה של אזורי זמן, אסטרטגיות מרובות סביבות, ונהלי דריסת חירום. עיינו כשמיישמים או מאתרים באגים במערכת ההקפאה.
+- הקובץ `references/workflow-templates.md` -- תבניות YAML מלאות ומוכנות להעתקה ל-CI/CD של סטארטאפים ישראליים: lint-test-deploy, Supabase migration CI, i18n validation, ו-pipeline תאימות ישראלי. עיינו כשמקימים workflows לפרויקט חדש.
+- הקובץ `references/shabbat-deploy-freeze.md` -- מדריך יישום מפורט להקפאת פריסה בשבת וחגים, כולל שימוש ב-hebcal API, מקרי קצה של אזורי זמן, אסטרטגיות מרובות סביבות, ונהלי דריסת חירום. עיינו כשמיישמים או מאתרים באגים במערכת ההקפאה.
 
 ## שרתי MCP מומלצים
 
@@ -530,13 +510,16 @@ runs:
 
 - **לוחות cron משתמשים ב-UTC, לא בשעון ישראל.** סוכנים נוטים לכתוב cron schedules בשעון מקומי. ישראל היא UTC+2 (חורף) או UTC+3 (קיץ). `0 9 * * 0-4` ב-cron פירושו 09:00 UTC, שזה 11:00 או 12:00 בישראל. תמיד תמירו.
 - **שבוע העבודה בישראל הוא ראשון-חמישי, לא שני-שישי.** סוכנים כותבים `1-5` ל-cron של ימי חול (שני-שישי). לצוותים ישראליים, השתמשו ב-`0-4` (ראשון-חמישי) או `0-5` (ראשון-שישי חצי יום).
-- **זמני שבת משתנים כל שבוע ולפי עיר.** סוכנים נוטים לקבע "שישי 18:00" כזמן כניסת שבת. בפועל, הדלקת נרות בערים בישראל נעה בין 15:55 בערך (ירושלים, תחילת-אמצע דצמבר) ל-19:30 בערך (תל אביב, יוני), וירושלים מדליקה כ-20 דקות מוקדם יותר מערי החוף כי היא נוהגת להדליק 40 דקות לפני השקיעה. תמיד השתמשו ב-hebcal API לזמנים מדויקים.
-- **שלוש דרכים שבהן סוכן שובר את ההקפאה בשקט בזמן שה-workflow עדיין נראה תקין.** ראשית, hebcal מחזיר זמנים עם היסט (`2026-08-28T18:28:00+03:00`); השוואה לקסיקוגרפית מול `date -u` שגויה בגודל ההיסט ומשאירה את השער פתוח בשעות הראשונות של השבת. המירו את שני הגבולות לשניות epoch עם `date -d`. שנית, `/shabbat` מחזיר כברירת מחדל את סוף השבוע הקרוב, ולכן העבירו `gy`/`gm`/`gd` של היום, מחושבים תחת `TZ=Asia/Jerusalem`: `date` רגיל על ראנר הוא עדיין אתמול בין 00:00 ל-03:00 שעון ישראל. שלישית, חג של יומיים פולט שתי הדלקות נרות לפני הבדלה אחת, ולכן שמרו את המוקדמת שבהן שטרם נסגרה; דריסה שלה בודקת רק את הלילה השני ומאפשרת פריסות לאורך כל היום הראשון של ראש השנה.
+- **זמני שבת משתנים כל שבוע ולפי עיר.** סוכנים נוטים לקבע "שישי 18:00" כזמן כניסת שבת. בפועל, הדלקת נרות בערים בישראל נעה בין 15:55 בערך (ירושלים, תחילת-אמצע דצמבר) ל-19:30 בערך (תל אביב, יוני), וירושלים מדליקה כ-20 דקות לפני תל אביב כי היא נוהגת להדליק 40 דקות לפני השקיעה (בחיפה 30). תמיד השתמשו ב-hebcal API לזמנים מדויקים.
+- **שלוש דרכים שבהן סוכן שובר את ההקפאה בשקט בזמן שה-workflow עדיין נראה תקין.** ראשית, hebcal מחזיר זמנים עם היסט (`2026-08-28T18:28:00+03:00`); השוואה לקסיקוגרפית מול `date -u` שגויה בגודל ההיסט ומשאירה את השער פתוח בשעות הראשונות של השבת. המירו את שני הגבולות לשניות epoch עם `date -d`. שנית, העבירו `gy`/`gm`/`gd` של היום, מחושבים תחת `TZ=Asia/Jerusalem`, כך ש"היום" הוא היום בישראל: `date` רגיל על ראנר הוא עדיין אתמול בין 00:00 ל-03:00 שעון ישראל. שלישית, חג של יומיים פולט שתי הדלקות נרות לפני הבדלה אחת, ולכן שמרו את המוקדמת שבהן שטרם נסגרה; דריסה שלה בודקת רק את הלילה השני ומאפשרת פריסות לאורך כל היום הראשון של ראש השנה.
 - **טקסט עברי ב-YAML צריך סמני RTL.** בלי תו RTL mark (U+200F), טקסט עברי ב-Slack payloads מציג סימני פיסוק במקום הלא נכון. תמיד הוסיפו `\u200F` לפני שורות בעברית.
-- **IS-5568 הוא לא רק WCAG 2.1 AA.** סוכנים מתייחסים ל-IS-5568 כמילה נרדפת ל-WCAG. ל-IS-5568 יש דרישות נוספות ספציפיות לישראל סביב תוכן דו-לשוני, לוגואים ממשלתיים ונגישות יצירת קשר.
-- **`me-south-1` (בחריין) לא זמין לכל חשבונות AWS.** האזור הזה דורש הפעלה (opt-in). אל תניחו שהוא זמין. חיזרו ל-`eu-west-1` אם המשתמש לא הפעיל אותו.
-- **Monday.com API v2 משתמש רק ב-GraphQL.** סוכנים לפעמים מנסים REST endpoints ל-Monday.com. ה-API הוא GraphQL בלבד ב-`https://api.monday.com/v2`.
-- **`schedule` event ב-GitHub Actions רץ רק על ה-default branch.** סוכנים מוסיפים scheduled workflows על feature branches ותוהים למה הם לא מופעלים.
+- **התקן IS-5568 הוא לא רק WCAG 2.1 AA.** סוכנים מתייחסים ל-IS-5568 כמילה נרדפת ל-WCAG. ל-IS-5568 יש דרישות נוספות ספציפיות לישראל סביב תוכן דו-לשוני, לוגואים ממשלתיים ונגישות יצירת קשר.
+- **האזור `il-central-1` (תל אביב) הוא אזור AWS שדורש הפעלה (opt-in).** הוא כבוי בחשבון עד שמישהו מפעיל אותו, ולכן workflow שמניח אותו נכשל בשלב ההרשאות או בקריאת ה-API. ודאו שהוא מופעל, או חיזרו ל-`eu-west-1`.
+- **התווית `ubuntu-latest` עוברת ל-Ubuntu 26.04 בין 2026-10-19 ל-2026-11-19.** job פריסה שעבד אתמול יכול להישבר באמצע ההגירה בלי שום שינוי בריפו. נעצו `ubuntu-24.04` ב-jobs של ייצור ועברו באופן מבוקר. ב-26.04 התיקייה `/tmp` היא tmpfs בזיכרון עם מכסה של כ-7.8GB למשתמש, ולכן בילדים גדולים שכותבים לשם נכשלים עם "disk quota exceeded".
+- **גרסת Node 20 הוסרה מהראנרים (2026-09-23).** action שה-`action.yml` שלו עדיין מצהיר `using: node20` רץ עכשיו על Node 24, ו-`ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION` כבר לא מחזיר את Node 20. אם action כזה נשבר, זו הסיבה; עדכנו לגרסה שנבנתה ל-`node24`.
+- **הפעולה `pnpm/action-setup` נכשלת כש-`version:` ו-`packageManager` לא תואמים.** `version: 9` לצד `"packageManager": "pnpm@9.15.0"` נחשב אי-התאמה ועוצר עם "Multiple versions of pnpm specified". השמיטו את `version:` כש-`package.json` מצהיר על `packageManager`.
+- **ה-API של Monday.com (גרסה 2) משתמש רק ב-GraphQL.** סוכנים לפעמים מנסים REST endpoints ל-Monday.com. ה-API הוא GraphQL בלבד ב-`https://api.monday.com/v2`.
+- **אירוע `schedule` ב-GitHub Actions רץ רק על ה-default branch.** סוכנים מוסיפים scheduled workflows על feature branches ותוהים למה הם לא מופעלים.
 
 ## פתרון בעיות
 

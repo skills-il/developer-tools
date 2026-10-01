@@ -12,13 +12,13 @@ compatibility: Requires GitHub repository with Actions enabled. GitHub CLI (gh) 
 
 ### Step 1: Choose the Right Workflow Pattern
 
-Match the team's need to the appropriate workflow template. Use this table as a starting point, then customize based on the project's stack and deployment target.
+Match the team's need to a workflow template, then adapt it to the stack.
 
 | Israeli Dev Need | Workflow Template | Key Actions / Tools |
 |-----------------|-------------------|---------------------|
 | Shabbat/holiday deploy freeze | `shabbat-deploy-freeze.yml` | hebcal API, cron schedule, environment protection rules |
 | Hebrew Slack notifications | `hebrew-notifications.yml` | Slack Incoming Webhook, RTL text payload |
-| Hebrew Teams notifications | `hebrew-notifications.yml` | Teams Incoming Webhook, Adaptive Card with RTL |
+| Hebrew Teams notifications | `hebrew-notifications.yml` | Teams Workflows webhook, Adaptive Card |
 | IS-5568 accessibility check | `compliance-checks.yml` | axe-core, pa11y, custom IS-5568 rules |
 | Privacy compliance (GDPR-IL) | `compliance-checks.yml` | custom scanner, dependency audit |
 | Monday.com issue sync | `monday-sync.yml` | Monday.com GraphQL API |
@@ -56,9 +56,9 @@ runs:
       run: |
         # ONE feed covers Shabbat AND holidays. The /shabbat endpoint honours maj=on and
         # returns `holiday` items together with their candle-lighting times, including the
-        # EREV entries (Erev Yom Kippur, Erev Sukkot) that the /hebcal feed omits entirely.
-        # Ask for TODAY in Israel time: runners are UTC, so a bare `date` is still yesterday
-        # between 00:00 and 03:00 Israel time and would miss the chag.
+        # EREV entries (Erev Yom Kippur, Erev Sukkot), so one small call has everything.
+        # Pass TODAY in Israel time explicitly: runners are UTC, so a bare `date` is still
+        # yesterday between 00:00 and 03:00 Israel time and would miss the chag.
         export TZ=Asia/Jerusalem
         CURL_OK=0
         FEED=$(curl -sf --max-time 10 --retry 2 \
@@ -77,7 +77,9 @@ runs:
         # the offset and leaves the gate open for the first hours of every Shabbat.
         # A 200 with an unexpected shape must freeze too: pipefail does not propagate out
         # of the process substitution below, so an empty item list would silently open the gate.
-        ITEM_COUNT=$(echo "$FEED" | jq -r '.items | length' 2>/dev/null || echo 0)
+        # A real feed always has a candle-lighting or a havdalah (not always both: the week
+        # before Rosh Hashana returns only the two candle-lightings), so require one of them.
+        ITEM_COUNT=$(echo "$FEED" | jq -r '[.items[]? | select(.category=="candles" or .category=="havdalah")] | length' 2>/dev/null || echo 0)
         if [ -z "$ITEM_COUNT" ] || [ "$ITEM_COUNT" = "0" ] || [ "$ITEM_COUNT" = "null" ]; then
           echo "frozen=true" >> $GITHUB_OUTPUT
           echo "reason=hebcal returned no calendar items; failing closed. Override with force_deploy." >> $GITHUB_OUTPUT
@@ -154,6 +156,13 @@ runs:
           esac
         done < <(echo "$FEED" | jq -r '.items[] | [.category, .date, .title] | @tsv')
 
+        # A candle-lighting with no havdalah after it in this feed: the window runs past the
+        # feed's range. If it has started, we are inside it, so freeze.
+        if [ "$FROZEN" = false ] && [ -n "$START" ] && [ "$NOW_EPOCH" -ge "$(date -d "$START" +%s)" ]; then
+          FROZEN=true
+          REASON="$LABEL (from $START, end not in feed)"
+        fi
+
         echo "frozen=$FROZEN" >> $GITHUB_OUTPUT
         echo "reason=$REASON" >> $GITHUB_OUTPUT
 ```
@@ -162,35 +171,26 @@ runs:
 
 ```yaml
 jobs:
-  check-deploy-window:
-    runs-on: ubuntu-latest
-    outputs:
-      is_frozen: ${{ steps.shabbat.outputs.is_frozen }}
-      reason: ${{ steps.shabbat.outputs.reason }}
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: production   # holds the prod secrets; see the note below
     steps:
       - uses: actions/checkout@v7
+      # The gate runs INSIDE the environment-protected job, i.e. after any approval wait.
       - id: shabbat
         uses: ./.github/actions/shabbat-check
-
-  deploy:
-    needs: check-deploy-window
-    if: needs.check-deploy-window.outputs.is_frozen != 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Deploying..."
-
-  notify-frozen:
-    needs: check-deploy-window
-    if: needs.check-deploy-window.outputs.is_frozen == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - env:
-          # The reason string carries a title from hebcal's HTTP response, so bind it to an
-          # env var rather than interpolating ${{ }} into the script.
-          FREEZE_REASON: ${{ needs.check-deploy-window.outputs.reason }}
+      - id: deploy
+        # == 'false', not != 'true': a crashed or empty gate must stay closed.
+        if: steps.shabbat.outputs.is_frozen == 'false'
+        run: echo "Deploying..."
+      - name: Notify frozen
+        if: steps.shabbat.outputs.is_frozen == 'true'
+        env:
+          # The reason carries a title from hebcal's response; bind it, never ${{ }} it.
+          FREEZE_REASON: ${{ steps.shabbat.outputs.reason }}
         run: |
-          echo "Deploy frozen: $FREEZE_REASON"
-          # Send notification (see Step 3)
+          echo "Deploy frozen: $FREEZE_REASON"   # send it to Slack, see Step 3
 ```
 
 3. **Emergency override**: Add a `workflow_dispatch` input for overriding the freeze:
@@ -206,17 +206,19 @@ on:
         default: false
 ```
 
-Then modify the deploy job condition:
+Then change the deploy step condition (explicit `success()` stops GitHub adding an implicit one, so the override still works when the gate step crashed):
 
 ```yaml
 if: >
-  needs.check-deploy-window.outputs.is_frozen != 'true' ||
-  github.event.inputs.force_deploy == 'true'
+  (success() && steps.shabbat.outputs.is_frozen == 'false') ||
+  (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
 ```
 
-> **Note:** The composite action above is the working reference implementation: it pairs each candle-lighting with the havdalah that follows it and compares in epoch seconds, it asks hebcal for TODAY in `Asia/Jerusalem` rather than the runner's UTC date, and it fails closed when hebcal is unreachable. `references/shabbat-deploy-freeze.md` adds a configurable pre-Shabbat buffer, per-city geonameids, multi-environment strategies and the emergency-override workflow. Two things this gate does NOT cover: minor fasts and Chanukah/Purim (`min=on`) and the modern civil days Yom HaZikaron and Yom HaAtzmaut (`mod=on`). Israeli teams commonly freeze on Yom HaZikaron too; add the parameter if you observe them.
+> **Note:** `references/shabbat-deploy-freeze.md` has the same gate plus a configurable pre-Shabbat buffer and per-city geonameids, multi-environment strategies and the emergency-override workflow. Not covered: minor fasts and Chanukah/Purim (`min=on`) and Yom HaZikaron/Yom HaAtzmaut (`mod=on`). Many Israeli teams also freeze on Yom HaZikaron; add the parameter if you do.
 
-For the full implementation guide with edge cases and timezone handling, consult `references/shabbat-deploy-freeze.md`.
+**Why `environment: production`.** An `if:` is just YAML, so anyone who can open a PR can edit it. Put the production secrets on a deployment environment instead, and add a deployment-branch rule so only `main` can use it. Plan limits: on Free, environment secrets work only in public repos; required reviewers are public-only on Free, Pro and Team; deployment-branch rules work on private repos with Pro or Team. Keep the gate inside that job: a gate in an earlier job can say "open" at 13:00 while an approval clicked at 18:30 deploys into Shabbat.
+
+For the full implementation guide with edge cases and timezone handling, consult `references/shabbat-deploy-freeze.md`. To share one gate across many repos instead of copying it into each, use the reusable workflow in `references/workflow-templates.md` (Template 6).
 
 ### Step 3: Configure Hebrew Notifications
 
@@ -258,72 +260,40 @@ Hebrew text in webhook payloads requires explicit RTL handling. Slack and Teams 
     # RTL marker ensures Hebrew renders correctly in Slack
     RTL=$'\u200F'
 
-    curl -s -X POST "$SLACK_WEBHOOK" \
-      -H 'Content-Type: application/json' \
-      -d @- <<EOF
-    {
-      "attachments": [{
-        "color": "$COLOR",
-        "blocks": [
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "$EMOJI ${RTL}*פריסה ${STATUS_HE}*\n${RTL}ריפו: \`${REPO}\`\n${RTL}ענף: \`${BRANCH}\`\n${RTL}קומיט: ${COMMIT_MSG}\n${RTL}מפתח: ${ACTOR}"
-            }
-          }
-        ]
-      }]
-    }
-    EOF
+    # jq escapes quotes and newlines, so a commit message cannot break the JSON.
+    jq -n --arg color "$COLOR" --arg rtl "$RTL" --arg emoji "$EMOJI" --arg st "$STATUS_HE" \
+          --arg repo "$REPO" --arg branch "$BRANCH" --arg msg "$COMMIT_MSG" --arg actor "$ACTOR" \
+      '{attachments:[{color:$color,blocks:[{type:"section",text:{type:"mrkdwn",
+        text:($emoji+" "+$rtl+"*פריסה "+$st+"*\n"+$rtl+"ריפו: `"+$repo+"`\n"+$rtl+"ענף: `"+$branch+"`\n"+$rtl+"קומיט: "+$msg+"\n"+$rtl+"מפתח: "+$actor)}}]}]}' \
+      | curl -s -X POST "$SLACK_WEBHOOK" -H 'Content-Type: application/json' -d @-
 ```
 
-**Key points for Hebrew in Slack:**
-- Prefix Hebrew lines with the RTL mark character (U+200F) to force correct display
-- Keep repository names, branch names, and technical identifiers in English (no translation needed)
-- Slack mrkdwn formatting (`*bold*`, `` `code` ``) works fine with Hebrew text
+Prefix each Hebrew line with U+200F and keep repo and branch names in English; mrkdwn (`*bold*`, `` `code` ``) works fine with Hebrew.
 
-**Teams (Adaptive Card):**
+**Teams (Adaptive Card):** `TEAMS_WEBHOOK_URL` must come from the Teams **Workflows** app (template "Send webhook alerts to a channel"). Office 365 Connector incoming webhooks stopped working in May 2026; a connector URL now fails, so replace it rather than debugging the payload. Workflows accepts the same `attachments` envelope:
 
 ```yaml
 - name: Notify Teams (Hebrew)
   if: always()
   env:
     TEAMS_WEBHOOK: ${{ secrets.TEAMS_WEBHOOK_URL }}
+    STATUS: ${{ job.status }}
+    REPO: ${{ github.repository }}
+    BRANCH: ${{ github.ref_name }}
+    ACTOR: ${{ github.actor }}
   run: |
-    STATUS="${{ job.status }}"
-    # ... same status mapping as Slack ...
+    case "$STATUS" in
+      success) STATUS_HE="הצליחה" ;;
+      failure) STATUS_HE="נכשלה" ;;
+      *)       STATUS_HE="בוטלה" ;;
+    esac
 
-    curl -s -X POST "$TEAMS_WEBHOOK" \
-      -H 'Content-Type: application/json' \
-      -d @- <<EOF
-    {
-      "type": "message",
-      "attachments": [{
-        "contentType": "application/vnd.microsoft.card.adaptive",
-        "content": {
-          "type": "AdaptiveCard",
-          "version": "1.4",
-          "body": [
-            {
-              "type": "TextBlock",
-              "text": "פריסה ${STATUS_HE}",
-              "weight": "Bolder",
-              "size": "Medium"
-            },
-            {
-              "type": "FactSet",
-              "facts": [
-                {"title": "ריפו", "value": "${REPO}"},
-                {"title": "ענף", "value": "${BRANCH}"},
-                {"title": "מפתח", "value": "${ACTOR}"}
-              ]
-            }
-          ]
-        }
-      }]
-    }
-    EOF
+    jq -n --arg st "$STATUS_HE" --arg repo "$REPO" --arg branch "$BRANCH" --arg actor "$ACTOR" \
+      '{type:"message",attachments:[{contentType:"application/vnd.microsoft.card.adaptive",
+        content:{type:"AdaptiveCard",version:"1.5",rtl:true,body:[
+          {type:"TextBlock",text:("פריסה "+$st),weight:"Bolder",size:"Medium"},
+          {type:"FactSet",facts:[{title:"ריפו",value:$repo},{title:"ענף",value:$branch},{title:"מפתח",value:$actor}]}]}}]}' \
+      | curl -s -X POST "$TEAMS_WEBHOOK" -H 'Content-Type: application/json' -d @-
 ```
 
 **Monday.com status update:**
@@ -344,7 +314,7 @@ Hebrew text in webhook payloads requires explicit RTL handling. Slack and Teams 
       STATUS_LABEL="${{ job.status == 'success' && 'Deployed' || 'Failed' }}"
 
       curl -s -X POST "https://api.monday.com/v2" \
-        -H "Authorization: Bearer $MONDAY_TOKEN" \
+        -H "Authorization: $MONDAY_TOKEN" \
         -H "Content-Type: application/json" \
         -d "{\"query\": \"mutation { change_simple_column_value(item_id: $ITEM_ID, board_id: $BOARD_ID, column_id: \\\"status\\\", value: \\\"$STATUS_LABEL\\\") { id } }\"}"
     fi
@@ -354,7 +324,7 @@ Hebrew text in webhook payloads requires explicit RTL handling. Slack and Teams 
 
 **IS-5568 Accessibility (Israeli Standard)**
 
-IS-5568 is the Israeli web-accessibility standard made binding by the Equal Rights for Persons with Disabilities (accessibility of a service) regulations. It adopts WCAG with additional requirements for Hebrew/RTL content. The WCAG edition it points at has moved between revisions of the standard, so confirm the level your obligation is assessed against with the Standards Institution of Israel rather than assuming; scanning against WCAG 2.1 AA satisfies 2.0 AA as a superset, which is why the axe configuration below passes all three tag sets. Key differences from WCAG alone:
+IS-5568 is the Israeli web-accessibility standard made binding by the Equal Rights for Persons with Disabilities (accessibility of a service) regulations. It adopts WCAG with additional requirements for Hebrew/RTL content. The WCAG edition it points at has moved between revisions of the standard, so confirm the level your obligation is assessed against with the Standards Institution of Israel rather than assuming; scanning against WCAG 2.1 AA satisfies 2.0 AA as a superset, which is why the axe configuration below passes the 2.0 and 2.1 A/AA tag sets. `@axe-core/cli` has no locale option; the RTL/lang step below covers Hebrew. Key differences from WCAG alone:
 
 | IS-5568 Requirement | WCAG Equivalent | Additional Israeli Rule |
 |---------------------|-----------------|------------------------|
@@ -375,20 +345,19 @@ accessibility-check:
       with:
         node-version: '24'
 
-    - name: Install accessibility tools
-      run: npm install -g @axe-core/cli pa11y-ci
-
-    - name: Build project
-      run: npm run build && npm run start &
-      # Wait for server to be ready
+    - run: npm ci
+    - run: npm run build
+    - name: Start server in the background
+      run: npm run start &
     - name: Wait for server
       run: npx wait-on http://localhost:3000 --timeout 60000
 
     - name: Run axe-core scan
       run: |
-        axe http://localhost:3000 \
-          --tags wcag2a,wcag2aa,wcag21aa \
-          --locale he \
+        # The runner's ChromeDriver matches its Chrome; chromedriver@latest may not.
+        npx @axe-core/cli http://localhost:3000 \
+          --chromedriver-path "$CHROMEWEBDRIVER/chromedriver" \
+          --tags wcag2a,wcag2aa,wcag21a,wcag21aa \
           --exit
 
     - name: Check RTL and lang attributes (IS-5568 specific)
@@ -421,7 +390,8 @@ privacy-check:
 
     - name: Scan for exposed PII patterns
       run: |
-        # Israeli ID number pattern (9 digits with Luhn check)
+        # Any 9-digit run. No check-digit validation, so expect false positives;
+        # treat hits as a prompt for review, not as detected PII.
         if grep -rn '[0-9]\{9\}' src/ --include="*.ts" --include="*.tsx" | \
            grep -v 'test\|mock\|spec\|\.d\.ts'; then
           echo "::warning::Potential Israeli ID numbers found in source code. Verify these are not real PII."
@@ -455,7 +425,7 @@ Israeli projects should deploy to regions with low latency to Israel. Here are t
 | Cloudflare Workers | Automatic (TLV edge) | lowest | No region config needed |
 | DigitalOcean | fra1 (Frankfurt) | low | `doctl apps create --region fra` |
 
-The latency column is a relative ranking, not measured figures: an in-country region beats a European one, which beats anything further out. Measure from your own users before committing to a region, and weigh it against il-central-1 and me-west1 carrying a thinner service catalogue than the mature European regions.
+The latency column is a relative ranking, not a measurement. Measure from your own users, and weigh in-country regions against their thinner service catalogue.
 
 **Vercel deployment with fra1 pinning:**
 
@@ -470,10 +440,13 @@ deploy-vercel:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       run: |
-        npx vercel pull --yes --token=$VERCEL_TOKEN
-        npx vercel build --token=$VERCEL_TOKEN
-        npx vercel deploy --prebuilt --token=$VERCEL_TOKEN --regions fra1
+        # pull defaults to the DEVELOPMENT environment; name production explicitly.
+        npx vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+        npx vercel build --prod --token=$VERCEL_TOKEN
+        npx vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN --regions fra1
 ```
+
+**Turn off Vercel's own Git deploys for `main`, or the freeze does nothing.** A project connected through Vercel's Git integration deploys every push by itself, outside GitHub Actions. Add `"git": {"deploymentEnabled": {"main": false}}` to `vercel.json` so production ships only from the gated workflow.
 
 **AWS deployment with region selection:**
 
@@ -484,7 +457,7 @@ deploy-aws:
     id-token: write   # REQUIRED for OIDC role assumption; without it the action fails with "Unable to get OIDC token"
     contents: read
   env:
-    AWS_DEFAULT_REGION: il-central-1  # AWS Tel Aviv (lowest latency to Israel); eu-west-1 is an alternative
+    AWS_DEFAULT_REGION: il-central-1  # AWS Tel Aviv. Opt-in region: enable it on the account first, or use eu-west-1
   steps:
     - uses: aws-actions/configure-aws-credentials@v6
       with:
@@ -493,7 +466,7 @@ deploy-aws:
     # ... deployment steps
 ```
 
-**Token permissions and security hardening.** Since February 2023 the default `GITHUB_TOKEN` is **read-only**, so any job that writes (commenting on a PR, pushing a commit, creating a release) must declare an explicit `permissions:` block, and OIDC cloud auth (above) requires `id-token: write`. Set least-privilege permissions per job:
+**Token permissions and security hardening.** Since February 2023 new organizations and repos get a **read-only** default `GITHUB_TOKEN` (older repos may still default to read/write; check Settings > Actions), so any job that writes (commenting on a PR, pushing a commit, creating a release) must declare an explicit `permissions:` block, and OIDC cloud auth (above) requires `id-token: write`. Set least-privilege permissions per job:
 
 ```yaml
 permissions:
@@ -522,7 +495,7 @@ Israeli work week is Sunday through Thursday. Friday is a half-day (typically un
 | Fri 12:00 (half-day cutoff) | `0 10 * * 5` | `0 9 * * 5` | Last Friday deploy |
 | Daily except Shabbat | `0 7 * * 0-5` | `0 6 * * 0-5` | Weekday + Friday morning |
 
-**Handling DST transitions**: Israel enters DST on the Friday before the last Sunday of March, and returns to standard time on the last Sunday of October (27 Mar and 25 Oct in 2026; 26 Mar and 31 Oct in 2027). Rather than maintaining two cron schedules, use the hebcal API to determine the current UTC offset dynamically, or accept a 1-hour drift during transition weeks.
+**Handling DST transitions**: Israel enters DST on the Friday before the last Sunday of March, and returns to standard time on the last Sunday of October (27 Mar and 25 Oct in 2026; 26 Mar and 31 Oct in 2027). Either accept a 1-hour drift in those weeks or check the offset at runtime.
 
 ```yaml
 on:
@@ -537,52 +510,7 @@ on:
 
 Build a library of composite actions that encode Israeli startup conventions. These live in `.github/actions/` and can be shared across repositories.
 
-**Hebrew i18n validation action:**
-
-```yaml
-# .github/actions/i18n-validate/action.yml
-name: 'Validate Hebrew i18n'
-description: 'Check that all i18n keys exist in both he and en locales'
-inputs:
-  locales_dir:
-    description: 'Path to locales directory'
-    default: 'src/locales'
-runs:
-  using: 'composite'
-  steps:
-    - shell: bash
-      run: |
-        HE_FILE="${{ inputs.locales_dir }}/he.json"
-        EN_FILE="${{ inputs.locales_dir }}/en.json"
-
-        if [ ! -f "$HE_FILE" ] || [ ! -f "$EN_FILE" ]; then
-          echo "::error::Missing locale files. Expected $HE_FILE and $EN_FILE"
-          exit 1
-        fi
-
-        # Extract keys from both files
-        HE_KEYS=$(jq -r '[paths(scalars)] | map(join(".")) | sort[]' "$HE_FILE")
-        EN_KEYS=$(jq -r '[paths(scalars)] | map(join(".")) | sort[]' "$EN_FILE")
-
-        # Find missing keys
-        MISSING_HE=$(comm -23 <(echo "$EN_KEYS") <(echo "$HE_KEYS"))
-        MISSING_EN=$(comm -23 <(echo "$HE_KEYS") <(echo "$EN_KEYS"))
-
-        if [ -n "$MISSING_HE" ]; then
-          echo "::error::Keys in en.json missing from he.json:"
-          echo "$MISSING_HE" | while read key; do
-            echo "  - $key"
-          done
-          exit 1
-        fi
-
-        if [ -n "$MISSING_EN" ]; then
-          echo "::warning::Keys in he.json missing from en.json:"
-          echo "$MISSING_EN"
-        fi
-
-        echo "i18n validation passed"
-```
+Good candidates: the Shabbat gate from Step 2, the Hebrew Slack notifier from Step 3, and an i18n check that fails a PR when `he.json` is missing keys present in `en.json` (Template 3 in the references file does this with `jq paths(scalars)` and `comm`). Pin cross-repo actions to a full SHA, and prefer a reusable workflow (Template 6) when the same job is copied into many repos.
 
 For complete workflow YAML templates, consult `references/workflow-templates.md`.
 
@@ -607,7 +535,7 @@ User says: "We need IS-5568 accessibility checks in our pull request CI"
 
 Actions:
 1. Add the `accessibility-check` job from Step 4 to the PR workflow
-2. Configure axe-core with WCAG 2.1 AA + Hebrew locale
+2. Configure axe-core with the WCAG 2.0/2.1 A and AA tags
 3. Add the RTL/lang attribute check specific to IS-5568
 4. Add the privacy policy route check
 5. Set the job as a required status check in branch protection rules
@@ -636,7 +564,7 @@ Actions:
 3. Add Hebrew i18n validation (he.json / en.json key parity)
 4. Add IS-5568 accessibility scan on PRs
 5. Create Vercel deploy workflow with fra1 region pinning
-6. Gate production deploys on Shabbat/holiday check
+6. Gate production deploys on Shabbat/holiday check, and set `git.deploymentEnabled.main: false` in `vercel.json`
 7. Add Hebrew Slack notifications for all pipeline stages
 
 Result: Complete CI/CD pipeline respecting Israeli work culture, with compliance checks, bilingual i18n validation, and Shabbat-aware production deploys.
@@ -649,7 +577,7 @@ Result: Complete CI/CD pipeline respecting Israeli work culture, with compliance
 
 ## Recommended MCP Servers
 
-- **hebcal**: Hebrew/Jewish calendar and Shabbat times. An MCP alternative to calling the Hebcal HTTP API inside a composite action, useful when an agent needs holiday data while authoring or reasoning about a workflow rather than at runtime.
+- **hebcal**: Jewish calendar and Shabbat times, for an agent that needs holiday data while authoring a workflow (the workflow itself still calls the HTTP API).
 
 ## Reference Links
 
@@ -665,11 +593,14 @@ Result: Complete CI/CD pipeline respecting Israeli work culture, with compliance
 
 - **Cron schedules use UTC, not Israel time.** Agents default to writing cron schedules in local time. Israel is UTC+2 (winter) or UTC+3 (summer/DST). A `0 9 * * 0-4` cron means 09:00 UTC, which is 11:00 or 12:00 in Israel. Always convert.
 - **Israeli work week is Sunday-Thursday, not Monday-Friday.** Agents consistently write `1-5` for weekday cron (Monday-Friday). For Israeli teams, use `0-4` (Sunday-Thursday) or `0-5` (Sunday-Friday half-day).
-- **Shabbat times vary weekly and by city.** Agents tend to hardcode "Friday 18:00" as Shabbat start. In reality, candle lighting across Israeli cities runs from about 15:55 (Jerusalem, early-to-mid December) to about 19:30 (Tel Aviv, June), and Jerusalem lights roughly 20 minutes earlier than the coastal cities because it keeps a 40-minute-before-sunset custom. Always use the hebcal API for accurate times.
-- **Three ways an agent silently breaks the freeze while the workflow still looks correct.** First, hebcal returns offset-aware times (`2026-08-28T18:28:00+03:00`); comparing that lexicographically against `date -u` is wrong by the offset and leaves the gate open for the first hours of Shabbat. Convert both bounds to epoch seconds with `date -d`. Second, `/shabbat` defaults to the UPCOMING weekend, so pass `gy`/`gm`/`gd` for today, computed under `TZ=Asia/Jerusalem`: a runner's bare `date` is still yesterday between 00:00 and 03:00 Israel time. Third, a two-day yom tov emits TWO candle-lightings before a single havdalah, so keep the EARLIEST unclosed one; overwriting it tests only the second night and deploys run through the whole of Rosh Hashana day one.
+- **Shabbat times vary weekly and by city.** Agents tend to hardcode "Friday 18:00" as Shabbat start. In reality, candle lighting across Israeli cities runs from about 15:55 (Jerusalem, early-to-mid December) to about 19:30 (Tel Aviv, June), and Jerusalem lights roughly 20 minutes earlier than Tel Aviv because it keeps a 40-minute-before-sunset custom (Haifa uses 30). Always use the hebcal API for accurate times.
+- **Three ways an agent silently breaks the freeze while the workflow still looks correct.** First, hebcal returns offset-aware times (`2026-08-28T18:28:00+03:00`); comparing that lexicographically against `date -u` is wrong by the offset and leaves the gate open for the first hours of Shabbat. Convert both bounds to epoch seconds with `date -d`. Second, pass `gy`/`gm`/`gd` for today computed under `TZ=Asia/Jerusalem`, so "today" means Israel's today: a runner's bare `date` is still yesterday between 00:00 and 03:00 Israel time. Third, a two-day yom tov emits TWO candle-lightings before a single havdalah, so keep the EARLIEST unclosed one; overwriting it tests only the second night and deploys run through the whole of Rosh Hashana day one.
 - **Hebrew text in YAML needs RTL markers.** Without the RTL mark character (U+200F), Hebrew text in Slack payloads renders with punctuation in the wrong position. Always prefix Hebrew lines with `\u200F`.
 - **IS-5568 is not just WCAG 2.1 AA.** Agents treat IS-5568 as a synonym for WCAG. IS-5568 has additional Israeli-specific requirements around bilingual content, government logos, and contact accessibility.
-- **`me-south-1` (Bahrain) is NOT available to all AWS accounts.** This region requires opt-in activation. Do not assume it is available. Fall back to `eu-west-1` if the user has not explicitly enabled it.
+- **`il-central-1` (Tel Aviv) is an opt-in AWS region.** It is disabled on an account until someone enables it, so a workflow that assumes it fails at the credentials or API call. Confirm it is enabled, or fall back to `eu-west-1`.
+- **`ubuntu-latest` moves to Ubuntu 26.04 between 2026-10-19 and 2026-11-19.** A deploy job that worked yesterday can break mid-rollout with no change in the repo. Pin `ubuntu-24.04` on production jobs and move deliberately. On 26.04, `/tmp` is a RAM-backed tmpfs with a per-user quota of about 7.8 GB, so large builds writing there fail with "disk quota exceeded".
+- **Node 20 is gone from the runners (removed 2026-09-23).** An action whose `action.yml` still says `using: node20` is now run on Node 24, and `ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION` no longer brings Node 20 back. If such an action breaks, that is why; bump it to a release built for `node24`.
+- **`pnpm/action-setup` fails when `version:` and `packageManager` disagree.** `version: 9` beside `"packageManager": "pnpm@9.15.0"` is a mismatch and aborts with "Multiple versions of pnpm specified". Omit `version:` when `package.json` declares `packageManager`.
 - **Monday.com API v2 uses GraphQL only.** Agents sometimes try REST endpoints for Monday.com. The API is exclusively GraphQL at `https://api.monday.com/v2`.
 - **GitHub Actions `schedule` event runs on the default branch only.** Agents sometimes add scheduled workflows on feature branches and wonder why they do not trigger.
 
@@ -685,7 +616,7 @@ Solution: Prefix every Hebrew line with `$'\u200F'` in bash, or `\u200F` in JSON
 
 ### Error: "Cron schedule fires at wrong time"
 Cause: Schedule written in Israel time instead of UTC.
-Solution: Subtract 2 hours (winter) or 3 hours (summer) from the desired Israel time. Use `date -u` to verify current UTC time. For DST-proof scheduling, accept the 1-hour drift or add a runtime check.
+Solution: Subtract 2 hours (winter) or 3 hours (summer) from the desired Israel time, and accept a 1-hour drift around DST changes or add a runtime check.
 
 ### Error: "axe-core scan finds no violations but site is not accessible"
 Cause: Automated scanning catches only a minority of accessibility issues (commonly cited as roughly a third). IS-5568 requires manual testing for reading order, screen reader behavior, and bilingual content flow.

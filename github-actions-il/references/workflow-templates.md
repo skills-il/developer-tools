@@ -6,6 +6,8 @@ This reference contains complete, copy-paste-ready GitHub Actions workflow YAML 
 
 A standard CI/CD pipeline for Israeli startups using Node.js. Runs on Israeli work days, deploys to Vercel fra1, and sends Hebrew Slack notifications.
 
+**Before using it with Vercel:** if the project is connected through Vercel's Git integration, Vercel deploys every push to `main` by itself and the Shabbat gate below never sees it. Add `"git": {"deploymentEnabled": {"main": false}}` to `vercel.json` so production ships only from this workflow.
+
 ```yaml
 # .github/workflows/ci-cd.yml
 name: CI/CD Pipeline
@@ -41,23 +43,19 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # pnpm BEFORE setup-node, so setup-node's `cache: pnpm` can find the store.
+      # No `version:` here: the action reads `packageManager` from package.json. Setting
+      # both to different strings ("9" vs "pnpm@9.15.0") fails the step with
+      # "Multiple versions of pnpm specified". Add `version:` only if package.json has
+      # no packageManager field.
+      - uses: pnpm/action-setup@v6
+
+      # Node 24 is supported until 2028-04-30 (Maintenance from 2026-10-20). Node 26
+      # becomes LTS on 2026-10-28; move to it once your dependencies support it.
       - uses: actions/setup-node@v7
         with:
           node-version: '24'
-
-      - uses: pnpm/action-setup@v6
-        with:
-          version: 9
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - uses: actions/cache@v6
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: ${{ runner.os }}-pnpm-store-
+          cache: pnpm
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
@@ -68,12 +66,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
           node-version: '24'
-      - uses: pnpm/action-setup@v6
-        with:
-          version: 9
+          cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
 
@@ -83,14 +80,14 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write   # required for the github-script PR comment below (default GITHUB_TOKEN is read-only)
+      pull-requests: write   # required for the github-script PR comment below (newer repos default GITHUB_TOKEN to read-only)
     steps:
       - uses: actions/checkout@v7
       - name: Deploy Preview to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          npx vercel pull --yes --token=$VERCEL_TOKEN
+          npx vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
           npx vercel build --token=$VERCEL_TOKEN
           PREVIEW_URL=$(npx vercel deploy --prebuilt --token=$VERCEL_TOKEN --regions fra1)
           echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
@@ -111,7 +108,13 @@ jobs:
     # above is unreachable and an hebcal outage hard-blocks production with no escape.
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     needs: build
-    runs-on: ubuntu-latest
+    # Pin the image on the production path: ubuntu-latest moves to 26.04 between
+    # 2026-10-19 and 2026-11-19. Move this line deliberately after testing on 26.04.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    # A deployment environment holds the production secrets and can carry deployment-branch
+    # rules, which a job-level if: cannot: anyone can edit an if: in a PR.
+    environment: production
     steps:
       - uses: actions/checkout@v7
 
@@ -119,27 +122,31 @@ jobs:
         uses: ./.github/actions/shabbat-check
 
       - name: Deploy to Vercel Production
+        id: deploy
         # NOT always(): if the gate step crashes it never writes its output, is_frozen is
         # empty, and always() would let '' != 'true' deploy during Shabbat. success() keeps
         # a crashed gate blocking; the explicit force_deploy arm is the documented escape.
         if: |
-          (success() && steps.shabbat.outputs.is_frozen != 'true')
+          (success() && steps.shabbat.outputs.is_frozen == 'false')
           || (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          npx vercel pull --yes --token=$VERCEL_TOKEN
+          # pull defaults to the DEVELOPMENT environment; name production explicitly.
+          npx vercel pull --yes --environment=production --token=$VERCEL_TOKEN
           npx vercel build --prod --token=$VERCEL_TOKEN
           npx vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN --regions fra1
 
       - name: Notify Slack
-        if: always()
+        # Only when the deploy step actually ran. job.status stays 'success' when the
+        # deploy was SKIPPED by the freeze, which would announce a deploy that never happened.
+        if: always() && steps.deploy.outcome != 'skipped'
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           # Untrusted context is bound here, never interpolated into the run: script.
-          STATUS: ${{ job.status }}
+          STATUS: ${{ steps.deploy.outcome }}
           RAW_COMMIT_MSG: ${{ github.event.head_commit.message }}
           ACTOR: ${{ github.actor }}
         run: |
@@ -159,11 +166,14 @@ jobs:
               | curl -s -X POST "$SLACK_WEBHOOK" -H 'Content-Type: application/json' -d @-
 
       - name: Notify frozen
-        if: steps.shabbat.outputs.is_frozen == 'true'
+        # Also when the gate step itself failed: then nothing was deployed and no other
+        # message would go out.
+        if: always() && (steps.shabbat.outputs.is_frozen == 'true' || steps.shabbat.outcome == 'failure')
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           REASON: ${{ steps.shabbat.outputs.reason }}
         run: |
+          REASON="${REASON:-the Shabbat gate step failed}"
           RTL=$'\u200F'
           # Nothing in this template queues the deploy, so the message must not promise that
           # it will resume by itself. Say what actually has to happen.
@@ -316,28 +326,6 @@ jobs:
               echo "$EMPTY"
             fi
           done
-
-      - name: Validate no Hebrew in code blocks (SKILL files)
-        run: |
-          # Check SKILL_HE.md for Hebrew text inside code blocks (breaks RTL rendering)
-          if [ -f "SKILL_HE.md" ]; then
-            IN_CODE=false
-            LINE_NUM=0
-            while IFS= read -r line; do
-              LINE_NUM=$((LINE_NUM + 1))
-              if echo "$line" | grep -q '```'; then
-                if [ "$IN_CODE" = false ]; then
-                  IN_CODE=true
-                else
-                  IN_CODE=false
-                fi
-              elif [ "$IN_CODE" = true ]; then
-                if echo "$line" | grep -qP '[\x{0590}-\x{05FF}]'; then
-                  echo "::warning file=SKILL_HE.md,line=$LINE_NUM::Hebrew text inside code block (will render LTR)"
-                fi
-              fi
-            done < SKILL_HE.md
-          fi
 ```
 
 ## Template 4: Israeli Compliance Pipeline
@@ -373,10 +361,13 @@ jobs:
       - name: Wait for server
         run: npx wait-on http://localhost:3000 --timeout 60000
 
-      - name: axe-core WCAG 2.1 AA scan
+      - name: axe-core WCAG 2.0/2.1 A+AA scan
         run: |
+          # Use the runner's ChromeDriver, which matches its Chrome; the CLI otherwise
+          # pulls chromedriver@latest, which can be a major version ahead.
           npx @axe-core/cli http://localhost:3000 \
-            --tags wcag2a,wcag2aa,wcag21aa \
+            --chromedriver-path "$CHROMEWEBDRIVER/chromedriver" \
+            --tags wcag2a,wcag2aa,wcag21a,wcag21aa \
             --exit
 
       - name: IS-5568 specific checks
@@ -415,7 +406,8 @@ jobs:
 
       - name: Scan for PII patterns
         run: |
-          # Israeli ID number pattern (9 digits)
+          # Any 9-digit run. No check-digit validation, so expect false positives
+          # (timestamps, phone numbers); this is a prompt for review, not a detector.
           PII_HITS=$(grep -rn '[0-9]\{9\}' src/ --include="*.ts" --include="*.tsx" --include="*.js" \
             | grep -v 'test\|mock\|spec\|\.d\.ts\|node_modules' || true)
 
@@ -461,7 +453,7 @@ jobs:
           fi
 
       - name: npm audit
-        run: npm audit --production --audit-level=high
+        run: npm audit --omit=dev --audit-level=high
         continue-on-error: true
 ```
 
@@ -548,6 +540,93 @@ jobs:
 
           echo "Updated Monday.com item $ITEM_ID to '$STATUS'"
 ```
+
+## Template 6: Org-Wide Shabbat Gate (Reusable Workflow)
+
+Vendoring `.github/actions/shabbat-check` into every repo means every copy has to be fixed separately when the gate changes. Keep one copy in a central repo (here `your-org/ci-workflows`, holding the action from `references/shabbat-deploy-freeze.md`, the version WITH the `pre_shabbat_buffer_minutes` input, under `.github/actions/shabbat-check/`) and call it as a reusable workflow. If that repo is private, share it under its Settings > Actions > General > Access ("Accessible from repositories in the organization"), or the callers cannot resolve it.
+
+```yaml
+# your-org/ci-workflows/.github/workflows/shabbat-gate.yml
+name: Shabbat gate
+
+on:
+  workflow_call:
+    inputs:
+      pre_shabbat_buffer_minutes:
+        type: string
+        default: '60'
+    outputs:
+      is_frozen:
+        description: 'true if deploys should be frozen'
+        value: ${{ jobs.gate.outputs.is_frozen }}
+      reason:
+        description: 'Why'
+        value: ${{ jobs.gate.outputs.reason }}
+
+jobs:
+  gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      is_frozen: ${{ steps.check.outputs.is_frozen }}
+      reason: ${{ steps.check.outputs.reason }}
+    steps:
+      # Pin to a full commit SHA, as the callers below pin this workflow; a moving ref lets
+      # anyone with write access to ci-workflows change the production gate everywhere.
+      - id: check
+        uses: your-org/ci-workflows/.github/actions/shabbat-check@<40-char-sha>
+        with:
+          pre_shabbat_buffer_minutes: ${{ inputs.pre_shabbat_buffer_minutes }}
+```
+
+In each product repo:
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Bypass the Shabbat/holiday freeze (production incidents only)'
+        type: boolean
+        default: false
+
+jobs:
+  gate:
+    uses: your-org/ci-workflows/.github/workflows/shabbat-gate.yml@<40-char-sha>
+
+  deploy:
+    needs: gate
+    # !cancelled() so the force_deploy arm still works when the gate job FAILED (always()
+    # would also run it after someone cancels the run); the normal arm demands an
+    # explicit 'false', so a crashed or empty gate stays closed.
+    if: >-
+      !cancelled() && (
+        (needs.gate.result == 'success' && needs.gate.outputs.is_frozen == 'false')
+        || (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
+      )
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: production
+    steps:
+      # Re-check INSIDE the environment-protected job. The gate job above ran before any
+      # approval wait; an approval clicked hours later must not deploy into Shabbat.
+      - id: recheck
+        uses: your-org/ci-workflows/.github/actions/shabbat-check@<40-char-sha>
+        with:
+          pre_shabbat_buffer_minutes: '60'   # keep equal to the gate job's buffer
+      - uses: actions/checkout@v7
+      - if: >-
+          (success() && steps.recheck.outputs.is_frozen == 'false')
+          || (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
+        run: echo "Deploying..."
+```
+
+The `gate` job still earns its place: when it reports frozen, the deploy job is skipped before it ever asks for an approval.
 
 ## Secrets and Variables Checklist
 
