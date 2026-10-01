@@ -2,8 +2,8 @@
 name: skills-il-skill-creator
 description: Interactive workflow for creating new skills for the skills-il organization. Guides through category selection, use case definition, folder scaffolding, metadata.json generation with bilingual metadata, instruction writing, Hebrew companion creation, and validation. Use when user asks to create a new skill, scaffold a skill for skills-il, write a SKILL.md, contribute a skill, new skill template, or liztor skill chadash. Enforces skills-il conventions (kebab-case naming, Hebrew transliterations, bilingual display names, progressive disclosure, validate-skill.sh compliance). Do NOT use for editing existing skills, creating skills for non-skills-il platforms, or generic markdown file creation.
 license: MIT
-allowed-tools: Bash(python:*) Bash(./scripts/*) WebFetch
-compatibility: No network required for scaffolding. WebFetch optional for pulling latest conventions. Works with Claude Code, Claude.ai, Cursor.
+allowed-tools: 'Bash(python3:*) Bash(curl:*) Bash(./scripts/*) WebFetch'
+compatibility: No network required for scaffolding. WebFetch optional for pulling latest conventions. Needs a terminal agent that can run Python 3 (Claude Code, Cursor, Codex and similar).
 ---
 
 # Skills-IL Skill Creator
@@ -12,31 +12,13 @@ compatibility: No network required for scaffolding. WebFetch optional for pullin
 
 This skill walks you through creating a production-quality skill for the skills-il organization. It follows Anthropic's Complete Guide to Building Skills and enforces all skills-il conventions.
 
-Every skill you create will include: SKILL.md with validated frontmatter, bilingual metadata (Hebrew + English), step-by-step instructions with tables and code examples, a Hebrew companion file (SKILL_HE.md), and pass all validation checks.
+Every skill you create will include SKILL.md, a Hebrew companion (SKILL_HE.md), bilingual metadata.json, and will pass validation.
 
 ## Instructions
 
 ### Step 1: Choose Category Repository
 
-Ask the user which category repo this skill belongs to:
-
-| Category | Repo | Focus Area |
-|----------|------|------------|
-| Tax & Finance | tax-and-finance | Invoicing, payroll, VAT, payments, pensions |
-| Government | government-services | data.gov.il, Bituach Leumi, Rasham, transit |
-| Security | security-compliance | Privacy law, cybersecurity, legal research |
-| Localization | localization | RTL, Hebrew NLP, OCR, Shabbat scheduling |
-| Dev Tools | developer-tools | ID validation, date conversion, phone formatting |
-| Communication | communication | SMS, WhatsApp, Monday.com, job market |
-| Food & Dining | food-and-dining | Restaurants, recipes, kashrut, delivery |
-| Legal Tech | legal-tech | Contracts, legal research, compliance |
-| Marketing & Growth | marketing-growth | SEO, social media, ads, email campaigns, ASO |
-| Education | education | Learning platforms, tutoring, academic tools |
-| Health Services | health-services | HMOs, pharmacy, medical records, appointments |
-| Accounting | accounting | Bookkeeping, financial reporting, audit, accountant tooling |
-| Travel | travel | Trip planning, flights, destinations, travel rights |
-
-All 13 category repos use `master` as their default branch (not `main`). The full path format for `github_url` is `https://github.com/skills-il/<repo>/tree/master/<slug>`.
+Ask the user which of the 13 category repos this skill belongs to: tax-and-finance, government-services, security-compliance, localization, developer-tools, communication, food-and-dining, legal-tech, marketing-growth, education, health-services, accounting, or travel. Each repo's focus area is in `references/skill-spec.md`.
 
 If the skill doesn't fit any category, discuss with the user whether it belongs in an existing category or warrants a new repo.
 
@@ -46,7 +28,7 @@ Before proceeding, you MUST ask the user for their creator details. These are re
 
 Ask the user:
 
-> "What is your name? This will be displayed as the skill creator on the Skills IL directory. Your GitHub username is fine too."
+> "What is your GitHub username? It becomes the `author` of the skill, and the directory builds your creator link and avatar from it."
 
 Wait for the user's response and store their answer as `creator_name`.
 
@@ -57,10 +39,10 @@ Then ask:
 Wait for the user's response and store their answer as `creator_email`.
 
 **Rules:**
-- `creator_name` is required. Default to the GitHub username if the user prefers not to provide their full name.
+- `creator_name` is required and must be a real GitHub login, not a full name, brand, or pen name. The directory links to `github.com/<author>` and loads the avatar from `github.com/<author>.png`, so anything that is not an account renders as a broken link and a missing image. Check it before using it: `curl -sL -o /dev/null -w '%{http_code}' https://github.com/<author>.png` must print `200` (a missing account prints `404`).
 - `creator_email` is **required** and must be a valid email address. Do NOT proceed without it.
-- Store both values -- they will be used in the `metadata.author` field and when submitting to the directory.
-- If the user declines to provide an email, explain that it is mandatory for the submission process and they will not receive notifications about their skill without it.
+- Store both values. `creator_name` goes into the `author` field of `metadata.json`; both are entered on the submission form.
+- If the user declines, explain that the email is mandatory for submission.
 
 ### Step 3: Define Use Cases
 
@@ -85,37 +67,46 @@ Result: Invoice validated with pass/fail report
 
 Ask the user to describe their skill idea, then help them extract 2-3 use cases from it. Include Hebrew transliterations for all domain terms (e.g., "payroll" = "tlush maskoret", "invoice" = "hashbonit").
 
+**Record a baseline now, before anything is scaffolded.** Give one use case to an agent that does NOT have the skill and write down three lines: the task you gave it, which agent you used, and exactly where it failed (wrong figure, missed step, invented form number). Everything the skill later says should fix something on that list. If the agent already gets every use case right, stop here: the skill would only restate what the model knows.
+
 ### Step 4: Fact-Check Domain Information
 
 Before writing any content, verify the key facts your skill will reference. This is especially important for skills dealing with Israeli laws, regulations, government services, financial rules, or healthcare policies, as these change frequently.
 
-**What to verify:**
-- Legal thresholds and limits (e.g., small claims court limit, tax brackets, age limits)
-- Government processes and forms (e.g., filing procedures, required documents)
-- Institutional names and contact details (e.g., phone numbers, websites, addresses)
-- Pricing and fees (e.g., copayments, filing fees, service costs)
-- Recent law changes that may have taken effect this year
+**What to verify:** legal thresholds and limits, government processes and form numbers, institutional names and contact details, prices and fees, and any law change that took effect this year.
 
-**How to verify:**
-- Search official Israeli government sources (gov.il, Knesset, Bituach Leumi)
-- Check current-year dates in your searches (laws and thresholds change annually)
-- Cross-reference at least 2 sources for critical facts like monetary limits or legal requirements
-- Note the verification date so the skill can be updated when facts change
+**How to verify:** use official sources (gov.il, the Knesset, Bituach Leumi), search with the current year, and cross-check critical figures (money amounts, legal requirements) against at least 2 sources.
 
-**What to record:**
-For each key fact, note: the fact, the source, and the date verified. Include these as inline references in your SKILL.md instructions, always with the effective date (for example, an amount followed by "as of January 2025").
+**What to record:** for each key fact, the fact, the source, and the date verified. State the effective date next to the value in SKILL.md (for example, an amount followed by "as of January 2025").
 
 Do NOT skip this step. A skill with outdated or incorrect facts (wrong tax rate, expired law, wrong phone number) is worse than no skill at all.
 
+### Step 4.5: Regulated-Domain Screen (decide before scaffolding)
+
+Some acts and titles in Israel are reserved to licensed professionals (lawyers, accountants and tax advisors, property appraisers, investment and pension advisors, physicians, psychologists, and others). A skill can trespass in two independent ways, so ask both questions now:
+
+1. **Does the name or description use a licensed profession's title or activity noun** ("appraisal", "advisor", "shamai", "yoetz mas", "orech din")? If so, rename. No disclaimer fixes a name that holds the skill out as the professional.
+2. **Does the skill emit a work product reserved to one of those professions** about the user's own situation, for example a valuation, a contract, will, pleading or other legal document drafted for the user, a legal opinion, a tax filing or tax opinion, an investment or pension recommendation, a diagnosis? Explaining how a process works is information. An invoice generator or a CV writer emits documents, but none reserved to a profession, so this question does not catch them.
+
+If either answer is yes:
+
+- Add a `## Legal notice` section to SKILL.md and a `## הבהרה משפטית` section to SKILL_HE.md, **immediately after the H1**. Say what the skill is (an AI-operated information tool, and free if it is), that no licensed professional reviews the output, what the output is NOT in the profession's own terms and what it IS instead (general information, a statistical indication), which professional steps it does not perform, that it may be wrong, that it must not be filed, relied on as evidence, or presented as the professional's work, and that it is not a substitute for advice tailored to the user's circumstances. The directory renders this section above the fold.
+- Open the SKILL.md `description` and both `display_description` values in metadata.json with a short, profession-specific clause such as "Not legal advice." / "אינו ייעוץ משפטי.", so it survives truncation in search results and cards.
+- Prefer emitting the principles and arguments the user drafts from over emitting the finished instrument. A skill that outputs a ready-to-file objection letter is harder to defend than one that gives the user the points to write it.
+
+Not sure? Say so on the submission form. The directory's intake review checks this and asks for changes before publishing.
+
 ### Step 5: Scaffold the Folder
 
-Run the scaffolding script to create the skill folder structure:
+**Where the skill lives:** either your own public GitHub repo (the usual route, submitted as "Existing Repository" in Step 11), or a fork of the category repo opened as a pull request. In your own repo, download the validator once so Step 10 can run: `mkdir -p scripts && curl -sL https://raw.githubusercontent.com/skills-il/developer-tools/master/scripts/validate-skill.sh -o scripts/validate-skill.sh && chmod +x scripts/validate-skill.sh`.
+
+From that repo's root, run this skill's scaffolding script (`--author` is required and must be your GitHub username):
 
 ```bash
-python scripts/scaffold-skill.py --name <skill-name> --category <category-repo>
+python3 <path-to-skills-il-skill-creator>/scripts/scaffold-skill.py --name <skill-name> --category <category-repo> --author <github-login>
 ```
 
-The script creates:
+The script creates (SKILL.md and SKILL_HE.md come with Gotchas and Reference Links stubs):
 ```
 <skill-name>/
 ├── SKILL.md          # Minimal frontmatter (name, description, license)
@@ -129,8 +120,9 @@ Verify the output:
 - Folder name is kebab-case
 - No spaces, underscores, or capitals
 - Name does not contain "claude" or "anthropic"
+- Name is at most 64 characters, with no leading, trailing, or consecutive hyphens (Agent Skills specification)
 - No README.md inside the skill folder (skill folders must not contain README.md)
-- The **repo-level README.md** (at the root of the category repo) must be written in **English**. This is required because the repo is public on GitHub and the README serves as the entry point for international developers and AI agents. Hebrew content belongs in SKILL_HE.md files inside skill folders, not in the repo README.
+- The **repo-level README.md** (at the root of your repo or the category repo) must be written in **English**. This is required because the repo is public on GitHub and the README serves as the entry point for international developers and AI agents. Hebrew content belongs in SKILL_HE.md files inside skill folders, not in the repo README.
 
 ### Step 6: Write the YAML Frontmatter and metadata.json
 
@@ -148,82 +140,45 @@ description: >-
 license: MIT
 allowed-tools: '<tools if needed>'      # optional, only when scripts call CLI tools
 compatibility: >-                         # optional
-  [Network/system requirements]. Works with Claude Code, Claude.ai, Cursor.
+  [Network/system requirements, consistent with supported_agents].
 ---
 ```
 
 Do NOT add `metadata:`, `version:`, `tags:`, `display_name:`, `display_description:`, `author:`, `category:`, or `supported_agents:` to the frontmatter. Claude Desktop rejects them.
 
-**metadata.json (in the same skill folder, alongside SKILL.md):**
+**metadata.json (in the same skill folder, alongside SKILL.md)** holds `author` (your GitHub username from Step 2), `version` (start at `1.0.0`), `category`, `tags` as equal-length `he` / `en` arrays, `display_name` and `display_description` as `{he, en}` objects, and `supported_agents`. The scaffold writes a filled-in skeleton; the full annotated example is in `references/skill-spec.md`.
 
-```json
-{
-  "author": "<creator_name from Step 2>",
-  "version": "1.0.0",
-  "category": "<category-repo>",
-  "tags": {
-    "he": ["<tag1-he>", "<tag2-he>", "ישראל"],
-    "en": ["<tag1>", "<tag2>", "israel"]
-  },
-  "display_name": {
-    "he": "<Hebrew display name>",
-    "en": "<English Display Name>"
-  },
-  "display_description": {
-    "he": "<Hebrew description>",
-    "en": "<English description, mirrors the main description field>"
-  },
-  "supported_agents": [
-    "claude-code",
-    "cursor",
-    "github-copilot",
-    "windsurf",
-    "opencode",
-    "codex",
-    "gemini-cli"
-  ]
-}
-```
-
-**Supported agents:** Include all standard agents (claude-code, cursor, github-copilot, windsurf, opencode, codex, gemini-cli) by default. If the skill relies on agent-specific features (e.g., MCP tools only available in Claude Code), remove agents that cannot support it and document why in the `compatibility` field. Add `antigravity` only if the skill is verified as Antigravity-compatible.
+**Supported agents:** list only agents that can actually run the skill's happy path. The scaffold defaults to seven terminal agents that can run bundled scripts. Do not assume desktop, web and upload platforms (`claude-desktop`, `claude-ai`, `chatgpt`, `manus`, `grok`) can run a step like `python3 scripts/x.py`; add one only if the skill has a route that works there. `gemini-spark` runs scripts but without network access. The full slug list, the capability tiers, and the Gemini Spark constraints are in `references/skill-spec.md`. Document any deliberate exclusion in `compatibility`.
 
 **Project style rules (apply to every skill file):**
 
-- **No em dashes (U+2014) or en dashes (U+2013)** anywhere in SKILL.md, SKILL_HE.md, metadata.json, references, or scripts. Replace with commas, parentheses, periods, or "to" for ranges. Use the regular ASCII hyphen-minus instead.
-- **All 13 category repos use `master`**, not `main`, as the default branch.
-- **`github_url` format must include the full path to the skill folder**, not just the repo root: `https://github.com/skills-il/<repo>/tree/master/<slug>`.
+- **No em dashes (U+2014) or en dashes (U+2013)** in any skill file. Use commas, parentheses, periods, "to" for ranges, or the ASCII hyphen.
+- **All 13 category repos use `master`**, not `main`, and a skill's GitHub URL includes the full folder path: `https://github.com/skills-il/<repo>/tree/master/<slug>`.
 
 **Bilingual tags (MUST ASK):** After defining the English tags, ask the user:
 
-> "Please provide Hebrew translations for each tag. Tags must have matching `he` and `en` arrays (same length). For example, if your English tags are `[invoicing, tax, israel]`, the Hebrew tags should be `[invoices, taxes, israel]`. What are the Hebrew equivalents for your tags?"
+> "Please provide a Hebrew translation for each tag. What are the Hebrew equivalents?"
 
-- Both `he` and `en` arrays are **required** -- no tag may be left untranslated
-- Arrays must be the **same length** (each English tag has exactly one Hebrew counterpart)
-- No empty strings allowed in either array
-- Technical terms that have no Hebrew equivalent can stay in English in both arrays (e.g., `API`, `MCP`)
+Both arrays are required, must be the same length (one Hebrew tag per English tag), and may not contain empty strings. Technical terms with no Hebrew equivalent (`API`, `MCP`) stay in English in both.
 
 **Description rules (CRITICAL):**
 - Must follow pattern: `[What it does] + [When to use it] + [Key capabilities] + [Do NOT use for X]`
-- Under 1024 characters total
+- Written in the third person ("Validates Israeli ID numbers..."), never "I can help you" or "You can use this". The description is injected into the agent's system prompt, and a shifting point of view hurts discovery.
+- At most 1023 characters, counted WITH any surrounding YAML quotes; aim for 950 or fewer. The spec allows 1024, but Gemini Spark rejects a description sitting at the limit, and the validator enforces 1023. In a plain one-line value, a colon followed by a space breaks YAML parsing. Use the folded `>-` style (as the scaffold does), or quote the value (2 more characters), or reword the colon to a comma.
 - No XML angle brackets (< >) anywhere in frontmatter
 - Include trigger phrases users would actually say
 - Include Hebrew transliterations in quotes (e.g., "tlush maskoret")
 - End with `Do NOT use for` boundary + cross-reference to related skills
 
-**Allowed-tools patterns:**
-- No tools needed: omit the field
-- Python scripts: `'Bash(python:*)'`
-- Python + web: `'Bash(python:*) WebFetch'`
-- Multiple CLI tools: `'Bash(python:*) Bash(curl:*) WebFetch'`
-- pip installs: `'Bash(python:*) Bash(pip:*)'`
+**Allowed-tools:** omit the field when no tools are needed; otherwise use a quoted, space-separated list such as `'Bash(python3:*) WebFetch'`. More patterns are in `references/skill-spec.md`. The field is experimental in the spec and not every agent honors it.
 
 ### Step 6.5: Authoring Principles (apply while writing Steps 7-8)
 
-These four principles decide whether a skill actually improves agent behavior or just adds tokens. Apply them while writing the body, not as a cleanup pass afterwards.
+These principles decide whether a skill actually improves agent behavior or just adds tokens. Apply them while writing the body, not as a cleanup pass afterwards.
 
-**1. Establish a baseline before you document anything.** Run the target task against an agent that does NOT have your skill, and note exactly where it fails. Write only what fixes those observed failures. If the agent already completes the task correctly without help, the skill is bloat and should not be written at all. This is the fastest way to avoid a skill that restates what the model already knows.
+**1. Write only against the baseline.** Every section should fix a failure you recorded in Step 3. A paragraph that fixes nothing on that list is a candidate for deletion.
 
-**2. Be concise: the context window is shared.** Every word competes with the conversation and with every other loaded skill. Assume the agent is already competent, so do not explain what JSON is, how HTTP works, or how to write a loop. Challenge each paragraph with "does this earn its place?" and cut it if the answer is no. The enforced ceiling is 5,000 words (checked in Step 10); treat 500 lines as a softer heuristic on top of it. Anything beyond either belongs in `references/` (Step 8).
+**2. Be concise: the context window is shared.** Every word competes with the conversation and with every other loaded skill. Assume the agent is already competent, so do not explain what JSON is, how HTTP works, or how to write a loop. Challenge each paragraph with "does this earn its place?" and cut it if the answer is no. Upstream guidance is under 500 lines and roughly 5,000 tokens for the body; the skills-il validator hard-fails at 5,000 words, which is a looser bound (Hebrew in particular costs more tokens per word). Aim for the upstream numbers and move the rest to `references/` (Step 8).
 
 **3. Match freedom to fragility.** How specific you should be depends on how badly the task breaks when done differently.
 
@@ -236,6 +191,12 @@ These four principles decide whether a skill actually improves agent behavior or
 Over-constraining a high-freedom task makes the skill brittle. Under-constraining a fragile one makes it dangerous.
 
 **4. Depth over count in examples.** Step 7 requires at least two examples; within that budget prefer complete, realistic, runnable ones over fill-in-the-blank templates. Prefer real Israeli values (an actual form number, a real municipality, a realistic salary) over `<placeholder>` tokens.
+
+**5. Write so the skill stays true and readable.**
+- Avoid phrasing that silently expires ("the new rule", "before next year"). State the effective date with the value instead.
+- Keep references one level deep: SKILL.md links to `references/x.md`, and that file does not send the agent on to a third file.
+- Give any reference file over about 100 lines a short table of contents, so an agent that reads only the top still sees its full scope.
+- Pick one term per concept and use it everywhere. Switching between synonyms makes the agent wonder whether they mean different things.
 
 ### Step 7: Write the Instructions Body
 
@@ -263,7 +224,7 @@ Result: ...
 ## Bundled Resources
 
 ### Scripts
-- `scripts/<name>.py` -- <What it does, how to run>. Run: `python scripts/<name>.py --help`
+- `scripts/<name>.py` -- <What it does, how to run>. Run: `python3 scripts/<name>.py --help`
 
 ### References
 - `references/<name>.md` -- <What it contains>. Consult when <specific situation>.
@@ -274,6 +235,12 @@ Result: ...
 - <A domain assumption that looks reasonable but is false>
 - <A field, format, or edge case agents routinely miss>
 
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| <Official source> | <https URL> | <What to verify there> |
+
 ## Troubleshooting
 
 ### Error: "<Error name>"
@@ -281,82 +248,36 @@ Cause: <Why>
 Solution: <Fix>
 ```
 
-**Best practices from the Complete Guide:**
-- Be specific and actionable: "Run `python scripts/validate.py --input {filename}`" not "Validate the data"
-- Use tables for decision matrices, field mappings, comparison data
-- Include inline code for algorithms and API calls
-- Keep SKILL.md under 5,000 words -- move detailed docs to `references/`
-- Reference bundled resources with "Consult when..." guidance
-- Include 2-4 examples covering common and edge cases
-- Include 2-4 troubleshooting entries for likely errors
-- Embed Hebrew terminology inline: "installments (tashlumim)"
+**Gotchas are agent failure modes, not user errors.** "The agent computes VAT on the gross amount" belongs there; "the user forgot their password" does not. They are the highest-signal lines in a skill, so draw them from the failures you recorded in Step 3.
 
-**Progressive disclosure:**
-- SKILL.md = core instructions (what the agent needs most of the time)
-- `references/` = detailed specs, full API docs, edge cases (loaded on demand)
-- `scripts/` = executable helpers (run when needed)
+**Troubleshooting causes must be verified.** An agent that hits the symptom will repeat the stated cause to the user as a diagnosis. If a cause is a guess, say so in the row.
+
+**Body rules** (size and specificity are covered in Step 6.5):
+- Use tables for decision matrices, field mappings, comparison data
+- Reference bundled resources with "Consult when..." guidance
+- Include 2-4 examples and 2-4 troubleshooting entries
+- Embed Hebrew terminology inline: "installments (tashlumim)"
 
 ### Step 8: Create References and Scripts
 
-Every skill should include reference files and helper scripts. These are not optional extras; they make the difference between a thin skill and a production-quality one.
+Every skill should include reference files and helper scripts. They make the difference between a thin skill and a production-quality one.
 
-**References (`references/` directory):**
+- **References:** create 2-3 files in `references/` for detail too long for SKILL.md (directories, detailed guides, glossaries, checklists, comparison tables, templates). Keep each under 3,000 words, use headers and tables, include Hebrew terms in parentheses, and link each from SKILL.md with "Consult when..." guidance.
+- **Scripts:** create 1-2 Python helpers in `scripts/` for calculations or lookups. Use a `#!/usr/bin/env python3` shebang, argparse with `--help`, a usage docstring, stdlib only, input validation with clear errors, and clean output. A script should handle its own errors rather than punting them to the agent.
 
-Create 2-3 reference files that contain detailed information too long for SKILL.md. Common patterns:
-
-| Pattern | Example | When to use |
-|---------|---------|-------------|
-| Directory/listing | `hospital-directory.md`, `crisis-hotlines-directory.md` | Skill covers a domain with many institutions, services, or contacts |
-| Detailed guide | `fair-rental-law-summary.md`, `ivf-process-detailed.md` | A process or law needs more detail than fits in instructions |
-| Glossary | `hebrew-rental-glossary.md` | Skill uses domain-specific Hebrew terminology (50+ terms) |
-| Checklist | `contract-checklist.md`, `evidence-guide.md` | Users need a step-by-step verification or preparation list |
-| Comparison table | `universities-comparison.md`, `city-rental-guide.md` | Users need to compare options across multiple dimensions |
-| Template | `demand-letter-template.md` | Users need a starting point for a document or form |
-
-Each reference file should:
-- Be under 3,000 words
-- Use markdown with clear headers and tables
-- Include Hebrew terms in parentheses
-- Be linked from SKILL.md with "Consult when..." guidance
-
-**Scripts (`scripts/` directory):**
-
-Create 1-2 Python helper scripts for calculations or data lookups. Common patterns:
-
-| Pattern | Example | When to use |
-|---------|---------|-------------|
-| Calculator | `sekher-calculator.py`, `filing-fee-calculator.py` | Skill involves formulas, tax calculations, or fee estimation |
-| Coverage checker | `fertility-coverage-checker.py` | Skill involves eligibility rules based on multiple criteria |
-| Cost estimator | `therapy-cost-estimator.py`, `rental-budget-calculator.py` | Users need to compare costs across options |
-| Index/adjustment | `rent-index-calculator.py` | Skill involves CPI-linked values or time-based adjustments |
-
-Each script should:
-- Use `#!/usr/bin/env python3` shebang
-- Include argparse with `--help`
-- Have a clear docstring explaining usage
-- Use stdlib only (no external dependencies)
-- Include input validation with clear error messages
-- Print results in clean, formatted output
+Common reference and script patterns, with example filenames, are in `references/skill-spec.md`.
 
 **Update SKILL.md:** Add a `## Bundled Resources` section (before `## Troubleshooting`) listing all references and scripts with "Consult when..." guidance.
 
 **Update SKILL_HE.md:** Add a matching `## משאבים מצורפים` section with Hebrew descriptions.
 
+**Recommended MCP Servers (when one exists):** if a published MCP server in the directory supplies data or actions your instructions rely on, add a `## Recommended MCP Servers` table (`| MCP | What It Adds |`, linking to its directory page) after `## Bundled Resources`, and a matching `## שרתי MCP מומלצים` in SKILL_HE.md. Do not use the retired `mcp-server` frontmatter key.
+
 ### Step 8.5: Add Reference Links Section
 
 Every skill MUST include a `## Reference Links` section (after `## Recommended MCP Servers` or `## Bundled Resources`, before `## Troubleshooting`) with a table of official source URLs used to verify the skill's domain-specific facts.
 
-**Format:**
-```markdown
-## Reference Links
-
-Official sources for verifying and updating the information in this skill:
-
-| Source | URL | What to Check |
-|--------|-----|---------------|
-| Israeli Tax Authority | https://www.gov.il/he/departments/israel_tax_authority | Tax rates, forms, circulars |
-| Kolzchut | https://www.kolzchut.org.il | Rights, entitlements, eligibility |
-```
+Use the table shape from the Step 7 template (`| Source | URL | What to Check |`).
 
 **Guidelines:**
 - Include 3-6 authoritative links (government sites, official API docs, legal databases)
@@ -365,10 +286,7 @@ Official sources for verifying and updating the information in this skill:
 - Include at least one English-language source when available
 - The Hebrew companion must have a matching `## קישורי עזר` section
 
-**Why this matters:**
-- Users can independently verify claims
-- The fact-check pipeline uses these URLs for automated validation
-- It builds trust by showing the skill's information is grounded in official sources
+These links let users, and anyone updating the skill later, re-verify every claim against its source.
 
 ### Step 9: Create the Hebrew Companion (SKILL_HE.md)
 
@@ -376,71 +294,35 @@ Create SKILL_HE.md with the same structure but in Hebrew:
 - Translate the body instructions to Hebrew
 - Keep code blocks, field names, and API references in English
 - Use Hebrew-native terminology (not transliterations)
-- Maintain the same step numbering and section structure
+- Maintain the same step numbering and section structure, and translate every section heading (the validator catches common ones such as `## Examples` or `## Gotchas`, but not all, so also check `## Overview` and `## Legal notice` yourself)
 
 The Hebrew file uses the same frontmatter as SKILL.md (frontmatter stays in English).
 
 ### Step 9.5: Validate All Links (MANDATORY)
 
-Before running the validation script, verify that every URL in the skill content actually resolves. Broken links in published skills erode trust and cause the automated fact-check pipeline to flag false positives.
+Before running the validator, verify that every URL in the skill actually resolves.
 
-**Step 1: Extract all URLs** from all skill files:
-```bash
-grep -rEoh 'https?://[^ )>"'\'']+' <skill-name>/ | sort -u > /tmp/<skill-name>-urls.txt
-cat /tmp/<skill-name>-urls.txt
-```
-
-**Step 2: Check each URL returns HTTP 200:**
-```bash
-while IFS= read -r url; do
-  status=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 10 "$url" 2>/dev/null)
-  [ "$status" != "200" ] && echo "[$status] $url"
-done < /tmp/<skill-name>-urls.txt
-```
-
-If no output, all links are valid. If any lines appear, fix them:
-
-| HTTP Status | Action |
-|-------------|--------|
-| 301/302 | Update URL to the final redirect destination |
-| 403 | May be geo-blocked or bot-blocked. Verify manually in a browser. If it works in a browser, keep it |
-| 404 | **BROKEN** -- find the correct URL via WebSearch, or remove the link |
-| 5xx | Retry once. If still failing, the service may be down temporarily. Note it |
-| Timeout / DNS failure | **BROKEN** -- the domain may no longer exist. Remove all references to this URL |
-
-**Pay special attention to:**
-- `.gov.il` URLs (Israeli government sites restructure frequently)
-- Israeli startup domains (`.co.il`) that may have gone offline
-- Reference Links table entries (Step 8.5) -- these are the most visible links to users
+Extract every URL from every file in the skill folder (including `scripts/` and `references/`) and check that each returns HTTP 200. The two commands, and what to do for each non-200 status, are in `references/submission-checklist.md`. Give extra attention to `.gov.il` URLs, `.co.il` startup domains, and the Reference Links table. A 403 is often bot-blocking: open the page in a browser before calling it broken.
 
 **Do NOT proceed to Step 10 with broken links.** Fix every broken URL first.
 
 ### Step 10: Validate and Prepare for Submission
 
-Run the validation script:
+Run the validator from the **repo root** (it lives at the repo's `scripts/validate-skill.sh`, not in your skill's own `scripts/` folder):
 
 ```bash
 ./scripts/validate-skill.sh <skill-name>/SKILL.md
 ```
 
-The script checks 9 rules:
+It needs PyYAML (`pip install pyyaml`); without it the YAML check is skipped with a NOTICE and CI may still reject the skill. Beyond the naming, description, word-count, README and secrets checks, it also fails on frontmatter that does not parse as YAML, a description over 1023 characters including quotes, a missing `SKILL_HE.md`, and untranslated English headings in `SKILL_HE.md`. It warns when the Hebrew body exceeds 5,000 words or its heading count differs from SKILL.md. The full rule table with fixes is in `references/submission-checklist.md`.
 
-| # | Rule | Common Fix |
-|---|------|-----------|
-| 1 | File is exactly `SKILL.md` | Rename if wrong case |
-| 2 | Starts with `---` delimiter | Add YAML frontmatter |
-| 3 | `name` is kebab-case, matches folder | Fix casing or rename folder |
-| 4 | No "claude"/"anthropic" in name | Choose different name |
-| 5 | `description` present, under 1024 chars, has trigger phrase, no `<>` | Shorten or add "Use when" |
-| 6 | No `<>` in frontmatter | Remove XML angle brackets |
-| 7 | Body under 5,000 words | Move content to references/ |
-| 8 | No README.md in skill folder | Delete README.md |
-| 9 | No hardcoded secrets | Remove API keys, tokens |
-
-After validation passes, review against the quality checklist:
+**The validator is structural only.** An untouched scaffold passes it. Before submitting, `grep -rn TODO <skill-name>/` must print nothing, no `[...]` template placeholder may remain, and every item below is a manual check:
+- [ ] Baseline recorded, and every section fixes an observed failure (Step 3)
 - [ ] Domain facts verified against official sources (Step 4)
+- [ ] Regulated-domain screen done; if it applies, a Legal notice section sits right after the H1 in both files (Step 4.5)
 - [ ] All URLs return HTTP 200 (Step 9.5)
-- [ ] Description includes WHAT and WHEN
+- [ ] Description includes WHAT and WHEN, is in the third person, and is 1023 characters or fewer including quotes
+- [ ] Gotchas describe agent failure modes, not user errors
 - [ ] Instructions are specific and actionable
 - [ ] Examples cover 2+ real scenarios
 - [ ] Troubleshooting covers likely errors
@@ -449,29 +331,19 @@ After validation passes, review against the quality checklist:
 - [ ] At least 2 reference files in `references/` with "Consult when..." guidance
 - [ ] At least 1 helper script in `scripts/` with argparse and `--help`
 - [ ] No security issues (secrets, injection vectors)
-- [ ] `supported_agents` list is accurate (all compatible agents included)
+- [ ] `supported_agents` includes only agents whose happy path works, and `compatibility` agrees with it
 - [ ] `metadata.version` is set (e.g., 1.0.0)
 - [ ] `metadata.tags` has both `he` and `en` arrays of equal length with no empty strings
-- [ ] `creator_name` and `creator_email` collected from user (Step 2)
+- [ ] `creator_name` and `creator_email` collected from user (Step 2), and `author` is a real GitHub login
 - [ ] Repo-level README.md is written in English (not Hebrew)
 
 ### Step 10.5: Pre-Submission GitHub Verification Setup
 
-The submission form runs a live GitHub Verification scorecard against your repo before you can submit. The 5 Critical signals must pass for the skills-il team to approve. Set them up now (about 15 minutes total) so you don't bounce at submit time.
+The submission form runs a live GitHub Verification scorecard against your repo, so set the signals up before you submit.
 
-| # | Signal | Quick Setup |
-|---|--------|-------------|
-| 1 | `spec_compliant` | Install `gh` CLI 2.90.0+, then run `gh skill publish --dry-run path/to/your-skill` locally and fix any errors |
-| 2 | `secret_scanning` | Repo → Settings → Code security and analysis → enable **Secret scanning** + **Push protection** |
-| 3 | `code_scanning` | Same Settings page → under **Code scanning** click **Set up** → **Default** |
-| 4 | `signed_release` | Add `.github/workflows/release.yml` that uses `actions/attest-build-provenance@v4` on `tags: ['v*']` (or use `skills-il/release-workflow@v1` as a reusable workflow), then push a `v1.0.0` tag |
-| 5 | `license_spdx` | Add a `LICENSE` file at the repo root with a recognized SPDX license (use GitHub's "Choose a license template"; MIT is the standard) |
+The five Critical signals are `spec_compliant` (run `gh skill publish --dry-run`, GitHub CLI 2.90.0 or later), `secret_scanning`, `code_scanning`, `signed_release` (a tag-triggered release workflow with build-provenance attestation), and `license_spdx` (a root `LICENSE` file). A quick-setup row for each is in `references/submission-checklist.md`; full copy-paste steps are in the [GitHub Verification checklist guide](https://agentskills.co.il/en/guides/github-verification-checklist). For an MCP server, `spec_compliant` does not apply.
 
-**For MCPs the `spec_compliant` row is N/A** (the `gh skill` CLI validates SKILL.md only, not MCP servers). The other 4 still apply.
-
-**Copy-paste setup steps for each signal**, with full YAML snippets and screenshots, are in the [GitHub Verification checklist guide](https://agentskills.co.il/en/guides/github-verification-checklist). When in doubt, follow that guide.
-
-**Skip this step at your own risk:** the admin approval gate refuses approval unless `critical_all_pass` is true. The rejection email will tell you which signals failed and link back to this guide.
+Approval is refused unless all five pass; the rejection email names the failing signals.
 
 ### Step 11: Submit Your Skill
 
@@ -479,7 +351,7 @@ After validation passes, submit your skill through the [submission page](https:/
 
 1. Choose submission type: "Existing Repository" (if you pushed your skill to a GitHub repo) or "Proposal" (if you want the skills-il team to create the repo)
 2. Fill in the form with: your GitHub repo URL, creator name, and creator email (from Step 2)
-3. **The form will fetch your SKILL.md and run a live GitHub Verification scorecard.** You'll see pass/fail for each of the 5 Critical signals. If any fail, fix them per Step 10.5 and re-submit.
+3. The form fetches your SKILL.md and shows pass/fail for each Critical signal. Fix any failure per Step 10.5 and re-submit.
 4. The skills-il team will review your submission, run security analysis, and publish it if it passes
 
 ## Examples
@@ -490,10 +362,10 @@ User says: "I want to create a skill for querying Israeli court decisions"
 
 Actions:
 1. Category: government-services
-2. Creator info: Ask for name and email
+2. Creator info: Ask for GitHub username and email
 3. Use cases: search by case number, search by judge name, search by topic (Hebrew legal terms)
-4. Fact-check: Verify court system structure, Nevo access methods, citation formats via official sources
-5. Scaffold: `python scripts/scaffold-skill.py --name israeli-court-decisions --category government-services`
+4. Fact-check: Verify court system structure, Nevo access methods, citation formats via official sources. Regulated-domain screen: finding and citing published rulings explains the law, so no notice is needed unless the skill starts assessing the user's own case
+5. Scaffold: `python3 <path-to-skills-il-skill-creator>/scripts/scaffold-skill.py --name israeli-court-decisions --category government-services --author <github-login>`
 6. Frontmatter: name=israeli-court-decisions, author=creator_name, triggers include "psakei din", "beit mishpat", "nevo"
 7. Instructions: Steps for search types, result parsing, citation format
 8. References: `references/court-hierarchy.md` (court levels), `references/citation-format.md` (Israeli legal citation rules)
@@ -507,18 +379,7 @@ Result: Complete skill ready for the Skills IL directory.
 
 User says: "I need a skill that helps format Israeli addresses"
 
-Actions:
-1. Category: developer-tools (or government-services for address lookup APIs)
-2. Creator info: Ask for name and email
-3. Use cases: format for postal mail, validate mikud, normalize city names
-4. Fact-check: Verify mikud format rules, Israel Post API availability, city name mappings
-5. Scaffold: `python scripts/scaffold-skill.py --name israeli-address-formatter --category developer-tools`
-6. Frontmatter: triggers include "format ktovet", "mikud", "address normalization"
-7. Instructions: Format rules, mikud lookup, bilingual city names
-8. References: `references/mikud-format.md`; Scripts: `scripts/mikud-validator.py`
-9. Hebrew: SKILL_HE.md
-10. Validate: passes all checks
-11. Submit via the [submission page](https://agentskills.co.il/en/submit)
+Actions: category developer-tools (or government-services if it centers on address lookup APIs); ask for GitHub username and email; use cases are postal formatting, mikud validation, and city-name normalization; verify mikud format rules and Israel Post API availability; scaffold with `python3 <path-to-skills-il-skill-creator>/scripts/scaffold-skill.py --name israeli-address-formatter --category developer-tools --author <github-login>`; triggers include "format ktovet" and "mikud"; add `references/mikud-format.md` and `scripts/mikud-validator.py`; write SKILL_HE.md; validate; submit.
 
 Result: Address formatting skill with validation and postal format support.
 
@@ -526,28 +387,19 @@ Result: Address formatting skill with validation and postal format support.
 
 User says: "I want to create a skill that uses the israeli-bank-mcp server"
 
-Actions:
-1. Category: tax-and-finance
-2. Creator info: Ask for name and email
-3. Use cases: categorize transactions, detect recurring charges, monthly summary
-4. Fact-check: Verify Israeli bank API patterns, transaction category standards
-5. Scaffold: `python scripts/scaffold-skill.py --name israeli-bank-analyzer --category tax-and-finance`
-6. metadata.json: include the relevant Recommended MCP Servers section in SKILL.md (and `## שרתי MCP מומלצים` in SKILL_HE.md) pointing to `israeli-bank-mcp`. Description triggers include "nituch tenuot bank"
-7. Instructions: MCP tool calls for fetching transactions, categorization logic, summary generation
-8. References: `references/bank-api-reference.md`; Scripts: `scripts/transaction-categorizer.py`
-9. Hebrew: SKILL_HE.md with banking terminology
-10. Validate: passes all checks
-11. Submit via the [submission page](https://agentskills.co.il/en/submit)
+Actions: category tax-and-finance; ask for GitHub username and email; use cases are transaction categorization, recurring-charge detection, and a monthly summary; scaffold `israeli-bank-analyzer` with `--author <github-login>`; add `## Recommended MCP Servers` to SKILL.md and `## שרתי MCP מומלצים` to SKILL_HE.md, both pointing to `israeli-bank-mcp`; instructions cover the MCP tool calls, categorization logic, and summary; add `references/bank-api-reference.md` and `scripts/transaction-categorizer.py`; validate; submit.
 
 Result: MCP-enhanced skill that adds workflow intelligence on top of bank data access.
 
 ## Bundled Resources
 
 ### Scripts
-- `scripts/scaffold-skill.py` -- Creates the complete folder structure for a new skills-il skill: SKILL.md with minimal frontmatter, SKILL_HE.md stub, metadata.json (enriched metadata), and scripts/ and references/ directories. Validates name and category and prevents overwrites. Run: `python scripts/scaffold-skill.py --help`
+- `scripts/scaffold-skill.py` -- Creates the complete folder structure for a new skills-il skill: SKILL.md with minimal frontmatter plus Gotchas and Reference Links stubs, a SKILL_HE.md stub with Hebrew headings, metadata.json (enriched metadata, `--author` is your GitHub login), and scripts/ and references/ directories. Validates name (kebab-case, at most 64 characters) and category, and prevents overwrites. Run: `python3 scripts/scaffold-skill.py --help`
 
 ### References
-- `references/skill-spec.md` -- Complete skills-il SKILL.md specification including all frontmatter fields (required and optional), description-writing formula with good/bad examples, the 5 skill patterns from Anthropic's guide, quality checklist, and validation rules. Consult when writing frontmatter or instructions and you need detailed guidance beyond the steps above.
+- `references/skill-spec.md` -- Complete skills-il SKILL.md specification including all frontmatter fields (required and optional), description-writing formula with good/bad examples, the 5 skill patterns from Anthropic's guide, quality checklist, and validation rules. Consult when writing frontmatter or instructions and you need detailed guidance beyond the steps above, or when choosing `supported_agents`.
+- `references/submission-checklist.md` -- Link-check commands and status actions, the full validate-skill.sh rule table, and the five GitHub Verification signals. Consult when a link check, the validator, or the submission scorecard fails.
+- `references/domain-checklist.md` -- What a complete skill-authoring guide must cover, with sources. Consult when reviewing or extending this skill.
 
 ## Gotchas
 
@@ -556,12 +408,33 @@ Result: MCP-enhanced skill that adds workflow intelligence on top of bank data a
 - Hebrew content in SKILL_HE.md must never appear inside code blocks (```) because code blocks do not support RTL rendering. Use plain text or bullet lists for Hebrew content.
 - The skill description field has a dual purpose: it serves as both the YAML frontmatter description and the trigger text for agent matching. Agents may write a generic description that fails to trigger on relevant user queries.
 - `metadata.json` must include `version`, `category`, bilingual `tags`, `display_name`, `display_description`, and `supported_agents`. Agents may omit required fields like `supported_agents` or `display_name`.
+- Agents treat 1024 as the description limit because the spec says so. The validator stops at 1023 counted with the YAML quotes, so a quoted 1023-character value already fails.
+- Agents fill `author` with the contributor's full name. It must be a GitHub login, or the creator link and avatar break.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Agent Skills specification | https://agentskills.io/specification | Frontmatter fields and limits (name, description, compatibility) |
+| Anthropic skill authoring best practices | https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices | Conciseness, degrees of freedom, progressive disclosure, evaluation-first |
+| The Complete Guide to Building Skills for Claude (Anthropic, PDF) | https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf | The five skill patterns summarized in `references/skill-spec.md` |
+| skills-il validator | https://github.com/skills-il/developer-tools/blob/master/scripts/validate-skill.sh | The exact checks CI runs, including the 1023 limit and the SKILL_HE.md rules |
+| gh skill publish manual | https://cli.github.com/manual/gh_skill_publish | The `--dry-run` validation behind the `spec_compliant` signal |
+| GitHub Verification checklist | https://agentskills.co.il/en/guides/github-verification-checklist | Setup steps for the five Critical signals |
 
 ## Troubleshooting
 
 ### Error: "Validation fails on description"
-Cause: Description missing trigger phrase or over 1024 characters
-Solution: Ensure description includes one of: "Use when", "Use for", "Use if", "When user", "When the user". Check length is under 1024 chars. Remove any `<>` angle brackets.
+Cause: Description missing a trigger phrase, longer than 1023 characters including YAML quotes, or containing angle brackets
+Solution: Ensure description includes one of: "Use when", "Use for", "Use if", "When user", "When the user". Shorten to 1023 characters or fewer counting the quotes (aim for 950). Remove any `<>` angle brackets.
+
+### Error: "frontmatter is not valid YAML"
+Cause: Almost always a plain one-line description that contains a colon followed by a space, which YAML reads as a nested key
+Solution: Switch the description to the folded `>-` style, wrap it in single quotes (doubling any single quote inside it), or reword the colon to a comma. The check runs on SKILL_HE.md frontmatter too.
+
+### Error: "missing sibling SKILL_HE.md" or "untranslated English heading(s)"
+Cause: The Hebrew companion is absent, or it kept English section headings such as `## Examples` outside a code block
+Solution: Create SKILL_HE.md, and translate every section heading (for example `## דוגמאות`, `## מלכודות נפוצות`, `## קישורי עזר`). Headings inside code fences are ignored.
 
 ### Error: "Name doesn't match folder"
 Cause: SKILL.md `name` field differs from the folder name

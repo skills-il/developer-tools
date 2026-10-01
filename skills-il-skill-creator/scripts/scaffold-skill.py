@@ -3,16 +3,19 @@
 
 Creates the complete folder structure for a new skill:
   <skill-name>/
-  ├── SKILL.md          # Template with minimal frontmatter (name, description, license)
+  ├── SKILL.md          # Template with minimal frontmatter, Gotchas and Reference Links stubs
   ├── SKILL_HE.md       # Hebrew companion stub
   ├── metadata.json     # All enriched metadata (Claude Desktop rejects it in frontmatter)
   ├── scripts/          # For helper scripts
   └── references/       # For reference documentation
 
+Run it from the directory the new skill folder should be created in (your repo
+root, or the category repo root), or pass --dir.
+
 Usage:
-  python scripts/scaffold-skill.py --name my-skill --category developer-tools
-  python scripts/scaffold-skill.py --name my-skill --category tax-and-finance --author "My Name"
-  python scripts/scaffold-skill.py --help
+  python3 <path-to>/scaffold-skill.py --name my-skill --category developer-tools --author my-github-login
+  python3 <path-to>/scaffold-skill.py --name my-skill --category tax-and-finance --author my-github-login --dir ../my-repo
+  python3 <path-to>/scaffold-skill.py --help
 """
 
 import argparse
@@ -40,17 +43,25 @@ VALID_CATEGORIES = [
 
 KEBAB_CASE_PATTERN = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 
+# Agent Skills specification: name is 1-64 characters.
+MAX_NAME_LENGTH = 64
+
 FORBIDDEN_NAMES = ["claude", "anthropic"]
+
+# GitHub login rules: 1-39 alphanumerics or single hyphens, no leading or
+# trailing hyphen. The directory builds the creator link and avatar from it.
+GITHUB_LOGIN_PATTERN = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$")
+RESERVED_AUTHORS = ["skills-il"]
 
 SKILL_MD_TEMPLATE = """---
 name: {name}
 description: >-
-  TODO: [What it does]. Use when user asks to [triggers], "[Hebrew transliteration]",
-  or [scenarios]. [Key capabilities]. Do NOT use for [anti-triggers].
+  TODO: [Third-person verb: Validates/Calculates...] [what it does]. Use when user
+  asks to [triggers], "[Hebrew transliteration]", or [scenarios]. [Key capabilities].
+  Do NOT use for [anti-triggers].
 license: MIT
-allowed-tools: ''
 compatibility: >-
-  TODO: [Requirements]. Works with Claude Code, Claude.ai, Cursor.
+  TODO: [Requirements, or delete this field]. Keep it consistent with supported_agents in metadata.json.
 ---
 
 # TODO: Skill Display Name
@@ -71,10 +82,20 @@ Result: TODO
 ## Bundled Resources
 
 ### Scripts
-- `scripts/TODO.py` -- TODO: What it does. Run: `python scripts/TODO.py --help`
+- `scripts/TODO.py` -- TODO: What it does. Run: `python3 scripts/TODO.py --help`
 
 ### References
 - `references/TODO.md` -- TODO: What it contains. Consult when TODO.
+
+## Gotchas
+
+- TODO: An agent failure mode (not a user error) observed in your baseline run.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| TODO | TODO | TODO |
 
 ## Troubleshooting
 
@@ -86,17 +107,18 @@ Solution: TODO
 SKILL_HE_TEMPLATE = """---
 name: {name}
 description: >-
-  TODO: [What it does]. Use when user asks to [triggers], "[Hebrew transliteration]",
-  or [scenarios]. [Key capabilities]. Do NOT use for [anti-triggers].
+  TODO: [Third-person verb: Validates/Calculates...] [what it does]. Use when user
+  asks to [triggers], "[Hebrew transliteration]", or [scenarios]. [Key capabilities].
+  Do NOT use for [anti-triggers].
 license: MIT
 ---
 
-# TODO: Hebrew Skill Name
+# שם הסקיל בעברית (TODO)
 
 ## הוראות
 
 ### שלב 1: TODO
-TODO: הוראות ברורות בעברית.
+הוראות ברורות בעברית (TODO).
 
 ## דוגמאות
 
@@ -109,10 +131,20 @@ TODO: הוראות ברורות בעברית.
 ## משאבים מצורפים
 
 ### סקריפטים
-- `scripts/TODO.py` -- TODO
+- הסקריפט `scripts/TODO.py` (TODO)
 
 ### מסמכי עזר
-- `references/TODO.md` -- TODO
+- הקובץ `references/TODO.md` (TODO)
+
+## מלכודות נפוצות
+
+- כשל שהסוכן נופל בו, לא טעות של המשתמש (TODO).
+
+## קישורי עזר
+
+| מקור | כתובת | מה לבדוק |
+|------|-------|----------|
+| TODO | TODO | TODO |
 
 ## פתרון בעיות
 
@@ -132,6 +164,12 @@ def validate_name(name: str) -> list[str]:
             "Use only lowercase letters, numbers, and hyphens."
         )
 
+    if len(name) > MAX_NAME_LENGTH:
+        errors.append(
+            f"Name '{name}' is {len(name)} characters. "
+            f"The Agent Skills specification allows at most {MAX_NAME_LENGTH}."
+        )
+
     for forbidden in FORBIDDEN_NAMES:
         if forbidden in name.lower():
             errors.append(
@@ -140,6 +178,21 @@ def validate_name(name: str) -> list[str]:
             )
 
     return errors
+
+
+def validate_author(author: str) -> list[str]:
+    """Validate the author is shaped like a GitHub login and is not reserved."""
+    if not GITHUB_LOGIN_PATTERN.match(author):
+        return [
+            f"Author '{author}' is not a GitHub login. Use your GitHub username "
+            "(letters, digits, single hyphens), not a full name or brand."
+        ]
+    if author.lower() in RESERVED_AUTHORS:
+        return [
+            f"Author '{author}' is reserved for skills authored by the skills-il "
+            "team. Use your own GitHub username."
+        ]
+    return []
 
 
 def validate_category(category: str) -> list[str]:
@@ -224,10 +277,13 @@ def scaffold(name: str, category: str, author: str, base_dir: str) -> None:
     print()
     print("Next steps:")
     print("  1. Edit SKILL.md -- replace all TODO placeholders (keep frontmatter minimal)")
+    print("     Regulated domain? See Step 4.5: '## Legal notice' in SKILL.md and")
+    print("     '## הבהרה משפטית' in SKILL_HE.md, right after the H1.")
     print("  2. Edit metadata.json -- fill in tags (he/en), display names, supported_agents")
     print("  3. Write instructions with tables, code examples, and Hebrew terms")
     print("  4. Translate to Hebrew in SKILL_HE.md")
-    print(f"  5. Validate: ./scripts/validate-skill.sh {name}/SKILL.md")
+    print(f"  5. Validate: ./scripts/validate-skill.sh {name}/SKILL.md (structural only)")
+    print(f"  6. Before submitting: grep -rn TODO {name}/ must print nothing")
 
 
 def main():
@@ -236,8 +292,8 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  %(prog)s --name israeli-court-decisions --category government-services\n"
-            "  %(prog)s --name hebrew-spell-checker --category localization --author 'My Name'\n"
+            "  %(prog)s --name israeli-court-decisions --category government-services --author my-github-login\n"
+            "  %(prog)s --name hebrew-spell-checker --category localization --author my-github-login\n"
         ),
     )
     parser.add_argument(
@@ -253,8 +309,11 @@ def main():
     )
     parser.add_argument(
         "--author",
-        default="skills-il",
-        help="Author name for metadata (default: skills-il)",
+        required=True,
+        help=(
+            "Your GitHub username for metadata.json. Must be a real GitHub "
+            "account: the directory builds the creator link and avatar from it."
+        ),
     )
     parser.add_argument(
         "--dir",
@@ -265,7 +324,11 @@ def main():
     args = parser.parse_args()
 
     # Validate
-    errors = validate_name(args.name) + validate_category(args.category)
+    errors = (
+        validate_name(args.name)
+        + validate_category(args.category)
+        + validate_author(args.author)
+    )
     if errors:
         for error in errors:
             print(f"Error: {error}", file=sys.stderr)

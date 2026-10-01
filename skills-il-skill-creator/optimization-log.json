@@ -21,6 +21,26 @@
         "Deferred: scaffold-skill.py templates emit no Gotchas and no Reference Links section despite Step 8.5 calling the latter mandatory, and hardcode an empty allowed-tools line that Step 6 says to omit.",
         "Deferred: Step 10 should state that validate-skill.sh runs from the category-repo root, since the path is otherwise ambiguous against the skill's own scripts/ directory."
       ]
+    },
+    {
+      "version": "1.8.0",
+      "date": "2026-10-01",
+      "lessons": [
+        "Resolved CARRY: third-person description rule and 'Gotchas are agent failure modes' now taught in prose, scaffold templates and all checklists.",
+        "Resolved CARRY: baseline moved to Step 3 with a three-line capture format and a checklist line; Step 6.5 principle 1 now points back to it.",
+        "Resolved CARRY: Step 7 duplication of Step 6.5 removed; the four Should-cover items (time-sensitive phrasing, one-level references, TOC over ~100 lines, consistent terminology) added as principle 5.",
+        "Resolved CARRY: SKILL_HE.md parity gaps closed; both files now share identical frontmatter and heading counts.",
+        "Resolved CARRY: SKILL.md under 500 lines (mechanical tables moved to references/submission-checklist.md and references/skill-spec.md).",
+        "Resolved CARRY: scaffold emits Gotchas and Reference Links stubs, no empty allowed-tools line, requires --author as a GitHub login, enforces the 64-character name limit.",
+        "Resolved CARRY: Step 10 states the validator runs from the repo root; contributors in their own repo are told how to download it.",
+        "Fixed drift vs the current validator: 1023-character description cap counted with YAML quotes, YAML-parse check, SKILL_HE.md missing/untranslated-heading errors and word-cap/parity warnings.",
+        "Fixed: skill-spec.md category table was still missing travel although v1.7.0 recorded it as fixed. Re-check prior 'fixed' claims against the file.",
+        "Added Step 4.5 regulated-domain screen (contributor-facing, no internal paths).",
+        "Deferred: SKILL.md frontmatter description does not mention the baseline run or the regulated-domain screen. Changing it needs a trigger eval with a frozen holdout set; do it as its own cycle and record eval_pass_rate (currently null).",
+        "Deferred: body is about 4,880 words, close to the 5,000-word validator error. Next content addition must move something else to references/ first.",
+        "Deferred minor: the Step 9.5 link extractor picks up placeholder URLs like https://github.com/<author> from the guide's own patterns and reports false 404s; consider excluding '<' in the grep pattern.",
+        "Process lesson: a v1.7.0 'fixed' claim (travel in every category table) was false in references/skill-spec.md. Verify prior-cycle fix claims against the files, not the log."
+      ]
     }
   ]
 }

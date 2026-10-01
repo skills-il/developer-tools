@@ -1,30 +1,8 @@
 {
   "schemaVersion": "1.0",
   "skill": "skills-il-skill-creator",
-  "generated_at": "2026-05-29T00:00:00Z",
+  "generated_at": "2026-10-01T14:00:00Z",
   "claims": [
-    {
-      "claim_id": "ita-reference-url",
-      "claim": "The Israeli Tax Authority page is used as an example official Reference Links source for verifying tax rates, forms, and circulars.",
-      "source_url": "https://www.gov.il/he/departments/israel_tax_authority",
-      "raw_snippet": "רשות המסים בישראל",
-      "fetched_at": "2026-05-29T00:00:00Z",
-      "appears_in": [
-        "SKILL.md",
-        "references/skill-spec.md"
-      ]
-    },
-    {
-      "claim_id": "kolzchut-reference-url",
-      "claim": "Kol Zchut is used as an example official Reference Links source for rights, entitlements, and eligibility.",
-      "source_url": "https://www.kolzchut.org.il",
-      "raw_snippet": "כל זכות",
-      "fetched_at": "2026-05-29T00:00:00Z",
-      "appears_in": [
-        "SKILL.md",
-        "references/skill-spec.md"
-      ]
-    },
     {
       "claim_id": "skill-md-500-line-ceiling",
       "claim": "The SKILL.md body should be kept under 500 lines, with longer content split into separate reference files.",
@@ -98,6 +76,201 @@
       "fetched_at": "2026-07-24T00:00:00Z",
       "appears_in": [
         "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "spec-name-max-64",
+      "claim": "Agent Skills spec: name is 1-64 characters",
+      "source_url": "https://agentskills.io/specification",
+      "raw_snippet": "Must be 1-64 characters",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/skill-spec.md",
+        "references/domain-checklist.md",
+        "scripts/scaffold-skill.py"
+      ]
+    },
+    {
+      "claim_id": "spec-name-no-consecutive-hyphens",
+      "claim": "Agent Skills spec: name must not contain consecutive hyphens",
+      "source_url": "https://agentskills.io/specification",
+      "raw_snippet": "Must not contain consecutive hyphens",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/skill-spec.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "spec-description-max-1024",
+      "claim": "Agent Skills spec: description is 1-1024 characters",
+      "source_url": "https://agentskills.io/specification",
+      "raw_snippet": "Must be 1-1024 characters",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/skill-spec.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "spec-allowed-tools-experimental",
+      "claim": "Agent Skills spec marks allowed-tools as experimental",
+      "source_url": "https://agentskills.io/specification",
+      "raw_snippet": "Experimental",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/skill-spec.md"
+      ]
+    },
+    {
+      "claim_id": "spec-references-one-level-deep",
+      "claim": "Keep file references one level deep from SKILL.md",
+      "source_url": "https://agentskills.io/specification",
+      "raw_snippet": "Keep file references one level deep",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/skill-spec.md"
+      ]
+    },
+    {
+      "claim_id": "validator-description-max-1023",
+      "claim": "skills-il validator caps the raw (quoted) description at 1023 characters",
+      "source_url": "https://raw.githubusercontent.com/skills-il/developer-tools/master/scripts/validate-skill.sh",
+      "raw_snippet": "max 1023",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/skill-spec.md",
+        "references/submission-checklist.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "validator-missing-skill-he",
+      "claim": "skills-il validator errors on a missing sibling SKILL_HE.md",
+      "source_url": "https://raw.githubusercontent.com/skills-il/developer-tools/master/scripts/validate-skill.sh",
+      "raw_snippet": "missing sibling SKILL_HE.md",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/submission-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "gh-skill-publish-dry-run",
+      "claim": "gh skill publish --dry-run validates without publishing",
+      "source_url": "https://cli.github.com/manual/gh_skill_publish",
+      "raw_snippet": "Validate without publishing",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/submission-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "gh-skill-introduced-2-90-0",
+      "claim": "gh skill (public preview) shipped in GitHub CLI v2.90.0",
+      "source_url": "https://github.com/cli/cli/releases/tag/v2.90.0",
+      "raw_snippet": "gh skill publish --dry-run",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/submission-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "attest-build-provenance-v4",
+      "claim": "actions/attest-build-provenance has a v4 release line",
+      "source_url": "https://github.com/actions/attest-build-provenance/releases",
+      "raw_snippet": "Release list v4.2.2 v4.1.1 v4.1.0 v4.0.0",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "references/submission-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "description-third-person",
+      "claim": "Descriptions should be written in third person",
+      "source_url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+      "raw_snippet": "Always write in third person",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/skill-spec.md"
+      ]
+    },
+    {
+      "claim_id": "reference-toc-over-100-lines",
+      "claim": "Reference files over 100 lines should carry a table of contents",
+      "source_url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+      "raw_snippet": "For reference files longer than 100 lines, include a table of contents at the top",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "avoid-time-sensitive-information",
+      "claim": "Avoid time-sensitive information",
+      "source_url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+      "raw_snippet": "Avoid time-sensitive information",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "consistent-terminology",
+      "claim": "Use consistent terminology",
+      "source_url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+      "raw_snippet": "Use consistent terminology",
+      "fetched_at": "2026-10-01T14:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "complete-guide-five-patterns",
+      "claim": "Anthropic's 'The Complete Guide to Building Skills for Claude' defines five skill patterns (sequential workflow orchestration, multi-MCP coordination, iterative refinement, context-aware tool selection, domain-specific intelligence)",
+      "source_url": "https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf",
+      "raw_snippet": "Pattern 1: Sequential workflow orchestration",
+      "fetched_at": "2026-10-01T14:30:00Z",
+      "verified_via": "pdf",
+      "verified_at": "2026-10-01",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/skill-spec.md"
+      ]
+    },
+    {
+      "claim_id": "validator-raw-url-download",
+      "claim": "The skills-il validator can be downloaded from the developer-tools repo raw URL",
+      "source_url": "https://raw.githubusercontent.com/skills-il/developer-tools/master/scripts/validate-skill.sh",
+      "raw_snippet": "Validates SKILL.md files against the Agent Skills spec",
+      "fetched_at": "2026-10-01T14:30:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/submission-checklist.md"
       ]
     }
   ]
