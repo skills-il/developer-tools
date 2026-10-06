@@ -2,25 +2,32 @@
 """Tests for normalize_he_for_tts() in references/hebrew-tts-normalization.md.
 
 The helper is published as a code block in that reference file. This script
-extracts the block and runs it, so the tests always check the code readers copy.
+extracts the block and imports it, so the tests always check the code readers copy.
 
 Run: python3 scripts/test_hebrew_tts_normalization.py
 """
 
+import importlib.util
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 REF = Path(__file__).resolve().parent.parent / "references" / "hebrew-tts-normalization.md"
 
 
 def load_helper():
+    """Write the published code block to a temp module and import it."""
     text = REF.read_text(encoding="utf-8")
     blocks = re.findall(r"```python\n(.*?)```", text, re.S)
     code = next(b for b in blocks if "def normalize_he_for_tts" in b)
-    namespace = {}
-    exec(code, namespace)
-    return namespace["normalize_he_for_tts"]
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "tts_normalization.py"
+        path.write_text(code, encoding="utf-8")
+        spec = importlib.util.spec_from_file_location("tts_normalization", path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+    return module.normalize_he_for_tts
 
 
 P_054 = "אפס חמש ארבע, אחת שתיים שלוש, ארבע חמש שש שבע"

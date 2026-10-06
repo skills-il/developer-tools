@@ -40,7 +40,7 @@ def check_openai_key():
     """Verify OpenAI API key is set."""
     if not os.environ.get("OPENAI_API_KEY"):
         print("Error: OPENAI_API_KEY environment variable not set.", file=sys.stderr)
-        print("Set it with: export OPENAI_API_KEY='your-key-here'", file=sys.stderr)
+        print("Set the OPENAI_API_KEY environment variable first.", file=sys.stderr)
         sys.exit(1)
 
 
