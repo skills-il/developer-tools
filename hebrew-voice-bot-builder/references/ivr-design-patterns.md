@@ -41,7 +41,7 @@ Do not exceed 3 menu levels. If you need more depth, redesign the flow.
     -> [Main Menu]
   IF Friday afternoon / Shabbat:
     "אנחנו סגורים כעת. שעות פעילות: א'-ה' {hours}, ו' {fri_hours}."
-    "להשאיר הודעה, הקישו 1. לשמוע שוב, הקישו 2."
+    "להשאיר הודעה, הקישו 1. לשמוע שוב, הקישו 7."
 
 [Main Menu]
 "להזמנת מקום, הקישו 1.
@@ -276,3 +276,64 @@ Do not exceed 3 menu levels. If you need more depth, redesign the flow.
 - Volume lower than voice prompts
 - Interrupt every 60 seconds with position/wait update
 - Offer callback option after 3 minutes: "אם תרצו שנחזור אליכם, הקישו 1"
+
+## Reference IVR_MENU structure
+
+Moved here from SKILL.md Step 4 to keep the skill body under its word cap.
+
+```python
+IVR_MENU = {
+    "welcome": {
+        "prompt_he": "שלום, הגעתם ל{company_name}.",
+        "prompt_en": "Hello, you've reached {company_name}. For English, press 9.",
+    },
+    "main_menu": {
+        "prompt_he": (
+            "לשירות לקוחות, הקישו 1. "
+            "למכירות, הקישו 2. "
+            "לתמיכה טכנית, הקישו 3. "
+            "למצב הזמנה, הקישו 4. "
+            "לנציג, הקישו 0. "
+            "לשמוע שוב, הקישו 7."
+        ),
+        "options": {
+            "1": "customer_service",
+            "2": "sales",
+            "3": "tech_support",
+            "4": "order_status",
+            "7": "main_menu",   # repeat (numbered key, never 9: 9 is the language key)
+            "0": "agent_queue", # 0 = human agent on every level
+            "9": "english_menu",
+            "#": "main_menu",   # main menu (scheme: * = previous, # = main)
+        },
+        "timeout_seconds": 8,
+        "no_input_prompt_he": "לא קיבלנו בחירה. בבקשה הקישו מספר מ-1 עד 4, או 0 לנציג.",
+        "invalid_prompt_he": "בחירה לא תקינה. נסו שוב.",
+        "max_retries": 3,
+    },
+    "customer_service": {
+        "prompt_he": (
+            "לבירור חשבון, הקישו 1. "
+            "לתלונה, הקישו 2. "
+            "לנציג, הקישו 0. "
+            "לשמוע שוב, הקישו 7. "
+            "לתפריט הקודם, הקישו כוכבית. "
+            "לתפריט הראשי, הקישו סולמית."
+        ),
+        "options": {
+            "1": "account_inquiry",
+            "2": "complaint",
+            "0": "agent_queue",
+            "7": "customer_service",  # repeat this submenu
+            "*": "main_menu",   # previous menu (from a first-level submenu it is the main menu)
+            "#": "main_menu",   # main menu, same key on every level
+        },
+    },
+    "agent_queue": {
+        "prompt_he": "ממתינים לנציג הפנוי הבא. זמן המתנה משוער: {wait_time} דקות.",
+        "hold_music": "hold_music_hebrew.mp3",
+        "periodic_message_he": "תודה שאתם ממתינים. שיחתכם חשובה לנו.",
+        "periodic_interval_seconds": 60,
+    },
+}
+```

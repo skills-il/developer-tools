@@ -1,6 +1,20 @@
 {
   "cycles": [
     {
+      "version": "1.4.0",
+      "date": "2026-10-07",
+      "lessons": [
+        "Held twice (cycles 1001 and 1004) before shipping; 7 judge+expert rounds in all. normalize_he_for_tts() was defective in five successive rounds, each a new input CLASS: separators/decimals, 07X prefix, Hebrew-prefix glue (\\b fails on Hebrew letters), number before a glued prefix amount, then the same with a spaced symbol, newline or NBSP. Root cause: a symbol between two numbers is ambiguous. Final rule: the glued side decides; a number on both sides of a spaced symbol is left as written; one horizontal space never crosses a line; amounts cannot start with 0; an amount followed by -digit or a closing symbol is rejected.",
+        "Process lesson: test a text normalizer with a two-token adjacency matrix (every token type x every separator, both directions), not single tokens. The expert's 2,544-case matrix found what 70 hand-picked tests missed.",
+        "r7: the r6 bidi repair (mark between any two non-space chars -> space) split one-letter Hebrew prefixes from Fluent-isolated values ('ל' + FSI phone). Narrowed to digit + mark + digit/symbol; verified mechanically by re-running the expert's own matrix, value checker and 720 in-context cases against the r7 baseline (work/r7-fix-verify), not by a new LLM round. Lesson: a repair to a normalizer needs the reviewer's full harness re-run, diffed against the previous code.",
+        "to_e164_il now validates digit count by prefix (5X/7X = 9 national digits, landlines 8) and rejects extensions, star codes, short codes and 1-700/1-800 instead of building a wrong +972 number.",
+        "Enriched FAQ fact-sync: the STT answer still recommended gpt-4o-transcribe/whisper-1 after the body recorded their 2026-08-26 deprecation; rewritten. Twilio FAQ's unsourced SIP-trunking line removed.",
+        "[CARRY] Minor, deferred: a spaced prefix amount right after another spaced prefix amount ('<sym> 150 <sym> 200') leaves the second unnormalized (fixed-width lookbehind limit); not a wrong number.",
+        "[CARRY] Minor, deferred: prefix-symbol ranges and digit-soup inputs are left as written by design; a range helper ('between A and B shekels') could be added.",
+        "[CARRY] Minor, deferred (code change skipped by lead decision): to_e164_il raises on '054/1234567', en-dash, U+2010 and fullwidth-plus forms; fails loudly, not wrongly."
+      ]
+    },
+    {
       "version": "1.3.0",
       "date": "2026-08-27",
       "lessons": [

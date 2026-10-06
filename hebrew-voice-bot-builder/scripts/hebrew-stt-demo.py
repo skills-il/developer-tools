@@ -2,7 +2,9 @@
 """
 Hebrew Speech-to-Text Demo
 
-Demonstrates Hebrew STT using OpenAI Whisper. Can transcribe existing
+Demonstrates Hebrew STT using OpenAI (gpt-transcribe by default; whisper-1
+only for --verbose, because it is the only model with timestamps and it shuts
+down on 2027-02-26). Can transcribe existing
 Hebrew audio files or generate a test audio file using TTS and then
 transcribe it back to verify the pipeline.
 
@@ -44,7 +46,11 @@ def check_openai_key():
 
 def transcribe_hebrew(audio_path: str, verbose: bool = False) -> dict:
     """
-    Transcribe a Hebrew audio file using OpenAI Whisper.
+    Transcribe a Hebrew audio file with OpenAI.
+
+    Default path: gpt-transcribe, which takes `languages` (a list) in place of
+    the singular `language` (do not send both). --verbose path: whisper-1, the only OpenAI model
+    that returns segment timestamps; it shuts down on 2027-02-26.
 
     Args:
         audio_path: Path to the audio file (mp3, mp4, mpeg, mpga, m4a, wav, webm)
@@ -81,10 +87,9 @@ def transcribe_hebrew(audio_path: str, verbose: bool = False) -> dict:
             )
         else:
             result = client.audio.transcriptions.create(
-                model="whisper-1",
+                model="gpt-transcribe",
                 file=audio_file,
-                language="he",
-                response_format="text",
+                extra_body={"languages": ["he"]},
             )
 
     elapsed = time.time() - start_time
@@ -109,7 +114,7 @@ def transcribe_hebrew(audio_path: str, verbose: bool = False) -> dict:
         }
     else:
         return {
-            "transcript": result,
+            "transcript": result.text,
             "processing_time_seconds": round(elapsed, 2),
         }
 
@@ -169,6 +174,7 @@ _HEBREW_NUMERALS = {
     "שלוש": "3", "שלושה": "3", "ארבע": "4", "ארבעה": "4", "חמש": "5",
     "חמישה": "5", "שש": "6", "שישה": "6", "שבע": "7", "שבעה": "7",
     "שמונה": "8", "תשע": "9", "תשעה": "9", "עשר": "10", "עשרה": "10",
+    "שתים": "2",  # common spelling variant of שתיים
 }
 
 # Punctuation to drop before aligning. Includes the Hebrew geresh and gershayim,
@@ -185,9 +191,29 @@ def _normalize_for_wer(text: str) -> list:
     transcription as substantially wrong, which is just as useless as the
     set-overlap score it replaced reporting a scrambled one as perfect.
     """
+    import re
+    import unicodedata
+
+    # Strip niqqud and cantillation (U+0591-U+05C7), except the maqaf itself.
+    text = "".join(
+        ch for ch in unicodedata.normalize("NFC", text)
+        if not ("\u0591" <= ch <= "\u05c7") or ch == "\u05be"
+    )
+    # Hyphen and maqaf join words ("הקישו-1", "תמיכה־טכנית"): split on them.
+    # Keep digit groups together ("054-1234567" == "0541234567") before
+    # splitting the remaining hyphens and maqafs.
+    text = re.sub(r"(?<=\d)-(?=\d)", "", text)
+    text = re.sub("[-\u05be]", " ", text)
     words = []
     for w in text.strip().split():
         w = w.strip(_WER_PUNCT).lower()
+        # Gershayim INSIDE a token (מד"א) are spelling, not recognition:
+        # remove them so מד"א and מדא align.
+        # A geresh after ג/ז/צ/ת marks a different sound (צ'יפס is not ציפס),
+        # so keep it there and drop the rest.
+        w = re.sub("[\u05f3\u2019]", "'", w)  # one geresh form
+        w = re.sub("(?<![גזצת])'", "", w)
+        w = re.sub("[\"\u05f4]", "", w)
         if not w:
             continue
         words.append(_HEBREW_NUMERALS.get(w, w))
@@ -265,7 +291,7 @@ def calculate_accuracy(expected: str, actual: str) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Hebrew Speech-to-Text Demo using OpenAI Whisper",
+        description="Hebrew Speech-to-Text Demo using OpenAI (gpt-transcribe)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -322,7 +348,7 @@ Environment:
 
     print("=" * 60)
     print("  Hebrew Speech-to-Text Demo")
-    print("  Provider: OpenAI Whisper")
+    print("  Provider: OpenAI (gpt-transcribe; whisper-1 for --verbose)")
     print("=" * 60)
     print()
 
