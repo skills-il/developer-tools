@@ -34,10 +34,10 @@ import fs from "fs";
 
 const to = path.join(process.cwd(), "whisper.cpp");
 
-// whisper.cpp 1.5.5 is the documented minimum; pin to a current release.
-// As of 2026-08 the whisper.cpp project is on the 1.9.x line (latest v1.9.3).
-// Check https://github.com/ggml-org/whisper.cpp/releases for the latest tag.
-const WHISPER_CPP_VERSION = "1.9.3";
+// whisper.cpp 1.5.5 is the documented minimum; pin to a current STABLE release.
+// As of 2026-10 the latest stable releases are v1.9.5 and v1.9.4. Skip tags GitHub marks
+// "Pre-release" (v1.9.3 is one). Check https://github.com/ggml-org/whisper.cpp/releases
+const WHISPER_CPP_VERSION = "1.9.4";
 // Windows caveat: only official release tags are accepted there, prebuilt binaries stop at
 // 1.6.0, and from 1.7.3 a source build is required, which needs cmake on PATH.
 
@@ -87,11 +87,52 @@ Transcribe each clip individually and create multiple JSON files.
 
 See [Displaying captions](display-captions.md) for how to display the captions in Remotion.
 
-## Browser-side transcription without whisper.cpp
+## GPU transcription without whisper.cpp: `@remotion/whisper-webgpu`
 
-Remotion 4.0.518 added `@remotion/whisper-webgpu`, which runs Whisper in the browser over
-WebGPU with no local whisper.cpp install and no model download step in your build. It is the
-lighter path when you only need captions inside Studio or a Player, and it avoids the
-platform-specific whisper.cpp build entirely. Check support first with `canUseWhisperWebGpu()`,
-which needs WebGPU, a usable adapter, and a secure context. The `installWhisperCpp` route above
-remains the right choice for CI and headless renders. See https://www.remotion.dev/docs/whisper-webgpu.
+Remotion 4.0.518 added `@remotion/whisper-webgpu`, which runs timestamped Whisper models over
+WebGPU through Transformers.js and converts the result to `@remotion/captions`. It needs no
+whisper.cpp build. It runs in the browser (Studio, Player), and since 4.0.528 the docs also
+cover Node.js (with `@mediabunny/server` to decode the file to a 16kHz waveform). Either way it
+needs a GPU: call `canUseWhisperWebGpu()` first and fall back to the whisper.cpp route above if
+`supported` is false, which is the usual case on GPU-less CI runners.
+
+Install it together with its Transformers.js peer dependency:
+
+```bash
+npx remotion add @remotion/whisper-webgpu @huggingface/transformers
+```
+
+The example below runs in the browser: `resampleTo16Khz()` decodes and resamples browser audio, so it is not the Node.js path. In Node.js, also install `mediabunny` and `@mediabunny/server` and follow the Node.js page linked at the end of this section to build the 16kHz waveform.
+
+**Hebrew rule for this package:** automatic language detection is not supported. With a
+multilingual model the `language` option of `transcribe()` is required, so pass `language: "he"`
+and pick a multilingual model (`small` is the documented default; `medium` and `large-v3-turbo`
+are also available). Never use a `.en` model for Hebrew audio.
+
+```ts
+import {
+  canUseWhisperWebGpu,
+  downloadWhisperModel,
+  resampleTo16Khz,
+  toCaptions,
+  transcribe,
+} from "@remotion/whisper-webgpu";
+
+export const transcribeHebrewFile = async (file: File) => {
+  const support = await canUseWhisperWebGpu();
+  if (!support.supported) {
+    throw new Error(support.detailedReason);
+  }
+  await downloadWhisperModel({ model: "small" });
+  const channelWaveform = await resampleTo16Khz({ file });
+  const transcription = await transcribe({
+    channelWaveform,
+    model: "small",
+    language: "he",
+  });
+  const { captions } = toCaptions({ whisperWebGpuOutput: transcription });
+  return captions;
+};
+```
+
+See https://www.remotion.dev/docs/whisper-webgpu and, for Node.js, https://www.remotion.dev/docs/whisper-webgpu/node.

@@ -9,46 +9,39 @@ metadata:
 
 ## Hebrew Google Fonts
 
-Use `@remotion/google-fonts` with the `hebrew` subset. These fonts have excellent Hebrew support:
+Use `@remotion/google-fonts` with BOTH the `hebrew` and `latin` subsets. The `hebrew` subset covers only the Hebrew block (U+0590-05FF) plus a few marks and the shekel sign: it does NOT contain the space, the digits 0-9 or ASCII punctuation (`.` `,` `!` `?` `%` `"` `'`). Those live in `latin`, so a `hebrew`-only load renders every digit, comma and gershayim quote (מע"מ, צה"ל) in a fallback font next to the Heebo letters. These fonts have excellent Hebrew support:
 
 ```tsx
 // Heebo -- clean, modern, great for titles and body
 import { loadFont } from "@remotion/google-fonts/Heebo";
 const { fontFamily } = loadFont("normal", {
   weights: ["400", "700", "900"],
-  subsets: ["hebrew"],
+  subsets: ["hebrew", "latin"],
 });
 
 // Rubik -- rounded, friendly, works for marketing videos
 import { loadFont as loadRubik } from "@remotion/google-fonts/Rubik";
 const { fontFamily: rubikFamily } = loadRubik("normal", {
   weights: ["400", "600", "700"],
-  subsets: ["hebrew"],
+  subsets: ["hebrew", "latin"],
 });
 
 // Assistant -- geometric, minimal, good for tech content
 import { loadFont as loadAssistant } from "@remotion/google-fonts/Assistant";
 const { fontFamily: assistantFamily } = loadAssistant("normal", {
   weights: ["400", "600", "700"],
-  subsets: ["hebrew"],
+  subsets: ["hebrew", "latin"],
 });
 
 // Noto Sans Hebrew -- widest Unicode coverage, fallback font
 import { loadFont as loadNoto } from "@remotion/google-fonts/NotoSansHebrew";
 const { fontFamily: notoFamily } = loadNoto("normal", {
   weights: ["400", "700"],
-  subsets: ["hebrew"],
-});
-```
-
-Always specify `subsets: ["hebrew"]` to avoid downloading the full font file. For bilingual videos, add both subsets:
-
-```tsx
-const { fontFamily } = loadFont("normal", {
-  weights: ["400", "700"],
   subsets: ["hebrew", "latin"],
 });
 ```
+
+Always specify the subsets (and weights) instead of loading everything: it avoids downloading every subset file, and Remotion 5.0 makes it mandatory. For Hebrew that means `["hebrew", "latin"]`, even for Hebrew-only copy, because spaces, numbers and punctuation come from `latin`.
 
 ## RTL Text Direction
 
@@ -165,7 +158,7 @@ The rule: the FIRST DOM child goes on the RIGHT in an RTL flex row. Write your D
 
 ## Preventing Line Wrapping on Hebrew Titles
 
-Hebrew fonts like Heebo at display weights are wider than their English equivalents. Multi-word titles that look fine in English often wrap to 2 lines in Hebrew.
+A multi-word Hebrew title can wrap to 2 lines at a size that worked for the English version, or leave unused space. Hebrew width relative to English varies by font and by wording, so do not reuse the English size and do not apply a fixed reduction.
 
 ```tsx
 // WRONG -- words wrap, breaking the composition rhythm
@@ -173,7 +166,7 @@ Hebrew fonts like Heebo at display weights are wider than their English equivale
   {words.map(w => <span>{w}</span>)}
 </div>
 
-// CORRECT -- force single line, shrink font if needed
+// CORRECT -- force single line, size the font with fitText() (below)
 <div style={{
   display: "flex",
   gap: 12,
@@ -184,7 +177,7 @@ Hebrew fonts like Heebo at display weights are wider than their English equivale
 </div>
 ```
 
-Rule of thumb: Hebrew at the same font size renders ~20-30% wider than English. If an English title at `fontSize: 72` fits, the Hebrew equivalent needs `fontSize: 54-60` on the same canvas width.
+`nowrap` alone just moves the problem: a title that is too wide now overflows the frame instead of wrapping. Pair it with a computed size from `fitText()` (see "Text Measurement with Hebrew Fonts" below) so the line fits the available width.
 
 ## Hebrew Copy in Video Captions -- Natural Israeli Phrasing
 
@@ -256,7 +249,7 @@ import type { TikTokPage } from "@remotion/captions";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Heebo";
 
-const { fontFamily } = loadFont("normal", { subsets: ["hebrew"], weights: ["700"] });
+const { fontFamily } = loadFont("normal", { subsets: ["hebrew", "latin"], weights: ["700"] });
 const HIGHLIGHT_COLOR = "#39E508";
 
 const HebrewCaptionPage: React.FC<{ page: TikTokPage }> = ({ page }) => {
@@ -297,12 +290,21 @@ const HebrewCaptionPage: React.FC<{ page: TikTokPage }> = ({ page }) => {
 };
 ```
 
-For Hebrew transcription with Whisper, use the `medium` model (not `medium.en`) which supports Hebrew:
+For Hebrew transcription with Whisper, use the `medium` model (not `medium.en`) which supports Hebrew, AND pin the language when you transcribe (see `transcribe-captions.md` for the full script):
 
 ```ts
 await downloadWhisperModel({
   model: "medium",  // NOT "medium.en" -- Hebrew needs multilingual model
   folder: to,
+});
+
+const whisperCppOutput = await transcribe({
+  model: "medium",
+  whisperPath: to,
+  whisperCppVersion: WHISPER_CPP_VERSION,
+  inputPath: "/path/to/voiceover-16khz.wav", // 16-bit 16kHz WAV only
+  language: "he", // never rely on auto-detect for Hebrew
+  tokenLevelTimestamps: true,
 });
 ```
 
@@ -380,7 +382,7 @@ const HebrewWordReveal: React.FC<{ text: string }> = ({ text }) => {
 
 ## Hebrew Voiceover
 
-When using ElevenLabs TTS for Hebrew voiceover, use an `eleven_v3` family model. `eleven_multilingual_v2` supports 29 languages and Hebrew is not one of them, so a Hebrew request against it will not produce correct Hebrew speech:
+When using ElevenLabs TTS for Hebrew voiceover, use `eleven_v3` on the Text to Speech endpoint. `eleven_multilingual_v2` supports 29 languages and Hebrew is not one of them, so a Hebrew request against it will not produce correct Hebrew speech. The newer v4 family also lists Hebrew; see `voiceover.md` before switching to it. Check `response.ok` before writing the audio, as `voiceover.md` does:
 
 ```ts
 const response = await fetch(
@@ -403,9 +405,13 @@ const response = await fetch(
     }),
   },
 );
+
+if (!response.ok) {
+  throw new Error(`ElevenLabs ${response.status}: ${await response.text()}`);
+}
 ```
 
-ElevenLabs Hebrew voices: check the voice library for voices tagged with Hebrew support. Use `eleven_v3` for pre-rendered voiceover and `eleven_v3_conversational` for realtime; both list Hebrew (heb). Behaviour with nikkud (vowel marks) is not documented by ElevenLabs, so test your own text both ways rather than assuming.
+ElevenLabs Hebrew voices: check the voice library for voices tagged with Hebrew support. Use `eleven_v3` for pre-rendered voiceover. Behaviour with nikkud (vowel marks) is not documented by ElevenLabs, so test your own text both ways rather than assuming.
 
 ## Israeli Map Defaults
 
@@ -450,7 +456,21 @@ work:
 2. **Add a symbol layer with a Hebrew-capable glyph font.** The default `["DIN Pro Bold", "Arial
    Unicode MS Bold"]` stack in `rules/maps.md` has no Hebrew glyphs in the first family, so Hebrew
    `text-field` values fall through to the fallback or render as tofu. Supply a font stack whose
-   first family covers Hebrew.
+   first family covers Hebrew. A Hebrew font alone is NOT enough: Mapbox GL JS also needs its RTL
+   text plugin, which its API reference calls "Necessary for supporting the Arabic and Hebrew
+   languages". Register it once, before creating the map:
+
+   ```ts
+   mapboxgl.setRTLTextPlugin(
+     "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.3.0/mapbox-gl-rtl-text.js",
+     null,
+     false, // load now; with true, RTL text renders only after a deferred load finishes
+   );
+   ```
+
+   Mapbox's own example passes `true` (lazy). For a video render prefer `false`, so the plugin starts
+   loading before the frames you capture. Loading is still asynchronous, so keep the map's
+   `delayRender()` handle open until the map has finished rendering the Hebrew labels.
 
 ## Text Measurement with Hebrew Fonts
 
@@ -462,7 +482,7 @@ import { measureText, fitText } from "@remotion/layout-utils";
 
 const { fontFamily, waitUntilDone } = loadFont("normal", {
   weights: ["400", "700"],
-  subsets: ["hebrew"],
+  subsets: ["hebrew", "latin"],
 });
 
 // Wait for Hebrew font before measuring
@@ -476,4 +496,4 @@ const { fontSize } = fitText({
 });
 ```
 
-Hebrew text tends to be ~20-30% wider than equivalent English text at the same font size. Account for this when setting container widths.
+Run `fitText()` per string and per font. There is no fixed Hebrew-to-English width ratio to plan container widths from: it changes with the font and with the wording.

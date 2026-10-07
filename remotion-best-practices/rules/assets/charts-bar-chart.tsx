@@ -1,7 +1,7 @@
 import {loadFont} from '@remotion/google-fonts/Inter';
 import {AbsoluteFill, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 
-const {fontFamily} = loadFont();
+const {fontFamily} = loadFont('normal', {weights: ['400', '600'], subsets: ['latin']});
 
 const COLOR_BAR = '#D4AF37';
 const COLOR_TEXT = '#ffffff';

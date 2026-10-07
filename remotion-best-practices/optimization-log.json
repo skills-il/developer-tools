@@ -1,6 +1,22 @@
 {
   "cycles": [
     {
+      "version": "1.9.0",
+      "date": "2026-10-07",
+      "lessons": [
+        "RESOLVED [CARRY] Hebrew-width heuristic: measured 2026-10-07 (canvas, Heebo/Rubik/Assistant 700-900, 72px, 8 matched HE/EN titles): Hebrew titles came out NARROWER in most pairs (mean ratio 0.75-0.90) and per-glyph Hebrew was 0.97x-1.14x Latin lowercase. The 20-30%/72->54-60 rule was wrong; replaced by fitText() everywhere.",
+        "RESOLVED [CARRY] nine ref-* slug-as-snippet evidence entries and the bundled remotion-version-4-stable entry were rebuilt with real page sentences, one claim per source.",
+        "Deterministic import check (npm pack 4.0.533 + grep every named import against .d.ts) found two compile-breaking bugs every prior gate missed: mediabunny FileSource (never existed) and getImageDimensions imported from 'remotion'. Re-run this script every cycle; it is in work/check_imports.py of the 2026-10-04 batch and is cheap.",
+        "Upstream remotion-dev/skills restructured into many sub-skills (remotion-markup, remotion-captions, ...). Diff our rules against the matching upstream file each cycle; upstream fixed several of our bugs first (getImageDimensions 2026-09-29, trimAfter -> durationInFrames, whisper-webgpu as primary).",
+        "Pin check: whisper.cpp v1.9.3 was a GitHub PRE-RELEASE and the skill pinned it as 'current'. Check the prerelease flag, not just the tag name.",
+        "Watch: ElevenLabs eleven_v4 (2026-09-28) lists Hebrew but the release note routes it through Text to Dialogue. Next cycle: confirm whether GET /v1/models reports can_do_text_to_speech for eleven_v4 and, if so, make it the Hebrew default (drop style from voice_settings).",
+        "Watch Remotion 5.0 stable (still 4.1.0-alpha12 on 2026-10-07).",
+        "Deferred MINORs (expert r1): text-animations-word-highlight.tsx transformOrigin 'left center' sweeps against Hebrew reading direction; gifs.md says <Gif> has the same props as <AnimatedImage> (loopBehavior differs: unmount-after-finish vs clear-after-finish); compositions.md should say ids/folder names must be Latin (Hebrew throws); voiceover.md calculateMetadata never returns sceneDurations as props and the generator does not mkdir; charts-bar-chart.tsx RTL axis + toLocaleString without locale; URL-based mediabunny helpers never dispose the Input; mention fitTextOnNLines for 2-line Hebrew titles.",
+        "Deferred older MINORs still open: display-captions.md CaptionedContent snippet boundary; assets.md raw FontFace vs loadFont(); lottie.md bare delayRender vs useDelayRender(); Troubleshooting waitUntilDone() is a measurement requirement, not a render requirement.",
+        "Deferred r2 MINORs: note durationInFrames on @remotion/media <Video>/<Audio> needs 4.0.446+; give the reason for pinning whisper.cpp 1.9.4 rather than 1.9.5 (or move to 1.9.5 once it has settled)."
+      ]
+    },
+    {
       "version": "1.8.0",
       "date": "2026-08-26",
       "lessons": [

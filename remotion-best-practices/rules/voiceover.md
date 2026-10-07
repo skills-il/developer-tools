@@ -15,7 +15,9 @@ By default this guide uses **ElevenLabs** as the TTS provider (`ELEVENLABS_API_K
 
 If the user has not specified a TTS provider, recommend ElevenLabs and ask for their API key.
 
-**For Hebrew you must use `eleven_v3`.** `eleven_multilingual_v2` covers 29 languages and Hebrew is NOT among them (nor is it in `eleven_flash_v2_5`, which is v2's list plus Hungarian, Norwegian and Vietnamese). Hebrew appears only in the v3 family, which supports 70+ languages including Hebrew (heb). Because voiceover renders ahead of time rather than live, `eleven_v3` is the right model here; use `eleven_v3_conversational` only if you need realtime synthesis. `eleven_multilingual_v2` remains a reasonable default for the 29 languages it does cover.
+**For Hebrew, never use `eleven_multilingual_v2` or `eleven_flash_v2_5`.** `eleven_multilingual_v2` covers 29 languages and Hebrew is NOT among them (nor is it in `eleven_flash_v2_5`, which is v2's list plus Hungarian, Norwegian and Vietnamese). Hebrew (heb) is in the language lists of the v3 family (`eleven_v3`, 70+ languages) and of the newer v4 family (`eleven_v4` and `eleven_v4_turbo`, 90+ languages, released September 28, 2026).
+
+The example below uses `eleven_v3`, which ElevenLabs documents as usable with the Text to Speech API that this script calls. ElevenLabs now calls v3 its previous generation and recommends v4, but its v4 release note routes `eleven_v4` through the Text to Dialogue API. Before swapping `eleven_v4` into this Text to Speech call, check that `GET /v1/models` reports `can_do_text_to_speech` for it, and drop `style` from `voice_settings`, because the Style setting is not available in Eleven v4. `eleven_multilingual_v2` remains a reasonable default for the 29 languages it does cover.
 
 Ensure the environment variable is available when running the generation script:
 
@@ -50,6 +52,11 @@ const response = await fetch(
     }),
   },
 );
+
+if (!response.ok) {
+  // Without this check a 401/422 error body gets written to disk as an "MP3".
+  throw new Error(`ElevenLabs ${response.status}: ${await response.text()}`);
+}
 
 const audioBuffer = Buffer.from(await response.arrayBuffer());
 writeFileSync(`public/voiceover/${compositionId}/${scene.id}.mp3`, audioBuffer);

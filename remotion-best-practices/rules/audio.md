@@ -40,7 +40,7 @@ Multiple audio tracks can be layered by adding multiple `<Audio>` components.
 
 ## Trimming
 
-Use `trimBefore` and `trimAfter` to remove portions of the audio. Values are in frames.
+Use `trimBefore` to skip the beginning of the audio and `durationInFrames` to end it early (`trimAfter` still works but is deprecated in `@remotion/media` as of 4.0.533; use `durationInFrames` for new code). Values are in frames; `durationInFrames` counts source frames starting at `trimBefore`.
 
 ```tsx
 const { fps } = useVideoConfig();
@@ -49,7 +49,7 @@ return (
   <Audio
     src={staticFile("audio.mp3")}
     trimBefore={2 * fps} // Skip the first 2 seconds
-    trimAfter={10 * fps} // End at the 10 second mark
+    durationInFrames={8 * fps} // Play 8 seconds, until the 10 second mark
   />
 );
 ```

@@ -41,7 +41,11 @@ export const MyComponent: React.FC = () => {
   const fetchCaptions = useCallback(async () => {
     try {
       const response = await fetch(staticFile("subtitles.srt"));
-      const text = await response.text();
+      // response.text() always decodes as UTF-8. A Hebrew .srt saved by an
+      // older Windows tool can be Windows-1255; decode that explicitly or every
+      // Hebrew letter becomes a U+FFFD replacement character, with no error.
+      const text = new TextDecoder("utf-8").decode(await response.arrayBuffer());
+      // For a Windows-1255 file: new TextDecoder("windows-1255").decode(...)
       const { captions: parsed } = parseSrt({ input: text });
       setCaptions(parsed);
       continueRender(handle);

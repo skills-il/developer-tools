@@ -38,7 +38,7 @@ Remote URLs are also supported:
 
 ## Trimming
 
-Use `trimBefore` and `trimAfter` to remove portions of the video. Values are in frames, so multiply seconds by `fps` from `useVideoConfig()`.
+Use `trimBefore` to skip the beginning of the video and `durationInFrames` to end it early (`trimAfter` still works but is deprecated in `@remotion/media` as of 4.0.533; use `durationInFrames` for new code). Values are in frames, so multiply seconds by `fps` from `useVideoConfig()`. `durationInFrames` counts SOURCE frames starting at `trimBefore`.
 
 ```tsx
 const { fps } = useVideoConfig();
@@ -47,7 +47,7 @@ return (
   <Video
     src={staticFile("video.mp4")}
     trimBefore={2 * fps} // Skip the first 2 seconds
-    trimAfter={10 * fps} // End at the 10 second mark
+    durationInFrames={8 * fps} // Play 8 seconds, until the 10 second mark
   />
 );
 ```
@@ -73,18 +73,18 @@ The video will appear after 1 second.
 
 ## Sizing and Position
 
-Use the `style` prop to control size and position:
+Use the `style` prop to control size and position, and the `objectFit` PROP (not `style.objectFit`) to control cropping. `<Video>` from `@remotion/media` draws into a canvas and overwrites `style.objectFit` with its own `objectFit` prop, which defaults to `"contain"`, so a `style`-only `"cover"` renders letterboxed (it only logs a warning). Tailwind `object-cover` classes are ignored the same way. For a full-bleed crop of a landscape clip in a 1080x1920 vertical video, pass `objectFit="cover"`:
 
 ```tsx
 <Video
   src={staticFile("video.mp4")}
+  objectFit="cover"
   style={{
     width: 500,
     height: 300,
     position: "absolute",
     top: 100,
     left: 50,
-    objectFit: "cover",
   }}
 />
 ```

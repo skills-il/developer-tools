@@ -18,7 +18,7 @@ const FONT_WEIGHT = 700;
 const HIGHLIGHT_START_FRAME = 30;
 const HIGHLIGHT_WIPE_DURATION = 18;
 
-const {fontFamily} = loadFont();
+const {fontFamily} = loadFont('normal', {weights: ['400', '700'], subsets: ['latin']});
 
 const Highlight: React.FC<{
 	word: string;

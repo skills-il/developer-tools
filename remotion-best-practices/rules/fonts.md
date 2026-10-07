@@ -26,14 +26,17 @@ pnpm exec remotion add @remotion/google-fonts # If project uses pnpm
 ```tsx
 import { loadFont } from "@remotion/google-fonts/Lobster";
 
-const { fontFamily } = loadFont();
+const { fontFamily } = loadFont("normal", {
+  weights: ["400"],
+  subsets: ["latin"],
+});
 
 export const MyComposition = () => {
   return <div style={{ fontFamily }}>Hello World</div>;
 };
 ```
 
-Preferrably, specify only needed weights and subsets to reduce file size:
+Always specify only the weights and subsets you need. A bare `loadFont()` loads every weight and subset, which the Remotion 5.0 migration guide says "can lead to timeouts", and Remotion 5.0 makes the arguments mandatory. For Hebrew use `subsets: ["hebrew", "latin"]` (see `hebrew-rtl.md`):
 
 ```tsx
 import { loadFont } from "@remotion/google-fonts/Roboto";
@@ -51,7 +54,10 @@ Use `waitUntilDone()` if you need to know when the font is ready:
 ```tsx
 import { loadFont } from "@remotion/google-fonts/Lobster";
 
-const { fontFamily, waitUntilDone } = loadFont();
+const { fontFamily, waitUntilDone } = loadFont("normal", {
+  weights: ["400"],
+  subsets: ["latin"],
+});
 
 await waitUntilDone();
 ```

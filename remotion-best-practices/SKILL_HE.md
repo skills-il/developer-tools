@@ -40,12 +40,12 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 
 לכל תוכן וידאו בעברית, טענו את [./rules/hebrew-rtl.md](./rules/hebrew-rtl.md). בפנים תמצאו:
 
-- פונטים עבריים מ-Google (Heebo, Rubik, Assistant, Noto Sans Hebrew) עם `subsets: ["hebrew"]`
+- פונטים עבריים מ-Google (Heebo, Rubik, Assistant, Noto Sans Hebrew) עם `subsets: ["hebrew", "latin"]` (ב-subset העברי אין ספרות, רווחים או סימני פיסוק)
 - כיוון טקסט RTL (`direction: "rtl"`, `textAlign: "right"`)
 - עבודה עם טקסט דו-כיווני (Unicode bidi isolates לשילוב עברית/אנגלית)
 - כתוביות עבריות עם הדגשת מילים בזמן אמת
 - אפקט הקלדה בעברית (חשיפת תווים מימין לשמאל)
-- קריינות עברית עם ElevenLabs במודל `eleven_v3` (למודל multilingual v2 אין תמיכה בעברית)
+- קריינות עברית עם ElevenLabs במודל `eleven_v3` (למודלים multilingual v2 ו-flash v2.5 אין תמיכה בעברית; על משפחת v4 החדשה ראו `rules/voiceover.md`)
 - נקודות ציון של ערים ישראליות ותוויות מפה בעברית
 
 ### כתוביות
@@ -94,7 +94,7 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 - [rules/gifs.md](rules/gifs.md) - הצגת GIFs מסונכרנים לציר הזמן
 - [rules/images.md](rules/images.md) - הטמעת תמונות עם קומפוננטת Img
 - [rules/import-srt-captions.md](rules/import-srt-captions.md) - ייבוא קבצי כתוביות srt
-- [rules/light-leaks.md](rules/light-leaks.md) - אפקטים של דליפת אור
+- [rules/light-leaks.md](rules/light-leaks.md) - אפקטים של דליפת אור עם `lightLeak()` מ-`@remotion/effects`
 - [rules/lottie.md](rules/lottie.md) - הטמעת אנימציות Lottie
 - [rules/maps.md](rules/maps.md) - אנימציות מפה עם Mapbox
 - [rules/measuring-dom-nodes.md](rules/measuring-dom-nodes.md) - מדידת מימדים של אלמנטי DOM
@@ -123,7 +123,7 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 שתיים, מייצרים את הקריינות בעברית (טוענים את `rules/voiceover.md`, ElevenLabs במודל `eleven_v3`).
 שלוש, ממירים את ה-MP3 ל-WAV של 16 ביט ב-16kHz ואז מתמללים את הקריינות לכתוביות (טוענים את `rules/transcribe-captions.md`, משתמשים במודל הרב-לשוני `medium` עם `language: "he"`, אף פעם לא `medium.en`).
 ארבע, מרנדרים כתוביות בסגנון TikTok עם הדגשת מילים (טוענים את `rules/display-captions.md` ואת `rules/hebrew-rtl.md`): מגדירים `direction: "rtl"`, `textAlign: "right"` ועוטפים ספרות לטיניות מוטמעות ב-bidi isolates.
-חמש, מגדירים קומפוזיציה בגודל 1080x1920 ומקטינים את הפונט העברי בשתי דרגות מתחת לגודל שהייתם נותנים באנגלית (מלכודת 7).
+חמש, מגדירים קומפוזיציה בגודל 1080x1920 ומחשבים את גודל הפונט של כל כותרת עברית עם `fitText()` לפי רוחב הכתובית, במקום להעתיק את הגודל מהגרסה האנגלית (מלכודת 7).
 שש, מציגים תצוגה מקדימה ב-`npx remotion studio` ואז מרנדרים עם `npx remotion render` (טוענים את `rules/rendering.md`).
 
 ### דוגמה 2: סרטון גרף מבוסס נתונים
@@ -160,19 +160,19 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 
 6. **RTL הופך את `flex-start` ו-`flex-end`.** בתוך flex עם RTL, `flex-start` זה ימין ו-`flex-end` זה שמאל -- ההפך ממה שמצפים. כדי ליישר שורות אייקון+טקסט לימין בעברית, תשתמשו ב-`justifyContent: "flex-start"` (לא `flex-end`). הכיוון RTL כבר הופך את סדר ה-DOM, אז האלמנט הראשון (אייקון) מרונדר בצד ימין. אל תשתמשו ב-`flexDirection: "row-reverse"` בתוך RTL -- זה הופך פעמיים וחוזר לסדר LTR.
 
-7. **טקסט עברי נשבר לשורה שנייה בגודל פונט שבו אנגלית נכנסת בשורה אחת.** פונטים עבריים (Heebo, Rubik, Assistant) בגדלים גדולים רחבים ב-20-30% מאנגלית באותו גודל. אם כותרת באנגלית עובדת ב-`fontSize: 72`, הגרסה העברית צריכה `54-60`. תוסיפו גם `flexWrap: "nowrap"` ו-`whiteSpace: "nowrap"` לכל שורת flex עם מילים עבריות גדולות כדי למנוע שבירת שורה באמצע המשפט.
+7. **מתאימים כותרות עבריות עם `fitText()`, לא עם הקטנה קבועה של הפונט.** אין יחס קבוע בין רוחב עברית לרוחב אנגלית: הוא משתנה לפי הפונט ולפי המילים שבכותרת, ולכותרת בעברית יש לא פעם פחות אותיות מהמקור האנגלי, כך שאותה כותרת יכולה לצאת צרה יותר באותה מידה שהיא יכולה לצאת רחבה יותר. במקום לנחש, מחשבים: טוענים את הפונט עם `subsets: ["hebrew", "latin"]`, מחכים שייטען, ואז קוראים ל-`fitText()` מ-`@remotion/layout-utils` עם רוחב הקונטיינר (ראו `rules/measuring-text.md` ו-`rules/hebrew-rtl.md`). תוסיפו גם `flexWrap: "nowrap"` ו-`whiteSpace: "nowrap"` לכל שורת flex עם מילים עבריות גדולות כדי למנוע שבירת שורה באמצע המשפט.
 
 8. **כתוביות עבריות חייבות להישמע ישראלי, לא מתורגם.** תתרחקו מביטויים קורפורטיביים כמו "תמיכה מלאה", מתיאורים בבניין סביל, ומתרגומים מילוליים של ביטויים באנגלית. סלנג של מפתחים ישראלים: "עולים" (load), "מתיישרת" / "נדחפת" / "מופיעה" לתנועה, "אפקט הקלדה" (לא "מכונת כתיבה"). אל תשתמשו ב-"נופלת", שמשמעותה נפילה כלפי מטה ולא תזוזה הצידה; ראו את טבלת הפעלים ב-`rules/hebrew-rtl.md`. תשתמשו ב-"אפשר" לא "ניתן", בבניין פעיל, ותפזרו מחברים טבעיים כמו "סוף סוף", "כמו שצריך", "באמת".
 
 9. **לעולם אל תשתמשו ב-em dash או en dash.** תחליפו אותם בפסיק, נקודתיים, סוגריים או שני מקפים (`--`). הם לא על מקלדת סטנדרטית, לא תמיד מרונדרים נכון, וגורמים לטקסט להרגיש כאילו מכונה כתבה אותו. הכלל תקף גם באנגלית וגם בעברית בקובצי SKILL.md, כתוביות וטקסט ממשק.
 
-10. **רמושן לא חינמי בלי תנאים.** הוא חינמי ליחידים, למלכ"רים ולארגונים עסקיים עם 3 עובדים או פחות. ארגונים של 4 עובדים ומעלה חייבים לקנות רישיון Company License בתשלום מ-remotion.pro. זה תקף לשימוש ב-Remotion בכלל (סטודיו, רינדור, CI), לא רק לפיצ'ר מסוים. בדקו את https://www.remotion.dev/license ואת קובץ ה-`LICENSE` המצורף לפני שמשחררים פרויקט מסחרי.
+10. **השימוש ב-Remotion לא חינמי בלי תנאים.** הוא חינמי ליחידים, למלכ"רים ולארגונים עסקיים עם 3 עובדים או פחות. ארגונים של 4 עובדים ומעלה חייבים לקנות רישיון Company License בתשלום מ-remotion.pro. זה תקף לשימוש ב-Remotion בכלל (סטודיו, רינדור, CI), לא רק לפיצ'ר מסוים. בדקו את https://www.remotion.dev/license ואת קובץ ה-`LICENSE` המצורף לפני שמשחררים פרויקט מסחרי.
 
 11. **כווננו את ביצועי הרינדור, אל תקבלו סתם את ברירות המחדל.** הורידו את `--concurrency` אם רינדור נגמר לו הזיכרון; העלו אותו במכונות עם הרבה ליבות בשביל רינדור מהיר יותר. השתמשו ב-`--scale` קטן מ-1 לרינדור טיוטה מהיר וגדול מ-1 למאסטר ברזולוציה גבוהה. לוידאו מוטמע, העדיפו את ה-`<Video>` החדש מ-`@remotion/media` (frame-exact, שולף את הפריים המדויק מחוץ ל-thread הראשי דרך Mediabunny); העצה הישנה "העדיפו `<OffthreadVideo>` על פני `<Video>`" תקפה רק ל-`<Video>` הישן מחבילת `remotion`. שמרו על `calculateMetadata` זול ועצל כי הוא רץ לפני כל רינדור. ראו את `rules/rendering.md`.
 
 12. **`Math.random()` שובר רינדורים.** רינדור מריץ את הקומפוננטה מחדש לכל פריים, ולעיתים במקביל בכמה טאבים, ולכן `Math.random()` מחזיר ערך אחר בכל פריים וכל מה שנגזר ממנו רועד או מהבהב. השתמשו ב-`random()` מ-`remotion` עם seed קבוע במקום: `random("particle-3")` דטרמיניסטי גם בין פריימים וגם בין מכונות. אותו דבר תקף ל-`Date.now()` ול-`new Date()`. ראו https://www.remotion.dev/docs/using-randomness.
 
-13. **היערכו לשינויים השוברים של Remotion 5.0.** הגרסה היציבה היום היא קו 4.0.x (4.0.518 נכון לאוגוסט 2026); `4.1.0-alpha*` הוא רכבת הפרה-רליז ל-5.0 ומדריך המעבר הכתוב מכוון ל-5.0. ארבעה שינויים נוגעים ישירות לעצות בסקיל הזה: החבילות `@remotion/light-leaks` ו-`@remotion/starburst` מפסיקות לקבל גרסאות ומוחלפות ב-`lightLeak()` וב-`starburst()` מ-`@remotion/effects`; הפונקציה `loadFont()` מ-`@remotion/google-fonts` תחייב ציון מפורש של משקלים ו-subsets (כלומר `subsets: ["hebrew"]` הופך מהמלצה לחובה); הרכיבים `<Sequence>`, `<Series.Sequence>` ו-`<TransitionSeries.Sequence>` יבצעו premount אוטומטי של שנייה אחת, עם `premountFor={0}` כדרך לבטל; וקבלני משנה נספרים מעכשיו לצורך סף העובדים של ה-Company License. ראו https://www.remotion.dev/docs/5-0-migration.
+13. **היערכו לשינויים השוברים של Remotion 5.0.** הגרסה היציבה היום היא קו 4.0.x (4.0.533 נכון לאוקטובר 2026); `4.1.0-alpha*` הוא רכבת הפרה-רליז ל-5.0, ומדריך המעבר עדיין מציין ש-5.0 טרם שוחררה. חמישה שינויים נוגעים ישירות לעצות בסקיל הזה: החבילות `@remotion/light-leaks` ו-`@remotion/starburst` לא יקבלו גרסאות 5.x ומוחלפות ב-`lightLeak()` וב-`starburst()` מ-`@remotion/effects` (התיעוד כבר מסמן את שתי החבילות הישנות כ-deprecated, ו-`lightLeak()` עובד כבר היום מגרסה 4.0.500, ולכן `rules/light-leaks.md` מלמד אותו); הפונקציה `loadFont()` מ-`@remotion/google-fonts` תחייב ציון מפורש של משקלים ו-subsets (כלומר `subsets: ["hebrew", "latin"]` הופך מהמלצה לחובה); הפונקציות `measureText()` ו-`fitText()` יפעילו כברירת מחדל את `validateFontIsLoaded`, ולכן הקריאה ל-`fitText()` ממלכודת 7 חייבת לרוץ רק אחרי שהפונט העברי נטען; הרכיבים `<Sequence>`, `<Series.Sequence>` ו-`<TransitionSeries.Sequence>` יבצעו premount אוטומטי של שנייה אחת, עם `premountFor={0}` כדרך לבטל; ובמסגרת הרישיון של 5.0, גם קבלני משנה נספרים לצורך סף העובדים של ה-Company License. ראו https://www.remotion.dev/docs/5-0-migration.
 
 ## קישורי עזר
 
@@ -185,8 +185,8 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 | @remotion/lambda | https://www.remotion.dev/docs/lambda | רינדור בענן על AWS Lambda בכמות גדולה |
 | @remotion/google-fonts | https://www.remotion.dev/docs/google-fonts | פונטים עם תמיכה בעברית |
 | @remotion/captions | https://www.remotion.dev/docs/captions | סוגי כתוביות, API לכתוביות TikTok |
-| מודלים של ElevenLabs | https://elevenlabs.io/docs/overview/models | אילו מודלים כוללים עברית (משפחת v3) ואילו לא (multilingual v2) |
-| Google Fonts Hebrew | https://fonts.google.com/?subset=hebrew | עיון בפונטים התומכים בעברית |
+| מודלים של ElevenLabs | https://elevenlabs.io/docs/overview/models | אילו מודלים כוללים עברית (משפחות v3 ו-v4) ואילו לא (multilingual v2, flash v2.5) |
+| Google Fonts Hebrew | https://fonts.google.com/?script=Hebr | עיון בפונטים התומכים בעברית |
 
 ## פתרון בעיות
 
@@ -197,7 +197,7 @@ npx remotion still [composition-id] --scale=0.25 --frame=30
 הקונטיינר צריך `direction: "rtl"` וגם `whiteSpace: "pre"`. בלי RTL, סדר הרינדור של הטוקנים הוא LTR וההדגשה של המילה הנוכחית תופיע על המילה הלא נכונה.
 
 ### פונט עברי לא מרונדר (מציג ריבועים)
-ודאו שטענתם את הפונט עם `subsets: ["hebrew"]` וקראתם ל-`waitUntilDone()` לפני שמתחילים לרנדר. בלי ה-subset, הגליפים העבריים לא יורדים בכלל.
+ודאו שטענתם את הפונט עם `subsets: ["hebrew", "latin"]` וקראתם ל-`waitUntilDone()` לפני שמתחילים לרנדר. בלי `hebrew` הגליפים העבריים לא יורדים בכלל, ובלי `latin` ספרות, רווחים וסימני פיסוק באותה שורה נופלים לפונט אחר.
 
 ### מספרים מופיעים בצד הלא נכון של טקסט עברי
 השתמשו ב-Unicode bidi isolates: עטפו מספרים או שמות אנגליים עם `\u2066...\u2069` (LTR Isolate) בתוך טקסט עברי. בלי זה, אלגוריתם ה-bidi של הדפדפן עשוי לערבב את הסדר.

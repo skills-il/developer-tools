@@ -49,12 +49,12 @@ At 30 fps, `--frame=30` is the one-second mark (`--frame` is zero-based).
 
 For any Hebrew video content, load the [./rules/hebrew-rtl.md](./rules/hebrew-rtl.md) file. It covers:
 
-- Hebrew Google Fonts (Heebo, Rubik, Assistant, Noto Sans Hebrew) with `subsets: ["hebrew"]`
+- Hebrew Google Fonts (Heebo, Rubik, Assistant, Noto Sans Hebrew) with `subsets: ["hebrew", "latin"]` (the `hebrew` subset has no digits, spaces or punctuation)
 - RTL text direction (`direction: "rtl"`, `textAlign: "right"`)
 - Bidirectional text handling (Unicode bidi isolates for mixed Hebrew/English)
 - Hebrew captions with RTL word highlighting
 - Hebrew typewriter effects (right-to-left character reveal)
-- Hebrew voiceover with ElevenLabs `eleven_v3` (multilingual v2 does not cover Hebrew)
+- Hebrew voiceover with ElevenLabs `eleven_v3` (multilingual v2 and flash v2.5 do not cover Hebrew; see `rules/voiceover.md` for the newer v4 family)
 - Israeli map coordinates and Hebrew map labels
 
 ### Captions
@@ -103,7 +103,7 @@ Read individual rule files for detailed explanations and code examples:
 - [rules/gifs.md](rules/gifs.md) - Displaying GIFs synchronized with Remotion timeline
 - [rules/images.md](rules/images.md) - Embedding images using the Img component
 - [rules/import-srt-captions.md](rules/import-srt-captions.md) - Importing .srt subtitle files
-- [rules/light-leaks.md](rules/light-leaks.md) - Light leak overlay effects
+- [rules/light-leaks.md](rules/light-leaks.md) - Light leak overlay effects with `lightLeak()` from `@remotion/effects`
 - [rules/lottie.md](rules/lottie.md) - Embedding Lottie animations
 - [rules/maps.md](rules/maps.md) - Map animations with Mapbox
 - [rules/measuring-dom-nodes.md](rules/measuring-dom-nodes.md) - Measuring DOM element dimensions
@@ -132,7 +132,7 @@ User wants a vertical (1080x1920) social clip with a Hebrew voiceover and word-h
 2. Generate the Hebrew voiceover (load `rules/voiceover.md`, ElevenLabs `eleven_v3`).
 3. Convert the MP3 to a 16-bit 16kHz WAV, then transcribe to captions (load `rules/transcribe-captions.md`, use the `medium` multilingual Whisper model with `language: "he"`, never `medium.en`).
 4. Render TikTok-style word-highlighted captions (load `rules/display-captions.md` and `rules/hebrew-rtl.md`): set `direction: "rtl"`, `textAlign: "right"`, and wrap any embedded Latin digits in LTR bidi isolates (`\u2066` ... `\u2069`).
-5. Size the composition 1080x1920, drop the Hebrew display font two steps below the English size you would use (Gotcha #7).
+5. Size the composition 1080x1920 and compute each Hebrew display title's font size with `fitText()` for the caption width instead of reusing the English size (Gotcha #7).
 6. Preview in `npx remotion studio`, then render with `npx remotion render` (load `rules/rendering.md`).
 
 ### Example 2: Data-driven chart video
@@ -169,7 +169,7 @@ Ready-to-use TSX component examples referenced by the rule files: `charts-bar-ch
 
 6. **RTL flips `flex-start` and `flex-end`.** In an RTL flex container, `flex-start` = RIGHT and `flex-end` = LEFT. To right-align icon+text rows in Hebrew, use `justifyContent: "flex-start"` (not `flex-end`). The RTL direction already reverses DOM order, so the first child (icon) renders on the right. Do not use `flexDirection: "row-reverse"` in RTL containers -- it double-reverses back to LTR order.
 
-7. **Hebrew text wraps to a second line at the same font size English fits on one line.** Hebrew fonts (Heebo, Rubik, Assistant) at display weights render 20-30% wider than English at the same size. If an English title works at `fontSize: 72`, the Hebrew equivalent needs `54-60`. Also set `flexWrap: "nowrap"` and `whiteSpace: "nowrap"` on any flex row containing display-size Hebrew words to prevent unwanted line breaks mid-phrase.
+7. **Fit Hebrew display titles with `fitText()`, not with a fixed size cut.** Hebrew width relative to English is not a fixed ratio: it varies by font and by wording, and a Hebrew title often has fewer letters than its English source, so the same title can come out narrower as easily as wider. Compute the size instead of guessing it: load the font with `subsets: ["hebrew", "latin"]`, wait for it, then call `fitText()` from `@remotion/layout-utils` with the container width (see `rules/measuring-text.md` and `rules/hebrew-rtl.md`). Also set `flexWrap: "nowrap"` and `whiteSpace: "nowrap"` on any flex row containing display-size Hebrew words to prevent unwanted line breaks mid-phrase.
 
 8. **Hebrew captions must sound Israeli, not translated.** Avoid corporate-sounding phrases like "תמיכה מלאה", passive-participle text descriptions, and literal translations of English idioms. Israeli dev slang: "עולים" (load), "מתיישרת" / "נדחפת" / "מופיעה" for movement, "אפקט הקלדה" (not "מכונת כתיבה"). Do NOT use "נופלת", which means falls DOWN, not sideways; see the verb table in `rules/hebrew-rtl.md`. Use "אפשר" not "ניתן", use active voice, and sprinkle natural connectors like "סוף סוף", "כמו שצריך", "באמת".
 
@@ -181,7 +181,7 @@ Ready-to-use TSX component examples referenced by the rule files: `charts-bar-ch
 
 12. **`Math.random()` breaks renders.** A render evaluates your component once per frame, often in parallel across several browser tabs, so `Math.random()` returns a different value on every frame and anything derived from it jitters or flickers. Use `random()` from `remotion` with a fixed seed instead: `random("particle-3")` is deterministic across frames and across machines. The same applies to `Date.now()` and `new Date()`. See https://www.remotion.dev/docs/using-randomness.
 
-13. **Plan for the Remotion 5.0 breaking set.** Stable today is the 4.0.x line (4.0.518 as of August 2026); `4.1.0-alpha*` is the pre-release train for 5.0 and the written migration guide targets 5.0. Four changes hit this skill's advice directly: `@remotion/light-leaks` and `@remotion/starburst` stop receiving releases and are replaced by `lightLeak()` and `starburst()` from `@remotion/effects`; `loadFont()` from `@remotion/google-fonts` will REQUIRE explicit weights and subsets (so `subsets: ["hebrew"]` goes from best practice to mandatory); `<Sequence>`, `<Series.Sequence>` and `<TransitionSeries.Sequence>` premount automatically for one second, with `premountFor={0}` as the opt-out; and contractors count towards the employee threshold for the Company License. See https://www.remotion.dev/docs/5-0-migration.
+13. **Plan for the Remotion 5.0 breaking set.** Stable today is the 4.0.x line (4.0.533 as of October 2026); `4.1.0-alpha*` is the pre-release train for 5.0, and the migration guide still says 5.0 is not yet released. Five changes hit this skill's advice directly: `@remotion/light-leaks` and `@remotion/starburst` get no 5.x releases and are replaced by `lightLeak()` and `starburst()` from `@remotion/effects` (the docs already mark both old packages deprecated, and `lightLeak()` works today from 4.0.500, so `rules/light-leaks.md` teaches it); `loadFont()` from `@remotion/google-fonts` will REQUIRE explicit weights and subsets (so `subsets: ["hebrew", "latin"]` goes from best practice to mandatory); `measureText()` and `fitText()` default `validateFontIsLoaded` to true, so the Gotcha #7 `fitText()` call must run after the Hebrew font has loaded; `<Sequence>`, `<Series.Sequence>` and `<TransitionSeries.Sequence>` premount automatically for one second, with `premountFor={0}` as the opt-out; and under the 5.0 license, contractors count towards the employee threshold for the Company License. See https://www.remotion.dev/docs/5-0-migration.
 
 ## Reference Links
 
@@ -194,8 +194,8 @@ Ready-to-use TSX component examples referenced by the rule files: `charts-bar-ch
 | @remotion/lambda | https://www.remotion.dev/docs/lambda | Cloud rendering on AWS Lambda at scale |
 | @remotion/google-fonts | https://www.remotion.dev/docs/google-fonts | Available Google Fonts with Hebrew subset support |
 | @remotion/captions | https://www.remotion.dev/docs/captions | Caption types, TikTok-style captions API |
-| ElevenLabs models | https://elevenlabs.io/docs/overview/models | Which model IDs list Hebrew (v3 family), which do not (multilingual v2) |
-| Google Fonts Hebrew | https://fonts.google.com/?subset=hebrew | Browse Hebrew-supporting fonts |
+| ElevenLabs models | https://elevenlabs.io/docs/overview/models | Which model IDs list Hebrew (v3 and v4 families), which do not (multilingual v2, flash v2.5) |
+| Google Fonts Hebrew | https://fonts.google.com/?script=Hebr | Browse Hebrew-supporting fonts |
 
 ## Troubleshooting
 
@@ -206,7 +206,7 @@ Add `direction: "rtl"` and `textAlign: "right"` to the text container style. For
 The caption container needs `direction: "rtl"` and `whiteSpace: "pre"`. Without RTL direction, token rendering order is LTR.
 
 ### Hebrew font not rendering (shows squares or fallback)
-Ensure you loaded the font with `subsets: ["hebrew"]` and called `waitUntilDone()` before rendering. Without the subset, the Hebrew glyphs are not downloaded.
+Ensure you loaded the font with `subsets: ["hebrew", "latin"]` and called `waitUntilDone()` before rendering. Without `hebrew`, the Hebrew glyphs are not downloaded; without `latin`, digits, spaces and punctuation in the same line fall back to another font.
 
 ### Numbers appear on wrong side of Hebrew text
 Use Unicode bidi isolates: wrap numbers with `\u2066...\u2069` (LTR isolate) when embedded in Hebrew text.

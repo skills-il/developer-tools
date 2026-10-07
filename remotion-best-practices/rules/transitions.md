@@ -14,6 +14,8 @@ metadata:
 
 Children are absolutely positioned.
 
+Premount scenes: set `premountFor={fps}` (with `fps` from `useVideoConfig()`) on every `<TransitionSeries.Sequence>` and `<TransitionSeries.Overlay>` so heavy content (video, images, fonts) is loaded before it appears. `<TransitionSeries.Transition>` does not accept `premountFor`. The examples below omit it for brevity.
+
 ## Prerequisites
 
 ```bash
@@ -42,20 +44,18 @@ import { fade } from "@remotion/transitions/fade";
 
 ## Overlay example
 
-Any React component can be used as an overlay. For a ready-made effect, see the **light-leaks** rule.
+Any React component can be used as an overlay. For a ready-made effect, see the **light-leaks** rule, which builds the `LightLeakOverlay` component used below from `lightLeak()` in `@remotion/effects` (the older `<LightLeak>` from `@remotion/light-leaks` is deprecated).
 
 ```tsx
 import { TransitionSeries } from "@remotion/transitions";
-// Remotion 5.0 discontinues @remotion/light-leaks: it is replaced by lightLeak() from
-// @remotion/effects. Correct on the 4.0.x line; plan the swap before upgrading.
-import { LightLeak } from "@remotion/light-leaks";
+import { LightLeakOverlay } from "./LightLeakOverlay"; // see the light-leaks rule
 
 <TransitionSeries>
   <TransitionSeries.Sequence durationInFrames={60}>
     <SceneA />
   </TransitionSeries.Sequence>
   <TransitionSeries.Overlay durationInFrames={20}>
-    <LightLeak />
+    <LightLeakOverlay />
   </TransitionSeries.Overlay>
   <TransitionSeries.Sequence durationInFrames={60}>
     <SceneB />
@@ -70,14 +70,14 @@ Transitions and overlays can coexist in the same `<TransitionSeries>`, but an ov
 ```tsx
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
-import { LightLeak } from "@remotion/light-leaks";
+import { LightLeakOverlay } from "./LightLeakOverlay"; // see the light-leaks rule
 
 <TransitionSeries>
   <TransitionSeries.Sequence durationInFrames={60}>
     <SceneA />
   </TransitionSeries.Sequence>
   <TransitionSeries.Overlay durationInFrames={30}>
-    <LightLeak />
+    <LightLeakOverlay />
   </TransitionSeries.Overlay>
   <TransitionSeries.Sequence durationInFrames={60}>
     <SceneB />
