@@ -9,7 +9,16 @@
 //   - contrast-overlay.png  (sprite grid; magenta=fail AA, yellow=pass AA only, green=AAA)
 //
 // Vendored from heygen-com/hyperframes skills/hyperframes-creative/scripts @ d94708e
-// (Apache-2.0). skills-il change: WCAG 2.2 luminance threshold and 14pt-bold cutoff.
+// (Apache-2.0). Modified by skills-il on 2026-10-07:
+//   1. Relative luminance uses the WCAG 2.2 sRGB threshold 0.04045 (was 0.03928).
+//   2. Large bold text starts at 14pt (18.67px) per WCAG 2.2 (was 19px).
+//   3. The sampling screenshot lifts the engine's style#__hf_transparent_bg__
+//      override, so the page background is measured as rendered.
+//   4. Non-rgb() colors (oklch, color(), color-mix) are resolved through a canvas;
+//      a color that cannot be resolved, or a transparent backdrop, is reported
+//      UNMEASURED (exit 3) instead of being read as black.
+//   5. Text under an invisible ancestor (opacity 0, hidden, display none) is skipped.
+//   6. Usage path, and em dashes in comments and messages replaced.
 //
 // Usage:
 //   node <skill-dir>/scripts/contrast-report.mjs <composition-dir> \

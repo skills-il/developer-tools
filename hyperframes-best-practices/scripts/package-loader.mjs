@@ -4,7 +4,7 @@
 // and PATH-adjacent node_modules.
 //
 // Vendored from heygen-com/hyperframes skills/*/scripts @ d94708e (Apache-2.0).
-// skills-il change: upstream could bootstrap missing packages with a temporary
+// Modified by skills-il on 2026-10-07 (also em dashes replaced): upstream could bootstrap missing packages with a temporary
 // `npm install`. This copy never spawns a process; when a package is missing it
 // stops and prints the install command for you to run.
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";

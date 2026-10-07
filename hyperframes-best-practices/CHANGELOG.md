@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.2 - 2026-10-07
+
+### Changed
+
+- Apache-2.0 section 4(b) modification notices: the headers of the vendored `scripts/contrast-report.mjs`, `scripts/animation-map.mjs` and `scripts/package-loader.mjs` now list every skills-il change, with the date. Comments only, no behaviour change.
+
 ## 1.3.1 - 2026-10-07
 
 ### Fixed

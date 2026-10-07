@@ -6,6 +6,8 @@
 // human-readable summaries. Outputs a single animation-map.json.
 //
 // Vendored from heygen-com/hyperframes skills/hyperframes-animation/scripts @ d94708e (Apache-2.0).
+// Modified by skills-il on 2026-10-07: usage path, and em dashes in comments and
+// messages replaced. No functional change.
 //
 // Usage:
 //   node <skill-dir>/scripts/animation-map.mjs <composition-dir> \
