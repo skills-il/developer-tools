@@ -1,6 +1,6 @@
 # Typography
 
-The compiler embeds supported fonts, just write `font-family` in CSS.
+The 18 pre-bundled families need only a `font-family` in CSS. Any other family, every Hebrew one included, must be declared with a Google Fonts `<link>` (or `@import`) or your own `@font-face`, or lint raises `font_family_without_font_face`; see `references/hebrew-rtl.md`.
 
 ## Hebrew first (read before anything below)
 

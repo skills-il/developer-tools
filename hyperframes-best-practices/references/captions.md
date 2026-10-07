@@ -37,10 +37,11 @@ Read the full transcript before choosing. Four dimensions:
 
 ## Hebrew captions
 
-This file is upstream text written for Latin scripts. Three of its rules do not transfer:
+This file is upstream text written for Latin scripts. Four of its rules do not transfer:
 
 - **The ALL CAPS emphasis lane does not exist in Hebrew.** Hebrew letters are caseless (Unicode general category Lo), so `.toUpperCase()` is a no-op. Carry emphasis with weight, scale, color or the marker patterns in `css-patterns.md` instead.
 - **Do not measure Hebrew with `fontFamily: "Outfit"`.** The overflow example below passes Outfit to `fitTextFontSize`, which has no Hebrew glyphs, so the measurement is taken in Latin metrics for text that will render in a different face and the returned size does not fit. Pass the Hebrew family you actually set (Heebo, Rubik, Assistant), and read `.fontSize` off the returned `{ fontSize, fits }` object.
+- **"Just declare `font-family`" fails lint for Hebrew.** No Hebrew family is pre-bundled, so the caption composition file itself must declare it: `@import url("https://fonts.googleapis.com/css2?family=Heebo:wght@400;800&display=swap");` at the top of the `<style>` inside its `<template>`. Otherwise lint raises `font_family_without_font_face`, which stops `check` before its contrast and layout passes. See `references/hebrew-rtl.md`.
 - **`--model small` is wrong for Hebrew.** The Non-Negotiable Language Rule above prescribes it for every language; Hebrew needs `--model medium --language he` at minimum, because per-word effects key off word boundaries `small` mis-places. See SKILL.md and `references/hebrew-rtl.md`.
 
 Also wrap each caption word span in `dir="rtl"` and mirror the sweep so the highlight advances right to left across the group. See `references/hebrew-rtl.md`.

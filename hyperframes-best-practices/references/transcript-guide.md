@@ -1,5 +1,7 @@
 # Transcript Guide
 
+> **Hebrew (skills-il note):** always pass `--language he`. The CLI then swaps any `.en` model for its multilingual twin before downloading, so the `.en` warnings below matter mainly when `--language` is omitted, in which case the default `small.en` forces English. Use `--model medium --language he` as the Hebrew default (see SKILL.md Gotchas).
+
 ## How Transcripts Are Generated
 
 `hyperframes transcribe` handles both transcription and format conversion:

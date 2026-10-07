@@ -8,7 +8,9 @@ These cause real bugs if violated.
 
 **Scene visibility:** Scene 1 visible by default (no `opacity: 0`). Scenes 2+ have `opacity: 0` on the CONTAINER div. GSAP reveals them. No visibility shim (`timedEls`).
 
-**Fonts:** Just write the `font-family` you want, the compiler embeds supported fonts automatically via `@font-face` with inline data URIs. No need for `<link>` tags or `@import`. Works in all contexts including sandboxed iframes.
+**Fonts:** The 18 pre-bundled families need no declaration. Any other family, every Hebrew one included, needs a Google Fonts `<link>` (or `@import`) or your own `@font-face`, or lint raises `font_family_without_font_face`; the compiler turns the declaration into embedded `@font-face` rules with inline data URIs. See [../hebrew-rtl.md](../hebrew-rtl.md).
+
+**Portrait (skills-il note):** the template and the push/cover code below are written for 1920x1080. For a 1080x1920 Reel set `body`, `.scene` and the viewport meta to 1080x1920 together, and convert pixel offsets such as `x: 1920` / `y: 1080` to `xPercent` / `yPercent`. RTL direction for directional transitions is in [../hebrew-rtl.md](../hebrew-rtl.md).
 
 **Element structure:** No `class="clip"` on scene divs in standalone compositions. Only the root div gets `data-composition-id`/`data-start`/`data-duration`.
 

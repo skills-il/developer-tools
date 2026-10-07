@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "hyperframes-best-practices",
-  "generated_at": "2026-08-26T16:20:11Z",
+  "generated_at": "2026-10-07T00:14:54Z",
   "claims": [
     {
       "claim_id": "gsap-pin-3-14-2-upstream-template",
@@ -12,9 +12,7 @@
       "appears_in": [
         "SKILL.md",
         "references/transitions/catalog.md"
-      ],
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z"
+      ]
     },
     {
       "claim_id": "gsap-docs-v3",
@@ -30,28 +28,27 @@
     },
     {
       "claim_id": "hyperframes-repo",
-      "claim": "HyperFrames is an open-source HeyGen project: public repo, default branch main. Validated at commit 4f00336c92f6418aab82c060853da604dd832197, release v0.8.15 (2026-08-26).",
-      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/package.json",
-      "raw_snippet": "\"name\": \"@hyperframes/cli\"",
-      "fetched_at": "2026-06-28T23:30:00Z",
+      "claim": "This cycle is anchored at heygen-com/hyperframes d94708e, whose CLI package version is 0.8.138.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/d94708e5312df021e1fdcac421f00ed3015f11bd/packages/cli/package.json",
+      "raw_snippet": "\"version\": \"0.8.138\",",
+      "fetched_at": "2026-10-07T00:14:54Z",
       "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "verified_via": "source"
+        "references/domain-checklist.md",
+        "CHANGELOG.md"
+      ]
     },
     {
       "claim_id": "hyperframes-font-logic",
-      "claim": "HyperFrames compiler deterministic font resolution logic (canonical font list, Google Fonts fallback, cache path)",
-      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/packages/producer/src/services/deterministicFonts.ts",
-      "raw_snippet": "Faces sharing a source can be emitted as * one weight-range rule instead of embedding that blob once per weight. * * Without `text=` the response is ordered weight-major, subset-minor, so those * faces are not adjacent — group by source rather than scanning neighbours. * Insertion order keeps the emitted CSS deterministic. */ function normalizeWeightKey(weight: string): string { const numeric = Number(weight); return Number.isFinite(numeric) ? String(numeric) : weight.trim().",
-      "fetched_at": "2026-08-18",
+      "claim": "The compiler font pipeline (bundled list, Google Fonts fetch, per-family cache directory) lives in packages/core/src/fonts/deterministicFonts.ts and caches WOFF2s under ~/.cache/hyperframes/fonts.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/core/src/fonts/deterministicFonts.ts",
+      "raw_snippet": "return join(homedir(), \".cache\", \"hyperframes\", \"fonts\");",
+      "fetched_at": "2026-10-06T23:50:49Z",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "verified_via": "cited page fetched; 17 of 22 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"blob\"",
-      "verified_at": "2026-08-18"
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
     },
     {
       "claim_id": "kokoro-nine-locales-no-hebrew",
@@ -64,9 +61,7 @@
         "SKILL_HE.md",
         "references/tts.md",
         "references/hebrew-rtl.md"
-      ],
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z"
+      ]
     },
     {
       "claim_id": "hyperframes-tts-is-local-only",
@@ -77,21 +72,19 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ],
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z"
+      ]
     },
     {
       "claim_id": "hyperframes-render-command",
-      "claim": "npx hyperframes render is the CLI command that encodes the composition HTML to MP4 (distinct from lint/validate which check the HTML)",
-      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes/SKILL.md",
-      "raw_snippet": "media | `/media-use` | | Voiceover carve, audio effect chains, or automation envelopes on a track | `/hyperframes-audio` | | Init, lint, check, snapshots, compare, batch render, Studio, render, publish, or diagnostics | `/hyperframes-cli` | | Registry blocks and components | `/hyperframes-registry` | | Figma assets, tokens, components, or storyboard frames as reconstructed motion | `/figma` | Creator edit phrases are cross-domain requests.",
-      "fetched_at": "2026-08-18",
+      "claim": "npx hyperframes render encodes the composition to MP4; check is the required final gate and validate, inspect and layout are compatibility aliases.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-cli/SKILL.md",
+      "raw_snippet": "`validate`, `inspect`, and `layout` remain aliases for compatibility but must not appear in new instructions or scripts.",
+      "fetched_at": "2026-10-07T00:14:54Z",
       "appears_in": [
-        "SKILL.md"
-      ],
-      "verified_via": "cited page fetched; 12 of 15 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"lint\"",
-      "verified_at": "2026-08-18"
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
     },
     {
       "claim_id": "groq-whisper-endpoint",
@@ -177,8 +170,6 @@
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/validate.ts",
       "raw_snippet": "Load a composition in headless Chrome and report console errors (deprecated, use check)",
       "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -190,8 +181,6 @@
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/check.ts",
       "raw_snippet": "Run the WCAG AA contrast pass (enabled by default)",
       "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -203,8 +192,6 @@
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/SKILL.md",
       "raw_snippet": "`data-track-index` is a Studio display lane, not a timing constraint, so it does not need to be free.",
       "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md"
       ]
@@ -215,8 +202,6 @@
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/core/src/text/fitTextFontSize.ts",
       "raw_snippet": "export type FitTextResult = {",
       "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md"
       ]
@@ -227,20 +212,16 @@
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/tts/manager.ts",
       "raw_snippet": "export const BUNDLED_VOICES: VoiceInfo[] = [",
       "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "references/tts.md"
       ]
     },
     {
       "claim_id": "audio-groups-and-fx-chain",
-      "claim": "Upstream exposes audio grouping via the `data-audio-group` attribute and a summed FX bus via `data-fx-chain`; `data-audio-group` on a `<video>` element is ignored.",
+      "claim": "Upstream exposes audio grouping via the data-audio-group attribute.",
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/core/src/audioGroups.ts",
       "raw_snippet": "export const HF_AUDIO_GROUP_ATTR = \"data-audio-group\";",
-      "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
+      "fetched_at": "2026-10-06T23:50:49Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -248,27 +229,26 @@
     },
     {
       "claim_id": "normalize-audio-command",
-      "claim": "`hyperframes normalize-audio` matches one local audio clip to another using integrated LUFS.",
+      "claim": "normalize-audio --target is the audio or video element id whose data-volume is set; --write persists the gain into index.html.",
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/normalize-audio.ts",
-      "raw_snippet": "Match one local audio clip to another using integrated LUFS",
-      "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
+      "raw_snippet": "description: \"Audio or video element id whose data-volume should be set\",",
+      "fetched_at": "2026-10-07T00:14:54Z",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
       ]
     },
     {
       "claim_id": "transcribe-engine-flag",
-      "claim": "`hyperframes transcribe` accepts an `--engine` flag with values auto, parakeet or whisper, defaulting to Parakeet when it is installed.",
+      "claim": "transcribe --engine auto uses Parakeet if installed and it covers --language, else whisper.",
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/transcribe.ts",
-      "raw_snippet": "ASR engine: auto (Parakeet if installed, else whisper), parakeet, or whisper. Default: auto.",
-      "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
+      "raw_snippet": "ASR engine: auto (Parakeet if installed and it covers --language, else whisper), parakeet, or whisper. Default: auto.",
+      "fetched_at": "2026-10-06T23:50:49Z",
       "appears_in": [
-        "SKILL.md"
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md"
       ]
     },
     {
@@ -277,8 +257,6 @@
       "source_url": "https://registry.npmjs.org/@hyperframes/producer/latest",
       "raw_snippet": "\"node\": \">=22\"",
       "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -290,8 +268,6 @@
       "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/media-use/audio/references/tts.md",
       "raw_snippet": "`npx hyperframes tts` synthesizes locally with Kokoro. It does not accept a",
       "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -316,8 +292,6 @@
       "source_url": "https://www.unicode.org/reports/tr9/",
       "raw_snippet": "UAX #9: Unicode Bidirectional Algorithm",
       "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "references/domain-checklist.md"
       ]
@@ -328,8 +302,6 @@
       "source_url": "https://www.w3.org/TR/WCAG21/#contrast-minimum",
       "raw_snippet": "contrast ratio of at least 4.5:1",
       "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -338,12 +310,10 @@
     },
     {
       "claim_id": "html-dir-blanks-render",
-      "claim": "Setting dir=\"rtl\" or dir=\"auto\" on the <html> element previews and snapshots correctly but renders a fully blank/black MP4. Upstream ships this as lint rule html_dir_attribute_breaks_render at severity error.",
+      "claim": "<html dir=\"rtl|auto\"> renders correctly in preview/snapshot but can produce a blank video; lint error html_dir_attribute_breaks_render.",
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/composition.ts",
-      "raw_snippet": "renders correctly in preview/snapshot but produces a fully blank/black video from render",
-      "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
+      "raw_snippet": "renders correctly in preview/snapshot but produces a fully blank/black video from render — a confirmed, silent failure.",
+      "fetched_at": "2026-10-06T23:50:49Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -357,8 +327,6 @@
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/gsap.ts",
       "raw_snippet": "`repeat: Math.max(0, Math.floor(totalDuration / cycleDuration) - 1)`",
       "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -367,13 +335,13 @@
     },
     {
       "claim_id": "clip-class-convention",
-      "claim": "`class=\"clip\"` is a convention the runtime never reads, but the scaffold's shared `.clip { position: absolute; inset: 0 }` rule supplies the full-frame scene box and lint warns via timed_element_missing_clip_class when a visible timed element lacks it.",
+      "claim": "`class=\"clip\"` is a convention the runtime never reads; keep writing it (full-frame box, Studio hint), lint warns timed_element_missing_clip_class; omit on video/audio.",
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/data-attributes.md",
       "raw_snippet": "`class=\"clip\"` is a **convention, not a requirement**: the runtime never reads it.",
-      "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
+      "fetched_at": "2026-10-06T23:50:49Z",
       "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
         "references/domain-checklist.md"
       ]
     },
@@ -383,13 +351,911 @@
       "source_url": "https://raw.githubusercontent.com/skills-il/developer-tools/master/hyperframes-best-practices/scripts/animation-map.mjs",
       "raw_snippet": "const WIDTH = Number(args.width ?? 1920);",
       "fetched_at": "2026-08-26T16:20:11Z",
-      "verified_via": "source",
-      "verified_at": "2026-08-26T16:20:11Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "scripts/animation-map.mjs",
         "scripts/contrast-report.mjs"
+      ]
+    },
+    {
+      "claim_id": "font-lint-requires-declaration",
+      "claim": "A font-family outside the auto-resolved list with no @font-face and no Google Fonts link raises font_family_without_font_face at severity error.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/fonts.ts",
+      "raw_snippet": "These are not in the auto-resolved font list, so the renderer cannot supply them automatically. ",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/typography.md",
+        "references/transitions/catalog.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "font-lint-accepts-google-link",
+      "claim": "The font lint treats families named in a Google Fonts link/@import as declared.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/fonts.ts",
+      "raw_snippet": "!googleFonts.has(name.replace(/\\+/g, \" \")),",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "bundled-fonts-18-no-hebrew",
+      "claim": "The renderer pre-bundles 18 families, none Hebrew (Noto Sans JP is the only non-Latin), and an un-bundled Google font fetched implicitly trips font_family_without_font_face and is fail-closed in distributed/cloud renders.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-creative/references/typography.md",
+      "raw_snippet": "These **18 families** are the ones the renderer **pre-bundles**",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/typography.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "implicit-font-fetch-fail-closed",
+      "claim": "Upstream documents the implicit Google-font fetch as fail-closed in distributed/cloud renders.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-creative/references/typography.md",
+      "raw_snippet": "is **fail-closed in distributed/cloud renders**",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "compiler-embeds-linked-google-font",
+      "claim": "The producer embeds the Google font the page linked, keeping every weight the link asked for, and follows @import (commit 918e39e78, 2026-09-28).",
+      "source_url": "https://github.com/heygen-com/hyperframes/commit/918e39e78",
+      "raw_snippet": "fix(producer): embed the Google font the page linked instead of a wider cut (#4569)",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "crossorigin-media-lint-error",
+      "claim": "crossorigin on <video>/<audio> is the lint error media_crossorigin_breaks_preview; plain displayed media never needs it.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/media.ts",
+      "raw_snippet": "Plain displayed media never needs it.",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "parent-traversal-lint-error",
+      "claim": "Asset paths traversing above the project root with ../ are the lint error invalid_parent_traversal_in_asset_path; compositions are served with the project root as base URL.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/composition.ts",
+      "raw_snippet": "compositions are served with the project root as their base URL, so paths must be root-relative",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "video-has-audio-attr",
+      "claim": "A video with sound keeps it on the <video> with data-has-audio=\"true\" and no muted; separate <audio> for music and voiceover; silent footage is muted.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/variables-and-media.md",
+      "raw_snippet": "A video with sound keeps it on the `<video>` (`data-has-audio=\"true\"`, no `muted`).",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "data-attributes-table",
+      "claim": "Current clip attribute contract: id required on media (id-less audio is silent), data-track-index not required, img defaults to 3s, data-volume up to 3.98 (+12 dB), data-has-audio.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/data-attributes.md",
+      "raw_snippet": "up to `3.98` (+12 dB)",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "id-less-audio-silent",
+      "claim": "An id-less <audio> is never mixed, so the render is silent.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/data-attributes.md",
+      "raw_snippet": "an id-less `<audio>` is never mixed, so the render is **silent**",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "img-default-3s",
+      "claim": "An img with data-start defaults to 3 s.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/data-attributes.md",
+      "raw_snippet": "An `img` with `data-start` defaults to 3 s",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "data-fps-root",
+      "claim": "data-fps is an optional frame-rate hint on the root; render --fps defaults to the root data-fps, else 30.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/render.ts",
+      "raw_snippet": "Defaults to the composition's root data-fps, else 30.",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "async-build-register-last",
+      "claim": "Building a timeline inside an async callback is supported; registering the key before the build finishes renders blank (gsap_timeline_registered_before_async_build).",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/determinism-rules.md",
+      "raw_snippet": "**Building inside an async callback is supported.**",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "runtime-creates-registry",
+      "claim": "The runtime creates window.__timelines before inline scripts evaluate.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/determinism-rules.md",
+      "raw_snippet": "the runtime creates the registry before your inline scripts evaluate",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "infinite-repeat-severity",
+      "claim": "repeat: -1 is a lint error without a finite composition data-duration and a warning with one.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/gsap.ts",
+      "raw_snippet": "severity: hasFiniteCompositionWindow ? \"warning\" : \"error\",",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "gsap-animates-clip-element",
+      "claim": "Tweening display, visibility or autoAlpha on a clip element is rejected by lint (gsap_animates_clip_element).",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/determinism-rules.md",
+      "raw_snippet": "`lint` rejects it (`gsap_animates_clip_element`)",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "sub-composition-template-cloned",
+      "claim": "The runtime clones only the <template> contents into the host slot.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/sub-compositions.md",
+      "raw_snippet": "**Finds the `<template>` element and clones ONLY its contents into the host slot.**",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "fittext-defaults",
+      "claim": "fitTextFontSize defaults: maxWidth 1600, fontFamily Outfit.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/core/src/text/fitTextFontSize.ts",
+      "raw_snippet": "fontFamily: \"Outfit\",",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "check-strict-flag",
+      "claim": "check --strict exits non-zero on warnings too.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/check.ts",
+      "raw_snippet": "description: \"Exit non-zero on warnings too\",",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "render-strict-flag",
+      "claim": "render --strict fails the render on lint errors; without it render continues.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/render.ts",
+      "raw_snippet": "description: \"Fail render on lint errors\",",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "render-quality-flag",
+      "claim": "render --quality draft|looks|delivery, default looks (CRF 16).",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/render.ts",
+      "raw_snippet": "looks is the default (CRF 16)",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "render-format-flag",
+      "claim": "render --format mp4, webm, mov, gif, png-sequence, hls.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/render.ts",
+      "raw_snippet": "\"Output format: mp4, webm, mov, gif, png-sequence, hls \"",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "render-resolution-aspect",
+      "claim": "render --resolution presets include portrait; the aspect ratio must match the composition.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/render.ts",
+      "raw_snippet": "Aspect ratio must match the composition",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "init-resolution-portrait",
+      "claim": "init --resolution portrait sets a 1080x1920 canvas; default keeps template dimensions (typically 1920x1080).",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/init.ts",
+      "raw_snippet": "Default: keep template dimensions (typically 1920x1080).",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "root-dimensions-mismatch-warning",
+      "claim": "root_dimensions_mismatch is a lint warning.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/core.ts",
+      "raw_snippet": "code: \"root_dimensions_mismatch\",",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "registry-catalog-add",
+      "claim": "The CLI registers add and catalog commands for the registry.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/cli.ts",
+      "raw_snippet": "catalog: () => import(\"./commands/catalog.js\").then((m) => m.default),",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "check-lint-error-skips-browser",
+      "claim": "When the browser session never runs, check reports layout, motion and contrast as empty placeholders, not a clean pass.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/check.ts",
+      "raw_snippet": "Browser session never ran",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "contrast-five-frames",
+      "claim": "check --snapshots saves the five contrast-pass PNGs under snapshots/.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/check.ts",
+      "raw_snippet": "Save the five contrast-pass PNGs under snapshots/",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "check-bold-cutoff-19px",
+      "claim": "The check contrast audit classifies large text as >=24px or >=19px bold.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/contrast-audit.browser.js",
+      "raw_snippet": "var large = fontSize >= 24 || (fontSize >= 19 && fontWeight >= 700);",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "transcribe-default-small-en",
+      "claim": "The whisper default model is small.en.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/whisper/manager.ts",
+      "raw_snippet": "const DEFAULT_MODEL = \"small.en\";",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/transcript-guide.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "transcribe-strips-en-for-language",
+      "claim": "With a non-English --language, the CLI swaps a .en model for its multilingual twin.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/whisper/transcribe.ts",
+      "raw_snippet": "if (baseLanguage && baseLanguage !== \"en\" && model.endsWith(\".en\")) {",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/transcript-guide.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "transcribe-no-language-forces-en",
+      "claim": "Without --language, a .en model transcribes as English.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/whisper/transcribe.ts",
+      "raw_snippet": "const language = options?.language ?? (automaticLanguage ? \"auto\" : \"en\");",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/transcript-guide.md"
+      ]
+    },
+    {
+      "claim_id": "parakeet-no-hebrew",
+      "claim": "Parakeet TDT 0.6B v3 language list has no Hebrew.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/whisper/parakeet.ts",
+      "raw_snippet": "\"en es fr de bg hr cs da nl et fi el hu it lv lt mt pl pt ro sk sl sv ru uk\";",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "init-audio-language",
+      "claim": "init accepts --audio to auto-transcribe a file, with --language and --model.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/init.ts",
+      "raw_snippet": "description: \"Path to an audio file (MP3, WAV, M4A)\",",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "references/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "caption-transcript-inline",
+      "claim": "A caption composition that fetch()es its transcript is the lint error caption_transcript_not_inline; it requires an inline var TRANSCRIPT array.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/captions.ts",
+      "raw_snippet": "requires an inline `var TRANSCRIPT = [...]` array to detect and edit captions.",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "doctor-checks-kokoro-only",
+      "claim": "doctor checks local TTS via the Kokoro check only.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/doctor.ts",
+      "raw_snippet": "checks.push({ name: \"TTS (Kokoro)\", run: checkLocalVoice });",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "doctor-json-ok-gate",
+      "claim": "doctor --json health should be gated on .ok, not the exit code.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/doctor.ts",
+      "raw_snippet": "hyperframes doctor --json | jq -e '.ok' > /dev/null || handle_failure",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "gemini-tts-provider",
+      "claim": "The media-use audio engine supports Gemini TTS as an explicit provider outside the automatic order; lang selects the transcription language.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/media-use/audio/references/tts.md",
+      "raw_snippet": "Gemini is an explicit alternative to the automatic provider order below.",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "gemini-tts-lang-transcription",
+      "claim": "For the Gemini adapter, lang selects transcription language; Gemini infers speech language from the text.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/media-use/audio/references/tts.md",
+      "raw_snippet": "`lang` selects transcription language; Gemini",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "references/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "gemini-tts-hebrew",
+      "claim": "Google lists Hebrew as supported by Gemini 3.8 Flash TTS and Flash-Lite TTS.",
+      "source_url": "https://ai.google.dev/gemini-api/docs/speech-generation?hl=en",
+      "raw_snippet": "Hausa ✔️ ✔️ Hebrew ✔️ ✔️ Hindi ✔️ ✔️",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "references/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "audio-carve-attr",
+      "claim": "The bed carves against a voice group with data-fx-carve; never put a carve on a voice track.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-audio/SKILL.md",
+      "raw_snippet": "**Never put a carve on a voice track.**",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "audio-carve-example",
+      "claim": "Carve against a voice group (data-audio-group=\"voiceover\") rather than listing clip ids; the bed carries data-fx-carve with the group as sources.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-audio/SKILL.md",
+      "raw_snippet": "A carve against more than one clip id is wrong.",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "normalize-audio-default-lufs",
+      "claim": "DEFAULT_TARGET_LUFS is -16.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/studio-server/src/helpers/loudness.ts",
+      "raw_snippet": "DEFAULT_TARGET_LUFS = -16",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "wcag22-contrast-minimum",
+      "claim": "WCAG 2.2 SC 1.4.3 requires 4.5:1 for text, 3:1 for large-scale text.",
+      "source_url": "https://www.w3.org/TR/WCAG22/",
+      "raw_snippet": "contrast ratio of at least 4.5:1",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/contrast-report.mjs",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "wcag22-relative-luminance-04045",
+      "claim": "WCAG 2.2 relative luminance uses the 0.04045 sRGB threshold.",
+      "source_url": "https://www.w3.org/TR/WCAG22/",
+      "raw_snippet": "if RsRGB <= 0.04045 then R = RsRGB/12.92",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "scripts/contrast-report.mjs"
+      ]
+    },
+    {
+      "claim_id": "wcag22-large-scale-text",
+      "claim": "Large-scale text is at least 18 point or 14 point bold.",
+      "source_url": "https://www.w3.org/TR/WCAG22/",
+      "raw_snippet": "with at least 18 point or 14 point bold",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/contrast-report.mjs"
+      ]
+    },
+    {
+      "claim_id": "wcag-pt-to-px",
+      "claim": "1pt = 1.333px, so 14pt and 18pt are about 18.5px and 24px.",
+      "source_url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+      "raw_snippet": "therefore 14pt and 18pt are equivalent to approximately 18.5px and 24px",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/contrast-report.mjs"
+      ]
+    },
+    {
+      "claim_id": "nested-structure-warning",
+      "claim": "Inline scenes with nested structure on the root raise nested_structure_needs_subcomposition.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/structure.ts",
+      "raw_snippet": "code: \"nested_structure_needs_subcomposition\",",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "push-transition-opacity-fix",
+      "claim": "Upstream push templates set opacity: 1 in the to-vars so the incoming scene is revealed on every seek path.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-animation/transitions/css-push.md",
+      "raw_snippet": "tl.fromTo(new, { x: 1920, opacity: 1 }, { x: 0, opacity: 1, duration: 0.5, ease: \"power3.inOut\" }, T);",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "references/transitions/css-push.md"
+      ]
+    },
+    {
+      "claim_id": "registry-counts",
+      "claim": "registry.json lists typed items; parsed at d94708e it holds 164 hyperframes:block, 222 hyperframes:component and 8 hyperframes:example entries (counted with json.load, not quotable as one snippet).",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/registry.json",
+      "raw_snippet": "\"name\": \"ai-chat-reveal\",\n      \"type\": \"hyperframes:block\"",
+      "fetched_at": "2026-10-06T23:50:49Z",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "google-fonts-heebo-link-example",
+      "claim": "Example Google Fonts css2 link for Heebo 400 and 800, the declaration the skill recommends.",
+      "source_url": "https://fonts.googleapis.com/css2?family=Heebo:wght@400;800&display=swap",
+      "raw_snippet": "font-family: 'Heebo';",
+      "fetched_at": "2026-10-06T23:51:00Z",
+      "appears_in": [
+        "references/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "font-logic-github-url",
+      "claim": "Reference link to the current location of the compiler font module.",
+      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/packages/core/src/fonts/deterministicFonts.ts",
+      "raw_snippet": "fetchGoogleFont",
+      "fetched_at": "2026-10-06T23:51:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "data-attributes-github-url",
+      "claim": "Reference link to the upstream composition contract data-attributes reference.",
+      "source_url": "https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-core/references/data-attributes.md",
+      "raw_snippet": "timed_element_missing_clip_class",
+      "fetched_at": "2026-10-06T23:51:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "normalize-audio-lufs-flag",
+      "claim": "normalize-audio --lufs is the absolute integrated loudness target (default DEFAULT_TARGET_LUFS = -16).",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/normalize-audio.ts",
+      "raw_snippet": "description: `Absolute integrated loudness target without --reference (default ${DEFAULT_TARGET_LUFS})`,",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "carve-never-read-at-playback",
+      "claim": "The carve's own settings are never read at playback; the chain and lanes it produced are what play.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-audio/SKILL.md",
+      "raw_snippet": "The carve's own settings are never read at playback",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "carve-script",
+      "claim": "Headless carve generation: node <SKILL_DIR>/scripts/carve.mjs --comp index.html in the hyperframes-audio skill.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-audio/SKILL.md",
+      "raw_snippet": "node <SKILL_DIR>/scripts/carve.mjs --comp index.html",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "half-open-visibility",
+      "claim": "The visibility window is half-open [start, start + duration); land end states slightly before data-duration.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/data-attributes.md",
+      "raw_snippet": "**The visibility window is half-open: `[start, start + duration)`.**",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "non-deterministic-labels",
+      "claim": "non_deterministic_code (error) covers new Date(), performance.now() and gsap.utils.random().",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/core.ts",
+      "raw_snippet": "label: \"gsap.utils.random()\",",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "raf-lint-error",
+      "claim": "requestAnimationFrame in a composition is the lint error requestanimationframe_in_composition.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/composition.ts",
+      "raw_snippet": "code: \"requestanimationframe_in_composition\",",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "lint-per-composition-file",
+      "claim": "The project linter lints every compositions/*.html file on its own.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/project.ts",
+      "raw_snippet": "const files = collectHtmlFiles(compositionsDir, \"\").sort();",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/captions.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "sub-composition-head-discarded",
+      "claim": "Everything outside the <template> (including the entire <head>) is discarded when a sub-composition is mounted.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/sub-compositions.md",
+      "raw_snippet": "Everything **outside** the `<template>` (including the entire `<head>`) is **discarded**.",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-rtl.md",
+        "references/captions.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "sub-composition-template-shape",
+      "claim": "Upstream sub-composition file shape: styles, markup and scripts inside <template>, #root position absolute inset 0, timeline registered at the end.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/sub-compositions.md",
+      "raw_snippet": "<!-- EVERYTHING the runtime needs goes here: styles, markup, scripts -->",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "merge-fragments-latin-only",
+      "claim": "Whisper fragment repair (mergeFragments) only matches Latin capital/lowercase patterns.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/whisper/normalize.ts",
+      "raw_snippet": "/^[A-Z]$/.test(curr.text) &&",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "references/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "caption-track-kind-lint",
+      "claim": "Caption-like rows without data-track-kind=\"captions\" raise caption_track_kind_missing.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/lint/src/rules/structure.ts",
+      "raw_snippet": "code: \"caption_track_kind_missing\",",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "check-caption-zone-flag",
+      "claim": "check --caption-zone takes a band \"x0=..;y0=..;x1=..;y1=..[;severity=warning|error]\" in frame fractions.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/check.ts",
+      "raw_snippet": "Caption band \"x0=0;y0=.82;x1=1;y1=1[;severity=warning|error][;seek=.5,1]\" (fractions 0-1; defaults: warning, seek=1)",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "allow-caption-zone-attr",
+      "claim": "data-layout-allow-caption-zone opts intentional lower-third copy out of --caption-zone.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/data-attributes.md",
+      "raw_snippet": "`data-layout-allow-caption-zone` — opt out of `--caption-zone`",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "preview-command",
+      "claim": "The CLI registers a preview command (Studio).",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/cli.ts",
+      "raw_snippet": "preview: () =>",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "skill-scripts-package-loader",
+      "claim": "The vendored skill scripts resolve packages from cwd first and, with HYPERFRAMES_SKILL_BOOTSTRAP_DEPS=1, bootstrap them with npm install --ignore-scripts --no-save into a temp dir.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-animation/scripts/package-loader.mjs",
+      "raw_snippet": "const BOOTSTRAP_CONFIRM_ENV = \"HYPERFRAMES_SKILL_BOOTSTRAP_DEPS\";",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/package-loader.mjs"
+      ]
+    },
+    {
+      "claim_id": "skill-scripts-loader-cwd-first",
+      "claim": "resolvePackageEntry tries process.cwd() before the script directory.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-animation/scripts/package-loader.mjs",
+      "raw_snippet": "const bases = [process.cwd(), HERE, ...envNodeModulesDirs(), ...nodeModulesDirsFromPath()];",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "skill-scripts-pin-version",
+      "claim": "HYPERFRAMES_SKILL_PKG_VERSION pins the bootstrapped package version.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-animation/scripts/package-loader.mjs",
+      "raw_snippet": "const VERSION_OVERRIDE_ENV = \"HYPERFRAMES_SKILL_PKG_VERSION\";",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "upstream-contrast-report-hidden-text",
+      "claim": "Upstream contrast-report samples the real pixels behind each element after hiding its text paint, instead of a 4px ring.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-creative/scripts/contrast-report.mjs",
+      "raw_snippet": "every candidate element's own text paint (color/fill → transparent,",
+      "fetched_at": "2026-10-07T00:14:54Z",
+      "appears_in": [
+        "scripts/contrast-report.mjs"
+      ]
+    },
+    {
+      "claim_id": "capture-injects-transparent-bg",
+      "claim": "The engine screenshot service injects a transparent html/body background, so the contrast script reads the authored background through that override.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/engine/src/services/screenshotService.ts",
+      "raw_snippet": "= `${selector}{background:transparent !important;background-color:transpare",
+      "fetched_at": "2026-10-07T00:15:05Z",
+      "appears_in": [
+        "scripts/contrast-report.mjs"
+      ]
+    },
+    {
+      "claim_id": "transparent-bg-style-id",
+      "claim": "The engine screenshot service tags its transparent-background override style with the id __hf_transparent_bg__.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/engine/src/services/screenshotService.ts",
+      "raw_snippet": "const TRANSPARENT_BG_STYLE_ID = \"__hf_transparent_bg__\";",
+      "fetched_at": "2026-10-07T00:21:21Z",
+      "appears_in": [
+        "scripts/contrast-report.mjs"
+      ]
+    },
+    {
+      "claim_id": "caption-zone-seek-default",
+      "claim": "--caption-zone defaults to severity warning and seek=1 (the last frame).",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/check.ts",
+      "raw_snippet": "(fractions 0-1; defaults: warning, seek=1)",
+      "fetched_at": "2026-10-07T00:22:53Z",
+      "appears_in": [
+        "references/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "render-variables-flag",
+      "claim": "render accepts --variables / --variables-file for per-render variable values.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/render.ts",
+      "raw_snippet": "\"variables-file\": {",
+      "fetched_at": "2026-10-07T00:22:53Z",
+      "appears_in": [
+        "references/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "composition-variables-attr",
+      "claim": "data-composition-variables declares variables on <html>; data-var-text binds text.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-core/references/data-attributes.md",
+      "raw_snippet": "| `data-var-text`              | No          | Binds the element's own text to a scalar variable id; children are preserved.",
+      "fetched_at": "2026-10-07T00:22:53Z",
+      "appears_in": [
+        "references/hebrew-rtl.md"
+      ]
+    },
+    {
+      "claim_id": "nested-structure-timed-rows",
+      "claim": "Only sub-composition hosts and timed elements become top-level rows checked by nested_structure_needs_subcomposition.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/parsers/src/topLevelElements.ts",
+      "raw_snippet": "if (isSubCompositionHost(node) || isTimedElement(node)) rows.push(node);",
+      "fetched_at": "2026-10-07T00:22:53Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "caption-zone-exempts-captions",
+      "claim": "The caption-zone geometry collection skips content inside [data-composition-id=\"captions\"], .caption-layer and #caption-stage.",
+      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/packages/cli/src/commands/layout-audit.browser.js",
+      "raw_snippet": "if (element.closest('[data-composition-id=\"captions\"], .caption-layer, #caption-stage')) {",
+      "fetched_at": "2026-10-07T00:32:18Z",
+      "appears_in": [
+        "references/hebrew-rtl.md",
+        "references/domain-checklist.md"
       ]
     }
   ]
