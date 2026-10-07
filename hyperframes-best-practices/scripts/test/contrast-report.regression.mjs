@@ -8,11 +8,10 @@
 // Usage (from a HyperFrames project root, so @hyperframes/* and sharp resolve,
 // or with HYPERFRAMES_SKILL_BOOTSTRAP_DEPS=1):
 //   node <skill-dir>/scripts/test/contrast-report.regression.mjs
-import { spawnSync } from "node:child_process";
 import { mkdtempSync, writeFileSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const SCRIPT = join(dirname(fileURLToPath(import.meta.url)), "..", "contrast-report.mjs");
 
@@ -55,7 +54,12 @@ for (const c of CASES) {
   const dir = mkdtempSync(join(tmpdir(), "hf-contrast-"));
   try {
     writeFileSync(join(dir, "index.html"), c.html);
-    const r = spawnSync(process.execPath, [SCRIPT, dir, "--width", "1080", "--height", "1920", "--samples", "1", "--out", join(dir, "out")], { encoding: "utf8" });
+    // Run the report in-process: a fresh module instance per case (query
+    // string), with argv set for it. No child process is spawned.
+    process.argv = [process.argv[0], SCRIPT, dir, "--width", "1080", "--height", "1920", "--samples", "1", "--out", join(dir, "out")];
+    process.exitCode = 0;
+    await import(`${pathToFileURL(SCRIPT).href}?case=${encodeURIComponent(c.name)}`);
+    const r = { status: process.exitCode ?? 0 };
     const report = JSON.parse(readFileSync(join(dir, "out", "contrast-report.json"), "utf8"));
     const byId = Object.fromEntries(report.entries.map((e) => [e.selector.replace(/^#/, ""), e]));
     const problems = [];
@@ -75,3 +79,4 @@ for (const c of CASES) {
   }
 }
 process.exitCode = failures ? 1 : 0;
+console.log(failures ? `${failures} case(s) failed` : "all cases passed");

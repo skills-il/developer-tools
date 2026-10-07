@@ -173,14 +173,14 @@ license: Apache-2.0
 
 ## סקריפטים מצורפים
 
-בתיקייה `scripts/` יש שני כלי Node שהועתקו מה-upstream בגרסה `d94708e` (`animation-map.mjs` עם קובץ העזר `animation-map-sampling.mjs`, `contrast-report.mjs`, ו-`package-loader.mjs` המשותף). מריצים אותם מתוך שורש הפרויקט ומצביעים על תיקיית הסקיל; הם מאתרים את `@hyperframes/producer`, `@hyperframes/core` ו-`sharp` קודם כל מתיקיית העבודה. לפרויקט חדש של `hyperframes init` אין `node_modules`, אז או שמתקינים אותם, או שנותנים לטוען לבצע התקנה זמנית חד-פעמית (`npm install --ignore-scripts --no-save` לתיקייה זמנית) עם `HYPERFRAMES_SKILL_BOOTSTRAP_DEPS=1`; בלי TTY הוא עוצר ומדפיס את ההוראה הזאת. את הגרסה נועלים עם `HYPERFRAMES_SKILL_PKG_VERSION`.
+בתיקייה `scripts/` יש שני כלי Node שהועתקו מה-upstream בגרסה `d94708e` (`animation-map.mjs` עם קובץ העזר `animation-map-sampling.mjs`, `contrast-report.mjs`, ו-`package-loader.mjs` המשותף). מריצים אותם מתוך שורש הפרויקט ומצביעים על תיקיית הסקיל; הם מאתרים את `@hyperframes/producer`, `@hyperframes/core` ו-`sharp` קודם כל מתיקיית העבודה. לפרויקט חדש של `hyperframes init` אין `node_modules`, אז מתקינים אותם קודם; אם חבילה חסרה, הסקריפט עוצר ומדפיס את שורת ה-`npm install` המדויקת. בניגוד ל-upstream, העותק הזה אף פעם לא מריץ התקנה בעצמו.
 
 ```bash
 # פורמט לאורך (טיקטוק / רילס). שני הסקריפטים מוגדרים כברירת מחדל
 # ל-viewport של 1920x1080, אז לקומפוזיציה לאורך חובה להעביר --width/--height.
-export HYPERFRAMES_SKILL_PKG_VERSION="$(npx hyperframes --version)"
-HYPERFRAMES_SKILL_BOOTSTRAP_DEPS=1 node <skill-dir>/scripts/animation-map.mjs . --width 1080 --height 1920 --out .hyperframes/anim-map
-HYPERFRAMES_SKILL_BOOTSTRAP_DEPS=1 node <skill-dir>/scripts/contrast-report.mjs . --width 1080 --height 1920 --samples 10 --out .hyperframes/contrast
+npm install --save-dev @hyperframes/producer@"$(npx hyperframes --version)" @hyperframes/core@"$(npx hyperframes --version)" sharp
+node <skill-dir>/scripts/animation-map.mjs . --width 1080 --height 1920 --out .hyperframes/anim-map
+node <skill-dir>/scripts/contrast-report.mjs . --width 1080 --height 1920 --samples 10 --out .hyperframes/contrast
 ```
 
 שניהם מקבלים גם `--fps` (ברירת מחדל 30). התאימו אותו לרנדר שלכם, ושימו `data-fps` על שורש הקומפוזיציה אם אתם לא מרנדרים ב-30.

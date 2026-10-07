@@ -1,25 +1,20 @@
-// package-loader, bootstrap optional helper packages only when missing, with
-// defense-in-depth so a malicious or typo'd dependency can't run on install:
-//   • specs are version-pinned (assertPinnedPackageSpecs), no floating "latest"
-//   • install runs `npm install --ignore-scripts`, package lifecycle scripts
-//     never execute
-//   • `--no-save` into a throwaway tmp dir, the host project is left untouched
-//   • requires an interactive y/N (or an explicit $HYPERFRAMES_SKILL_BOOTSTRAP_DEPS=1)
-//   • npm is spawned with an argv array (no shell), never a built command string
-// The `installLine` strings below are DISPLAY ONLY (shown in the prompt / error
-// text); they are never handed to a shell or executed.
-import { spawnSync } from "node:child_process";
+// package-loader: resolve the helper packages these scripts need
+// (@hyperframes/producer, @hyperframes/core, sharp) from the working directory
+// first, then from node_modules beside the script, $HYPERFRAMES_SKILL_NODE_MODULES
+// and PATH-adjacent node_modules.
+//
+// Vendored from heygen-com/hyperframes skills/*/scripts @ d94708e (Apache-2.0).
+// skills-il change: upstream could bootstrap missing packages with a temporary
+// `npm install`. This copy never spawns a process; when a package is missing it
+// stops and prints the install command for you to run.
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { basename, delimiter, dirname, join, parse, resolve, win32 as win32Path } from "node:path";
-import { createInterface } from "node:readline/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const VERSION_OVERRIDE_ENV = "HYPERFRAMES_SKILL_PKG_VERSION";
-const BOOTSTRAP_ENV = "HYPERFRAMES_SKILL_DEPS_BOOTSTRAPPED";
-const BOOTSTRAP_CONFIRM_ENV = "HYPERFRAMES_SKILL_BOOTSTRAP_DEPS";
 const NODE_MODULES_ENV = "HYPERFRAMES_SKILL_NODE_MODULES";
 
 export async function importPackagesOrBootstrap(packageNames, options = {}) {
@@ -32,19 +27,15 @@ export async function importPackagesOrBootstrap(packageNames, options = {}) {
     else missing.push(packageName);
   }
 
-  if (missing.length > 0 && !process.env[BOOTSTRAP_ENV]) {
-    const npmPackages = options.npmPackages ?? missing;
-    assertPinnedPackageSpecs(npmPackages);
-    await confirmBootstrap(npmPackages);
-    bootstrapWithNpmInstall(npmPackages);
-  }
-
+  // skills-il: the upstream loader could spawn a temporary `npm install`.
+  // This copy never spawns a process; it prints the install command instead.
   if (missing.length > 0) {
+    const npmPackages = options.npmPackages ?? missing;
     throw new Error(
       [
         `Could not resolve required package(s): ${missing.join(", ")}`,
-        "Install them in this project, for example:",
-        `  npm install --save-dev ${packageNames.map(shellQuote).join(" ")}`,
+        "Run this from your HyperFrames project root, then re-run the script from there:",
+        `  npm install --save-dev ${npmPackages.map(shellQuote).join(" ")}`,
       ].join("\n"),
     );
   }
@@ -149,13 +140,6 @@ export function hyperframesPackageSpec(packageName) {
   // in their ancestor chain, so the bundled version is unknowable. Fall back to
   // @latest instead of throwing: already-installed packages still import, and a
   // bootstrap install can still proceed (@latest satisfies the pinned-spec guard).
-  process.stderr.write(
-    [
-      `hyperframes: could not determine the bundled version for ${packageName}; using @latest.`,
-      `Set ${VERSION_OVERRIDE_ENV}=<version> to pin it.`,
-      "",
-    ].join("\n"),
-  );
   return `${packageName}@latest`;
 }
 
@@ -293,39 +277,6 @@ function hasVersionSpec(packageSpec) {
   return packageSpec.includes("@");
 }
 
-async function confirmBootstrap(packageSpecs) {
-  if (process.env[BOOTSTRAP_CONFIRM_ENV] === "1") return;
-
-  const installLine = `npm install --ignore-scripts --no-save ${packageSpecs.map(shellQuote).join(" ")}`;
-  if (!process.stdin.isTTY) {
-    throw new Error(
-      [
-        "Required helper package(s) are missing.",
-        "To allow a one-time temporary dependency bootstrap for this run, set:",
-        `  ${BOOTSTRAP_CONFIRM_ENV}=1`,
-        "The bootstrap command will be:",
-        `  ${installLine}`,
-      ].join("\n"),
-    );
-  }
-
-  const rl = createInterface({ input: process.stdin, output: process.stderr });
-  try {
-    const answer = await rl.question(
-      [
-        "HyperFrames helper package(s) are missing.",
-        `Run a temporary install with lifecycle scripts disabled?`,
-        `  ${installLine}`,
-        "Proceed? [y/N] ",
-      ].join("\n"),
-    );
-    if (!/^(y|yes)$/i.test(answer.trim())) {
-      throw new Error("Dependency bootstrap cancelled.");
-    }
-  } finally {
-    rl.close();
-  }
-}
 
 function ancestors(start) {
   const dirs = [];
@@ -339,75 +290,7 @@ function ancestors(start) {
   return dirs;
 }
 
-export function resolveNpmSpawnCommand(
-  args,
-  platform = process.platform,
-  env = process.env,
-  nodeExecPath = process.execPath,
-  pathExists = existsSync,
-) {
-  if (platform !== "win32") {
-    return { cmd: "npm", args, opts: { stdio: "inherit" } };
-  }
 
-  const bundledNpmCli = win32Path.join(
-    win32Path.dirname(nodeExecPath),
-    "node_modules",
-    "npm",
-    "bin",
-    "npm-cli.js",
-  );
-  const npmCli = [env.npm_execpath, bundledNpmCli].find(
-    (candidate) => candidate && pathExists(candidate),
-  );
-  if (!npmCli) return null;
-  return {
-    cmd: env.npm_node_execpath || nodeExecPath,
-    args: [npmCli, ...args],
-    opts: { stdio: "inherit", windowsHide: true },
-  };
-}
-
-function bootstrapWithNpmInstall(packageNames) {
-  const installRoot = mkdtempSync(join(tmpdir(), "hyperframes-skill-deps-"));
-  const npmArgs = [
-    "install",
-    "--silent",
-    "--no-audit",
-    "--no-fund",
-    "--ignore-scripts",
-    "--no-save",
-    "--prefix",
-    installRoot,
-    ...packageNames,
-  ];
-  const npmCommand = resolveNpmSpawnCommand(npmArgs);
-  if (!npmCommand) {
-    rmSync(installRoot, { recursive: true, force: true });
-    throw new Error("Could not locate npm-cli.js for dependency bootstrap on Windows.");
-  }
-  const installResult = spawnSync(npmCommand.cmd, npmCommand.args, npmCommand.opts);
-
-  if (installResult.error) throw installResult.error;
-  if (installResult.status !== 0) {
-    rmSync(installRoot, { recursive: true, force: true });
-    process.exit(installResult.status ?? 1);
-  }
-
-  const args = [...process.argv.slice(1)];
-  const result = spawnSync(process.execPath, args, {
-    stdio: "inherit",
-    env: {
-      ...process.env,
-      [BOOTSTRAP_ENV]: "1",
-      [NODE_MODULES_ENV]: join(installRoot, "node_modules"),
-    },
-  });
-
-  rmSync(installRoot, { recursive: true, force: true });
-  if (result.error) throw result.error;
-  process.exit(result.status ?? 1);
-}
 
 function shellQuote(value) {
   if (/^[A-Za-z0-9_./:@=-]+$/.test(value)) return value;

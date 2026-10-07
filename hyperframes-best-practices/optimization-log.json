@@ -1,10 +1,11 @@
 {
   "cycles": [
     {
-      "version": "1.3.0",
+      "version": "1.3.1",
       "date": "2026-10-07",
       "upstream_validated_against": "heygen-com/hyperframes @ d94708e5312df021e1fdcac421f00ed3015f11bd, release v0.8.138 (2026-10-06)",
       "lessons": [
+        "Vendoring upstream scripts can trip the category repo's Cisco scanner: package-loader.mjs spawned npm (COMMAND_INJECTION_JS_CHILD_PROCESS, CRITICAL) and 1.3.0 failed CI after tagging. Run `skill-scanner scan-all` locally (pip install cisco-ai-skill-scanner==2.1.0, repo policy) BEFORE cutting the tag.",
         "RUN THE SKILL'S OWN ADVICE THROUGH THE REAL CLI, NOT JUST THE SOURCE. The top Hebrew gotcha (never add a Google Fonts <link>) had been inverted for at least two cycles: a bare font-family raises lint error font_family_without_font_face, which stops `check` before its browser session, so contrast/layout/motion never ran on any Hebrew composition that followed the skill. The prior checklist even cited that lint rule. Only `npx hyperframes check` on a test composition showed it. Next cycle: build work/proj (1080x1920 Hebrew) first and run lint, check, render on it before reading prose.",
         "Bundled scripts were the July-era upstream versions; upstream had already fixed the 4px-ring background sampling before the previous anchor. Diff every vendored file (scripts/ and references/transitions/) against upstream HEAD each cycle, ignoring em-dash substitutions.",
         "contrast-report.mjs carries skills-il patches on top of upstream (WCAG 2.2 0.04045, 14pt bold, lifting #__hf_transparent_bg__ for the sampling screenshot, canvas color resolution for oklch, hidden-ancestor skip). Re-apply them when re-vendoring, and validate against `check` on work/r2/A-G style cases (solid, gradient, semi-transparent, class, html-only, image, oklch).",

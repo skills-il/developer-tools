@@ -270,14 +270,14 @@ For GSAP timeline patterns and easing, follow [house-style.md](./house-style.md)
 
 ## Bundled Scripts
 
-`scripts/` holds two Node tools vendored from upstream at `d94708e` (`animation-map.mjs` with its helper `animation-map-sampling.mjs`, `contrast-report.mjs`, and the shared `package-loader.mjs`). Run them from the project root and point at the skill folder; they resolve `@hyperframes/producer`, `@hyperframes/core` and `sharp` from your working directory first. A fresh `hyperframes init` project has no `node_modules`, so either install them, or let the loader do a one-time temporary install (`npm install --ignore-scripts --no-save` into a temp dir) by setting `HYPERFRAMES_SKILL_BOOTSTRAP_DEPS=1`; without a TTY it otherwise stops and prints that instruction. Pin the version with `HYPERFRAMES_SKILL_PKG_VERSION`.
+`scripts/` holds two Node tools vendored from upstream at `d94708e` (`animation-map.mjs` with its helper `animation-map-sampling.mjs`, `contrast-report.mjs`, and the shared `package-loader.mjs`). Run them from the project root and point at the skill folder; they resolve `@hyperframes/producer`, `@hyperframes/core` and `sharp` from your working directory first. A fresh `hyperframes init` project has no `node_modules`, so install them first; if one is missing the script stops and prints the exact `npm install` line. Unlike upstream, this copy never spawns an install itself.
 
 ```bash
 # Portrait (TikTok / Reels). BOTH scripts default to a 1920x1080 viewport, so a
 # portrait composition MUST be given --width/--height.
-export HYPERFRAMES_SKILL_PKG_VERSION="$(npx hyperframes --version)"
-HYPERFRAMES_SKILL_BOOTSTRAP_DEPS=1 node <skill-dir>/scripts/animation-map.mjs . --width 1080 --height 1920 --out .hyperframes/anim-map
-HYPERFRAMES_SKILL_BOOTSTRAP_DEPS=1 node <skill-dir>/scripts/contrast-report.mjs . --width 1080 --height 1920 --samples 10 --out .hyperframes/contrast
+npm install --save-dev @hyperframes/producer@"$(npx hyperframes --version)" @hyperframes/core@"$(npx hyperframes --version)" sharp
+node <skill-dir>/scripts/animation-map.mjs . --width 1080 --height 1920 --out .hyperframes/anim-map
+node <skill-dir>/scripts/contrast-report.mjs . --width 1080 --height 1920 --samples 10 --out .hyperframes/contrast
 ```
 
 Both also accept `--fps` (default 30). Match it to your render, and set `data-fps` on the composition root if you are not rendering at 30.

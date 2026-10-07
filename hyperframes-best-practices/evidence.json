@@ -1143,18 +1143,6 @@
       ]
     },
     {
-      "claim_id": "skill-scripts-package-loader",
-      "claim": "The vendored skill scripts resolve packages from cwd first and, with HYPERFRAMES_SKILL_BOOTSTRAP_DEPS=1, bootstrap them with npm install --ignore-scripts --no-save into a temp dir.",
-      "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-animation/scripts/package-loader.mjs",
-      "raw_snippet": "const BOOTSTRAP_CONFIRM_ENV = \"HYPERFRAMES_SKILL_BOOTSTRAP_DEPS\";",
-      "fetched_at": "2026-10-07T00:14:54Z",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md",
-        "scripts/package-loader.mjs"
-      ]
-    },
-    {
       "claim_id": "skill-scripts-loader-cwd-first",
       "claim": "resolvePackageEntry tries process.cwd() before the script directory.",
       "source_url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/skills/hyperframes-animation/scripts/package-loader.mjs",
@@ -1172,8 +1160,7 @@
       "raw_snippet": "const VERSION_OVERRIDE_ENV = \"HYPERFRAMES_SKILL_PKG_VERSION\";",
       "fetched_at": "2026-10-07T00:14:54Z",
       "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
+        "scripts/package-loader.mjs"
       ]
     },
     {

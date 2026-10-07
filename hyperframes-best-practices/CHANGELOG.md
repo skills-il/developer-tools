@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1 - 2026-10-07
+
+### Fixed
+
+- 1.3.0 failed the Cisco Skill Scanner (CRITICAL `COMMAND_INJECTION_JS_CHILD_PROCESS`) on the vendored `scripts/package-loader.mjs`, whose upstream bootstrap spawned `npm install`. The bootstrap is removed: a missing package now stops the script with the install command to run, and Bundled Scripts documents installing first. The contrast regression test runs the report in-process instead of spawning it.
+
 ## 1.3.0 - 2026-10-07
 
 Validated against upstream heygen-com/hyperframes @ d94708e (release v0.8.138, 2026-10-06), 1,247 commits after the previous anchor. Every behavioural claim below was either read in upstream source or measured on a 1080x1920 Hebrew test composition with the 0.8.138 CLI.
@@ -16,7 +22,7 @@ Validated against upstream heygen-com/hyperframes @ d94708e (release v0.8.138, 2
 - `crossorigin` on media is now a lint error, and `../` asset paths are a lint error; the skill recommended both.
 - Audio mixing: group only the voices, and duck the bed with a generated carve (see below), instead of grouping voice and music together.
 - `check` contrast failures are errors with a suggested color, not warnings. Output Checklist now says "0 errors", explains that a lint error silences the other passes, and renders with `--strict`.
-- **Bundled scripts re-vendored from upstream `d94708e`** (`animation-map.mjs`, `animation-map-sampling.mjs`, `contrast-report.mjs`, `package-loader.mjs`). The old `contrast-report.mjs` sampled a 4px ring outside each text box, so a dark caption on a blue pill read 1.21:1 against the surround instead of its real 2.08:1. The scripts now resolve packages from the project and can bootstrap them (`HYPERFRAMES_SKILL_BOOTSTRAP_DEPS=1`), so they no longer need copying into the project.
+- **Bundled scripts re-vendored from upstream `d94708e`** (`animation-map.mjs`, `animation-map-sampling.mjs`, `contrast-report.mjs`, `package-loader.mjs`). The old `contrast-report.mjs` sampled a 4px ring outside each text box, so a dark caption on a blue pill read 1.21:1 against the surround instead of its real 2.08:1. The scripts now resolve packages from the project, so they no longer need copying into it. Upstream's loader can spawn a temporary `npm install`; that path was removed here (it tripped the Cisco scanner's child-process rule and is not something a skill should do unasked), and a missing package now stops with the install command to run.
 - `scripts/contrast-report.mjs` skills-il changes on top of upstream: WCAG 2.2 luminance threshold 0.04045; large bold text from 14pt (18.67px) instead of 19px; it lifts the capture pipeline's transparent-background override for its sampling screenshot, so solid, gradient, semi-transparent and html-level page backgrounds are measured as rendered (light text on a white body had been measured against black and passed at 13.08:1, real 1.61:1); it resolves non-rgb() colors such as Tailwind v4's oklch() through a canvas instead of reading them as black; and it skips text under a hidden ancestor. On four test compositions it now reports the same ratios as `check`.
 - Voice-over-music: a hand-written `data-fx-carve` is never read at playback; the carve must be generated (Studio or upstream `carve.mjs`). `normalize-audio --target` is the element id and `--lufs` the loudness.
 - Fonts are declared per composition file: a sub-composition needs its own `@import` inside its `<template>` (measured). `references/captions.md` gained the matching Hebrew rule.
