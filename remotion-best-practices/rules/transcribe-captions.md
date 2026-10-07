@@ -36,7 +36,8 @@ const to = path.join(process.cwd(), "whisper.cpp");
 
 // whisper.cpp 1.5.5 is the documented minimum; pin to a current STABLE release.
 // As of 2026-10 the latest stable releases are v1.9.5 and v1.9.4. Skip tags GitHub marks
-// "Pre-release" (v1.9.3 is one). Check https://github.com/ggml-org/whisper.cpp/releases
+// "Pre-release" (v1.9.3 is one). Pinned to 1.9.4 rather than 1.9.5 only because 1.9.5
+// was one day old at the time of writing. Check https://github.com/ggml-org/whisper.cpp/releases
 const WHISPER_CPP_VERSION = "1.9.4";
 // Windows caveat: only official release tags are accepted there, prebuilt binaries stop at
 // 1.6.0, and from 1.7.3 a source build is required, which needs cmake on PATH.

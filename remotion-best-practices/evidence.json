@@ -537,7 +537,7 @@
     },
     {
       "claim_id": "whisper-cpp-windows-binary-limit",
-      "claim": "On Windows @remotion/install-whisper-cpp downloads a binary, accepts only semantic-version tags, has no binaries newer than 1.6.0, and from 1.7.3 onward requires cmake to build from source. A 1.9.3 pin therefore means a source build on Windows. Also covers: https://www.remotion.dev/docs/install-whisper-cpp",
+      "claim": "On Windows @remotion/install-whisper-cpp downloads a binary, accepts only semantic-version tags, has no binaries newer than 1.6.0, and from 1.7.3 onward requires cmake to build from source. A 1.9.4 pin therefore means a source build on Windows. Also covers: https://www.remotion.dev/docs/install-whisper-cpp",
       "source_url": "https://www.remotion.dev/docs/install-whisper-cpp/install-whisper-cpp",
       "raw_snippet": "On Windows, there are no binaries newer than 1.6.0 available.",
       "fetched_at": "2026-08-26T18:58:47.465564+00:00",
@@ -615,7 +615,7 @@
     },
     {
       "claim_id": "whisper-cpp-releases-page",
-      "claim": "whisper.cpp release tags are published at https://github.com/ggml-org/whisper.cpp/releases; v1.9.5 was the Latest stable release on 2026-10-07.",
+      "claim": "whisper.cpp release tags are published at https://github.com/ggml-org/whisper.cpp/releases; v1.9.5 (released 2026-10-06) was the Latest stable release on 2026-10-07, one day old, which is why the skill pins 1.9.4.",
       "source_url": "https://github.com/ggml-org/whisper.cpp/releases/tag/v1.9.5",
       "raw_snippet": "Releases v1.9.5 v1.9.5 Latest Latest",
       "fetched_at": "2026-10-07T00:02:08.141957+00:00",
