@@ -1,10 +1,10 @@
 # Israeli Billing Cycle Automation Patterns
 
-Detailed Make.com router configurations for automating Israeli billing cycles. Covers bimonthly VAT, bimonthly advance payments (mikdamot), annual reporting, and payroll schedules.
+Detailed Make.com router configurations for automating Israeli billing cycles. Covers VAT periods, advance income-tax payments (mikdamot, monthly by default), annual reporting, and payroll schedules.
 
 ## Bimonthly VAT Reporting (Doch Du-Hodshi)
 
-Most Israeli businesses with annual revenue above the exemption threshold report VAT bimonthly. The Israel Tax Authority (Rashut HaMisim) requires reporting by the 15th of the month following the period end.
+An osek murshe reports VAT every two months when turnover in the determining year is up to 1,775,000 NIS (2026; 1,805,000 NIS from 1 January 2027) and monthly above it; an osek patur files only an annual declaration, by 31 January. Reports are due by the 15th of the month after the period. Online filers who are not detailed reporters may file and pay up to the 19th (18:30 on the Tax Authority site). The calendar below is the bimonthly case; a monthly filer uses the same logic with one-month periods.
 
 ### VAT Period Calendar
 
@@ -54,71 +54,26 @@ This returns 1 for Jan-Feb, 2 for Mar-Apr, through 6 for Nov-Dec. Use this value
 - Period start month: `(period - 1) * 2 + 1`
 - Period end month: `period * 2`
 
-### VAT Calculation Pattern
+### Period Summary for the Accountant (not a VAT computation)
 
-After filtering transactions by period, route into two sub-branches:
+After filtering by period, aggregate what Morning already computed instead of recomputing VAT:
 
-| Branch | Document Types | Purpose |
+| Branch | Document types | What to sum |
 |---|---|---|
-| Income (Output VAT) | 305 (Tax Invoice), 320 (Tax Invoice/Receipt) | VAT collected from customers |
-| Credits (Reductions) | 330 (Credit Note/Refund) | Reduces VAT for this period |
+| Income | 305 (tax invoice), 320 (tax invoice / receipt) | each document's `subtotal` (before VAT) and its VAT amount as Morning returns it |
+| Credits | 330 (credit invoice) | the same fields, as reductions |
 
-**Aggregation formula:**
+Morning's document payload carries `subtotal`, a `tax` array and `total` (see the `document/created` sample in Morning's help center), so the summary never multiplies by a hardcoded VAT rate. Group documents whose document-level `vatType` is 1 (exempt) separately, so they appear in turnover with no VAT.
 
-```
-Output VAT (mas etzot) = Sum of income amounts * VAT rate
-Input VAT (mas tsurot) = Sum of expense amounts * VAT rate
-VAT payable = Output VAT - Input VAT
-```
+Hand the totals to the business's accountant. Input-VAT deductibility, zero-rated exports and mixed exempt activity are their determination; this reference does not compute a VAT liability.
 
-Current VAT rate: 18% (as of January 2025).
+## Advance Tax Payments (Mikdamot)
 
-Use an Array Aggregator module after each branch, with the `amount` field as the aggregation target and `sum` as the function.
-
-### Handling Exempt Transactions
-
-Not all transactions carry VAT. Filter by `vatType` before aggregating:
-
-| vatType | Treatment |
-|---|---|
-| 0 (Exempt) | Exclude from VAT calculation, include in revenue total |
-| 1 (Included) | Extract VAT: `amount - (amount / 1.18)` |
-| 2 (Excluded) | Add VAT: `amount * 0.18` |
-
-### Special Cases
-
-**Zero-rated exports:** Services exported to foreign clients are zero-rated (0% VAT). These appear in the revenue total but not in VAT calculations. Filter by `currency != "ILS"` or by a specific export flag.
-
-**Mixed transactions:** Some businesses have both VAT-liable and exempt activities. Use a secondary router to split these before aggregation.
-
-**Credit notes:** Credit notes (type 330) reduce the VAT for the period they are issued in, not the period of the original invoice.
-
-## Bimonthly Advance Tax Payments (Mikdamot)
-
-Self-employed individuals (atzma'im) and some companies pay bimonthly advance tax (mikdamot mas) based on projected annual income. Mikdamot follow the same bimonthly periods as VAT reporting.
-
-### Bimonthly Calendar
-
-| Period | Months | Payment Due | Make.com Trigger Date |
-|---|---|---|---|
-| 1 | January - February | March 15-19 | March 1 |
-| 2 | March - April | May 15-19 | May 1 |
-| 3 | May - June | July 15-19 | July 1 |
-| 4 | July - August | September 15-19 | September 1 |
-| 5 | September - October | November 15-19 | November 1 |
-| 6 | November - December | January 15-19 | January 1 |
+By law, self-employed advance income-tax payments are MONTHLY: report the previous month's turnover (excluding VAT) and pay by the 15th. The assessing officer may approve a low-turnover business to report and pay every two months, on the 15th, and only a business whose advance booklet (פנקס מקדמות) shows that approval may do so. Paying through the Tax Authority website extends the deadline to the 19th at 18:30. Do not infer the mikdamot frequency from the VAT frequency: read it from the booklet and store it per business.
 
 ### Router Configuration
 
-**Period detection formula:**
-
-Use the same formula as VAT period detection:
-
-```
-ceil(formatDate(now; "M") / 2)
-```
-
-Returns 1-6 for the current bimonthly period.
+**Period detection:** for a monthly payer the period is the previous calendar month (`formatDate(addMonths(now; -1); "YYYY-MM")`). For an approved bimonthly payer, reuse the VAT formula `ceil(formatDate(now; "M") / 2)`, which returns 1-6.
 
 **Filter expression for bimonthly transactions:**
 
@@ -130,15 +85,11 @@ AND formatDate(item.date; "YYYY") = formatDate(now; "YYYY")
 
 ### Advance Payment Calculation
 
-The advance payment is typically a percentage of revenue set by the Tax Authority:
+1. Fetch total turnover for the period, excluding VAT (the rate applies to income, not profit)
+2. Multiply by the advance rate printed in the booklet (set per business by the assessing officer, and changeable on request)
+3. If clients withheld tax at source (ניכוי במקור), confirm with the business's accountant how it is credited before netting it off; this reference does not assert a netting rule
 
-1. Fetch total revenue for the bimonthly period
-2. Apply the advance percentage (set individually by the Tax Authority, commonly 5-15% for new businesses)
-3. Subtract any tax deducted at source (nikui mas bamakor) during the period
-
-The formula: `Advance payment = (Period revenue * advance rate) - Tax withheld`
-
-Store the advance rate in a Make.com Data Store or Set Variable module, since it varies per business and is updated annually.
+Store the advance rate in a Make.com Data Store or Set Variable module, since it varies per business and can change.
 
 ## Annual Reporting
 
@@ -147,12 +98,9 @@ Store the advance rate in a Make.com Data Store or Set Variable module, since it
 | Deadline | Report | Trigger Configuration |
 |---|---|---|
 | January 18 | Form 126 employer wage reconciliation, covering January to December of the PRECEDING year | January 1 |
-| January 31 | Annual payroll summary (106) | January 1 |
-| March 31 | 856 form (payments to suppliers) | March 1 |
-| April 30 | Annual income tax return (online filing) | April 1 |
-| May 31+ | Annual income tax return (accountant filing) | May 1 |
-| June 30 | Annual VAT summary | June 1 |
 | July 18 | Form 126 employer wage reconciliation, covering January to June of the SAME year | July 1 |
+
+Other annual deadlines (the annual employee pay certificate, the annual report on payments to suppliers, the annual income-tax return and its yearly extensions) are published by the Tax Authority each year. They are deliberately not hardcoded here: read the current year's dates and store them in a Data Store.
 
 Form 126 is filed at three points, not two. Bituach Leumi states the schedule as
 `עד 18 ביולי בכל שנה` for January to June of that year, `עד 18 בינואר בכל שנה` for January
@@ -163,6 +111,8 @@ the **18th**, not the end of the month, which is where a scenario scheduled on a
 month-end pattern will silently miss it.
 
 ### Year-End Aggregation Scenario
+
+Make caps a single scenario run at 40 minutes on paid plans and 5 minutes on Free, so a full-year Morning search can be cut off. Run one month per execution and accumulate into a Data Store instead of fetching the whole year at once.
 
 Build a scenario that runs on January 1 and produces a full-year summary:
 
@@ -184,7 +134,7 @@ Compare the sum of 6 bimonthly VAT reports against the annual total. Discrepanci
 - Credit notes applied across periods
 - Currency conversion differences for export transactions
 
-Add a validation step that compares `sum(bimonthly totals)` with `annual total` and flags differences above 1%.
+Add a validation step that compares `sum(bimonthly totals)` with `annual total` and flags differences above a tolerance you set.
 
 ## Payroll Cycle Patterns (Sekher)
 
@@ -195,21 +145,13 @@ Israeli payroll runs monthly, with several recurring obligations:
 | Day of Month | Action | Automation |
 |---|---|---|
 | 1st-9th | Previous month's pay processed | Watch for payroll file from HR system |
-| mid-month, VERIFY | Social Security (Bituach Leumi) employer payment, via Tofes 102 | Aggregate and prepare the payment summary. **Do not schedule this on the 10th without checking.** This row previously asserted the 10th with no source; the deadline is commonly cited as the 15th of the month following the salary month, and neither day could be confirmed against a Bituach Leumi page. Late transfer carries קנסות plus הצמדה, so confirm the date for your own תיק ניכויים before wiring a reminder to it. |
-| 15th | Tax withholding (nikui mas) deposit | Generate withholding report |
+| 15th | Social Security (Bituach Leumi) payment, employer AND employee shares, via Tofes 102 | Aggregate and prepare the payment summary. Due by the 15th of the month after the salary month. Withheld employee contributions not transferred within 40 days of the statutory pay date are a criminal offence. |
+| 16th | Income-tax withholding (ניכויים) report and payment | Generate withholding report. The Tax Authority's 2026 calendar puts withholding on the 16th, not the 15th; when a deadline lands on Friday, Saturday or Sunday it moves to the next business day |
 | Last day | Salary bank transfer | Trigger payroll file generation |
 
-### Router for Payroll Components
+### Payroll Rates (deliberately not tabulated here)
 
-| Component | Employer Rate | Employee Rate | Notes |
-|---|---|---|---|
-| Bituach Leumi (national insurance) | 4.51% (up to threshold) / 7.60% (above) | 1.04% (up to threshold) / 7.00% (above) | 2026: reduced rate up to 7,703 NIS, full rate from there to the 51,910 NIS ceiling |
-| Bituach Briut (health insurance) | N/A (employee only) | 3.23% (up to threshold) / 5.17% (above) | Health insurance is deducted from the employee ONLY, employers pay no health share. Same 7,703 NIS reduced/full threshold |
-| Pension (mandatory) | 6.5% benefits + 6% severance (pitzuim) = 12.5% | 6.0% | Mandatory pension Extension Order: total 18.5% of salary (employee 6% + employer 6.5% benefits + employer 6% severance), up to the insurable ceiling |
-| Education Fund (keren hishtalmut) | 7.5% of salary | 2.5% of salary | Optional, common benefit |
-| Income Tax | N/A | Progressive brackets | Use the annual income-tax brackets (madregot mas) from the Tax Authority |
-
-Note: these are the 2026 salaried-employee rates (verified against btl.gov.il). Bituach Leumi / Briut rates, the reduced-rate threshold (7,703 NIS in 2026), and the income ceiling (51,910 NIS in 2026) change annually. Always verify against the Bituach Leumi and Tax Authority websites for the current year's values.
+Bituach Leumi, health-insurance and pension rates, the reduced-rate threshold and the income ceiling all change every January, and no scenario in this skill computes them. Do not hardcode them in a Make scenario from memory: take the current year's figures from btl.gov.il, or use the `israeli-payroll-calculator` skill, and store them in a Data Store so one January update fixes every scenario.
 
 ## Shabbat and Holiday Scheduling
 
@@ -272,12 +214,12 @@ Parse the JSON response for entries where `date` matches today and `category` is
 
 ### Combining Deadline Awareness with Shabbat
 
-When a filing deadline (e.g., VAT report due the 15th) falls on Shabbat or a holiday, it is typically extended to the next business day. Build a deadline resolution function:
+The Tax Authority's rule: when a statutory 15th / 16th / 23rd deadline falls on Friday, Saturday or Sunday, it moves to the next business day, which in practice is Monday. Build a deadline resolution function:
 
-1. Set target date to the 15th
-2. Check if it falls on Shabbat (day = 6): push to Sunday (day = 0)
-3. Check if it falls on a holiday via Hebcal: push to the next non-holiday day
-4. Use this resolved date for reminder notifications and report triggers
+1. Set the target date (15th for VAT and mikdamot, 16th for withholding, 23rd for the detailed VAT report)
+2. If it falls on Friday, Saturday or Sunday (`formatDate(date; "d")` returns 5, 6 or 0), move it to the next business day, usually Monday; a holiday or an ad-hoc extension can push it later
+3. Treat the Tax Authority's published calendar for the year as the primary source (it carries holidays and one-off extensions); Hebcal is only a fallback check
+4. Use the resolved date for reminders and report triggers
 
 ## Make.com Data Store for Period Tracking
 
@@ -287,13 +229,17 @@ Create a Make.com Data Store to track which billing periods have been processed:
 
 | Field | Type | Purpose |
 |---|---|---|
-| `period_type` | Text | `vat_bimonthly`, `advance_bimonthly`, `annual` |
+| `period_type` | Text | `vat_bimonthly` or `vat_monthly`, `advance_monthly` (or `advance_bimonthly` when the booklet approves it), `annual` |
 | `period_key` | Text | e.g., `2026-P1`, `2026-P2`, `2026` |
 | `status` | Text | `pending`, `processing`, `completed`, `filed` |
 | `total_income` | Number | Aggregated income for the period |
 | `total_expenses` | Number | Aggregated expenses for the period |
-| `vat_payable` | Number | Calculated VAT due |
+| `vat_total` | Number | Sum of the VAT amounts Morning returned (for the accountant) |
 | `processed_at` | Date | When the scenario last ran |
 | `filed_at` | Date | When the report was filed (manual entry) |
 
 Use "Search records" at the start of each scenario run to check if the current period has already been processed. This prevents duplicate processing if a scenario runs more than once.
+
+## Refunds and Chargebacks
+
+Every payment-to-invoice scenario needs the reverse path. When a gateway reports a refund, create a Morning 330 (credit invoice) linked to the original document through `linkedDocumentIds` with `linkType` `cancel` ("Document cancels another"), and deduplicate on the gateway's refund or transaction ID exactly as for the original payment. Without it a refunded sale keeps an uncancelled tax invoice.

@@ -64,7 +64,7 @@ A scenario that satisfies only one of conditions 1 and 2 will never appear in th
 
 ## Timeouts
 
-Scenario-run tools time out at 25s on OAuth and 40s on token transports. Israeli billing scenarios that aggregate a full VAT period can exceed this. When a run times out, the response includes an `executionId`, and the scenario keeps running in Make for up to 40 minutes. Poll for the result with `executions_get` using that ID. For long scenarios, switch from `https://mcp.make.com` to a zone-specific URL (`https://<MAKE_ZONE>/mcp/<TRANSPORT>`) to get the longer token timeouts.
+Scenario-run tools time out at 25s on OAuth and 40s on token transports. Israeli billing scenarios that aggregate a full VAT period can exceed this. When a run times out, the response includes an `executionId`, and the scenario keeps running in Make for up to 40 minutes. Poll for the result with `executions_get` using that ID. For long scenarios, switch from `https://mcp.make.com` (OAuth) to the MCP-token URL `https://<MAKE_ZONE>/mcp/u/<MCP_TOKEN>` to get the longer token timeouts.
 
 ## Worked example: expose a Morning invoice scenario as an MCP tool
 

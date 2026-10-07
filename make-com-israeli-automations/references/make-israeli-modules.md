@@ -6,23 +6,13 @@ Reference guide for connecting Israeli services in Make.com scenarios. Covers co
 
 ### Community Module (by Callbox)
 
-Morning has a **community-built** Make.com module. Search "Morning" in the module palette. Listed as "Morning by Callbox". Requires **Best subscription tier or higher**. Make.com states: "Make does not maintain or support this integration."
+Morning has a **community-built** Make.com module. Search "Morning" in the module palette. Listed as "Morning by Callbox". Requires a **Morning Best plan or higher** (Best is Morning's own subscription tier, the first with API access; it is not a Make plan). Make.com states: "Make does not maintain or support this integration."
 
 **Connection Setup:**
-1. Go to Morning dashboard: Settings > API Integration
-2. Generate API Key and Secret
-3. In Make.com, create a new Morning connection with these credentials
-4. Select environment: Production or Sandbox
+1. Generate API keys in your Morning account. Morning issues them as OAuth 2.0 client credentials (client ID + secret), and "Each environment requires its own set of API keys" (Production and Sandbox).
+2. In Make.com, create a new Morning connection with these credentials.
 
-**Sandbox vs Production:**
-
-| Setting | Sandbox | Production |
-|---|---|---|
-| Base URL | `https://sandbox.d.greeninvoice.co.il/api/v1/` | `https://api.greeninvoice.co.il/api/v1/` |
-| Documents | Test only, not legally valid | Real tax documents |
-| Rate limits | More lenient | Standard |
-
-Note: The API domain remains `greeninvoice.co.il` despite the Morning rebrand.
+**Direct API (HTTP module):** POST `{"grant_type":"client_credentials","client_id":"...","client_secret":"..."}` to `https://api.morning.co/idp/v1/oauth/token`. The response's `accessToken` (a JWT, valid for 1 hour) goes in `Authorization: Bearer <accessToken>`. The production API base remains `https://api.greeninvoice.co.il/api/v1` despite the rebrand. Sandbox base and token URLs are on the Sandbox tab of `https://www.greeninvoice.co.il/api-docs`; sandbox documents are test data only.
 
 ### Available Actions (NO triggers/watches)
 
@@ -38,21 +28,31 @@ Note: The API domain remains `greeninvoice.co.il` despite the Morning rebrand.
 | Search Expenses | Query expenses by criteria | Date range, category, etc. |
 | Update Client | Modify existing client | Client ID + fields |
 | Delete Client | Remove a client record | Client ID |
+| Add Supplier, Add Expense Draft by File, Get Document, Get a Preview Document | Also listed on the Callbox app page | See the app page |
+| Make an API Call | Raw call to any Morning endpoint | Path, method, body |
 | Make an API Call | Raw API request | Any Morning API endpoint |
 
 ### Document Type Codes
 
-| Code | Type (English) | Type (Hebrew) |
+| Code | Type (English) | Type (Hebrew, as Morning names it) |
 |---|---|---|
-| 10 | Price Quote | הצעת מחיר |
+| 10 | Price quote | הצעת מחיר |
+| 20 | Bill / payment confirmation | חשבון / אישור תשלום |
 | 100 | Order | הזמנה |
-| 300 | Invoice + Receipt | חשבונית מס / קבלה |
-| 305 | Tax Invoice | חשבונית מס |
-| 320 | Tax Invoice / Receipt | חשבונית מס / קבלה |
-| 330 | Credit Note / Refund | הודעת זיכוי |
+| 200 | Delivery note | תעודת משלוח |
+| 210 | Return note | תעודת החזרה |
+| 300 | Transaction account (NOT a tax invoice) | חשבון עסקה |
+| 305 | Tax invoice | חשבונית מס |
+| 320 | Tax invoice / receipt | חשבונית מס / קבלה |
+| 330 | Credit invoice | חשבונית זיכוי |
 | 400 | Receipt | קבלה |
-| 405 | Purchase Order | הזמנת רכש |
-| 500 | Delivery Note | תעודת משלוח |
+| 405 | Donation receipt | קבלה על תרומה |
+| 410 | Donation cancellation | ביטול תרומה |
+| 500 | Purchase order | הזמנת רכש |
+| 600 | Deposit receipt | קבלת פיקדון |
+| 610 | Deposit withdrawal | משיכת פיקדון |
+
+For a paid gateway sale, an osek murshe normally issues 320 (tax invoice / receipt). Never use 300 for a paid sale: a transaction account is not a tax document, so a business buyer cannot deduct input VAT on it. Confirm the document policy with the business's accountant.
 
 ### Example: Create Tax Invoice Payload
 
@@ -61,6 +61,7 @@ Note: The API domain remains `greeninvoice.co.il` despite the Morning rebrand.
   "type": 305,
   "lang": "he",
   "currency": "ILS",
+  "vatType": 0,
   "client": {
     "name": "חברה לדוגמה בע\"מ",
     "taxId": "515123456",
@@ -71,8 +72,7 @@ Note: The API domain remains `greeninvoice.co.il` despite the Morning rebrand.
       "description": "שירותי פיתוח תוכנה",
       "quantity": 1,
       "price": 15000,
-      "currency": "ILS",
-      "vatType": 1
+      "currency": "ILS"
     }
   ]
 }
@@ -82,23 +82,13 @@ Note: The API domain remains `greeninvoice.co.il` despite the Morning rebrand.
 
 ### Israel Invoice Reform 2026
 
-Tax invoices over the Tax Authority allocation-number threshold require an allocation number (mispar hiktzava). The threshold steps down during 2026: 10,000 NIS from January 1, 2026, then 5,000 NIS from June 1, 2026 (the value in force now). Treat the threshold as a configurable scenario variable, not a hardcoded number, since it is scheduled to keep dropping. Include the `allocationNumber` field for qualifying documents:
+Tax invoices over the Tax Authority allocation-number threshold require an allocation number (mispar hiktzava). The threshold steps down during 2026: 10,000 NIS from January 1, 2026, then 5,000 NIS from June 1, 2026 (the value in force now), compared on the amount BEFORE VAT. The published schedule ends at 5,000 NIS and no further step has been legislated; still hold the threshold in a scenario variable for maintainability.
 
-```json
-{
-  "type": 305,
-  "allocationNumber": "ALLOCATION_NUMBER_FROM_TAX_AUTHORITY",
-  "income": [...]
-}
-```
+Morning returns the number on the created document as `allocationNumber` ("Allocation Number issued by the Israeli Tax Authority"). Read it back and store it; alert when it is empty on an invoice to an osek murshe above the threshold. The gov.il online request form serves businesses on a paper booklet or unconnected software and asks for the customer's osek murshe number.
 
 ### VAT Type Values
 
-| Value | Meaning | When to Use |
-|---|---|---|
-| 0 | Exempt from VAT | Non-profit, certain services |
-| 1 | VAT included in price | B2C, retail pricing |
-| 2 | VAT excluded (added on top) | B2B, wholesale pricing |
+`vatType` is required at document level, where Morning documents: 0 = default (VAT by business type), 1 = exempt (VAT-free), 2 = mixed (exempt and taxable rows). Income rows have their own `vatType` field; expand the income-row schema in Morning's API docs before setting it, and never assume a value means "VAT added on top". Setting the wrong value issues a VAT-exempt tax invoice or double-counts VAT.
 
 ## iCount
 
@@ -115,7 +105,7 @@ iCount has a **native (first-party) Make.com module**. Search "iCount" in the mo
 - Clients: Create and manage client records
 - Documents: Create invoices, receipts, quotes
 
-iCount is a strong alternative to Morning for Israeli accounting automation, especially if you want a natively supported Make.com module without the Best plan requirement.
+iCount is a strong alternative to Morning for Israeli accounting automation, especially if you want a natively supported Make.com module. Make's app page notes it requires a paid iCount account.
 
 ## Monday.com
 
@@ -123,7 +113,9 @@ iCount is a strong alternative to Morning for Israeli accounting automation, esp
 
 Monday.com has a built-in Make.com module.
 
-**Important:** monday.com versions its API by DATE, not as v1/v2. `api.monday.com/v2` is the GraphQL endpoint path and is unrelated to the API version. Current default is `2026-07`; `2026-04` is in maintenance and `2026-10` is a release candidate. Set the version explicitly with an `API-Version` request header. Deprecations get at least six months' notice.
+**Make app version:** Make states "monday.com Version 1 is now legacy and its maintenance has ended". Use the upgrade arrow on each module to switch to Version 2.
+
+**Important:** monday.com versions its API by DATE, not as v1/v2. `api.monday.com/v2` is the GraphQL endpoint path and is unrelated to the API version. Versions roll quarterly. Since October 1st, 2026 the current default is `2026-10`; `2026-07` is in maintenance and `2027-01` is the release candidate (current from January 15th, 2027). Set the version explicitly with an `API-Version` request header. Deprecations get at least six months' notice.
 
 **Connection Setup:**
 1. In Monday.com: Avatar > Developers > My Access Tokens
@@ -184,44 +176,19 @@ Priority supports three authentication methods:
 - **Personal Access Token (PAT):** Token-based, more secure
 - **OAuth2:** Full OAuth2 flow for enterprise integrations
 
-### Common Entities
+### Entities: read them from your installation
 
-| Entity | Path | Description | Key Fields |
-|---|---|---|---|
-| ORDERS | `/ORDERS` | Sales orders | `ORDNAME`, `CUSTNAME`, `QPRICE`, `CURDATE` |
-| AINVOICES | `/AINVOICES` | A/R invoices | `IVNUM`, `CUSTNAME`, `TOTPRICE`, `IVDATE` |
-| PINVOICES | `/PINVOICES` | A/P invoices | `IVNUM`, `SUPNAME`, `TOTPRICE`, `IVDATE` |
-| PORDERS | `/PORDERS` | Purchase orders | `ORDNAME`, `SUPNAME`, `QPRICE` |
-| CUSTOMERS | `/CUSTOMERS` | Customer master | `CUSTNAME`, `CUSTDES`, `PHONE`, `EMAIL` |
-| SUPPLIERS | `/SUPPLIERS` | Supplier master | `SUPNAME`, `SUPDES`, `PHONE`, `EMAIL` |
-| PART | `/PART` | Item master | `PARTNAME`, `PARTDES`, `TBALANCE` |
-| LOGCOUNTERS | `/LOGCOUNTERS` | Inventory counts | `PARTNAME`, `LOCNAME`, `TBALANCE` |
-
-### OData Query Examples
-
-**Get invoices from this month:**
-```
-/AINVOICES?$filter=IVDATE ge 2026-03-01T00:00:00Z&$orderby=IVDATE desc&$top=100
-```
-
-**Get customer by name (Hebrew):**
-```
-/CUSTOMERS?$filter=CUSTDES eq 'חברה לדוגמה'
-```
+Entity (form) names and their fields are installation-dependent. Priority's own REST docs say forms and fields "must be matched exactly. When in doubt, check the metadata for the entity", and their examples use `ORDERS` (sales orders) with `ORDERITEMS` lines. For any other entity, read `{service root}/$metadata` from your own installation instead of guessing a form name.
 
 Note: Hebrew values in OData filters must be URL-encoded. Make.com's HTTP module handles this automatically when using the query string builder.
 
-**Expand related entities:**
-```
-/ORDERS?$expand=ORDERITEMS_SUBFORM&$filter=CURDATE ge 2026-01-01T00:00:00Z
-```
 
 ### Priority API Gotchas
 
 - Priority field names are ALL CAPS (e.g., `CUSTNAME`, not `custName`)
 - Date format in responses: `YYYY-MM-DDT00:00:00+02:00` (Israel timezone offset)
 - Hebrew text in responses is UTF-8 encoded
-- Pagination: use `$skip` and `$top` (default page size is 20)
+- Pagination: use `$skip` and `$top`
 - Some on-prem installations require VPN or IP whitelisting
 
 ## WhatsApp Business Cloud
@@ -325,12 +292,10 @@ Make.com expression to format: `replace(replace(phone; "+"; ""); "-"; "")` then 
       "username": "your_username"
     },
     "source": "YourBrand",
-    "targets": {
-      "phone": ["0501234567"]
+    "destinations": {
+      "phone": [{ "_": "5xxxxxxxx" }]
     },
-    "message": {
-      "msg": "הודעה בעברית"
-    }
+    "message": "הודעה בעברית"
   }
 }
 ```
@@ -343,39 +308,26 @@ Make.com expression to format: `replace(replace(phone; "+"; ""); "-"; "")` then 
 | Method | POST |
 | Content-Type | `application/xml` |
 
-Note: InforUMobile uses an ASMX web service with XML format, not JSON. Set the Make.com HTTP module body type to "Raw" and build the XML string. The endpoint is `.asmx` (not `.ashx`).
+Note: the `SendMessageXml.ashx` endpoint takes XML, so set the Make.com HTTP module body type to "Raw" and build the XML string. The JSON alternative is the `capi.inforu.co.il` v2 REST endpoint. Take the exact XML/JSON schema from InforU's developer docs.
 
 ### SMS4Free
 
 | Setting | Value |
 |---|---|
-| URL | `https://www.sms4free.co.il/ApiSMS/SendSMS` |
+| URL | `https://api.sms4free.co.il/ApiSMS/v2/SendSMS` |
 | Method | POST |
 | Content-Type | `application/json` |
 
-SMS4Free requires three credentials: `key`, `user`, and `pass`:
-
-```json
-{
-  "key": "your_api_key",
-  "user": "your_username",
-  "pass": "your_password",
-  "sender": "YourBrand",
-  "recipient": "0501234567",
-  "msg": "הודעה בעברית"
-}
-```
+The API host is `api.sms4free.co.il`; `www.sms4free.co.il/ApiSMS/...` only redirects to the marketing site. An unauthenticated POST returns `{"status":-1,"message":"Incorrect key, username or password"}`, so the call needs an API key, a username and a password. Take the exact JSON field names from SMS4Free's API documentation in your account rather than guessing them.
 
 ## Israeli Payment Gateway Webhooks
 
 ### Cardcom
 
 **Webhook URL Setup:**
-In the Cardcom dashboard, go to Settings > Notification URL > set your Make.com Custom Webhook URL.
+Cardcom has two webhook generations. The **current API v11** POSTs a JSON body to the `WebHookUrl` you pass in `LowProfile/Create` (a required field there); success is `ResponseCode` = 0 with `Description`, plus `TranzactionId` and `Amount`. Verify exact v11 field names against https://secure.cardcom.solutions/Api/v11/Docs before mapping them. The table below is the **legacy LowProfile (v10)** field set; it was NOT re-verified against a current Cardcom page this cycle, so confirm it against your own terminal's documentation.
 
-Cardcom has two webhook generations. The **current API v11** reports via HTTP POST with a JSON body (success is `ResponseCode` = 0 with `Description`, plus `TranzactionId` and `Amount`; card-owner/token data are nested objects). Verify the exact v11 field names against the official docs at https://secure.cardcom.solutions/Api/v11/Docs before mapping them. The table below is the **legacy LowProfile / Name-to-Value (v10)** field set, which posts form-encoded fields (its redirect IndicatorUrl is a GET). Confirm which generation your terminal uses.
-
-**Legacy LowProfile (v10) callback fields (POST body, form-encoded):**
+**Legacy LowProfile (v10) callback fields (unverified this cycle):**
 
 | Field | Type | Description |
 |---|---|---|
@@ -427,36 +379,19 @@ Cardcom has two webhook generations. The **current API v11** reports via HTTP PO
 
 ### Grow (by Meshulam)
 
-Grow is an independent fintech company by Meshulam (NOT affiliated with Bank Leumi).
+Grow (formerly Meshulam; meshulam.co.il now redirects to grow.business) is operated by Grow Payments Ltd, a licensed payment company, not by a bank.
 
-**Webhook Payload (JSON POST):**
+Grow has two separate notification mechanisms. Do not mix their fields.
 
-Grow sends a JSON payload. Verify authenticity by checking the `webhookKey` field in the JSON body (not a header).
+**1. `notifyUrl` server-to-server callback** (the URL you pass in CreatePaymentProcess): an HTTP POST, "NOT as JSON", with `err`, `status` and a `data` object (`sum`, `transactionId`, `transactionToken`, `asmachta`, `paymentsNum`, `allPaymentsNum`, `processId`, `processToken`, ...). It carries no `webhookKey`. "Upon receiving the update, you are required to execute the ApproveTransaction API call." ApproveTransaction "serves as an acknowledgment that your system has received the server notification"; it does not return a verified amount, and "The transaction will be processed even if the ApproveTransaction request is not executed or fails." Without acknowledgments Grow resends the update up to 5 additional times, so deduplicate on `transactionId`. The step "does not alter the transaction status"; "Do not send this request in the case of token transactions (created with createTransactionWithToken) or delayed transactions (J4J5), or for save token only scenarios." To re-check the amount, use Get Transaction Info, not ApproveTransaction.
 
-**Webhook Verification:**
-1. Parse the JSON body
-2. Compare the `webhookKey` value against your configured key in Grow dashboard
+**2. Dashboard Webhooks service** ("Contact our support team to enable Webhooks for your account"): flat fields such as `webhookKey`, `transactionCode`, `transactionType`, `paymentSum`, `paymentsNum`, `allPaymentNum`, `firstPaymentSum`, `paymentType`, `paymentDate`, `asmachta`, `paymentDesc`, `fullName`, `payerPhone`, `payerEmail`, `cardSuffix`. Compare `webhookKey` with your key. Recurring, failed-recurring and invoice webhooks use different formats; see `https://developers.grow.business/reference/webhooks`.
 
-**Important:** Grow's API uses **multipart/form-data** for outbound requests, not JSON. Configure your HTTP module accordingly when making API calls to Grow.
-
-| Field | Type | Description |
-|---|---|---|
-| `event_type` | String | `payment.completed`, `payment.failed`, `refund.completed` |
-| `payment.amount` | Number | Amount in ILS (decimal, not agorot) |
-| `payment.currency` | String | `ILS` |
-| `payment.id` | String | Grow payment ID |
-| `payment.customer.name` | String | Customer name |
-| `payment.customer.email` | String | Customer email |
-| `payment.customer.phone` | String | Customer phone |
-| `payment.installments` | Number | Number of installments |
-| `payment.status` | String | `completed`, `failed`, `refunded` |
-| `webhookKey` | String | Key for webhook verification |
+**Invoices:** Grow can issue invoices itself and sends a separate invoice webhook (`transactionCode`, `invoiceNumber`, `invoiceUrl`). If that is on, do not also create a Morning document for the same sale.
 
 ### Bit (by Bank HaPoalim)
 
-Bit is Israel's dominant P2P payment platform with a business API.
-
-**Bit Business API:** Register for API access through the Bit Business program. Configure webhook URL in the Bit Business dashboard to receive payment notifications.
+Bit usually reaches a small business through a payment gateway (Grow and Tranzila both support it), so it arrives in that gateway's callback rather than from a separate Bit dashboard.
 
 ### PayMe (by Isracard)
 
@@ -474,7 +409,7 @@ Digital payment solution with webhook notifications for completed transactions.
 | iCount API | Check iCount docs | 15 minutes |
 | Monday.com API | Complexity budget, not a request count: 5M points/min each for reads and writes on an app token, or a combined 10M/min on a personal token (1M for trial, NGO and free accounts); a single query is capped at 5M | 5 minutes |
 | Priority OData | Varies by installation | 15 minutes |
-| WhatsApp Cloud API | 250 messages/sec for a business-initiated send (uncited, confirm against Meta's throughput docs) | N/A (event-driven) |
+| WhatsApp Cloud API | Up to 80 messages/sec per business phone number by default, up to 1,000 by automatic upgrade; a number shared with the WhatsApp Business app (coexistence) is fixed at 20 | N/A (event-driven) |
 | Cardcom | No documented limit | N/A (webhook) |
 | Tranzila | No documented limit | N/A (webhook) |
 
@@ -498,3 +433,15 @@ Make has no native Hebrew month formatting. Get the numeric month with `formatDa
 | 10 | אוקטובר |
 | 11 | נובמבר |
 | 12 | דצמבר |
+
+## Make.com vs n8n vs Zapier
+
+| Criteria | Make.com | n8n | Zapier |
+|---|---|---|---|
+| **Best for** | Visual automations, non-developers | Self-hosted, code-heavy workflows | Simple 2-app connections |
+| **Israeli app modules** | Morning (community), iCount (native), Priority (community), Hebcal (community) | Fewer Israeli modules | Some Israeli apps |
+| **AI Agents** | Built-in visual AI Agents | Via code nodes | Limited AI features |
+| **Pricing** | Free: $0 (1,000 credits/mo, 2 active scenarios); Core from $9/mo; Pro from $16/mo; Teams from $29/mo | Free (self-hosted) | Paid plans; check zapier.com/pricing |
+| **Community modules** | Growing Israeli ecosystem | npm packages | Fewer community options |
+
+On Make, every paid plan schedules down to 1 minute; only Free is capped, at 15 minutes. Check n8n and Zapier limits on their own pricing pages.
