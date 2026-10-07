@@ -146,7 +146,7 @@ Israeli payroll runs monthly, with several recurring obligations:
 |---|---|---|
 | 1st-9th | Previous month's pay processed | Watch for payroll file from HR system |
 | 15th | Social Security (Bituach Leumi) payment, employer AND employee shares, via Tofes 102 | Aggregate and prepare the payment summary. Due by the 15th of the month after the salary month. Withheld employee contributions not transferred within 40 days of the statutory pay date are a criminal offence. |
-| 16th | Income-tax withholding (ניכויים) report and payment | Generate withholding report. The Tax Authority's 2026 calendar puts withholding on the 16th, not the 15th; when a deadline lands on Friday, Saturday or Sunday it moves to the next business day |
+| 16th | Income-tax withholding (ניכויים) report and payment | Generate withholding report. The Tax Authority's 2026 calendar puts withholding on the 16th, not the 15th. For filing deadlines only, the Tax Authority treats Friday, Saturday and Sunday as weekly rest days (one per religion), so a deadline on any of them moves to the following Monday (see "Combining Deadline Awareness with Shabbat" below) |
 | Last day | Salary bank transfer | Trigger payroll file generation |
 
 ### Payroll Rates (deliberately not tabulated here)
@@ -214,10 +214,10 @@ Parse the JSON response for entries where `date` matches today and `category` is
 
 ### Combining Deadline Awareness with Shabbat
 
-The Tax Authority's rule: when a statutory 15th / 16th / 23rd deadline falls on Friday, Saturday or Sunday, it moves to the next business day, which in practice is Monday. Build a deadline resolution function:
+The Tax Authority's rule, as stated in its 2026 reporting calendar: when a statutory 15th / 16th / 23rd deadline falls on a weekly rest day "according to the filer's religion", meaning Friday, Saturday or Sunday, the report and payment move to the next business day after the rest day, and the Tax Authority's computer system (שע"מ) records the moved date as the Monday. This is specific to these filing deadlines: Sunday is still an ordinary business day for scheduling and business hours (table above). Build a deadline resolution function:
 
 1. Set the target date (15th for VAT and mikdamot, 16th for withholding, 23rd for the detailed VAT report)
-2. If it falls on Friday, Saturday or Sunday (`formatDate(date; "d")` returns 5, 6 or 0), move it to the next business day, usually Monday; a holiday or an ad-hoc extension can push it later
+2. If it falls on Friday, Saturday or Sunday (`formatDate(date; "d")` returns 5, 6 or 0), move it to the following Monday; a holiday or an ad-hoc extension can push it later
 3. Treat the Tax Authority's published calendar for the year as the primary source (it carries holidays and one-off extensions); Hebcal is only a fallback check
 4. Use the resolved date for reminders and report triggers
 

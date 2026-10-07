@@ -50,6 +50,13 @@
         "Deferred (MAJOR/MINOR): Tranzila API v2 HMAC for the 'don't trust the payload' rule; Priority PAT username/password convention and $since; Morning token caching in HTTP-module flows; WhatsApp per-message pricing and 24h window detail in SKILL; AI Agent token-based credit usage; Privacy Amendment 13 for PII in Data Stores/Sheets; VAT rate as a variable in references; Morning sandbox base URL (hidden behind a docs tab, not captured); SMS4Free JSON field names (only key/username/password confirmed via probe); Grow re-query endpoint (Get Transaction) not wired.",
         "Word budget is at ~4,98x/5,000 for SKILL.md: next cycle must MOVE content to references before adding any."
       ]
+    },
+    {
+      "version": "2.3.2",
+      "date": "2026-10-07",
+      "lessons": [
+        "Evidence repair: withholding-16th-2026-calendar claimed the Friday/Saturday/Sunday roll rule but its snippets held no roll rule. The rule IS on the Tax Authority 2026 calendar (efraty.com/?p=5144): the director treats each religion's weekly rest day (Fri, Sat, Sun) as a rest day for the 15th/16th/23rd, and SHAAM records the moved date as Monday. Snippet now page-sliced verbatim; text clarifies Sunday is still a business day for scheduling. A reviewer instinct that 'Sunday is a business day in Israel' would have narrowed a correct rule: check the source before narrowing."
+      ]
     }
   ]
 }

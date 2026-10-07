@@ -489,11 +489,13 @@
     },
     {
       "claim_id": "withholding-16th-2026-calendar",
-      "claim": "Per the Tax Authority's 2026 reporting calendar (republished by a CPA firm), periodic VAT and mikdamot are due on the 15th, income-tax withholding (ניכויים) on the 16th and the detailed VAT report on the 23rd; dates falling on Friday, Saturday or Sunday move to the next business day.",
+      "claim": "Per the Tax Authority's 2026 reporting calendar (republished by a CPA firm), periodic VAT and mikdamot are due on the 15th, income-tax withholding (ניכויים) on the 16th and the detailed VAT report on the 23rd; the Tax Authority director determined that when the 15th, 16th or 23rd falls on a weekly rest day according to the filer's religion (Friday, Saturday or Sunday), the report and payment move to the next business day, which the Tax Authority's system records as Monday.",
       "source_url": "https://www.efraty.com/?p=5144",
       "raw_snippet": "ב-16 לכל חודש, חל מועד הדיווח ותשלום לניכויים מס הכנסה.",
       "extra_snippets": [
-        "ב-23 לכל חודש, חל מועד הדיווח והתשלום של הדוחות המפורטים למע\"מ."
+        "ב-15 לכל חודש חל מועד הדיווח והתשלום לדוחות התקופתיים למע\"מ ולמקדמות מס הכנסה.",
+        "ב-23 לכל חודש, חל מועד הדיווח והתשלום של הדוחות המפורטים למע\"מ.",
+        "מנהל רשות המסים קבע כי במידה ומועדי הדיווח על פי החוק (15,16,23 לחודש), יחולו ביום המנוחה השבועי, לפי דתו, של החייב בדיווח ותשלום, קרי, ביום שישי, שבת או ראשון, אזי מועד הדיווח והתשלום התקופתי ידחה ליום העסקים שבא לאחר יום המנוחה השבועי. לפיכך, במערכת מחשב שע\"מ, יעודכן מועד הדיווח והתשלום הנדחה ליום שני, שהינו יום החול הראשון, לאחר שלושת ימי המנוחה של בני הדתות השונות."
       ],
       "verified_via": "browser",
       "appears_in": [
