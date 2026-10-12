@@ -1,132 +1,1492 @@
 {
   "schemaVersion": "1.0",
   "skill": "israeli-phone-formatter",
-  "generated_at": "2026-05-20T00:00:00Z",
+  "generated_at": "2026-10-12T15:18:37Z",
   "claims": [
     {
-      "claim_id": "israel-numbering-plan",
-      "claim": "Israeli non-geographic nationwide numbers use the 07 area code (071-079), allocated to landline and VoIP operators, in +972 international format.",
-      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
-      "raw_snippet": "Non-geographic nationwide area code can be used by Landline and VoIP operators.",
-      "fetched_at": "2026-08-09T00:00:00Z",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md",
-        "references/prefix-allocation.md",
-        "scripts/validate_phone.py",
-        "metadata.json"
-      ],
-      "verified_via": "curl (rendered Wikipedia / raw GitHub README)"
-    },
-    {
-      "claim_id": "mnp-since-2007",
-      "claim": "Israel implemented number portability on 2007-12-03 (landline and mobile), so a mobile prefix indicates the originally issuing carrier rather than the currently servicing one.",
-      "source_url": "https://en.wikipedia.org/wiki/Mobile_number_portability",
-      "raw_snippet": "Israel 2007.12.03 up-to 30 minutes Free Service includes landline as well as mobile numbers",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "claim_id": "plan-edition-4",
+      "claim": "MoC numbering plan for telephony services, edition 4 of 2 February 2023 (Reference Links row \"MoC numbering plan (Feb 2023, edition 4)\").",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "מהדורה  4מיום  02בפברואר2023 ,",
+      "fetched_at": "2026-10-12T15:18:37Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/prefix-allocation.md"
-      ],
-      "verification_note": "The Telephone_numbers_in_Israel article states the portability consequence but gives no date: \"Due to mobile number portability, a mobile phone with a prefix of one provider can be associated with a different provider.\" The 2007 date comes from the Mobile_number_portability country table.",
-      "verified_via": "curl (rendered Wikipedia / raw GitHub README)"
+      ]
     },
     {
-      "claim_id": "059-jawwal-palestinian",
-      "claim": "059 is allocated to Jawwal and 056 to Ooredoo Palestine (formerly Wataniya); both are Palestinian-territories-only carriers whose numbers match the Israeli mobile shape.",
-      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
-      "raw_snippet": "056 XXX-XXXX +972 56 XXX-XXXX Ooredoo Palestine Palestinian territories only 058 XXX-XXXX +972 58 XXX-XXXX Golan Telecom 059 XXX-XXXX +972 59 XXX-XXXX Jawwal Palestinian territories only",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "claim_id": "plan-geographic-structure",
+      "claim": "Geographic numbers are 9 digits in the pattern 0A-NXX-XXXX.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "מספר בן  9ספרות ,בתבנית ;0A-NXX-XXXX",
+      "fetched_at": "2026-10-12T15:18:37Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/prefix-allocation.md",
         "scripts/validate_phone.py"
-      ],
-      "verification_note": "CORRECTION to the evidence text: the article names 056 as Ooredoo Palestine, not Wataniya (Wataniya Mobile rebranded to Ooredoo Palestine). SKILL.md already said \"Ooredoo Palestine, formerly Wataniya\", so no body change was needed.",
-      "verified_via": "curl (rendered Wikipedia / raw GitHub README)"
-    },
-    {
-      "claim_id": "moc-israel",
-      "claim": "Israel's Ministry of Communications publishes official numbering-plan changes at gov.il under /departments/ministry_of_communications.",
-      "source_url": "https://www.gov.il/en/departments/ministry_of_communications",
-      "raw_snippet": "Ministry of Communications",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
       ]
     },
     {
-      "claim_id": "moc-israel-he",
-      "claim": "Israel's Ministry of Communications also publishes the Hebrew version of its homepage at gov.il/he/departments/ministry_of_communications.",
-      "source_url": "https://www.gov.il/he/departments/ministry_of_communications",
-      "raw_snippet": "משרד התקשורת",
-      "fetched_at": "2026-05-20T00:00:00Z",
+      "claim_id": "plan-subscriber-digit-n",
+      "claim": "The first subscriber digit N takes values 2-9.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": ",N=2-9הספרה  Nיכולה לקבל ערכים בין  2ל;9-",
+      "fetched_at": "2026-10-12T15:18:37Z",
       "appears_in": [
-        "SKILL_HE.md"
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-area-codes-1",
+      "claim": "Geographic dialing areas: 02 Jerusalem, 03 Tel Aviv, 04 Haifa and the North, 08 Shfela and the South, 09 Sharon; A=6 is reserved.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "A=2אזור חיוג ירושלים ()02",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-area-codes-2",
+      "claim": "Geographic dialing areas: 02 Jerusalem, 03 Tel Aviv, 04 Haifa and the North, 08 Shfela and the South, 09 Sharon; A=6 is reserved.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "A=3אזור חיוג תל-אביב ()03",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-area-codes-3",
+      "claim": "Geographic dialing areas: 02 Jerusalem, 03 Tel Aviv, 04 Haifa and the North, 08 Shfela and the South, 09 Sharon; A=6 is reserved.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "A=4אזור חיוג חיפה והצפון ()04",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-area-codes-4",
+      "claim": "Geographic dialing areas: 02 Jerusalem, 03 Tel Aviv, 04 Haifa and the North, 08 Shfela and the South, 09 Sharon; A=6 is reserved.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "A=6רזרבה לצרכים עתידיים",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-area-codes-5",
+      "claim": "Geographic dialing areas: 02 Jerusalem, 03 Tel Aviv, 04 Haifa and the North, 08 Shfela and the South, 09 Sharon; A=6 is reserved.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "A=8אזור חיוג השפלה והדרום ()08",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-area-codes-6",
+      "claim": "Geographic dialing areas: 02 Jerusalem, 03 Tel Aviv, 04 Haifa and the North, 08 Shfela and the South, 09 Sharon; A=6 is reserved.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "A=9אזור חיוג השרון ()09",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-mobile-structure",
+      "claim": "Mobile numbers are 10 digits in the pattern 05R-NXX-XXXX.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "מספר בן  10ספרות ,בתבנית ;05R-NXX-XXXX",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-mobile-m2m-1",
+      "claim": "In mobile ranges N=0-1 is used only for numbers intended for M2M service.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": ",N=0-1הספרה  Nיכולה לקבל ערכים בין  0ל 1-עבור",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-mobile-m2m-2",
+      "claim": "In mobile ranges N=0-1 is used only for numbers intended for M2M service.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "מספרים המיועדים לשירות  M2Mבלבד;",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-national-structure-1",
+      "claim": "National (non-geographic) numbers are 10 digits in the pattern 07P-NXX-XXXX, with P=2-9.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "מספר בן  10ספרות ,בתבנית ; 07P-NXX-XXXX",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-national-structure-2",
+      "claim": "National (non-geographic) numbers are 10 digits in the pattern 07P-NXX-XXXX, with P=2-9.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": ",P=2-9הספרה  Pיכולה לקבל ערכים בין  2ל;9-",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-service-area",
+      "claim": "Service-area numbers are 10 digits in the pattern 1SYZ-WWWWWW.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "מספר בן  10ספרות ,בתבנית ; 1SYZ-WWWWWW",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md"
+      ]
+    },
+    {
+      "claim_id": "plan-mnp-2007",
+      "claim": "Number portability began on 2 December 2007.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "ג .ניידות מספרים החלה ב 2-לדצמבר .2007",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-star-four-digits",
+      "claim": "Business short numbers are a star plus four digits (*XXXX); the skill uses *2421 only as an illustrative example of that shape.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "מספר מקוצר לעסקים – כוכבית וארבע ספרות",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-1222",
+      "claim": "1222 is dialed instead of the star on terminals that do not support it.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "3עבור חיוג מציוד קצה שאינו תומך בכוכבית ,הוקצתה הקידומת  1222אשר תחוייג במקום הכוכבית.",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "references/prefix-allocation.md"
+      ]
+    },
+    {
+      "claim_id": "alloc-dataset",
+      "claim": "MoC allocation table of number ranges per operator (https://data.gov.il/dataset/israel-numbering-plan), queried via the CKAN datastore API.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":172,\"NDC\":50,\"E.164 Range Format\":\"+972 50 2XXXXXX\",\"Dialing Within Israel\":\"050-2XXXXXX\",\"Allocated To\":\"PELEPHONE COMMUNICATIONS LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md"
+      ]
+    },
+    {
+      "claim_id": "alloc-050-pelephone-1",
+      "claim": "050 is held by Pelephone; 050-1 is an M2M block.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":171,\"NDC\":50,\"E.164 Range Format\":\"+972 50 1XXXXXX\",\"Dialing Within Israel\":\"050-1XXXXXX\",\"Allocated To\":\"PELEPHONE COMMUNICATIONS LTD\",\"Notes\":\"M2M Services\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-050-pelephone-2",
+      "claim": "050 is held by Pelephone; 050-1 is an M2M block.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":172,\"NDC\":50,\"E.164 Range Format\":\"+972 50 2XXXXXX\",\"Dialing Within Israel\":\"050-2XXXXXX\",\"Allocated To\":\"PELEPHONE COMMUNICATIONS LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-051-wecom-1",
+      "claim": "051 ranges 051-2, 051-5, 051-6 are allocated to WeCom Mobile.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":180,\"NDC\":51,\"E.164 Range Format\":\"+972 51 2XXXXXX\",\"Dialing Within Israel\":\"051-2XXXXXX\",\"Allocated To\":\"WECOM MOBILE LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-051-wecom-2",
+      "claim": "051 ranges 051-2, 051-5, 051-6 are allocated to WeCom Mobile.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":181,\"NDC\":51,\"E.164 Range Format\":\"+972 51 5XXXXXX\",\"Dialing Within Israel\":\"051-5XXXXXX\",\"Allocated To\":\"WECOM MOBILE LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-051-wecom-3",
+      "claim": "051 ranges 051-2, 051-5, 051-6 are allocated to WeCom Mobile.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":182,\"NDC\":51,\"E.164 Range Format\":\"+972 51 6XXXXXX\",\"Dialing Within Israel\":\"051-6XXXXXX\",\"Allocated To\":\"WECOM MOBILE LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-052-cellcom-1",
+      "claim": "052 is held by Cellcom; 052-1 is an M2M block.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":183,\"NDC\":52,\"E.164 Range Format\":\"+972 52 1XXXXXX\",\"Dialing Within Israel\":\"052-1XXXXXX\",\"Allocated To\":\"CELLCOM ISRAEL LTD\",\"Notes\":\"M2M Services\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-052-cellcom-2",
+      "claim": "052 is held by Cellcom; 052-1 is an M2M block.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":184,\"NDC\":52,\"E.164 Range Format\":\"+972 52 2XXXXXX\",\"Dialing Within Israel\":\"052-2XXXXXX\",\"Allocated To\":\"CELLCOM ISRAEL LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-053-hot-mobile",
+      "claim": "053 is held by Hot Mobile.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":192,\"NDC\":53,\"E.164 Range Format\":\"+972 53 2XXXXXX\",\"Dialing Within Israel\":\"053-2XXXXXX\",\"Allocated To\":\"HOT MOBILE LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-054-partner-1",
+      "claim": "054 is held by Partner; 054-0 and 054-1 are M2M blocks.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":200,\"NDC\":54,\"E.164 Range Format\":\"+972 54 0XXXXXX\",\"Dialing Within Israel\":\"054-0XXXXXX\",\"Allocated To\":\"PARTNER COMMUNICATIONS COMPANY LTD\",\"Notes\":\"M2M Services\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-054-partner-2",
+      "claim": "054 is held by Partner; 054-0 and 054-1 are M2M blocks.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":201,\"NDC\":54,\"E.164 Range Format\":\"+972 54 1XXXXXX\",\"Dialing Within Israel\":\"054-1XXXXXX\",\"Allocated To\":\"PARTNER COMMUNICATIONS COMPANY LTD\",\"Notes\":\"M2M Services\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-054-partner-3",
+      "claim": "054 is held by Partner; 054-0 and 054-1 are M2M blocks.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":202,\"NDC\":54,\"E.164 Range Format\":\"+972 54 2XXXXXX\",\"Dialing Within Israel\":\"054-2XXXXXX\",\"Allocated To\":\"PARTNER COMMUNICATIONS COMPANY LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-1",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":210,\"NDC\":55,\"E.164 Range Format\":\"+972 55 16XXXXX\",\"Dialing Within Israel\":\"055-16XXXXX\",\"Allocated To\":\"PAYCALL TECHNOLOGIES LTD\",\"Notes\":\"M2M Services\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-2",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":213,\"NDC\":55,\"E.164 Range Format\":\"+972 55 19XXXXX\",\"Dialing Within Israel\":\"055-19XXXXX\",\"Allocated To\":\"TELZAR 019 INTERNATIONAL TELECOMMUNICATION LTD\",\"Notes\":\"M2M Services\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-3",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":216,\"NDC\":55,\"E.164 Range Format\":\"+972 55 22XXXXX\",\"Dialing Within Israel\":\"055-22XXXXX\",\"Allocated To\":\"CELLCOM ISRAEL LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-4",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":218,\"NDC\":55,\"E.164 Range Format\":\"+972 55 24XXXXX\",\"Dialing Within Israel\":\"055-24XXXXX\",\"Allocated To\":\"TELZAR 019 INTERNATIONAL TELECOMMUNICATION LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-5",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":226,\"NDC\":55,\"E.164 Range Format\":\"+972 55 32XXXXX\",\"Dialing Within Israel\":\"055-32XXXXX\",\"Allocated To\":\"WIDELY MOBILE LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-6",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":228,\"NDC\":55,\"E.164 Range Format\":\"+972 55 400XXXX\",\"Dialing Within Israel\":\"055-400XXXX\",\"Allocated To\":\"RAMI LEVY HASHIKME MARKETING COMMUNICATION LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-7",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":234,\"NDC\":55,\"E.164 Range Format\":\"+972 55 43XXXXX\",\"Dialing Within Israel\":\"055-43XXXXX\",\"Allocated To\":\"MASKYOO TELEPHONIA LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-8",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":237,\"NDC\":55,\"E.164 Range Format\":\"+972 55 442XXXX\",\"Dialing Within Israel\":\"055-442XXXX\",\"Allocated To\":\"XPHONE 018 LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-9",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":240,\"NDC\":55,\"E.164 Range Format\":\"+972 55 445XXXX\",\"Dialing Within Israel\":\"055-445XXXX\",\"Allocated To\":\"VOICENTER LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-10",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":259,\"NDC\":55,\"E.164 Range Format\":\"+972 55 50XXXXX\",\"Dialing Within Israel\":\"055-50XXXXX\",\"Allocated To\":\"LB ANNATEL LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-11",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":272,\"NDC\":55,\"E.164 Range Format\":\"+972 55 70XXXXX\",\"Dialing Within Israel\":\"055-70XXXXX\",\"Allocated To\":\"CELLACT COMMUNICATION LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-12",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":283,\"NDC\":55,\"E.164 Range Format\":\"+972 55 87XXXXX\",\"Dialing Within Israel\":\"055-87XXXXX\",\"Allocated To\":\"PELEPHONE COMMUNICATIONS LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-055-multi-13",
+      "claim": "055 is split into sub-blocks across many operators (019 Telzar, Rami Levy, Cellcom, Cellact, Annatel, Widely, Pelephone, Paycall, Maskyoo, Merkaziya, Xphone 018, Voicenter); 055-16 to 055-19 are M2M.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":232,\"NDC\":55,\"E.164 Range Format\":\"+972 55 404XXXX\",\"Dialing Within Israel\":\"055-404XXXX\",\"Allocated To\":\"MERKAZIYA LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-056-palestinian",
+      "claim": "056 is allocated to Palestinian operators (Palestinian Authority).",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":295,\"NDC\":56,\"E.164 Range Format\":\"+972 56 XXXXXXX\",\"Dialing Within Israel\":\"056-XXXXXXX\",\"Allocated To\":\"Palestinian Operators\",\"Notes\":\"Palestinian Authority\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-058-cellcom-1",
+      "claim": "058 is held by Cellcom; 058-0 and 058-1 are M2M blocks.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":296,\"NDC\":58,\"E.164 Range Format\":\"+972 58 0XXXXXX\",\"Dialing Within Israel\":\"058-0XXXXXX\",\"Allocated To\":\"CELLCOM ISRAEL LTD\",\"Notes\":\"M2M Services\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-058-cellcom-2",
+      "claim": "058 is held by Cellcom; 058-0 and 058-1 are M2M blocks.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":297,\"NDC\":58,\"E.164 Range Format\":\"+972 58 1XXXXXX\",\"Dialing Within Israel\":\"058-1XXXXXX\",\"Allocated To\":\"CELLCOM ISRAEL LTD\",\"Notes\":\"M2M Services\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-058-cellcom-3",
+      "claim": "058 is held by Cellcom; 058-0 and 058-1 are M2M blocks.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":298,\"NDC\":58,\"E.164 Range Format\":\"+972 58 3XXXXXX\",\"Dialing Within Israel\":\"058-3XXXXXX\",\"Allocated To\":\"CELLCOM ISRAEL LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-059-jawwal",
+      "claim": "059 is allocated to Jawwal, a Palestinian operator.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":303,\"NDC\":59,\"E.164 Range Format\":\"+972 59 2XXXXXX\",\"Dialing Within Israel\":\"059-2XXXXXX\",\"Allocated To\":\"JAWWAL (Palestinian MNO)\",\"Notes\":\"Palestinian Authority\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-palestinian-landline-1",
+      "claim": "Landline blocks 02-2, 04-2, 08-2 and 09-2 are allocated to Palestinian operators.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":1,\"NDC\":2,\"E.164 Range Format\":\"+972 2 2XXXXXX\",\"Dialing Within Israel\":\"02-2XXXXXX\",\"Allocated To\":\"Palestinian Operators\",\"Notes\":\"Palestinian Authority\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-palestinian-landline-2",
+      "claim": "Landline blocks 02-2, 04-2, 08-2 and 09-2 are allocated to Palestinian operators.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":117,\"NDC\":4,\"E.164 Range Format\":\"+972 4 2XXXXXX\",\"Dialing Within Israel\":\"04-2XXXXXX\",\"Allocated To\":\"Palestinian Operators\",\"Notes\":\"Palestinian Authority\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-palestinian-landline-3",
+      "claim": "Landline blocks 02-2, 04-2, 08-2 and 09-2 are allocated to Palestinian operators.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":357,\"NDC\":8,\"E.164 Range Format\":\"+972 8 2XXXXXX\",\"Dialing Within Israel\":\"08-2XXXXXX\",\"Allocated To\":\"Palestinian Operators\",\"Notes\":\"Palestinian Authority\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-palestinian-landline-4",
+      "claim": "Landline blocks 02-2, 04-2, 08-2 and 09-2 are allocated to Palestinian operators.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":412,\"NDC\":9,\"E.164 Range Format\":\"+972 9 2XXXXXX\",\"Dialing Within Israel\":\"09-2XXXXXX\",\"Allocated To\":\"Palestinian Operators\",\"Notes\":\"Palestinian Authority\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-072-partner-1",
+      "claim": "072-2 and 072-3 are held by Partner, with small blocks for other operators.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":311,\"NDC\":72,\"E.164 Range Format\":\"+972 72 2XXXXXX\",\"Dialing Within Israel\":\"072-2XXXXXX\",\"Allocated To\":\"PARTNER COMMUNICATIONS COMPANY LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-072-partner-2",
+      "claim": "072-2 and 072-3 are held by Partner, with small blocks for other operators.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":312,\"NDC\":72,\"E.164 Range Format\":\"+972 72 3XXXXXX\",\"Dialing Within Israel\":\"072-3XXXXXX\",\"Allocated To\":\"PARTNER COMMUNICATIONS COMPANY LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-072-partner-3",
+      "claim": "072-2 and 072-3 are held by Partner, with small blocks for other operators.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":313,\"NDC\":72,\"E.164 Range Format\":\"+972 72 800XXXX\",\"Dialing Within Israel\":\"072-800XXXX\",\"Allocated To\":\"YOSI COMMUNICATION LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-073-cellcom-1",
+      "claim": "073-2, 073-3, 073-7 are held by Cellcom; smaller operators hold 073-8 blocks.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":315,\"NDC\":73,\"E.164 Range Format\":\"+972 73 2XXXXXX\",\"Dialing Within Israel\":\"073-2XXXXXX\",\"Allocated To\":\"CELLCOM ISRAEL LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-073-cellcom-2",
+      "claim": "073-2, 073-3, 073-7 are held by Cellcom; smaller operators hold 073-8 blocks.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":316,\"NDC\":73,\"E.164 Range Format\":\"+972 73 3XXXXXX\",\"Dialing Within Israel\":\"073-3XXXXXX\",\"Allocated To\":\"CELLCOM ISRAEL LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-073-cellcom-3",
+      "claim": "073-2, 073-3, 073-7 are held by Cellcom; smaller operators hold 073-8 blocks.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":317,\"NDC\":73,\"E.164 Range Format\":\"+972 73 7XXXXXX\",\"Dialing Within Israel\":\"073-7XXXXXX\",\"Allocated To\":\"CELLCOM ISRAEL LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-073-cellcom-4",
+      "claim": "073-2, 073-3, 073-7 are held by Cellcom; smaller operators hold 073-8 blocks.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":318,\"NDC\":73,\"E.164 Range Format\":\"+972 73 80XXXXX\",\"Dialing Within Israel\":\"073-80XXXXX\",\"Allocated To\":\"MASKYOO TELEPHONIA LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-074-partner",
+      "claim": "074-7 is held by Partner.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":335,\"NDC\":74,\"E.164 Range Format\":\"+972 74 7XXXXXX\",\"Dialing Within Israel\":\"074-7XXXXXX\",\"Allocated To\":\"PARTNER COMMUNICATIONS COMPANY LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-076-bezeq-1",
+      "claim": "076-5 is held by Bezeq International and 076-8 blocks by Bezeq.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":336,\"NDC\":76,\"E.164 Range Format\":\"+972 76 5XXXXXX\",\"Dialing Within Israel\":\"076-5XXXXXX\",\"Allocated To\":\"BEZEQ INTERNATIONAL LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-076-bezeq-2",
+      "claim": "076-5 is held by Bezeq International and 076-8 blocks by Bezeq.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":337,\"NDC\":76,\"E.164 Range Format\":\"+972 76 80XXXXX\",\"Dialing Within Israel\":\"076-80XXXXX\",\"Allocated To\":\"BEZEQ, THE ISRAELI TELECOMMUNICATIONS CORP. LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-077-hot",
+      "claim": "077 is held by Hot Telecom.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":341,\"NDC\":77,\"E.164 Range Format\":\"+972 77 2XXXXXX\",\"Dialing Within Israel\":\"077-2XXXXXX\",\"Allocated To\":\"HOT TELECOM LP\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-079-multi-1",
+      "claim": "079 is split: Widely (079-2), Binat (079-3), Hallo 015 (079-4 to 079-6), Cellact (079-7), Annatel (079-8), 019 Telzar (079-9).",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":349,\"NDC\":79,\"E.164 Range Format\":\"+972 79 2XXXXXX\",\"Dialing Within Israel\":\"079-2XXXXXX\",\"Allocated To\":\"WIDELY MOBILE LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-079-multi-2",
+      "claim": "079 is split: Widely (079-2), Binat (079-3), Hallo 015 (079-4 to 079-6), Cellact (079-7), Annatel (079-8), 019 Telzar (079-9).",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":350,\"NDC\":79,\"E.164 Range Format\":\"+972 79 3XXXXXX\",\"Dialing Within Israel\":\"079-3XXXXXX\",\"Allocated To\":\"BINAT BUSINESS LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-079-multi-3",
+      "claim": "079 is split: Widely (079-2), Binat (079-3), Hallo 015 (079-4 to 079-6), Cellact (079-7), Annatel (079-8), 019 Telzar (079-9).",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":351,\"NDC\":79,\"E.164 Range Format\":\"+972 79 4XXXXXX\",\"Dialing Within Israel\":\"079-4XXXXXX\",\"Allocated To\":\"HASHIKMA N.G.N INTERNATIONAL COMMUNICATIONS 015 LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-079-multi-4",
+      "claim": "079 is split: Widely (079-2), Binat (079-3), Hallo 015 (079-4 to 079-6), Cellact (079-7), Annatel (079-8), 019 Telzar (079-9).",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":354,\"NDC\":79,\"E.164 Range Format\":\"+972 79 7XXXXXX\",\"Dialing Within Israel\":\"079-7XXXXXX\",\"Allocated To\":\"CELLACT COMMUNICATION LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-079-multi-5",
+      "claim": "079 is split: Widely (079-2), Binat (079-3), Hallo 015 (079-4 to 079-6), Cellact (079-7), Annatel (079-8), 019 Telzar (079-9).",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":355,\"NDC\":79,\"E.164 Range Format\":\"+972 79 8XXXXXX\",\"Dialing Within Israel\":\"079-8XXXXXX\",\"Allocated To\":\"LB ANNATEL LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-079-multi-6",
+      "claim": "079 is split: Widely (079-2), Binat (079-3), Hallo 015 (079-4 to 079-6), Cellact (079-7), Annatel (079-8), 019 Telzar (079-9).",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":356,\"NDC\":79,\"E.164 Range Format\":\"+972 79 9XXXXXX\",\"Dialing Within Israel\":\"079-9XXXXXX\",\"Allocated To\":\"TELZAR 019 INTERNATIONAL TELECOMMUNICATION LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-no-071-075-078-057-1",
+      "claim": "The allocation table has no range under 057, 070, 071, 075 or 078: the 05X NDCs listed are 50-56, 58, 59 and the 07X NDCs are 72, 73, 74, 76, 77, 79 (verified by enumerating every NDC in the 461-row table). The snippet shows the last 058 row followed directly by the first 059 row, and the last 077 row followed directly by the first 079 row.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":302,\"NDC\":58,\"E.164 Range Format\":\"+972 58 7XXXXXX\",\"Dialing Within Israel\":\"058-7XXXXXX\",\"Allocated To\":\"CELLCOM ISRAEL LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-no-071-075-078-057-2",
+      "claim": "The allocation table has no range under 057, 070, 071, 075 or 078: the 05X NDCs listed are 50-56, 58, 59 and the 07X NDCs are 72, 73, 74, 76, 77, 79 (verified by enumerating every NDC in the 461-row table). The snippet shows the last 058 row followed directly by the first 059 row, and the last 077 row followed directly by the first 079 row.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":303,\"NDC\":59,\"E.164 Range Format\":\"+972 59 2XXXXXX\",\"Dialing Within Israel\":\"059-2XXXXXX\",\"Allocated To\":\"JAWWAL (Palestinian MNO)\",\"Notes\":\"Palestinian Authority\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-no-071-075-078-057-3",
+      "claim": "The allocation table has no range under 057, 070, 071, 075 or 078: the 05X NDCs listed are 50-56, 58, 59 and the 07X NDCs are 72, 73, 74, 76, 77, 79 (verified by enumerating every NDC in the 461-row table). The snippet shows the last 058 row followed directly by the first 059 row, and the last 077 row followed directly by the first 079 row.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":348,\"NDC\":77,\"E.164 Range Format\":\"+972 77 9XXXXXX\",\"Dialing Within Israel\":\"077-9XXXXXX\",\"Allocated To\":\"HOT TELECOM LP\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "alloc-no-071-075-078-057-4",
+      "claim": "The allocation table has no range under 057, 070, 071, 075 or 078: the 05X NDCs listed are 50-56, 58, 59 and the 07X NDCs are 72, 73, 74, 76, 77, 79 (verified by enumerating every NDC in the 461-row table). The snippet shows the last 058 row followed directly by the first 059 row, and the last 077 row followed directly by the first 079 row.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":349,\"NDC\":79,\"E.164 Range Format\":\"+972 79 2XXXXXX\",\"Dialing Within Israel\":\"079-2XXXXXX\",\"Allocated To\":\"WIDELY MOBILE LTD\",\"Notes\":\"\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-dataset",
+      "claim": "MoC list of national service numbers (https://data.gov.il/dataset/israel-dialing-plan), queried via the CKAN datastore API.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":1,\"סוג\":\"שירות רשתי אחיד\",\"רשתי\":\"כן\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"*0120\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מוקד קבורה חירום - במתכונת כוכבית לעסקים\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md"
+      ]
+    },
+    {
+      "claim_id": "dial-1700-shared-cost",
+      "claim": "1-700 is a local call with split charging (shared cost), not premium.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":113,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1700\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"שיחה מקומית - חיוב מפוצל\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-1599-router",
+      "claim": "1-599 is a business call router.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":96,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"33XXXX\",\"קידומת חיוג (קוד גישה)\":\"1599\",\"מוקצה לספק מורשה במשרד התקשורת\":\"מסקיו טלפוניה בע\\\"מ\",\"הערות\":\"נתב שיחות עסקי\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-1800-1801-free-1",
+      "claim": "1-800 and 1-801 are toll-free numbers.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":154,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1800\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מספרי חינם\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-1800-1801-free-2",
+      "claim": "1-800 and 1-801 are toll-free numbers.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":188,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1801\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מספרי חינם\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-1809-intl",
+      "claim": "1-809 is a toll-free number for international operators.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":223,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1809\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מספר חינם למפעילים בינלאומיים\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-premium-1",
+      "claim": "1-900, 1-901 and 1-902 are premium services at premium rate; 1-919 is adult services; 1-956 voice entertainment and 1-957 voice information.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":247,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1900\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"שירות פרימיום בתעריף פרימיום\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-premium-2",
+      "claim": "1-900, 1-901 and 1-902 are premium services at premium rate; 1-919 is adult services; 1-956 voice entertainment and 1-957 voice information.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":272,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1901\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"שירות פרימיום בתעריף פרימיום\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-premium-3",
+      "claim": "1-900, 1-901 and 1-902 are premium services at premium rate; 1-919 is adult services; 1-956 voice entertainment and 1-957 voice information.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":297,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1902\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"שירות פרימיום בתעריף פרימיום\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-premium-4",
+      "claim": "1-900, 1-901 and 1-902 are premium services at premium rate; 1-919 is adult services; 1-956 voice entertainment and 1-957 voice information.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":314,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1919\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"גישה לשירותים ארוטיים\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-premium-5",
+      "claim": "1-900, 1-901 and 1-902 are premium services at premium rate; 1-919 is adult services; 1-956 voice entertainment and 1-957 voice information.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":328,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1956\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"שירותי בידור קולי (אופציונלי)\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-premium-6",
+      "claim": "1-900, 1-901 and 1-902 are premium services at premium rate; 1-919 is adult services; 1-956 voice entertainment and 1-957 voice information.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":329,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1957\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"שירותי מידע קולי\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-televoting-1",
+      "claim": "1-200 is remote voting and 1-212 public polls.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":52,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1200\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"הצבעה מרחוק\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-televoting-2",
+      "claim": "1-200 is remote voting and 1-212 public polls.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":61,\"סוג\":\"איזור חיוג לשירות\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXXXX\",\"קידומת חיוג (קוד גישה)\":\"1212\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"משאלים פומביים\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-1",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":35,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"100\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"משטרה\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-2",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":36,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"101\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מד\\\"א\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-3",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":37,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"102\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מכבי אש\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-4",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":38,\"סוג\":\"מספר מקוצר\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"103\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"חברת חשמל\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-5",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":39,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"104\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מוקד פיקוד העורף\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-6",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":40,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"105\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"המטה הלאומי להגנה על ילדים ברשת (מוקד מאו\\\"ר)\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-7",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":41,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"106\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מוקד עירוני\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-8",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":42,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"107\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מוקד עירוני (יבוטל בעתיד)\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-9",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":45,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"110\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מוקד מידע ארצי משטרת ישראל\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-10",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":47,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"112\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מוקד חירום משותף (עתידי)\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-11",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":48,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"115\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מוקד אסון לאומי משטרת ישראל\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-12",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":50,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"118\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מוקד חירום ארצי לנפגעי רווחה\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-short-codes-13",
+      "claim": "Short codes: 100 police, 101 MDA, 102 fire, 103 electric company, 104 Home Front Command, 105 child online protection, 106 municipal center (107-109 to be cancelled), 110 police information, 112 future joint emergency center, 115 police national disaster center, 118 welfare emergency, 119 cyber directorate.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":51,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"119\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מוקד מערך הסייבר הלאומי\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "dial-1222",
+      "claim": "1222 gives access to star numbers.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":70,\"סוג\":\"מספר מקוצר\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"XXXX\",\"קידומת חיוג (קוד גישה)\":\"1222\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"גישה למספרי כוכביות\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "references/prefix-allocation.md"
+      ]
+    },
+    {
+      "claim_id": "wp-056-ooredoo",
+      "claim": "056 is used by Ooredoo Palestine (Palestinian territories only).",
+      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
+      "raw_snippet": "056 XXX-XXXX +972 56 XXX-XXXX Ooredoo Palestine Palestinian territories only",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "wp-058-golan",
+      "claim": "058 was Golan Telecom's range (Wikipedia still lists Golan Telecom; the MoC table now lists Cellcom).",
+      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
+      "raw_snippet": "058 XXX-XXXX +972 58 XXX-XXXX Golan Telecom",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "wp-057-to-053-2014",
+      "claim": "Hot Mobile used 057 until it changed to 053 in November 2014.",
+      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
+      "raw_snippet": "Former prefix 057. Changed to 053 in November 2014.",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "wp-wataniya",
+      "claim": "Ooredoo Palestine was formerly Wataniya Mobile.",
+      "source_url": "https://en.wikipedia.org/wiki/Ooredoo_Palestine",
+      "raw_snippet": "Wataniya",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "lpn-071-078",
+      "claim": "libphonenumber IL metadata still classifies 0718 and 078 sub-blocks as VoIP.",
+      "source_url": "https://raw.githubusercontent.com/google/libphonenumber/master/resources/PhoneNumberMetadata.xml",
+      "raw_snippet": "<voip> <possibleLengths national=\"9\"/> <exampleNumber>771234567</exampleNumber> <nationalNumberPattern> 7(?: 280[01]| 38(?: [05]\\d| 8[0-358] )| 8(?: 33| 55| 77| 81 )\\d )\\d{4}| 7(?: 18| 2[23]| 3[237]| 47| 6[258]| 7\\d| 82| 9[2-9] )\\d{6} </nationalNumberPattern> </voip>",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md"
+      ]
+    },
+    {
+      "claim_id": "lpn-1700-shared",
+      "claim": "libphonenumber classifies 1700 as shared cost.",
+      "source_url": "https://raw.githubusercontent.com/google/libphonenumber/master/resources/PhoneNumberMetadata.xml",
+      "raw_snippet": "<sharedCost> <possibleLengths national=\"10\"/> <exampleNumber>1700123456</exampleNumber> <nationalNumberPattern>1700\\d{6}</nationalNumberPattern> </sharedCost>",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md"
       ]
     },
     {
       "claim_id": "libphonenumber-google",
-      "claim": "Google's libphonenumber is the common Java, C++ and JavaScript library for parsing, formatting and validating international phone numbers.",
+      "claim": "Google libphonenumber is the reference library for parsing, formatting and validating international numbers.",
       "source_url": "https://github.com/google/libphonenumber",
-      "raw_snippet": "Google's common Java, C++ and JavaScript library for parsing, formatting, and\nvalidating international phone numbers.",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "raw_snippet": "Google's common Java, C++ and JavaScript library for parsing, formatting, and validating international phone numbers.",
+      "fetched_at": "2026-10-12T15:18:37Z",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "verified_via": "curl (rendered Wikipedia / raw GitHub README)"
-    },
-    {
-      "claim_id": "libphonenumber-js",
-      "claim": "The libphonenumber-js npm package is a JavaScript port of Google's libphonenumber commonly used in frontend phone-input components.",
-      "source_url": "https://www.npmjs.com/package/libphonenumber-js",
-      "raw_snippet": "libphonenumber-js",
-      "fetched_at": "2026-05-20T00:00:00Z",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/prefix-allocation.md"
       ]
     },
     {
-      "claim_id": "e164-format",
-      "claim": "Israeli numbers are written (0A) XXX-XXXX for landline and 05N-XXX-XXXX for mobile domestically, and with the +972 country code internationally (the leading 0 is dropped).",
-      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
-      "raw_snippet": "(0A) XXX-XXXX (landline) <br /> 05N-XXX-XXXX (mobile)",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "claim_id": "libphonenumber-js",
+      "claim": "libphonenumber-js is the JavaScript port of libphonenumber on npm (package page https://www.npmjs.com/package/libphonenumber-js, which is Cloudflare-blocked to scripts, so the registry record is cited).",
+      "source_url": "https://registry.npmjs.org/libphonenumber-js/latest",
+      "raw_snippet": "\"name\":\"libphonenumber-js\"",
+      "fetched_at": "2026-10-12T15:18:37Z",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "verified_via": "curl (rendered Wikipedia / raw GitHub README)"
+        "SKILL_HE.md",
+        "references/prefix-allocation.md"
+      ]
     },
     {
-      "claim_id": "israel-emergency-numbers",
-      "claim": "Israeli emergency short codes: 100 Police, 101 Magen David Adom (ambulance), 102 Fire Fighters.",
-      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
-      "raw_snippet": "100 : Police 101 : Magen David Adom : Ambulance Service and Emergency Medical Response 102 : Fire Fighters",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "claim_id": "meta-separators",
+      "claim": "WhatsApp Cloud API accepts plus signs, hyphens, parentheses and spaces in send message requests.",
+      "source_url": "https://developers.facebook.com/docs/whatsapp/cloud-api/reference/phone-numbers/",
+      "raw_snippet": "and spaces are supported in send message requests.",
+      "fetched_at": "2026-10-12T15:18:37Z",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "verified_via": "curl (rendered Wikipedia / raw GitHub README)"
+        "SKILL_HE.md",
+        "references/prefix-allocation.md"
+      ]
     },
     {
-      "claim_id": "star-service-format",
-      "claim": "Israel operates shortened business \"star numbers\", listed by the Ministry of Communications. *2421 appears in this skill only as an illustrative example of the *XXXX shape, with no claim about which business operates it.",
-      "source_url": "https://en.wikipedia.org/wiki/Telephone_numbers_in_Israel",
-      "raw_snippet": "Shortened business numbers (star numbers) at the Israel Ministry of Communications (in Hebrew)",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "claim_id": "meta-plus-required",
+      "claim": "WhatsApp recommends the plus sign and country code; if the plus sign is omitted, the business phone number country calling code is prepended, which can leave messages undelivered or misdelivered.",
+      "source_url": "https://developers.facebook.com/docs/whatsapp/cloud-api/reference/phone-numbers/",
+      "raw_snippet": "We highly recommend that you include both the plus sign and country calling code when sending a message to a customer.",
+      "fetched_at": "2026-10-12T15:18:37Z",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "verification_note": "The Wikipedia article links the MoC star-number registry under External links but does not enumerate specific star codes, so no specific star code is asserted by this skill.",
-      "verified_via": "curl (rendered Wikipedia / raw GitHub README)"
+        "SKILL_HE.md",
+        "references/prefix-allocation.md"
+      ]
+    },
+    {
+      "claim_id": "lpn-parse-separators",
+      "claim": "libphonenumber parse() accepts formatted input with separators (the README parses a spaced number); hyphenated, bidi-marked, Arabic-Indic, +972 (0) and zero-stripped Israeli inputs were also confirmed with the Python port phonenumbers 9.0.41 on 2026-10-12.",
+      "source_url": "https://raw.githubusercontent.com/google/libphonenumber/master/README.md",
+      "raw_snippet": "String swissNumberStr = \"044 668 18 00\";",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md"
+      ]
+    },
+    {
+      "claim_id": "alloc-ndc13-iot",
+      "claim": "NDC 13 numbers (e.g. 13-02XXXXXX, Partner) are an IoT/M2M service class.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=caa80822-5880-4bbf-808a-06d7f53c4ae5&limit=5000",
+      "raw_snippet": "{\"_id\":457,\"NDC\":13,\"E.164 Range Format\":\"+972 13 02XXXXXX\",\"Dialing Within Israel\":\"13-02XXXXXX\",\"Allocated To\":\"PARTNER COMMUNICATIONS COMPANY LTD\",\"Notes\":\"IOT/M2M Services\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "references/prefix-allocation.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "plan-7-digit-local",
+      "claim": "Within an area, a number can be dialed with 7 digits NXX-XXXX (open numbering).",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "בחיוג הגיאוגרפי :חיוג במספור פתוח 7 ,ספרות  NXX-XXXXבתוך אזור החיוג 9 ,ספרות",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md"
+      ]
+    },
+    {
+      "claim_id": "dial-115",
+      "claim": "115 is the Israel Police national disaster center.",
+      "source_url": "https://data.gov.il/api/3/action/datastore_search?resource_id=f5e57cec-4af9-488e-94b5-53f948a3cec3&limit=5000",
+      "raw_snippet": "{\"_id\":48,\"סוג\":\"מספר מקוצר לחירום\",\"רשתי\":\"\",\"מספר ספרות לאחר הקידומת\":\"\",\"קידומת חיוג (קוד גישה)\":\"115\",\"מוקצה לספק מורשה במשרד התקשורת\":\"\",\"הערות\":\"מוקד אסון לאומי משטרת ישראל\"}",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/prefix-allocation.md",
+        "scripts/validate_phone.py"
+      ]
+    },
+    {
+      "claim_id": "plan-151-153-length",
+      "claim": "Number-attached services (151 voicemail, 153 fax box) are 11 to 13 digits including the 1SY / 1SYZ access code.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/number_policy/en/The_numbering_plan-02-2023.pdf",
+      "raw_snippet": "( )4גישה לשירותים צמודי מספר (שצ\"מ) :מספר בן  11עד  13ספרות ,הכוללות קוד",
+      "fetched_at": "2026-10-12T15:18:37Z",
+      "appears_in": [
+        "references/domain-checklist.md"
+      ]
     }
   ]
 }

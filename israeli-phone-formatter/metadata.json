@@ -1,6 +1,6 @@
 {
   "author": "skills-il",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "category": "developer-tools",
   "tags": {
     "he": [
@@ -23,8 +23,8 @@
     "en": "Israeli Phone Formatter"
   },
   "display_description": {
-    "he": "מאמתים ומעצבים מספרי טלפון ישראליים בכל הפורמטים.",
-    "en": "Validate, format, and convert Israeli phone numbers between local and international (+972) formats. Use when user asks to validate Israeli phone number, format phone for SMS, convert to +972, check phone prefix, or implement Israeli phone input validation in code. Handles mobile (050-058), landline (02-09), non-geographic / VoIP (072-079), toll-free (1-800), and star-service numbers. Do NOT use for non-Israeli phone systems or general telecom questions."
+    "he": "מאמתים, מעצבים וממירים מספרי טלפון ישראליים בין פורמט מקומי לבינלאומי (+972). מתאים כשצריך לבדוק אם מספר תקין, להכין מספר ל-SMS או ל-WhatsApp, לזהות סוג קו לפי הקידומת, או לכתוב בדיקת קלט בקוד. מכסה נייד (050-055, 058, ו-056/059 הפלסטיניים), קווי (02, 03, 04, 08, 09), מספרים ארציים (072-074, 076, 077, 079), 1-800, 1-700, 1-900 ומספרי כוכבית, ומפיק פלט E.164 נקי. חוסך כפילויות ותקלות שליחה שנגרמות מפורמט לא אחיד. לא מתאים למספרים שאינם ישראליים או לשאלות טלקום כלליות.",
+    "en": "Validate, format, and convert Israeli phone numbers between local and international (+972) formats. Use when user asks to validate Israeli phone number, format phone for SMS or WhatsApp, convert to +972, check phone prefix, or implement Israeli phone input validation in code. Handles mobile (050-055, 058, plus Palestinian 056/059), landline (02, 03, 04, 08, 09), non-geographic (072-074, 076, 077, 079), toll-free (1-800), shared-cost 1-700, premium 1-900, and star-service numbers, and emits strict E.164 output for libphonenumber and WhatsApp Business API. Do NOT use for non-Israeli phone systems or general telecom questions."
   },
   "supported_agents": [
     "claude-code",
