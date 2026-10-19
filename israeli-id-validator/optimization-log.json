@@ -52,6 +52,22 @@
         "A single boolean return cannot express three outcomes. Separating malformed input from a failed check digit needed an exit-code contract (0 valid, 1 bad check digit, 2 malformed), and the library already held the information the CLI was discarding.",
         "Cross-checking against an independently written implementation of the same published algorithm is cheap, and is what allowed the arithmetic to be declared sound by evidence rather than by inspection."
       ]
+    },
+    {
+      "version": "1.4.0",
+      "date": "2026-10-19",
+      "lessons": [
+        "A fix can reach the CLI and miss the library under it. 1.3.0 removed the strip-every-non-digit regex from the CLI path while normalize_id() kept it as a fallback, so validate_israeli_id('62819482.1') still returned True. Test the importable functions, not just the command line.",
+        "The inline code in SKILL.md is what readers copy, and it drifts from the script. Exec every fenced Python/JS block against the golden vectors each cycle (this cycle: generator guard missing inline, then input handling).",
+        "The check-digit weights 1,2,1,2,1,2,1,2,1 are a palindrome, so a reversed 9-digit ID always passes. The skill had listed RTL reversal as a cause of check FAILURE for several cycles; caught only by an expert who ran 20,000 reversals.",
+        "Accepting more input is a security decision. Discarding 'invisible' characters to fix paste false negatives briefly let bidi overrides through ('\\u202e287654321' displays as 123456782). Only BN-class zero-width characters may be dropped inside a number; LRM/RLM/ALM and line breaks only at the ends; overrides and isolates never.",
+        "evidence.json had been gamed: snippets were page navigation text with the quote pasted into the claim, and verified_via exempted 10 of 11 entries from the source check. Rebuilt from real quotations; watch for verified_via on text-checkable pages.",
+        "The live /tools widget (frontend/src/lib/checkers/israeli-id.ts) disagreed with the skill: 000000000 valid, 50/52/53/54/56/59 typed as personal IDs, en dash rejected. Fix committed locally on fix/id-validator-engine (99c92013), not pushed. Next cycle: confirm it reached main.",
+        "DEFERRED (Expert MAJOR, needs a verified source or exceeds the batch edit cap): personal-ID display format (python-stdnum il.idnr '03933742-3'); Tax Authority emosek lookup and the data.gov.il companies dataset as existence pointers (terms of automated use unconfirmed); Israel Invoices allocation numbers depending on a correct buyer number (threshold unsourced); python-stdnum il.idnr/il.hp as a cross-check, noting il.hp requires a leading 5; DB schema guidance (CHAR(9) + CHECK, separate id_type column); foreign counterparties with no TZ; deduction-file numbers (structure unsourced, do not run this algorithm on them); an authoritative (non-vendor) source for the osek-number-is-usually-TZ rule, e.g. the CBS self-employed release or the OECD Israel TIN sheet.",
+        "DEFERRED (Expert MAJOR): the inline validate_israeli_id still returns a bare bool; only the script's parse_id and the JS parseIsraeliId return the reason.",
+        "DEFERRED (minor): the CLI needs `--` before an input starting with '-' (argparse); identify has no documented exit-code contract; a 2-digit input like '18' validates by design of zero-padding, so a product may want its own minimum length (do not invent one).",
+        "domain-checklist.md was bootstrapped this cycle but kept OUT of the published folder (its Authoritative sources list contains URLs not yet verified, which would enter the evidence gate). Lives in the batch workdir; promote it to references/ once its URLs are verified."
+      ]
     }
   ]
 }

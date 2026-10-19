@@ -1,120 +1,226 @@
 {
   "schemaVersion": "1.0",
   "skill": "israeli-id-validator",
-  "generated": "2026-06-16",
+  "generated_at": "2026-10-19T19:40:00+03:00",
   "claims": [
     {
-      "claim": "The Israeli ID number (Mispar Zehut) is nine digits, the last of which is a check digit calculated using the Luhn algorithm. The skill's algorithm (pad to 9, alternating x1/x2 weights, sum-digits-if-product>9, total divisible by 10) is the standard Luhn-variant implementation of this. Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit calculated using the Luhn algorithm",
+      "claim_id": "tz-nine-digits-luhn",
+      "claim": "The Israeli ID number (Mispar Zehut) is nine digits, the last of which is a Luhn check digit. The skill implements the Luhn variant: pad to 9, weights 1,2,1,2..., digit-sum any product over 9, total divisible by 10.",
       "source_url": "https://en.wikipedia.org/wiki/Israeli_identity_card",
-      "raw_snippet": "idata item Appearance move to sidebar hide From Wikipedia, the free encyclopedia National identity card of Israel {{Script/Hebrew|תעודת זהות}}<br />{{lang|ar|بطاقة هوية}}\"},\"image\":{\"wt\":\"The Example of the Biometric Teudat Zehut front side.",
-      "effective_date": "2026-06-16",
-      "verification": "Confirmed empirically with the bundled scripts/validate_id.py: all 6 worked examples (123456782, 612345678, 515308203, 550123459, 570123455, 580123453) return VALID and the deliberately-wrong 123456789 returns INVALID.",
-      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
-      "verified_at": "2026-08-18",
-      "fetched_at": "2026-08-18"
-    },
-    {
-      "claim": "Corporate and registered-entity numbers carry a check digit whose calculation rules are identical to the personal ID check digit, so company / partnership / cooperative / amuta numbers pass the same algorithm. הספרה הימנית ביותר במספר התאגיד היא ספרת ביקורת, שכללי חישובה זהים לאלה של חישוב ספרת הביקורת במספר זהות",
-      "source_url": "https://he.wikipedia.org/wiki/תאגיד",
-      "raw_snippet": "ת יצירת קשר ספר אורחים חיפוש חיפוש מראה תרומה לוויקיפדיה יצירת חשבון כניסה לחשבון כלים אישיים תרומה לוויקיפדיה יצירת חשבון כניסה לחשבון תוכן עניינים העברה לסרגל הצד הסתרה התחלה 1 היסטוריה 2 תאגיד רב-לאומי 3 בישראל שינוי מצב התת־פרק בישראל 3.",
-      "effective_date": "2026-06-16",
-      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
-      "verified_at": "2026-08-18",
-      "fetched_at": "2026-08-18"
-    },
-    {
-      "claim": "A corporate/registered-entity number is 9 digits; the first two digits map to the entity type: 50 government company / provident fund / pension fund / local committee, 51 private company, 52 public company, 53 mandatory partnership, 54 general partnership, 55 partnership, 56 foreign company, 57 cooperative society / kibbutz, 58 amuta / non-profit / public-benefit company, 59 endowment. על פי רוב שתי הספרות הראשונות במספר רישום התאגיד קשורות לסוג התאגיד, כדלהלן: 50 = חברה ממשלתית, קופת גמל, קרן פנסיה, ועד",
-      "source_url": "https://he.wikipedia.org/wiki/תאגיד",
-      "raw_snippet": "ת יצירת קשר ספר אורחים חיפוש חיפוש מראה תרומה לוויקיפדיה יצירת חשבון כניסה לחשבון כלים אישיים תרומה לוויקיפדיה יצירת חשבון כניסה לחשבון תוכן עניינים העברה לסרגל הצד הסתרה התחלה 1 היסטוריה 2 תאגיד רב-לאומי 3 בישראל שינוי מצב התת־פרק בישראל 3.",
-      "effective_date": "2026-06-16",
-      "notes": "53 is שותפות מנדטורית = mandatory (Mandate-era) partnership, NOT limited partnership.",
-      "source_fetched_at": "2026-07-26T00:00:00Z",
-      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
-      "verified_at": "2026-08-18",
-      "fetched_at": "2026-08-18"
-    },
-    {
-      "claim": "The authoritative structural description of the Mispar Zehut specifies only that it is nine digits ending in a Luhn check digit; it documents no field encoding birth date, age, residency status, or a native/resident/foreign-worker number range. The common range-by-status split is therefore unsupported folklore. Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit calculated using the Luhn algorithm",
-      "source_url": "https://en.wikipedia.org/wiki/Israeli_identity_card",
-      "raw_snippet": "idata item Appearance move to sidebar hide From Wikipedia, the free encyclopedia National identity card of Israel {{Script/Hebrew|תעודת זהות}}<br />{{lang|ar|بطاقة هوية}}\"},\"image\":{\"wt\":\"The Example of the Biometric Teudat Zehut front side.",
-      "effective_date": "2026-06-16",
-      "notes": "The cited source describes ONLY the nine-digit + check-digit structure; it asserts no date/age/status/range encoding, which is the basis for treating the range-by-status claim as folklore.",
-      "verified_via": "reference-coverage entry; snippet is a contiguous sentence from its source page",
-      "verified_at": "2026-08-18",
-      "fetched_at": "2026-08-18"
-    },
-    {
-      "claim": "Israel's Privacy Protection Law Amendment 13 (Amendment 13 to the 1981 Privacy Protection Law) tightening consent and breach-notification rules came into force on 14 August 2025. היום, 14.8.2025, נכנס לתוקפו",
-      "source_url": "https://www.law.co.il/news/2025/08/14/ppa-is-updating-its-guidelines-following-amendment-13/",
-      "raw_snippet": "הרשות להגנת הפרטיות מעדכנת את הנחיותיה לאחר כניסת תיקון 13 לתוקף - חדשות - law.co.il",
-      "effective_date": "2025-08-14",
-      "source_fetched_at": "2026-07-26T00:00:00Z",
-      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
-      "verified_at": "2026-08-18",
-      "fetched_at": "2026-08-18"
-    },
-    {
-      "claim": "The Ministry of the Interior (Misrad HaPnim) publishes the official Teudat Zehut issuance/structure topic page at gov.il. Official Ministry of Interior topic page for Teudat Zehut (identity card) issuance, structure, and renewal. gov.il blocks non-browser user agents (HTTP 403 to bots) but the page is live in a browser. The former topic page https://www.gov.il/he/departments/topics/identity_card now returns 404, so the live service page is cited.",
-      "source_url": "https://www.gov.il/he/service/biometric_smart_id_request",
-      "raw_snippet": "שירות זה מיועד למי שרוצה להגיש בקשה לתעודת זהות ישראלית.",
-      "effective_date": "2026-06-16",
-      "verified_via": "gov.il service page rendered in a browser; the old topic URL redirects to /he/error",
-      "verified_at": "2026-08-19",
-      "fetched_at": "2026-08-19"
-    },
-    {
-      "claim": "The Israeli Corporations Authority (Rashut HaTaagidim) registrar lookup for company, amuta, partnership, and cooperative-society numbers is hosted at ica.justice.gov.il.",
-      "source_url": "https://ica.justice.gov.il/",
-      "raw_snippet": "מידע ושרותים מקוונים - תאגידים ברשת (תאגידים ONLINE)",
-      "effective_date": "2026-06-16",
-      "source_fetched_at": "2026-07-26T00:00:00Z",
-      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
-      "verified_at": "2026-08-18",
-      "fetched_at": "2026-08-18"
-    },
-    {
-      "claim": "Kol-Zchut maintains a citizen-rights hub for identity cards, passports, and travel documents. תעודות זהות, דרכונים ותעודות מעבר",
-      "source_url": "https://www.kolzchut.org.il/he/תעודות_זהות,_דרכונים_ותעודות_מעבר",
-      "raw_snippet": "החל מ-2017 מדינת ישראל מנפיקה דרכונים ותעודות ביומטריים בלבד.",
-      "effective_date": "2026-06-16",
-      "source_fetched_at": "2026-07-26T00:00:00Z",
-      "verified_via": "Kol Zchut page read through the site's MediaWiki API from inside a loaded page, which passes the WAF a plain fetch does not",
-      "verified_at": "2026-08-18",
-      "fetched_at": "2026-08-18"
-    },
-    {
-      "id": "amendment13-first-sanction-2026",
-      "claim": "In July 2026 the Israeli Privacy Protection Authority imposed its first monetary sanction under Amendment 13, 256,000 NIS after statutory reductions, on a health fund for failing to notify a severe security incident immediately. The immediate-notification duty arises when the incident becomes known.",
-      "claim_type": "enforcement",
-      "source_url": "https://www.law.co.il/news/2026/07/21/meuhedet-data-breach-notification-monetary-sanction/",
-      "source_fetched_at": "2026-07-26T00:00:00Z",
-      "raw_snippet": "הרשות להגנת הפרטיות הטילה עיצום כספי בסך של 256,000 ש\"ח (לאחר הפחתות בהתאם להוראות החוק) על קופה\"ח מאוחדת",
-      "confidence": "high",
-      "verified_via": "browser",
-      "verified_at": "2026-07-26T00:00:00Z",
-      "verification_note": "Read the rendered article text directly; the figure and the parenthetical are split across HTML tags, so the raw-HTML substring matcher cannot see the contiguous phrase."
-    },
-    {
-      "id": "amendment13-dpo-opinion-2026",
-      "claim": "On 14 July 2026 the Privacy Protection Authority published the final version of its opinion on the duty to appoint a privacy protection officer.",
-      "claim_type": "guidance",
-      "source_url": "https://www.law.co.il/news/2026/07/20/ppa-dpo-appointment-opinion/",
-      "source_fetched_at": "2026-07-26T00:00:00Z",
-      "raw_snippet": "על גופים ציבוריים ועל מחזיקים במאגריהם, על גופים העוסקים בסחר במידע שבמאגרם מידע אישי על יותר מ-10,000 בני אדם, על גופים שעיסוקם כרוך בניטור שוטף ושיטתי של בני אדם, ועל בעלי שליטה ומחזיקים שעיסוקם העיקרי כולל עיבוד בהיקף ניכר של מידע בעל רגישות מיוחדת",
-      "confidence": "high"
-    },
-    {
-      "claim_id": "separator-only-stripping",
-      "claim": "DESIGN RULE, verified by executing the bundled script rather than quoted from an external source. Stripping every non-digit character before validating an Israeli ID produces false positives: the input 62819482.1 becomes the valid ID 628194821, and an empty string, a word, or a row of punctuation all become 000000000. scripts/validate_id.py therefore discards only a named separator set (space, hyphen, en dash, em dash, tab, non-breaking space), rejects anything else as malformed, rejects input longer than 9 digits, and distinguishes the three outcomes by exit code: 0 valid, 1 a well-formed ID failing its check digit, 2 malformed input.",
-      "source_url": "https://www.gov.il/he/departments/population_and_immigration_authority",
-      "raw_snippet": "DERIVED FROM EXECUTION, not from a published page. Reproduce with: python3 scripts/validate_id.py validate 62819482.1 (expect exit 2 MALFORMED), validate 628194821 (expect exit 0 VALID), validate 12345678 (expect exit 1 INVALID), validate 0000000018 (expect exit 2, too long), validate \"\" (expect exit 2, empty input).",
-      "verified_via": "executed the bundled script against a battery of edge cases and cross-checked the check-digit arithmetic against an independently written implementation on 24 random 9-digit inputs, 0 mismatches",
-      "verified_at": "2026-08-27T00:00:00Z",
-      "fetched_at": "2026-08-27T00:00:00Z",
+      "raw_snippet": "Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit calculated using the Luhn algorithm",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
+        "references/id-formats.md",
+        "scripts/validate_id.py",
+        "references/javascript.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "tz-no-status-encoding",
+      "claim": "The structural description of the Mispar Zehut specifies only nine digits ending in a Luhn check digit; it documents no field encoding birth date, age, residency status, or a status-by-range split. The skill therefore treats range-by-status typing as unsupported.",
+      "source_url": "https://en.wikipedia.org/wiki/Israeli_identity_card",
+      "raw_snippet": "Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/id-formats.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "corp-check-digit-same",
+      "claim": "Corporate and registered-entity numbers carry a rightmost check digit computed by the same rules as the personal ID check digit.",
+      "source_url": "https://he.wikipedia.org/wiki/תאגיד",
+      "raw_snippet": "הספרה הימנית ביותר במספר התאגיד היא ספרת ביקורת, שכללי חישובה זהים לאלה של חישוב ספרת הביקורת במספר זהות",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/id-formats.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "corp-nine-digits",
+      "claim": "A registered-entity number is a 9-digit number given on registration with the Corporations Authority.",
+      "source_url": "https://he.wikipedia.org/wiki/תאגיד",
+      "raw_snippet": "זהו מספר בן 9 ספרות, שניתן עם רישום התאגיד ברשות התאגידים",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/id-formats.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "corp-prefix-table",
+      "claim": "Usually the first two digits map to the entity type: 50 government company / provident fund / pension fund / local committee, 51 private company, 52 public company, 53 Mandate-era partnership (שותפות מנדטורית), 54 general partnership, 55 partnership, 56 foreign company, 57 cooperative society / kibbutz, 58 amuta / non-profit / public-benefit company, 59 endowment (not itself a corporation). \"Usually\" is why the skill calls prefix typing a heuristic.",
+      "source_url": "https://he.wikipedia.org/wiki/תאגיד",
+      "raw_snippet": "על פי רוב שתי הספרות הראשונות במספר רישום התאגיד קשורות לסוג התאגיד, כדלהלן: 50 = חברה ממשלתית, קופת גמל, קרן פנסיה, ועד מקומי 51 = חברה פרטית 52 = חברה ציבורית 53 = שותפות מנדטורית 54 = שותפות כללית 55 = שותפות 56 = חברה זרה 57 = אגודה שיתופית, קיבוץ 58 = עמותה, מלכ\"ר, חברה לתועלת הציבור 59 = הקדש (אינו תאגיד)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/id-formats.md",
         "scripts/validate_id.py"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "amendment13-in-force",
+      "claim": "Privacy Protection Law Amendment 13 came into force on 14 August 2025.",
+      "source_url": "https://www.law.co.il/news/2025/08/14/ppa-is-updating-its-guidelines-following-amendment-13/",
+      "raw_snippet": "היום, 14.8.2025, נכנס לתוקפו תיקון 13 לחוק הגנת הפרטיות",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "amendment13-first-sanction",
+      "claim": "In July 2026 the Privacy Protection Authority imposed its first monetary sanction since Amendment 13 took effect: 256,000 NIS after statutory reductions, on a health fund, for failing the immediate-reporting duty for severe security incidents.",
+      "source_url": "https://www.law.co.il/news/2026/07/21/meuhedet-data-breach-notification-monetary-sanction/",
+      "raw_snippet": "לראשונה מאז כניסת תיקון 13 לתוקף, הרשות להגנת הפרטיות הטילה עיצום כספי בסך של 256,000 ש\"ח (לאחר הפחתות בהתאם להוראות החוק) על קופה\"ח מאוחדת לאחר שזו כשלה לעמוד בחובת הדיווח המיידית על אירועי אבטחה חמורים",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "sanction-info-security-regs",
+      "claim": "The reporting duty breached is the duty to report to the Authority immediately under the Information Security Regulations.",
+      "source_url": "https://www.law.co.il/news/2026/07/21/meuhedet-data-breach-notification-monetary-sanction/",
+      "raw_snippet": "לא דיווחה לרשות באופן מיידי כנדרש בתקנות אבטחת המידע",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "sanction-duty-on-awareness",
+      "claim": "The immediate-reporting duty arises when the severe incident becomes known, and the required report is a preliminary one based on what is known at the time of reporting.",
+      "source_url": "https://www.law.co.il/news/2026/07/21/meuhedet-data-breach-notification-monetary-sanction/",
+      "raw_snippet": "חובת הדיווח המיידי קמה עם היוודע על התרחשות אירוע האבטחה החמור, ויש לקיימה בסמוך למועד הגילוי וללא דיחוי. עוד היא מדגישה כי עמדה לפיה יש להמתין להשלמת כלל הבדיקות מרוקנת מתוכן את דרישת \"המיידיות\", וכי הדיווח הנדרש הוא דיווח ראשוני המבוסס על המידע הידוע במועד הדיווח",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "piba-id-service-page",
+      "claim": "The Population and Immigration Authority service page for requesting an identity card is live at /he/service/biometric_smart_id_request. The former topic page /he/departments/topics/identity_card redirects to /he/error with HTTP 404 (both checked in a browser on 2026-10-19; gov.il returns 403 to curl).",
+      "source_url": "https://www.gov.il/he/service/biometric_smart_id_request",
+      "raw_snippet": "שירות זה מיועד למי שרוצה להגיש בקשה לתעודת זהות ישראלית.",
+      "verified_via": "browser",
+      "verified_at": "2026-10-19",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "ica-registry",
+      "claim": "The Israeli Corporations Authority online registry for companies, amutot and partnerships is at ica.justice.gov.il.",
+      "source_url": "https://ica.justice.gov.il/",
+      "raw_snippet": "תאגידים ברשת (תאגידים ONLINE)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/id-formats.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "kolzchut-id-hub",
+      "claim": "Kol Zchut maintains a hub page on identity cards, passports and travel documents, including how to obtain them.",
+      "source_url": "https://www.kolzchut.org.il/he/תעודות_זהות,_דרכונים_ותעודות_מעבר",
+      "raw_snippet": "איך מוציאים תעודת זהות, דרכון או תעודת מעבר?",
+      "verified_via": "browser",
+      "verified_at": "2026-10-19",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "separator-only-stripping",
+      "claim": "DESIGN RULE derived from executing the bundled script, not from a published page. Stripping every non-digit before validating produces false positives (62819482.1 becomes valid 628194821; empty, letters and punctuation become 000000000). The script discards only a named interior separator set (space, hyphens U+2010/U+2011, en and em dash, narrow and ordinary no-break space, and the soft hyphen, zero-width characters U+200B-U+200D, word joiner U+2060 and BOM, which the bidi algorithm ignores), trims whitespace, tabs, CR/LF, BOM and LRM/RLM/ALM at the ends only, rejects interior tabs and line breaks, interior bidi marks, bidi overrides and isolates, any other character and input over 9 digits as malformed, and exits 0 valid, 1 failing check digit, 2 malformed. Reproduce with: python3 scripts/validate_id.py validate 62819482.1 (exit 2); the golden-vector table in references/id-formats.md lists every case. Note the snippet is the line in THIS version of the script; it reaches the GitHub URL when 1.4.0 is pushed.",
+      "source_url": "https://github.com/skills-il/developer-tools/blob/master/israeli-id-validator/scripts/validate_id.py",
+      "raw_snippet": "SEPARATORS = \" -\\u2010\\u2011\\u2013\\u2014\\u202f\\u00a0\\u00ad\\u200b\\u200c\\u200d\\u2060\\ufeff\"",
+      "verified_via": "execution of scripts/validate_id.py, both inline Python blocks and the JavaScript port against the golden vectors and random inputs",
+      "verified_at": "2026-10-19",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/validate_id.py",
+        "references/id-formats.md",
+        "references/javascript.md"
+      ],
+      "fetched_at": "2026-10-19T19:10:00+03:00"
+    },
+    {
+      "claim_id": "amendment13-comprehensive",
+      "claim": "Amendment 13 makes a series of comprehensive changes to the Privacy Protection Law (this, and the in-force date, is all the skill asserts about the amendment itself; the reporting duty is attributed to the Information Security Regulations).",
+      "source_url": "https://www.law.co.il/news/2025/08/14/ppa-is-updating-its-guidelines-following-amendment-13/",
+      "raw_snippet": "התיקון כידוע כולל שורה של שינויים מקיפים בחוק הפרטיות הישראלי המיושן",
+      "fetched_at": "2026-10-19T19:40:00+03:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "osek-number-usually-tz",
+      "claim": "A sole trader's business (osek) number is usually the owner's Teudat Zehut number, so a business-number field must accept TZ-shaped numbers as well as 5x registered-entity numbers.",
+      "source_url": "https://www.greeninvoice.co.il/magazine/exempt-dealer-approval/",
+      "raw_snippet": "מספר העוסק (לרוב מדובר במספר תעודת הזהות של בעל העסק)",
+      "fetched_at": "2026-10-19T19:40:00+03:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "coop-registrar",
+      "claim": "Cooperative societies are supervised by the Registrar of Cooperative Societies (the source names the Ministry of Industry, Trade and Labor), not by the Corporations Authority registrars that cover companies, partnerships and amutot.",
+      "source_url": "https://he.wikipedia.org/wiki/תאגיד",
+      "raw_snippet": "הפיקוח על אגודות שיתופיות נתון לרשם האגודות השיתופיות, במשרד התעשייה המסחר והתעסוקה",
+      "fetched_at": "2026-10-19T20:30:00+03:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/id-formats.md"
+      ]
+    },
+    {
+      "claim_id": "ica-covers-companies-amutot-partnerships",
+      "claim": "The Corporations Authority online service handles companies, amutot and public-benefit companies, and partnerships.",
+      "source_url": "https://ica.justice.gov.il/",
+      "raw_snippet": "לפנייה בנושא: חברות לפנייה בנושא: עמותות וחל\"צ לפנייה בנושא: שותפויות",
+      "fetched_at": "2026-10-19T20:30:00+03:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "reversal-passes-check-digit",
+      "claim": "DESIGN FACT derived by execution and arithmetic, not from a published page: the weights 1,2,1,2,1,2,1,2,1 are a palindrome, so any valid 9-digit ID read backwards also validates (123456782 reversed is 287654321, which passes; 5,000 of 5,000 generated IDs pass when reversed). The check digit therefore cannot detect RTL reversal.",
+      "source_url": "https://github.com/skills-il/developer-tools/blob/master/israeli-id-validator/references/id-formats.md",
+      "raw_snippet": "| `287654321` | valid | 0 |",
+      "verified_via": "execution: python3 scripts/validate_id.py validate 287654321 exits 0; reversal of 5,000 generated IDs all validate",
+      "verified_at": "2026-10-19",
+      "fetched_at": "2026-10-19T21:00:00+03:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/id-formats.md"
       ]
     }
   ]

@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.4.0 - 2026-10-19
+
+The 1.3.0 fix reached the CLI but not the library underneath it.
+
+- **`validate_israeli_id("62819482.1")` still returned `True`.** 1.3.0 fixed the command line, but the importable function went through `normalize_id()`, whose fallback for malformed input was the very `re.sub(r'[^0-9]', '', ...)` the release removed everywhere else. `identify 62819482.1` printed `Valid: True` next to `Error: contains characters that are not digits`. `normalize_id()` now returns `None` for malformed input, so no caller can validate garbage through it.
+- **The inline `generate_test_id` in SKILL.md was the old version.** The script already rejected over-long prefixes and re-rolled the all-zeros draw; the code block readers copy did neither, so `generate_test_id("1234567890")` produced an 11-digit "ID". The block now matches the script.
+- **`validate --mask`** prints only the last 4 digits, for shell history and CI logs. `--verbose` prints every digit and refuses to combine with it.
+- **The prefix caveat now prints on `validate`, not only on `identify`**, so a personal ID that happens to start with 5 is not silently shown as a company.
+- **New `references/javascript.md`**: a JavaScript port cross-checked against the script (0 mismatches on the golden vectors and 300 random inputs), with the ways JavaScript ports usually break. Example 2 used to promise JavaScript with nothing behind it.
+- **Golden test vectors** added to `references/id-formats.md`, each with its expected exit code.
+- **New gotcha: a generated test ID can be a real person's ID.**
+- **Amendment 13 gotcha corrected.** It claimed the affected individuals must also be notified of a severe incident; the cited source does not say that, and it was removed. The sanction is now attributed to the immediate-reporting duty in the Information Security Regulations, as the source states, and the DPO opinion is dated July 2026 rather than an unsourced 14 July.
+- **Dead link replaced.** The gov.il topic page `/he/departments/topics/identity_card` returns 404; the reference now points at the identity-card service page.
+- **`generate --prefix 00000000` hung forever** (the re-roll could never escape the only completion, `000000000`); it now fails fast with exit 2, in the script and in both inline code blocks.
+- **Prefix 53 was mistranslated.** שותפות מנדטורית is a Mandate-era partnership, from the British Mandate period, not a "mandatory" partnership (the Hebrew file even said שותפות חובה). Prefix 59 is now marked as not itself a corporation, as the source states.
+- **Three unsourced assertions removed or hedged:** that personal IDs are "assigned sequentially" (the cited source documents no allocation order, only the absence of encoded fields), that the IDF mispar ishi "does not share the civilian Luhn algorithm" (the skill documents nothing about it either way), and that a sole trader's business number always IS their Teudat Zehut, which is now "usually", per the cited source, with the "most common defect" superlative dropped.
+- **`validate --verbose` exited 0 for an ID that fails its check digit**, so `validate -v "$ID" && accept` accepted every mistyped ID. It now follows the same 0/1/2 contract as the plain path.
+- **Pasted numbers are trimmed, not rejected.** Whitespace and tabs, a trailing CR LF, the BOM and LRM/RLM/ALM marks at the ENDS of a number, and zero-width characters, the soft hyphen, the word joiner, or the narrow no-break space and non-breaking hyphen inside it, used to make a real ID "malformed" with an error naming a character the user cannot see. A line break, tab or bidi mark INSIDE the number is rejected (a line break or a tab, which is a TSV cell boundary, would join two fragments, or make the screen show other digits than the ones stored), and bidi overrides and isolates are never discarded: `\u202e287654321` displays as 123456782. Mirrored in the inline code and the JavaScript port. The inline code and the library now refuse a non-string, since an int has already lost its leading zeros.
+- **A reversed ID passes the check digit, and the skill said the opposite.** The weights read the same in both directions, so a 9-digit number reversed by a right-to-left copy-paste always validates; Troubleshooting listed reversal as a cause of FAILURE. New gotcha and golden rows.
+- **Prefix typing toned down to what the source says** ("usually", not "overwhelmingly" / "almost always"), with an explicit rule never to reject a number, or route it to a field, because of its prefix.
+- **Cooperative societies (57) are not in the Corporations Authority search**; they are supervised by the Registrar of Cooperative Societies. The reference link used to promise otherwise.
+- **The privacy-compliance news is now a pointer to `israeli-privacy-shield`.** The privacy-officer conditions are gone from this developer skill; the code-level rules (mask, keyed hash, no unmasked logs) stay.
+- Removed a stale `version: 1.2.0` from the SKILL.md frontmatter (the version lives in `metadata.json`) and a duplicated leading-digit gotcha.
+- `evidence.json` rebuilt. Its snippets had been page navigation text with the real quotation pasted into the claim, and ten of eleven entries carried a `verified_via` that exempted them from the source check. Every text-checkable snippet is now a real quotation that `--check-sources` finds on the page.
+
 ## 1.3.0 - 2026-08-27
 
 The check-digit algorithm was correct. The input handling around it was not, which is the failure mode an "evergreen" skill hides best: the prose was right while the code silently accepted garbage.

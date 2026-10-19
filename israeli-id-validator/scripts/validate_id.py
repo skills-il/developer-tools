@@ -3,13 +3,14 @@
 
 Validates and generates Israeli identification numbers including:
 - Teudat Zehut (personal ID) - 9 digits, Luhn check digit
-- Corporate / registered-entity numbers - 9 digits starting with 5, where the
-  second digit selects the type (50-59: government/private/public company,
-  mandatory/general partnership, partnership, foreign company, cooperative
+- Corporate / registered-entity numbers - 9 digits that usually begin with 5,
+  where the first two digits usually relate to the type (50-59: government/private/public company,
+  Mandate-era/general partnership, partnership, foreign company, cooperative
   society, amuta, endowment). All types share the same check-digit algorithm.
 
 Usage:
     python validate_id.py validate 123456782
+    python validate_id.py validate 123456782 --mask     # prints xxxxx6782
     python validate_id.py generate --count 10 --prefix 51
     python validate_id.py identify 515308203
 """
@@ -24,7 +25,18 @@ import sys
 # Anything else is garbage and must be reported, not silently deleted: stripping
 # every non-digit turns "62819482.1" into a VALID teudat zehut, which is worse than
 # rejecting it, because the caller never learns the input was malformed.
-SEPARATORS = " -\u2013\u2014\t\u00a0"
+# Soft hyphen, zero-width space/joiners, word joiner and the BOM are ignored by the bidi algorithm, so they
+# cannot change the order in which digits are displayed and are safe to drop too.
+SEPARATORS = " -\u2010\u2011\u2013\u2014\u202f\u00a0\u00ad\u200b\u200c\u200d\u2060\ufeff"
+
+# Characters trimmed from the ENDS only: whitespace (including tab), a CSV line
+# break, the BOM, and
+# the LRM/RLM/ALM marks a Hebrew page or WhatsApp puts around a pasted number.
+# Inside the number they stay errors: an interior line break joins two fragments
+# into one "ID" (so does a tab, which is a TSV cell boundary), and an interior bidi mark can make the screen show a different
+# digit order than the one stored. Bidi overrides and isolates (U+202A-E,
+# U+2066-9) are never discarded: "\u202e287654321" displays as 123456782.
+EDGE = " \t\u00a0\r\n\u200b\ufeff\u200e\u200f\u061c"
 
 
 def parse_id(id_number) -> tuple:
@@ -36,7 +48,11 @@ def parse_id(id_number) -> tuple:
     """
     if id_number is None:
         return None, "empty input: no ID supplied"
-    raw = str(id_number)
+    if not isinstance(id_number, str):
+        # An int has already lost its leading zeros, so 12345674 would silently
+        # become 012345674. Make the caller keep IDs as text end to end.
+        return None, f"not a string ({type(id_number).__name__}): pass the ID as text"
+    raw = id_number.strip(EDGE)
     if raw.strip() == "":
         return None, "empty input: no ID supplied"
 
@@ -53,19 +69,24 @@ def parse_id(id_number) -> tuple:
     return stripped.zfill(9), None
 
 
-def normalize_id(id_number: str) -> str:
-    """Strip separators and left-pad to 9 digits.
+def normalize_id(id_number: str):
+    """Strip separators and left-pad to 9 digits, or return None if malformed.
 
-    Uses an explicit ASCII class rather than str.isdigit(), which is True for
-    Arabic-Indic digits and superscripts. Those either crash int() or silently
-    validate as a different value than the one stored downstream.
+    Kept for backward compatibility. Prefer parse_id(), which also tells you WHY
+    an input was rejected.
 
-    Kept for backward compatibility. Prefer parse_id(), which tells you WHY an
-    input was rejected instead of silently returning "000000000" for an empty
-    string, for "abc", and for a row of punctuation.
+    It used to fall back to re.sub(r'[^0-9]', '', ...) for malformed input, which
+    meant validate_israeli_id("62819482.1") still returned True through this
+    helper even after the CLI had been fixed. Malformed input now yields None,
+    never a digit string, so no caller can validate garbage by accident.
     """
     digits, _ = parse_id(id_number)
-    return digits if digits is not None else re.sub(r'[^0-9]', '', str(id_number or "")).zfill(9)
+    return digits
+
+
+def mask_id(id_str: str) -> str:
+    """Mask all but the last 4 characters, e.g. '123456782' -> 'xxxxx6782'."""
+    return "x" * max(len(id_str) - 4, 0) + id_str[-4:]
 
 
 def validate_israeli_id(id_number: str) -> bool:
@@ -86,11 +107,11 @@ def validate_israeli_id(id_number: str) -> bool:
     """
     id_str = normalize_id(id_number)
 
-    if not re.fullmatch(r'[0-9]{9}', id_str):
-        return False
+    if id_str is None or not re.fullmatch(r'[0-9]{9}', id_str):
+        return False        # malformed input, NOT an invalid ID
 
     # 000000000 passes the Luhn check (digit sum 0) but is never a real ID. It
-    # is the most common sentinel/empty-field false positive (an empty string
+    # is a common sentinel/empty-field false positive (an empty string
     # zero-pads straight into it), so reject it explicitly.
     if id_str == '000000000':
         return False
@@ -105,29 +126,34 @@ def validate_israeli_id(id_number: str) -> bool:
     return total % 10 == 0
 
 
-# Corporate / registered-entity codes: 9-digit numbers in the 5XX-million block.
-# The first two digits encode the entity type; the check digit is identical to a
-# personal Teudat Zehut.
+# Corporate / registered-entity codes. The first two digits USUALLY relate to the
+# entity type (the source says "usually"), so this is a likely label, never a rule;
+# the check digit is identical to a personal Teudat Zehut.
 CORPORATE_PREFIXES = {
     "50": "Government company / pension or provident fund / local committee",
     "51": "Company (Chevra Ba'am / Ltd)",
     "52": "Public company",
-    "53": "Mandatory partnership",
+    "53": "Mandate-era partnership (Shutafut Mandatorit)",
     "54": "General partnership",
     "55": "Partnership (Shutafut)",
     "56": "Foreign company",
     "57": "Cooperative Society (Aguda Shitufit) / kibbutz",
     "58": "Amuta (Non-profit / Registered Association)",
-    "59": "Endowment (Hekdesh)",
+    "59": "Endowment (Hekdesh), not itself a corporation",
 }
+
+
+PREFIX_CAVEAT = ("Note:  Prefix typing is heuristic. A 9-digit number starting with 5 is "
+                 "usually a registered entity, but a personal ID cannot be ruled out by "
+                 "prefix alone; only the issuing registry is authoritative.")
 
 
 def identify_id_type(id_number: str) -> str:
     """Identify the type of Israeli ID based on prefix.
 
-    Prefix typing is a best-effort heuristic: corporate and registered-entity
-    numbers are allocated from the 5XX-million block (first two digits 50-59),
-    so a 9-digit number starting with 5 is overwhelmingly a registered entity.
+    Prefix typing is a best-effort heuristic: the first two digits of a
+    registered-entity number usually relate to its type (codes 50-59), so a
+    9-digit number starting with 5 is usually a registered entity.
     A personal Teudat Zehut cannot be reliably typed from its prefix; only the
     issuing registry is authoritative.
 
@@ -154,6 +180,10 @@ def generate_test_id(prefix: str = "") -> str:
     """
     if not re.fullmatch(r'[0-9]{0,8}', prefix):
         raise ValueError("prefix must be 0-8 ASCII digits")
+    if prefix == '00000000':
+        # The only completion is 000000000, which validation rejects; without
+        # this guard the re-roll loop below never terminates.
+        raise ValueError("an all-zeros prefix can only yield 000000000")
 
     while True:
         base = prefix + ''.join(
@@ -183,6 +213,8 @@ def format_id(id_number: str) -> str:
         Formatted ID string (e.g., '51-530820-3' for company numbers)
     """
     id_str = normalize_id(id_number)
+    if id_str is None:
+        return str(id_number)   # malformed: never invent a formatted ID
     id_type = identify_id_type(id_str)
 
     if id_type.startswith("Teudat Zehut"):
@@ -267,6 +299,8 @@ def main():
     validate_parser.add_argument("id_number", help="ID number to validate")
     validate_parser.add_argument("-v", "--verbose", action="store_true",
                                  help="Show step-by-step calculation")
+    validate_parser.add_argument("--mask", action="store_true",
+                                 help="Print only the last 4 digits (for logs and CI output)")
 
     # Generate command
     generate_parser = subparsers.add_parser("generate", help="Generate test IDs")
@@ -278,10 +312,14 @@ def main():
     # Identify command
     identify_parser = subparsers.add_parser("identify", help="Identify ID type")
     identify_parser.add_argument("id_number", help="ID number to identify")
+    identify_parser.add_argument("--mask", action="store_true",
+                                 help="Accepted for symmetry; identify never prints the ID")
 
     args = parser.parse_args()
 
     if args.command == "validate":
+        if args.verbose and args.mask:
+            parser.error("--verbose prints every digit, so it cannot be combined with --mask")
         if args.verbose:
             result = validate_with_details(args.id_number)
             print(f"Input:      {result['input']}")
@@ -297,6 +335,8 @@ def main():
             print("\nCalculation:")
             for detail in result["details"]:
                 print(f"  {detail}")
+            # Same exit-code contract as the plain path: 0 valid, 1 check digit.
+            sys.exit(0 if result["valid"] else 1)
         else:
             result = validate_with_details(args.id_number)
             if result.get("error"):
@@ -306,14 +346,21 @@ def main():
                 print(f"MALFORMED - {result['error']}")
                 sys.exit(2)
             status = "VALID" if result["valid"] else "INVALID"
-            print(f"{status} - {result['type']}: {result['formatted']}")
+            shown = mask_id(result["normalized"]) if args.mask else result["formatted"]
+            print(f"{status} - {result['type']}: {shown}")
             if not result["valid"] and result["details"]:
                 reason = result["details"][0]
                 if not reason.startswith("Digit "):
                     print(f"  reason: {reason}")
+            if result["normalized"][:2] in CORPORATE_PREFIXES:
+                print(PREFIX_CAVEAT)
             sys.exit(0 if result["valid"] else 1)
 
     elif args.command == "generate":
+        try:
+            generate_test_id(args.prefix)
+        except ValueError as e:
+            parser.error(f"--prefix: {e}")
         print(f"Generating {args.count} test ID(s)"
               + (f" with prefix '{args.prefix}'" if args.prefix else "") + ":")
         print("WARNING: These are for TESTING ONLY. Do not use as real IDs.\n")
@@ -333,9 +380,7 @@ def main():
             sys.exit(2)
         norm = digits
         if norm[:2] in CORPORATE_PREFIXES:
-            print("Note:  Prefix typing is heuristic. A 9-digit number starting with 5 is "
-                  "usually a registered entity, but a personal ID cannot be ruled out by "
-                  "prefix alone; only the issuing registry is authoritative.")
+            print(PREFIX_CAVEAT)
 
     else:
         parser.print_help()
