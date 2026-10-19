@@ -2,24 +2,45 @@
 
 For multi-step interactions (forms, wizards), each framework has its own approach. Pick by the framework you're already in.
 
-## grammY - Conversations plugin
+## grammY - Conversations plugin (2.x)
+
+Written against `@grammyjs/conversations` 2.1.1 and grammy 1.46.0, and type-checked with `tsc --strict`. Three things v1-era samples get wrong: the context flavor, side effects outside `conversation.external()`, and the assumption that `session()` is required.
 
 ```typescript
-import { conversations, createConversation } from "@grammyjs/conversations";
+import { Bot, type Context } from "grammy";
+import {
+  type Conversation,
+  type ConversationFlavor,
+  conversations,
+  createConversation,
+} from "@grammyjs/conversations";
 
-bot.use(session({ initial: () => ({}) }));
+// Without the flavor, bot.use(conversations()) does not compile.
+type MyContext = ConversationFlavor<Context>;
+type MyConversation = Conversation<MyContext, Context>;
+
+const bot = new Bot<MyContext>(process.env.BOT_TOKEN!);
+
+// 2.x keeps conversation state itself, in memory by default (lost on restart, and
+// on Vercel/Workers lost between invocations). On serverless, from day one:
+//   import { RedisAdapter } from "@grammyjs/storage-redis";
+//   bot.use(conversations({ storage: new RedisAdapter({ instance: redis }) }));
 bot.use(conversations());
 
-async function registration(conversation, ctx) {
+async function registration(conversation: MyConversation, ctx: Context) {
   await ctx.reply("מה השם שלך?");
-  const nameCtx = await conversation.wait();
-  const name = nameCtx.message?.text;
+  const name = (await conversation.waitFor("message:text")).message.text;
 
   await ctx.reply("מה האימייל שלך?");
-  const emailCtx = await conversation.wait();
-  const email = emailCtx.message?.text;
+  const email = (await conversation.waitFor("message:text")).message.text;
 
-  await ctx.reply(`תודה ${name}! נרשמת עם ${email}`);
+  // The function is replayed on every update. Anything with a side effect
+  // (DB write, HTTP call, Date.now(), Math.random()) must run inside external(),
+  // or it runs again on each replay.
+  await conversation.external(() => saveUser({ name, email }));
+
+  // \u2068...\u2069 isolates the LTR email so the Hebrew punctuation stays in place
+  await ctx.reply(`תודה ${name}! נרשמת עם \u2068${email}\u2069`);
 }
 
 bot.use(createConversation(registration));
@@ -27,6 +48,8 @@ bot.command("register", async (ctx) => {
   await ctx.conversation.enter("registration");
 });
 ```
+
+`waitFor("message:text")` narrows the type, so `.message.text` needs no optional chaining, and a sticker or photo sent mid-flow is skipped instead of producing `undefined`.
 
 ## Telegraf - Scenes / WizardScene
 

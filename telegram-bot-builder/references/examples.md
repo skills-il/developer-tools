@@ -77,7 +77,20 @@ import { Bot, webhookCallback, GrammyError } from "grammy";
 
 const bot = new Bot(process.env.BOT_TOKEN!);
 
-bot.command("start", async (ctx) => {
+// bot.catch() only runs under long polling ("Calling bot.catch when using other
+// means of running your bot (or webhooks) has no effect"). On a webhook an uncaught
+// error reaches webhookCallback, Telegram gets a non-2XX and retries. Register the
+// handlers inside an errorBoundary instead.
+const safe = bot.errorBoundary(async (err) => {
+  console.error("Bot error:", err.error);
+  if (err.error instanceof GrammyError) {
+    console.error("Telegram API error:", err.error.description);
+  }
+  // Tell the user in Hebrew; ignore a failure here so the boundary itself never throws
+  await err.ctx.reply("אירעה תקלה זמנית. נסו שוב בעוד רגע.").catch(() => {});
+});
+
+safe.command("start", async (ctx) => {
   await ctx.reply(
     "שלום! אני בוט שירות לקוחות.\n\n" +
     "שלחו לי הודעה ואחזור אליכם בהקדם.\n" +
@@ -86,7 +99,7 @@ bot.command("start", async (ctx) => {
   );
 });
 
-bot.command("menu", async (ctx) => {
+safe.command("menu", async (ctx) => {
   await ctx.reply(
     "<b>תפריט ראשי</b>\n\n" +
     "/status - בדיקת סטטוס הזמנה\n" +
@@ -96,7 +109,7 @@ bot.command("menu", async (ctx) => {
   );
 });
 
-bot.command("hours", async (ctx) => {
+safe.command("hours", async (ctx) => {
   await ctx.reply(
     "<b>שעות פעילות</b>\n\n" +
     "ראשון-חמישי: 09:00-18:00\n" +
@@ -106,7 +119,7 @@ bot.command("hours", async (ctx) => {
   );
 });
 
-bot.on("message:text", async (ctx) => {
+safe.on("message:text", async (ctx) => {
   // Forward user messages to admin group
   const adminChatId = process.env.ADMIN_CHAT_ID;
   if (adminChatId) {
@@ -118,14 +131,9 @@ bot.on("message:text", async (ctx) => {
   await ctx.reply("ההודעה התקבלה! נחזור אליכם בהקדם.");
 });
 
-bot.catch((err) => {
-  console.error("Bot error:", err.error);
-  if (err.error instanceof GrammyError) {
-    console.error("Telegram API error:", err.error.description);
-  }
+export default webhookCallback(bot, "std/http", {
+  secretToken: process.env.WEBHOOK_SECRET_TOKEN, // without it grammY accepts any POST
 });
-
-export default webhookCallback(bot, "std/http");
 ```
 
 ### Example 3: python-telegram-bot with Conversation Flow and Hebrew
@@ -269,6 +277,17 @@ async def precheckout(update: Update, context) -> None:
 
 async def successful_payment(update: Update, context) -> None:
     payment = update.message.successful_payment
+    # Persist BEFORE delivering: the charge id is what refundStarPayment and
+    # editUserStarSubscription need. save_payment is your own DB call
+    # (INSERT ... ON CONFLICT DO NOTHING) returning True only for a new row,
+    # so a redelivered update delivers nothing twice.
+    is_new = await save_payment(
+        user_id=update.effective_user.id,
+        charge_id=payment.telegram_payment_charge_id,
+        payload=payment.invoice_payload,
+    )
+    if not is_new:
+        return
     await update.message.reply_text("תודה על הרכישה! המנוי הופעל")
 
 application.add_handler(CommandHandler("buy", buy))
@@ -280,7 +299,7 @@ application.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, successful_pa
 - `pre_checkout_query` MUST be answered within 10 seconds or the payment fails.
 - Telegram Stars (XTR) amounts are in whole stars (no decimals).
 - For physical goods or non-digital services, you need a third-party payment provider (Stripe, etc.) configured via BotFather under `/mybots > Payments`.
-- Refunds are done via `refundStarPayment` API method, not manually.
+- Refunds are done via `refundStarPayment(user_id, telegram_payment_charge_id)`, which is why the handler stores the charge id.
 
 
 ### Example 5: Israeli phone-number verification via request_contact (grammY)
@@ -337,8 +356,16 @@ bot.command("buy", async (ctx) => {
 // Handle successful payment
 bot.on("message:successful_payment", async (ctx) => {
   const payment = ctx.message.successful_payment;
-  console.log(`Payment received: ${payment.total_amount} ${payment.currency}`);
-  console.log(`Payload: ${payment.invoice_payload}`);
+  // Persist before delivering, unique on telegram_payment_charge_id (refunds need it).
+  // savePayment is your own DB call (INSERT ... ON CONFLICT DO NOTHING) and returns
+  // true only when the row is new, so a redelivered update delivers nothing twice.
+  const isNew = await savePayment({
+    userId: ctx.from.id,
+    chargeId: payment.telegram_payment_charge_id,
+    payload: payment.invoice_payload,
+    expiresAt: payment.subscription_expiration_date, // subscriptions only
+  });
+  if (!isNew) return;
 
   await ctx.reply("תודה על הרכישה! המנוי הופעל");
 });
@@ -454,5 +481,76 @@ bot.on("business_message", async (ctx) => {
   await ctx.api.sendMessage(ctx.businessMessage.chat.id, "אני אחזור אליך תוך מספר דקות", {
     business_connection_id: ctx.businessMessage.business_connection_id,
   });
+});
+```
+
+## Bilingual command menus (setMyCommands)
+
+Set the English list without `language_code` first: it is the fallback for every user "for whose language there are no dedicated commands". Then layer the Hebrew list and any scoped menus on top. The resolution order is documented under "Determining list of commands", and "the first list of commands which is set is returned". Each tier is tried first with the user's `language_code`, then without. In the chat with the bot: `chat`, `all_private_chats`, `default`. In groups: `chat_member`, `chat_administrators` (admins only), `chat`, `all_chat_administrators` (admins only), `all_group_chats`, `default`. Run once at deploy time, not on every update.
+
+```typescript
+// grammY (type-checked against grammy 1.46.0)
+await bot.api.setMyCommands([
+  { command: "start", description: "Start" },
+  { command: "help", description: "Help" },
+]);
+await bot.api.setMyCommands([
+  { command: "start", description: "התחלה" },
+  { command: "help", description: "עזרה" },
+], { language_code: "he" });
+// Group admins: lists do NOT merge (the first matching list wins), so repeat the
+// base commands, once per language
+await bot.api.setMyCommands([
+  { command: "start", description: "התחלה" },
+  { command: "help", description: "עזרה" },
+  { command: "stats", description: "סטטיסטיקה" },
+], { scope: { type: "all_chat_administrators" }, language_code: "he" });
+await bot.api.setMyCommands([
+  { command: "start", description: "Start" },
+  { command: "help", description: "Help" },
+  { command: "stats", description: "Stats" },
+], { scope: { type: "all_chat_administrators" } });
+
+// Telegraf: same arguments on bot.telegram
+await bot.telegram.setMyCommands([{ command: "help", description: "עזרה" }], { language_code: "he" });
+```
+
+```python
+# python-telegram-bot 22.8: set_my_commands(commands, scope=None, language_code=None)
+from telegram import BotCommand, BotCommandScopeAllChatAdministrators
+
+await application.bot.set_my_commands([BotCommand("start", "Start"), BotCommand("help", "Help")])
+await application.bot.set_my_commands(
+    [BotCommand("start", "התחלה"), BotCommand("help", "עזרה")], language_code="he"
+)
+await application.bot.set_my_commands(
+    [BotCommand("start", "התחלה"), BotCommand("help", "עזרה"), BotCommand("stats", "סטטיסטיקה")],
+    scope=BotCommandScopeAllChatAdministrators(),
+    language_code="he",
+)
+```
+
+Command names themselves stay Latin (`a-z`, `0-9`, `_`); only the description is Hebrew. A Hebrew-word alias such as typing "עזרה" is a text handler, see "Hebrew Command Aliases" in SKILL.md.
+
+## Scheduling in Asia/Jerusalem
+
+```python
+# python-telegram-bot: needs pip install "python-telegram-bot[job-queue]"
+from zoneinfo import ZoneInfo
+from datetime import time
+
+application.job_queue.run_daily(
+    send_morning_digest,
+    time=time(9, 0, tzinfo=ZoneInfo("Asia/Jerusalem")),
+    name="morning_digest",
+)
+```
+
+```typescript
+// grammY / Telegraf with node-cron (croner takes the same timezone option)
+import cron from "node-cron";
+
+cron.schedule("0 9 * * *", sendMorningDigest, {
+  timezone: "Asia/Jerusalem",
 });
 ```

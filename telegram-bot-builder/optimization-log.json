@@ -57,6 +57,23 @@
         "Deferred, MAJOR: the BiometricManager example calls authenticate() without requestAccess(), so the callback returns false when permission was never granted, while gating a Stars payment on it.",
         "This skill ships no scripts. scripts/ contains only a .gitkeep, so any script gate on it is vacuous and every code sample is inline and unrunnable without a live BOT_TOKEN."
       ]
+    },
+    {
+      "version": "1.5.0",
+      "date": "2026-10-19",
+      "eval_skipped_reason": "Description unchanged this cycle (Bot API still 10.3), so no trigger-phrase or boundary change; Phase 5.7 skipped.",
+      "gate_rounds": 3,
+      "lessons": [
+        "No version drift for the first time in three cycles: Bot API 10.3 still latest on 2026-10-19, grammY 1.46.0, Telegraf 4.16.3, PTB 22.8, @grammyjs/conversations 2.1.1 unchanged. Still check the changelog first.",
+        "The deferred MAJORs from 1.3.0/1.4.0 (setMyCommands language_code, deep links, conversations 2.x, webhook idempotency, BiometricManager) are resolved and dropped from carry.",
+        "The expert found the webhook secret was never CHECKED in any recipe: setWebhook secret_token only makes Telegram send the header; grammY accepts every request unless secretToken is passed to webhookCallback. Read the framework source (webhook.js) for any security claim, not the Bot API page alone.",
+        "grammY bot.catch() has no effect for webhooks (bot.d.ts JSDoc). Any webhook-mode advice that leans on bot.catch is wrong; use bot.errorBoundary or a try/catch in middleware.",
+        "Two pre-existing factual errors survived three cycles of judges: allowed_updates 'omitted = default' (omitting keeps the previous setting) and BotSubscriptionUpdated 'renewed/expired' (states are canceled/active/failed). Both were paraphrases of the docs, not quotes. Prefer quoting the exact sentence for behaviour claims.",
+        "Body is pinned at the 5,000-word cap (4,990 EN after this cycle). Bot Business detail moved to references/business-mode.md, inline keyboard code and invoice code to references/examples.md. Any addition must move an equal amount out.",
+        "The Hebrew legal tripwire fires on the word 'ניסוח' (drafting) even in a technical sense; avoid it in Hebrew prose of developer skills.",
+        "Deferred, MINOR: pass botInfo to new Bot() in serverless recipes to skip the getMe round trip on each cold start (inside the 10 s pre_checkout window).",
+        "This skill still ships no scripts; every code sample was type-checked (tsc --strict, grammy 1.46.0 / telegraf 4.16.3 / conversations 2.1.1 / storage-redis 2.6.0 / ioredis) or executed (PTB 22.8 with an invalid-token negative control) in the batch workdir."
+      ]
     }
   ]
 }

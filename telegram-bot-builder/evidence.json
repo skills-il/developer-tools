@@ -1,14 +1,14 @@
 {
   "schemaVersion": "1.0",
   "skill": "telegram-bot-builder",
-  "generated_at": "2026-08-27T00:00:00Z",
+  "generated_at": "2026-10-19T00:00:00Z",
   "claims": [
     {
       "claim_id": "bot-api-v10",
       "claim": "Telegram released Bot API 10.3 on August 24, 2026. Bot API 10.2 was July 14, 2026 and Bot API 10.0 was May 8, 2026.",
       "source_url": "https://core.telegram.org/bots/api-changelog",
       "raw_snippet": "August 24, 2026\nBot API 10.3",
-      "fetched_at": "2026-08-27T00:00:00Z",
+      "fetched_at": "2026-10-19T00:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -26,7 +26,9 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "curl, asserted on content (t.me preview page contains BotNews)",
+      "verified_at": "2026-10-19"
     },
     {
       "claim_id": "grammy-docs",
@@ -268,7 +270,7 @@
     },
     {
       "claim_id": "allowed-updates-optin",
-      "claim": "An empty or omitted allowed_updates list delivers all update types except chat_member, message_reaction, and message_reaction_count.",
+      "claim": "An empty allowed_updates list delivers all update types except chat_member, message_reaction, and message_reaction_count (omitting it keeps the previous setting, see allowed-updates-omit-keeps-previous).",
       "source_url": "https://core.telegram.org/bots/api",
       "raw_snippet": "Specify an empty list to receive all update types except chat_member, message_reaction, and message_reaction_count (default).",
       "fetched_at": "2026-07-25T19:29:41.664024+00:00",
@@ -393,7 +395,8 @@
       "verified_at": "2026-07-25T19:29:41.664024+00:00",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/business-mode.md"
       ]
     },
     {
@@ -743,6 +746,434 @@
         "SKILL.md",
         "SKILL_HE.md"
       ]
+    },
+    {
+      "claim_id": "setmycommands-language-code",
+      "claim": "setMyCommands takes scope and language_code; an empty language_code applies the commands to all users in the scope whose language has no dedicated list.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "language_code String Optional A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/examples.md"
+      ]
+    },
+    {
+      "claim_id": "setmycommands-100",
+      "claim": "setMyCommands accepts at most 100 commands per list.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "At most 100 commands can be specified.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "botcommand-name-rule",
+      "claim": "A bot command name is 1-32 characters of lowercase English letters, digits and underscores; the description is 1-256 characters.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Text of the command; 1-32 characters. Can contain only lowercase English letters, digits and underscores.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "references/examples.md"
+      ]
+    },
+    {
+      "claim_id": "botcommandscope-admins",
+      "claim": "BotCommandScopeAllChatAdministrators covers all group and supergroup chat administrators (type all_chat_administrators).",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "BotCommandScopeAllChatAdministrators Represents the scope of bot commands, covering all group and supergroup chat administrators.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/examples.md"
+      ]
+    },
+    {
+      "claim_id": "deep-link-payload",
+      "claim": "Deep-link start payload allows A-Z, a-z, 0-9, _ and -, up to 64 characters; base64url is recommended for binary content. It arrives as /start <payload>.",
+      "source_url": "https://core.telegram.org/bots/features",
+      "raw_snippet": "A-Z, a-z, 0-9, _ and - are allowed. We recommend using base64url to encode parameters with binary and other types of content. The parameter can be up to 64 characters long.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "webhook-retry",
+      "claim": "On a non-2XX webhook response Telegram repeats the request and gives up after a reasonable number of attempts.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "In case of an unsuccessful request (a request with response HTTP status code different from 2XY), we will repeat the request and give up after a reasonable amount of attempts.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "update-id-dedupe",
+      "claim": "update_id lets a webhook bot ignore repeated updates.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "This identifier becomes especially handy if you're using webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "biometric-request-access",
+      "claim": "BiometricManager.requestAccess requests permission to use biometrics; its callback receives whether the user granted access.",
+      "source_url": "https://core.telegram.org/bots/webapps",
+      "raw_snippet": "A method that requests permission to use biometrics according to the params argument of type BiometricRequestAccessParams.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "references/mini-apps.md"
+      ]
+    },
+    {
+      "claim_id": "biometric-reason-128",
+      "claim": "BiometricRequestAccessParams.reason and BiometricAuthenticateParams.reason are 0-128 characters.",
+      "source_url": "https://core.telegram.org/bots/webapps",
+      "raw_snippet": "The text to be displayed to a user in the popup describing why the bot needs access to biometrics, 0-128 characters.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "references/mini-apps.md"
+      ]
+    },
+    {
+      "claim_id": "conversations-flavor",
+      "claim": "grammY conversations 2.x types the bot context as ConversationFlavor<Context>.",
+      "source_url": "https://unpkg.com/@grammyjs/conversations@2.1.1/out/plugin.d.ts",
+      "raw_snippet": "export type ConversationFlavor<C extends Context> = C & {",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/conversations.md"
+      ]
+    },
+    {
+      "claim_id": "conversations-external",
+      "claim": "conversation.external() runs side effects (database, external APIs, randomness, time) outside the replay engine.",
+      "source_url": "https://unpkg.com/@grammyjs/conversations@2.1.1/out/conversation.d.ts",
+      "raw_snippet": "Runs a function outside of the replay engine. This provides a safe way to",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/conversations.md"
+      ]
+    },
+    {
+      "claim_id": "conversations-memory",
+      "claim": "grammY conversations keep their data in memory by default; persistence needs a storage adapter.",
+      "source_url": "https://grammy.dev/plugins/conversations",
+      "raw_snippet": "By default, all data stored by the conversations plugin is kept in memory.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/conversations.md"
+      ]
+    },
+    {
+      "claim_id": "conversations-version",
+      "claim": "@grammyjs/conversations latest is 2.1.1.",
+      "source_url": "https://unpkg.com/@grammyjs/conversations@latest/package.json",
+      "raw_snippet": "\"version\": \"2.1.1\",",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "references/conversations.md"
+      ],
+      "verified_via": "curl, asserted on content (short JSON body, below the verifier text threshold)",
+      "verified_at": "2026-10-19"
+    },
+    {
+      "claim_id": "botfather-setcommands",
+      "claim": "BotFather /setcommands changes the list of commands supported by the bot.",
+      "source_url": "https://core.telegram.org/bots/features",
+      "raw_snippet": "/setcommands – change the list of commands supported by your bot.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "allowed-updates-omit-keeps-previous",
+      "claim": "An empty allowed_updates list gives the default (all except chat_member, message_reaction, message_reaction_count); omitting it keeps the previous setting.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "If not specified, the previous setting will be used.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "webhook-max-connections",
+      "claim": "setWebhook max_connections is 1-100, default 40.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "The maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery, 1-100. Defaults to 40.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "grammy-secret-token-accept-all",
+      "claim": "grammY's webhookCallback accepts every request when no secretToken is configured.",
+      "source_url": "https://unpkg.com/grammy@1.46.0/out/convenience/webhook.js",
+      "raw_snippet": "// If no token is configured, accept all requests",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/deployment.md",
+        "references/examples.md"
+      ],
+      "verified_via": "curl, asserted on content (grammy 1.46.0 published JS)",
+      "verified_at": "2026-10-19"
+    },
+    {
+      "claim_id": "grammy-webhook-timeout-10s",
+      "claim": "grammY webhookCallback defaults to a 10000 ms timeout with onTimeout throw.",
+      "source_url": "https://unpkg.com/grammy@1.46.0/out/convenience/webhook.js",
+      "raw_snippet": "const { onTimeout: timeout = \"throw\", timeoutMilliseconds: ms = 10000, secretToken: token, } = typeof onTimeout === \"object\"",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/deployment.md"
+      ],
+      "verified_via": "curl, asserted on content (grammy 1.46.0 published JS)",
+      "verified_at": "2026-10-19"
+    },
+    {
+      "claim_id": "telegraf-secret-token-check",
+      "claim": "Telegraf 4.16.3 webhookCallback compares the secret token header when secretToken is set.",
+      "source_url": "https://unpkg.com/telegraf@4.16.3/lib/telegraf.js",
+      "raw_snippet": "if (safeCompare(this.secretToken, token))",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/deployment.md"
+      ],
+      "verified_via": "curl, asserted on content (telegraf 4.16.3 published JS)",
+      "verified_at": "2026-10-19"
+    },
+    {
+      "claim_id": "update-id-random-after-week",
+      "claim": "After a week with no updates the next update_id is chosen randomly.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/deployment.md"
+      ]
+    },
+    {
+      "claim_id": "api-request-shape",
+      "claim": "Bot API requests take the form https://api.telegram.org/bot<token>/METHOD_NAME.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "need to be presented in this form: https://api.telegram.org/bot<token>/METHOD_NAME",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "api-case-insensitive",
+      "claim": "All Bot API methods are case-insensitive.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "All methods in the Bot API are case-insensitive.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "stars-digital-exclusive",
+      "claim": "Telegram cannot display a bot or Mini App to mobile users that sells digital goods via other currencies or third-party providers.",
+      "source_url": "https://core.telegram.org/bots/payments-stars",
+      "raw_snippet": "Telegram cannot display your bot or mini-app to mobile users if you attempt to sell digital goods and services via other currencies or through third-party payment providers.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "stars-terms-command",
+      "claim": "Payment bots must offer /terms and users must confirm the terms before purchase.",
+      "source_url": "https://core.telegram.org/bots/payments-stars",
+      "raw_snippet": "make sure your bot can respond to a /terms command",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "stars-support-command",
+      "claim": "Payment bots must provide support via /support or another clear means.",
+      "source_url": "https://core.telegram.org/bots/payments-stars",
+      "raw_snippet": "Your bot must provide support for its customers, either by responding to a /support command",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "bot-help-command",
+      "claim": "/help is the standard command that returns a help message and the command list.",
+      "source_url": "https://core.telegram.org/bots/features",
+      "raw_snippet": "/help - returns a help message, like a short text about what your bot can do and a list of commands.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/examples.md"
+      ]
+    },
+    {
+      "claim_id": "stars-store-charge-id",
+      "claim": "Store SuccessfulPayment.telegram_payment_charge_id, it may be needed for a refund.",
+      "source_url": "https://core.telegram.org/bots/payments-stars",
+      "raw_snippet": "telegram_payment_charge_id – it may be needed to issue a refund in the future",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/examples.md"
+      ]
+    },
+    {
+      "claim_id": "refund-star-payment",
+      "claim": "refundStarPayment(user_id, telegram_payment_charge_id) refunds a Stars payment.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "refundStarPayment Refunds a successful payment in Telegram Stars.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/examples.md"
+      ]
+    },
+    {
+      "claim_id": "edit-user-star-subscription",
+      "claim": "editUserStarSubscription(user_id, telegram_payment_charge_id, is_canceled) cancels or re-enables extension; the subscription stays active to the end of the period.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Pass True to cancel extension of the user subscription; the subscription must be active up to the end of the current subscription period",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "subscription-update-states",
+      "claim": "BotSubscriptionUpdated.state is canceled, active (re-enabled) or failed.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "Currently, it can be one of “canceled” if the user canceled the subscription, “active” if the user re-enabled a previously canceled subscription, or “failed” if payment for the subscription failed",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "successful-payment-recurring",
+      "claim": "SuccessfulPayment carries subscription_expiration_date and is_recurring / is_first_recurring.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "True, if the payment is a recurring payment for a subscription",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "commands-first-list-wins",
+      "claim": "The command menu shown is the first list that is set, in a fixed scope/language order.",
+      "source_url": "https://core.telegram.org/bots/api",
+      "raw_snippet": "The first list of commands which is set is returned:",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/examples.md"
+      ]
+    },
+    {
+      "claim_id": "ptb-callback-data-extra",
+      "claim": "python-telegram-bot's [callback-data] extra installs cachetools for arbitrary callback_data.",
+      "source_url": "https://raw.githubusercontent.com/python-telegram-bot/python-telegram-bot/v22.8/README.rst",
+      "raw_snippet": "pip install \"python-telegram-bot[callback-data]\"",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "biometric-authenticate-throws",
+      "claim": "BiometricManager.authenticate throws WebAppBiometricManagerBiometricAccessNotGranted when access is not granted; init returns without the callback when already initialised or below 7.2.",
+      "source_url": "https://telegram.org/js/telegram-web-app.js",
+      "raw_snippet": "throw Error('WebAppBiometricManagerBiometricAccessNotGranted');",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "references/mini-apps.md"
+      ],
+      "verified_via": "curl, asserted on content (official telegram-web-app.js)",
+      "verified_at": "2026-10-19"
+    },
+    {
+      "claim_id": "biometric-open-settings",
+      "claim": "openSettings opens the biometric access settings, is for users who haven't granted access, and must be called in response to user interaction.",
+      "source_url": "https://core.telegram.org/bots/webapps",
+      "raw_snippet": "A method that opens the biometric access settings for bots. Useful when you need to request biometrics access to users who haven't granted it yet.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "references/mini-apps.md"
+      ]
+    },
+    {
+      "claim_id": "webapp-is-version-at-least",
+      "claim": "Telegram.WebApp.isVersionAtLeast(version) checks the client's Bot API version.",
+      "source_url": "https://core.telegram.org/bots/webapps",
+      "raw_snippet": "Returns true if the user's app supports a version of the Bot API that is equal to or higher than the version passed as the parameter.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "references/mini-apps.md"
+      ]
+    },
+    {
+      "claim_id": "grammy-catch-no-effect-webhooks",
+      "claim": "In grammY, bot.catch only applies to long polling; with webhooks it has no effect, and bot.errorBoundary() wraps handlers instead.",
+      "source_url": "https://unpkg.com/grammy@1.46.0/out/bot.d.ts",
+      "raw_snippet": "webhooks) has no effect.",
+      "fetched_at": "2026-10-19T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/examples.md",
+        "references/deployment.md"
+      ],
+      "verified_via": "curl, asserted on content (grammy 1.46.0 bot.d.ts JSDoc on catch(): 'Calling `bot.catch` when using other means of running your bot (or webhooks) has no effect.')",
+      "verified_at": "2026-10-19"
     }
   ]
 }

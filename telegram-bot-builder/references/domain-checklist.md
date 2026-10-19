@@ -2,7 +2,7 @@
 
 Coverage contract for this skill. Every "Must cover" item is knowledge whose absence
 causes an agent to emit broken, insecure, or silently-non-working bot code.
-Verified against the live docs on 2026-08-27 (Bot API 10.3, released 2026-08-24).
+Verified against the live docs on 2026-10-19 (Bot API 10.3, released 2026-08-24, still the latest).
 
 ---
 
@@ -31,9 +31,10 @@ Verified against the live docs on 2026-08-27 (Bot API 10.3, released 2026-08-24)
    Cited by: bots/api setWebhook ("Ports currently supported for webhooks: 443, 80, 88,
    8443"; "the request will contain a header X-Telegram-Bot-Api-Secret-Token").
 
-5. **`allowed_updates` semantics.** An empty/unspecified list delivers everything EXCEPT
+5. **`allowed_updates` semantics.** An EMPTY list delivers everything EXCEPT
    `chat_member`, `message_reaction`, and `message_reaction_count`; those three require
-   explicit opt-in. The parameter does not affect updates created before the call.
+   explicit opt-in. OMITTING the parameter keeps the previous setting ("If not specified,
+   the previous setting will be used"), so pass it on every call. The parameter does not affect updates created before the call.
    Cited by: bots/api getUpdates / setWebhook `allowed_updates` rows.
 
 6. **Group privacy mode.** Enabled by default: in groups a non-admin bot only receives
@@ -262,9 +263,9 @@ Verified against the live docs on 2026-08-27 (Bot API 10.3, released 2026-08-24)
 | https://core.telegram.org/bots/faq | Broadcast rate limits, paid broadcasts |
 | https://core.telegram.org/bots/payments | Payment/pre-checkout flow |
 | https://github.com/tdlib/telegram-bot-api | Self-hosted Bot API server (track its release notes; the cloud API is on 10.3) |
-| https://grammy.dev/ | grammY 1.45.x core + plugin APIs |
+| https://grammy.dev/ | grammY 1.46.x core + plugin APIs |
 | https://docs.python-telegram-bot.org/ | python-telegram-bot 22.8, optional extras, v20 async transition |
 | https://telegraf.js.org/ | Telegraf 4.16.3 API surface and maintenance status |
 | https://t.me/botnews | Release announcements |
 
-_Verified 2026-08-27 against Bot API 10.3 (released 2026-08-24)._
+_Verified 2026-10-19 against Bot API 10.3 (released 2026-08-24, still the latest on that date)._

@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.5.0 - 2026-10-19
+
+Coverage cycle. Bot API 10.3 is still the latest release (re-checked against the live changelog on 2026-10-19), and grammY 1.46.0, Telegraf 4.16.3 and python-telegram-bot 22.8 are unchanged, so no version drift this time. The work is the MAJOR findings the last two cycles deferred.
+
+- **Bilingual command menus.** New section on `setMyCommands` with `scope` and `language_code`: an English list with no `language_code` as the fallback, a `he` list on top, admin-only menus via `BotCommandScopeAllChatAdministrators`. Code for grammY, Telegraf and python-telegram-bot in `references/examples.md`, type-checked (grammY, Telegraf) and executed against an invalid token (PTB, `InvalidToken`, the expected negative control).
+- **Deep links.** `t.me/<bot>?start=<payload>`, the `A-Z a-z 0-9 _ -` / 64-character rule, base64url for anything else, and the per-framework accessor (`ctx.match`, `ctx.payload`, `context.args`).
+- **grammY conversations 2.x.** The snippet was v1-shaped: untyped context (does not compile once the bot is typed), side effects outside `conversation.external()` (re-run on every replay), and a `session()` the 2.x plugin does not need. Rewritten against `@grammyjs/conversations` 2.1.1 and checked with `tsc --strict`, with a negative control showing the old `Bot<Context>` typing fails to compile. The Hebrew file still carried the old snippet inline after the English file had moved it out; it now points at the reference like the English one.
+- **Webhook idempotency.** Telegram retries any non-2XX response, so the same update can arrive twice. Dedupe on `update_id`.
+- **BiometricManager.** The example called `authenticate()` without `requestAccess()`; in the official `telegram-web-app.js` that call throws `WebAppBiometricManagerBiometricAccessNotGranted`. It also relied on `init()`'s callback, which is never called again once initialised (so a second tap did nothing) or on clients below 7.2. Rewritten: version check, `isInited` check, request access only if never asked, `openSettings()` for a user who refused, and a non-biometric fallback. Noted that biometrics proves nothing to the server.
+- **Webhook secret was never checked.** Every recipe set `secret_token` on `setWebhook`, which only makes Telegram send the header; grammY ("If no token is configured, accept all requests") and Telegraf both need `secretToken` passed to `webhookCallback` to check it. Without it a forged `successful_payment` is accepted. Fixed in the body, `references/deployment.md` and `references/examples.md`, plus a Gotcha.
+- **`allowed_updates` was misstated.** An empty list gives the default; omitting the parameter keeps the previous setting.
+- **`BotSubscriptionUpdated` was misdescribed** as reporting renewal and expiry. Its states are `canceled`, `active` and `failed`; renewals arrive as `successful_payment` with `is_recurring`, and expiry is tracked from `subscription_expiration_date`.
+- **Stars refunds and cancellations** (`refundStarPayment`, `editUserStarSubscription`) and storing `telegram_payment_charge_id` before delivering, now in the body and in both payment examples. Added Telegram's rules that digital goods must be sold in Stars and that payment bots answer `/terms` and `/support`.
+- **Command menus do not merge.** The admin-scope example would have hidden `/start` and `/help` from admins; it now repeats the base commands per language.
+- Also: `max_connections`, the raw request/response shape, the `[callback-data]` extra, conversations storage on serverless, a Redis dedupe middleware (TTL key, never a watermark, since `update_id` restarts randomly after a quiet week), grammY's 10-second webhook timeout replacing an unsourced "~60 seconds" troubleshooting claim, and Bot Business detail moved to a new `references/business-mode.md` with the full method list.
+- Structural: the local Bot API server detail and the scheduling snippets moved to `references/deployment.md` and `references/examples.md` to keep both bodies under the 5,000-word cap.
+
 ## 1.4.0 - 2026-08-27
 
 Bot API version cycle, plus three defects the version bump surfaced.
