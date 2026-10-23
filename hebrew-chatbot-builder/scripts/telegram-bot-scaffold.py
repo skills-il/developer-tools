@@ -22,9 +22,13 @@ Usage:
 
 import logging
 import os
+import sys
 from datetime import datetime, timezone
 from enum import Enum, auto
 from typing import Any
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from hebrew_bidi import fix_line_direction  # noqa: E402
 
 from telegram import (
     InlineKeyboardButton,
@@ -172,7 +176,11 @@ TEXTS = {
 def get_text(context: ContextTypes.DEFAULT_TYPE, key: str) -> str:
     """Get localized text based on user's language preference."""
     lang = context.user_data.get("language", "he")
-    return TEXTS.get(lang, TEXTS["he"]).get(key, key)
+    # Keep Hebrew lines that open with English right-to-left. Text sent without
+    # get_text (order status, LLM replies) needs the same call before sending.
+    return fix_line_direction(
+        TEXTS.get(lang, TEXTS["he"]).get(key, key), hebrew_reply=(lang == "he")
+    )
 
 
 # =============================================================================

@@ -37,6 +37,9 @@ from typing import Any
 import requests
 from flask import Flask, jsonify, request
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from hebrew_bidi import fix_line_direction  # noqa: E402
+
 # Configuration
 VERIFY_TOKEN = os.environ.get("WHATSAPP_VERIFY_TOKEN", "")
 APP_SECRET = os.environ.get("WHATSAPP_APP_SECRET", "")
@@ -120,7 +123,10 @@ def send_text_message(to: str, text: str) -> dict:
         "messaging_product": "whatsapp",
         "to": to,
         "type": "text",
-        "text": {"body": text},
+        # Keep Hebrew lines that open with English right-to-left (this bot
+        # replies only in Hebrew). Adds one character per fixed line; if you
+        # chunk long replies, fix the text first: the call is idempotent.
+        "text": {"body": fix_line_direction(text, hebrew_reply=True)},
     }
     return _send_message(payload)
 
@@ -137,7 +143,7 @@ def send_interactive_buttons(to: str, body_text: str, buttons: list[dict]) -> di
         "type": "interactive",
         "interactive": {
             "type": "button",
-            "body": {"text": body_text},
+            "body": {"text": fix_line_direction(body_text, hebrew_reply=True)},
             "action": {
                 "buttons": [
                     {"type": "reply", "reply": {"id": b["id"], "title": b["title"]}}
@@ -162,7 +168,7 @@ def send_interactive_list(
         "type": "interactive",
         "interactive": {
             "type": "list",
-            "body": {"text": body_text},
+            "body": {"text": fix_line_direction(body_text, hebrew_reply=True)},
             "action": {"button": button_label, "sections": sections},
         },
     }

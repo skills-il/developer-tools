@@ -774,57 +774,7 @@ def is_valid_teudat_zehut(value: str) -> bool:
 
 ### Sentiment Analysis for Hebrew
 
-```python
-# Simple Hebrew sentiment lexicon (for basic analysis)
-# For production, use an LLM or Hebrew-trained model
-HEBREW_SENTIMENT = {
-    # Positive
-    "מעולה": 1.0, "מצוין": 1.0, "נהדר": 0.9, "אהבתי": 0.9,
-    "טוב": 0.6, "יפה": 0.6, "נחמד": 0.5, "בסדר": 0.3,
-    "תודה": 0.4, "תודה רבה": 0.7, "ממליץ": 0.8, "ממליצה": 0.8,
-    "מרוצה": 0.8, "שמח": 0.7, "שמחה": 0.7, "אחלה": 0.8,
-    "סבבה": 0.5, "קול": 0.5, "בומבה": 0.9,
-
-    # Negative
-    "גרוע": -0.9, "נורא": -0.9, "איום": -1.0, "מאכזב": -0.8,
-    "רע": -0.7, "לא טוב": -0.6, "בעיה": -0.5, "תקלה": -0.5,
-    "לא עובד": -0.7, "לא מרוצה": -0.8, "מתסכל": -0.7, "עצבני": -0.8,
-    "חרא": -1.0, "זבל": -0.9, "בושה": -0.8, "אכזבה": -0.8,
-}
-
-def analyze_hebrew_sentiment(text: str) -> dict:
-    """Basic Hebrew sentiment analysis using lexicon matching."""
-    scores = []
-    words_found = []
-
-    # Check multi-word expressions first (sorted by length, longest first)
-    sorted_expressions = sorted(HEBREW_SENTIMENT.keys(), key=len, reverse=True)
-
-    remaining_text = text
-    for expression in sorted_expressions:
-        if expression in remaining_text:
-            scores.append(HEBREW_SENTIMENT[expression])
-            words_found.append(expression)
-            remaining_text = remaining_text.replace(expression, "", 1)
-
-    if not scores:
-        return {"sentiment": "neutral", "score": 0.0, "words": []}
-
-    avg_score = sum(scores) / len(scores)
-
-    if avg_score > 0.2:
-        sentiment = "positive"
-    elif avg_score < -0.2:
-        sentiment = "negative"
-    else:
-        sentiment = "neutral"
-
-    return {
-        "sentiment": sentiment,
-        "score": round(avg_score, 2),
-        "words": words_found,
-    }
-```
+A lexicon matcher is a cheap baseline for spotting an unhappy user (for example, to offer a human agent sooner). The starter lexicon and `analyze_hebrew_sentiment()` are in `references/hebrew-sentiment-lexicon.md`. Match multi-word expressions first, longest first, so "לא טוב" is scored before "טוב". For production, use an LLM or a Hebrew-trained model.
 
 ## Conversation Flows
 
@@ -956,11 +906,13 @@ This skill includes helper scripts in the `scripts/` directory:
 
 - `whatsapp-webhook-handler.py`: Complete WhatsApp Cloud API webhook handler with signature verification, message routing, and Hebrew response templates
 - `telegram-bot-scaffold.py`: Telegram bot starter with Hebrew support, inline keyboards, conversation state management, and command handlers
+- `hebrew_bidi.py`: `fix_line_direction()`, which keeps Hebrew lines that open with English right-to-left in WhatsApp and Telegram (see Troubleshooting). Both scaffolds call it; run `python hebrew_bidi.py --test` for its checks
 
 And reference documents in `references/`:
 
 - `hebrew-chatbot-phrases.md`: Comprehensive Hebrew conversational phrases for bots, organized by category with transliterations
 - `whatsapp-business-api-guide.md`: Step-by-step WhatsApp Business API setup guide for Israeli businesses
+- `hebrew-sentiment-lexicon.md`: Starter Hebrew sentiment lexicon and matcher
 
 ## Gotchas
 
@@ -1001,6 +953,10 @@ And reference documents in `references/`:
 **RTL chat widget text aligns left despite `direction: rtl`**
 - Cause: A child element overrides the direction, or the CSS is applied to the wrong container. Common when using a UI framework that sets `direction: ltr` at the body level.
 - Solution: Set `dir="rtl"` on the outermost chat container HTML element (not just CSS). Also add `direction: rtl` to the input field and any message bubble containers individually. Inspect with browser DevTools to find where the override occurs.
+
+**AI reply in Telegram or WhatsApp: a Hebrew line that starts with English aligns left**
+- Cause: A client that sets direction per line takes it from the line's first strong character (Unicode bidi rules P1-P3: a line break starts a new paragraph; bullets, most emoji, digits and punctuation are not strong, and flag emoji are strong left-to-right). Telegram Desktop does this, and WhatsApp users report the same symptom. A Hebrew line that opens with an English word, even after a bullet or emoji, renders left-to-right and its punctuation scrambles. A chat message has no `dir` to set, and you cannot know in advance what the model will write.
+- Solution: On the final text of a Hebrew reply, insert RLM (`\u200F`) into every line that contains Hebrew and whose first strong character is Latin, skipping code blocks so no hidden character lands in copied code. `fix_line_direction()` in `scripts/hebrew_bidi.py` does this; both scaffolds call it. Three traps: never apply it to an English reply (a line like "Your order from רמי לוי" must stay left-to-right), so pass the conversation language when you know it; put the mark at the start of the word holding the first strong character, after any leading quote or list marker (at column 0 Telegram MarkdownV2 rejects `>` quotes; right before the letter it cuts slash commands, @mentions and escapes off their sigil); and run it before chunking or truncating to a length limit and before computing Telegram entity offsets, since it adds one character per fixed line.
 
 **Webhook handler logs "WHATSAPP_ACCESS_TOKEN was renamed to FACEBOOK_ACCESS_TOKEN"**
 - Cause: Renamed environment variable. The bundled `scripts/whatsapp-webhook-handler.py` used to read `WHATSAPP_ACCESS_TOKEN`; it now reads only `FACEBOOK_ACCESS_TOKEN`, so a server configured with the old name has no access token. The error is logged at startup; the local dev server then exits, while under gunicorn or another WSGI server the app keeps running and every outgoing message fails with an authentication error.

@@ -37,6 +37,19 @@
       "lessons": [
         "Env var rename (Cisco CORRELATED_SENSITIVE_NETWORK_FLOW remediation) broke users on the old name. A fallback that reads both names re-triggers HIGH because the correlation analyzer unions provider tokens from every contributing env name and requires exactly one; shipped a migration error message plus a troubleshooting entry instead."
       ]
+    },
+    {
+      "version": "1.6.0",
+      "date": "2026-10-23",
+      "lessons": [
+        "Resolved the long-deferred 'LRM/RLM bidi controls' MINOR after a user report: Hebrew lines opening with English render LTR in WhatsApp/Telegram. Added scripts/hebrew_bidi.py fix_line_direction() (RLM on Hebrew lines whose first strong char is L, code fences skipped, idempotent, self-test) and wired it into both scaffolds' send step, plus a Troubleshooting entry. App behavior is from the user report and matches UAX #9 P1-P3; not independently reproduced in the apps.",
+        "Expert review (FAIL then fixed) showed the user-reported rule 'RLM on every line that contains Hebrew' is wrong as stated: it flips English replies containing Hebrew names/addresses, flips URL-only lines with Hebrew paths, and breaks Telegram MarkdownV2 '>' quotes (HTTP 400). Shipped: Hebrew-reply guard (auto or explicit), URL exclusion, RLM placed before the first strong char instead of column 0, fence-anywhere handling, py3.9 compat. Still unverified on a device: whether WhatsApp still parses list/quote markup when RLM follows the marker (placement keeps markers first, so expected fine). Not wired: WhatsApp button/list-row titles and templates, Telegram inline-button labels (20/24-char limits would need headroom).",
+        "Expert iteration 2 (FAIL): moving the RLM to just before the first strong character split '/start', '@user', MarkdownV2 escapes and '&quot;' from their sigil (Telegram commands untappable, 400s). Final rule (iteration 3 PASS): RLM at the start of the WORD holding the first strong character, after any leading quote/list marker. Both scaffolds pass hebrew_reply explicitly; auto mode excludes inline code and URLs (incl. scheme-less). Known MINOR: URL regex also matches Hebrew dotted abbreviations with a slash (ח.פ/ע.מ); auto-mode outliers for very Latin-heavy Hebrew answers.",
+        "Moved the sentiment lexicon code to references/hebrew-sentiment-lexicon.md to make room under the 5,000-word cap (body was 4,973 before this cycle).",
+        "Still open from 1.5.x (not touched this cycle): the RAG / tool-calling / Hebrew voice STT-TTS / intent-eval MAJORs; the Telegram scaffold logging raw free text; the web widget's physical CSS; Graph v25.0 hardcoded in SKILL.md and the reference guide. Next cycle must fix or move them to Out of scope (CARRY-STALE).",
+        "markdownv2-quotes-and-split scored 0.50 WITH the skill: the agent wrote its own RLM function instead of reusing scripts/hebrew_bidi.py and misplaced the mark. Next cycle: tell the agent explicitly to import/reuse fix_line_direction() rather than re-derive it."
+      ],
+      "value_add": "2026-10-23 value-add gate (4 workflow cases, search-enabled baseline): with=0.88 without=0.83 delta=+0.04, BLOCK on delta (advisory in update). Per case: entity-extraction 1.00/1.00, llm-reply-mixed-lines 1.00/0.83, markdownv2-quotes-and-split 0.50/0.50, webhook-review 1.00/1.00. Plain Claude with search already handles fail-closed signatures, ID check digits and basic RLM; the skill's edge is narrow. Rework/retirement candidate flagged to admin."
     }
   ]
 }

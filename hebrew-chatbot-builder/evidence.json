@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "hebrew-chatbot-builder",
-  "generated_at": "2026-08-26T00:00:00Z",
+  "generated_at": "2026-10-23T19:10:34Z",
   "claims": [
     {
       "claim_id": "llm-models-2026",
@@ -183,6 +183,54 @@
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "uax9-paragraph-direction",
+      "claim": "Under the Unicode Bidirectional Algorithm (UAX #9, Revision 52) rules P1-P3, text is split into paragraphs at paragraph separators (type B, which includes the line feed), and each paragraph's direction comes from its first strong character (type L, AL or R). Bullets, most emoji, ASCII digits and punctuation are not strong; flag emoji, built from regional indicators (1F1E6..1F1FF, inside the class-L range 1F1E6..1F202), are strong left-to-right.",
+      "source_url": "https://www.unicode.org/reports/tr9/tr9-52.html",
+      "raw_snippet": "P1 . Split the text into separate paragraphs. A paragraph separator (type B) is kept with the previous paragraph. Within each paragraph, apply all the other rules of this algorithm. P2 . In each paragraph, find the first character of type L, AL, or R",
+      "fetched_at": "2026-10-23T19:00:55Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/hebrew_bidi.py"
+      ]
+    },
+    {
+      "claim_id": "rlm-bidi-class",
+      "claim": "U+200F RIGHT-TO-LEFT MARK has bidi class R (a strong right-to-left character), and U+000A line feed has bidi class B (paragraph separator). Prepending RLM therefore makes it the line's first strong character and sets the line right-to-left.",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedBidiClass.txt",
+      "raw_snippet": "200F          ; R # Cf       RIGHT-TO-LEFT MARK",
+      "fetched_at": "2026-10-23T18:52:16Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/hebrew_bidi.py"
+      ]
+    },
+    {
+      "claim_id": "telegram-desktop-line-direction",
+      "claim": "Telegram Desktop's text engine (desktop-app/lib_ui, ui/text/text.cpp) computes each paragraph's direction from its first strong character (DirL -> left-to-right, DirR/DirAL -> right-to-left) and treats the line feed as the paragraph separator, so direction is set per line. The same symptom in WhatsApp comes from a user report (2026-10-23); WhatsApp is closed source and publishes no specification of this.",
+      "source_url": "https://raw.githubusercontent.com/desktop-app/lib_ui/master/ui/text/text.cpp",
+      "raw_snippet": "bool IsParagraphSeparator(QChar ch) {\n\tswitch (ch.unicode()) {\n\tcase QChar::LineFeed:\n\t\treturn true;",
+      "fetched_at": "2026-10-23T19:00:55Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/hebrew_bidi.py"
+      ]
+    },
+    {
+      "claim_id": "flag-emoji-bidi-class",
+      "claim": "Regional indicator symbols, from which flag emoji are built, have bidi class L (strong left-to-right), so a Hebrew line that starts with a flag emoji is laid out left-to-right in a client that sets direction per line.",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedBidiClass.txt",
+      "raw_snippet": "1F1E6..1F202  ; L # So  [29] REGIONAL INDICATOR SYMBOL LETTER A..SQUARED KATAKANA SA",
+      "fetched_at": "2026-10-23T19:10:34Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/hebrew_bidi.py"
       ]
     }
   ]
