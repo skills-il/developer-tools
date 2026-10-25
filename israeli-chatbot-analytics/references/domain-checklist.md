@@ -33,7 +33,7 @@ Last reviewed: 2026-10-25 (v1.5.0).
 |-------|--------|-------|
 | Sentiment model selection for Hebrew | Covered | Step 4, references/hebrew-sentiment-guide.md |
 | Reading sentiment labels from model config rather than a literal | Covered | Step 4, Troubleshooting |
-| Negation patterns, including the Israeli reading of "לא רע" | Covered | hebrew-sentiment-guide.md |
+| Negation patterns, including the Israeli reading of "לא רע" | Covered by the model, not by code: labelling guidance and test sentences only; the lexicon baseline abstains (returns None) on negated messages | hebrew-sentiment-guide.md |
 | Sarcasm and irony detection heuristics | Covered | hebrew-sentiment-guide.md |
 | Slang and Arabic loanword lexicon, with a whole-token lookup rule | Covered | hebrew-sentiment-guide.md |
 | Context-dependent idioms kept out of the fixed-score lexicon | Covered | hebrew-sentiment-guide.md ambiguous table |

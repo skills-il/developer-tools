@@ -91,7 +91,7 @@
       ]
     },
     {
-      "version": "1.5.0",
+      "version": "1.5.1",
       "date": "2026-10-25",
       "lessons": [
         "Browser-declared evidence (verified_via=browser) is never re-fetched by --check-sources, so the WhatsApp entries reported green while Meta had changed pricing on 2026-10-01 (service and in-window utility charged again, FEP 72h -> up to 7 days). Re-render every verified_via=browser source each cycle.",
@@ -103,7 +103,8 @@
         "Deferred: no WhatsApp sessionizer in the script; it only flags sessions with an internal gap over --session-timeout-minutes.",
         "Resolved CARRY items from 1.4.0: OTel GenAI attributes named, handoff-quality metrics added, retention computed by the script, 'נו' whole-token lookup, 'כל הכבוד' context-gated, 'ההה' removed, Dicta-LM 3.0 repo ids, SKILL_HE.md under 5,000 words, legal allowlist confirmed landed.",
         "Removed the hand-rolled Hebrew negation scorer from the sentiment guide after three arithmetic rounds each found new misreadings (window crossing commas, idioms overriding complaints). Keyword rules cannot tell which word a negator governs; the guide now gives labelling guidance and test sentences and routes negation to DictaBERT. Do not reintroduce a rule-based flipper.",
-        "Opt-out detection in the script is a triage screen (explicit phrases, or a bare opt-out word in a message of <= 3 tokens), not a Section 30A determination; keep it phrase-anchored."
+        "Opt-out detection in the script is a triage screen (explicit phrases, or a bare opt-out word in a message of <= 3 tokens), not a Section 30A determination; keep it phrase-anchored.",
+        "1.5.1 (post-ship, same batch): with the negation scorer gone, lexicon_score averaged 'השירות לא טוב' as positive. It now abstains (None) on any negator token. Removing a component means re-checking every consumer of what it used to guard."
       ]
     }
   ]

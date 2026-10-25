@@ -102,7 +102,7 @@ CRITICAL: read the label names from `model.config.id2label`, never from a hardco
 
 Full code, batching wrapper and the lexicon fallback: `references/hebrew-sentiment-guide.md`.
 
-**Hebrew-specific sentiment challenges.** "לא רע" reads mildly positive in Israeli usage; sarcasm ("יופי, בדיוק מה שחיכיתי לו") is common and deeply negative; slang moves fast ("וואלה" is context-dependent); and users mix scripts in one message ("ה-support שלכם גרוע"). Negation handling, the slang lexicon and its token-boundary lookup rule: `references/hebrew-sentiment-guide.md`.
+**Hebrew-specific sentiment challenges.** "לא רע" reads mildly positive in Israeli usage; sarcasm ("יופי, בדיוק מה שחיכיתי לו") is common and deeply negative; slang moves fast ("וואלה" is context-dependent); and users mix scripts in one message ("ה-support שלכם גרוע"). Negation is left to DictaBERT: the lexicon baseline in `references/hebrew-sentiment-guide.md` (slang lexicon, whole-token lookup) leaves negated messages unscored.
 
 ### Step 5: Intent Recognition Accuracy Tracking
 

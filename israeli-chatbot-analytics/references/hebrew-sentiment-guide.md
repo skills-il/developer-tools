@@ -273,13 +273,26 @@ def _lexicon_form(token: str) -> str | None:
     return None
 
 
+NEGATORS = {"לא", "אין", "בלי", "ללא", "אינו", "אינה", "אינם", "אינן",
+            "not", "no", "don't", "dont", "never"}
+
+
 def lexicon_score(text: str) -> float | None:
     """Mean lexicon score of the WHOLE tokens in text, or None if none match.
+
+    This baseline does NOT handle negation. A message containing a negator
+    ("לא", "אין", "בלי", "ללא", "אינו"/"אינה", "not", "no", "don't", "never")
+    returns None (left unscored) rather than a number, because averaging
+    "השירות לא טוב" would score it positive. Use DictaBERT for production.
 
     Never match by substring: "נו" (-0.15) would otherwise fire inside
     "נושא", "נוסף" and "נוח", and "אש" inside "אשמח". Multi-word entries
     ("חייב לנסות") are matched on consecutive tokens.
     """
+    import re
+    words = {w.lower() for w in re.findall(r"[\u05D0-\u05EA'a-zA-Z]+", text)}
+    if words & NEGATORS:
+        return None
     toks = _tokens(text)
     scores = []
     for i in range(len(toks)):
