@@ -45,34 +45,19 @@ Example: "אי אפשר שלא לאהוב את המוצר הזה" = "impossible 
 
 ### Handling Strategy
 
-```python
-# Negation detection patterns for Hebrew sentiment
-# "אל" is deliberately excluded: it negates only in imperatives ("אל תעשה"),
-# and as a preposition ("פניתי אל הנציג") it appears constantly in support
-# transcripts, where it would flip sentiment on ordinary sentences.
-NEGATION_WORDS = ["לא", "אין", "בלי", "ללא"]
+Let the model read negation; do not hand-roll a negation flipper. DictaBERT sees the whole sentence, while a keyword rule cannot tell which word a negator governs: an earlier version of this guide shipped such a rule, and across three review rounds it kept flipping ordinary praise into complaints ("תודה, אין כמוכם, מעולה", "לא רק טוב, מעולה", "ללא עלות, עובד מעולה") and complaints into praise ("אין בעיה באינטרנט שלי, האפליקציה קורסת"). It was removed.
 
-def handle_hebrew_negation(text: str, base_sentiment: float) -> float:
-    """Adjust sentiment score based on Hebrew negation patterns."""
+Use the patterns above as **labelling guidance** for the people who annotate your fine-tuning and evaluation sets, and as test sentences for whatever model you deploy:
 
-    # Check for double negation (reinforces positive)
-    double_neg_patterns = ["לא שלא", "אי אפשר שלא", "אין דבר שלא"]
-    for pattern in double_neg_patterns:
-        if pattern in text:
-            return abs(base_sentiment) * 0.8  # Strong positive
+| Pattern | Reads as | Test sentence |
+|---------|----------|---------------|
+| "לא רע", "לא נורא" | mildly positive | "האוכל לא רע בכלל" |
+| "אין בעיה", "אין בעיות" | agreement, mildly positive | "תודה, אין בעיה" |
+| "אי אפשר שלא" + verb | the verb's own sign, reinforced | "אי אפשר שלא לאהוב", "אי אפשר שלא לכעוס" |
+| Negator not governing a polar word | no flip | "מעולה, לא ידעתי שאפשר" |
+| Idiom inside a complaint | negative | "זה לא רע, זה גרוע" |
 
-    # Check for "לא רע" pattern (mildly positive in Israeli usage)
-    if "לא רע" in text or "לא נורא" in text:
-        return 0.3  # Mildly positive
-
-    # Standard negation flips sentiment
-    words = text.split()
-    for i, word in enumerate(words):
-        if word in NEGATION_WORDS and i + 1 < len(words):
-            return -base_sentiment * 0.7  # Flip with dampening
-
-    return base_sentiment
-```
+If a model misreads any of these, that is a fine-tuning gap to fix with labelled examples, not a rule to bolt on afterwards.
 
 ## Sarcasm and Irony / סרקזם ואירוניה
 
@@ -139,15 +124,26 @@ def detect_potential_sarcasm(
     if "..." in current_message:
         sarcasm_score += 0.15
 
-    # Check for sarcasm indicators
-    sarcasm_markers = ["כאילו", "ברור", "בטח", "נו באמת", "כל הכבוד"]
+    import re
+
+    # Check for sarcasm indicators, on whole tokens: as substrings "בטח" would
+    # fire inside "הבטחה", "אבטחה" and "מבטח".
+    toks = re.findall(r"[\u05D0-\u05EA']+", current_message)
+    joined = " " + " ".join(toks) + " "
+    sarcasm_markers = ["כאילו", "ברור", "בטח", "נו באמת"]
     for marker in sarcasm_markers:
-        if marker in current_message:
+        if f" {marker} " in joined:
             sarcasm_score += 0.2
 
-    # Check for quoted positive words (suggesting irony)
-    import re
-    quoted = re.findall(r'["\']([^"\']+)["\']', current_message)
+    # Check for quoted positive words (suggesting irony). A quote mark between
+    # two Hebrew letters is a gershayim or geresh ("ת"א", "ב"ה"), not a quote.
+    # An opening quote may follow a one-letter prefix ('ה"מעולה"'), but a mark
+    # inside an abbreviation ('ת"א') is not a quote.
+    quoted = re.findall(
+        r'(?:(?<![\u05D0-\u05EA])|(?<=(?<![\u05D0-\u05EA])[הובלמשכ]))'
+        r'["\']([^"\']+)["\'](?![\u05D0-\u05EA])',
+        current_message,
+    )
     positive_words = ["מעולה", "מצוין", "נהדר", "מדהים", "אחלה"]
     for q in quoted:
         if any(pw in q for pw in positive_words):
@@ -163,6 +159,10 @@ def detect_potential_sarcasm(
         negative_ratio = recent_sentiments.count("negative") / max(len(recent_sentiments), 1)
         if negative_ratio > 0.5:
             sarcasm_score += 0.25  # Preceded by frustration
+            # "כל הכבוד" is overwhelmingly a genuine compliment in Israeli
+            # support chat. Score it as a sarcasm marker ONLY after frustration.
+            if "כל הכבוד" in current_message:
+                sarcasm_score += 0.2
 
     return min(sarcasm_score, 1.0)
 ```
@@ -212,7 +212,7 @@ Israeli chat language includes many slang terms, Arabic loanwords, and abbreviat
 
 | Abbreviation | Full Form | Meaning |
 |-------------|-----------|---------|
-| חחח / ההה | Laughter | LOL equivalent |
+| חחח | Laughter | LOL equivalent. Do not read "ההה" as laughter: it is as often an interjection or a keyboard artifact. |
 | ב"ה | ברוך השם | Thank God |
 | נ"ל | נראה לי | I think / seems to me |
 | תכל'ס | תכלית | Bottom line / practically |
@@ -243,7 +243,6 @@ HEBREW_SLANG_SENTIMENT = {
 
     # Chat indicators
     "חחח": 0.4,     # Laughter, mildly positive
-    "ההה": 0.3,     # Softer laughter
 
     # Ambiguous (default to neutral, use context)
     "וואלה": 0.0,
@@ -251,6 +250,46 @@ HEBREW_SLANG_SENTIMENT = {
     "נו": -0.15,
     "סתם": 0.0,
 }
+
+# Single-letter prefixes plus "וה". "של" and "לה" are words, not prefixes:
+# stripping "של" turns "שלנו" (ours) into "נו".
+PREFIXES = ["וה", "ב", "ה", "ו", "ל", "מ", "כ", "ש"]
+
+
+def _tokens(text: str) -> list[str]:
+    import re
+    return re.findall(r"[\u05D0-\u05EA']+", text)
+
+
+def _lexicon_form(token: str) -> str | None:
+    """Exact match first, then one stripped prefix (same rule as Step 9)."""
+    if token in HEBREW_SLANG_SENTIMENT:
+        return token
+    if len(token) > 3:
+        for p in PREFIXES:
+            rest = token[len(p):]
+            if token.startswith(p) and len(rest) >= 2 and rest in HEBREW_SLANG_SENTIMENT:
+                return rest
+    return None
+
+
+def lexicon_score(text: str) -> float | None:
+    """Mean lexicon score of the WHOLE tokens in text, or None if none match.
+
+    Never match by substring: "נו" (-0.15) would otherwise fire inside
+    "נושא", "נוסף" and "נוח", and "אש" inside "אשמח". Multi-word entries
+    ("חייב לנסות") are matched on consecutive tokens.
+    """
+    toks = _tokens(text)
+    scores = []
+    for i in range(len(toks)):
+        pair = " ".join(toks[i:i + 2])
+        if len(toks) > i + 1 and pair in HEBREW_SLANG_SENTIMENT:
+            scores.append(HEBREW_SLANG_SENTIMENT[pair])
+        form = _lexicon_form(toks[i])
+        if form is not None:
+            scores.append(HEBREW_SLANG_SENTIMENT[form])
+    return round(sum(scores) / len(scores), 3) if scores else None
 ```
 
 ## Mixed Hebrew-English Text / טקסט מעורב עברית-אנגלית
@@ -363,17 +402,17 @@ def analyze_mixed_sentiment(text: str, he_analyzer, en_analyzer) -> dict:
 
 ### DictaBERT (dicta-il/dictabert)
 - **Type**: BERT-based Hebrew language model
-- **Developer**: DICTA: The Israel Center for Text Analysis (an independent Israeli non-profit, dicta.org.il), not Bar-Ilan University
+- **Developer**: DICTA: The Israel Center for Text Analysis (an Israeli non-profit, dicta.org.il)
 - **Strengths**: Strong Hebrew language understanding, good for fine-tuning
 - **Sentiment variant**: `dicta-il/dictabert-sentiment`, fine-tuned on the HebrewSentiment dataset released by the Israeli National Program for Hebrew and Arabic NLP, CC-BY-4.0. Read its labels from `model.config.id2label` (`{0: "Positive", 1: "Negative", 2: "Neutral"}`), never from a hardcoded list.
 - **URL**: https://huggingface.co/dicta-il
 
 ### Dicta-LM 3.0 (dicta-il/DictaLM-3.0-*)
 - **Type**: Generative language model family for Hebrew, February 2026
-- **Developer**: DICTA: The Israel Center for Text Analysis (an independent Israeli non-profit, dicta.org.il), not Bar-Ilan University
+- **Developer**: DICTA: The Israel Center for Text Analysis (an Israeli non-profit, dicta.org.il)
 - **Sizes**: 24B (from Mistral-Small-3.1), 12B (from NVIDIA Nemotron Nano V2), 1.7B (from Qwen3-1.7B), each with a 65k native context and a chat variant with tool-calling support
 - **Strengths**: Zero-shot sentiment classification via prompting, plus Hebrew summarization in the same call
-- **Usage**: 1.7B for per-message classification at volume, 24B for offline conversation summaries. DictaLM 2.0 (7B, July 2024) is the previous generation.
+- **Usage**: 1.7B for per-message classification at volume, 24B for offline conversation summaries. DictaLM 2.0 (7B, based on Mistral-7B, 2024) is the previous generation.
 
 ### AlephBERT
 - **Type**: BERT model for Hebrew

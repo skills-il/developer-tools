@@ -28,7 +28,7 @@ conversation_log = {
     "messages": [
         {
             "timestamp": "ISO-8601",
-            "sender": "user|bot",
+            "sender": "user|bot|agent",     # agent = a human who took over
             "text": "שלום, אני צריך עזרה",
             "intent": "greeting",           # Detected intent
             "intent_confidence": 0.92,       # Model confidence
@@ -58,27 +58,15 @@ Two fields in that schema carry every headline number in this skill, and neither
 
 Never take an `outcome` the bot writes about itself ("flow completed") as an outcome. That is the bot's own belief, and treating it as ground truth is the same error as reading `high_confidence_rate` as `intent_accuracy` (Step 8).
 
-**Defining the session boundary.** `session_id`, `started_at` and `ended_at` are given on Dialogflow CX and Rasa. On WhatsApp Cloud API, the dominant Israeli channel, there is no session object at all, only a flat webhook stream. You must cut it yourself with an inactivity timeout, and **the timeout you pick mechanically sets your abandonment rate and average handle time**. A user who replies the next morning is one long resolved session under a 24-hour cut and one abandoned session plus a new one under a 30-minute cut. Both numbers get quoted to management. Pick one (30 minutes is a reasonable default for support), write it into the log-normalization step, and never change it without restating the history. The WhatsApp 24-hour customer-service window and the 72-hour free-entry-point window are BILLING windows: do not reuse them as conversation boundaries.
+**Defining the session boundary.** The Dialogflow CX BigQuery export has one row per turn: take the session from `conversation_name` and its start and end from the first and last `request_time`. On WhatsApp Cloud API, the dominant Israeli channel, there is no session object at all, only a flat webhook stream. You must cut it yourself with an inactivity timeout, and **the timeout you pick mechanically sets your abandonment rate and average handle time**. A user who replies the next morning is one long resolved session under a 24-hour cut and one abandoned session plus a new one under a 30-minute cut. Both numbers get quoted to management. Pick one (30 minutes is a reasonable default for support), write it into the log-normalization step, and never change it without restating the history. The WhatsApp 24-hour customer-service window and the free-entry-point window (up to 7 days) are BILLING windows: do not reuse them as conversation boundaries.
 
-If your platform exports a different shape, normalize it first. Common platforms:
-
-| Platform | Export Method | Format |
-|----------|-------------|--------|
-| Conversational Agents (formerly Dialogflow CX) | BigQuery export | JSON rows with session context. Use the `he-il` language code on new agents; the language reference lists `iw` as `Hebrew (deprecated)` with reduced feature coverage (https://docs.cloud.google.com/dialogflow/cx/docs/reference/language). The standalone Dialogflow CX console was retired on 2025-10-31 and the product is now Conversational Agents; the API and doc paths still use `dialogflow/cx`. |
-| Rasa Pro / CALM | Analytics dashboard + tracker events | Flow-step events (Rasa Pro 3.x with CALM is dialogue-driven, not intent-driven, so legacy intent-accuracy metrics map differently). |
-| Rasa Open Source (legacy) | Tracker Store (SQL/Mongo) | Events list per conversation. Rasa Open Source is in maintenance mode (https://github.com/RasaHQ/rasa); legacy OSS docs at https://legacy-docs-oss.rasa.com/docs/rasa/. |
-| Botpress | Conversation export / DB | JSON. Hebrew is a supported language, but we have not verified RTL alignment in the default web webchat, so check message-bubble alignment in your own widget before reporting on it. |
-| Custom bots | Application logs | Varies (normalize to schema above) |
-| WhatsApp Cloud API | Webhook logs | Message objects with metadata. See `## WhatsApp Business Platform pricing notes` below for the per-message cost model that started July 2025. |
-| ManyChat | Audience + flow exports | CSV/JSON. WhatsApp send-out costs flow through Meta's per-message tariff. |
+If your platform exports a different shape, normalize it first. The export method and format for Conversational Agents (Dialogflow CX), Rasa Pro / CALM, Rasa Open Source, Botpress, WhatsApp Cloud API, ManyChat and custom bots, with the Hebrew language-code caveat, are in `references/platform-integrations.md`.
 
 ### Step 2: Conversation Flow Analysis
 
 Analyze session-level metrics to understand overall chatbot health:
 
-Build a `ConversationMetrics` dataclass that tracks `total_sessions`, `completed_sessions`, `escalated_sessions`, `abandoned_sessions`, `session_lengths` (per-session message count), and `session_durations` (seconds). Derive rate properties (`completion_rate`, `escalation_rate`, `abandonment_rate`) as `count / total_sessions`, and `avg_session_length` / `median_session_duration_seconds` from the list fields.
-
-`compute_flow_metrics(conversations)` iterates the structured logs once, increments the right outcome counter (`resolved` / `escalated` / `abandoned`), appends message count and `(ended_at - started_at).total_seconds()`, and returns the metrics object.
+`compute_flow_metrics(conversations)` makes one pass, counting sessions per outcome (`resolved` / `escalated` / `abandoned`) and collecting message counts and `(ended_at - started_at).total_seconds()`. Rates are `count / total_sessions`, with `unknown` sessions left in the denominator; also report the average session length and the median duration.
 
 **Industry benchmarks for support chatbots (apply with judgment to Hebrew bots):**
 
@@ -92,6 +80,8 @@ These are general support-chatbot targets with no Israeli sample behind them. Us
 | Avg session length | 4-8 messages | 8-15 messages | > 15 messages |
 | First-contact resolution | > 65% | 45-65% | < 45% |
 
+**Measure what happens after an escalation.** `escalation_rate` on its own rewards a bot that is hard to escape. For every escalated session also track the queue wait from handoff to the first human reply, whether the agent received the transcript (an agent whose first message re-asks for an ID or order number the user already gave did not), the human resolution rate, and the bounce-back rate (handed back to the bot, or escalated again within 24 hours). A falling escalation rate alongside rising bounce-backs or repeat contacts is a bot that deflects, not one that resolves.
+
 ### Step 3: Drop-off Point Detection
 
 Identify where users abandon. This reveals UX problems, confusing prompts, or missing capabilities:
@@ -104,7 +94,7 @@ Keep `fallback` in the by-intent bucket. Fallback-then-abandon is the most commo
 
 ### Step 4: Hebrew Sentiment Analysis
 
-Hebrew sentiment analysis requires special handling due to morphological complexity, negation patterns, and slang. Use DictaBERT (encoder, classification) for production sentiment scoring, AlephBERT (`onlplab/alephbert-base` from the ONLP Lab at Bar-Ilan University) as an alternative encoder baseline, or a lexicon-based approach for lightweight analysis. When you need one model to classify sentiment AND summarize the conversation in Hebrew prose for the ops team, use Dicta-LM 3.0 (February 2026), the current Hebrew model family from Dicta: 24B (adapted from Mistral-Small-3.1), 12B (from NVIDIA Nemotron Nano V2) and 1.7B (from Qwen3-1.7B), each with a 65k native context and a chat variant with tool-calling support. The 1.7B variant is the practical choice for per-message classification at volume; the 24B for offline summarization. DictaLM 2.0 (July 2024, 7B, Mistral-based) is the previous generation and still works, but new builds should start on 3.0.
+Hebrew sentiment analysis requires special handling due to morphological complexity, negation patterns, and slang. Use DictaBERT (encoder, classification) for production sentiment scoring, AlephBERT (`onlplab/alephbert-base` from the ONLP Lab at Bar-Ilan University) as an alternative encoder baseline, or a lexicon-based approach for lightweight analysis. When you need one model to classify sentiment AND summarize the conversation in Hebrew prose for the ops team, use Dicta-LM 3.0 (February 2026), the current Hebrew model family from Dicta, with a 65k native context: 24B (adapted from Mistral-Small-3.1), 12B (from NVIDIA Nemotron Nano V2) and 1.7B (from Qwen3-1.7B). The chat variants are not named alike, so copy the exact repo id: `DictaLM-3.0-1.7B-Instruct` and `-1.7B-Thinking`, `DictaLM-3.0-Nemotron-12B-Instruct`, and for 24B only `DictaLM-3.0-24B-Thinking` (there is no 24B Instruct). The 1.7B Instruct is the practical choice for per-message classification at volume; the 24B Thinking for offline summarization. DictaLM 2.0 (2024, 7B, based on Mistral-7B) is the previous generation and still works, but new builds should start on 3.0.
 
 **Using DictaBERT (recommended for production).** The simplest path is `pipeline("sentiment-analysis", model="dicta-il/dictabert-sentiment")`, which resolves the label names off the model config for you. If you drive the model directly for batching control, wrap `AutoTokenizer` + `AutoModelForSequenceClassification`, tokenize with `truncation=True, max_length=512, padding=True`, softmax the logits, and map each row through `id2label`.
 
@@ -112,9 +102,7 @@ CRITICAL: read the label names from `model.config.id2label`, never from a hardco
 
 Full code, batching wrapper and the lexicon fallback: `references/hebrew-sentiment-guide.md`.
 
-**Hebrew-specific sentiment challenges (summary).** Negation flips meaning and "לא רע" reads mildly positive in Israeli usage. Sarcasm is very common ("יופי, בדיוק מה שחיכיתי לו" is deeply negative); DictaBERT catches some, fine-tune on your domain for the rest. Slang moves fast ("אחלה" / "סבבה" / "בומבה" positive, "חרא" / "פאדיחה" negative, "וואלה" context-dependent). And users mix scripts in one message ("ה-support שלכם גרוע"), so your model or lexicon must handle both.
-
-See `references/hebrew-sentiment-guide.md` for the full treatment of these challenges, including the slang lexicon and negation-handling code.
+**Hebrew-specific sentiment challenges.** "לא רע" reads mildly positive in Israeli usage; sarcasm ("יופי, בדיוק מה שחיכיתי לו") is common and deeply negative; slang moves fast ("וואלה" is context-dependent); and users mix scripts in one message ("ה-support שלכם גרוע"). Negation handling, the slang lexicon and its token-boundary lookup rule: `references/hebrew-sentiment-guide.md`.
 
 ### Step 5: Intent Recognition Accuracy Tracking
 
@@ -182,6 +170,7 @@ Implement `build_dashboard(conversations, period_days=7)` to populate the datacl
 - `conversations_per_day = n / period_days`. `peak_hour` and `busiest_day` from `Counter` over `started_at` hour and weekday.
 
 **Israeli traffic patterns to expect.** These follow from the Sun-Thu work week and are working assumptions, not a measured dataset. Confirm each against your own logs before building a staffing or alerting rule on it.
+- Convert timestamps to Israel time (Asia/Jerusalem) before bucketing by hour or weekday. BigQuery exports are UTC, so without the conversion a session that opened at 01:30 on Sunday in Israel lands on Saturday night.
 - Peak hours are typically 10:00-12:00 and 19:00-22:00 (Israel Time, UTC+2/+3)
 - Sunday is the busiest day (first workday of the Israeli week)
 - Friday afternoon and Saturday see minimal traffic
@@ -191,7 +180,7 @@ Implement `build_dashboard(conversations, period_days=7)` to populate the datacl
 
 Session-level metrics tell you how a single conversation went, but not whether the bot earns repeat use. Track these retention dimensions alongside the dashboard above (all require a stable `user_id` across sessions, pseudonymized per the Privacy and Consent section):
 
-For each `user_id`, collect the set of distinct dates with a conversation, then compute: **D1 return rate** (first date + 1 day is also in the set), **D7 return rate** (any of first date + 2..7 days is in the set, more stable than D1 at Israeli volumes), and **repeat-contact rate** (more than one distinct date). On a support bot a high repeat rate can mean trust or unresolved issues, so always read it next to first-contact resolution.
+For each `user_id`, collect the set of distinct Israel-local dates with a conversation, then compute: **D1 return rate** (first date + 1 day is also in the set), **D7 return rate** (any of first date + 2..7 days is in the set, more stable than D1 at Israeli volumes), and **repeat-contact rate** (more than one distinct date). Count a user toward D1 or D7 only when their window ends on or before the last day in the log, or users first seen in the last week drag D7 toward zero. On a support bot a high repeat rate can mean trust or unresolved issues, so always read it next to first-contact resolution. The bundled script computes all three.
 
 ### Step 9: Hebrew-Specific Analytics Challenges
 
@@ -233,23 +222,19 @@ Each platform exports conversations in its own shape; normalize every one of the
 
 ## WhatsApp Business Platform pricing notes
 
-Meta may revise pricing only on the first day of each quarter. Utility templates sent inside an open customer-service window are currently free, and free-entry-point windows stay open 72 hours. Israel rates are not published per country, so do not hardcode a figure: pull the current rate card. Two 2026 changes to budget for: a separate pricing policy for **AI Providers** on the platform took effect 16 February 2026 (updated 12 May 2026), so check whether your bot falls under it before modelling cost per conversation; and businesses on the Marketing Messages API can now set a max price per marketing-message delivery, which turns per-message cost into a variable you control and should therefore log. Add `template_category` (marketing / utility / authentication / service) and a boolean `arrived_via_ctw_ad` to the Step 1 conversation-log schema, so finance and product can split CSAT and completion by paid versus free interaction. Full breakdown and the remaining cost fields to log: `references/chatbot-metrics-glossary.md`.
+Meta changed what is free on 1 October 2026, so any cost model built before then is wrong. Service messages, including a human agent's replies, are now charged after the first 1,000 per business phone number per month, and utility templates inside an open customer-service window are charged again. Messages inside a free-entry-point (FEP) window, opened by a click-to-WhatsApp ad, stay free for up to 7 days. Without a payment method on the account, service replies simply stop being delivered after the free 1,000, so alert on failed deliveries. Israel is a standalone market on the rate card, so its rate is public: pull it each quarter. Log the `pricing` object (`billable`, `category`, `type`) from each message's delivered-status webhook rather than estimating cost; the bundled script counts it by category, by type and per number per month. Rates, the AI Providers rules (Israel is not a listed market) and the fields to log: `references/chatbot-metrics-glossary.md`.
 
 ## Anti-spam compliance (Israel Communications Law, Section 30A)
 
-If your chatbot sends marketing messages (broadcasts, promotional templates on WhatsApp, Telegram campaigns, SMS retargeting), Section 30A of the Communications Law (Telecom and Broadcasts) 5742-1982 applies. The law requires **prior opt-in consent** before sending advertising messages. DLA Piper's Israel summary describes the statute as prohibiting "advertising by means of automated dialing, fax or text messages without first obtaining the recipient's initial opt-in prior consent", with a mandatory opt-out in every message. Whether that reaches WhatsApp and Telegram rests on how Israeli courts read "text messages", not on explicit statutory text, and we could not verify a specific ruling. Treat IM broadcasts as in scope for compliance planning and get a lawyer's read before relying on the opposite. The term "advertisement" is interpreted broadly: any message not purely service-related can be treated as advertising.
+If your chatbot sends marketing messages (WhatsApp promotional templates, Telegram campaigns, SMS), Section 30A of the Communications Law (Telecom and Broadcasts), 5742-1982 requires the recipient's **express prior consent, in writing**, before sending an advertisement by electronic message or short message. Neither statutory definition names a channel, so plan as if WhatsApp and Telegram broadcasts are in scope. A click on a click-to-WhatsApp ad, or an earlier service chat, is not consent: being free inside the FEP window does not make a marketing template lawful. For consumers, the only exception is Section 30A(c), for a customer who gave their details while buying, was told they would get advertising and given a chance to refuse, and is offered something similar. Log `opt_in_basis` as `written_consent`, `existing_customer` or `service_only`. A reply such as "הסר" or "stop" is a refusal (Section 30A(d)(1)): route it to a confirmation step, never to a fallback; the bundled script flags likely ones. Labelling rules and the SMS carve-out: `references/chatbot-metrics-glossary.md`.
 
-Tag every send with an `opt_in_basis` ("explicit_form" / "ctw_ad_click" / "service_reply" / "transactional") as your audit trail, track unsubscribe-path success as a compliance KPI, and split completion and CSAT between opt-in marketing flows and user-initiated service flows, since combining them masks both. Detail and the cross-channel skill pointers: `references/chatbot-metrics-glossary.md`.
-
-This is engineering guidance, not legal advice. Israeli law provides statutory damages per unsolicited marketing message without proof of damages, so a misconfigured broadcast to even a few hundred non-consenting users can become a meaningful financial event. We could not verify the current per-message cap against a primary source, so confirm the figure and your specific exposure with a privacy lawyer before sizing the risk.
+This is engineering guidance, not legal advice. A court may award exemplary damages, with no proof of harm, of up to NIS 1,000 for each advertisement sent knowingly in breach (Section 30A(j)(1)), so one misconfigured broadcast can be a six-figure exposure. Confirm your position with a lawyer.
 
 ## Experimentation and analytics stack
 
 `HebrewABTestManager` (Step 7) does in-process bucketing with in-memory results. For sequential testing or CUPED variance reduction, move to Statsig, LaunchDarkly or GrowthBook: none of them care what language `variant_text` is in, and GrowthBook is the one that never ingests your event data, so Hebrew transcripts stay in your own warehouse. Plan on 2+ weeks and 200+ impressions per variant; Israeli user bases are small and the Sun-Thu week makes one-week tests unreliable.
 
-On the analytics side, GA4 has a built-in `AI Assistant` channel group (Medium `ai-assistant`) for LLM-referred traffic, and Mixpanel's AI query builder was renamed from Spark to **Mixpanel Agent** and ships an MCP server your agent can query directly.
-
-Vendor ownership, pricing tiers, current names and the recognized-referrer caveat: `references/analytics-stack-notes.md`. Statsig changed hands twice between September 2025 and May 2026, so do not trust an older note about who operates it.
+On the analytics side, Google's definition of the GA4 `AI Assistant` channel (Medium `ai-assistant`) does not name Claude or Perplexity among its examples, so check your referral report before relying on it, and Mixpanel's AI query builder is now **Mixpanel Agent**, with an MCP server. Ownership, pricing and naming detail (Statsig changed hands twice in 2025-2026): `references/analytics-stack-notes.md`.
 
 ## LLM and RAG bot observability
 
@@ -288,7 +273,7 @@ Run `build_dashboard()` for the current and previous week, pass both to `generat
 ## Bundled Resources
 
 ### Scripts
-- `scripts/conversation-analyzer.py` -- Pure standard library, no pip install. Computes outcome rates, drop-off points, conversation loops, intent confidence, response-time percentiles, Israeli traffic patterns and Hebrew/English code-switching. It does NOT compute sentiment: that needs the DictaBERT path in Step 4. Run: `python3 scripts/conversation-analyzer.py --help`
+- `scripts/conversation-analyzer.py` -- Pure standard library, no pip install. Computes outcome rates (including the unknown-outcome share it warns on), drop-off points, conversation loops, intent confidence, response-time percentiles, Israel-time traffic patterns, D1/D7/repeat-contact retention, Hebrew/English code-switching, WhatsApp billable counts when messages carry the `pricing` object, likely opt-out replies for manual review (a triage aid, not a legal determination), and sessions with a gap over the inactivity timeout. Tolerates media messages with no text. It does NOT compute sentiment: that needs the DictaBERT path in Step 4. Run: `python3 scripts/conversation-analyzer.py --help`
 
 ### References
 - `references/chatbot-metrics-glossary.md` -- Glossary of chatbot analytics metrics with Hebrew translations and industry benchmarks. Consult when defining KPIs or explaining metrics to Hebrew-speaking stakeholders.
@@ -306,15 +291,15 @@ Run `build_dashboard()` for the current and previous week, pass both to `generat
 
 ## Privacy and Consent
 
-This skill ingests full conversation transcripts and `user_id` values, and runs sentiment analysis on user messages. Conversation text is personal data and often contains sensitive content (health, finances, complaints). Handle it under Israel's Privacy Protection Law, including Amendment 13 (in force August 2025), which tightened consent, notice, accountability, and data-minimization obligations.
+This skill ingests full conversation transcripts and `user_id` values, and runs sentiment analysis on user messages. Conversation text is personal data and often contains sensitive content (health, finances, complaints). Handle it under Israel's Privacy Protection Law as amended by Amendment 13 (in force 14 August 2025). Section 11 sets what the notice must say when you collect the data (list sentiment analysis among the purposes); Section 17B1 requires a privacy protection officer where the main activity includes processing especially sensitive information at significant scale, naming banks, insurers, general hospitals and health funds. Sending transcripts to Meta's servers or to a foreign LLM or analytics vendor is a transfer abroad, allowed only on a ground in the Transfer Regulations (for example the person's consent, or a contractual undertaking by the recipient). A severe security incident must be reported to the Registrar immediately.
 
-Practical rules, in full in `references/chatbot-metrics-glossary.md`: get consent to store and analyze chat content and disclose sentiment analysis as a processing purpose; pseudonymize `user_id` before it reaches the pipeline and keep the mapping table separate (retention and A/B bucketing both work fine on a stable pseudonymous id); strip or mask entities you do not need (ID numbers, names, card numbers); set an explicit retention window for raw transcripts, for example 90 days, and keep only aggregates long-term; restrict and log access, and know where the data is stored and processed. Note that the Data Security Regulations require access logs for medium and high security databases to be retained for at least 24 months, which is a separate obligation from transcript retention.
+Practical rules, and each provision in full, in `references/chatbot-metrics-glossary.md`: pseudonymize `user_id` before it reaches the pipeline; mask entities you do not need (ID numbers, names, card numbers); set a retention window for raw transcripts (for example 90 days) and keep aggregates long-term; restrict and log access (the Data Security Regulations keep access logs of medium and high security databases for at least 24 months, separate from transcript retention).
 
 - This is engineering guidance, not legal advice. Confirm your specific obligations with a privacy professional.
 
 ## Recommended MCP Servers
 
-None is required. The skill operates on exported conversation logs (BigQuery exports, Rasa tracker-store dumps, application log files) loaded from disk and analyzed locally with the bundled script. If your metrics already live in Mixpanel, its MCP server lets you query them conversationally from the agent, but that is optional and sits outside this skill's analysis path.
+None is required: the skill analyzes exported logs locally with the bundled script. If your metrics already live in Mixpanel, its MCP server lets the agent query them, which is optional.
 
 ## Reference Links
 
@@ -322,28 +307,27 @@ None is required. The skill operates on exported conversation logs (BigQuery exp
 |--------|-----|---------------|
 | Conversational Agents (Dialogflow CX) language reference | https://docs.cloud.google.com/dialogflow/cx/docs/reference/language | Hebrew language code `he-il`; the table lists `Hebrew (deprecated) iw` with fewer supported features |
 | Dialogflow CX analytics | https://docs.cloud.google.com/dialogflow/cx/docs/concept/analytics | Built-in conversation analytics, intent metrics |
-| Rasa CALM docs | https://rasa.com/docs/learn/concepts/calm/ | Dialogue-driven flows for Rasa Pro 3.x, replaces intent-based design for new builds |
+| Rasa CALM docs | https://rasa.com/docs/learn/concepts/calm/ | Dialogue-driven flows for Rasa Pro, replaces intent-based design for new builds |
 | Rasa OSS documentation (legacy) | https://legacy-docs-oss.rasa.com/docs/rasa/ | Event tracking, tracker stores, custom analytics integrations (maintenance mode) |
-| WhatsApp Business Platform pricing | https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing | Per-message rates by country + category (marketing/utility/auth/service), free 24h window rules |
+| WhatsApp Business Platform pricing | https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing | Israel rate card row, the 1 October 2026 changes, FEP window, monthly free service tier, Meta Business Agent |
 | DictaBERT (Hebrew BERT suite) | https://huggingface.co/dicta-il/dictabert | Pre-trained Hebrew BERT for classification fine-tunes |
 | DictaBERT sentiment | https://huggingface.co/dicta-il/dictabert-sentiment | Off-the-shelf Hebrew sentiment classifier (3-class) |
 | Dicta-LM 3.0 (technical report) | https://arxiv.org/abs/2602.02104 | Current Hebrew model family (24B / 12B / 1.7B, 65k context, tool-calling chat variants) |
 | DictaLM 2.0 Instruct (previous generation) | https://huggingface.co/dicta-il/dictalm2.0-instruct | Generative Hebrew LLM (7B, Mistral-based); superseded by Dicta-LM 3.0 |
 | AlephBERT | https://huggingface.co/onlplab/alephbert-base | Alternative Hebrew BERT from BIU OnlpLab |
-| HuggingFace Hebrew models | https://huggingface.co/models?language=he | Browse the full Hebrew model catalog |
-| Mixpanel help | https://mixpanel.com/help | Funnel analysis, cohort retention for chat flows |
-| Matomo analytics | https://matomo.org/docs/ | Self-hosted event tracking, privacy-friendly |
-| GA4 AI Assistant channel group (Search Engine Journal) | https://www.searchenginejournal.com/google-analytics-adds-ai-assistant-as-default-channel-group/574974/ | Medium `ai-assistant`, the reserved campaign value, and which assistants Google has actually named |
+| GA4 default channel group (Google) | https://support.google.com/analytics/answer/9756891 | AI Assistant channel: Medium `ai-assistant`, the `(ai-assistant)` campaign value, which assistants Google names |
 | Mixpanel Agent (formerly Spark) | https://docs.mixpanel.com/docs/mixpanel-agent | Current name and capabilities of the AI query builder |
 | OpenTelemetry GenAI semantic conventions | https://github.com/open-telemetry/semantic-conventions-genai | Span attribute names for model, token counts and tool calls when tracing an LLM bot |
+| Privacy Protection Law, consolidated Hebrew text | https://he.wikisource.org/wiki/חוק_הגנת_הפרטיות | Section 11 notice contents, Section 17B1 privacy-officer duty |
+| Communications Law, Section 30A (consolidated Hebrew text) | https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים) | Consent, the required labelling, the SMS carve-out, and the NIS 1,000 exemplary-damages cap |
 | Israel Privacy Amendment 13 (IAPP) | https://iapp.org/news/a/israel-marks-a-new-era-in-privacy-law-amendment-13-ushers-in-sweeping-reform | Effective Aug 14, 2025: consent, notice, retention limits, deletion mechanisms |
-| Section 30A anti-spam guide (DLA Piper) | https://www.dlapiperdataprotection.com/index.html?t=electronic-marketing&c=IL | Opt-in regime for SMS / email / IM marketing in Israel |
 
 ## Troubleshooting
 
-- **DictaBERT model not loading**: the `dicta-il/dictabert-sentiment` model needs PyTorch + `transformers` (~500MB). Run `pip install torch transformers` (known to work on the transformers 5.x line; pin whichever version you have actually tested); for CPU-only, install torch from `https://download.pytorch.org/whl/cpu`.
+- **DictaBERT model not loading**: the `dicta-il/dictabert-sentiment` model needs PyTorch + `transformers`. Run `pip install torch transformers` (known to work on the transformers 5.x line; pin whichever version you have actually tested); for CPU-only, install torch from `https://download.pytorch.org/whl/cpu`.
 - **Sentiment labels look inverted**: you hardcoded a label list. Read `model.config.id2label` instead. For `dicta-il/dictabert-sentiment` it is `{0: "Positive", 1: "Negative", 2: "Neutral"}`.
-- **Timestamps parse to nothing on older Python**: `datetime.fromisoformat` only handles the full ISO-8601 range, including a trailing `Z`, from Python 3.11. On 3.10 the parse fails and durations and traffic patterns come back empty. Use Python 3.11 or newer.
+- **Timestamps parse to nothing on older Python**: `datetime.fromisoformat` only handles the full ISO-8601 range, including a trailing `Z`, from Python 3.11. On 3.10 (end of life since 2026-10-01) the parse fails and durations and traffic patterns come back empty. Use Python 3.11 or newer.
+- **Peak day shows Saturday on a Sunday-heavy bot**: the timestamps are UTC and were bucketed without converting to Israel time. The bundled script converts any timestamp that carries an offset or `Z`; one with no offset is assumed to be Israel time and counted in the report.
 - **Hebrew text appears reversed in charts**: matplotlib has no native RTL. Apply `python-bidi` (`bidi.algorithm.get_display()`) before rendering, or switch to Plotly.
 - **Tokenization produces wrong word frequencies**: whitespace splitting ignores Hebrew prefix particles. Use the prefix-stripping tokenizer in Step 9, or the YAP morphological analyzer (https://github.com/OnlpLab/yap) for production.
 - **Sentiment scores unreliable for short messages**: 1-3 word messages lack context ("סבבה" can be positive or neutral). Under 4 words, rely on behavioral signals (continued / escalated / abandoned) plus the Step 6 satisfaction signals.

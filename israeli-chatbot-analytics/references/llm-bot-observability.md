@@ -196,6 +196,23 @@ tracing backend works; the GenAI semantic conventions define the span attribute 
 for model, token counts and tool calls, so instrument to those rather than inventing
 your own attribute keys and you can change backend later.
 
+Concretely, one span per model call, named `{gen_ai.operation.name} {gen_ai.request.model}`
+(for example `chat DictaLM-3.0-1.7B-Instruct`), carrying at least:
+
+| Attribute | Type | Use in this skill |
+|---|---|---|
+| `gen_ai.operation.name` | string | `chat`, `generate_content`, ... |
+| `gen_ai.provider.name` | string | which vendor served the turn; the older `gen_ai.system` key is no longer in the registry |
+| `gen_ai.request.model` | string | joins to `llm_turn["model"]` and the cost rate card |
+| `gen_ai.usage.input_tokens` | int | `prompt_tokens` |
+| `gen_ai.usage.output_tokens` | int | `completion_tokens` |
+
+Put retrieval and each tool call in child spans of the turn, and carry your own
+`session_id` (pseudonymized) on every span so a trace joins back to the Step 1 log.
+Every one of these attributes is still marked **Development**, not stable, so pin
+the semantic-conventions version you instrument against and re-check it when you
+upgrade the SDK.
+
 The GenAI conventions moved out of the main OpenTelemetry semconv site in 2026 and are
 now maintained at https://github.com/open-telemetry/semantic-conventions-genai; the old
 `opentelemetry.io/docs/specs/semconv/gen-ai/` pages carry a "moved" banner and are no

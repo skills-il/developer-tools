@@ -89,6 +89,22 @@
         "Process lesson: two claims added mid-cycle (a dated LaunchDarkly pricing restructure, and Mixpanel MCP being off by default on older orgs) came from a research subagent and had no primary source. Both were removed at the Judge gate. A research agent's dated vendor claim is a lead, not a fact.",
         "Process lesson: a subagent reported the Mixpanel Agent doc URL as /docs/agent. The real path is /docs/mixpanel-agent; /docs/agent is a 404. Always curl a URL a subagent hands you before writing it into the skill."
       ]
+    },
+    {
+      "version": "1.5.0",
+      "date": "2026-10-25",
+      "lessons": [
+        "Browser-declared evidence (verified_via=browser) is never re-fetched by --check-sources, so the WhatsApp entries reported green while Meta had changed pricing on 2026-10-01 (service and in-window utility charged again, FEP 72h -> up to 7 days). Re-render every verified_via=browser source each cycle.",
+        "The 2026-09-02 out-of-scope row 'Israel per-country rate not published' was simply wrong: Israel is a standalone market on the public rate card. Re-litigation must open the source, not restate the old rationale.",
+        "The section 30A damages cap removed in 1.3.0 as unverifiable was verifiable all along from the statute text on Hebrew Wikisource; prefer the primary statute over law-firm summaries.",
+        "Pre-existing Dialogflow CX BigQuery recipe used column names that do not exist (session_id, query_text, matched_intent); fixed from the export-bq schema. Vendor schemas in references need their own evidence entries.",
+        "Script repairs introduced new defects twice (null-text tolerance created a media-loop false positive; case-insensitive outcomes reached core metrics but not drop-off). Grep every consumer of a field when normalising it.",
+        "Deferred: description still omits WhatsApp cost and compliance terms (Expert MINOR); changing it needs the Phase 5.7 holdout eval.",
+        "Deferred: no WhatsApp sessionizer in the script; it only flags sessions with an internal gap over --session-timeout-minutes.",
+        "Resolved CARRY items from 1.4.0: OTel GenAI attributes named, handoff-quality metrics added, retention computed by the script, 'נו' whole-token lookup, 'כל הכבוד' context-gated, 'ההה' removed, Dicta-LM 3.0 repo ids, SKILL_HE.md under 5,000 words, legal allowlist confirmed landed.",
+        "Removed the hand-rolled Hebrew negation scorer from the sentiment guide after three arithmetic rounds each found new misreadings (window crossing commas, idioms overriding complaints). Keyword rules cannot tell which word a negator governs; the guide now gives labelling guidance and test sentences and routes negation to DictaBERT. Do not reintroduce a rule-based flipper.",
+        "Opt-out detection in the script is a triage screen (explicit phrases, or a bare opt-out word in a message of <= 3 tokens), not a Section 30A determination; keep it phrase-anchored."
+      ]
     }
   ]
 }

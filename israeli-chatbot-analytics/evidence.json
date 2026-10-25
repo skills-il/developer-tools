@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "israeli-chatbot-analytics",
-  "generated_at": "2026-09-01T21:10:22+00:00",
+  "generated_at": "2026-10-25T09:00:00+00:00",
   "claims": [
     {
       "claim_id": "dialogflow-cx-hebrew-code",
@@ -18,95 +18,102 @@
     },
     {
       "claim_id": "dialogflow-cx-console-retired",
-      "claim": "The standalone Dialogflow CX console was deprecated on 2025-10-31 and users are routed to the Conversational Agents console; the API and documentation paths still use dialogflow/cx.",
-      "source_url": "https://kartaca.com/en/from-dialogflow-cx-to-conversational-agents-the-biggest-changes-you-should-know/",
-      "raw_snippet": "From Dialogflow CX to Conversational Agents",
-      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "claim": "The Dialogflow CX console was deprecated on 2025-10-31 and users are routed to the Conversational Agents console; API and doc paths still use dialogflow/cx.",
+      "source_url": "https://docs.cloud.google.com/dialogflow/docs/release-notes",
+      "raw_snippet": "The Dialogflow CX console will be deprecated on October 31, 2025. After that date all users will be automatically routed to the Conversational Agents console.",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
       "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
+        "references/platform-integrations.md"
       ],
       "confidence": "medium",
-      "verification": "Third-party migration write-up plus the Google Cloud Dialogflow release notes. The rename and console consolidation are corroborated by the live docs still serving under /dialogflow/cx/ while the console redirects to Conversational Agents. Confidence is medium because the exact retirement date comes from the third-party summary, not a quoted Google deprecation notice."
+      "verification": "Read verbatim from the page rendered with Playwright on 2026-10-25 (JS-rendered; the release-note line is not in the static HTML).",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T12:00:00+00:00"
     },
     {
       "claim_id": "whatsapp-per-message-pricing-2025",
-      "claim": "Effective July 1, 2025, Meta charges for WhatsApp Business Platform messages on a per-message basis rather than per 24-hour conversation, and only when a template message is delivered.",
+      "claim": "Since 1 July 2025 Meta bills WhatsApp Business Platform messages per delivered message, by category and market, and only for messages from the business to the user.",
       "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
-      "raw_snippet": "Effective July 1, 2025, Meta charges on a per-message basis for messages businesses deliver to WhatsApp users: You are only charged when a template message is delivered",
-      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "raw_snippet": "Meta charges by category–market, and only for messages from businesses to users.",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
       ],
       "confidence": "high",
-      "verification": "Read from the rendered Meta pricing page via Playwright. The page is JS-rendered and returns an error body to plain curl, so browser rendering was required.",
+      "verification": "Read verbatim from the Meta pricing page rendered with Playwright on 2026-10-25 (page header 'Updated: Sep 30, 2026'). The page returns an error body to plain curl.",
       "verified_via": "browser",
-      "verified_at": "2026-09-01T21:02:17+00:00"
+      "verified_at": "2026-10-25T09:00:00+00:00"
     },
     {
-      "claim_id": "whatsapp-service-window-free",
-      "claim": "Non-template messages sent within an open 24-hour customer service window are free.",
+      "claim_id": "whatsapp-service-free-tier-2026-10",
+      "claim": "From 1 October 2026 each business phone number gets 1,000 free service messages per month, with no roll-over; service messages beyond that are charged.",
       "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
-      "raw_snippet": "All non-template messages are free within an open customer service window.",
-      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "raw_snippet": "For each business phone number, Meta provides 1,000 free service messages per month, which do not roll over but reset monthly.",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md",
+        "scripts/conversation-analyzer.py"
       ],
       "confidence": "high",
-      "verification": "Verbatim from the rendered Meta pricing page via Playwright.",
+      "verification": "Read verbatim from the Meta pricing page rendered with Playwright on 2026-10-25 (page header 'Updated: Sep 30, 2026'). The page returns an error body to plain curl.",
       "verified_via": "browser",
-      "verified_at": "2026-09-01T21:02:17+00:00"
+      "verified_at": "2026-10-25T09:00:00+00:00"
     },
     {
-      "claim_id": "whatsapp-utility-free-in-csw",
-      "claim": "As of this review, utility template messages delivered within an open customer service window are free. Meta links a pricing explainer that reflects updates launching October 1, 2026, without stating the content on the page, so the end of this free status is a watch item and not a confirmed fact.",
+      "claim_id": "whatsapp-utility-in-csw-charged-2026-10",
+      "claim": "Utility templates sent inside an open customer-service window were free from 1 July 2025 and are charged again from 1 October 2026; the watch item from the 1.3.0 cycle is resolved.",
       "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
-      "raw_snippet": "As of July 1, 2025 - Meta does not charge for utility templates in response to users (delivered within an open customer service window).",
-      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "raw_snippet": "Utility messages sent in response to users (thus in an open customer service window), which became free as of July 1, 2025.",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "confidence": "medium",
-      "verification": "Verbatim from the rendered Meta pricing page. The same page also states: 'The pricing explainer PDF outlines how Meta charges businesses, in PDF form, and reflects updates launching October 1, 2026'. Several BSP guides claim in-window utility templates start being charged on 2026-10-01, but Meta's own page does not say so, so the skill carries it as a watch item.",
-      "verified_via": "browser",
-      "verified_at": "2026-09-01T21:02:17+00:00"
-    },
-    {
-      "claim_id": "whatsapp-fep-72h-free",
-      "claim": "Meta's term for the click-to-WhatsApp window is the free entry point (FEP) window. FEP windows stay open for 72 hours and all messages, including templates, are free inside them.",
-      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
-      "raw_snippet": "Free entry point window - All messages, including template messages, are free for 72 hours, if sent within an open free entry point window.",
-      "fetched_at": "2026-08-02T02:55:00+00:00",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
       ],
       "confidence": "high",
-      "verification": "Verbatim from the rendered Meta pricing page. The page also states 'FEP windows remain open for 72 hours.'",
+      "verification": "Read verbatim from the Meta pricing page rendered with Playwright on 2026-10-25 (page header 'Updated: Sep 30, 2026'). The page returns an error body to plain curl. Listed under 'Effective October 1, 2026 / 1. Charging for messages that were previously free', directly after the sentence 'Meta resumed charging, on a per-message basis, for messages that were previously free:'.",
       "verified_via": "browser",
-      "verified_at": "2026-09-01T21:02:17+00:00"
+      "verified_at": "2026-10-25T09:00:00+00:00"
+    },
+    {
+      "claim_id": "whatsapp-fep-up-to-7-days",
+      "claim": "The free-entry-point (FEP) window, opened by replying to a user who came from a click-to-WhatsApp ad on Android or iOS, can stay open up to 7 days; marketing, utility, authentication and service messages inside it are free, Meta Business Agent messages are not. The skill previously said 72 hours.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "The FEP window may remain open for up to 7 days.",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the Meta pricing page rendered with Playwright on 2026-10-25 (page header 'Updated: Sep 30, 2026'). The page returns an error body to plain curl. Same section: 'While open, Meta does not charge for marketing, utility, authentication or service messages. Meta continues to charge for Meta Business Agent messages in the FEP window.'",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T09:00:00+00:00"
     },
     {
       "claim_id": "whatsapp-quarterly-pricing-calendar",
       "claim": "Meta may change WhatsApp Business Platform pricing only on the first day of a calendar quarter, up to four times a year.",
       "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
       "raw_snippet": "Meta may update pricing only on the 1st day of each quarter, thus up to 4 times per year: January 1, April 1, July 1, and/or October 1.",
-      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
       ],
       "confidence": "high",
       "verification": "Verbatim from the rendered Meta pricing page, under the 'Pricing calendar' heading.",
       "verified_via": "browser",
-      "verified_at": "2026-09-01T21:02:17+00:00"
+      "verified_at": "2026-10-25T09:00:00+00:00"
     },
     {
       "claim_id": "dictalm-3-release",
-      "claim": "Dicta-LM 3.0 (February 2026) is Dicta's current open-weight Hebrew LLM family, released in 24B, 12B and 1.7B sizes adapted from Mistral-Small-3.1, NVIDIA Nemotron Nano V2 and Qwen3-1.7B respectively, each with a 65k native context and a chat variant with tool-calling support.",
+      "claim": "Dicta-LM 3.0 (February 2026) is released in 24B, 12B and 1.7B sizes adapted from Mistral-Small-3.1, NVIDIA Nemotron Nano V2 and Qwen3-1.7B respectively, with a 65k native context, as base and chat models with tool-calling support.",
       "source_url": "https://arxiv.org/abs/2602.02104",
       "raw_snippet": "The model is released in three sizes: 24B - adapted from the Mistral-Small-3.1 base model, 12B - adapted from the NVIDIA Nemotron Nano V2 model, and 1.7B - adapted from the Qwen3-1.7B base model. We are releasing multiple variants of each model, each with a native context length of 65k tokens; base model and chat model with tool-calling support.",
       "fetched_at": "2026-08-02T02:55:00+00:00",
@@ -130,7 +137,7 @@
       "confidence": "high",
       "verification": "Fetched the model's raw config.json over HTTP and read id2label directly. This is the source of the critical correction in this version: the previous instructions hardcoded a label list that inverted every sentiment reading.",
       "verified_via": "browser",
-      "verified_at": "2026-09-01T21:02:17+00:00"
+      "verified_at": "2026-10-25T09:00:00+00:00"
     },
     {
       "claim_id": "dictabert-sentiment-model-card",
@@ -148,17 +155,17 @@
     },
     {
       "claim_id": "alephbert-onlplab",
-      "claim": "AlephBERT (onlplab/alephbert-base) is a Hebrew BERT from the ONLP Lab, trained on the Hebrew section of OSCAR plus Wikipedia and Twitter data. It is not a Tel Aviv University model.",
-      "source_url": "https://huggingface.co/onlplab/alephbert-base",
-      "raw_snippet": "onlplab / alephbert-base like 21 Follow ONLP Lab",
-      "fetched_at": "2026-08-02T02:55:00+00:00",
+      "claim": "AlephBERT (onlplab/alephbert-base) is a Hebrew BERT from the ONLP Lab, trained on the Hebrew section of OSCAR plus Wikipedia and Twitter data. It is not a Tel Aviv University model. Model page: https://huggingface.co/onlplab/alephbert-base",
+      "source_url": "https://huggingface.co/onlplab/alephbert-base/raw/main/README.md",
+      "raw_snippet": "OSCAR [(Ortiz, 2019)](https://oscar-corpus.com/) Hebrew section (10 GB text, 20 million sentences).",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/hebrew-sentiment-guide.md"
       ],
       "confidence": "high",
-      "verification": "Fetched the model card. The org shown on the card is 'ONLP Lab' and the training-data section states 'OSCAR (Ortiz, 2019) Hebrew section (10 GB text, 20 million sentences).' This corrects a reference file that attributed AlephBERT to TAU."
+      "verification": "Model card README. The model is published under the onlplab organisation (load path 'onlplab/alephbert-base'), whose Hugging Face org page is titled ONLP Lab; the README lists OSCAR Hebrew, Wikipedia and Twitter as training data."
     },
     {
       "claim_id": "rasa-calm-dialogue-driven",
@@ -188,7 +195,7 @@
     },
     {
       "claim_id": "section-30a-optin-scope",
-      "claim": "Israel's Communications Law (Telecommunications and Broadcasting) 1982, the Anti Spam Act, prohibits advertising by automated dialing, fax or text messages without the recipient's prior opt-in consent, and requires an opt-out in every such message. Whether this reaches WhatsApp and Telegram depends on judicial interpretation of 'text messages' rather than explicit statutory text.",
+      "claim": "DLA Piper's Israel summary of the Anti Spam Act (Section 30A): opt-in consent required for advertising by automated dialing, fax or text messages, with an opt-out in every message. The skill now reads the scope from the statute text itself (entries s30a-*).",
       "source_url": "https://www.dlapiperdataprotection.com/index.html?t=electronic-marketing&c=IL",
       "raw_snippet": "The Anti Spam Act prohibits, subject to certain exceptions, advertising by means of automated dialing, fax or text messages without first obtaining the recipient's initial opt-in prior consent; all such communications also must contain an optout / unsubscribe option.",
       "fetched_at": "2026-08-02T02:55:00+00:00",
@@ -278,19 +285,6 @@
       ],
       "confidence": "low",
       "verification": "Only the fallback-rate benchmark has an external source (OMQ chatbot KPI lexicon: 'Benchmark: < 10%', 'Below 5% is excellent', plus the quoted sentence, read via Playwright). Every other threshold in the skill's benchmark tables is conventional practice with no measured Israeli sample behind it. The skill body now says so explicitly and instructs readers to replace each row with their own baseline after four weeks of data. Recorded at low confidence deliberately rather than dressed up with a citation that does not support it. The alerting thresholds are stated as operational defaults chosen for this skill rather than sourced benchmarks, so they are recorded here for traceability and not presented as external facts."
-    },
-    {
-      "claim_id": "section-30a-statutory-damages-unverified",
-      "claim": "Israeli law provides statutory damages per unsolicited marketing message without proof of damages under סעיף 30א of the Communications Law. The specific per-message cap could not be verified against a primary source in this review and has been removed from the skill body.",
-      "source_url": "https://www.dlapiperdataprotection.com/index.html?t=electronic-marketing&c=IL",
-      "raw_snippet": "The Anti Spam Act prohibits, subject to certain exceptions, advertising by means of automated dialing, fax or text messages without first obtaining the recipient's initial opt-in prior consent; all such communications also must contain an optout / unsubscribe option.",
-      "fetched_at": "2026-08-02T03:05:00+00:00",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "confidence": "low",
-      "verification": "The DLA Piper Israel page confirms the opt-in regime and the mandatory opt-out but states no damages figure. The previous version of this skill asserted a NIS 1,000 per-message cap; that number could not be traced to a primary source here, so the skill now describes the exposure qualitatively and tells the reader to confirm the figure with a lawyer."
     },
     {
       "claim_id": "ref-dialogflow-cx-analytics",
@@ -429,25 +423,11 @@
     },
     {
       "claim_id": "ga4-ai-assistant-channel",
-      "claim": "GA4 has a default AI Assistant channel group that assigns Medium `ai-assistant` and a reserved `(ai-assistant)` campaign value. Google names ChatGPT, Gemini and Claude as examples and has not published the full recognized-referrer list.",
+      "claim": "Search Engine Journal reported GA4's AI Assistant channel group, which assigns Medium ai-assistant. The examples Google itself lists are recorded in ga4-ai-assistant-google.",
       "source_url": "https://www.searchenginejournal.com/google-analytics-adds-ai-assistant-as-default-channel-group/574974/",
       "raw_snippet": "it assigns “ai-assistant” as the medium value",
       "fetched_at": "2026-09-01T20:59:37+00:00",
       "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md",
-        "references/analytics-stack-notes.md"
-      ]
-    },
-    {
-      "claim_id": "ga4-ai-assistant-referrer-list-unpublished",
-      "claim": "Google has not published which AI assistants are on the GA4 recognized-referrer list beyond the three named examples, so coverage of any particular assistant (Perplexity included) cannot be assumed.",
-      "source_url": "https://www.searchenginejournal.com/google-analytics-adds-ai-assistant-as-default-channel-group/574974/",
-      "raw_snippet": "Google hasn’t published which AI assistants are on the recognized referrer list beyond the three named examples",
-      "fetched_at": "2026-09-01T20:59:37+00:00",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md",
         "references/analytics-stack-notes.md"
       ]
     },
@@ -503,29 +483,35 @@
     },
     {
       "claim_id": "whatsapp-ai-providers-pricing-2026",
-      "claim": "Meta introduced a separate pricing policy for AI Providers on the WhatsApp Business Platform, effective 16 February 2026 and updated as of 12 May 2026.",
+      "claim": "Meta has a separate pricing policy for AI Providers on the WhatsApp Business Platform, effective 16 February 2026 and updated 12 May 2026; the 1 October 2026 service-message pricing change does not apply to AI Providers.",
       "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
-      "raw_snippet": "new pricing policy for “AI Providers” leveraging WhatsApp Business Platform, which is effective February 16, 2026, and updated as of May 12, 2026",
-      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "raw_snippet": "Pricing updates for service messages launching October 1, 2026 do not apply to AI Providers",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
       ],
+      "confidence": "high",
+      "verification": "Read verbatim from the Meta pricing page rendered with Playwright on 2026-10-25 (page header 'Updated: Sep 30, 2026'). The page returns an error body to plain curl. Preceding sentence on the page: 'See the AI Providers pricing policy, effective February 16, 2026 and updated as of May 12, 2026.'",
       "verified_via": "browser",
-      "verified_at": "2026-09-01T21:02:17+00:00"
+      "verified_at": "2026-10-25T09:00:00+00:00"
     },
     {
       "claim_id": "whatsapp-marketing-max-price",
-      "claim": "Businesses integrated with the Marketing Messages API can set a max price per marketing message delivery; Meta then charges that max price or lower.",
+      "claim": "Businesses on the Marketing Messages API can set a max price per marketing message delivery; Meta then charges that max price or lower.",
       "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
-      "raw_snippet": "can choose to set a max-price per marketing message delivery",
-      "fetched_at": "2026-09-01T20:59:37+00:00",
+      "raw_snippet": "can choose to set a max-price per marketing message delivery; when a max-price is set, Meta will charge that max-price or lower for delivery.",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
       ],
+      "confidence": "high",
+      "verification": "Read verbatim from the Meta pricing page rendered with Playwright on 2026-10-25 (page header 'Updated: Sep 30, 2026'). The page returns an error body to plain curl.",
       "verified_via": "browser",
-      "verified_at": "2026-09-01T21:02:17+00:00"
+      "verified_at": "2026-10-25T09:00:00+00:00"
     },
     {
       "claim_id": "otel-genai-semconv-moved",
@@ -575,7 +561,7 @@
     },
     {
       "claim_id": "dicta-org-identity",
-      "claim": "DICTA is an independent Israeli non-profit, The Israel Center for Text Analysis, not a Bar-Ilan University lab. Bar-Ilan is the correct affiliation for the ONLP Lab behind AlephBERT.",
+      "claim": "Dicta-LM and DictaBERT are published by DICTA: The Israel Center for Text Analysis, an Israeli non-profit.",
       "source_url": "https://huggingface.co/dicta-il",
       "raw_snippet": "DICTA: The Israel Center for Text Analysis",
       "fetched_at": "2026-09-01T21:10:22+00:00",
@@ -595,6 +581,573 @@
       ],
       "verified_via": "browser",
       "verified_at": "2026-09-01T21:10:22+00:00"
+    },
+    {
+      "claim_id": "whatsapp-resumed-charging-2026-10",
+      "claim": "On 1 October 2026 Meta resumed charging for WhatsApp messages that had been free: service messages beyond the monthly free tier (free since 1 November 2024) and utility templates in an open customer-service window.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "Meta resumed charging, on a per-message basis, for messages that were previously free:",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the Meta pricing page rendered with Playwright on 2026-10-25 (page header 'Updated: Sep 30, 2026'). The page returns an error body to plain curl. The list that follows starts 'Service messages, which became free as of Nov. 1, 2024.'",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T09:00:00+00:00"
+    },
+    {
+      "claim_id": "whatsapp-israel-standalone-market",
+      "claim": "Israel is a standalone market on Meta's WhatsApp rate card (not part of a 'Rest of' region), so its per-message rate is published.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "Israel (IL) - 972",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md",
+        "references/domain-checklist.md",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the Meta pricing page rendered with Playwright on 2026-10-25 (page header 'Updated: Sep 30, 2026'). The page returns an error body to plain curl. Listed under the heading 'Standalone on rate cards – 39 markets'.",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T09:00:00+00:00"
+    },
+    {
+      "claim_id": "whatsapp-israel-rates-2026-10",
+      "claim": "Israel USD list rates effective 1 October 2026: marketing $0.0353, utility $0.0053, authentication $0.0053, service $0.0053, Meta Business Agent $2.00 per million tokens.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "('Israel', 'USD', 0.0353, 0.0053, 0.0053, 'n/a', 0.0053, '$2.00 USD / 1 M (million) tokens')",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Row read from the 'USD list rates' rate-card file linked from the pricing page (an XLSX served with a .csv name from a signed, expiring fbcdn URL, so the stable source cited is the pricing page). Title row of the file: 'Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026'. Column order: Market, Currency, Marketing, Utility, Authentication, Authentication-International, Service, Meta Business Agent.",
+      "verified_via": "pdf",
+      "verified_at": "2026-10-25T09:00:00+00:00"
+    },
+    {
+      "claim_id": "whatsapp-meta-business-agent",
+      "claim": "Since 1 July 2026 WhatsApp has a fifth message category, Meta Business Agent, for non-template replies powered by Meta's agent platform, billed at one global rate of $2.00 per million tokens with no free messages.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "One global rate of $2.00 USD per 1 million (M) tokens.",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the Meta pricing page rendered with Playwright on 2026-10-25 (page header 'Updated: Sep 30, 2026'). The page returns an error body to plain curl. Same page: 'Meta has 5 different message categories on the WhatsApp Business Platform, with the introduction of Meta Business Agent as of July 1, 2026.'",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T09:00:00+00:00"
+    },
+    {
+      "claim_id": "whatsapp-pricing-webhook-type",
+      "claim": "Each delivery status webhook carries a pricing object (billable, pricing_model, type, category); a service message inside the free tier is type free_customer_service, and from the 1,001st message it is type regular.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "will change from free_customer_service to regular as outlined below:",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md",
+        "scripts/conversation-analyzer.py",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the Meta pricing page rendered with Playwright on 2026-10-25 (page header 'Updated: Sep 30, 2026'). The page returns an error body to plain curl. Example objects on the page: \"billable\": false, \"pricing_model\": \"PMP\", \"type\": \"free_customer_service\", \"category\": \"service\" and the billable/regular counterpart.",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T09:00:00+00:00"
+    },
+    {
+      "claim_id": "whatsapp-gov-nonprofit-exception",
+      "claim": "Eligible government and non-profit organisations keep service messages free beyond the monthly tier, through 31 December 2027.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "This pricing policy will be in effect through December 31, 2027.",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the Meta pricing page rendered with Playwright on 2026-10-25 (page header 'Updated: Sep 30, 2026'). The page returns an error body to plain curl. Preceding sentence: 'Starting October 1, 2026 - Service messages remain free beyond the monthly free tier only for eligible government and non-profit organizations using the WhatsApp Business Platform.'",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T09:00:00+00:00"
+    },
+    {
+      "claim_id": "s30a-consent-in-writing",
+      "claim": "Section 30A(b) bars sending an advertisement by fax, automatic dialing system, electronic message or short message without the recipient's express prior consent in writing, including by electronic message or a recorded call.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)",
+      "raw_snippet": "בלא קבלת הסכמה מפורשת מראש של הנמען, בכתב",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Read from the consolidated text on Hebrew Wikisource (section header lists amendments through תשפ\"ב-2)."
+    },
+    {
+      "claim_id": "s30a-electronic-message-definition",
+      "claim": "Section 30A(a) defines an electronic message as a coded telecom message transmitted over the internet that can be stored and retrieved by computer; neither it nor the short-message definition names a channel.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)",
+      "raw_snippet": "מסר בזק מקודד המועבר ברשת האינטרנט",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "s30a-advertisement-definition",
+      "claim": "Section 30A(a): an advertisement includes a commercially distributed message whose purpose is to encourage buying a product or service or otherwise spending money.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)",
+      "raw_snippet": "שמטרתו לעודד רכישת מוצר או שירות",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "s30a-labelling",
+      "claim": "Section 30A(e)(1): the words 'פרסומת' (or donation request / propaganda) appear at the start of the advertisement, and in the subject line of an electronic message; plus the advertiser's name, address and contact details and the right to refuse.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)",
+      "raw_snippet": "יופיעו בתחילת דבר הפרסומת",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "s30a-sms-carve-out",
+      "claim": "Section 30A(e)(2): an advertisement sent by short message need state only the advertiser's name and contact details for giving a refusal notice.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)",
+      "raw_snippet": "יציין בדבר הפרסומת רק את שמו ואת דרכי יצירת הקשר עמו לצורך מתן הודעת סירוב",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "s30a-exemplary-damages",
+      "claim": "Communications Law סעיף 30א(י)(1), Section 30A(j)(1): where an advertisement is sent knowingly in breach, the court may award exemplary damages not dependent on harm of up to NIS 1,000 per advertisement received. Replaces the 1.3.0 entry that could not verify this figure.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)",
+      "raw_snippet": "בסכום שלא יעלה על 1,000 שקלים חדשים בשל כל דבר פרסומת",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ppl-s11-notice",
+      "claim": "Privacy Protection Law Section 11 (סעיף 11, amended תשפ\"ד, i.e. Amendment 13): a request for personal data for processing in a database must state whether giving it is a legal duty or depends on consent and what follows a refusal, the purpose, the controller's name and contact details, recipients and purposes of transfer, and the access and correction rights.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_הגנת_הפרטיות",
+      "raw_snippet": "שמו של בעל השליטה במאגר המידע, ודרכי ההתקשרות עימו",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Section header on Wikisource reads 'תיקון: תשפ״ד'. Opening clause: 'פניה לאדם לקבלת מידע אישי לשם עיבודו במאגר מידע תלווה בהודעה שיצויינו בה'."
+    },
+    {
+      "claim_id": "ppl-s17b1-dpo",
+      "claim": "Privacy Protection Law Section 17B1 (סעיף 17ב1, added by Amendment 13): a privacy protection officer is mandatory for public bodies, data brokers holding data on more than 10,000 people, controllers or holders whose main activities require ongoing systematic monitoring at significant scale, and those whose main activity includes processing especially sensitive information at significant scale, naming banks, insurers, general hospitals and health funds.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_הגנת_הפרטיות",
+      "raw_snippet": "שעיסוקו העיקרי כולל עיבוד מידע בעל רגישות מיוחדת בהיקף ניכר",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ppl-s17b1-dpo-brokers",
+      "claim": "s.17B1(a)(2): the data-broker limb applies where the database holds personal data on more than 10,000 people.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_הגנת_הפרטיות",
+      "raw_snippet": "ויש במאגר מידע אישי על יותר מ",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ga4-ai-assistant-google",
+      "claim": "Google's GA4 default channel group page: AI Assistant traffic comes from sources like ChatGPT, Gemini, Deepseek, Copilot or Grok, excludes Google's AI Overviews and AI Mode, and the medium is set to ai-assistant only if the referrer matches an unpublished list of AI Assistants. Page: https://support.google.com/analytics/answer/9756891",
+      "source_url": "https://support.google.com/analytics/answer/9756891?hl=en",
+      "raw_snippet": "AI Assistant is the channel by which users arrive at your site from sources like ChatGPT, Gemini, Deepseek, Copilot, or Grok.",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/analytics-stack-notes.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mixpanel-mcp-default-on",
+      "claim": "On Mixpanel free and growth accounts created after 1 August 2026, the MCP server is enabled by default and org admins can disable it.",
+      "source_url": "https://docs.mixpanel.com/docs/mcp",
+      "raw_snippet": "MCP is enabled by default",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "references/analytics-stack-notes.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "otel-genai-attributes",
+      "claim": "The OpenTelemetry GenAI attribute registry defines gen_ai.operation.name, gen_ai.provider.name, gen_ai.request.model, gen_ai.usage.input_tokens and gen_ai.usage.output_tokens, all at Development stability; gen_ai.system is no longer listed.",
+      "source_url": "https://raw.githubusercontent.com/open-telemetry/semantic-conventions-genai/main/docs/registry/attributes/gen-ai.md",
+      "raw_snippet": "The Generative AI provider as identified by the client or server instrumentation.",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "references/llm-bot-observability.md"
+      ],
+      "confidence": "high",
+      "verification": "Rows for each of the five attributes carry the 'Development' badge. grep for 'gen_ai.system`' returns only gen_ai.system_instructions."
+    },
+    {
+      "claim_id": "otel-genai-span-name",
+      "claim": "Inference span name SHOULD be '{gen_ai.operation.name} {gen_ai.request.model}'.",
+      "source_url": "https://raw.githubusercontent.com/open-telemetry/semantic-conventions-genai/main/docs/gen-ai/gen-ai-spans.md",
+      "raw_snippet": "SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "references/llm-bot-observability.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "python-310-eol",
+      "claim": "Python 3.10 reached end of life on 2026-10-01.",
+      "source_url": "https://peps.python.org/pep-0619/",
+      "raw_snippet": "As of 2026-10-01, 3.10 has reached the end-of-life phase of its release cycle.",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/conversation-analyzer.py"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "dictalm-3-repo-ids",
+      "claim": "Dicta-LM 3.0 chat variants on Hugging Face: DictaLM-3.0-1.7B-Instruct, DictaLM-3.0-1.7B-Thinking, DictaLM-3.0-Nemotron-12B-Instruct and DictaLM-3.0-24B-Thinking; there is no 24B Instruct.",
+      "source_url": "https://huggingface.co/dicta-il/DictaLM-3.0-24B-Thinking/raw/main/README.md",
+      "raw_snippet": "This is our flagship model, a 24-billion-parameter *reasoning* model, with full precision (BF16), originally initialized from",
+      "fetched_at": "2026-10-25T09:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "confidence": "high",
+      "verification": "The Hugging Face model listing for author dicta-il (api/models?author=dicta-il&search=DictaLM-3.0) on 2026-10-25 contains DictaLM-3.0-1.7B-Instruct, DictaLM-3.0-1.7B-Thinking, DictaLM-3.0-Nemotron-12B-Instruct and DictaLM-3.0-24B-Thinking, and no DictaLM-3.0-24B-Instruct; the 24B card itself describes the model as a reasoning chat model."
+    },
+    {
+      "claim_id": "onlp-lab-bar-ilan",
+      "claim": "The ONLP Lab, publisher of AlephBERT (onlplab/alephbert-base), is the NLP research lab at Bar-Ilan University.",
+      "source_url": "https://api.github.com/orgs/OnlpLab",
+      "raw_snippet": "The NLP research lab at the Bar Ilan University, Israel",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-sentiment-guide.md"
+      ],
+      "confidence": "high",
+      "verification": "GitHub org description of OnlpLab. The AlephBERT paper (arXiv 2104.04052) lists the authors' affiliation as 'Bar-Ilan University, Computer Science Department, Ramat-Gan, Israel'."
+    },
+    {
+      "claim_id": "dictalm2-7b-mistral",
+      "claim": "DictaLM 2.0 (2024) is a 7-billion-parameter model based on Mistral-7B-v0.1.",
+      "source_url": "https://huggingface.co/dicta-il/dictalm2.0/raw/main/README.md",
+      "raw_snippet": "pretrained generative text model with 7 billion parameters trained to specialize in Hebrew text",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/hebrew-sentiment-guide.md"
+      ],
+      "confidence": "high",
+      "verification": "Same card: 'DictaLM-2.0 is based on the Mistral-7B-v0.1 model'. Technical report arXiv 2407.07080."
+    },
+    {
+      "claim_id": "dfcx-bq-export-schema",
+      "claim": "The Dialogflow CX BigQuery export has one row per conversational turn with columns including conversation_name (the session resource name), turn_position, request_time, request and response (JSON); there is no session_id column, and the suggested table name is dialogflow_bigquery_export_data.",
+      "source_url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/export-bq",
+      "raw_snippet": "conversation_name STRING The fully qualified resource name for the session.",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/platform-integrations.md"
+      ],
+      "confidence": "high",
+      "verification": "Same page: 'CREATE TABLE < your_dataset_name > . dialogflow_bigquery_export_data ( project_id STRING , agent_id STRING , conversation_name STRING , turn_position INTEGER , request_time TIMESTAMP ...'."
+    },
+    {
+      "claim_id": "dfcx-match-fields",
+      "claim": "In the detect-intent response, QueryResult carries text, match (Match: intent, confidence, matchType) and responseMessages.",
+      "source_url": "https://docs.cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Match",
+      "raw_snippet": "The Intent that matched the query.",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "references/platform-integrations.md"
+      ],
+      "confidence": "high",
+      "verification": "Match JSON representation on the same page: { \"intent\": { object (Intent) }, \"event\": string, \"parameters\": { object }, \"resolvedInput\": string, \"matchType\": enum (MatchType), \"confidence\": number }. QueryResult (reference/rest/v3/QueryResult) lists responseMessages, match and the union field text."
+    },
+    {
+      "claim_id": "s30a-c-existing-customer",
+      "claim": "Communications Law Section 30A(c), סעיף 30א(ג): an advertisement may be sent without consent only if the recipient gave their details while buying or negotiating to buy and was told they would be used for advertising, was given a chance to refuse and did not, and the advertisement concerns a product or service of a similar kind.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)",
+      "raw_snippet": "הנמען מסר את פרטיו למפרסם במהלך רכישה של מוצר או שירות",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Same subsection, para (3): 'דבר הפרסומת מתייחס למוצר או לשירות מסוג דומה'."
+    },
+    {
+      "claim_id": "s30a-d1-refusal-channel",
+      "claim": "Section 30A(d)(1): a refusal may be given in writing or in the way the advertisement was sent, at the recipient's choice, at any time.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)",
+      "raw_snippet": "הודעת הסירוב תינתן בכתב או בדרך שבה שוגר דבר הפרסומת",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md",
+        "scripts/conversation-analyzer.py"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "s30a-d2-contract-end",
+      "claim": "Section 30A(d)(2): in an ongoing contract for goods or services, the recipient is treated as having refused when the contract ends.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)",
+      "raw_snippet": "יראו את הנמען כמי שנתן הודעת סירוב במועד סיום ההתקשרות",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "xfer-regs-r1",
+      "claim": "Privacy Protection (Transfer of Data to Databases Abroad) Regulations, reg. 1: no transfer of data from an Israeli database abroad unless the destination law gives at least equivalent protection, subject to reg. 2.",
+      "source_url": "https://he.wikisource.org/wiki/תקנות_הגנת_הפרטיות_(העברת_מידע_אל_מאגרי_מידע_שמחוץ_לגבולות_המדינה)",
+      "raw_snippet": "לא יעביר אדם מידע ולא יאפשר העברה של מידע ממאגר מידע בישראל אל מחוץ לגבולותיה",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "xfer-regs-r2",
+      "claim": "Reg. 2 grounds include the data subject's consent (2(1)) and a recipient that undertook by contract to keep the conditions applying to an Israeli database (2(4)).",
+      "source_url": "https://he.wikisource.org/wiki/תקנות_הגנת_הפרטיות_(העברת_מידע_אל_מאגרי_מידע_שמחוץ_לגבולות_המדינה)",
+      "raw_snippet": "האדם שעליו המידע הסכים להעברה",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Para (4) on the same page: 'המידע מועבר למי שהתחייב בהסכם עם בעל מאגר המידע שממנו מועבר המידע, לקיים את התנאים לאחזקת מידע ולשימוש בו החלים על מאגר מידע בישראל'."
+    },
+    {
+      "claim_id": "sec-regs-11d",
+      "claim": "Data Security Regulations reg. 11(d)(1): on a severe security incident the database owner must notify the Registrar immediately and report the steps taken.",
+      "source_url": "https://he.wikisource.org/wiki/תקנות_הגנת_הפרטיות_(אבטחת_מידע)",
+      "raw_snippet": "יודיע על כך בעל המאגר לרשם באופן מיידי",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "sec-regs-high-level",
+      "claim": "Data Security Regulations Second Schedule: a medium-level database (First Schedule items 1 or 3, which include medical, mental-health and financial-situation information) is high-level when it holds data on 100,000 people or more, or has more than 100 authorized users.",
+      "source_url": "https://he.wikisource.org/wiki/תקנות_הגנת_הפרטיות_(אבטחת_מידע)",
+      "raw_snippet": "שיש בו מידע על אודות 100,000 אנשים ומעלה",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Same schedule: 'שמספר בעלי ההרשאה בו עולה על 100'. First Schedule item (3)(ב): 'מידע רפואי או מידע על מצבו הנפשי של אדם'."
+    },
+    {
+      "claim_id": "wa-service-includes-humans",
+      "claim": "A WhatsApp service message is any non-template message not powered by Meta Business Agent, whether sent by a third-party AI or by people such as customer service representatives.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "These can be powered by a 3rd-party AI solution or people (like customer service representatives).",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md",
+        "scripts/conversation-analyzer.py"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the page rendered with Playwright on 2026-10-25 (JS-rendered; plain curl returns an error body).",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T12:00:00+00:00"
+    },
+    {
+      "claim_id": "wa-payment-method-cliff",
+      "claim": "Without a payment method on the Messaging account, Meta delivers service messages within the free tier but stops delivering them after the free tier is used.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "Meta will deliver service messages within the free tier but not deliver them after the free tier has been used.",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the page rendered with Playwright on 2026-10-25 (JS-rendered; plain curl returns an error body).",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T12:00:00+00:00"
+    },
+    {
+      "claim_id": "wa-free-tier-reset-tz",
+      "claim": "The monthly free tier resets at 12am by the Messaging account's time zone.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "This reset happens at 12am by Messaging account timezone.",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md",
+        "scripts/conversation-analyzer.py"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the page rendered with Playwright on 2026-10-25 (JS-rendered; plain curl returns an error body).",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T12:00:00+00:00"
+    },
+    {
+      "claim_id": "wa-pricing-analytics",
+      "claim": "Tier progress is not in webhooks; the pricing_analytics field provides per-message pricing breakdowns and tiering information.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "Use the pricing_analytics field to get per-message pricing breakdowns and tiering information for delivered messages.",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the page rendered with Playwright on 2026-10-25 (JS-rendered; plain curl returns an error body). Also: 'Note that currently, tiering information is not included in any webhooks.'",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T12:00:00+00:00"
+    },
+    {
+      "claim_id": "wa-currencies",
+      "claim": "Meta's WhatsApp Business Platform has 16 billing currencies (USD, AED, ARS, AUD, BRL, CLP, COP, EUR, GBP, IDR, INR, MXN, MYR, PEN, SAR, SGD), ILS not among them, and the currency cannot be changed after account creation.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "Currency selection is part of the Messaging account creation process; once selected, a currency cannot be changed.",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the page rendered with Playwright on 2026-10-25 (JS-rendered; plain curl returns an error body). The rate-card table lists exactly these 16 currency codes; same paragraph: 'Meta has 16 currencies enabled on the WhatsApp Business Platform'.",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T12:00:00+00:00"
+    },
+    {
+      "claim_id": "wa-subtype-paid-exempt",
+      "claim": "Since 12 October 2026 status webhooks carry a pricing subtype; paid_exempt marks a service message free because the organisation is an eligible government or non-profit.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "Service messages that are free because the organization is eligible for this policy have subtype set to paid_exempt.",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Read verbatim from the page rendered with Playwright on 2026-10-25 (JS-rendered; plain curl returns an error body).",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T12:00:00+00:00"
+    },
+    {
+      "claim_id": "wa-ai-providers-terms",
+      "claim": "Under WhatsApp's terms updated 15 January 2026, AI Providers may offer general-purpose AI assistants on the platform only where Meta is legally required to permit it; the markets Meta lists (EU/EEA countries, Brazil, Italy, Türkiye) do not include Israel (+972).",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing/ai-providers",
+      "raw_snippet": "are only permitted to offer general-purpose AI assistants on the WhatsApp Business Platform where Meta is legally required to permit this use case.",
+      "fetched_at": "2026-10-25T12:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Rendered with Playwright on 2026-10-25 (page 'New pricing policy for AI Providers leveraging the WhatsApp Business Platform', updated October 15, 2026). The market list on the page has no +972 entry (grep for 'Israel' and '972' returned nothing).",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T12:00:00+00:00"
+    },
+    {
+      "claim_id": "wa-ai-providers-page-updated",
+      "claim": "Meta's AI Providers pricing-policy page was last updated on 15 October 2026 (Türkiye change).",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing/ai-providers",
+      "raw_snippet": "This was updated on October 15, 2026 to reflect an update for Türkiye as outlined below.",
+      "fetched_at": "2026-10-25T13:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high",
+      "verification": "Rendered with Playwright on 2026-10-25; page header 'Updated: Oct 15, 2026'.",
+      "verified_via": "browser",
+      "verified_at": "2026-10-25T13:00:00+00:00"
+    },
+    {
+      "claim_id": "sec-regs-basic-carveout",
+      "claim": "Data Security Regulations First Schedule item 2: a database otherwise at medium level under item 1(3) is basic level if no more than ten people are authorized users, or if it holds the listed data only about the owner's employees or suppliers for managing the business.",
+      "source_url": "https://he.wikisource.org/wiki/תקנות_הגנת_הפרטיות_(אבטחת_מידע)",
+      "raw_snippet": "מספר בעלי ההרשאה אצל בעל המאגר אינו עולה על עשרה",
+      "fetched_at": "2026-10-25T13:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "s30a-b-business-one-time",
+      "claim": "Section 30A(b) last sentence: a one-time approach by an advertiser to a business recipient, or for a donation or propaganda, offering to consent to receive advertisements, is not a breach; s.30A(b1) exempts donation or propaganda e-mail from an amuta or public-benefit company unless the recipient refused.",
+      "source_url": "https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)",
+      "raw_snippet": "פנייה חד־פעמית מטעם מפרסם לנמען שהוא בית עסק",
+      "fetched_at": "2026-10-25T14:00:00+00:00",
+      "appears_in": [
+        "references/chatbot-metrics-glossary.md"
+      ],
+      "confidence": "high"
     }
   ]
 }
