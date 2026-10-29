@@ -2,43 +2,117 @@
 
 Ready-to-use Zap configurations for common Israeli business workflows. Each template includes the trigger, action chain, field mappings, and notes on customization.
 
-All Israeli payment processors (Cardcom, Tranzila, Grow, Morning) send amounts in decimal shekels. No unit conversion is needed. Note that gateway amounts INCLUDE VAT, so divide by 1.18 before comparing against the Invoice Reform threshold, which is measured before VAT.
+Israeli payment processors (Cardcom, Tranzila, Grow, Morning) send amounts in decimal units of the transaction currency, never agorot, so check the currency before treating a value as ILS. Gateway amounts INCLUDE VAT, and the Invoice Reform threshold is measured before VAT.
+
+**One phone normaliser for every template** (Israeli numbers only; leave a number with another country code alone):
+
+```javascript
+let d = (inputData.phone || '').replace(/\D/g, '').replace(/^00/, '');
+if (d.startsWith('972')) d = d.slice(3);
+d = d.replace(/^0/, '');
+const phone = d ? '+972' + d : '';
+```
+
+**One Hebrew cleaner** (strips RLM/LRM, embeddings, isolates, ALM and zero-width characters):
+
+```javascript
+const clean = s => (s || '').replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069\u061C\u200B-\u200D\u2060\uFEFF]/g, '').trim();
+```
+
+**One Morning search loop** for Templates 4, 7 and 9. A search page holds 25 documents by default and the spec documents no maximum, so page through `pages` inside a Code by Zapier step (Zapier's Code docs use `await fetch(url, {method: 'POST', body: JSON.stringify(data), ...})`). Map `token` from the Morning token step; never paste the client secret into code. Zapier's own guidance prefers API by Zapier over `fetch` for authenticated calls; this loop holds no credential (the one-hour token is mapped in), but if your account has API by Zapier, use it instead. A whole-year search can run into Code by Zapier's run-time limit, so split a long range by quarter.
+
+```javascript
+async function searchAll(token, filter) {
+  const docs = [];
+  let page = 1, pages = 1, total = 0;
+  do {
+    const r = await fetch('https://api.greeninvoice.co.il/api/v1/documents/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ ...filter, page, pageSize: 25 })
+    });
+    if (!r.ok) throw new Error('Morning search failed: HTTP ' + r.status);
+    const body = await r.json();
+    docs.push(...(body.items || []));
+    pages = body.pages || 1;
+    total = body.total || 0;
+    page++;
+  } while (page <= pages);
+  if (docs.length < total) throw new Error(`only ${docs.length} of ${total} documents came back`);
+  return docs;
+}
+```
+
+A document in a foreign currency converts to ILS with its `currencyRate`; when that optional field is missing, derive it from `amountLocal / amount`:
+
+```javascript
+const rateOf = d => d.currencyRate || (d.amountLocal && d.amount ? d.amountLocal / d.amount : 1);
+```
 
 ## Template 1: Cardcom Payment to Morning Receipt
 
-**Use case:** Auto-generate a receipt (kabala) in Morning (formerly Green Invoice) when a customer pays through Cardcom.
+**Use case:** Auto-generate a tax invoice/receipt in Morning (formerly Green Invoice) when a customer pays through Cardcom.
+
+**Before building it:** skip the Zap if the payment page is a Morning payment form (Morning issues the document itself through its clearing plugin) or if your `CreateLowProfile` request sends a `Document` object (Cardcom creates its own document and the callback's `DocumentInfo` is filled). Either way a Zap would issue a second tax invoice for the same sale. An osek patur issues 400, not 320.
 
 **Zap steps:**
 
-| Step | App | Event | Configuration |
-|------|-----|-------|---------------|
-| 1. Trigger | Webhooks by Zapier | Catch Hook | Pass the webhook URL as `WebHookUrl` on your Cardcom `CreateLowProfile` request |
-| 2. Filter | Filter by Zapier | Only Continue If | `ResponseCode` = 0 (successful payment) |
-| 3. Format | Formatter by Zapier | Date/Time > Format | Input: current date, To Format: `DD/MM/YYYY` |
-| 4. Action | Webhooks by Zapier | Custom Request | Fetch a Morning token, then POST to Morning API: Create Document type 320 (חשבונית מס/קבלה) |
-| 5. Action | Gmail | Send Email | Send receipt link to customer |
+| Step | App | Event | Configuration | Tasks |
+|------|-----|-------|---------------|-------|
+| 1. Trigger | Webhooks by Zapier | Catch Hook | Pass the URL as `WebHookUrl` on each `CreateLowProfile` request; put the order ID and a secret in `ReturnValue` | 0 |
+| 2. Filter | Filter by Zapier | Only Continue If | `ResponseCode` = 0; `Operation` is `ChargeOnly` or `ChargeAndCreateToken`; `TranzactionInfo Amount` exists and > 0; `TranzactionInfo IsRefund` is not true; `TranzactionInfo CoinId` = 1; `ReturnValue` contains your secret | 0 |
+| 3. Re-fetch | Webhooks by Zapier | Custom Request | POST `https://secure.cardcom.solutions/api/v11/LowProfile/GetLpResult`, JSON `{"TerminalNumber":..., "ApiName":"...", "LowProfileId":"<from step 1>"}`. Map everything below from THIS response, which a forged callback cannot fake | 1 |
+| 3b. Filter | Filter by Zapier | Only Continue If | Repeat on the step 3 response: `ResponseCode` = 0, `TranzactionInfo Amount` > 0, `IsRefund` not true, `CoinId` = 1. If the callback and the real result disagree, this stops a zero-value document | 0 |
+| 4. Dedupe | Zapier Tables, then Filter | Find Record, then Only Continue If | Look up `TranzactionId`, then continue only if the search found nothing | 0 |
+| 5. Date | Formatter by Zapier | Date/Time > Format | Input: step 3 `TranzactionInfo CreateDate` (the charge time, not the run time, so a held or replayed run keeps its VAT period), To Format `YYYY-MM-DD`, timezone `Asia/Jerusalem`. Check on a test payload whether `CreateDate` already is Israel time; if so do not shift it again | 0 |
+| 6. Token | Webhooks by Zapier | Custom Request | POST `https://api.morning.co/idp/v1/oauth/token`, Data `{"grant_type":"client_credentials","client_id":"...","client_secret":"..."}`, header `Content-Type: application/json` | 1 |
+| 7. Body | Code by Zapier | Run JavaScript | Build the JSON with `JSON.stringify` (code below) | 1 |
+| 8. Create | Webhooks by Zapier | Custom Request | POST `https://api.greeninvoice.co.il/api/v1/documents`, Data = step 7 `body`, headers `Content-Type: application/json` and `Authorization: Bearer <step 6 accessToken>` | 1 |
+| 9. Log | Zapier Tables | Create Record | `TranzactionId`, Morning `id` and `number`, so step 4 sees it next time | 0 |
+| 10. Allocation | Delay by Zapier, then Custom Request | Delay For, then GET | B2B over the threshold only: wait, then GET `/documents/{id}` and read `allocationNumber`; alert yourself if it is missing or the create response's `taxAuthorityConfirmationLastError` is not 0 | 1 |
 
-**Morning API field mapping (Step 4):**
+About 5 tasks per payment, so Professional's 750 cover roughly 150 payments a month (past that, pay-per-task billing or held runs). There is no separate email step: Morning emails the document link to every address in `client.emails`.
 
-| Morning API Field | Source | Notes |
-|-------------------|--------|-------|
-| `type` | Static: `320` | חשבונית מס/קבלה. Use 320 rather than a bare 400 receipt for an osek murshe card sale: 320 is the tax invoice the customer deducts input VAT against, and the document an allocation number attaches to. |
-| `lang` | Static: `he` | **Required.** The most commonly omitted field; without it the request 400s. |
-| `client.name` | Step 1: `UIValues.CardOwnerName` | Hebrew names pass through as-is |
-| `client.emails` | Step 1: `UIValues.CardOwnerEmail` | Array: `[UIValues.CardOwnerEmail]` |
-| `income[].description` | Static or custom | e.g., "תשלום עבור שירות". Required per row. |
-| `income[].price` | Step 1: `TranzactionInfo.Amount` | The callback has NO top-level `Amount`. Already decimal ILS, use as-is. Required per row. |
-| `income[].quantity` | Static: `1` | Required per row. |
-| `income[].currency` | Static: `ILS` | Required per row. |
-| `income[].vatType` | Static: `0` (before VAT) or `1` (included) | Required per row. |
-| `vatType` | Static: `0` (before VAT) or `1` (included) | **Required** at document level too. Ask user preference. |
-| `currency` | Static: `ILS` | **Required.** |
+**Body code (step 7).** Map the inputs from step 3: `name` = `UIValues CardOwnerName`, `email` = `UIValues CardOwnerEmail`, `amount` = `TranzactionInfo Amount`, `last4` = `TranzactionInfo Last4CardDigitsString`, `payments` = `TranzactionInfo NumberOfPayments`, `first` = `TranzactionInfo FirstPaymentAmount`, `date` = step 5, and `taxId` = the buyer's ח.פ. if your checkout collected one.
+
+```javascript
+const amount = Number(inputData.amount);
+const n = Number(inputData.payments) || 1;
+const clean = s => (s || '').replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069\u061C\u200B-\u200D\u2060\uFEFF]/g, '').trim();
+const client = { name: clean(inputData.name), emails: inputData.email ? [inputData.email] : [] };
+if (inputData.taxId) client.taxId = inputData.taxId.replace(/\D/g, '');
+const pay = { date: inputData.date, type: 3, price: amount, currency: 'ILS',
+              cardNum: inputData.last4, numPayments: n, dealType: n > 1 ? 2 : 1 };
+if (n > 1 && inputData.first) pay.firstPayment = Number(inputData.first);
+const body = {
+  type: 320, lang: 'he', currency: 'ILS', vatType: 0, client,
+  income: [{ description: 'תשלום עבור שירות', quantity: 1, price: amount, currency: 'ILS', vatType: 1 }],
+  payment: [pay]
+};
+output = [{ body: JSON.stringify(body) }];
+```
+
+`JSON.stringify` escapes the ASCII quote in names like `כהן בע"מ`; typing mapped fields into a JSON Data box does not, and the request 400s for exactly those customers.
+
+**Morning API field reference (step 7):**
+
+| Morning API Field | Value | Notes |
+|-------------------|-------|-------|
+| `type` | `320` | חשבונית מס/קבלה, the tax invoice the customer deducts input VAT against and the document an allocation number attaches to |
+| `lang` | `he` | **Required**, and the most often omitted |
+| `currency` | `ILS` | **Required**. The Filter admits only `CoinId` 1 (ILS) |
+| `vatType` | `0` | **Required** at document level, a DIFFERENT enum: `0` default for the business type, `1` **exempt**, `2` mixed |
+| `client.name` / `client.emails` | cardholder name / `[email]` | Morning sends the document link to `client.emails` |
+| `client.taxId` | buyer's ח.פ. / osek number | Needed for a B2B invoice above the threshold to get an allocation number |
+| `income[]` | one row | Each row requires `description`, `quantity`, `price`, `currency`, `vatType`; row `vatType: 1` = price includes VAT |
+| `payment[]` | one row | Each row requires `date`, `type`, `price`, `currency`. `type: 3` is credit card; `cardNum` takes the last 4 digits; `dealType` 1 standard, 2 payments; `numPayments` 1-36; `firstPayment` the first installment. `price` equals the income total |
 
 **Customization options:**
-- If the pre-VAT amount exceeds 5,000 ILS an Invoice Reform allocation number is required (since June 2026). Divide the gateway total by 1.18 before comparing: the threshold is measured before VAT. Note the create-document response does NOT return the allocation number; check `taxAuthorityConfirmationInitiated` / `taxAuthorityConfirmationLastError` on it, then read `allocationNumber` from a follow-up `GET /documents/{id}` or the `document/created` webhook.
-- Add a Slack notification step for payments above a threshold
-- For installment payments (tashlumim), include `UIValues.NumOfPayments` in the description
-- Use Zapier Tables instead of Gmail for logging (simpler, no external auth needed)
+- Branch with Paths on "`taxId` present AND pre-VAT amount over the threshold variable" before step 10; a consumer sale needs no allocation number.
+- Send the customer the document on WhatsApp too: a WhatsApp Business `Send Template Message` after step 8, with a template variable for the create response's `url.he`, and the phone from `UIValues CardOwnerPhone` (filled only when the payment page sets `UIDefinition.IsCardOwnerPhoneRequired`) through the normaliser above.
+- A refund (`IsRefund` true) needs a 330 credit note against the original document, not this Zap.
+- The body records a credit card (`type: 3`). If the same page also offers Bit or PayPal, run one test payment of each and look at `ExternalPaymentVector` and `TranzactionInfo`; map Morning payment `type` 10 (payment app) or 5 (PayPal) for those, or send them to a separate path. Morning's `dealType` also has 3 (Credit) for a קרדיט deal, which the code above labels 2.
+- A sale your accountant treats as zero-rated (an exported service, a foreign client) must not take this path: the body always extracts 18% from the price.
 
 ---
 
@@ -50,25 +124,28 @@ All Israeli payment processors (Cardcom, Tranzila, Grow, Morning) send amounts i
 
 | Step | App | Event | Configuration |
 |------|-----|-------|---------------|
-| 1. Trigger | Webhooks by Zapier | Catch Hook | Configure Morning webhook to fire on new document creation |
-| 2. Filter | Filter by Zapier | Only Continue If | Document type is 305 (Invoice), 320 (Invoice-Receipt), or 400 (Receipt) |
-| 3. Format | Formatter by Zapier | Numbers > Format Number | Format amount with 2 decimal places |
+| 1. Trigger | Webhooks by Zapier | Catch Hook | Subscribe the Catch Hook URL to Morning's `document/created` webhook |
+| 2. Filter | Filter by Zapier | Only Continue If | Document type is 305 (Invoice), 320 (Invoice-Receipt) or 330 (Credit Note), OR type is 400 (Receipt) and `businessType` is 3 (עוסק פטור). An osek murshe's 400 for a 305 already logged is the same sale with no VAT line, so logging it would count that revenue twice; an osek patur issues only 400s, so for it they are the revenue. Store amounts as absolute values with the Document Type column, and subtract 330 rows when you total (the sign on a real 330 payload is not documented) |
+| 3. Format | Code by Zapier | Run JavaScript | `subtotal: Math.abs(Number(inputData.subtotal)).toFixed(2), vat: Math.abs(Number(inputData.vat ?? 0)).toFixed(2), total: Math.abs(Number(inputData.total)).toFixed(2)`, with `vat` mapped from `tax[0].total`. The payload has no `amount`, and `tax` carries a VAT line only when VAT applies, hence the 0 default. Do not use Numbers > Format Number: Zapier's docs say it "cannot round or pad numbers" |
 | 4. Action | Zapier Tables | Create Record | Map fields to columns |
 
 **Zapier Tables columns and mapping (Step 4):**
 
 | Column | Source | Notes |
 |--------|--------|-------|
-| Date | Step 1: `date` | Reformat to DD/MM/YYYY if needed |
+| Date | Step 1: `date` | Already `YYYY-MM-DD`; keep it. Zapier Tables accepts only `MM/DD/YYYY`, `YYYY-MM-DD` or `YYYY-MM-DDhh:mm:ssZ`, so a DD/MM/YYYY value is misread as month-first. Use DD/MM/YYYY only in human-facing text |
 | Document Number | Step 1: `number` | e.g., "1001" |
-| Document Type | Step 1: `type` | Map code: 305=Invoice, 320=Invoice-Receipt, 400=Receipt |
-| Client Name | Step 1: `client.name` | |
-| Amount Before VAT | Step 1: `amount` (calculated) | Total minus VAT |
-| VAT Amount | Step 1: `vat` | |
-| Total Amount | Step 1: `total` | |
-| Payment Status | Step 1: `status` | Paid / Unpaid / Partially Paid |
+| Document Type | Step 1: `type` | Map code: 305=Invoice, 320=Invoice-Receipt, 330=Credit Note (subtract), 400=Receipt (osek patur only) |
+| Client Name | Step 1: `recipient.name` | The `document/created` payload calls the client `recipient`, not `client` |
+| Amount Before VAT | Step 3: `subtotal` | "Document total before VAT" in the webhook schema |
+| VAT Amount | Step 3: `vat` | From `tax[0].total`; `tax` is an array of tax lines, and the VAT line carries `rate` (e.g. 0.18) and `total` |
+| Currency / Rate | Step 1: `currency`, `foreignCurrencyRate` | Amounts are in the document currency; the rate is present only when that is not ILS, so a USD row is not an ILS figure |
+| Total Amount | Step 3: `total` | Includes VAT |
+| Payment Status | `GET /documents/{id}`, field `status` | Not in the webhook payload. Codes: 0 open, 1 closed, 2 manually closed, 3 cancelling, 4 cancelled |
 | VAT Period | Step 1: derive from date | e.g., "Jan-Feb 2026" |
-| Allocation Number | `allocationNumber`, from `GET /documents/{id}` or the `document/created` webhook, NOT from the create response | Required for invoices > 5,000 NIS before VAT since Jun 2026 |
+| Allocation Number | Step 1: `allocationNumber` | Present on the `document/created` payload when one was assigned, and omitted otherwise (Morning omits empty fields rather than sending null). Never read it from the create-document response. Required for invoices > 5,000 NIS before VAT since Jun 2026 |
+
+**Securing the hook:** configure the Morning webhook with a secret, and Morning signs every delivery with an `x-webhook-signature` header (HMAC-SHA256 of the body) that a Code step can check. Morning also deactivates a webhook after 15 failed deliveries, so a Zap that was off for a while may need the webhook re-enabled.
 
 **VAT period derivation:**
 Use Formatter > Date/Time to extract the month number, then use a Lookup Table:
@@ -91,16 +168,22 @@ Use Formatter > Date/Time to extract the month number, then use a Lookup Table:
 |------|-----|-------|---------------|
 | 1. Trigger | Shopify | New Order | Or WooCommerce > New Order |
 | 2. Format | Code by Zapier | Run JavaScript | Clean Hebrew text and format phone number |
-| 3. Action | Webhooks by Zapier | Custom Request | POST to Morning API: Create Document type 320 (Invoice-Receipt) |
+| 3a. Token | Webhooks by Zapier | Custom Request | Morning token, as Template 1 step 6 |
+| 3b. Body | Code by Zapier | Run JavaScript | Build the 320 body with `JSON.stringify`, as Template 1 step 7 |
+| 3c. Create | Webhooks by Zapier | Custom Request | POST `/documents` with the step 3b string |
 | 4. Action | Gmail | Send Email | Hebrew RTL confirmation email |
 | 5. Action | Monday.com | Create Item | Track order in board |
 
 **Phone formatting and Hebrew text cleaning (Step 2):**
 
 ```javascript
-const phone = inputData.phone.replace(/^0/, '+972');
-const name = inputData.name.replace(/[\u200F\u200E\u200B\u200C\u200D\uFEFF]/g, '').trim();
-output = [{phone: phone, name: name}];
+// the shared normaliser and cleaner from the top of this file
+let d = (inputData.phone || '').replace(/\D/g, '').replace(/^00/, '');
+if (d.startsWith('972')) d = d.slice(3);
+d = d.replace(/^0/, '');
+const phone = d ? '+972' + d : '';
+const name = (inputData.name || '').replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069\u061C\u200B-\u200D\u2060\uFEFF]/g, '').trim();
+output = [{phone, name}];
 ```
 
 **Note on WhatsApp:** use the **WhatsApp Business** app (not "WhatsApp Notifications", which only messages your own number). A proactive order confirmation falls outside the 24-hour customer-service window, so it needs a Meta-approved Hebrew template. Inside that window, `Send Freeform Message` sends arbitrary Hebrew.
@@ -116,10 +199,27 @@ output = [{phone: phone, name: name}];
 | Step | App | Event | Configuration |
 |------|-----|-------|---------------|
 | 1. Trigger | Schedule by Zapier | Every Month | Day: 1st of month |
-| 2. Action | Webhooks by Zapier | Custom Request | POST to Morning API document search: unpaid documents from last 60 days (the search endpoint takes a JSON filter body, not GET query params) |
-| 3. Filter | Filter by Zapier | Only Continue If | Step 2 returns results |
-| 4. Action | Code by Zapier | Run JavaScript | Sum outstanding amounts |
+| 2. Action | Webhooks by Zapier | Custom Request | Morning token step (Template 1 step 6) |
+| 3. Action | Code by Zapier | Run JavaScript | Search loop plus open-balance sum (code below) |
+| 4. Filter | Filter by Zapier | Only Continue If | Step 3 `count` is greater than 0 |
 | 5. Action | Gmail | Send Email | Summary to self or accountant |
+
+**Open-balance code (Step 3).** Paste `searchAll` and `rateOf` from the top of this file above it. The filter has no `fromDate`: a date window drops exactly the oldest, most overdue invoices. The `type` filter keeps out open quotes (10) and orders (100), which are not debts.
+
+```javascript
+const docs = await searchAll(inputData.token, { type: [305, 300, 20], status: [0] });
+let total = 0;
+for (const d of docs) {
+  // amountOpened exists only on payment-request documents (type 20), in the document currency;
+  // other open documents owe their full total, and amountLocal is already ILS
+  const owed = d.amountOpened != null ? Number(d.amountOpened) * rateOf(d)
+                                      : Number(d.amountLocal ?? d.amount * rateOf(d));
+  total += owed || 0;
+}
+output = [{ count: docs.length, total: total.toFixed(2) }];
+```
+
+A partly paid invoice still shows its full amount here, because Morning reports a remaining balance only on payment requests.
 
 **Email template (Step 5):**
 
@@ -155,9 +255,13 @@ Subject: "סיכום חשבוניות פתוחות - {{current_month}} {{current
 **Hebrew text cleaning (Step 2):**
 
 ```javascript
-const phone = inputData.phone.replace(/^0/, '+972');
-const name = inputData.name.replace(/[\u200F\u200E\u200B\u200C\u200D\uFEFF]/g, '').trim();
-output = [{phone: phone, name: name}];
+// the shared normaliser and cleaner from the top of this file
+let d = (inputData.phone || '').replace(/\D/g, '').replace(/^00/, '');
+if (d.startsWith('972')) d = d.slice(3);
+d = d.replace(/^0/, '');
+const phone = d ? '+972' + d : '';
+const name = (inputData.name || '').replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069\u061C\u200B-\u200D\u2060\uFEFF]/g, '').trim();
+output = [{phone, name}];
 ```
 
 **Monday.com board setup (Step 3):**
@@ -188,34 +292,29 @@ output = [{phone: phone, name: name}];
 | 3. Action | Code by Zapier | Run JavaScript | Categorize by sender |
 | 4. Action | Zapier Tables | Create Record | Log to expenses table |
 
-**Categorization logic (Step 3):**
+**Categorization logic (Step 3).** Match the sender's DOMAIN against a map, not keywords against the whole address: a keyword like `paz` matches a person called Paz, `hot` matches every `hotmail.com` sender, and a word boundary misses `hotmobile.co.il`. The entries below are examples; build the map from the domains your own receipts actually come from, since vendors bill from several.
 
 ```javascript
-const sender = inputData.sender_email.toLowerCase();
-const subject = inputData.subject || '';
+// accept both "invoice@bezeq.co.il" and "Bezeq <invoice@bezeq.co.il>"
+// map Gmail's bare sender address (From Email), not the display name; if only a
+// "Name <addr>" string is available, take the LAST <...> so a display name such as
+// "<invoice@bezeq.co.il>" <scam@evil.example> cannot pose as the vendor
+const raw = (inputData.sender_email || '').toLowerCase();
+const addr = ([...raw.matchAll(/<([^>]+)>/g)].pop() || [, raw])[1];
+const m = addr.match(/@([a-z0-9.-]+)\s*$/);
+const domain = m ? m[1] : '';
 
-let category = 'other';
-
-const categories = {
-  'office': ['office depot', 'mahsanei', 'kravitz'],
-  'telecom': ['partner', 'cellcom', 'pelephone', 'hot', 'bezeq'],
-  'internet': ['netvision', 'smile', '013'],
-  'fuel': ['paz', 'delek', 'sonol', 'amisragas'],
-  'software': ['google', 'microsoft', 'adobe', 'github', 'aws', 'vercel'],
-  'insurance': ['harel', 'migdal', 'phoenix', 'clal', 'menora'],
-  'vehicle': ['test-il', 'rav-kav', 'parking'],
-  'meals': ['wolt', 'tenbis', 'cibus', 'japanika', 'aroma']
+const domains = {   // examples: replace with your vendors' real sender domains
+  'bezeq.co.il': 'telecom', 'partner.co.il': 'telecom', 'cellcom.co.il': 'telecom',
+  'paz.co.il': 'fuel', 'delek.co.il': 'fuel',
+  'google.com': 'software', 'github.com': 'software', 'wolt.com': 'meals'
 };
 
-for (const [cat, keywords] of Object.entries(categories)) {
-  if (keywords.some(kw => sender.includes(kw) || subject.includes(kw))) {
-    category = cat;
-    break;
-  }
-}
-
-output = [{category: category}];
+const hit = Object.keys(domains).find(k => domain === k || domain.endsWith('.' + k));
+output = [{ category: hit ? domains[hit] : 'other' }];   // 'other' goes to a person for review
 ```
+
+Subjects are deliberately not matched: Hebrew brand words are also first names and ordinary words (פז, מבזק), so a subject match reintroduces the false positives the domain map removes.
 
 **Zapier Tables columns (Step 4):**
 
@@ -241,28 +340,35 @@ output = [{category: category}];
 | Step | App | Event | Configuration |
 |------|-----|-------|---------------|
 | 1. Trigger | Schedule by Zapier | Specific months | March, May, July, September, November, January on the 10th |
-| 2. Action | Webhooks by Zapier | Custom Request | POST to Morning API document search: documents for previous 2 months (the search endpoint takes a JSON filter body, not GET query params) |
-| 3. Action | Code by Zapier | Run JavaScript | Calculate totals |
+| 2. Action | Webhooks by Zapier | Custom Request | Morning token step (Template 1 step 6) |
+| 3. Action | Code by Zapier | Run JavaScript | Search loop plus totals for the previous 2 months (code below) |
 | 4. Action | Gmail | Send Email | Summary to accountant |
 | 5. Action | Zapier Tables | Create Record | Archive period summary |
 
-**Calculation logic (Step 3):**
+**Calculation logic (Step 3).** Paste `searchAll` and `rateOf` from the top of this file above it. Map `fromDate` / `toDate` (`YYYY-MM-DD`) for the period, and `patur` = `true` for an osek patur, whose 400 receipts are its revenue (with no VAT).
 
 ```javascript
-const docs = JSON.parse(inputData.documents);
-let totalRevenue = 0;
-let totalVAT = 0;
-let invoiceCount = 0;
-let receiptCount = 0;
+const docs = await searchAll(inputData.token, { fromDate: inputData.fromDate, toDate: inputData.toDate });
+let totalRevenue = 0, totalVAT = 0, invoiceCount = 0, receiptCount = 0;
+const creditNotes = [];
 
 for (const doc of docs) {
+  // every document dated in the period counts, whatever its status today: an invoice
+  // cancelled after the period closed still belongs to this period, and its 330 to the next
+  const rate = rateOf(doc);
+  const grossIls = Number(doc.amountLocal ?? doc.amount * rate);
+  const vatIls = (doc.vat || 0) * rate;               // vat is not a required field
   if (doc.type === 305 || doc.type === 320) {
-    totalRevenue += doc.amount;
-    totalVAT += doc.vat;
+    totalRevenue += grossIls - vatIls;                // amount INCLUDES VAT
+    totalVAT += vatIls;
     invoiceCount++;
-  }
-  if (doc.type === 400) {
+  } else if (doc.type === 330) {
+    totalRevenue -= Math.abs(grossIls) - Math.abs(vatIls);   // credit note dated in this period
+    totalVAT -= Math.abs(vatIls);
+    creditNotes.push(`${doc.number}: ${Math.abs(grossIls).toFixed(2)}`);
+  } else if (doc.type === 400) {
     receiptCount++;
+    if (/^(true|1|yes|כן)$/i.test(String(inputData.patur || '').trim())) totalRevenue += grossIls;   // osek patur: receipts are the turnover
   }
 }
 
@@ -270,10 +376,12 @@ output = [{
   totalRevenue: totalRevenue.toFixed(2),
   totalVAT: totalVAT.toFixed(2),
   totalWithVAT: (totalRevenue + totalVAT).toFixed(2),
-  invoiceCount: invoiceCount,
-  receiptCount: receiptCount
+  invoiceCount, receiptCount,
+  creditNotes: creditNotes.join(', ')
 }];
 ```
+
+For an osek murshe only 305, 320 and 330 enter the totals: a 400 receipt documents a payment against an invoice already counted. For an osek patur (`patur` = `true`) the 400s are the revenue. Each document counts in the period of its own date, so a credit note reduces the period it is dated in, which is how a cancellation after the period closed is reported. Revenue is converted with each document's rate, so USD and EUR invoices land in ILS. The figures are by document date; a business whose VAT falls due on receipt should confirm the basis with its accountant.
 
 **Accountant email template (Step 4):**
 
@@ -286,6 +394,7 @@ Subject: "סיכום תקופת מע"מ {{period}} {{year}}"
     <tr><td>תקופה</td><td>{{period}}</td></tr>
     <tr><td>מספר חשבוניות</td><td>{{invoiceCount}}</td></tr>
     <tr><td>מספר קבלות</td><td>{{receiptCount}}</td></tr>
+    <tr><td>חשבוניות זיכוי (קוזזו)</td><td>{{creditNotes}}</td></tr>
     <tr><td>סה"כ הכנסות (לפני מע"מ)</td><td>{{totalRevenue}} ש"ח</td></tr>
     <tr><td>סה"כ מע"מ</td><td>{{totalVAT}} ש"ח</td></tr>
     <tr><td>סה"כ כולל מע"מ</td><td>{{totalWithVAT}} ש"ח</td></tr>
@@ -301,133 +410,60 @@ Subject: "סיכום תקופת מע"מ {{period}} {{year}}"
 
 **Use case:** Consolidate payments from multiple Israeli processors (Cardcom, Tranzila, Grow, Morning direct) into a single Zapier Table.
 
-**Implementation:** Create 4 separate Zaps, all writing to the same Zapier Table. All processors send amounts in decimal shekels.
+**Implementation:** Create 4 separate Zaps, all writing to the same Zapier Table. All processors send decimal amounts, never agorot.
+
+**Every Zap first dedupes:** Zapier Tables > Find Record on the Reference column, then a Filter that continues only if nothing was found. A retried delivery or a manual replay otherwise logs the payment twice.
 
 **Zap A: Cardcom payments**
 1. Trigger: Webhooks by Zapier > Catch Hook (Cardcom `WebHookUrl` JSON POST callback)
-2. Filter: `ResponseCode` = 0
+2. Filter, re-fetch and second Filter exactly as Template 1 steps 2, 3 and 3b, except that `CoinId` is mapped into the Currency column rather than required to be 1
 3. Action: Zapier Tables > Create Record
 
 **Zap B: Tranzila payments**
-1. Trigger: Webhooks by Zapier > Catch Hook (Tranzila webhook)
-2. Action: Zapier Tables > Create Record
+1. Trigger: Webhooks by Zapier > Catch Hook (Tranzila Notify URL, form-encoded POST)
+2. Filter: `Response` = `000` (or `0`). Check how a refund arrives on one test refund before trusting the sign of `sum`
+3. Action: Zapier Tables > Create Record
 
 **Zap C: Grow by Meshulam payments**
-1. Trigger: Webhooks by Zapier > Catch Hook (Grow JSON webhook)
-2. Action: Zapier Tables > Create Record
+1. Trigger: Webhooks by Zapier > Catch Hook (Grow Webhooks service, JSON; enabled through Grow support)
+2. Filter: `webhookKey` equals your account's key
+3. Action: Zapier Tables > Create Record
 
 **Zap D: Morning direct payments**
-1. Trigger: Morning webhook (document status = "paid")
-2. Action: Zapier Tables > Create Record
+1. Trigger: Webhooks by Zapier > Catch Hook subscribed to Morning's `payment/received` webhook
+2. Write `transactions[].gatewayTransactionId` into a Gateway Reference column. A Morning payment page clears through gateways such as Cardcom (`transactions[].gateway`, e.g. `cardcom`); if the same gateway account also feeds Zap A or C, have every Zap's dedupe look up both Reference and Gateway Reference, and confirm on one test payment that Morning's `gatewayTransactionId` equals the gateway's own ID, which no document states
+3. Action: Zapier Tables > Create Record
+
+**Dates.** Write each row's date as `YYYY-MM-DD` in `Asia/Jerusalem` (Formatter > Date/Time, To Timezone `Asia/Jerusalem`). Zapier's receive time is UTC, so a payment at 00:30 Israel time on 1 March would otherwise land on 28 February, in the previous VAT period. Use the vendor's own timestamp where there is one, and set Formatter's From Format to match it: Grow's `paymentDate` is day-first with a two-digit year (`14/10/21` in Grow's example), and Tables would misread it month-first.
 
 **Shared Zapier Tables columns:**
 
-| Column | Cardcom v11 Source | Tranzila Source (unverified) | Grow Source (unverified) | Morning Source |
+| Column | Cardcom v11 Source | Tranzila Notify Source | Grow Webhook Source | Morning `payment/received` Source |
 |--------|---------------|-----------------|-------------|----------------|
-| Date | Webhook timestamp | Webhook timestamp | Webhook timestamp | Document date |
+| Date | `TranzactionInfo.CreateDate`, converted | Receive time, converted to `Asia/Jerusalem` | `paymentDate`, converted from `DD/MM/YY` | `transactions[].createdAt` (Unix ms), converted |
 | Source | Static: "Cardcom" | Static: "Tranzila" | Static: "Grow" | Static: "Morning" |
-| Amount (ILS) | `TranzactionInfo.Amount` | `sum` | `amount` | `total` |
-| Customer | `UIValues.CardOwnerName` | `contact` | `customer_name` | `client.name` |
-| Reference | `TranzactionId` | `index` | `transaction_id` | Document number |
-| Payment Method | Static: "Credit Card" | Static: "Credit Card" | `payment_method` | N/A |
-| Installments | `UIValues.NumOfPayments` | `npay` | N/A | N/A |
-| Status | (always "Completed") | (always "Completed") | (always "Completed") | Document status |
+| Amount (incl. VAT) | `TranzactionInfo.Amount` | `sum` | `paymentSum` | `total` |
+| Currency | `TranzactionInfo.CoinId` (1 = ILS, 2 = USD) | `currency` (1 = ILS) | not verified, check a test payload | `transactions[].currency` |
+| Customer | `UIValues.CardOwnerName` | `contact` (echoed request parameter) | `fullName` | `payer.name` |
+| Reference | `TranzactionId` | `ConfirmationCode` | `transactionCode` | `id` |
+| Payment Method | Static: "Credit Card" | Static: "Credit Card" | `transactionType` | `channel` |
+| Installments | `UIValues.NumOfPayments` | not verified | `paymentsNum` | `transactions[].installments` |
 
+Keep a Currency column rather than heading the amount "ILS": Cardcom can charge in USD, and Morning reports each transaction's own currency. Tranzila and Grow field names come from those vendors' own docs (see `israeli-zapier-apps.md`); map from one real test payload before going live.
 
-## Relocated from SKILL.md
-### Step 9: Use Common Zap Templates for Israeli Businesses
+---
 
-**Template 1: Freelancer invoice-to-bookkeeping**
-1. Trigger: Morning webhook (new document created)
-2. Filter: Document type = Tax Invoice (305) or Tax Invoice/Receipt (320)
-3. Action: Create record in Zapier Tables with columns: Date, Client Name, Amount (before VAT), VAT Amount, Total, Document Number
-4. Action: If the pre-VAT amount exceeds the Invoice Reform threshold variable (currently 5,000 ILS), verify Invoice Reform allocation number is present
-5. Action: If amount > 25,000 ILS, send Slack notification to accountant channel
+## Template 9: Freelancer End-of-Year Summary
 
-**Template 2: E-commerce order-to-invoice**
-1. Trigger: Shopify/WooCommerce > New Order
-2. Action: Create document in Morning via Webhooks by Zapier (type: 320 Tax Invoice/Receipt or 400 Receipt based on business preference)
-3. Action: Send email confirmation with receipt details (RTL HTML template)
-4. Action: Update Monday.com board with order status
+**Use case:** "I need a Zap that compiles my annual invoice summary for tax filing."
 
-**Template 3: Payment-to-receipt (Cardcom)**
-1. Trigger: Webhooks by Zapier (Cardcom `WebHookUrl` JSON POST callback)
-2. Filter: `ResponseCode` = 0 (successful payment only)
-3. Action: fetch a Morning token (POST `grant_type=client_credentials` to `https://api.morning.co/idp/v1/oauth/token`; it expires in 1 hour, so fetch per run), then Morning API > Create Document (type: 320 חשבונית מס/קבלה). Map the price from `TranzactionInfo.Amount`, already decimal shekels; there is no top-level `Amount`.
-4. Action: Send email with receipt PDF link to customer
-5. Action: Log to Zapier Tables for reconciliation
+1. Trigger: Schedule by Zapier, January
+2. Action: Morning token step
+3. Action: Code by Zapier, the Template 7 code with `fromDate` / `toDate` covering the whole previous year (if it hits the run-time limit, run it once per quarter and add the four results), with `patur` = `true` for an osek patur, whose receipts are its whole turnover
+4. Action: Gmail, RTL summary to the accountant
+5. Action: Zapier Tables, archive the annual summary
 
-**Template 4: Lead capture to CRM follow-up**
-1. Trigger: Typeform/Google Forms > New Response
-2. Action: Code by Zapier to clean Hebrew text (strip Unicode directional markers)
-3. Action: Create contact in CRM (Monday.com or HubSpot)
-4. Action: Send welcome email with RTL HTML template
-5. Action: Create follow-up task in Monday.com for 3 days later
-
-**Template 5: Expense receipt categorization**
-1. Trigger: Gmail > New Email with attachment matching "קבלה" or "חשבון"
-2. Action: Code by Zapier to extract amount and categorize by sender
-3. Filter: Only continue if amount is parseable
-4. Action: Create record in Zapier Tables "Tax Deductions" with category column
-
-**Template 6: Multi-gateway payment consolidation**
-Create 3 separate Zaps, all writing to the same Zapier Table:
-- Zap A: Cardcom `WebHookUrl` webhook -> Zapier Tables (Amount in decimal ILS)
-- Zap B: Tranzila webhook -> Zapier Tables (sum in decimal ILS)
-- Zap C: Grow by Meshulam webhook -> Zapier Tables (amount in decimal ILS)
-All three processors send amounts in decimal shekels. No conversion needed.
-
-
-### Step 5: Set Up Webhook-Based Israeli Integrations
-
-Many Israeli payment processors and services do not have native Zapier integrations. Use webhooks to bridge the gap.
-
-**Cardcom payment webhook as Zap trigger:**
-
-Cardcom v11 uses a `WebHookUrl` callback. When a transaction completes, Cardcom sends a **JSON POST** to that URL carrying a `LowProfileResult` object. Key fields:
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| `ResponseCode` | Response code (0 = success) | `0` |
-| `TranzactionId` | Credit-card transaction ID | `12345678` |
-| `LowProfileId` | Unique ID of the low-profile transaction | `a1b2c3d4-...` |
-| `ReturnValue` | Whatever you sent on the request, typically your order ID | `Z12332X` |
-| `TranzactionInfo.Amount` | Payment amount in decimal shekels. There is NO top-level `Amount` on the callback; `TranzactionInfo` is null outside `ChargeOnly` / `ChargeAndCreateToken`. | `150.50` (= 150.50 ILS) |
-| `UIValues.CardOwnerName` | Cardholder name | `ישראל ישראלי` |
-| `UIValues.CardOwnerEmail` | Customer email | `israel@example.com` |
-| `UIValues.CardOwnerPhone` | Customer phone | `0541234567` |
-| `UIValues.NumOfPayments` | Installment count (tashlumim) | `3` |
-| `Description` | Human-readable description of `ResponseCode` | `Success` |
-
-Note the nesting: cardholder details live under `UIValues`, not at the top level. In Zapier's field mapper they appear as `UIValues CardOwnerName` and similar.
-
-Cardcom amounts are in decimal shekels (e.g., 150.50 means 150.50 ILS). No conversion needed. Use the value directly in your invoice creation step.
-
-**Tranzila payment webhook:**
-
-**Unverified.** See the Tranzila caveat in Step 2. Tranzila's current documentation does not describe a merchant-panel webhook, and the `index` / `sum` / `ccno` / `npay` / `contact` / `email` / `phone` field names are the legacy redirect-response parameters rather than a documented server-to-server callback payload. Confirm the mechanism in the merchant panel before relying on it.
-
-Cardcom sends amounts in decimal shekels. No unit conversion is needed.
-
-**Grow by Meshulam payment webhook:**
-
-Grow supports credit cards, Bit, Apple Pay, and Google Pay. Sends JSON POST webhooks:
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| `transaction_id` | Transaction ID | `GRW-123456` |
-| `amount` | Amount in decimal ILS | `99.90` |
-| `payment_method` | Payment type | `credit_card`, `bit`, `apple_pay`, `google_pay` |
-| `customer_name` | Customer name | `ישראל ישראלי` |
-| `customer_email` | Customer email | `israel@example.com` |
-| `customer_phone` | Customer phone | `0541234567` |
-
-**Bit payments:** Bit is Israel's dominant P2P payment app with growing business adoption. To accept Bit payments and trigger Zaps, use one of these gateways:
-- Grow by Meshulam (native Bit support via their checkout page)
-- Tranzila (Bit integration available)
-- Direct Bit Business API (requires separate merchant agreement)
-
-
+Do not encode the filing deadline in the Zap: it is announced annually and moves (for tax year 2025 it was 31.5.2026 for individuals not filing online, 30.6.2026 for those filing online, and 30.7.2026 for companies). Withholding at source and expenses are not in Morning's income documents, so the accountant supplies those.
 
 ## Zap pattern index (relocated from SKILL.md Step 1)
 
@@ -437,9 +473,9 @@ Match the Israeli business need to the correct Zap architecture.
 |---------------|-------------|--------------|--------------|
 | Auto-receipt after payment | Cardcom/Tranzila webhook | Parse payment -> Create Morning doc -> Email customer | Cardcom, Morning |
 | Invoice-to-bookkeeping sync | Morning new document webhook | Map fields -> Create entry in Zapier Tables or accounting tool -> Tag VAT period | Morning, Zapier Tables |
-| Payment reminder (freelancer) | Schedule trigger (bimonthly) | Query unpaid invoices -> Filter overdue -> Send Hebrew reminder | Morning, email/SMS provider |
+| Payment reminder (freelancer) | Schedule trigger (monthly) | Query unpaid invoices -> Filter overdue -> Send Hebrew reminder | Morning, email/SMS provider |
 | E-commerce order processing | WooCommerce/Shopify new order | Create invoice in Morning -> Send email confirmation -> Update Monday.com board | Morning, Monday.com |
-| WhatsApp order confirmation | Payment webhook | Format Hebrew message -> Send via Twilio WhatsApp Business API | Twilio (WhatsApp Business) |
+| WhatsApp order confirmation | Payment webhook | Format Hebrew message -> Send approved template | WhatsApp Business (or InforUMobile, Twilio) |
 | Lead capture with CRM | Form submission (Typeform, Google Forms) | Extract Hebrew name -> Create CRM contact -> Send email follow-up | Monday.com, HubSpot |
 | Multi-gateway consolidation | Multiple webhooks (Cardcom, Tranzila, Grow) | Normalize amounts -> Log to unified Zapier Table | Cardcom, Tranzila, Grow |
 

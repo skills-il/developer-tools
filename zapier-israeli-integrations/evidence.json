@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "skill": "zapier-israeli-integrations",
-  "generated_at": "2026-09-02T00:00:00+00:00",
+  "generated_at": "2026-10-29T21:30:00+00:00",
   "claims": [
     {
       "claim_id": "zapier-plans-2026",
@@ -36,10 +36,10 @@
     },
     {
       "claim_id": "cardcom-v11-webhook-shape-b",
-      "claim": "The WebHookUrl callback posts transaction data to the URL supplied on CreateLowProfile. The v11 spec describes WebHookUrl only as \"A webhook URL is a web address that receives real-time data about the transaction\"; that the callback body uses the same LowProfileResult schema as GetLpResult is a reasonable inference from the spec, not a documented guarantee. Confirm the shape against a real callback before mapping fields.",
+      "claim": "The WebHookUrl callback posts the LowProfileResult schema as JSON: the v11 spec declares it as a callback on POST /api/v11/LowProfile/Create whose requestBody is application/json with schema LowProfileResult (the same schema GetLpResult returns).",
       "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
       "verification_note": "Downloaded the full spec (394KB) on 2026-08-09 and counted occurrences: 'WebHookUrl' 8, 'IndicatorUrl' 0, 'DealResponse' 0, 'TranzactionId' 5, 'UIValues' 3. info.version = '11.0', info.title = 'CardCom API'.",
-      "fetched_at": "2026-09-01T22:45:35+00:00",
+      "fetched_at": "2026-10-29T21:30:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -245,33 +245,37 @@
     },
     {
       "claim_id": "israel-vat-rate-2026",
-      "claim": "Israel's VAT rate is 18%, in force since January 1, 2025, with no change during 2026. The outdated rate agents sometimes reach for is 17%. Arithmetic consequence used in the skill: at 18% VAT a 5,900 ILS / 5,900 ש\"ח gross charge is exactly a 5,000 base.",
-      "source_url": "https://keep.co.il/blog/nihul-maam-2026.html",
-      "raw_snippet": "שיעור המע\"מ הנוכחי בישראל עומד על 18%, ושיעור זה בתוקף מאז ינואר 2025",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "claim": "Israel's VAT rate is 18% on transactions whose tax event is on or after 1 January 2025 (ITA interpretation directive 01/2025). At 18% a 5,900 ILS gross charge is exactly a 5,000 base.",
+      "source_url": "https://www.gov.il/BlobFolder/dynamiccollectorresultitem/represent-info-051224-2/he/vat_represent-info-051224-2.pdf",
+      "raw_snippet": "העלאת שיעור המע\"מ מ 17% ל 18%",
+      "fetched_at": "2026-10-29",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
-      ]
+      ],
+      "verified_via": "pdf",
+      "verified_at": "2026-10-29"
     },
     {
       "claim_id": "zapier-app-and-action-counts",
-      "claim": "Zapier integrates with 9,000+ apps, and Zapier MCP exposes 30,000+ actions across those apps.",
-      "source_url": "https://zapier.com/mcp",
-      "raw_snippet": "30,000+ actions across 9,000+ apps via the MCP standard",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "claim": "Zapier MCP gives an AI access to Zapier's 9,000+ apps; Zapier's own pages quote different action counts (the help centre says 40,000+, an older FAQ 30,000+), so the skill quotes only the app count. Each successful MCP tool call uses two tasks and failed calls use none; tools are individual app actions, not published Zaps.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/48308034391821",
+      "raw_snippet": "It gives your AI access to 9,000+ apps and 40,000+ actions",
+      "fetched_at": "2026-10-29",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
-      ]
+        "SKILL_HE.md",
+        "references/zapier-platform-notes.md"
+      ],
+      "secondary_raw_snippet": "Each successful tool call uses two tasks from your plan's allowance. Tool calls that fail do not use tasks."
     },
     {
       "claim_id": "zapier-agents-was-central",
-      "claim": "Zapier Agents was previously Zapier Central: zapier.com/blog/zapier-central-guide/ now redirects to /blog/zapier-agents-guide/, whose hero image is still titled 'zapier-central-guide-00-hero'. That guide was originally published in March 2024. This article was originally published in March 2024 by Elena Alston. It was most recently updated in November 2025.",
+      "claim": "Zapier Agents was previously Zapier Central: the Zapier Agents guide still carries the 'zapier-central-guide-00-hero' image and Central-logo alt text, and was originally published in March 2024.",
       "source_url": "https://zapier.com/blog/zapier-agents-guide/",
       "raw_snippet": "Zapier Agents: Combine AI agents with automation",
-      "verification_note": "The previously cited snippet ('Zapier launched Zapier Central in March 2024 ... In January 2025, Central was rebranded as Zapier Agents') does NOT appear on zapier.com/blog/best-ai-agents/ or on the Agents guide; the January-2025 rename date could not be sourced and was removed from the skill body. Corroborating: the alt text on the same page reads \"Hero image of the Zapier Central logo on a light yellow background.\" and agents.zapier.com returns HTTP 200.",
-      "fetched_at": "2026-08-18",
+      "verification_note": "Old blog URL zapier.com/blog/zapier-central-guide/ now 404s (no redirect), so the redirect statement was removed 2026-10-29. Snippet is the guide's title.",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -281,16 +285,15 @@
     },
     {
       "claim_id": "legacy-chatgpt-steps-deadline",
-      "claim": "Zaps built on deprecated legacy ChatGPT / OpenAI Assistants steps stop working after August 26, 2026.",
-      "source_url": "https://help.zapier.com/hc/en-us/articles/44865998484365-Important-update-ChatGPT-users-OpenAI-Assistants-API-deprecation",
-      "raw_snippet": "With Assistant (Legacy) Create Assistant Upload File (when used with assistants) Searches: Find Assistant Find or Create Assistant Dropdowns used in the actions above: List Assistants List Assistant Files These actions are no longer available when creating new Zaps. Existing Zaps that use them will continue to run until August 26, 2026, after which they will stop working.",
-      "fetched_at": "2026-08-18",
+      "claim": "Zapier deprecated the ChatGPT (OpenAI) actions that use the Assistants API; on August 26, 2026 Zaps using them stopped working. Zapier auto-migrated Conversation With Assistant (Legacy) to the new Conversation action and left migrated Zaps turned off for review; Create Assistant, Upload File and the assistant searches have no direct replacement.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/44865998484365",
+      "raw_snippet": "On August 26, 2026, Zaps using these actions will stop working.",
+      "fetched_at": "2026-10-29",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
       ],
-      "verified_via": "cited page fetched; 37 of 38 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"dropdowns\"",
-      "verified_at": "2026-08-18"
+      "secondary_raw_snippet": "Migrated Zaps are left turned off so you can review them first."
     },
     {
       "claim_id": "zapier-platform-docs",
@@ -307,16 +310,15 @@
     },
     {
       "claim_id": "zapier-webhooks",
-      "claim": "Webhooks by Zapier is a built-in app documented at zapier.com/apps/webhook/integrations.",
+      "claim": "Webhooks by Zapier is documented at zapier.com/apps/webhook/integrations, where the app is tagged Premium; its Custom Request action takes Method, URL, Data, Headers and related fields, with no payload-type field.",
       "source_url": "https://zapier.com/apps/webhook/integrations",
-      "raw_snippet": "all npm install @zapier/zapier-sdk npm install -D @zapier/zapier-sdk-cli zapier-sdk login # create a Webhooks by Zapier connection @ https://zapier.com/app/assets/connections Run an action // Typescript import { createZapierSdk } from \"@zapier/zapier-sdk\"; const zapier = createZapierSdk(); const { data: connection } = await zapier.findFirstConnection({ app: \"webhook\", owner: \"me\" }); await zapier.runAction({ app: 'webhook', action: 'custom', connection: connection.",
-      "fetched_at": "2026-08-18",
+      "raw_snippet": "Premium apps: Webhooks by Zapier",
+      "fetched_at": "2026-10-29",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
-      ],
-      "verified_via": "cited page fetched; 6 of 8 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"http\"",
-      "verified_at": "2026-08-18"
+        "SKILL_HE.md",
+        "references/zapier-platform-notes.md"
+      ]
     },
     {
       "claim_id": "morning-api-docs-host",
@@ -334,33 +336,14 @@
       "verified_at": "2026-09-02"
     },
     {
-      "claim_id": "tranzila-docs-no-webhook-page",
-      "claim": "Tranzila's current developer documentation does not describe a merchant-panel webhook or notification URL. Its Payments and Billing section covers Authentication, Hosted Fields, Iframe Integration, Iframe Integration new DirectNG, Apple Pay Integration via Iframe, PayPal Integration and Transaction Response Codes; its APIS section covers Tranzila Transactions API, Tranzila Api 3DS, Bit, Handshake API V2, MASAV API, Payment request and STO API for My Billing.",
-      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/authentication",
-      "raw_snippet": "Ask the docs Grounded in the Tranzila Developer Guide Please note: AI Agent is in Beta Ask anything about the Tranzila API. Answers cite the source pages so you can dig deeper. How do I initialize a Bit transaction? What headers does the Tranzila API require? How do I refund a payment? Explain Hosted Fields integration in 3 steps. AI can make mistakes. Verify against the cited pages.",
-      "verification_note": "The presence of a dedicated Bit API page corroborates the skill's claim that Tranzila supports Bit. The index/sum/ccno/npay field names previously documented as a webhook payload are the legacy redirect-response parameters and are now marked unverified in the skill.",
-      "fetched_at": "2026-08-18",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md",
-        "references/israeli-zapier-apps.md"
-      ],
-      "verified_via": "cited page fetched; 45 of 55 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"developer\"",
-      "verified_at": "2026-08-18"
-    },
-    {
       "claim_id": "inforu-sms-api-fallback",
-      "claim": "Inforu's XML API endpoint https://api.inforu.co.il/SendMessageXml.ashx is live and processing requests: an empty GET returns HTTP 200 with an XML fault body (Status -11, 'Error: Illegal XML'), confirming the endpoint parses input rather than being a dead host. It remains available as a fallback to the native Zapier app.",
-      "source_url": "https://api.inforu.co.il/SendMessageXml.ashx",
-      "raw_snippet": "<Result><Status>-11</Status><Description>Error: Illegal XML</Description><NumberOfRecipients>0</NumberOfRecipients></Result>",
-      "fetched_at": "2026-08-01T00:00:00Z",
+      "claim": "InforU's documented API (https://apidoc.inforu.co.il/) sends SMS via POST https://capi.inforu.co.il/api/v2/SMS/SendSms with HTTP Basic auth; the older XML endpoint https://api.inforu.co.il/SendMessageXml.ashx still answers but is not in those docs.",
+      "source_url": "https://documenter.gw.postman.com/api/collections/15332030/TzeWFTF1",
+      "raw_snippet": "https://capi.inforu.co.il/api/v2/SMS/SendSms",
+      "fetched_at": "2026-10-29",
       "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md",
         "references/israeli-zapier-apps.md"
-      ],
-      "verified_via": "curl 2026-09-02, HTTP 200, 124-byte XML fault body",
-      "verified_at": "2026-09-02"
+      ]
     },
     {
       "claim_id": "rivhit-api-endpoints",
@@ -414,10 +397,10 @@
     {
       "claim_id": "rivhit-document-new-endpoint",
       "claim": "Document.New is POSTed to https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/Document.New.",
-      "source_url": "https://api.rivhit.co.il/online/RivhitOnlineAPI.svc/Document.New",
+      "source_url": "https://rivhit-api.readme.io/reference/onlinerivhitonlineapisvcdocumentnew",
       "raw_snippet": "Document.New Copy Page post https://api.rivhit.co.il /online/RivhitOnlineAPI.svc/Document.New Create a New Document (Invoice, Shipping List, Order, ect..)",
       "verification_note": "Quoted from the vendor reference page https://rivhit-api.readme.io/reference/onlinerivhitonlineapisvcdocumentnew (the endpoint itself is POST-only and not fetchable unauthenticated).",
-      "fetched_at": "2026-08-09T00:00:00Z",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
       "verified_via": "curl (vendor ReadMe reference page)",
       "appears_in": [
         "references/israeli-zapier-apps.md"
@@ -472,35 +455,13 @@
       ]
     },
     {
-      "claim_id": "ita-digital-invoice-page-cloudflare",
-      "claim": "The Israel Tax Authority's Invoice Reform (digital invoice) page is at gov.il/he|en/departments/legalInfo/digital_invoice. It returns HTTP 403 to non-browser clients (Cloudflare), so it cannot be machine-verified and is cited as a pointer, not as the source of any figure.",
-      "source_url": "https://www.gov.il/he/service/request-assignment-number-for-tax-invoice",
-      "raw_snippet": "כשסכום העסקה לפני מע\"מ גבוה מ-5,000 ₪",
-      "verification_note": "HTTP 403 on 2026-08-09 for both the he and en paths. All allocation-number threshold figures in this skill are sourced from the greeninvoice.co.il magazine entry instead.",
-      "fetched_at": "2026-09-01T22:45:35+00:00",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md"
-      ]
-    },
-    {
-      "claim_id": "ita-digital-invoice-page-en",
-      "claim": "The English mirror of the ITA Invoice Reform page is gov.il/en/departments/legalInfo/digital_invoice; it is also Cloudflare-gated.",
-      "source_url": "https://www.gov.il/he/service/request-assignment-number-for-tax-invoice",
-      "raw_snippet": "כשסכום העסקה לפני מע\"מ גבוה מ-5,000 ₪",
-      "fetched_at": "2026-09-01T22:45:35+00:00",
-      "appears_in": [
-        "SKILL.md"
-      ]
-    },
-    {
       "claim_id": "vat-reporting-cadence-turnover",
-      "claim": "VAT reporting cadence is set by turnover: bimonthly for turnover up to 1,775,000 NIS, monthly above it. The controlling provisions are section 67(a2)(1) of the VAT Law and regulation 20(c)(1) of the VAT Regulations; regulation 20(c)(2) re-indexes the amount on 1 September each year, rounded to the nearest 5,000 NIS. 1,775,000 is the figure in force for 2026.",
+      "claim": "VAT reporting cadence is set by turnover: bimonthly for turnover up to 1,775,000 NIS, monthly above it, under section 67(a2)(1) of the VAT Law (with regulation 20(c)(1)). 1,775,000 is the figure in force for 2026 (labelled נכון ל-1/1/2026).",
       "source_url": "https://www.gov.il/he/pages/vat-to-the-new-dealer?chapterIndex=9",
       "raw_snippet": "עוסקים שמחזור עסקאותיהם בשנה הקובעת הינו עד 1,775,000 ₪ (נכון ל – 1/1/2026) ידווחו את הדו\"ח למע\"מ אחת לחודשיים.",
-      "fetched_at": "2026-09-02",
+      "fetched_at": "2026-10-29",
       "verified_via": "browser",
-      "verified_at": "2026-09-02",
+      "verified_at": "2026-10-29",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -524,9 +485,9 @@
       "claim": "The Tax Authority publishes an annual table of reporting and payment dates. For 2026 the periodic VAT and income-tax advance dates are 16.2, 16.3, 27.4, 18.5, 15.6, 15.7, 17.8, 24.9, 19.10, 16.11, 15.12 and 18.1.2027. Income-tax withholding (nikuyim) diverges in June, July and December (16.6, 16.7, 16.12). The detailed VAT report is a separate set: 23.2, 26.3, 27.4, 26.5, 23.6, 27.7, 24.8, 24.9, 26.10, 23.11, 23.12 and 26.1.2027. Statutory undeferred dates are the 15th (periodic VAT and advances), the 16th (withholding) and the 23rd (detailed report). Separate in-year announcements can defer individual periods further.",
       "source_url": "https://www.gov.il/he/pages/pa151025-2",
       "raw_snippet": "ב-15 לכל חודש חל מועד הדיווח והתשלום לדוחות התקופתיים למע\"מ ולמקדמות מס הכנסה. ב-16 לכל חודש, חל מועד הדיווח ותשלום לניכויים מס הכנסה. ב-23 לכל חודש, חל מועד הדיווח והתשלום של הדוחות המפורטים למע\"מ.",
-      "fetched_at": "2026-09-02",
+      "fetched_at": "2026-10-29",
       "verified_via": "browser",
-      "verified_at": "2026-09-02",
+      "verified_at": "2026-10-29",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md"
@@ -537,12 +498,13 @@
       "claim": "For tax year 2025 the Tax Authority deferred the annual filing deadlines to 31.5.2026 for individuals not filing online, 30.6.2026 for individuals filing online, and 30.7.2026 for companies, NPOs and controlling shareholders. Representative extensions are published separately.",
       "source_url": "https://www.gov.il/he/pages/pa230426-1",
       "raw_snippet": "המועד להגשת הדו\"ח ליחידים החייבים בהגשת דו\"ח לשנת 2025 באופן מקוון הינו עד יום שלישי ה-30.6.2026.",
-      "fetched_at": "2026-09-01T22:45:35+00:00",
+      "fetched_at": "2026-10-29",
       "verified_via": "browser",
-      "verified_at": "2026-09-01T22:45:35+00:00",
+      "verified_at": "2026-10-29",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
       ]
     },
     {
@@ -561,14 +523,16 @@
     },
     {
       "claim_id": "ita-no-public-allocation-api",
-      "claim": "The Tax Authority does not publish a public REST API for invoice allocation numbers. Access is through registered digital services and certified invoicing software, or the manual request service.",
-      "source_url": "https://www.gov.il/he/service/request-assignment-number-for-tax-invoice",
-      "raw_snippet": "מספר הקצאה",
-      "fetched_at": "2026-09-01T22:45:35+00:00",
+      "claim": "An allocation number is requested in one of two ways: manually by an online request, or automatically by invoicing software connected to the Tax Authority's systems (Morning does this). A Zap should route through such software rather than call the Tax Authority itself.",
+      "source_url": "https://www.greeninvoice.co.il/magazine/israel-invoice/",
+      "raw_snippet": "הגשת בקשה למספר הקצאה יכולה להתבצע בשתי דרכים – ידנית על ידי הגשת בקשה אונליין",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
-      ]
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_raw_snippet": "המערכת שלנו יודעת לשלוח בקשה אוטומטית למספר הקצאה עבור חשבוניות רלוונטיות, ע״י התממשקות למערכות של רשות המיסים"
     },
     {
       "claim_id": "ita-anti-splitting-notice-2026",
@@ -586,15 +550,16 @@
     },
     {
       "claim_id": "morning-auth-in-transition",
-      "claim": "Morning's documented auth is OAuth 2.0: the current bundled OpenAPI spec (info.version 2.0.0) documents POST /idp/v1/oauth/token with a server override to api.morning.co and grant_type=client_credentials, returning a short-lived JWT sent as Authorization: Bearer. The production server for all other paths is https://api.greeninvoice.co.il/api/v1. The legacy POST /api/v1/account/token still answers HTTP 400 to an empty POST but does not appear in the spec's paths, so it is undocumented legacy.",
+      "claim": "Morning's documented auth is OAuth 2.0 client_credentials: POST /idp/v1/oauth/token (server https://api.morning.co) with a JSON body carrying grant_type, client_id and client_secret and header Content-Type: application/json, returning accessToken valid for 1 hour. The legacy POST /api/v1/account/token is absent from the spec and returned HTTP 404 on 2026-10-29 (curl, JSON body) while POST /api/v1/documents and /api/v1/documents/search on the same host returned 401, so the legacy path is retired.",
       "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
-      "raw_snippet": "Authentication is implemented using OAuth 2.0, providing secure, token-based authorization.",
-      "fetched_at": "2026-09-02",
-      "verified_via": "fetch",
-      "verified_at": "2026-09-02",
+      "raw_snippet": "the `accessToken` is valid for 1 hour.",
+      "fetched_at": "2026-10-29",
+      "verified_via": "curl of the bundled spec 2026-10-29 plus curl probes of the legacy and current endpoints (legacy 404, siblings 401, token endpoint 401 invalid_client for fake credentials)",
+      "verified_at": "2026-10-29",
       "appears_in": [
         "SKILL.md",
-        "SKILL_HE.md"
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
       ]
     },
     {
@@ -609,20 +574,6 @@
         "SKILL.md",
         "SKILL_HE.md"
       ]
-    },
-    {
-      "claim_id": "make-n8n-integration-counts",
-      "claim": "Make.com advertises 3,000+ integration apps (not 2,000+). n8n's integrations page advertises 2,116 integrations, which is a different metric from a built-in node count; no page states a 400+ built-in node figure.",
-      "source_url": "https://www.make.com/en/integrations",
-      "raw_snippet": "3,000+ Integration Apps | Connect & Automate Software | Make",
-      "secondary_source_url": "https://n8n.io/integrations/",
-      "secondary_raw_snippet": "2116 integrations",
-      "fetched_at": "2026-09-02",
-      "appears_in": [
-        "references/zapier-platform-notes.md"
-      ],
-      "verified_via": "browser",
-      "verified_at": "2026-09-02"
     },
     {
       "claim_id": "meta-template-review-time",
@@ -726,7 +677,7 @@
     },
     {
       "claim_id": "morning-create-document-schema",
-      "claim": "Morning's POST /documents takes CreateDocumentRequest, whose required fields are [\"type\", \"lang\", \"currency\", \"vatType\", \"income\"]. The line array is `income[]` (IncomeRowRequest); there is no `items` property. Each income row requires [\"description\", \"quantity\", \"price\", \"currency\", \"vatType\"], so the price field is `price`, not `unitPrice`.",
+      "claim": "Morning's POST /documents takes CreateDocumentRequest, whose required fields are [\"type\", \"lang\", \"currency\", \"vatType\", \"income\"]. The line array is `income[]` (IncomeRowRequest); there is no `items` property. Each income row requires [\"description\", \"quantity\", \"price\", \"currency\", \"vatType\"], so the price field is `price`, not `unitPrice`. Documents are created by POST https://api.greeninvoice.co.il/api/v1/documents.",
       "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
       "raw_snippet": "\"CreateDocumentRequest\" required: [\"type\", \"lang\", \"currency\", \"vatType\", \"income\"]; properties include \"income\" and not \"items\"",
       "secondary_raw_snippet": "\"IncomeRowRequest\" required: [\"description\", \"quantity\", \"price\", \"currency\", \"vatType\"]",
@@ -758,11 +709,11 @@
     },
     {
       "claim_id": "cardcom-callback-amount-path",
-      "claim": "The Cardcom v11 webhook body (LowProfileResult) has NO top-level `Amount` property. Its properties are ResponseCode, Description, TerminalNumber, LowProfileId, TranzactionId, ReturnValue, Operation, UIValues, DocumentInfo, TokenInfo, SuspendedInfo, TranzactionInfo, ExternalPaymentVector, Country, UTM, IssuerAuthCodeDescription, AccountId. The paid amount is at TranzactionInfo.Amount (TransactionInfo schema, type number, format decimal). TranzactionInfo is nullable outside the ChargeOnly and ChargeAndCreateToken operations. The `Amount` field people copy is on the CreateLowProfile REQUEST schema, not the callback.",
+      "claim": "The Cardcom v11 webhook body (LowProfileResult) has NO top-level `Amount` property. Its properties are ResponseCode, Description, TerminalNumber, LowProfileId, TranzactionId, ReturnValue, Operation, UIValues, DocumentInfo, TokenInfo, SuspendedInfo, TranzactionInfo, ExternalPaymentVector, Country, UTM, IssuerAuthCodeDescription, AccountId, PendingReason. The paid amount is at TranzactionInfo.Amount (TransactionInfo schema, type number, format decimal). TranzactionInfo is nullable outside the ChargeOnly and ChargeAndCreateToken operations. The `Amount` field people copy is on the CreateLowProfile REQUEST schema, not the callback.",
       "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
       "raw_snippet": "Transaction information, Will no be null at operations: ChargeOnly, ChargeAndCreateToken",
       "secondary_raw_snippet": "\"Amount\": {\"type\": \"number\", \"description\": \"Transaction amount\", \"format\": \"decimal\"}",
-      "fetched_at": "2026-09-02",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -770,7 +721,8 @@
         "references/israeli-zapier-apps.md"
       ],
       "verified_via": "curl of the live v11 OpenAPI spec 2026-09-02, LowProfileResult properties enumerated directly",
-      "verified_at": "2026-09-02"
+      "verified_at": "2026-09-02",
+      "tertiary_raw_snippet": "Why the deal is still pending (ResponseCode 5117/5118/5119)"
     },
     {
       "claim_id": "vat-online-filing-19th-1830",
@@ -786,6 +738,669 @@
       ],
       "verified_via": "browser (gov.il bot-blocks curl) + curl of misim.gov.il",
       "verified_at": "2026-09-02"
+    },
+    {
+      "claim_id": "vat-section-126d-indexation",
+      "claim": "סעיף 126(ד) לחוק מע\"מ (Section 126(d) of the VAT Law) re-indexes the section 67(a2) amount on 1 September each year by the CPI change, rounded to the nearest 5,000 NIS. (Regulation 20(c)(2) indexes the regulation's own older amount, not the 1,775,000 statutory figure.)",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9E%D7%A1_%D7%A2%D7%A8%D7%9A_%D7%9E%D7%95%D7%A1%D7%A3",
+      "raw_snippet": "יותאם ב־1 בספטמבר של כל שנה (בסעיף קטן זה – יום העדכון) לעליית המדד",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "curl of the wikisource raw wikitext (action=raw), 2026-10-29",
+      "verified_at": "2026-10-29",
+      "secondary_raw_snippet": "הסכום המותאם יעוגל ל־5,000 השקלים החדשים הקרובים"
+    },
+    {
+      "claim_id": "vat-threshold-2025-gazetted-late",
+      "claim": "The notice setting the section 67(a2)(1) amount at 1,775,000 NIS from 1 September 2025 was published in Yalkut HaPirsumim 14736 and signed only on 30.6.2026, ten months after its effective date, so the 1.9.2026 figure that governs 2027 may also appear late.",
+      "source_url": "https://olaw.org.il/yalkut/yalkut-14736.pdf",
+      "raw_snippet": "הסכום הוא 1,775,000 שקלים חדשים",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "pdf",
+      "verified_at": "2026-10-29",
+      "verification_note": "Read via the batch research pass (pdftotext); the signing date ט\"ו בתמוז התשפ\"ו (30.6.2026) is on the notice. RTL extraction scrambles the section number."
+    },
+    {
+      "claim_id": "ita-feb-2026-periodic-deferral",
+      "claim": "A notice of 5.3.2026 (Yalkut HaPirsumim 14327) by the Tax Authority director under section 73 of the VAT Law deferred periodic reports by eleven days to 26 days after the period, valid until 26 March 2026, superseding the 16.3.2026 date in the annual table for the period ending February.",
+      "source_url": "https://www.gov.il/BlobFolder/policy/73503/he/Files_Hachlatot_73503_reshumot.pdf",
+      "raw_snippet": "תוקפה של דחייה זו עד יום ח' בניסן התשפ\"ו",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "references/israeli-zapier-apps.md"
+      ],
+      "verified_via": "pdf",
+      "verified_at": "2026-10-29",
+      "verification_note": "Downloaded with curl (HTTP 200, application/pdf) and read with pdftotext on 2026-10-29: 'יידחה באחד עשר ימים... יוגש בתוך עשרים ושישה ימים לאחר תקופת הדיווח... (26 במרץ 2026)', signed 5 במרץ 2026 by the Tax Authority director."
+    },
+    {
+      "claim_id": "zapier-premium-apps-paid-only",
+      "claim": "Premium apps on Zapier, including Webhooks by Zapier, are available only on a paid plan or during a free trial, so a Free account cannot use Catch Hook or Custom Request.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/37982571569421",
+      "raw_snippet": "Premium apps on Zapier are only available to users on a paid Zapier plan or while on a free trial",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zapier-platform-notes.md"
+      ]
+    },
+    {
+      "claim_id": "zapier-whatsapp-notifications-premium",
+      "claim": "WhatsApp Notifications became a premium Zapier app on 1 October 2025 and needs a paid Zapier account.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/39395817773453",
+      "raw_snippet": "Starting on October 1, 2025, the WhatsApp Notifications app will become a premium app on Zapier.",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zapier-platform-notes.md",
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "zapier-whatsapp-business-premium-and-window",
+      "claim": "The WhatsApp Business Zapier app needs a paid Zapier account (premium app); Get Attachment is a search; Send Freeform Message and Send Media Message can only be sent within 24 hours of the recipient's last message; Zap runs always appear successful even when the send fails.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/40123068069005",
+      "raw_snippet": "Zap runs will always appear as successful, even if they fail to send.",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zapier-platform-notes.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_raw_snippet": "Can only be sent within 24 hours of the recipie"
+    },
+    {
+      "claim_id": "zapier-format-number-no-rounding",
+      "claim": "Formatter's Numbers > Format Number regroups separators but cannot round or pad, so it cannot force two decimals; Formatter also has a separate Format Currency transform.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/8496288404877",
+      "raw_snippet": "This transform cannot round or pad numbers.",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "select Format Currency"
+    },
+    {
+      "claim_id": "zapier-tables-date-formats",
+      "claim": "Zapier Tables steps accept dates only as MM/DD/YYYY, YYYY-MM-DD or YYYY-MM-DDhh:mm:ssZ.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/9881673906701",
+      "raw_snippet": "Zap steps for Zapier Tables can work with dates in the following formats",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md"
+      ]
+    },
+    {
+      "claim_id": "zapier-formatter-timezone-utc",
+      "claim": "Formatter Date/Time's To Timezone defaults to UTC.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/8496257974029",
+      "raw_snippet": "select a timezone . The default is UTC.",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md"
+      ]
+    },
+    {
+      "claim_id": "zapier-guardrails-pii-languages",
+      "claim": "AI Guardrails by Zapier is an action step placed after an AI step; its PII detection supports English and Spanish only.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/43960366238221",
+      "raw_snippet": "PII detection supports English and Spanish only",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zapier-platform-notes.md"
+      ]
+    },
+    {
+      "claim_id": "zapier-agents-to-ai-by-zapier",
+      "claim": "Zapier is migrating Agents (agents.zapier.com) to AI by Zapier, a step in the Zap editor billed in tasks, and has not set a date to turn Agents off.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/47402591569805",
+      "raw_snippet": "Zapier is migrating Agents (agents.zapier.com) to AI by Zapier",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zapier-platform-notes.md"
+      ],
+      "secondary_raw_snippet": "Zapier has not set a date to turn off Agents yet."
+    },
+    {
+      "claim_id": "zapier-custom-request-raw-data",
+      "claim": "In Webhooks by Zapier Custom Request the Data field is sent exactly as entered, so a JSON body must be typed raw (and its Content-Type header set).",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/8496326446989",
+      "raw_snippet": "it will be sent exactly as entered",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "zapier-canvas",
+      "claim": "Zapier Canvas helps visualize and organize business systems that link to Zaps, chatbots, agents, tables and forms.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/19880280846221",
+      "raw_snippet": "Zapier Canvas helps you visualize and organize full business systems.",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "references/zapier-platform-notes.md"
+      ]
+    },
+    {
+      "claim_id": "morning-vattype-enums",
+      "claim": "Morning's document-level vatType (DocumentVatType) is 0 default, 1 exempt, 2 mixed, while the row-level income[].vatType (ItemVatType) is 0 default (VAT added), 1 included (VAT included in price), 2 exempt.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "| 1 | Exempt (VAT-free) |",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "| 1 | Included (VAT included in price) |",
+      "verified_via": "curl of the bundled spec 2026-10-29, components.schemas.DocumentVatType and ItemVatType read directly",
+      "verified_at": "2026-10-29"
+    },
+    {
+      "claim_id": "morning-payment-rows",
+      "claim": "In Morning's create-document request each payment[] row requires date, type, price and currency, and the installment count field is numPayments.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "\"numPayments\"",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ],
+      "verified_via": "curl of the bundled spec 2026-10-29, PaymentRowRequest required list read directly",
+      "verified_at": "2026-10-29"
+    },
+    {
+      "claim_id": "morning-search-and-amount-fields",
+      "claim": "Morning document search is POST /documents/search with a JSON filter (page, pageSize defaulting to 25, type, status, fromDate, toDate); in results, amount is the total including VAT, vat is the VAT amount and amountDueVat the amount before VAT; status 0 open ... 4 cancelled.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "Total amount, in requested currency (including the VAT, Discount & Rounding)",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "Number of results per page. Defaults to 25.",
+      "verified_via": "curl of the bundled spec 2026-10-29, /documents/search request and response schemas read directly",
+      "verified_at": "2026-10-29"
+    },
+    {
+      "claim_id": "morning-document-created-webhook",
+      "claim": "Morning's document/created webhook payload carries recipient (not client), subtotal (before VAT), tax[] lines, total (including VAT), date as YYYY-MM-DD and allocationNumber when assigned, with empty fields omitted; payment/received carries total and payer.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "Document total before VAT.",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "references/zap-templates.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_raw_snippet": "Fields with no value are omitted from the payload entirely",
+      "verified_via": "curl of the bundled spec 2026-10-29, x-webhooks and WebhookDocumentCreated read directly",
+      "verified_at": "2026-10-29"
+    },
+    {
+      "claim_id": "payplus-native-zapier-app",
+      "claim": "PayPlus (payplus.co.il) has a native trigger-only Zapier app with New Approval, New Charge and New Invoice triggers, authenticated with an API key and Secret key; each event can be subscribed once per company.",
+      "source_url": "https://www.payplus.co.il/faq/%D7%A1%D7%9C%D7%99%D7%A7%D7%94-%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98%D7%99%D7%AA/%D7%97%D7%99%D7%91%D7%95%D7%A8-%D7%95%D7%94%D7%A8%D7%A9%D7%90%D7%95%D7%AA-API/Zapier-Documentation",
+      "raw_snippet": "can only be subscribed to once per company",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_source_url": "https://zapier.com/apps/payplus/integrations",
+      "secondary_raw_snippet": "New Approval"
+    },
+    {
+      "claim_id": "wix-monday-zapier-labels",
+      "claim": "The Wix Zapier app is trigger-only (product-area triggers such as eCommerce, Forms, Payments; no write actions). monday.com triggers include New Item in Board and Specific Column Value Changed in Board; there is no 'Status Changed' trigger.",
+      "source_url": "https://zapier.com/apps/monday/integrations",
+      "raw_snippet": "Specific Column Value Changed in Board",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_source_url": "https://zapier.com/apps/wix/integrations",
+      "secondary_raw_snippet": "Members and Contacts",
+      "verified_via": "curl of the app pages 2026-10-29, __NEXT_DATA__ currentImplementation reads/writes parsed",
+      "verified_at": "2026-10-29"
+    },
+    {
+      "claim_id": "tranzila-notify-url",
+      "claim": "Tranzila documents a Notify page: set notify_url_address (or the Notify URL in the terminal's payment-page Security settings, Notify Format QSTR); transaction data is sent to it in parallel with the redirect, as application/x-www-form-urlencoded, with Response 000/0 for success and sum for the amount.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "If a Notify page was defined, transaction data will also be sent to it in parallel.",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ],
+      "secondary_source_url": "https://docs.tranzila.com/docs/vibe-coding/closing-an-order-in-base44-using-notify-page",
+      "secondary_raw_snippet": "Tranzila sends data as application/x-www-form-urlencoded."
+    },
+    {
+      "claim_id": "grow-webhooks-service",
+      "claim": "Grow (developers.grow.business) Webhooks are enabled by Grow support and send JSON with fields such as transactionCode, transactionType, paymentSum, fullName, payerPhone, payerEmail and webhookKey; the separate API notifyUrl callback is an HTTP POST not JSON and requires an ApproveTransaction call.",
+      "source_url": "https://developers.grow.business/docs/webhooks.md",
+      "raw_snippet": "Contact our support team to enable Webhooks for your account.",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md",
+        "references/zap-templates.md"
+      ],
+      "secondary_source_url": "https://developers.grow.business/reference/server-to-server-callback.md",
+      "secondary_raw_snippet": "NOT as JSON"
+    },
+    {
+      "claim_id": "icount-auth-and-incvat",
+      "claim": "iCount's API accepts a long-lived API token as Authorization: Bearer; doc items take unitprice (excluding VAT) or unitprice_incvat (including VAT, from which iCount extracts VAT). Base https://api.icount.co.il/api/v3.php/, docs at https://apiv3.icount.co.il/.",
+      "source_url": "https://api.icount.co.il/api/v3.php/help/methods/doc?format=json&no_auth=1&no_status=1",
+      "raw_snippet": "Item price (including VAT)",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_source_url": "https://apiv3.icount.co.il/",
+      "secondary_raw_snippet": "Bearer"
+    },
+    {
+      "claim_id": "ezcount-amount-is-quantity",
+      "claim": "In EZcount's createDoc item, price is the item price and amount is the item quantity; api_key and developer_email go in the body, demo.ezcount.co.il for testing and api.ezcount.co.il for production.",
+      "source_url": "https://documenter.gw.postman.com/api/collections/16363118/TzkyNLWB",
+      "raw_snippet": "Item Quantity",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "sms019-api",
+      "claim": "019 SMS's API takes XML/JSON over HTTP POST to https://019sms.co.il/api, authenticated with an API token; creating tokens from username and password is no longer supported.",
+      "source_url": "https://docs.019sms.co.il/sms/",
+      "raw_snippet": "All requests must be sent to : https://019sms.co.il/api",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_source_url": "https://docs.019sms.co.il/guide/",
+      "secondary_raw_snippet": "Creating tokens using a username and password is no longer supported",
+      "verified_via": "curl 2026-10-29: the snippet is present in the page HTML text (the verifier sees a near-empty body, likely a different text extraction)",
+      "verified_at": "2026-10-29"
+    },
+    {
+      "claim_id": "btl-self-employed-debit-date",
+      "claim": "A Bituach Leumi self-employed direct debit is charged on the 22nd of each month for the previous month, moved for Shabbat and holidays.",
+      "source_url": "https://www.btl.gov.il/Insurance/National%20Insurance/type_list/Self_Employed/Pages/howtopay.aspx",
+      "raw_snippet": "התשלום מתבצע ב-22 לכל חודש עבור החודש הקודם",
+      "fetched_at": "2026-10-29",
+      "appears_in": [
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "invoice-reform-b2b-only",
+      "claim": "The Invoice Israel regime governs transactions between Israeli-registered businesses that offset input VAT; foreign customers need no allocation number, and without a number the recipient cannot offset the input VAT.",
+      "source_url": "https://www.greeninvoice.co.il/magazine/israel-invoice/",
+      "raw_snippet": "חוק חשבוניות ישראל נועד להסדיר עסקאות בין עסקים הרשומים בישראל שמקזזים מס תשומות",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_raw_snippet": "מקבל החשבונית לא יוכל לקזז את מס התשומות"
+    },
+    {
+      "claim_id": "allocation-needs-buyer-taxid",
+      "claim": "For an allocation number the invoice must be a tax invoice or tax invoice/receipt, above 5,000 NIS before VAT, carry the customer's ח.פ., and Morning's Tax Authority authorization must be active.",
+      "source_url": "https://www.greeninvoice.co.il/magazine/israel-invoice/",
+      "raw_snippet": "החשבונית כוללת את מספר הח.פ של הלקוח",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_raw_snippet": "סכום החשבונית גבוה מ-5,000 ₪ (לפני מע״מ)"
+    },
+    {
+      "claim_id": "morning-tax-authority-auth-3-months",
+      "claim": "Morning's connection authorization to the Tax Authority is valid for 3 months and must then be renewed.",
+      "source_url": "https://www.greeninvoice.co.il/magazine/israel-invoice/",
+      "raw_snippet": "הרשאת החיבור לרשות המיסים תקפה למשך 3 חודשים ואחר זמן זה יש לחדשה",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "morning-payment-row-card-fields",
+      "claim": "Morning payment rows: type code 3 is credit card; cardNum is the last 4 digits; dealType 1 Standard, 2 Payments; numPayments 1-36; firstPayment is the first payment amount.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "| 3 | כרטיס אשראי |",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_raw_snippet": "Credit card's last 4 digits",
+      "tertiary_raw_snippet": "| 2 | Payments |"
+    },
+    {
+      "claim_id": "morning-amountopened-payment-requests-only",
+      "claim": "Morning's amountOpened exists only on payment-request documents (type 20); amountLocal is the ILS total including VAT; currencyRate is relative to ILS; amountDueVat is before rounding and discount.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "exists only in payment request documents",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "Total amount in local currency, including VAT, discount, and rounding",
+      "tertiary_raw_snippet": "Amount before VAT, and before rounding & discount"
+    },
+    {
+      "claim_id": "morning-client-emails-send-link",
+      "claim": "Morning sends the document download link to the addresses in client.emails.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "the document download link will be sent to these addresses",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md",
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "morning-webhook-signature-and-deactivation",
+      "claim": "Morning webhooks configured with a secret carry an x-webhook-signature HMAC-SHA256 header, and a webhook becomes inactive after 15 failed deliveries.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "after 15 failures the webhook becomes inactive",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "an HMAC-SHA256 signature of the delivered body"
+    },
+    {
+      "claim_id": "morning-payment-form-plugin",
+      "claim": "Morning's own payment form charges through a clearing plugin (pluginId) and creates the document itself.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "The clearing plugin ID to use",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "notified (POST) once the payment succeeds and the document is created"
+    },
+    {
+      "claim_id": "morning-payment-received-transactions",
+      "claim": "Morning payment/received transactions carry createdAt (Unix ms), currency and installments; document/created foreignCurrencyRate is present only for non-ILS documents.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "Unix timestamp in milliseconds of when the transaction was created",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "Number of installments the payment was split into",
+      "tertiary_raw_snippet": "Present only when the document currency is not ILS"
+    },
+    {
+      "claim_id": "cardcom-getlpresult",
+      "claim": "Cardcom v11 POST /api/v11/LowProfile/GetLpResult takes TerminalNumber, ApiName and LowProfileId and returns the LowProfileResult. Full URL: https://secure.cardcom.solutions/api/v11/LowProfile/GetLpResult (server https://secure.cardcom.solutions/).",
+      "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
+      "raw_snippet": "Get the result of an Iframe",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_raw_snippet": "/api/v11/LowProfile/GetLpResult"
+    },
+    {
+      "claim_id": "cardcom-operation-and-transaction-fields",
+      "claim": "Cardcom Operation values are ChargeOnly, ChargeAndCreateToken, CreateTokenOnly, SuspendedDeal, Do3DSAndSubmit; TransactionInfo carries CoinId (1 ILS, 2 USD), IsRefund, CreateDate, Last4CardDigitsString, NumberOfPayments, FirstPaymentAmount.",
+      "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
+      "raw_snippet": "Created token information, Will no be null at operations:  ChargeAndCreateToken, CreateTokenOnly",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_raw_snippet": "was it a refund deal?",
+      "tertiary_raw_snippet": "ISO Coin Code ,1 - ILS, 2 - USD"
+    },
+    {
+      "claim_id": "cardcom-creates-own-document",
+      "claim": "If CreateLowProfile sends a Document, Cardcom creates a document unless IsShowOnlyDocument is set, and the callback's DocumentInfo is not null when a document was created.",
+      "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
+      "raw_snippet": "NO DOCCUMENT WILL BE CREATED",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_raw_snippet": "Will no be null is a documents is created"
+    },
+    {
+      "claim_id": "cardcom-phone-required-flag",
+      "claim": "UIDefinition.IsCardOwnerPhoneRequired makes the cardholder phone input required.",
+      "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
+      "raw_snippet": "Is CardOwnerPhone input box required",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md",
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "zapier-task-counting",
+      "claim": "Filter and Paths steps, Zapier Tables steps, Formatter, Delay and Storage do not count as tasks; Code by Zapier is 1 task per run; when the task limit is reached runs are held, not lost.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/8496196837261",
+      "raw_snippet": "Any Filter or Paths step.",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "Code by Zapier 1 task per run with standard runtime.",
+      "tertiary_raw_snippet": "Steps for Zapier Tables and Zapier Forms"
+    },
+    {
+      "claim_id": "tranzila-legacy-iframe-sunset",
+      "claim": "Tranzila's legacy iframe on direct.tranzila.com is deprecated with official support ending 1 January 2027; the DirectNG iframe is at https://directng.tranzila.com/terminalname/iframenew.php and keeps notify_url_address.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "Official support ends on 1 January 2027",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "references/israeli-zapier-apps.md",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "secondary_source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration-directng",
+      "secondary_raw_snippet": "https://directng.tranzila.com/terminalname/iframenew.php"
+    },
+    {
+      "claim_id": "meta-whatsapp-pricing-2026",
+      "claim": "Meta bills WhatsApp per delivered business-to-user message by category and market (since 1 July 2025); from 1 October 2026 utility templates inside an open window are charged again and each business number gets 1,000 free service messages a month.",
+      "source_url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+      "raw_snippet": "Meta charges by category–market, and only for messages from businesses to users.",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_raw_snippet": "Meta will stop delivering service messages as of when they become charged on October 1, 2026.",
+      "tertiary_raw_snippet": "Utility messages sent in response to users (thus in an open customer service window), which became free as of July 1, 2025.",
+      "verified_via": "browser",
+      "verified_at": "2026-10-29T20:00:00+00:00",
+      "verification_note": "Read in Playwright on 2026-10-29 (page header Updated: Sep 30, 2026); the resumed charges are listed under the October 1, 2026 section. curl gets an error body.",
+      "quaternary_raw_snippet": "For each business phone number, Meta provides 1,000 free service messages per month"
+    },
+    {
+      "claim_id": "grow-paymentdate-and-type-examples",
+      "claim": "Grow's webhook examples show paymentDate as DD/MM/YY (14/10/21) and transactionType 'אשראי'.",
+      "source_url": "https://developers.grow.business/docs/webhooks.md",
+      "raw_snippet": "\"paymentDate\":\"14/10/21\", \"asmachta\":\"123456789\",",
+      "fetched_at": "2026-10-29T20:00:00+00:00",
+      "appears_in": [
+        "references/zap-templates.md",
+        "references/israeli-zapier-apps.md"
+      ],
+      "secondary_raw_snippet": "\"transactionType\":\"אשראי\""
+    },
+    {
+      "claim_id": "ita-allocation-request-service",
+      "claim": "The Tax Authority's online service lets dealers using a paper invoice book or software not connected to the service request an allocation number online when the pre-VAT amount exceeds 5,000 NIS (2026).",
+      "source_url": "https://www.gov.il/he/service/request-assignment-number-for-tax-invoice",
+      "raw_snippet": "המשתמשים בפנקס חשבוניות או בתוכנה שאינה מחוברת לשירות, לבקש באופן מקוון מספר הקצאה לחשבונית מס",
+      "fetched_at": "2026-10-29T20:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "browser",
+      "verified_at": "2026-10-29T20:30:00+00:00",
+      "verification_note": "Read in Playwright 2026-10-29; gov.il is bot-blocked to curl."
+    },
+    {
+      "claim_id": "morning-search-paging",
+      "claim": "Morning document search returns pages of 25 by default (pageSize), with total and pages in the response. Search is POST https://api.greeninvoice.co.il/api/v1/documents/search.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "Number of results per page. Defaults to 25.",
+      "fetched_at": "2026-10-29T21:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "/documents/search"
+    },
+    {
+      "claim_id": "morning-payment-gateway-fields",
+      "claim": "Morning payment/received transactions name the gateway (e.g. cardcom) and its gatewayTransactionId.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "Payment gateway that processed the transaction, e.g. `cardcom`.",
+      "fetched_at": "2026-10-29T21:30:00+00:00",
+      "appears_in": [
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "Identifier of the transaction at the payment gateway."
+    },
+    {
+      "claim_id": "morning-token-errors",
+      "claim": "Morning token errors: 400 invalid_request, unsupported_grant_type, invalid_grant, unauthorized_client; 401 invalid_client.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "API key privilege is expired, revoked, or pending",
+      "fetched_at": "2026-10-29T21:30:00+00:00",
+      "appears_in": [
+        "references/israeli-zapier-apps.md",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "morning-payment-types-other",
+      "claim": "Morning payment type 5 is PayPal and 10 a payment app; credit-card dealType 3 is Credit.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "| 10 | אפליקציית תשלום |",
+      "fetched_at": "2026-10-29T21:30:00+00:00",
+      "appears_in": [
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "| 5 | פייפאל |",
+      "tertiary_raw_snippet": "| 3 | Credit |"
+    },
+    {
+      "claim_id": "cardcom-external-payment-vector",
+      "claim": "Cardcom LowProfileResult carries ExternalPaymentVector, an external-payment indicator.",
+      "source_url": "https://secure.cardcom.solutions/swagger/v11/swagger.json",
+      "raw_snippet": "ExternalPayment indicator.",
+      "fetched_at": "2026-10-29T21:30:00+00:00",
+      "appears_in": [
+        "references/zap-templates.md",
+        "references/israeli-zapier-apps.md"
+      ]
+    },
+    {
+      "claim_id": "zapier-code-fetch",
+      "claim": "Code by Zapier JavaScript can make HTTP calls with await fetch(url, {method:'POST', body: JSON.stringify(data), ...}). The same article recommends API by Zapier rather than fetch for secrets or custom authenticated calls.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/45230556598157",
+      "raw_snippet": "await fetch(url, {method:",
+      "fetched_at": "2026-10-29T21:30:00+00:00",
+      "appears_in": [
+        "references/zap-templates.md"
+      ],
+      "secondary_raw_snippet": "Do not use fetch for these calls."
+    },
+    {
+      "claim_id": "zapier-pay-per-task",
+      "claim": "With pay-per-task billing Zapier bills extra tasks up to 3x the plan's task limit and then holds runs; without it, runs are held at the limit.",
+      "source_url": "https://help.zapier.com/hc/en-us/articles/8496196837261",
+      "raw_snippet": "equivalent to 3x your selected plan's task limit",
+      "fetched_at": "2026-10-29T21:30:00+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/zap-templates.md"
+      ]
+    },
+    {
+      "claim_id": "morning-business-type-patur",
+      "claim": "Morning's businessType code 3 is עוסק פטור (1 עוסק מורשה, 2 חברה בע״מ); document/created carries businessType.",
+      "source_url": "https://developers.morning.co/docs/openapi.bundled.json",
+      "raw_snippet": "| 3 | עוסק פטור |",
+      "fetched_at": "2026-10-29T21:45:00+00:00",
+      "appears_in": [
+        "references/zap-templates.md"
+      ]
     }
   ],
   "removed_claims": [
@@ -836,6 +1451,10 @@
     {
       "claim_id": "rivhit-api",
       "reason": "Superseded by rivhit-api-unverified after the .svc base returned 404."
+    },
+    {
+      "claim_id": "tranzila-docs-no-webhook-page",
+      "reason": "Superseded 2026-10-29: Tranzila's docs do document a Notify URL (notify_url_address / panel Security tab). Replaced by tranzila-notify-url."
     }
   ]
 }

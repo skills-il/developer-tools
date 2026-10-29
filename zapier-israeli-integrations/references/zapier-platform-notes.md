@@ -5,8 +5,9 @@ the skill; re-check plan names, limits and product names before quoting any of t
 
 ## Plans and prices
 
-Verified against `https://zapier.com/pricing` on 2026-09-02. The page renders **annual** pricing; a
-monthly-billing figure is not published there, so do not quote one.
+Verified against `https://zapier.com/pricing` on 2026-10-29. The page defaults to **annual** billing
+(a "Pay monthly / Pay yearly" toggle shows higher monthly-billing prices); the figures below are the
+annual ones, so say "billed annually" whenever you quote them.
 
 | | Free | Professional | Team | Enterprise |
 |---|---|---|---|---|
@@ -19,6 +20,9 @@ monthly-billing figure is not published there, so do not quote one.
 | Forms pages | 10/account | 50/account | 150/account | Contact Sales |
 | Managed access | (blank) | 100 users | 500 users | Contact Sales |
 | Copilot (Beta) | daily message limit | Unlimited | Unlimited | Unlimited |
+| Webhooks by Zapier | **No** (premium app) | Yes | Yes | Yes |
+
+**Webhooks by Zapier is a premium app, so Free cannot use it.** Zapier's help centre says "Premium apps on Zapier are only available to users on a paid Zapier plan or while on a free trial", and the app's own directory page is tagged Premium. Every Israeli vendor in this skill that has no native app (Morning, Cardcom, Tranzila, iCount, EZcount, Rivhit, Grow) is reached only through Catch Hook or Custom Request, so none of them can be automated on Free at all. Some individual help articles still carry a generic "Available on plans: Free ..." banner; the premium-app rule and the app's Premium tag are what apply.
 
 **There is no Starter plan.** It was discontinued on 2 April 2024 and Professional became the
 lowest-cost paid plan. Higher task volumes are a tier choice *within* Professional, not a separate
@@ -61,6 +65,7 @@ plan. Older tutorials that price "Starter" are describing a plan that no longer 
 - Can troubleshoot failing Zaps and suggest fixes
 
 **Zapier Agents** (autonomous AI agents):
+- **Being migrated into AI by Zapier**, a step inside the Zap editor billed in ordinary tasks. Zapier's migration guide says "Zapier has not set a date to turn off Agents yet", so existing agents keep working, but build new agentic flows as a Zap with an AI by Zapier step rather than as a standalone agent
 - Create AI agents that work across 9,000+ apps autonomously
 - Lives at `agents.zapier.com`. It was previously **Zapier Central**, so older tutorials and forum posts call it that. The rename is evidenced by redirects (`zapier.com/central` now lands on `zapier.com/agents`, and `central.zapier.com` on `agents.zapier.com`), not by a Zapier announcement we could locate, so do not cite a Zapier statement for it
 - Example: "Monitor my Morning account for unpaid invoices older than 30 days and send reminder emails in Hebrew"
@@ -74,14 +79,18 @@ plan. Older tutorials that price "Starter" are describing a plan that no longer 
 - The underlying model changes as Zapier migrates providers, so do not hardcode a model name into your process docs
 
 **Zapier MCP Server:**
-- Connects AI coding tools (Claude Code, ChatGPT, Cursor) to 30,000+ actions across 9,000+ apps
+- Connects AI coding tools (Claude Code, ChatGPT, Cursor) to Zapier's 9,000+ apps. Zapier's own pages quote different action counts (the help centre says 40,000+), so quote the app count, not an action count
+- Each tool is a single app action (the same actions your Zaps use), not one of your published Zaps. Each successful tool call uses two tasks from your plan; failed calls use none, and on Free the 100 monthly tasks are shared between Zaps and MCP
 - Agents can invoke Zapier actions directly from the development environment
 - Useful for building and testing Israeli business automations programmatically
 
 **AI Guardrails:**
-- PII detection to prevent sensitive data (Israeli ID numbers, credit card details) from leaking
+- A separate action step you place AFTER an AI step to screen its output, not a switch on the AI step itself
+- PII detection, but Zapier states "PII detection supports English and Spanish only". It is not documented to recognise a Teudat Zehut or Hebrew text, so for Israeli ID numbers add your own Code by Zapier check (9 digits, the last of which is the check digit) instead of relying on it
 - Toxic language filtering
 - Prompt injection prevention for chatbot-based flows
+
+**Zapier Canvas** is a diagramming tool, not an automation runtime: Zapier describes it as helping you "visualize and organize full business systems" that link to Zaps, chatbots, agents, tables and forms. Useful for mapping a client's whole billing flow (gateway, Morning, accountant, WhatsApp) before building the Zaps.
 
 
 
@@ -91,14 +100,15 @@ Zapier has **two different WhatsApp apps** and they are routinely confused. Pick
 
 | Zapier app | Who it can message | What it does |
 |------------|--------------------|--------------|
-| **WhatsApp Notifications** | **Only yourself.** Zapier's help page states you use it "to send yourself WhatsApp messages to your WhatsApp account", and setup authenticates by confirming your own number with an OTP | Exactly one action and zero triggers: `Send Message`. Limited to seven prefilled templates (New Lead, New Message, Payment Confirmation, New Order, Shipping Confirmation, Calendar Reminder, Zap Error), 1024-character cap, and "custom templates cannot be created". Good for "alert me when a payment lands". Not usable for customers. |
-| **WhatsApp Business** | **Your customers** | Triggers `New Message Received` (a customer messages your WhatsApp Business number) and `Message Status Updated` (sent, delivered, read, failed). Actions `Send Template Message`, `Send Freeform Message`, `Send Media Message`, `Get Attachment`. |
+| **WhatsApp Notifications** | **Only yourself**, and only on a paid plan: it became a premium app on 1 October 2025. Zapier's help page states you use it "to send yourself WhatsApp messages to your WhatsApp account", and setup authenticates by confirming your own number with an OTP | Exactly one action and zero triggers: `Send Message`. Limited to seven prefilled templates (New Lead, New Message, Payment Confirmation, New Order, Shipping Confirmation, Calendar Reminder, Zap Error), 1024-character cap, and "custom templates cannot be created". Good for "alert me when a payment lands". Not usable for customers. |
+| **WhatsApp Business** | **Your customers** (premium app, paid plan) | Triggers `New Message Received` (a customer messages your WhatsApp Business number) and `Message Status Updated` (sent, delivered, read, failed). Actions `Send Template Message`, `Send Freeform Message`, `Send Media Message`; search `Get Attachment`. Freeform AND media messages work only inside the 24-hour window. |
 
 **Use WhatsApp Business for customer-facing Hebrew messaging.** It requires a WhatsApp Business account connected to Zapier, and the usual Meta rules apply:
 - Outside the 24-hour customer-service window you must use a Meta-approved template. Templates are submitted for approval in advance; Meta's own template documentation says review can take up to 24 hours. Hebrew templates are supported but must be submitted with the Hebrew text.
 - Example approved template: "שלום {{1}}, קיבלנו את התשלום שלך בסך {{2}} ש\"ח. מספר אישור: {{3}}. תודה!"
 - **Inside** the 24-hour window, opened when the customer messages you first, `Send Freeform Message` sends arbitrary Hebrew text with no template. This is the path for live support replies and follow-up questions.
 - A payment confirmation sent proactively is outside the window, so it needs a template. A reply to a customer who just asked "did my payment go through?" does not.
+- **A green Zap run does not mean the message arrived.** Zapier's help page: "Zap runs will always appear as successful, even if they fail to send." Confirm delivery in Meta Business Manager, or add a `Message Status Updated` Zap that alerts you on `failed`.
 
 **Israeli alternative:** InforUMobile's native Zapier app carries a `Send Whatsapp Template Message` action. If you already use InforUMobile for SMS, this avoids adding a second vendor.
 
@@ -117,10 +127,10 @@ Zapier has **two different WhatsApp apps** and they are routinely confused. Pick
 | Factor | Zapier | Make.com (Integromat) | n8n |
 |--------|--------|----------------------|-----|
 | Ease of use | Simplest, visual builder + Copilot AI | Visual, slightly steeper learning curve | Requires self-hosting or cloud plan, most technical |
-| Native integrations | 9,000+ apps | 3,000+ apps | 2,100+ integrations per n8n.io/integrations |
+| Native integrations | 9,000+ apps | Thousands; check make.com/integrations | Thousands; check n8n.io/integrations |
 | Israeli app support | Native apps for SUMIT, Priority ERP, InforUMobile, Responder and Responder Live (רב מסר), Monday.com and Wix; webhook-based for Morning, Cardcom, Tranzila, iCount, EZcount, Rivhit and Grow | Webhook-based + some HTTP modules | Full HTTP/webhook flexibility |
 | AI features | Copilot, Agents, Chatbots, MCP Server | AI modules available | AI nodes (self-configured) |
-| Free tier | Unlimited 2-step Zaps, 100 tasks/month | 1,000 ops/month, limited scenarios | Self-host free, cloud plan has limits |
+| Free tier | Unlimited 2-step Zaps, 100 tasks/month, no webhooks | Monthly credit allowance (Make bills in credits); see make.com/pricing | Self-host free, cloud plan has limits |
 | Best for | Non-technical users, quick setup, AI-assisted building | Complex multi-branch workflows, cost-sensitive high-volume | Developers, self-hosted, full control |
 | Israeli community | Large | Growing | Small but technical |
 
@@ -133,14 +143,15 @@ Zapier has **two different WhatsApp apps** and they are routinely confused. Pick
 
 | אפליקציה ב-Zapier | למי אפשר לשלוח | מה היא עושה |
 |-------------------|----------------|-------------|
-| **WhatsApp Notifications** | **רק לעצמכם.** בדף העזרה של Zapier כתוב שמשתמשים בה "כדי לשלוח לעצמכם הודעות וואטסאפ לחשבון הוואטסאפ שלכם", וההתחברות מאמתת את המספר שלכם בקוד חד-פעמי | פעולה אחת בלבד ואפס טריגרים: `Send Message`. מוגבלת לשבע תבניות מוכנות מראש (New Lead, New Message, Payment Confirmation, New Order, Shipping Confirmation, Calendar Reminder, Zap Error), עד 1024 תווים, ו"אי אפשר ליצור תבניות מותאמות". מתאימה להתראות פנימיות. לא שימושית ללקוחות. |
-| **WhatsApp Business** | **ללקוחות שלך** | טריגרים `New Message Received` (לקוח שולח הודעה למספר העסקי שלך) ו-`Message Status Updated` (נשלח, נמסר, נקרא, נכשל). פעולות `Send Template Message`, `Send Freeform Message`, `Send Media Message`, `Get Attachment`. |
+| **WhatsApp Notifications** | **רק לעצמכם**, ורק במסלול בתשלום: מ-1 באוקטובר 2025 היא אפליקציית פרימיום. בדף העזרה של Zapier כתוב שמשתמשים בה "כדי לשלוח לעצמכם הודעות וואטסאפ לחשבון הוואטסאפ שלכם", וההתחברות מאמתת את המספר שלכם בקוד חד-פעמי | פעולה אחת בלבד ואפס טריגרים: `Send Message`. מוגבלת לשבע תבניות מוכנות מראש (New Lead, New Message, Payment Confirmation, New Order, Shipping Confirmation, Calendar Reminder, Zap Error), עד 1024 תווים, ו"אי אפשר ליצור תבניות מותאמות". מתאימה להתראות פנימיות. לא שימושית ללקוחות. |
+| **WhatsApp Business** | **ללקוחות שלך** (אפליקציית פרימיום, מסלול בתשלום) | טריגרים `New Message Received` (לקוח שולח הודעה למספר העסקי שלך) ו-`Message Status Updated` (נשלח, נמסר, נקרא, נכשל). פעולות `Send Template Message`, `Send Freeform Message`, `Send Media Message`; חיפוש `Get Attachment`. הודעה חופשית והודעת מדיה עובדות רק בתוך חלון 24 השעות. |
 
 **השתמשו ב-WhatsApp Business לתקשורת בעברית עם לקוחות.** נדרש חשבון WhatsApp Business מחובר ל-Zapier, וכללי Meta הרגילים חלים:
 - מחוץ לחלון שירות הלקוחות של 24 שעות חובה להשתמש בתבנית מאושרת על ידי Meta. תבניות מוגשות לאישור מראש; לפי תיעוד התבניות של Meta הבדיקה יכולה לקחת עד 24 שעות. תבניות בעברית נתמכות אך צריך להגיש אותן עם הטקסט בעברית.
 - דוגמה לתבנית מאושרת: "שלום {{1}}, קיבלנו את התשלום שלך בסך {{2}} ש\"ח. מספר אישור: {{3}}. תודה!"
 - **בתוך** חלון 24 השעות, שנפתח כשהלקוח פונה אליכם ראשון, הפעולה `Send Freeform Message` שולחת טקסט חופשי בעברית ללא תבנית. זה המסלול לתשובות תמיכה ולשאלות המשך.
 - אישור תשלום שנשלח ביוזמתכם הוא מחוץ לחלון ולכן דורש תבנית. תשובה ללקוח ששאל הרגע "התשלום עבר?" לא דורשת.
+- **ריצה ירוקה של ה-Zap אינה הוכחה שההודעה הגיעה.** בדף העזרה של Zapier כתוב שריצות "will always appear as successful, even if they fail to send". בדקו מסירה ב-Meta Business Manager, או בנו Zap על `Message Status Updated` שמתריע כשהסטטוס `failed`.
 
 **חלופה ישראלית:** לאפליקציה המובנית של InforUMobile יש פעולת `Send Whatsapp Template Message`. אם אתם כבר משתמשים בה ל-SMS, זה חוסך ספק נוסף.
 
@@ -191,6 +202,7 @@ Zapier has **two different WhatsApp apps** and they are routinely confused. Pick
 - יכול לפתור בעיות ב-Zaps כושלים ולהציע תיקונים
 
 **Zapier Agents** (סוכני AI אוטונומיים):
+- **בתהליך העברה ל-AI by Zapier**, שלב בתוך עורך ה-Zap שמחויב במשימות רגילות. במדריך המעבר של Zapier כתוב שעדיין לא נקבע תאריך לכיבוי Agents, ולכן סוכנים קיימים ממשיכים לעבוד, אבל תהליך סוכני חדש עדיף לבנות כ-Zap עם שלב AI by Zapier
 - יצירת סוכני AI שעובדים מול יותר מ-9,000 אפליקציות באופן עצמאי
 - המוצר יושב ב-`agents.zapier.com`. קודם הוא נקרא Zapier Central, ולכן מדריכים ופוסטים ישנים קוראים לו כך. השינוי מוכח מהפניות (`zapier.com/central` מוביל היום ל-`zapier.com/agents`, ו-`central.zapier.com` ל-`agents.zapier.com`) ולא מהודעה רשמית שמצאנו, אז אל תצטטו הצהרה של Zapier בעניין
 - דוגמה: "עקוב אחרי חשבון ה-Morning שלי עבור חשבוניות שלא שולמו יותר מ-30 יום ושלח תזכורות במייל בעברית"
@@ -204,14 +216,18 @@ Zapier has **two different WhatsApp apps** and they are routinely confused. Pick
 - המודל שמאחורי המוצר מתחלף כש-Zapier מעבירה ספקים, ולכן אין לקבע שם מודל במסמכי התהליך שלכם
 
 **Zapier MCP Server:**
-- מחבר כלי קידוד עם AI (Claude Code, ChatGPT, Cursor) ליותר מ-30,000 פעולות ביותר מ-9,000 אפליקציות
+- מחבר כלי קידוד עם AI (Claude Code, ChatGPT, Cursor) ליותר מ-9,000 האפליקציות של Zapier. דפי Zapier עצמם נותנים מספרי פעולות שונים (מרכז העזרה אומר 40,000+), ולכן ציינו את מספר האפליקציות ולא מספר פעולות
+- כל כלי הוא פעולה בודדת באפליקציה (אותן פעולות שה-Zaps משתמשים בהן), ולא Zap שפרסמתם. כל קריאת כלי מוצלחת צורכת שתי משימות מהמסלול, קריאה שנכשלה לא צורכת, ובחינמי 100 המשימות החודשיות משותפות ל-Zaps ול-MCP
 - סוכנים יכולים להפעיל פעולות Zapier ישירות מסביבת הפיתוח
 - שימושי לבנייה ובדיקה תכנותית של אוטומציות עסקיות ישראליות
 
 **AI Guardrails:**
-- זיהוי מידע אישי רגיש (מספרי ת.ז., פרטי כרטיס אשראי) למניעת דליפות
+- שלב פעולה נפרד שמציבים אחרי שלב ה-AI כדי לסנן את הפלט שלו, ולא מתג על שלב ה-AI עצמו
+- זיהוי מידע אישי רגיש, אבל Zapier כותבת שזיהוי ה-PII תומך באנגלית ובספרדית בלבד. אין תיעוד שהוא מזהה מספר תעודת זהות או טקסט בעברית, ולכן למספרי ת.ז. הוסיפו בדיקה משלכם ב-Code by Zapier (9 ספרות, שהאחרונה בהן היא ספרת הביקורת) במקום לסמוך עליו
 - סינון שפה פוגענית
 - הגנה מפני prompt injection בתהליכים מבוססי צ'אטבוט
+
+**Zapier Canvas** הוא כלי שרטוט ולא מנוע אוטומציה: Zapier מתארת אותו ככלי שעוזר "to visualize and organize full business systems" שמקושרות ל-Zaps, צ'אטבוטים, סוכנים, טבלאות וטפסים. שימושי למיפוי תהליך החיוב המלא של לקוח (סולק, Morning, רואה חשבון, וואטסאפ) לפני שבונים את ה-Zaps.
 
 
 
@@ -220,10 +236,10 @@ Zapier has **two different WhatsApp apps** and they are routinely confused. Pick
 | גורם | Zapier | Make.com (Integromat) | n8n |
 |-------|--------|----------------------|-----|
 | קלות שימוש | הכי פשוט, בונה ויזואלי + Copilot AI | ויזואלי, עקומת למידה קצת יותר תלולה | דורש אירוח עצמי או תוכנית ענן, הכי טכני |
-| אינטגרציות מובנות | 9,000+ אפליקציות | 3,000+ אפליקציות | 2,100+ אינטגרציות לפי n8n.io/integrations |
+| אינטגרציות מובנות | 9,000+ אפליקציות | אלפים; בדקו ב-make.com/integrations | אלפים; בדקו ב-n8n.io/integrations |
 | תמיכה באפליקציות ישראליות | אפליקציות מובנות ל-SUMIT, Priority ERP, InforUMobile, Responder ו-Responder Live (רב מסר), Monday.com ו-Wix; מבוסס webhook ל-Morning, קארדקום, טרנזילה, iCount, EZcount, ריווחית ו-Grow | מבוסס webhook + מודולי HTTP | גמישות מלאה ב-HTTP/webhook |
 | יכולות AI | Copilot, Agents, Chatbots, MCP Server | מודולי AI זמינים | nodes של AI (הגדרה עצמית) |
-| מסלול חינמי | Zaps ללא הגבלה בשני שלבים, 100 משימות/חודש | 1,000 פעולות/חודש, תרחישים מוגבלים | אירוח עצמי חינם, תוכנית ענן מוגבלת |
+| מסלול חינמי | Zaps ללא הגבלה בשני שלבים, 100 משימות/חודש, בלי webhooks | מכסת קרדיטים חודשית (Make מחייבת בקרדיטים); ראו make.com/pricing | אירוח עצמי חינם, תוכנית ענן מוגבלת |
 | מתאים ל | משתמשים לא-טכניים, הקמה מהירה, בנייה בעזרת AI | תהליכים מורכבים רב-ענפיים, רגישות לעלויות בנפחים גבוהים | מפתחים, אירוח עצמי, שליטה מלאה |
 | קהילה ישראלית | גדולה | בצמיחה | קטנה אך טכנית |
 

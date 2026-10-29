@@ -19,13 +19,6 @@
     {
       "date": "2026-09-02",
       "version": "3.1.0",
-      "scope": "coverage",
-      "title": "Carried forward: Zapier Canvas still absent from the product taxonomy",
-      "detail": "Re-litigated this cycle and deliberately kept deferred. Step 8 is now at the SKILL.md word cap and the cycle's budget went to four CRITICAL correctness defects. Canvas remains the natural entry point for a non-technical owner mapping an invoicing flow before building it. Add it next cycle, in references/zapier-platform-notes.md rather than the body."
-    },
-    {
-      "date": "2026-09-02",
-      "version": "3.1.0",
       "scope": "structural",
       "title": "Resolved: Step 2 is now a native-first ladder",
       "detail": "Carried from the 2026-08-01 deferral. Step 2 now leads with the native-app list (SUMIT, Priority ERP, InforUMobile, Responder and Responder Live, Monday.com, Wix), then Webhooks by Zapier as the fallback, with the per-vendor connection table relocated to references/israeli-zapier-apps.md. Two new native Israeli apps, Responder and Responder Live (רב מסר), were found and added."
@@ -36,6 +29,54 @@
       "scope": "coverage",
       "title": "Deferred: no Bituach Leumi advance schedule",
       "detail": "The expert review found that Step 4 covers VAT, mikdamot, withholding, the detailed report and the annual filing, but an osek murshe also owes monthly Bituach Leumi advances on a separate schedule, which a reminder Zap built from this skill silently misses. A pointer was added to references/israeli-zapier-apps.md, but no dates or rate bands were encoded because btl.gov.il was not reached this cycle. Verify at btl.gov.il and encode next cycle, or route explicitly to israeli-freelancer-ops."
+    },
+    {
+      "date": "2026-10-29",
+      "scope": "process",
+      "title": "Field paths were checked last cycle, enum SEMANTICS were not",
+      "detail": "v3.1.0 verified that `vatType` exists and is required, then documented it as '0 before VAT / 1 included' at both levels. The spec's DocumentVatType and ItemVatType are different enums: at document level 1 means EXEMPT. The skill told builders to choose 1 at document level for a VAT-inclusive sale, which issues an osek murshe document as VAT-exempt with no API error. Extending last cycle's lesson: for every enum the skill names, read the enum's value table in the spec, per schema, not once per field name."
+    },
+    {
+      "date": "2026-10-29",
+      "scope": "process",
+      "title": "A gateway cannot be called 'undocumented' from a section inventory",
+      "detail": "Tranzila (Notify URL, notify_url_address) and Grow (developers.grow.business Webhooks service) both publish their callback mechanism; the prior cycles concluded 'no webhook page' / 'no resolvable developer host' from a navigation list and a dead hostname. Search the vendor's sitemap.xml and the renamed developer host before declaring a payload unverifiable."
+    },
+    {
+      "date": "2026-10-29",
+      "scope": "process",
+      "title": "Plan availability needs the premium-app rule, not a help-article banner",
+      "detail": "Webhooks by Zapier was stated as 'available on all plans' because help articles carry a generic 'Available on plans: Free ...' banner. The app is Premium and premium apps are paid-only, which made every webhook recipe in the skill impossible on Free. Check the app page's Premium tag and the pricing table row."
+    },
+    {
+      "date": "2026-10-29",
+      "scope": "process",
+      "title": "Code snippets in references are scripts",
+      "detail": "The Template 7 VAT-summary code treated Morning's `amount` (total INCLUDING VAT) as pre-VAT revenue and then added VAT again, and the phone formatter turned 054-123-4567 into +97254-123-4567. Both ran without error. Execute every inline code block with realistic, messy inputs, and check each field's meaning in the vendor schema before trusting the arithmetic."
+    },
+    {
+      "date": "2026-10-29",
+      "scope": "content",
+      "title": "Resolved: Zapier Canvas added to the product taxonomy",
+      "detail": "Added to references/zapier-platform-notes.md as a Beta diagramming tool, sourced to help article 19880280846221."
+    },
+    {
+      "date": "2026-10-29",
+      "scope": "content",
+      "title": "Resolved: Bituach Leumi advance schedule",
+      "detail": "Direct debit on the 22nd for the previous month, moved for Shabbat/holidays, sourced to btl.gov.il howtopay."
+    },
+    {
+      "date": "2026-10-29",
+      "scope": "content",
+      "title": "Deferred: metadata display_description.he depth and PayPlus in descriptions",
+      "detail": "The HE display_description (345 chars) is thinner than EN (645), and neither description mentions PayPlus. Not changed this cycle because a description edit pulls in the holdout gate; revisit next cycle with the 5.7 eval."
+    },
+    {
+      "date": "2026-10-29",
+      "scope": "content",
+      "title": "Deferred: ITA letter of 22.10.2026 postponing the detailed-report obligation to 1.1.2028 for some individual dealers",
+      "detail": "Found only on a third-party copy (capitax.co.il), not on gov.il. Would refine the 'detailed VAT report' column guidance. Source it from gov.il before adding."
     }
   ],
   "persistent_fail": [
@@ -79,33 +120,8 @@
   "unverified": [
     {
       "date": "2026-08-01",
-      "item": "PayPlus corporate identity",
-      "detail": "zapier.com/apps/payplus/integrations is live with New Approval / New Charge / New Invoice triggers and a Hebrew-language integration partner (Responder Live), strongly suggesting the Israeli PayPlus. The page states no nationality, so PayPlus was deliberately NOT added to the skill this cycle. Confirm identity and then add it: it appears to be the only Israeli payment gateway with a native Zapier trigger."
-    },
-    {
-      "date": "2026-08-01",
-      "item": "Grow by Meshulam webhook payload field names",
-      "detail": "transaction_id / amount / payment_method / customer_name / customer_email / customer_phone are unsourced. developers.meshulam.co.il does not resolve. Marked unverified in both the skill and the reference."
-    },
-    {
-      "date": "2026-08-01",
-      "item": "Tranzila server-to-server webhook existence",
-      "detail": "docs.tranzila.com has no webhook or notification-URL page. The documented field names are legacy redirect-response params. Flagged in place rather than rewritten, pending merchant-panel confirmation."
-    },
-    {
-      "date": "2026-08-01",
-      "item": "Morning document-search endpoint path",
-      "detail": "The skill's 'GET Morning API: Find Documents' framing is wrong (search takes a JSON filter body), corrected to POST, but the exact path was not re-verified because the docs moved to developers.morning.co. Confirm the path on the new host."
-    },
-    {
-      "date": "2026-08-01",
       "item": "Zapier free-plan entitlements for Tables, Interfaces and Copilot",
       "detail": "The pricing page enumerates task tiers, not product entitlements. The v2.2.0 claim that Tables and Interfaces are 'free on all plans' was removed from frontmatter but a softer statement remains in Step 7. Source precisely or soften further."
-    },
-    {
-      "date": "2026-08-01",
-      "item": "Morning document type codes 10/305/320/330/400",
-      "detail": "Not contradicted by any source, but not re-verified against the relocated docs either."
     },
     {
       "date": "2026-09-02",
@@ -118,9 +134,31 @@
       "detail": "A grep of the v11 spec found no HMAC, signature or checksum on the callback, so a Catch Hook URL is forgeable. The skill documents mitigations (re-fetch by LowProfileId, echo a secret through ReturnValue) and states this is 'none found in the spec' rather than a guarantee. Confirm with Cardcom support."
     },
     {
-      "date": "2026-09-02",
-      "title": "Zapier monthly-billing prices are not published",
-      "detail": "zapier.com/pricing renders annual pricing only. A previously stated $29.99/month monthly figure could not be confirmed and was removed from all files; the verified annual $19.99 and $69 figures were kept."
+      "date": "2026-10-29",
+      "item": "Morning payment[] row requirement for type 320",
+      "detail": "The spec lists payment[] row required fields but does not state whether a 320 without payment rows is rejected. The skill tells builders to add one; confirm in the sandbox."
+    },
+    {
+      "date": "2026-10-29",
+      "item": "Tranzila Notify field names beyond Response/sum/TranzilaTK/ConfirmationCode",
+      "detail": "Sourced to Tranzila's own Base44 Notify guide (code sample), not a field reference table. ccno and index left out deliberately."
+    }
+  ],
+  "cycles": [
+    {
+      "version": "3.2.0",
+      "date": "2026-10-29",
+      "lessons": [
+        "Description unchanged this cycle, so no holdout run. SKILL_HE.md frontmatter description is still an older English text without the EN trigger phrases or the 'decimal shekels, not agorot' line: align it next cycle and run the Phase 5.7 holdout.",
+        "Dedupe in Template 1 / 8 is check-then-write with the write after the create; two near-simultaneous deliveries can both pass. Consider a Zapier Storage lock or writing the Tables row before the create.",
+        "VAT summary (Template 7) is by document date; for service businesses the tax event is on receipt. Source the rule (VAT Law s.24) and offer a receipt-basis variant.",
+        "Morning's gatewayTransactionId vs Cardcom TranzactionId / Grow transactionCode equality is unverified; confirm on a real payment and tighten Template 8 Zap D.",
+        "Sign of subtotal/total on a 330 document/created payload is undocumented; templates store absolute values. Check one real credit note.",
+        "Code by Zapier run-time limits for a whole-year searchAll were not sourced; templates say split by quarter. Source the limit or move to Looping by Zapier.",
+        "Bit / PayPal payments through a Cardcom page: whether TranzactionInfo is filled and what ExternalPaymentVector holds is unverified; test and encode the mapping.",
+        "SKILL.md body is about 4,850 words; the next addition must move content to references/ first.",
+        "Tranzila's legacy direct.tranzila.com iframe loses support on 1 January 2027: re-check the Notify field list against DirectNG after that date."
+      ]
     }
   ]
 }
