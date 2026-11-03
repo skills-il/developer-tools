@@ -10,7 +10,7 @@ Part of [Skills IL](https://github.com/skills-il) — curated AI agent skills fo
 |-------|-------------|---------|------------|
 | [cloudinary-assets](./cloudinary-assets/) | Cloudinary media management: upload, transform, optimize, deliver images and videos via REST API | `upload_asset.py` | `cloudinary-api.md`, `transformations.md` |
 | [idf-date-converter](./idf-date-converter/) | Hebrew/Gregorian date conversion, Israeli holidays, dual-date formatting, business day calculation | `convert_date.py` | `hebrew-calendar.md` |
-| [israeli-agritech-advisor](./israeli-agritech-advisor/) | Integrate CropX, Netafim GrowSphere, Taranis APIs. Irrigation optimization, crop monitoring, Israeli climate zones | -- | `agritech-apis.md` |
+| [israeli-agritech-advisor](./israeli-agritech-advisor/) | Developer integration guide: integrate CropX, Netafim GrowSphere, Taranis APIs. Irrigation optimization, crop monitoring, Israeli climate zones | -- | `agritech-apis.md` |
 | [israeli-app-code-review](./israeli-app-code-review/) | Review a PR, diff or files of an app serving Israeli users: RTL and mixed-direction text, final letters, Teudat Zehut, phone and mikud, shekel and VAT, Sunday-first week, Israeli DST and cron, sensitive data in logs. Severity-ranked report with file:line and fixes | `il-review-scan.py` | `rule-catalogue.md`, `domain-checklist.md` |
 | [israeli-id-validator](./israeli-id-validator/) | Validate Israeli IDs: Teudat Zehut, company numbers, amuta, partnerships. Check digit algorithm and test ID generation | `validate_id.py` | `id-formats.md` |
 | [israeli-marketplace-seller](./israeli-marketplace-seller/) | Manage online selling across Israeli marketplaces — Zap, KSP, Facebook Marketplace, and Instagram Shopping | -- | `marketplace-apis.md` |

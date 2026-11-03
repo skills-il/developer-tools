@@ -6,7 +6,11 @@ allowed-tools: Bash(python:*) Bash(pip:*) Bash(curl:*)
 compatibility: Network required for API calls. Python recommended for data processing. Works with Claude Code, Claude.ai.
 ---
 
-# Israeli Agritech Advisor
+# Israeli Agritech Integration Guide
+
+## Legal notice
+
+This is a free information tool operated by an AI model. It explains how to connect to agritech platforms (CropX, Netafim, Taranis and others), shows example integration code, and describes the Israeli agricultural and water-regulation context. No agronomist, plant-protection officer or Water Authority official reviews or approves its output. It is not an agronomic recommendation, not a plant-protection or pesticide-application instruction, and not a decision on a water allocation or quota. It is a starting point for developers building software. It does not visit the field, sample soil or plants, identify a pest on site, read a product's registered label, or check your licence or allocation with the Water Authority. It may be wrong, omit information, or rely on figures that have since changed. Any irrigation plan, crop-protection treatment or water-quota decision it helps you build must be checked against the product label, the Plant Protection and Inspection Services (שה"ם) and the Water Authority before it is used on a farm. It is not a substitute for advice that takes into account the specific data and needs of each person, and its use is at the user's sole responsibility.
 
 ## Instructions
 
