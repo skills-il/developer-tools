@@ -41,6 +41,29 @@
         "Process note: the rules/*.md files are mirrors of upstream packages/core/skills/*. They drift silently. In this cycle apply-comments.md still carried an `indent` field upstream had removed and told agents to run `pnpm tsc --noEmit` / `pnpm biome check`, which do not exist in a scaffolded project (its only scripts are dev, build, preview, sync:skills). Diff every mirrored file against upstream every cycle, not just SKILL.md.",
         "Process note: the 1.2.0 evidence.json was schema-CANONICAL but 7 of 12 raw_snippets were paraphrases that failed --check-sources. Repaired in 1.3.0 by citing raw.githubusercontent.com file URLs with literal quotes. Prefer raw.* over github.com/blob for any evidence entry, blob pages HTML-escape the text and rate-limit."
       ]
+    },
+    {
+      "version": "2.0.0",
+      "date": "2026-11-03",
+      "value_add": {
+        "with": 1.0,
+        "without": 0.33,
+        "delta": 0.67,
+        "verdict": "PASS",
+        "note": "run on round-1 text"
+      },
+      "lessons": [
+        "Headline: v2 went GA 2026-09-26 and is npm latest (core 2.3.1, cli 2.0.0); the skill still told agents v2 was a beta not to use. Retargeted to 2.x, pin moved to f4d840e, repo moved to open-slide/open-slide.",
+        "CRITICAL found by measurement, not by reading: the editable 'Export as PPTX' (2.0.0, #481) shreds wrapped or mixed Hebrew into one character per line (99 breaks vs 3 for the English control). Cause is the LTR-only line grouper in pptx/text-lines.ts. Only found because a real Hebrew deck was exported and the XML counted. Re-run that export test every cycle; drop the warning only when an export shows clean Hebrew.",
+        "Prior-cycle 'PDF/PPTX rasterise, no fonts' paragraph and the 'Option C project index.html' font route were both wrong (no index.html ships in any scaffold). Mirror claims about exports must be re-derived from source each major version.",
+        "Evidence trap repeated: claims carrying verified_via were skipped by --check-sources; two npm-page claims had invented snippets marked via=browser. npmjs.com is Cloudflare-gated even in Playwright; use unpkg package.json (pretty-printed, has whitespace) instead. fonts.google.com is JS-only; use google/fonts METADATA.pb pinned to a commit.",
+        "Judge round 1 found 7 pre-existing unsupported statements (10-15% width figure with a false 'no ascenders' rationale, 140-reads-like-120, an 88px overflow arithmetic error, a nikkud font ranking). All removed or reframed as editorial; the +10-15% bump is now explicitly optional and preview-verified.",
+        "Bidi: <bdi> disables 2.x inline text editing (BDI not in INLINE_TEXT_TAGS). <span dir=ltr> is now the preferred isolate. Measured: a bare unicode-bidi:isolate span does NOT fix -5; per-number isolation does NOT fix a '3 / 12' counter; one isolate around the whole run does.",
+        "Deferred (expert minor): agent-panel new-deck flow creates an untitled folder and forbids renaming; create-slide Step 3 does not cover it.",
+        "Deferred (expert minor): description does not mention export/notes triggers. Not changed this cycle to avoid the 5.7 holdout; next cycle should run 5.7 with an export/notes trigger edit.",
+        "Deferred (minor): hero line-height 0.95 vs 1.1 starting points; data-waitfor before export; build.* toggles for a public share link; visual-editing fixed heights causing overflow; duplicated gradient sentence in hebrew-rtl export bullet; RTL direction of --osd-dir transitions.",
+        "Description NOT changed this cycle, so Phase 5.7 holdout was not run."
+      ]
     }
   ]
 }

@@ -1,6 +1,6 @@
 # create-slide (open-slide reference)
 
-> Adapted from [1weiho/open-slide MIT, packages/core/skills/create-slide/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/create-slide/SKILL.md). Mirrored from `@open-slide/core@1.19.1`. Hebrew/RTL pointers added by skills-il. Links are pinned to the 1.19.1 release commit, not `main`, because `main` now serves 2.0.0-beta docs.
+> Adapted from [open-slide/open-slide MIT, packages/core/skills/create-slide/SKILL.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/create-slide/SKILL.md). Mirrored from `@open-slide/core@2.3.1`. Hebrew/RTL pointers added by skills-il. Links are pinned to the 2.3.1 release commit, not `main`, so they cannot drift ahead of the published package.
 
 # Create a slide in open-slide
 
@@ -12,7 +12,7 @@ You only write files under `slides/<id>/`. Never modify `package.json`, `open-sl
 
 List files under `themes/`. If any theme markdown files exist (anything other than `README.md`), call `AskUserQuestion` with each theme id as an option plus a final **"no theme, design from scratch"** option. (`AskUserQuestion` holds at most 4 options, with 4+ themes, offer the 3 most topic-relevant plus "no theme"; the auto-added "Other" lets the user name any omitted theme.)
 
-- If the user picks a theme: read `themes/<id>.md` end-to-end. The theme's palette, typography, layout, and Title/Footer components are now authoritative, copy them directly into the slide. If the theme declares a webfont import, load it per [references/webfonts.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/webfonts.md) in [./slide-authoring.md](./slide-authoring.md) (module-level, slide-keyed injection), don't let the slide silently fall back to system fonts. **Also set `theme: '<theme-id>'` on the `meta` export in `index.tsx`** (e.g. `export const meta: SlideMeta = { title: '…', createdAt: '…', theme: '<theme-id>' };`, `createdAt` per the file contract in [./slide-authoring.md](./slide-authoring.md)) so the slide back-links to the theme (chip on the slide card + listing on `/themes/<id>`). In Step 2, skip the **aesthetic direction** question (the theme already commits to one direction); you still need the topic itself, so confirm it before moving on. Page count and text density are independent of theme, ask those normally. For motion, if the theme's Motion section commits to a philosophy, present it as the "(Recommended)" option and reuse the theme's paste-ready keyframes; the user can still override.
+- If the user picks a theme: read `themes/<id>.md` end-to-end. The theme's palette, typography, layout, and Title/Footer components are now authoritative, copy them directly into the slide. If the theme declares a webfont import, load it per [references/webfonts.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/slide-authoring/references/webfonts.md) in [./slide-authoring.md](./slide-authoring.md) (module-level, slide-keyed injection), don't let the slide silently fall back to system fonts. **Also set `theme: '<theme-id>'` on the `meta` export in `index.tsx`** (e.g. `export const meta: SlideMeta = { title: '…', createdAt: '…', theme: '<theme-id>' };`, `createdAt` per the file contract in [./slide-authoring.md](./slide-authoring.md)) so the slide back-links to the theme (chip on the slide card + listing on `/themes/<id>`). In Step 2, skip the **aesthetic direction** question (the theme already commits to one direction); you still need the topic itself, so confirm it before moving on. Page count and text density are independent of theme, ask those normally. For motion, if the theme's Motion section commits to a philosophy, present it as the "(Recommended)" option and reuse the theme's paste-ready keyframes; the user can still override.
 - If the user picks "no theme", or `themes/` contains no theme markdown files: proceed to Step 2 unchanged.
 
 If you skip the aesthetic question because a theme was picked, restate the theme name in Step 2 so the user can correct course before you start writing.
@@ -75,16 +75,23 @@ If the `frontend-design` skill is available, consult it for deeper aesthetic gui
 
 Read the [./slide-authoring.md](./slide-authoring.md) reference before writing, it covers the file contract, canvas rules, type scale, spacing, and asset imports, and it includes a starter template you can copy. Don't duplicate that knowledge here; use it.
 
+If the user asked for a speech script / speaker notes (in the initial request or at any point after), write it into the slide's `export const notes` array, the framework's built-in speaker-notes feature, shown in the presenter view. See **Speaker notes** in [./slide-authoring.md](./slide-authoring.md) for the contract. Never deliver a script as a markdown or text file.
+
 ## Step 7, Self-review
 
 Run the checklist in `slide-authoring` ("Self-review before finishing"). It covers structural correctness, layout discipline, and asset existence.
 
+If the dev server is already running, screenshot each page through the preview route and fix what looks off, see **Previewing a page visually** in [./slide-authoring.md](./slide-authoring.md).
+
 ## Step 8, Hand off to the user
+
+If the user asked for an exported file, you cannot produce it: exports run in the browser. Give the steps from the export section of the parent skill (PDF from Chrome or Edge, or image PPTX when notes must travel; never the editable PPTX for Hebrew).
 
 Tell the user:
 
 - The slide id and file path you created.
 - That the dev server will hot-reload, they can open `http://localhost:5173/s/<id>` (or refresh the home page).
+- If you wrote speaker notes: that they live in the slide's `notes` export and show up in the viewer's notes drawer and the presenter view in present mode.
 - If dev isn't running: run the project's `dev` script from the project root with its package manager (`npm run dev`, `pnpm dev`, …, match the lockfile).
 
 Don't run the dev server yourself unless asked.
@@ -94,5 +101,5 @@ Don't run the dev server yourself unless asked.
 When the deck topic or audience is Hebrew-speaking, before Step 6 (writing `index.tsx`):
 - Read [./hebrew-rtl.md](./hebrew-rtl.md) for the full Hebrew/RTL adaptation.
 - In Step 2's aesthetic-direction options, prefer Hebrew Google Fonts (Heebo, Rubik, Assistant, Noto Sans Hebrew) over system stacks.
-- In Step 5's `DesignSystem` declaration, set `fonts.display` and `fonts.body` to Hebrew-supporting families and bump `typeScale.hero` by ~10-15%.
+- In Step 5's `DesignSystem` declaration, set `fonts.display` and `fonts.body` to Hebrew-supporting families and re-check `typeScale.hero` after previewing (the +10-15% bump in `hebrew-rtl.md` is an optional editorial starting point).
 - The page root `<div>` must carry `dir="rtl"` (set on the page, not on `<html>`).

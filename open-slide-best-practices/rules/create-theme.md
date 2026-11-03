@@ -1,6 +1,6 @@
 # create-theme (open-slide reference)
 
-> Adapted from [1weiho/open-slide MIT, packages/core/skills/create-theme/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/create-theme/SKILL.md). Mirrored from `@open-slide/core@1.19.1`. Hebrew/RTL pointers added by skills-il. Links are pinned to the 1.19.1 release commit, not `main`, because `main` now serves 2.0.0-beta docs.
+> Adapted from [open-slide/open-slide MIT, packages/core/skills/create-theme/SKILL.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/create-theme/SKILL.md). Mirrored from `@open-slide/core@2.3.1`. Hebrew/RTL pointers added by skills-il. Links are pinned to the 2.3.1 release commit, not `main`, so they cannot drift ahead of the published package.
 
 # Create a slide theme
 
@@ -70,7 +70,7 @@ mode: <dark | light, whichever matches the palette's bg>
 
 - Display font: `<stack>`, weight 800-900 for headlines.
 - Body font: `<stack>`, weight 400-500.
-- Webfont import (omit for system stacks): `<stylesheet URL>`, see [references/webfonts.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/webfonts.md) in `slide-authoring` for loading rules.
+- Webfont import (omit for system stacks): `<stylesheet URL>`, see [references/webfonts.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/slide-authoring/references/webfonts.md) in `slide-authoring` for loading rules.
 - Type-scale overrides (only list what differs from `slide-authoring` defaults):
   - Hero title: 180 px (default 140-200 ✓)
   - Body text: 36 px

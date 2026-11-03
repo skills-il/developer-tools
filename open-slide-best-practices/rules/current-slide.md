@@ -1,6 +1,6 @@
 # current-slide (open-slide reference)
 
-> Adapted from [1weiho/open-slide MIT, packages/core/skills/current-slide/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/current-slide/SKILL.md). Mirrored from `@open-slide/core@1.19.1`. Hebrew/RTL pointers added by skills-il. Links are pinned to the 1.19.1 release commit, not `main`, because `main` now serves 2.0.0-beta docs.
+> Adapted from [open-slide/open-slide MIT, packages/core/skills/current-slide/SKILL.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/current-slide/SKILL.md). Mirrored from `@open-slide/core@2.3.1`. Hebrew/RTL pointers added by skills-il. Links are pinned to the 2.3.1 release commit, not `main`, so they cannot drift ahead of the published package.
 
 # Where is the user right now?
 
@@ -94,6 +94,7 @@ User: "tighten the spacing on this page"
 3. Read `pagePath` (e.g. `slides/q2-roadmap/index.tsx`).
 4. Identify the page at `pageIndex` in the default-exported array.
 5. Consult the [./slide-authoring.md](./slide-authoring.md) reference for spacing rules, then edit that page in place.
+6. To check the result visually, screenshot `s/<slideId>/preview?p=<pageNumber>` on the dev server, see **Previewing a page visually** in [./slide-authoring.md](./slide-authoring.md).
 
 If `current.json` is missing or stale, ask: "Which slide and page should I tighten? The dev server hasn't published a current page recently."
 

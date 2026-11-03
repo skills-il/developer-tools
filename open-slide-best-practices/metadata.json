@@ -34,7 +34,7 @@
     ]
   },
   "author": "skills-il",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "category": "developer-tools",
   "supported_agents": [
     "claude-code",
@@ -50,7 +50,7 @@
   "volatility": "versioned",
   "authoritative_sources": [
     {
-      "url": "https://github.com/1weiho/open-slide",
+      "url": "https://github.com/open-slide/open-slide",
       "type": "upstream-repo",
       "language": "en"
     },
@@ -65,21 +65,21 @@
       "language": "en"
     },
     {
-      "url": "https://www.npmjs.com/package/@open-slide/core",
+      "url": "https://unpkg.com/@open-slide/core/package.json",
       "type": "npm-package",
       "language": "en"
     },
     {
-      "url": "https://www.npmjs.com/package/@open-slide/cli",
+      "url": "https://unpkg.com/@open-slide/cli/package.json",
       "type": "npm-package",
       "language": "en"
     },
     {
-      "url": "https://fonts.google.com/?subset=hebrew",
+      "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/heebo/METADATA.pb",
       "type": "font-source",
       "language": "en"
     }
   ],
   "domain_checklist_version": 2,
-  "upstream_pinned_version": "1.19.1"
+  "upstream_pinned_version": "2.3.1"
 }

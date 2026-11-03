@@ -1,6 +1,6 @@
 # slide-authoring (open-slide reference)
 
-> Adapted from [1weiho/open-slide MIT, packages/core/skills/slide-authoring/SKILL.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/SKILL.md). Hebrew/RTL pointers added by skills-il.
+> Adapted from [open-slide/open-slide MIT, packages/core/skills/slide-authoring/SKILL.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/slide-authoring/SKILL.md). Mirrored from `@open-slide/core@2.3.1`. Hebrew/RTL pointers added by skills-il.
 >
 > **For Hebrew or bilingual decks, always pair this with [./hebrew-rtl.md](./hebrew-rtl.md) before writing any code.** The rules below assume Latin text and physical-CSS positioning. The Hebrew companion explains how to translate them to logical properties, Hebrew Google Fonts, and bidi-safe markup.
 
@@ -22,13 +22,13 @@ Upstream split its own `slide-authoring` skill into per-primitive reference file
 
 | Primitive | Upstream file |
 | --- | --- |
-| Stepped reveals (`<Steps>` / `<Step>`) | [references/steps.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/steps.md) |
-| Page transitions (`SlideTransition`) | [references/transitions.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/transitions.md) |
-| Shared-element / magic-move (`MorphElement`) | [references/morph.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/morph.md) |
-| Page numbers (`useSlidePageNumber`) | [references/page-numbers.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/page-numbers.md) |
-| Design tokens (`design` const, `var(--osd-X)`) | [references/design-system.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/design-system.md) |
-| Assets | [references/assets.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/assets.md) |
-| Webfonts | [references/webfonts.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/webfonts.md) |
+| Stepped reveals (`<Steps>` / `<Step>`) | [references/steps.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/slide-authoring/references/steps.md) |
+| Page transitions (`SlideTransition`) | [references/transitions.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/slide-authoring/references/transitions.md) |
+| Shared-element / magic-move (`MorphElement`) | [references/morph.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/slide-authoring/references/morph.md) |
+| Page numbers (`useSlidePageNumber`) | [references/page-numbers.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/slide-authoring/references/page-numbers.md) |
+| Design tokens (`design` const, `var(--osd-X)`) | [references/design-system.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/slide-authoring/references/design-system.md) |
+| Assets | [references/assets.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/slide-authoring/references/assets.md) |
+| Webfonts | [references/webfonts.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/slide-authoring/references/webfonts.md) |
 
 For Hebrew webfont loading specifically, [./hebrew-rtl.md](./hebrew-rtl.md) section 3 applies the webfonts rule to Heebo / Rubik / Assistant loaded by head injection.
 
@@ -37,8 +37,8 @@ For Hebrew webfont loading specifically, [./hebrew-rtl.md](./hebrew-rtl.md) sect
 - Put the slide under `slides/<kebab-case-id>/`.
 - Entry is `slides/<id>/index.tsx`. Images/videos/fonts go under `slides/<id>/assets/`.
 - Do **not** touch `package.json`, `open-slide.config.ts`, or other slides.
-- Do not add dependencies. Only `react` and standard web APIs are available.
-- A slide is **one `index.tsx` plus `assets/`**, nothing else. Do not create sibling `.tsx`/`.ts` files (`Card.tsx`, `components/`, `helpers.ts`, etc.); helper components and constants go inside `index.tsx`. Do not create `README.md` or other prose files either.
+- Do not add dependencies. Only `react`, `@open-slide/core`, and standard web APIs are available.
+- A slide is **one `index.tsx` plus `assets/`**, nothing else. Do not create sibling `.tsx`/`.ts` files (`Card.tsx`, `components/`, `helpers.ts`, etc.); helper components and constants go inside `index.tsx`. Do not create `README.md` or other prose files either, speaker notes / a talk script belong in the `notes` export (see **Speaker notes** below), not in a markdown file.
 
 ## File contract
 
@@ -376,9 +376,9 @@ Also recompute the 1080px vertical budget for the **fully-composed** state: a fo
 
 ## Page numbers
 
-If a footer shows the current page (`03 / 12`), read it from `useSlidePageNumber()`, **never hardcode** `n` / `TOTAL`. A hardcoded counter goes stale the moment a page is inserted or removed. See the pinned [references/page-numbers.md](https://raw.githubusercontent.com/1weiho/open-slide/7fbd1ea84cf1ee7cd701cc9fe59bff3e4e0148c5/packages/core/skills/slide-authoring/references/page-numbers.md) for the hook's contract and where it can be called.
+If a footer shows the current page (`03 / 12`), read it from `useSlidePageNumber()`, **never hardcode** `n` / `TOTAL`. A hardcoded counter goes stale the moment a page is inserted or removed. See the pinned [references/page-numbers.md](https://raw.githubusercontent.com/open-slide/open-slide/f4d840ed1282cb4e2db1280f4a6454113a495383/packages/core/skills/slide-authoring/references/page-numbers.md) for the hook's contract and where it can be called.
 
-In an RTL footer, wrap the digits in `<bdi>` so the counter does not reorder against the Hebrew chrome around it.
+In an RTL footer, wrap the WHOLE `current / total` run in one `<span dir="ltr">` (or one `<bdi>`). Wrapping each number separately still renders `3 / 12` as `12 / 3`; see `hebrew-rtl.md` section 6.
 
 ## Speaker notes (`notes` export)
 
@@ -401,11 +401,14 @@ Pause for questions before moving on.`,
 export default [Cover, Agenda, Pillars];
 ```
 
-- One entry per page, same order as the default export. Use `undefined` to skip a page; never shorten the array, or every later note misaligns.
-- **When the user asks for a speech script, talk track, or presenter notes, in any language, it goes here.** A `script.md` or `notes.md` is invisible to the runtime. This is the single most common miss on this framework.
-- A slide is one `index.tsx` plus `assets/`. Do not create sibling prose files for notes.
+- One entry per page, same order as the default export. Use `undefined` to skip a page; trailing `undefined` entries can be dropped, but never drop one in the middle, or every later note misaligns.
+- When you add, remove, or reorder pages, re-align `notes` in the same edit.
+- Write notes as something to *say*, not a summary of what's on screen: openers, transitions, numbers to cite, timing cues.
+- **When the user asks for a speech script, talk track, or presenter notes, in any language, it goes here.** A `script.md` or `notes.md` is invisible to the runtime.
+- Keep `notes` a hand-written array literal with one plain element per page, and do not append `satisfies` or `as const` to it (the initializer then stops being an array literal and drawer edits return 422). The dev server writes drawer edits back into this array; a computed value returns 422, and a spread inside the literal silently shifts edits onto the wrong page.
+- Rendering: the presenter view renders a small Markdown subset (bold, italic with `*` or `_`, inline code, `#` headings, `-` / `*` and `1.` / `1)` lists); the drawer edits raw text. Upstream's own skill text still says markdown is not rendered; the 2.3.1 presenter code does render it.
 
-> Note for mirrors: the `notes` runtime exists in `@open-slide/core@1.19.1`, but none of the skills bundled with that release documents it; upstream added those docs after the 1.19.1 publish. This section is written from the shipped `SlideModule` type in `packages/core/src/app/lib/sdk.ts`, not from the bundled docs.
+> Hebrew notes: the drawer and presenter set no `dir`, so Hebrew notes are left-aligned and Markdown lists indent on the left. Prefer short plain paragraphs. Image-PPTX export copies notes into PowerPoint as raw LTR text with Markdown markers intact; PDF and HTML export drop them. See the export section of the parent skill.
 
 ## Runtime behavior you get for free
 
@@ -415,6 +418,27 @@ export default [Cover, Agenda, Pillars];
 - An **overview grid** (grid button in the slide header, or press `O`) shows every page at once; click a page to jump to it. A stepped page jumped to this way renders fully revealed.
 - In play mode: Space/→ next, ← prev, Esc exit.
 - Hot reload: edit `index.tsx` and the browser updates live.
+- Dev-only preview route `/s/<id>/preview?p=N` renders one page with no editor chrome, see **Previewing a page visually**.
+
+## Previewing a page visually
+
+After writing or editing a page, look at it. The vertical-budget math catches overflow, but not clashing colors, awkward wraps, or a broken image. While the dev server runs, every page has a chrome-less preview URL; don't drive the full editor UI (home → deck → thumbnail) to get there.
+
+1. **Find the dev server.** Read `node_modules/.open-slide/server.json` (written on startup, removed on shutdown). It carries `url`, `port`, `pid` and `startedAt`. Missing file = the dev server isn't running. Don't start it yourself unless the user asked; skip the visual check and mention it in your hand-off.
+2. **Open** `<url>s/<slideId>/preview?p=<pageNumber>`, where `p` is 1-based. Add `&step=<n>` to show only the first `n` `<Step>`s of a stepped page (default: fully revealed).
+3. **Wait** for `[data-osd-preview="ready"]`, set once fonts, `data-waitfor` targets, images, and entry animations have settled. It becomes `[data-osd-preview="error"]` instead when the slide id is unknown, the page is out of range, the page throws, or something hasn't settled within 10 s; `[data-osd-preview-error]` holds the message. Fix the cause rather than screenshotting anyway.
+4. **Screenshot** with a **1920×1080 viewport** so the page renders at native size. Use whatever browser tool you have (Playwright / Chrome MCP). If the project already has Playwright installed, the CLI works too, `--no` stops `npx` from downloading it:
+
+   ```bash
+   npx --no playwright screenshot --viewport-size "1920,1080" \
+     --wait-for-selector '[data-osd-preview="ready"]' \
+     "http://localhost:5173/s/<slideId>/preview?p=3" /tmp/<slideId>-p3.png
+   ```
+
+   If no browser tool is available, don't install one without asking; skip the visual check.
+
+Then view the image and fix what you see. The preview hot-reloads like the editor, and it never moves the user's cursor in `current.json`. On a Hebrew page, this is where a wrapped hero, a Latin token on the wrong side, or a fallback serif shows up.
+
 
 ## Hebrew and RTL adaptation
 
@@ -425,8 +449,8 @@ Every concrete style example in the rules above uses physical CSS (`paddingLeft:
 - Replace `left` / `right` (in absolute positioning) with `insetInlineStart` / `insetInlineEnd`.
 - Replace `text-align: 'left'` / `'right'` with `'start'` / `'end'`.
 - Set `dir="rtl"` on the **page component's root `<div>` only**, not on `<html>` (the dev server chrome must stay LTR).
-- Swap `fonts.display` and `fonts.body` for Hebrew Google Fonts (Heebo, Rubik, Assistant, Noto Sans Hebrew). System stacks fall back to David / Times for Hebrew, which looks weak at 140-200px.
-- Bump hero type by ~10-15% for Hebrew, since Hebrew renders wider per character at the same px size.
+- Swap `fonts.display` and `fonts.body` for Hebrew Google Fonts (Heebo, Rubik, Assistant, Noto Sans Hebrew). The runtime default display font is Georgia, which has no Hebrew glyphs, so the OS substitutes a system Hebrew serif.
+- Re-check type sizes for Hebrew by previewing; the +10-15% hero bump in `hebrew-rtl.md` is an optional editorial starting point.
 
 See [./hebrew-rtl.md](./hebrew-rtl.md) for the full Hebrew adaptation, including the bidi rules for mixed Hebrew+Latin runs.
 
@@ -443,6 +467,8 @@ See [./hebrew-rtl.md](./hebrew-rtl.md) for the full Hebrew adaptation, including
 - [ ] Visually repeated elements (cards, tiles, logo rows) are rendered as explicit `<Component />` instances, not via `array.map` over a data list.
 - [ ] All imported assets exist on disk under `slides/<id>/assets/`.
 - [ ] Every `<ImagePlaceholder>` corresponds to a real image the user must supply, not decorative filler. If it could be replaced by typography or layout, it should be.
+- [ ] If the user asked for a speech script / speaker notes, it lives in `export const notes` (index-aligned with the page array), not in a markdown or text file.
+- [ ] If the dev server is running, you previewed every page you touched (see **Previewing a page visually**) and fixed what looked off.
 - [ ] Nothing outside `slides/<id>/` was edited.
 
 ## Anti-patterns
@@ -455,9 +481,10 @@ See [./hebrew-rtl.md](./hebrew-rtl.md) for the full Hebrew adaptation, including
 - ❌ Bullets that wrap to a second line, either shorten or move to its own page.
 - ❌ Body type under 28px, unreadable on a projector.
 - ❌ Inconsistent palette across pages.
-- ❌ Installing packages. Only `react` and standard web APIs are available.
+- ❌ Installing packages. Only `react`, `@open-slide/core`, and standard web APIs are available.
 - ❌ Writing CSS to a shared file. Inline styles or scoped classnames only.
 - ❌ Creating `README.md` or other prose files inside the slide folder.
+- ❌ Delivering a speech script as a markdown or text file. The runtime only surfaces the `notes` export.
 - ❌ Editing `package.json`, `open-slide.config.ts`, or other slides.
 - ❌ Sprinkling `<ImagePlaceholder>` across pages "for visual interest". Placeholders are for content the user owns; they're not stock-photo slots.
 - ❌ Using a placeholder for an icon or decorative shape, those are typography/SVG problems, not asset problems.
