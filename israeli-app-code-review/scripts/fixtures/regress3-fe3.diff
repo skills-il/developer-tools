@@ -1,0 +1,21 @@
+diff --git a/src/Contact.tsx b/src/Contact.tsx
+index ad1d380..357bd55 100644
+--- a/src/Contact.tsx
++++ b/src/Contact.tsx
+@@ -1 +1,16 @@
+ export const x = 1;
++
++export function Contact() {
++  return (
++    <form>
++      <input
++        name="email"
++        type="email"
++        // don't let the browser autofill a stale address
++        placeholder="you@example.com"
++      />
++      <label htmlFor="idNumber">תעודת זהות</label>
++      <input id="idNumber" name="idNumber" type="number" dir="ltr" />
++    </form>
++  );
++}

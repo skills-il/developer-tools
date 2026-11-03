@@ -1,0 +1,7 @@
+--- a/src/x.ts
++++ b/src/x.ts
+@@ -1,0 +1,4 @@
++const COLS = ["שם", "טלפון", "כתובת", "סכום"];
++const gross = invoice.net * 1.17;
++const VAT_PERCENT = 17;
++export const isOpen = (d: Date) => d.getDay() !== 5 && d.getDay() !== 6;

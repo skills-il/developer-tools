@@ -1,0 +1,80 @@
+diff --git a/src/app/checkout/CheckoutPage.tsx b/src/app/checkout/CheckoutPage.tsx
+new file mode 100644
+--- /dev/null
++++ b/src/app/checkout/CheckoutPage.tsx
+@@ -0,0 +1,62 @@
++import { ArrowLeft } from "lucide-react";
++import { addBusinessDays, format } from "date-fns";
++import { cn } from "@/lib/utils";
++
++const MAAM_PERCENT = 17;
++
++export default function CheckoutPage({ cart, user }: Props) {
++  const net = cart.items.reduce((s, i) => s + i.unitPrice * i.qty, 0);
++  const gross = net * 1.17;
++  const delivery = addBusinessDays(new Date(), 3);
++  const [agree, setAgree] = useState(true);
++
++  function onSubmit(form: CheckoutForm) {
++    if (!/^[a-zA-Z\s'-]{2,}$/.test(form.fullName)) return setError("fullName");
++    if (!luhn(form.cardNumber) || form.cardNumber.length < 13) return setError("card");
++    analytics.track("checkout_submitted", { email: form.email, total: gross });
++    Sentry.setUser({ id: user.id, username: form.fullName });
++  }
++
++  return (
++    <div className="grid md:grid-cols-2 gap-6 md:pl-8 lg:text-left">
++      <aside className="fixed top-0 right-0 h-full translate-x-full data-[open=true]:translate-x-0">
++        <h2 className="text-xl">סיכום הזמנה</h2>
++        <p>
++          סה"כ לתשלום: {gross.toFixed(2)} ₪ (כולל מע"מ {MAAM_PERCENT}%)
++        </p>
++        <p>משלוח עד {format(delivery, "dd/MM/yyyy")}</p>
++      </aside>
++      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
++        <label htmlFor="fullName">שם מלא</label>
++        <input id="fullName" {...register("fullName")} />
++        <label htmlFor="tz">תעודת זהות</label>
++        <input
++          id="tz"
++          name="tz"
++          type="number"
++          maxLength={9}
++          className="border rounded-l-md pl-3"
++        />
++        <input id="phone" type="tel" dir="rtl" placeholder="050-0000000" />
++        <input id="zip" name="zipCode" inputMode="numeric" pattern="\d{5}" />
++        <input id="companyId" name="hp" type="number" placeholder="ח.פ. (לחשבונית מס)" />
++        <select name="payments" className="mr-2 sm:mr-4">
++          {[1, 2, 3, 6, 12].map((n) => (
++            <option key={n}>{n} תשלומים</option>
++          ))}
++        </select>
++        <label className="flex items-center gap-2">
++          <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
++          אני מאשר/ת קבלת עדכונים ומבצעים ב-SMS ובמייל
++        </label>
++        <div className="flex space-x-3">
++          <button type="button" onClick={back}>
++            <ArrowLeft className="w-4 h-4" /> חזרה לסל
++          </button>
++          <button type="submit" className="ms-auto">לתשלום</button>
++        </div>
++        <p>ההזמנה תצא ב{new Date(delivery).toLocaleDateString("he-IL")}</p>
++      </form>
++    </div>
++  );
++}
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -10,7 +10,10 @@ export default function RootLayout({ children }) {
+   return (
+-    <html lang="en">
++    <html
++      lang="he"
++      className={inter.className}
++    >
+       <body>{children}</body>
+     </html>
+   );

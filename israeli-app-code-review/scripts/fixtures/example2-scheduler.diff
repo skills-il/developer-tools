@@ -1,0 +1,35 @@
+diff --git a/server/jobs/reminders.js b/server/jobs/reminders.js
+index 77aa001..88bb002 100644
+--- a/server/jobs/reminders.js
++++ b/server/jobs/reminders.js
+@@ -1,6 +1,31 @@
+ const cron = require("node-cron");
+ const { sendSms } = require("../sms");
++const logger = require("../logger");
+ 
+-// TODO reminders
++const HOLIDAYS = ["2026-09-12", "2026-09-21", "2026-09-26"]; // Rosh Hashana, Yom Kippur, Sukkot
++
++function israelNow() {
++  return new Date(Date.now() + 2 * 60 * 60 * 1000);
++}
++
++function isBusinessDay(d) {
++  const day = d.getDay();
++  return day !== 0 && day !== 6 && !HOLIDAYS.includes(d.toISOString().slice(0, 10));
++}
++
++// Send appointment reminders every weekday at 09:00 Israel time
++cron.schedule("0 7 * * 1-5", async () => {
++  const now = israelNow();
++  if (!isBusinessDay(now)) return;
++  const appts = await db.appointments.forTomorrow();
++  for (const a of appts) {
++    logger.info(`reminder to ${a.patient.phone} tz=${a.patient.teudatZehut} for ${a.clinic}`);
++    await sendSms(a.patient.phone, `תזכורת: התור שלך מחר ב-${a.time} במרפאה ${a.clinic}`);
++  }
++});
++
++function slaDeadline(openedAt) {
++  return new Date(openedAt.getTime() + 48 * 3600 * 1000).toISOString().replace("Z", "+02:00");
++}

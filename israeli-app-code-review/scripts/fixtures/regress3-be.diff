@@ -1,0 +1,95 @@
+diff --git a/clinic/settings.py b/clinic/settings.py
+index d6dbc84..614ae20 100644
+--- a/clinic/settings.py
++++ b/clinic/settings.py
+@@ -1,6 +1,29 @@
+ from pathlib import Path
++from celery.schedules import crontab
+ 
+ BASE_DIR = Path(__file__).resolve().parent.parent
+ DEBUG = False
+ ALLOWED_HOSTS = ["*"]
+-LANGUAGE_CODE = "en-us"
++LANGUAGE_CODE = "he"
++TIME_ZONE = "Asia/Jerusalem"
++USE_TZ = True
++
++CELERY_TIMEZONE = "Asia/Jerusalem"
++CELERY_BEAT_SCHEDULE = {
++    "morning-reminders": {
++        "task": "clinic.tasks.send_reminders",
++        "schedule": crontab(
++            hour=8,
++            minute=0,
++            day_of_week="sun-thu",
++        ),
++    },
++    "weekly-report": {
++        "task": "clinic.tasks.weekly_report",
++        "schedule": crontab(hour=9, minute=0, day_of_week="1-5"),
++    },
++    "nightly-export": {
++        "task": "clinic.tasks.export_appointments",
++        "schedule": crontab(hour=4, minute=15, day_of_week="0-4"),
++    },
++}
+diff --git a/clinic/tasks.py b/clinic/tasks.py
+index 2631258..16fa291 100644
+--- a/clinic/tasks.py
++++ b/clinic/tasks.py
+@@ -1 +1,26 @@
+ from celery import shared_task
++from django.utils import timezone
++import csv
++import logging
++
++from .models import Appointment
++
++logger = logging.getLogger(__name__)
++
++
++@shared_task
++def send_reminders():
++    today = timezone.localdate()
++    for appt in Appointment.objects.filter(date=today):
++        when = timezone.localtime(appt.starts_at).strftime("%H:%M")
++        send_sms(appt.phone, f"תזכורת: התור שלך היום בשעה ⁨{when}⁩")
++        logger.info("reminder sent", extra={"appointment_id": appt.id})
++
++
++@shared_task
++def export_appointments():
++    day = timezone.now().date()
++    with open(f"/exports/{day}.csv", "w", encoding="utf-8-sig", newline="") as fh:
++        writer = csv.writer(fh)
++        for appt in Appointment.objects.filter(date=day):
++            writer.writerow([appt.id, appt.clinic_name, appt.starts_at.isoformat()])
+diff --git a/svc/scheduler.py b/svc/scheduler.py
+index ade1461..26b7a2b 100644
+--- a/svc/scheduler.py
++++ b/svc/scheduler.py
+@@ -1 +1,24 @@
+ import logging
++from zoneinfo import ZoneInfo
++
++from apscheduler.schedulers.blocking import BlockingScheduler
++from apscheduler.triggers.cron import CronTrigger
++
++IL = ZoneInfo("Asia/Jerusalem")
++sched = BlockingScheduler(timezone=IL)
++
++sched.add_job(sync_waitlist, "cron", day_of_week="sun,mon,tue,wed,thu", hour=8, timezone=IL)
++sched.add_job(push_digest, CronTrigger.from_crontab("0 9 * * sun-thu", timezone=IL))
++sched.add_job(close_day, CronTrigger.from_crontab("30 18 * * 0-4", timezone=IL))
++sched.add_job(
++    rebuild_slots,
++    "cron",
++    day_of_week="0-4",
++    hour=6,
++    timezone=IL,
++)
++
++
++@sched.scheduled_job("cron", day_of_week="mon-thu,sun", hour=2, minute=30, timezone=IL)
++def nightly_billing():
++    logging.info("billing run")

@@ -1,0 +1,101 @@
+diff --git a/app/[locale]/checkout/actions.ts b/app/[locale]/checkout/actions.ts
+new file mode 100644
+--- /dev/null
++++ b/app/[locale]/checkout/actions.ts
+@@ -0,0 +1,44 @@
++"use server";
++
++import { z } from "zod";
++import { revalidatePath } from "next/cache";
++import { redirect } from "next/navigation";
++import { db } from "@/lib/db";
++
++const MAAM = 0.17;
++
++const OrderSchema = z.object({
++  fullName: z.string().min(2).regex(/^[A-Za-z\s'-]+$/, "שם לא תקין"),
++  idNumber: z.coerce.number().int().positive(),
++  phone: z.string().regex(/^05\d{8}$/),
++  zip: z.string().length(5),
++  city: z.string(),
++  marketing: z.coerce.boolean().default(true),
++  qty: z.coerce.number().int().min(1),
++});
++
++export async function placeOrder(_prev: unknown, formData: FormData) {
++  const parsed = OrderSchema.safeParse(Object.fromEntries(formData));
++  if (!parsed.success) {
++    console.error("checkout validation failed", parsed.error.flatten(), Object.fromEntries(formData));
++    return { ok: false, message: "יש לתקן את השדות המסומנים" };
++  }
++  const data = parsed.data;
++  const unitNet = await getUnitPrice(data.qty);
++  const totalAgorot = Math.round(unitNet * data.qty * (1 + MAAM) * 100);
++  const orderDay = new Date().toISOString().slice(0, 10);
++  const deliverBy = new Date(Date.now() + 3 * 24 * 3600 * 1000);
++  const isWeekend = [0, 6].includes(deliverBy.getDay());
++
++  const order = await db.order.create({
++    data: { ...data, totalAgorot, orderDay, deliverBy },
++  });
++  console.info("order placed", { id: order.id, phone: data.phone });
++  await sendSms(data.phone, `תודה ${data.fullName}! הזמנה ${order.id} בסך ${totalAgorot / 100} ₪ תגיע עד ${deliverBy.toLocaleDateString()}`);
++  revalidatePath("/he/orders");
++  redirect(`/he/checkout/success?order=${order.id}`);
++}
++
++function getUnitPrice(qty: number) {
++  return qty > 10 ? 90 : 100;
++}
+diff --git a/app/[locale]/checkout/CheckoutForm.tsx b/app/[locale]/checkout/CheckoutForm.tsx
+new file mode 100644
+--- /dev/null
++++ b/app/[locale]/checkout/CheckoutForm.tsx
+@@ -0,0 +1,47 @@
++"use client";
++
++import { useActionState } from "react";
++import { ChevronRight } from "lucide-react";
++import { placeOrder } from "./actions";
++
++export function CheckoutForm({ unitPrice }: { unitPrice: number }) {
++  const [state, formAction, pending] = useActionState(placeOrder, null);
++  return (
++    <form action={formAction} className="mx-auto max-w-md space-y-4 text-right">
++      <p className="text-lg">מחיר ליחידה: ₪{unitPrice} (לפני מע"מ)</p>
++      <label htmlFor="fullName">שם מלא</label>
++      <input id="fullName" name="fullName" required />
++      <label htmlFor="idNumber">ת"ז</label>
++      <input
++        id="idNumber"
++        name="idNumber"
++        type="number"
++        maxLength={9}
++        onInput={(e) => {
++          // strip anything that isn't a digit
++          e.currentTarget.value = e.currentTarget.value.replace(/\D/g, "");
++        }}
++      />
++      <input
++        name="phone"
++        type="tel"
++        placeholder="050-1234567"
++        className="pl-3 rounded-r-lg"
++      />
++      <input name="zip" placeholder="מיקוד" maxLength={5} />
++      <label className="flex items-center gap-2">
++        <input
++          type="checkbox"
++          name="marketing"
++          defaultChecked
++        />
++        אשמח לקבל מבצעים ועדכונים ב-SMS
++      </label>
++      {state?.message && <p role="alert">{state.message}</p>}
++      <button disabled={pending} className="flex items-center gap-1">
++        {pending ? "שולח..." : "לתשלום"}
++        <ChevronRight className="h-4 w-4" />
++      </button>
++    </form>
++  );
++}

@@ -1,0 +1,73 @@
+diff --git a/src/components/PhoneField.tsx b/src/components/PhoneField.tsx
+new file mode 100644
+--- /dev/null
++++ b/src/components/PhoneField.tsx
+@@ -0,0 +1,48 @@
++export function PhoneField({ value, setValue, error, count }: Props) {
++  return (
++    <div>
++      <Input
++        id="customer-phone"
++        aria-describedby="phone-hint"
++        title="מספר > 9 ספרות"
++        disabled={count > 3 && !error}
++        onChange={(e) => setValue(e.target.value)}
++        onKeyDown={(e) => {
++          if (e.key === "Enter" && value.length >= 10) submit();
++        }}
++        className={cn(
++          "w-full border",
++          error && "border-red-500",
++        )}
++        type="tel"
++        autoComplete="tel"
++        value={value}
++      />
++      <input
++        name="email"
++        {/* don't autofill here */}
++        placeholder="you@example.com"
++      />
++      <input name="other" dir="ltr" />
++      <div
++        className={cn(
++          "flex items-center",
++          "ml-4 pl-2 text-left",
++        )}
++      />
++      <label className="flex gap-2">
++        <input
++          type="checkbox"
++          name="marketing"
++          defaultChecked
++        />
++        אני מסכים/ה לקבל מבצעים ועדכונים
++      </label>
++      <p className="text-sm">{value.length > 10 ? "ארוך מדי" : "תקין"}</p>
++      <input id="tz2" name="tz" type="text" inputMode="numeric" dir="ltr" />
++      <input type="number" name="quantity" />
++      <img src="/a.png" alt="x" />
++      <input name="mobile" type="text" />
++    </div>
++  );
++}
+diff --git a/src/pages/Checkout.js b/src/pages/Checkout.js
+new file mode 100644
+--- /dev/null
++++ b/src/pages/Checkout.js
+@@ -0,0 +1,6 @@
++export default function Checkout() {
++  return (
++    <form className="ml-4">
++      <input name="phone" type="number" placeholder="טלפון" />
++    </form>
++  );
++}
+diff --git a/app/layout.tsx b/app/layout.tsx
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -5,3 +5,3 @@ export default function RootLayout({ children, params }) {
+   return (
+-    <html lang="en">
++    <html {...getHtmlAttrs(params.locale)}>
+       <body>{children}</body>

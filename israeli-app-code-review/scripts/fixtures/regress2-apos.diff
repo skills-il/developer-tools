@@ -1,0 +1,27 @@
+diff --git a/src/components/ContactForm.tsx b/src/components/ContactForm.tsx
+new file mode 100644
+--- /dev/null
++++ b/src/components/ContactForm.tsx
+@@ -0,0 +1,22 @@
++export function ContactForm({ onSave }: Props) {
++  return (
++    <form>
++      <input
++        name="email"
++        placeholder="you@example.com"
++        onBlur={(e) => {
++          // don't validate until the user leaves the field
++          onSave(e.target.value);
++        }}
++      />
++      <label htmlFor="id-num">תעודת זהות</label>
++      <input id="id-num" name="idNumber" type="number" />
++      <input name="landline" dir="ltr" type="tel" />
++      <div className="flex">
++        <span>ok</span>
++      </div>
++      <input name="mobile" type="tel" dir="ltr" />
++      <p>שלום</p>
++    </form>
++  );
++}

@@ -1,0 +1,920 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "israeli-app-code-review",
+  "generated_at": "2026-11-02T23:45:00+02:00",
+  "claims": [
+    {
+      "claim_id": "dst-rule-law",
+      "claim": "Time Determination Law Section 3 (סעיף 3): DST runs from the Friday before the last Sunday of March at 02:00 until the last Sunday of October at 02:00, making Israel time UTC+3; standard time is UTC+2 (section 2).",
+      "claim_type": "law",
+      "source_url": "https://he.wikisource.org/wiki/חוק_קביעת_הזמן",
+      "raw_snippet": "בכל שנה, בתקופה שמיום שישי שלפני יום ראשון האחרון בחודש מרס בשעה 02:00, עד יום ראשון האחרון בחודש אוקטובר בשעה 02:00, יוקדם הזמן בישראל בשעה אחת נוספת, כך שיקדים את זמן יקום מתואם בשלוש שעות.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "standard-time-utc2",
+      "claim": "Time Determination Law Section 2 (סעיף 2): Israel time is UTC+2 outside DST.",
+      "claim_type": "law",
+      "source_url": "https://he.wikisource.org/wiki/חוק_קביעת_הזמן",
+      "raw_snippet": "הזמן בישראל יקדים את זמן יקום מתואם בשעתיים.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "dst-rule-2013",
+      "claim": "The current DST rule is the 2013 law (tzdata Asia/Jerusalem rule Zion 2013 to max).",
+      "claim_type": "law",
+      "source_url": "https://raw.githubusercontent.com/eggert/tz/main/asia",
+      "raw_snippet": "The current time law (2013) from the State of Israel can be viewed",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "dst-rule-2013-translation",
+      "claim": "tzdata translation of the 2013 rule: Friday before the last Sunday in March at 02:00 until the last Sunday of October at 02:00, UTC+3.",
+      "claim_type": "law",
+      "source_url": "https://raw.githubusercontent.com/eggert/tz/main/asia",
+      "raw_snippet": "the month of March at 02:00 a.m. until the last Sunday of the month",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "dst-2005-2012-yom-kippur",
+      "claim": "For 2005 to 2012 DST ended at 02:00 on the Saturday night before the fast of Yom Kippur, so pre-2013 timestamps follow a different rule.",
+      "claim_type": "date",
+      "source_url": "https://raw.githubusercontent.com/eggert/tz/main/asia",
+      "raw_snippet": "night _before_ the fast of Yom Kippur.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "tzdata-asia-url",
+      "claim": "IANA tzdata asia source file, Israel section.",
+      "claim_type": "url",
+      "source_url": "https://raw.githubusercontent.com/eggert/tz/main/asia",
+      "raw_snippet": "Every year, in the period from the Friday before the last Sunday in",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "vat-18-from-2025",
+      "claim": "VAT is 18% from 01.01.2025; it was 17% until 31.12.2024.",
+      "claim_type": "percentage",
+      "source_url": "https://www.kolzchut.org.il/he/מס_ערך_מוסף_(מע%22מ)",
+      "raw_snippet": "והחל מיום 01.01.2025 הוא עומד על 18% ממחיר הרכישה או השירות. עד 31.12.2024 היה שיעור המע\"מ 17%",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "amendment13-in-force",
+      "claim": "Privacy Protection Law Amendment 13 entered into force on 14 August 2025 and created the category 'data of special sensitivity'.",
+      "claim_type": "date",
+      "source_url": "https://www.gov.il/BlobFolder/legalinfo/the_board_role/en/Role_of_the_Board.pdf",
+      "raw_snippet": "and will enter into force on 14 August 2025, establishes a new category of data types defined as",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "amendment13-effects",
+      "claim": "The special-sensitivity category affects financial sanctions, the obligation to appoint a Data Protection Officer, and the duty to notify the Privacy Protection Authority about large and sensitive databases.",
+      "claim_type": "law",
+      "source_url": "https://www.gov.il/BlobFolder/legalinfo/the_board_role/en/Role_of_the_Board.pdf",
+      "raw_snippet": "This category affects the financial sanctions imposed for violations of the Law",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ppl-id-number-identifier",
+      "claim": "Under the Privacy Protection Law as amended, a person is identifiable by an identifier such as name, identification number, biometric identifier, location data or online identifier, so a Teudat Zehut makes a record personal data.",
+      "claim_type": "law",
+      "source_url": "https://www.gov.il/BlobFolder/legalinfo/legislation/en/Protection-of-Privacy-Law57411981unofficialtranslatioup.pdf",
+      "raw_snippet": "directly or indirectly, including by an identifier such as name, identification number,",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ppl-health-special",
+      "claim": "Health status data is data of special sensitivity.",
+      "claim_type": "law",
+      "source_url": "https://www.gov.il/BlobFolder/legalinfo/legislation/en/Protection-of-Privacy-Law57411981unofficialtranslatioup.pdf",
+      "raw_snippet": "(2) Personal data relating to a person's health status, including medical data as",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ppl-salary-special",
+      "claim": "Salary and financial activity data is data of special sensitivity.",
+      "claim_type": "law",
+      "source_url": "https://www.gov.il/BlobFolder/legalinfo/legislation/en/Protection-of-Privacy-Law57411981unofficialtranslatioup.pdf",
+      "raw_snippet": "(10) Personal data about a person's salary and financial activity;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ppl-biometric-special",
+      "claim": "A biometric identifier used to identify a person digitally is data of special sensitivity.",
+      "claim_type": "law",
+      "source_url": "https://www.gov.il/BlobFolder/legalinfo/legislation/en/Protection-of-Privacy-Law57411981unofficialtranslatioup.pdf",
+      "raw_snippet": "(4) Personal data that is a biometric identifier used or intended to be used to",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "reg35-is5568",
+      "claim": "Regulation 35 (תקנה 35) of the Accessibility for Service Regulations defines the internet accessibility standard (Israeli Standard 5568) as the guidelines for accessible web content published by the Standards Institution.",
+      "claim_type": "law",
+      "source_url": "https://he.wikisource.org/wiki/תקנות_שוויון_זכויות_לאנשים_עם_מוגבלות_(התאמות_נגישות_לשירות)",
+      "raw_snippet": "קווים מנחים לנגישות תכנים באינטרנט, על חלקיו השונים ונספחיהם, כתיקונם מזמן לזמן, שעותק שלהם מפורסם באתר מכון התקנים.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "reg35a-level-aa",
+      "claim": "תקנה 35א (regulation 35a) requires accessibility adjustments in an internet service per IS 5568 at level AA; applications are handled under regulation 35c.",
+      "claim_type": "law",
+      "source_url": "https://he.wikisource.org/wiki/תקנות_שוויון_זכויות_לאנשים_עם_מוגבלות_(התאמות_נגישות_לשירות)",
+      "raw_snippet": "חייב יספק התאמות נגישות בשירות אינטרנט, למעט לעניין יישומים (אפליקציות) כמשמעותם בתקנה 35ג ולמדיה מבוססת זמן לפי תקן נגישות אינטרנט בהתאם לקווים המנחים הקבועים בו, ברמה AA",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "is5568-2-wcag20",
+      "claim": "IS 5568 part 2 (digital documents, September 2023) is based on WCAG 2.0.",
+      "claim_type": "feature",
+      "source_url": "https://www.gov.il/BlobFolder/legalinfo/israeli_accessibility_standards_pdf/he/sitedocs_si-5568-2-september-2023.pdf",
+      "raw_snippet": "Web Content Accessibility Guidelines (WCAG) 2.0",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "is5568-1-sii",
+      "claim": "IS 5568 part 1 covers website accessibility; the Standards Institution page does not state its WCAG version in the page text.",
+      "claim_type": "url",
+      "source_url": "https://www.sii.org.il/lobby/standardization/standard-page?id=6751",
+      "raw_snippet": "תקן זה מביא קווים מנחים לנגישות אתרי אינטרנט.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "tz-luhn",
+      "claim": "The Teudat Zehut number has nine digits, the last a Luhn check digit.",
+      "claim_type": "feature",
+      "source_url": "https://en.wikipedia.org/wiki/Israeli_identity_card",
+      "raw_snippet": "Identity number (Mispar Zehut) comprising nine digits, the last of which is a check digit calculated using the Luhn algorithm",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mikud-7",
+      "claim": "Israeli postal codes (mikud) are seven digits; the change took effect 1 February 2013 and five-digit codes were valid until 31 January 2013.",
+      "claim_type": "threshold",
+      "source_url": "https://en.wikipedia.org/wiki/Postal_codes_in_Israel",
+      "raw_snippet": "In March 2012, Israel Post announced a change to 7-digit postal codes, with an implementation date of 5 December 2012, but which was postponed to 1 February 2013.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-cantillation",
+      "claim": "Cantillation marks start at U+0591 HEBREW ACCENT ETNAHTA (nonspacing mark, Mn).",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "0591;HEBREW ACCENT ETNAHTA;Mn;220;NSM;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-cantillation-end",
+      "claim": "The cantillation and masora marks end at U+05AF HEBREW MARK MASORA CIRCLE.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05AF;HEBREW MARK MASORA CIRCLE;Mn;230;NSM;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-points-start",
+      "claim": "Niqqud starts at U+05B0 HEBREW POINT SHEVA (Mn).",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05B0;HEBREW POINT SHEVA;Mn;10;NSM;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-points-end",
+      "claim": "The last Hebrew point is U+05C7 HEBREW POINT QAMATS QATAN (Mn).",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05C7;HEBREW POINT QAMATS QATAN;Mn;18;NSM;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-meteg",
+      "claim": "U+05BD HEBREW POINT METEG is a mark (Mn); U+05BE right after it is punctuation.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05BD;HEBREW POINT METEG;Mn;22;NSM;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-final-kaf",
+      "claim": "U+05DA HEBREW LETTER FINAL KAF is its own letter code point.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05DA;HEBREW LETTER FINAL KAF;Lo;0;R;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-final-mem",
+      "claim": "U+05DD HEBREW LETTER FINAL MEM.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05DD;HEBREW LETTER FINAL MEM;Lo;0;R;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-final-nun",
+      "claim": "U+05DF HEBREW LETTER FINAL NUN.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05DF;HEBREW LETTER FINAL NUN;Lo;0;R;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-final-pe",
+      "claim": "U+05E3 HEBREW LETTER FINAL PE.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05E3;HEBREW LETTER FINAL PE;Lo;0;R;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-final-tsadi",
+      "claim": "U+05E5 HEBREW LETTER FINAL TSADI.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05E5;HEBREW LETTER FINAL TSADI;Lo;0;R;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-chart",
+      "claim": "Unicode Hebrew block chart (U+0590 to U+05FF), letters based on ISO/IEC 8859-8.",
+      "claim_type": "url",
+      "source_url": "https://www.unicode.org/charts/PDF/U0590.pdf",
+      "raw_snippet": "Based on ISO/IEC 8859-8",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-geresh",
+      "claim": "U+05F3 HEBREW PUNCTUATION GERESH.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05F3;HEBREW PUNCTUATION GERESH;Po;0;R;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-gershayim",
+      "claim": "U+05F4 HEBREW PUNCTUATION GERSHAYIM.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05F4;HEBREW PUNCTUATION GERSHAYIM;Po;0;R;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-rlm",
+      "claim": "U+200F RIGHT-TO-LEFT MARK is a format character (Cf).",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "200F;RIGHT-TO-LEFT MARK;Cf;0;R;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-fsi",
+      "claim": "U+2068 FIRST STRONG ISOLATE.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "2068;FIRST STRONG ISOLATE;Cf;0;FSI;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-pdi",
+      "claim": "U+2069 POP DIRECTIONAL ISOLATE.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "2069;POP DIRECTIONAL ISOLATE;Cf;0;PDI;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-maqaf",
+      "claim": "Maqaf U+05BE is Hebrew punctuation (Pd, a dash), not a mark.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "05BE;HEBREW PUNCTUATION MAQAF;Pd;0;R;;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-fb1d",
+      "claim": "U+FB1D HEBREW LETTER YOD WITH HIRIQ decomposes to 05D9 05B4.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "FB1D;HEBREW LETTER YOD WITH HIRIQ;Lo;0;R;05D9 05B4;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-fb4f",
+      "claim": "U+FB4F HEBREW LIGATURE ALEF LAMED has a compatibility decomposition (NFKD only).",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+      "raw_snippet": "FB4F;HEBREW LIGATURE ALEF LAMED;Lo;0;R;<compat> 05D0 05DC;;;;N;;;;;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "unicode-presentation",
+      "claim": "Hebrew presentation forms (U+FB1D to U+FB4F) include precomposed letters such as SHIN WITH SHIN DOT.",
+      "claim_type": "feature",
+      "source_url": "https://www.unicode.org/charts/PDF/UFB00.pdf",
+      "raw_snippet": "HEBREW LETTER SHIN WITH SHIN DOT",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-margin-inline-start",
+      "claim": "margin-inline-start maps to a physical margin depending on writing mode and direction.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/margin-inline-start",
+      "raw_snippet": "defines the logical inline start margin of an element, which maps to a physical margin depending on the element's writing mode, directionality, and text orientation.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-logical",
+      "claim": "Logical properties define direction-relative equivalents to physical properties.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Logical_properties_and_values",
+      "raw_snippet": "Logical properties define direction",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-text-align-start",
+      "claim": "text-align: start is left in LTR and right in RTL.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-align",
+      "raw_snippet": "The same as left if direction is left-to-right and right if direction is right-to-left.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-bdi",
+      "claim": "bdi isolates its text from the surrounding bidi context; unicode-bidi: isolate on a span is not semantic.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/bdi",
+      "raw_snippet": "element tells the browser's bidirectional algorithm to treat the text it contains in isolation from its surrounding text.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-dir-auto",
+      "claim": "dir=auto should be used for data with unknown directionality such as user input.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/dir",
+      "raw_snippet": "The auto value should be used for data with an unknown directionality, like data coming from user input or external data.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-dir-omit",
+      "claim": "Omitting dir does not enable automatic direction detection; elements inherit direction from the parent.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/dir",
+      "raw_snippet": "Omitting dir does not enable automatic direction detection.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-unicode-bidi-isolate",
+      "claim": "unicode-bidi: isolate computes the container's direction without considering the element's content.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/unicode-bidi",
+      "raw_snippet": "This keyword indicates that the element's container directionality should be calculated without considering the content of this element.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-lang",
+      "claim": "The lang attribute lets screen readers use the correct pronunciation.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/lang",
+      "raw_snippet": "allow assistive technologies such as screen readers to invoke the correct pronunciation.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-tolocalestring-default",
+      "claim": "toLocaleString() without a locale uses the default locale.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString",
+      "raw_snippet": "Basic use of this method without specifying a locale returns a formatted string in the default locale and with default options.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-numberformat-currency",
+      "claim": "Intl.NumberFormat currency style has no default currency; it must be provided.",
+      "claim_type": "api-field",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat",
+      "raw_snippet": "There is no default value; if the style is \"currency\" , the currency property must be provided.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-collator",
+      "claim": "Intl.Collator provides language-sensitive string comparison.",
+      "claim_type": "api-field",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator",
+      "raw_snippet": "Collator object enables language-sensitive string comparison.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-weekinfo",
+      "claim": "Intl.Locale getWeekInfo returns firstDay as an integer from 1 (Monday) to 7 (Sunday) and a weekend array.",
+      "claim_type": "api-field",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo",
+      "raw_snippet": "An integer between 1 (Monday) and 7 (Sunday) indicating the first day of the week for the locale.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-dtf-timezone-default",
+      "claim": "Intl.DateTimeFormat timeZone defaults to the runtime's time zone.",
+      "claim_type": "api-field",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat",
+      "raw_snippet": "The default is the runtime's time zone, the same time zone used by Date.prototype.toString() .",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-normalize",
+      "claim": "String.prototype.normalize returns NFC, NFD, NFKC or NFKD forms.",
+      "claim_type": "api-field",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize",
+      "raw_snippet": "returns the Unicode Normalization Form of this string.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-segmenter",
+      "claim": "Intl.Segmenter splits text into graphemes, words or sentences.",
+      "claim_type": "api-field",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter",
+      "raw_snippet": "Segmenter object enables locale-sensitive text segmentation, enabling you to get meaningful items (graphemes, words or sentences) from a string.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-input-number",
+      "claim": "type=number is not appropriate for postal codes or other digit strings that are not numbers.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number",
+      "raw_snippet": "The number input type is not appropriate for values that happen to only consist of numbers but aren't strictly speaking a number, such as postal codes in many countries or credit card numbers.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-input-tel",
+      "claim": "input type=tel does not validate format automatically.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/tel",
+      "raw_snippet": "the input value is not automatically validated to a particular format before the form can be submitted, because formats for telephone numbers vary so much around the world.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-scalex",
+      "claim": "scaleX() flips an element horizontally with -1 (used to mirror icons).",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/transform-function/scaleX",
+      "raw_snippet": "scaleX(-1) defines an axial symmetry , with a vertical axis passing through the origin",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-dir-selector",
+      "claim": "The :dir() pseudo-class matches elements by directionality.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:dir",
+      "raw_snippet": "CSS pseudo-class matches elements based on the directionality of the text contained in them.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "w3c-spillover",
+      "claim": "W3C: numbers following a different directional run spill over; phone numbers, email addresses and file names need isolation.",
+      "claim_type": "feature",
+      "source_url": "https://www.w3.org/International/articles/inline-bidi-markup/",
+      "raw_snippet": "Avoiding spillover effects for following numbers that belong to a different directional run.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "w3c-phone-email",
+      "claim": "W3C lists phone numbers, email addresses and file names among content that needs bidi isolation.",
+      "claim_type": "feature",
+      "source_url": "https://www.w3.org/International/articles/inline-bidi-markup/",
+      "raw_snippet": "phone numbers and MAC addresses), street and email addresses",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "android-mirroring",
+      "claim": "An RTL interface uses right-aligned menus and text and forward arrows pointing to the left.",
+      "claim_type": "feature",
+      "source_url": "https://developer.android.com/training/basics/supporting-devices/languages",
+      "raw_snippet": "which includes right-aligned menus, right-aligned text, and forward arrows pointing to the left.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-11-03T00:55:00+02:00"
+    },
+    {
+      "claim_id": "cldr-il-week",
+      "claim": "CLDR week data for IL: firstDay sun, weekendStart fri, weekendEnd sat (Node: new Intl.Locale('he-IL').getWeekInfo() returned firstDay 7, weekend [5,6]).",
+      "claim_type": "feature",
+      "source_url": "https://raw.githubusercontent.com/unicode-org/cldr-json/main/cldr-json/cldr-core/supplemental/weekData.json",
+      "raw_snippet": "\"EG\": \"fri\", \"IL\": \"fri\", \"IN\": \"sun\",",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "tw-margin-logical",
+      "claim": "Tailwind ms-*/me-* set margin-inline-start/end.",
+      "claim_type": "feature",
+      "source_url": "https://tailwindcss.com/docs/margin",
+      "raw_snippet": "utilities like ms-4 and me-8 to set the margin-inline-start and margin-inline-end logical properties",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "tw-padding-logical",
+      "claim": "Tailwind ps-*/pe-* set padding-inline-start/end.",
+      "claim_type": "feature",
+      "source_url": "https://tailwindcss.com/docs/padding",
+      "raw_snippet": "utilities like ps-4 and pe-8 to set the padding-inline-start and padding-inline-end logical properties",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "tw-inset-logical",
+      "claim": "Current Tailwind docs name the logical inset utilities inset-s-* and inset-e-*.",
+      "claim_type": "feature",
+      "source_url": "https://tailwindcss.com/docs/top-right-bottom-left",
+      "raw_snippet": "utilities like inset-s-0 and inset-e-4 to set the inset-inline-start and inset-inline-end logical properties",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "tw-text-start",
+      "claim": "Tailwind text-start and text-end use logical properties.",
+      "claim_type": "feature",
+      "source_url": "https://tailwindcss.com/docs/text-align",
+      "raw_snippet": "Use the text-start and text-end utilities, which use logical properties",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "tw-rtl-variant",
+      "claim": "Tailwind rtl: and ltr: variants apply styles per direction.",
+      "claim_type": "feature",
+      "source_url": "https://tailwindcss.com/docs/hover-focus-and-other-states",
+      "raw_snippet": "Use the rtl and ltr variants to conditionally add styles in right-to-left and left-to-right modes respectively",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "node-cron-timezone",
+      "claim": "node-cron schedule() takes a timezone option; schedules match wall-clock time in the task's timezone.",
+      "claim_type": "api-field",
+      "source_url": "https://raw.githubusercontent.com/node-cron/node-cron/main/README.md",
+      "raw_snippet": "Schedules match wall-clock time in the task's `timezone`.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "aps-dow-monday",
+      "claim": "APScheduler 3.x numbers day_of_week 0 as Monday (crontab uses 0 for Sunday), including CronTrigger.from_crontab; fixed only in 4.x.",
+      "claim_type": "api-field",
+      "source_url": "https://apscheduler.readthedocs.io/en/3.x/modules/triggers/cron.html",
+      "raw_snippet": "APScheduler treats 0 as Monday while the original crontab treats it as Sunday.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "aps-names",
+      "claim": "APScheduler accepts abbreviated weekday names in day_of_week.",
+      "claim_type": "api-field",
+      "source_url": "https://apscheduler.readthedocs.io/en/3.x/modules/triggers/cron.html",
+      "raw_snippet": "The month and day_of_week fields accept abbreviated English month and weekday names",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "aps-dst",
+      "claim": "APScheduler warns that a wall-clock schedule across a DST switch can hit a period that does not exist or is repeated.",
+      "claim_type": "feature",
+      "source_url": "https://apscheduler.readthedocs.io/en/3.x/modules/triggers/cron.html",
+      "raw_snippet": "This will cause some time periods to either not exist at all, or be repeated.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "quartz-dow",
+      "claim": "Quartz cron numbers day of week 1-7 or SUN-SAT (Sunday is 1).",
+      "claim_type": "api-field",
+      "source_url": "https://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html",
+      "raw_snippet": "Day of week YES 1-7 or SUN-SAT",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "gha-utc",
+      "claim": "GitHub Actions scheduled workflows run in UTC by default; a timezone can optionally be specified with an IANA name.",
+      "claim_type": "feature",
+      "source_url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows",
+      "raw_snippet": "By default, scheduled workflows run in UTC. You can optionally specify a timezone using an IANA timezone string for timezone-aware scheduling.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "vercel-utc",
+      "claim": "Vercel cron jobs always run in UTC.",
+      "claim_type": "feature",
+      "source_url": "https://vercel.com/docs/cron-jobs",
+      "raw_snippet": "The timezone is always UTC",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "vercel-no-names",
+      "claim": "Vercel cron does not accept day or month names such as MON or SUN.",
+      "claim_type": "feature",
+      "source_url": "https://vercel.com/docs/cron-jobs",
+      "raw_snippet": "Cron jobs on Vercel do not support alternative expressions like MON",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "node-cron-dst",
+      "claim": "node-cron: across a DST fall-back the repeated hour runs once.",
+      "claim_type": "feature",
+      "source_url": "https://raw.githubusercontent.com/node-cron/node-cron/main/README.md",
+      "raw_snippet": "Across a daylight-saving fall-back the repeated hour runs once",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "mdn-js-w",
+      "claim": "In JavaScript regular expressions, \\w matches only basic Latin letters, digits and underscore.",
+      "claim_type": "feature",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes",
+      "raw_snippet": "Matches any alphanumeric character from the basic Latin alphabet, including the underscore.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "py-re-w",
+      "claim": "In Python 3 str patterns, \\w matches Unicode word characters (Unicode alphanumerics plus underscore).",
+      "claim_type": "feature",
+      "source_url": "https://docs.python.org/3/library/re.html",
+      "raw_snippet": "For Unicode (str) patterns: Matches Unicode word characters; this includes all Unicode alphanumeric characters",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "py-date-today",
+      "claim": "Python date.today() returns the current local date (the server's local time zone).",
+      "claim_type": "api-field",
+      "source_url": "https://docs.python.org/3/library/datetime.html",
+      "raw_snippet": "Return the current local date.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "py-utf8-sig",
+      "claim": "Python's utf-8-sig codec writes a UTF-8 BOM as a signature that helps guess the encoding.",
+      "claim_type": "api-field",
+      "source_url": "https://docs.python.org/3/library/codecs.html",
+      "raw_snippet": "as a signature that helps in guessing the encoding.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ms-bom-excel",
+      "claim": "Microsoft Q&A answer: include the UTF-8 BOM at the start of a CSV so Microsoft software (Excel) recognises it as UTF-8.",
+      "claim_type": "feature",
+      "source_url": "https://learn.microsoft.com/en-us/answers/questions/5104482/how-to-open-csv-file-encoded-with-utf-8-with-excel",
+      "raw_snippet": "That will get Microsoft software to recognize it as UTF-8.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "pytz-tzinfo",
+      "claim": "pytz: using the tzinfo argument of the datetime constructor does not work for many time zones; use localize() (the result carries the zone's LMT offset, +02:21 for Asia/Jerusalem, verified locally).",
+      "claim_type": "api-field",
+      "source_url": "https://raw.githubusercontent.com/stub42/pytz/master/src/README.rst",
+      "raw_snippet": "Unfortunately using the tzinfo argument of the standard datetime",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "tzdata-jerusalem-lmt",
+      "claim": "tzdata: Asia/Jerusalem local mean time was +2:20:54 until 1880, the offset pytz falls back to when used as tzinfo=.",
+      "claim_type": "feature",
+      "source_url": "https://raw.githubusercontent.com/eggert/tz/main/asia",
+      "raw_snippet": "Zone\tAsia/Jerusalem\t2:20:54 -\tLMT\t1880",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "numpy-weekmask",
+      "claim": "numpy.busday_offset defaults to weekmask '1111100' (Monday to Friday valid).",
+      "claim_type": "api-field",
+      "source_url": "https://numpy.org/doc/stable/reference/generated/numpy.busday_offset.html",
+      "raw_snippet": "weekmask = '1111100'",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "numpy-weekmask-order",
+      "claim": "NumPy weekmask lists Monday through Sunday.",
+      "claim_type": "api-field",
+      "source_url": "https://numpy.org/doc/stable/reference/generated/numpy.busday_offset.html",
+      "raw_snippet": "A seven-element array indicating which of Monday through Sunday are valid days.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "datefns-addbusinessdays",
+      "claim": "date-fns addBusinessDays adds business days Monday to Friday.",
+      "claim_type": "api-field",
+      "source_url": "https://unpkg.com/date-fns@4.1.0/addBusinessDays.js",
+      "raw_snippet": "Add the specified number of business days (mon - fri) to the given date.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "datefns-isweekend",
+      "claim": "date-fns isWeekend treats Saturday and Sunday as the weekend.",
+      "claim_type": "api-field",
+      "source_url": "https://unpkg.com/date-fns@4.1.0/isWeekend.js",
+      "raw_snippet": "A weekend is either Saturday (`6`) or Sunday (`0`).",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high",
+      "verified_via": "browser",
+      "verified_at": "2026-11-03T00:25:00+02:00"
+    },
+    {
+      "claim_id": "mdn-weekinfo-accessor",
+      "claim": "Some runtimes implemented getWeekInfo() as an accessor property weekInfo (Node 20.19.6 returns undefined for getWeekInfo and the object from weekInfo, verified locally).",
+      "claim_type": "api-field",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo",
+      "raw_snippet": "this method was implemented as an accessor property called weekInfo",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "consumer-17d",
+      "claim": "Consumer Protection Law Section 17 (סעיף 17ד): a dealer may not publish or quote a price to a consumer unless it is the total price only, and only in Israeli currency.",
+      "claim_type": "law",
+      "source_url": "https://he.wikisource.org/wiki/חוק_הגנת_הצרכן",
+      "raw_snippet": "לא יפרסם עוסק ולא ינקוב, במפורש או במשתמע, מחיר של נכס או של שירות המוצע לצרכן, אלא אם כן הוא המחיר הכולל בלבד ורק במטבע ישראלי.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "consumer-17a-vat",
+      "claim": "Consumer Protection Law (סעיף 17א) defines the total price to include VAT, fees and compulsory payments.",
+      "claim_type": "law",
+      "source_url": "https://he.wikisource.org/wiki/חוק_הגנת_הצרכן",
+      "raw_snippet": "(1) מס ערך מוסף, אגרות או תשלומי חובה;",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "comm-30a-consent",
+      "claim": "Communications Law Section 30 (סעיף 30א): advertising by fax, autodialer, electronic message or SMS requires the recipient's explicit prior consent, in writing, including by electronic message or recorded call.",
+      "claim_type": "law",
+      "source_url": "https://he.wikisource.org/wiki/חוק_התקשורת_(בזק_ושידורים)",
+      "raw_snippet": "בלא קבלת הסכמה מפורשת מראש של הנמען, בכתב, לרבות בהודעה אלקטרונית או בשיחה מוקלטת",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "corp-check-digit",
+      "claim": "The rightmost digit of an Israeli corporation number is a check digit computed by the same rules as the ID number check digit.",
+      "claim_type": "feature",
+      "source_url": "https://he.wikipedia.org/wiki/תאגיד",
+      "raw_snippet": "הספרה הימנית ביותר במספר התאגיד היא ספרת ביקורת, שכללי חישובה זהים לאלה של חישוב ספרת הביקורת במספר זהות",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "node-cron-dow",
+      "claim": "node-cron uses standard cron weekday numbering (0 or 7 = Sunday, 1 = Monday) and accepts names; Quartz numbers Sunday as 1.",
+      "claim_type": "api-field",
+      "source_url": "https://raw.githubusercontent.com/node-cron/node-cron/main/README.md",
+      "raw_snippet": "with `0`/`7` = Sunday and `1` = Monday. In Quartz `1` = Sunday",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "celery-dow",
+      "claim": "Celery crontab day_of_week: integers 0-6 where Sunday = 0 and Saturday = 6 (so 0-4 is Sunday to Thursday); names like mon-fri are accepted.",
+      "claim_type": "api-field",
+      "source_url": "https://docs.celeryq.dev/en/stable/reference/celery.schedules.html",
+      "raw_snippet": "A (list of) integers from 0-6, where Sunday = 0 and Saturday = 6, that represent the days of a week that execution should occur.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "django-now-utc",
+      "claim": "Django timezone.now() returns the current time in UTC when USE_TZ is True, regardless of TIME_ZONE.",
+      "claim_type": "api-field",
+      "source_url": "https://docs.djangoproject.com/en/5.2/ref/utils/",
+      "raw_snippet": "Note that now() will always return times in UTC regardless of the value of TIME_ZONE",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "django-localdate",
+      "claim": "Django timezone.localdate() converts an aware datetime to a date in the current time zone.",
+      "claim_type": "api-field",
+      "source_url": "https://docs.djangoproject.com/en/5.2/ref/utils/",
+      "raw_snippet": "to convert an aware datetime to a date() in a different time zone, by default the current time zone",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "django-default-tz",
+      "claim": "Django's default time zone is the TIME_ZONE setting; the current time zone, used for rendering, is set per user with activate().",
+      "claim_type": "api-field",
+      "source_url": "https://docs.djangoproject.com/en/5.2/topics/i18n/timezones/",
+      "raw_snippet": "The default time zone is the time zone defined by the TIME_ZONE setting. The current time zone is the time zone that’s used for rendering.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "aps-sun-thu-crash",
+      "claim": "APScheduler 3.x numbers weekdays from Monday (0) to Sunday (6), so day_of_week='sun-thu' is a descending range and raises ValueError ('The minimum value in a range must not be higher than the maximum'); 'sun,mon,tue,wed,thu' and 'mon-thu,sun' fire Sunday to Thursday. Verified locally on APScheduler 3.11.0, 2026-11-03.",
+      "claim_type": "api-field",
+      "source_url": "https://apscheduler.readthedocs.io/en/3.x/modules/triggers/cron.html",
+      "raw_snippet": "APScheduler treats 0 as Monday while the original crontab treats it as Sunday.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "debian-crontab-names",
+      "claim": "Debian's crontab(5) (Vixie cron): names may be used for month and day of week, but ranges or lists of names are not allowed.",
+      "claim_type": "api-field",
+      "source_url": "https://manpages.debian.org/bookworm/cron/crontab.5.en.html",
+      "raw_snippet": "Ranges or lists of names are not allowed.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "cronie-crontab-names",
+      "claim": "cronie's crontab(5) (man7.org) allows ranges and lists of names, so name support differs by cron implementation.",
+      "claim_type": "api-field",
+      "source_url": "https://man7.org/linux/man-pages/man5/crontab.5.html",
+      "raw_snippet": "Ranges and lists of names are allowed.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "celery-sun-thu",
+      "claim": "Celery crontab parses day_of_week='sun-thu' as days {0,1,2,3,4}, Sunday to Thursday (Celery numbers Sunday 0). Verified by a local run on Celery 5.6.3, 2026-11-03.",
+      "claim_type": "api-field",
+      "source_url": "https://docs.celeryq.dev/en/stable/reference/celery.schedules.html",
+      "raw_snippet": "A (list of) integers from 0-6, where Sunday = 0 and Saturday = 6, that represent the days of a week that execution should occur.",
+      "fetched_at": "2026-11-02T23:45:00+02:00",
+      "confidence": "high"
+    }
+  ]
+}

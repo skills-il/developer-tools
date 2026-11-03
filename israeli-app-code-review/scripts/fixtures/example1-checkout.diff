@@ -1,0 +1,53 @@
+diff --git a/src/components/CheckoutForm.tsx b/src/components/CheckoutForm.tsx
+index 3b1c2a0..9f4e7d1 100644
+--- a/src/components/CheckoutForm.tsx
++++ b/src/components/CheckoutForm.tsx
+@@ -1,9 +1,40 @@
+ import { useState } from "react";
+-import { Button } from "./ui/button";
++import { Button } from "./ui/button";
++import { ChevronRight } from "lucide-react";
++import { isValidTz } from "../lib/tz";
+ 
++const VAT = 0.17;
++
+ export function CheckoutForm({ cart, user }) {
+   const [form, setForm] = useState({});
++  const subtotal = cart.reduce((s, i) => s + i.price, 0);
++  const total = subtotal * (1 + VAT);
++
++  function submit() {
++    console.log("checkout", form.idNumber, form.phone, total);
++    if (!isValidTz(form.idNumber)) return;
++  }
++
+   return (
+-    <form>
++    <form className="space-y-4 text-left">
++      <label className="block mr-2">תעודת זהות</label>
++      <input name="idNumber" type="number" className="pl-3 border" />
++      <input type="tel" name="phone" placeholder="טלפון נייד" className="pl-3 border" />
++      <input name="zip" maxLength={5} placeholder="מיקוד" />
++      <p className="text-sm">שלום {user.firstName}, הסכום לתשלום: {total.toFixed(2) + " ₪"}</p>
++      <p>תאריך הזמנה: {new Date().toLocaleDateString()}</p>
++      <Button className="ml-auto">
++        המשך לתשלום <ChevronRight className="ml-1 h-4 w-4" />
++      </Button>
+     </form>
+   );
+ }
+diff --git a/src/lib/tz.ts b/src/lib/tz.ts
+new file mode 100644
+index 0000000..a1b2c3d
+--- /dev/null
++++ b/src/lib/tz.ts
+@@ -0,0 +1,9 @@
++export function isValidTz(id: number): boolean {
++  const s = String(id);
++  if (s.length !== 9) return false;
++  let sum = 0;
++  for (let i = 0; i < 9; i++) {
++    sum += Number(s[i]) * ((i % 2) + 1);
++  }
++  return sum % 10 === 0;
++}

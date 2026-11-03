@@ -1,0 +1,84 @@
+{
+  "author": "skills-il",
+  "version": "1.0.0",
+  "category": "developer-tools",
+  "tags": {
+    "he": [
+      "סקירת-קוד",
+      "RTL",
+      "עברית",
+      "אזור-זמן",
+      "פרטיות",
+      "נגישות",
+      "ישראל"
+    ],
+    "en": [
+      "code-review",
+      "rtl",
+      "hebrew",
+      "timezone",
+      "privacy",
+      "accessibility",
+      "israel"
+    ]
+  },
+  "display_name": {
+    "he": "סקירת קוד לאפליקציות בישראל",
+    "en": "Israeli App Code Review"
+  },
+  "display_description": {
+    "he": "בודק Pull Request, diff או קבצים של אפליקציה שמשרתת משתמשים בישראל, ומחזיר דוח מסודר לפי חומרה: איפה הבאג (קובץ ושורה), למי הוא שובר את החוויה ואיך מתקנים, וגם רשימה של מה שנבדק ונמצא תקין. מתאים לפני מיזוג, כשרוצים לוודא שהקוד עובד נכון בעברית ובישראל: כיווניות RTL וטקסט מעורב, אותיות סופיות וניקוד, תעודת זהות, טלפון ומיקוד בן שבע ספרות, מחירים בשקלים ומע\"מ, שבוע עבודה שמתחיל ביום ראשון, שעון קיץ ומשימות מתוזמנות, ומספרי זהות או מידע רפואי שנכתבים ללוגים. כך נתפסים באגים שסוקרי קוד מחוץ לישראל לא מחפשים, עוד לפני שהם מגיעים למשתמשים. לא מתאים לבניית ממשק RTL מאפס, לבדיקת אבטחה, לסקר נגישות מלא או לתוכנית ציות לחוק הגנת הפרטיות.",
+    "en": "Reviews a pull request, diff or set of files in an app that serves Israeli users and returns a report ranked by severity: where each bug is (file and line), which users it breaks for, and how to fix it, plus a list of what was checked and found clean. Use before merging to make sure the code works in Hebrew and in Israel: RTL layout and mixed-direction text, final letters and niqqud, Teudat Zehut, phone and seven-digit postal code fields, shekel prices and VAT, the Sunday-first work week, Israeli daylight saving time and scheduled jobs, and ID numbers or health data written to logs. It catches the bugs reviewers outside Israel do not look for, before users hit them. Do NOT use for building an RTL interface from scratch, security review, a full accessibility audit, or a privacy-law compliance programme."
+  },
+  "supported_agents": [
+    "claude-code",
+    "cursor",
+    "github-copilot",
+    "windsurf",
+    "opencode",
+    "codex",
+    "antigravity",
+    "gemini-cli",
+    "grok-build",
+    "chatgpt",
+    "claude-ai",
+    "claude-desktop",
+    "manus",
+    "gemini-spark",
+    "grok"
+  ],
+  "volatility": "versioned",
+  "authoritative_sources": [
+    {
+      "url": "https://he.wikisource.org/wiki/חוק_קביעת_הזמן",
+      "type": "statute",
+      "language": "he"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/eggert/tz/main/asia",
+      "type": "vendor-doc",
+      "language": "en"
+    },
+    {
+      "url": "https://www.kolzchut.org.il/he/מס_ערך_מוסף_(מע%22מ)",
+      "type": "aggregator",
+      "language": "he"
+    },
+    {
+      "url": "https://www.gov.il/BlobFolder/legalinfo/the_board_role/en/Role_of_the_Board.pdf",
+      "type": "regulator",
+      "language": "en"
+    },
+    {
+      "url": "https://he.wikisource.org/wiki/תקנות_שוויון_זכויות_לאנשים_עם_מוגבלות_(התאמות_נגישות_לשירות)",
+      "type": "regulation",
+      "language": "he"
+    },
+    {
+      "url": "https://www.unicode.org/charts/PDF/U0590.pdf",
+      "type": "standard",
+      "language": "en"
+    }
+  ],
+  "domain_checklist_version": 1
+}

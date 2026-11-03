@@ -1,0 +1,74 @@
+diff --git a/clinic/settings.py b/clinic/settings.py
+--- a/clinic/settings.py
++++ b/clinic/settings.py
+@@ -40,6 +40,16 @@ INSTALLED_APPS = [
+ ]
+ 
+ USE_TZ = True
++TIME_ZONE = "UTC"
++CELERY_TIMEZONE = "Asia/Jerusalem"
++
++CELERY_BEAT_SCHEDULE = {
++    "appointment-reminders": {
++        "task": "appointments.tasks.send_reminders",
++        "schedule": crontab(hour=8, minute=0, day_of_week="0-4"),
++    },
++    "nightly-billing": {"task": "billing.tasks.close_day", "schedule": crontab(hour=2, minute=30)},
++}
+ 
+ LANGUAGE_CODE = "he"
+diff --git a/appointments/tasks.py b/appointments/tasks.py
+new file mode 100644
+--- /dev/null
++++ b/appointments/tasks.py
+@@ -0,0 +1,40 @@
++import logging
++from datetime import timedelta
++
++from celery import shared_task
++from django.utils import timezone
++
++from .models import Appointment
++from .sms import send_sms
++
++logger = logging.getLogger(__name__)
++
++
++@shared_task(bind=True, max_retries=3)
++def send_reminders(self):
++    tomorrow = timezone.now().date() + timedelta(days=1)
++    if tomorrow.weekday() in (5, 6):
++        return 0
++    qs = Appointment.objects.filter(start__date=tomorrow).select_related("patient", "clinic")
++    sent = 0
++    for appt in qs:
++        p = appt.patient
++        local = timezone.localtime(appt.start)
++        body = f"שלום {p.first_name}, תזכורת לתור ב{appt.clinic.name} מחר בשעה {local:%H:%M}. לביטול השיבו 0"
++        try:
++            send_sms(p.phone, body)
++            sent += 1
++        except Exception as exc:
++            logger.exception("sms failed for patient %s (%s) at %s", p.teudat_zehut, p.phone, appt.clinic.name)
++            raise self.retry(exc=exc, countdown=60)
++        logger.info("reminder queued %s", appt)
++    return sent
++
++
++@shared_task
++def export_daily(day=None):
++    day = day or timezone.now().strftime("%Y-%m-%d")
++    rows = Appointment.objects.filter(start__date=day).values_list("patient__teudat_zehut", "clinic__name", "start")
++    with open(f"/exports/{day}.csv", "w", encoding="utf-8") as fh:
++        for tz, clinic, start in rows:
++            fh.write(f"{tz},{clinic},{start:%d/%m/%Y %H:%M}\n")
++    return len(rows)
+diff --git a/appointments/models.py b/appointments/models.py
+--- a/appointments/models.py
++++ b/appointments/models.py
+@@ -8,4 +8,7 @@ class Patient(models.Model):
+     first_name = models.CharField(max_length=60)
++    teudat_zehut = models.CharField(max_length=9, unique=True)
++    phone = models.BigIntegerField()
++    sms_opt_in = models.BooleanField(default=True)
+     created = models.DateTimeField(auto_now_add=True)

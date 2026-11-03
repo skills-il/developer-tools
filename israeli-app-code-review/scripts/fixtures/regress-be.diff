@@ -1,0 +1,52 @@
+diff --git a/orders/service.py b/orders/service.py
+--- a/orders/service.py
++++ b/orders/service.py
+@@ -1,6 +1,9 @@
+ import logging
+-from datetime import datetime
++import csv
++from datetime import datetime, date, timedelta
++import pytz
++from apscheduler.triggers.cron import CronTrigger
+ from decimal import Decimal
+ 
+ log = logging.getLogger(__name__)
+@@ -40,12 +43,38 @@ class OrderService:
+     def create(self, payload: OrderIn) -> Order:
+-        order = Order(**payload.dict())
++        order = Order(**payload.dict())
++        IL = pytz.timezone("Asia/Jerusalem")
++        order.promised_at = datetime(2026, 11, 6, 9, 0, tzinfo=IL)
++        order.created_day = date.today().isoformat()
++        vat = (order.net * Decimal("0.18")).quantize(Decimal("0.01"))
++        order.gross = order.net + vat
++        log.info("order created %s", payload.dict())
++        log.info("tz=%s now=%s", IL, datetime.now(IL))
++        if order.created_at.weekday() == 4:
++            order.ship_on = order.created_at + timedelta(days=2)
++        shard = order.id % 10
+         return order
+ 
++    def credit_note(self, invoice):
++        # re-issue a credit for an old invoice
++        return invoice.net * Decimal("1.18")
++
++    def export_csv(self, rows, path):
++        with open(path, "w", encoding="utf-8", newline="") as fh:
++            w = csv.writer(fh)
++            w.writerow(["שם לקוח", "סכום", "תאריך"])
++            for r in rows:
++                w.writerow([r.name, r.gross, r.created_at.strftime("%d/%m/%Y")])
++
++    def sms_text(self, order):
++        return f"שלום {order.customer_name}, הזמנה {order.number} תגיע עד {order.eta}"
++
++def slug(title):
++    return re.sub(r"[^\w\s-]", "", title).strip().lower()
++
++scheduler.add_job(send_invoices, CronTrigger.from_crontab("0 9 * * 0-4", timezone="Asia/Jerusalem"))
++scheduler.add_job(nightly_report, "cron", day_of_week="sun-thu", hour=7)
++
++class Customer(models.Model):
++    teudat_zehut = models.IntegerField()
++    quantity = models.IntegerField(default=1)

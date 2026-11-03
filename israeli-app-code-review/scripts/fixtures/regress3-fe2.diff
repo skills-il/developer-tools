@@ -1,0 +1,38 @@
+diff --git a/src/Contact.tsx b/src/Contact.tsx
+index ad1d380..54b5cdd 100644
+--- a/src/Contact.tsx
++++ b/src/Contact.tsx
+@@ -1 +1,33 @@
+ export const x = 1;
++
++export function Contact() {
++  return (
++    <form>
++      <input
++        name="email"
++        type="email"
++        // don't let the browser autofill a stale address
++        placeholder="you@example.com"
++      />
++      <input
++        name="name"
++        onInput={(e) => (e.currentTarget.value = e.currentTarget.value.replace(/[^א-ת\s'-]/g, ""))}
++      />
++      <input
++        name="phone"
++        type="tel"
++        placeholder="050-0000000"
++      />
++      <label htmlFor="tz">תעודת זהות</label>
++      <input id="tz" name="idNumber" type="number" dir="ltr" />
++      <label className="flex">
++        <input
++          type="checkbox"
++          name="marketing"
++          defaultChecked
++        />
++        אני מסכים/ה לקבל דיוור
++      </label>
++    </form>
++  );
++}

@@ -1,0 +1,12 @@
+--- /dev/null
++++ b/jobs.py
+@@ -0,0 +1,9 @@
++from apscheduler.schedulers.blocking import BlockingScheduler
++sched = BlockingScheduler(timezone="Asia/Jerusalem")
++sched.add_job(report, "cron", day_of_week="sun-thu", hour=9, timezone="Asia/Jerusalem")
++sched.add_job(report, "cron", day_of_week="sun,mon,tue,wed,thu", hour=9, timezone="Asia/Jerusalem")
++sched.add_job(report, "cron", day_of_week="mon-thu,sun", hour=9, timezone="Asia/Jerusalem")
++due = np.busday_offset(start, 3, roll="forward")
++due2 = np.busday_offset(start, 3, weekmask="1111100")
++due3 = np.busday_offset(start, 3, weekmask="1111001")
++app.conf.beat_schedule = {"r": {"task": "t", "schedule": crontab(hour=9, minute=0, day_of_week="0-4")}}

@@ -1,0 +1,110 @@
+diff --git a/app/checkout/CheckoutForm.tsx b/app/checkout/CheckoutForm.tsx
+index a0858b2..aa63e34 100644
+--- a/app/checkout/CheckoutForm.tsx
++++ b/app/checkout/CheckoutForm.tsx
+@@ -1,5 +1,63 @@
+ "use client";
+ 
+-export function CheckoutForm() {
+-  return null;
++import { useActionState } from "react";
++import { ArrowLeft } from "lucide-react";
++import { placeOrder } from "./actions";
++
++export function CheckoutForm({ total }: { total: number }) {
++  const [state, action] = useActionState(placeOrder, null);
++  return (
++    <form action={action} className="space-y-4 text-start">
++      <label htmlFor="fullName">שם מלא</label>
++      <input
++        id="fullName"
++        name="fullName"
++        autoComplete="name"
++        // we don't trim here, the action's zod schema does it
++        onInput={(e) => (e.currentTarget.value = e.currentTarget.value.replace(/[^א-תa-zA-Z\s'-]/g, ""))}
++        className="ps-3 border rounded-s-md"
++      />
++      <label htmlFor="idNumber">תעודת זהות</label>
++      <input
++        id="idNumber"
++        name="idNumber"
++        inputMode="numeric"
++        dir="ltr"
++        maxLength={9}
++        className="ps-3 border"
++      />
++      <label htmlFor="phone">טלפון נייד</label>
++      <input
++        id="phone"
++        name="phone"
++        type="tel"
++        dir="ltr"
++        placeholder="050-1234567"
++        className="ps-3 border"
++      />
++      <input
++        name="zip"
++        inputMode="numeric"
++        maxLength={7}
++        placeholder="מיקוד"
++        className="pl-3 border"
++      />
++      <label className="flex gap-2">
++        <input
++          type="checkbox"
++          name="marketing"
++          // unchecked by default, per the spam law (it's opt-in)
++        />
++        אני מסכים/ה לקבל עדכונים ומבצעים
++      </label>
++      <p>
++        לתשלום:{" "}
++        {new Intl.NumberFormat("he-IL", { style: "currency", currency: "ILS" }).format(total)}
++      </p>
++      <p>מועד משלוח: {new Date().toLocaleDateString("he-IL", { timeZone: "Asia/Jerusalem" })}</p>
++      <button type="submit" className="inline-flex items-center gap-1 me-auto">
++        המשך לתשלום <ArrowLeft className="h-4 w-4 rtl:rotate-0 ltr:rotate-180" />
++      </button>
++    </form>
++  );
+ }
+diff --git a/app/checkout/actions.ts b/app/checkout/actions.ts
+index c43a7dc..46f5d27 100644
+--- a/app/checkout/actions.ts
++++ b/app/checkout/actions.ts
+@@ -3,7 +3,34 @@
+ import { z } from "zod";
+ import { db } from "@/lib/db";
+ import { logger } from "@/lib/logger";
++import { VAT_RATE } from "@/lib/tax";
++
++const schema = z.object({
++  fullName: z.string().regex(/^[\u0590-\u05FFa-zA-Z\s'-]+$/, "שם יכול להכיל אותיות בעברית או באנגלית"),
++  idNumber: z.string().regex(/^\d{5,9}$/).transform((s) => s.padStart(9, "0")),
++  phone: z.string().min(9),
++  zip: z.string().length(7, "מיקוד הוא 7 ספרות"),
++  marketing: z.coerce.boolean().default(false),
++  deliveryDate: z.string(),
++});
+ 
+ export async function placeOrder(prev: unknown, formData: FormData) {
+-  return null;
++  const parsed = schema.safeParse(Object.fromEntries(formData));
++  if (!parsed.success) {
++    // don't echo the input back, it has the customer's ID
++    logger.warn("checkout validation failed", { issues: parsed.error.issues.length });
++    return { ok: false };
++  }
++  const data = parsed.data;
++  const day = new Date(data.deliveryDate).getDay();
++  if (day === 5 || day === 6) {
++    return { ok: false, error: "אין משלוחים בסוף השבוע" };
++  }
++  const gross = Math.round(data.netAgorot * (1 + VAT_RATE));
++  const orderDay = new Date().toISOString().slice(0, 10);
++  await db.order.create({ data: { ...data, gross, orderDay } });
++  logger.info("order placed", { tz: data.idNumber, phone: data.phone });
++  const price = new Intl.NumberFormat("he-IL", { style: "currency", currency: "ILS" }).format(gross / 100);
++  await sendSms(data.phone, `ההזמנה התקבלה, לתשלום ${price}`);
++  return { ok: true };
+ }
