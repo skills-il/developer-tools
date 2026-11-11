@@ -1,6 +1,6 @@
 # captions-only.sh tuning reference
 
-Constants you can edit at the top of `scripts/captions-only.sh` to change behavior. All defaults are conservative for a typical Hebrew talking-head / lecture / podcast video.
+Constants you can edit in `scripts/captions-only.sh` to change behavior. `GAP_THRESHOLD` and `TAIL_THRESHOLD` are shell variables in the Step 1.5 block; `MAX_WORD_DUR` and `MAX_DISPLAY_SEC` live inside the Step 2 Python heredoc, mid-file, not at the top. All defaults are conservative for a typical Hebrew talking-head / lecture / podcast video.
 
 ## Thresholds
 
@@ -13,11 +13,11 @@ Constants you can edit at the top of `scripts/captions-only.sh` to change behavi
 
 ## Scribe model
 
-**There is no longer a choice.** `scribe_v1` was deprecated and removed on 9 July 2026; the only current models are `scribe_v2` and `scribe_v2_realtime`. Both the full-video pass and each gap-recovery call now send `scribe_v2`.
+**There is no longer a choice.** ElevenLabs deprecated `scribe_v1` and announced its removal for 9 July 2026; its models page lists it under Deprecated models with `scribe_v2` as the replacement. Both the main pass and each gap-recovery call send `scribe_v2`.
 
-Earlier versions of this file recommended `scribe_v1` for the main pass. That advice was dead from 9 July 2026 onward and left `captions-only.sh` unable to transcribe anything. If a future cycle sees a v1/v2 split anywhere in this skill, it is stale: check https://elevenlabs.io/docs/api-reference/speech-to-text/convert for the current `model_id` enum before restoring it.
+Earlier versions of this file recommended `scribe_v1` for the main pass. Do not restore that. If a future cycle sees a v1/v2 split anywhere in this skill, it is stale: check https://elevenlabs.io/docs/api-reference/speech-to-text/convert for the current `model_id` enum before restoring it.
 
-Scribe v2 is billed at $0.22 per hour of audio on the API rate card (see [pricing.md](pricing.md)).
+Scribe v2 is billed at $0.20 per hour of audio on the API rate card (see [pricing.md](pricing.md)). ElevenLabs now lists `scribe_v3` as its successor at the same price; switching `model_id` in `scribe_call()` is untested here, so verify a short clip first.
 
 ## Punctuation stripping (Step 0 of `burn-hebrew-captions.sh`)
 
@@ -32,16 +32,23 @@ The implementation reason matters too: the python-bidi + libass double-reversal 
 Every successful run writes two artifacts:
 
 - `<output>.mp4` , the burned-in captioned video.
-- `<output>.he.srt` , the merged final SRT (post-Scribe-recovery, post-chunking, pre-burn). Upload this as a sidecar caption track to YouTube/Vimeo when you want the captions as user-toggleable text instead of burned pixels. Distinct from the raw Scribe output (which is in the temp `WORKDIR`).
+- `<output>.he.srt` , the merged final SRT (post-Scribe-recovery, post-chunking, pre-burn). Upload this as a sidecar caption track to YouTube/Vimeo when you want the captions as user-toggleable text instead of burned pixels. 
+
+There is no transcript cache. Every run calls Scribe again and is billed again; to fix captions without re-transcribing, edit `<output>.he.srt` and burn it with `burn-hebrew-captions.sh --srt`.
 
 ## Flags
 
 | Flag | Effect |
 |---|---|
 | `--strip-fillers` | Remove ALWAYS-FILLER Hebrew tokens from caption text. Audio is untouched. The set is exactly `אֶה, אה, אֶמ, אממ, אמממ, אהמ, המ, ממ` (see `hebrew-filler-words.md`). **`אם` is deliberately NOT in it**, it means "if/whether" and auto-cutting it silently changes meaning; `וואלה` is context-dependent and is not auto-cut either. Do not add either one back. |
-| `--yes` | Skip the cost-confirmation prompt. Useful in CI / batch / scripted runs. |
+| `--yes` | Skip the cost-confirmation prompt. Without a terminal (an agent's shell, CI) and without `--yes`, the script prints the estimate and exits with code 3 before sending anything; show the user the estimate and re-run with `--yes` once they agree. |
 | `--output PATH` | Override the default `<input>.captioned.<ext>` output path. |
-| `--ffmpeg PATH` | Override the `ffmpeg` binary (e.g. `/tmp/ffmpeg` for the static evermeet build on macOS, where Homebrew ffmpeg often lacks libass). |
+| `--ffmpeg PATH` | Override the `ffmpeg` binary, e.g. `/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg` on macOS, where the default Homebrew ffmpeg has no libass. |
+| `--audio-track N` | Zero-based audio stream to transcribe (default 0). OBS recordings often carry the mic on track 1. A silent track is refused before upload. |
+| `--max-gap-calls N` | Cap on extra billed gap-recovery calls (default 10). Gaps beyond the cap stay uncaptioned and are logged. |
+| `--font NAME`, `--fontsdir PATH` | Caption font (only Heebo is accepted: line widths are measured on it) and the font directory passed to libass. |
+| `--font-size N`, `--margin-v N` | Absolute pixels. Default `auto` lets `burn-hebrew-captions.sh` scale both from the frame height. |
+| `--keep-work` | Keep the temp work directory (Scribe JSON, extracted audio) for debugging. |
 
 ## Uploading the side-export SRT to YouTube/Vimeo
 
@@ -49,6 +56,6 @@ The `<output>.he.srt` written alongside the MP4 is a standard SRT in source-byte
 
 - **YouTube**: Studio > select video > Subtitles > Add language > Hebrew > Upload file > pick the `.he.srt`. Choose "With timing" since the file has timestamps.
 - **Vimeo**: video Settings > Distribution > Subtitles > Add new file > Language: Hebrew > Upload.
-- **Self-hosted / Plyr / Video.js**: reference the `.he.srt` as a `<track kind="captions" srclang="he" src="...">` child of the `<video>` element.
+- **Self-hosted / Plyr / Video.js**: browsers' `<track>` element needs WebVTT, not SRT. Convert first (`ffmpeg -i x.he.srt x.he.vtt`), then reference the `.vtt` as `<track kind="captions" srclang="he" src="...">` inside the `<video>` element.
 
 The advantage over burned-in pixels: users can toggle captions off, accessibility tools can read them, and search engines can index the text.

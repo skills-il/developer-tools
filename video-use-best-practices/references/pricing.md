@@ -9,15 +9,15 @@ video-use is free; underlying services are paid. Mode determines cost.
 | **A. Captions-only** (`scripts/captions-only.sh`) | Transcribe + burn Hebrew captions on original. No cuts. | Lectures, webinars, podcast videos. | **~$1-3 total** |
 | **B. Full cut** (default video-use flow) | Inventory → strategy → cut → render → self-eval. | Teaser from raw footage; multi-take selection. | **~$25-60** (1hr); **$120-300** (3hr). Scales super-linearly. |
 
-Per-unit: Scribe v2 is **$0.22 per hour** of audio on the API rate card (Scribe v2 Realtime is $0.39). `scribe_v1` was removed on 9 July 2026, so `scribe_v2` is the only model the scripts may send. Claude tokens depend on mode. Local FFmpeg/libass rendering is $0.
+Per-unit: Scribe v2 is **$0.20 per hour** of audio on the API rate card (Scribe v2 Realtime is $0.22). ElevenLabs also lists `scribe_v3` at $0.20/hr as v2's successor; the bundled scripts still send `scribe_v2` (v3 untested here). `scribe_v1` is deprecated (ElevenLabs announced its removal for 9 July 2026). Claude tokens depend on mode. Local FFmpeg/libass rendering is $0.
 
-**Two rate cards, do not mix them.** $0.22/hr is the pay-as-you-go **API** rate. On a subscription you spend **credits**: STT bills ~330 credits/minute, so an hour of audio is 19,800 credits, two thirds of Starter's 30,000. Dollar figures here assume the API rate; the free-tier warning below assumes credits.
+**Two rate cards, do not mix them.** $0.20/hr is the pay-as-you-go **API** rate. On a subscription you spend **credits**: STT bills ~330 credits/minute, so an hour of audio is 19,800 credits, two thirds of Starter's 30,000. Dollar figures here assume the API rate; the free-tier warning below assumes credits.
 
 **Free-tier reality check (the "$1-3" assumes the API rate; Starter is $6/mo for 30,000 credits).** ElevenLabs free tier is **10,000 credits/month**, and Speech-to-Text bills ~330 credits/minute (the per-character figure is for text-to-speech, not STT), so it covers only **~30 minutes of transcription/month**. A 10-minute Hebrew talking-head uses ~3,300 credits; gap-recovery (Step 8) re-transcribes dropped windows, counting again. So free tier yields **two or three short videos/month** before the quota wall. Warn non-technical users upfront.
 
 **Validated test (May 2026, 11:29 source → 75s teaser via Full cut):** Scribe $0.08 + Claude $9.50 = **~$9.60 first pass**, ~$1-3 per iteration.
 
-**Pick the cheap one if unsure.** Captions-only is 20-100x cheaper than Full cut for long videos and produces the same caption quality. If you decide to cut later, the Scribe transcript is already cached.
+**Pick the cheap one if unsure.** Captions-only is 20-100x cheaper than Full cut for long videos and produces the same caption quality. `captions-only.sh` keeps no transcript cache, so each run is billed. Cutting later (Mode B) transcribes again with upstream's helper.
 
 **Pricing trap:** `no_verbatim=true` on Scribe sounds like it saves money by dropping fillers but is destructive (agent loses the ability to make per-instance keep/cut decisions, usually leads to a re-transcription). Keep `no_verbatim=false` (default) and run the Hebrew lexicon post-pass instead.
 
@@ -29,12 +29,13 @@ Per-unit: Scribe v2 is **$0.22 per hour** of audio on the API rate card (Scribe 
 
 | Item | Value | Source |
 |---|---|---|
-| Scribe v2, API pay-as-you-go | $0.22 per hour of audio | elevenlabs.io/pricing/api |
-| Scribe v2 Realtime, API | $0.39 per hour of audio | elevenlabs.io/pricing/api |
+| Scribe v2, API pay-as-you-go | $0.20 per hour of audio | elevenlabs.io/pricing/api |
+| Scribe v2 Realtime, API | $0.22 per hour of audio | elevenlabs.io/pricing/api |
+| Scribe v3 (v2's successor, untested here) | $0.20 per hour of audio | elevenlabs.io/pricing/api |
 | Speech-to-text, credit rate | ~330 credits per minute (19,800/hour) | elevenlabs.io/pricing |
 | Free plan | $0, 10,000 credits/month (~30 min of STT) | elevenlabs.io/pricing |
 | Starter | $6/month, 30,000 credits | elevenlabs.io/pricing |
 | Creator | $22/month, 121,000 credits | elevenlabs.io/pricing |
-| `scribe_v1` | Removed 9 July 2026. Migrate to `scribe_v2` or `scribe_v2_realtime`. | elevenlabs.io/docs/changelog/2026/6/8 |
+| `scribe_v1` | Deprecated; removal announced for 9 July 2026. Migrate to `scribe_v2` or `scribe_v2_realtime`. | elevenlabs.io/docs/changelog/2026/6/8 |
 
-Re-check this page whenever a cycle touches cost text. ElevenLabs has changed Scribe pricing twice in 2026.
+Re-check this page whenever a cycle touches cost text. ElevenLabs has changed Scribe pricing three times in 2026 (last seen 2026-11-11).

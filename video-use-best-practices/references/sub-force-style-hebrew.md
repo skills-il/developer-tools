@@ -32,6 +32,8 @@ Alternatives are intentionally listed second:
 
 If the brand requires a specific Hebrew font not on this list, override `FontName` to that font's PostScript name and confirm via `fc-match "<FontName>:lang=he"` that fontconfig resolves to it (not to a fallback).
 
+These alternatives apply to the `render.py` `SUB_FORCE_STYLE` path only. `scripts/burn-hebrew-captions.sh` (and so `captions-only.sh`) accepts Heebo only, because its line-width estimate is measured on Heebo.
+
 ## Variant 1: `bold-overlay-he`, short-form social, kinetic typography
 
 Drop-in replacement for the upstream `bold-overlay`. Use for TikTok/Reels/Shorts that need fast-paced kinetic typography.

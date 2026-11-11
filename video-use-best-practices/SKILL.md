@@ -21,11 +21,11 @@ video-use is free; underlying services are paid. Mode determines cost.
 | **A. Captions-only** (`scripts/captions-only.sh`) | Transcribe + burn Hebrew captions on original. No cuts. | Lectures, webinars, podcast videos. | **~$1-3 total** |
 | **B. Full cut** (default video-use flow) | Inventory, strategy, cut, render, self-eval. | Teaser from raw footage; multi-take selection. | **~$25-60** (1hr); **$120-300** (3hr). Scales super-linearly. |
 
-Scribe v2 is **$0.22 per hour** of audio on the API rate card. `scribe_v1` was removed on 9 July 2026, so `scribe_v2` is the only model the scripts may send. Claude tokens dominate Mode A's cost; local FFmpeg rendering is $0.
+Scribe v2 is **$0.20 per hour** of audio on the API rate card (re-checked 2026-11-11). `scribe_v1` is deprecated (ElevenLabs announced its removal for 9 July 2026), so the bundled scripts send `scribe_v2`. ElevenLabs now lists `scribe_v3` (same $0.20/hr) as v2's successor; this skill has not tested v3 yet. Claude tokens dominate Mode A's cost; local FFmpeg rendering is $0.
 
-**Two rate cards, do not mix them.** $0.22/hr is pay-as-you-go **API**. On a subscription you spend **credits**: STT bills ~330 credits/minute, so an hour is 19,800 credits, two thirds of Starter's 30,000 ($6/mo). The free plan's 10,000/month covers ~30 minutes. Warn non-technical users upfront.
+**Two rate cards, do not mix them.** $0.20/hr is pay-as-you-go **API**. On a subscription you spend **credits**: STT bills ~330 credits/minute, so an hour is 19,800 credits, two thirds of Starter's 30,000 ($6/mo). The free plan's 10,000/month covers ~30 minutes. Warn non-technical users upfront.
 
-**Pick the cheap one if unsure.** Captions-only is 20-100x cheaper on long videos, produces the same caption quality, and caches the transcript, so cutting later costs little extra.
+**Pick the cheap one if unsure.** Captions-only is 20-100x cheaper on long videos, and produces the same caption quality. There is no transcript cache: every run is billed.
 
 **Pricing trap:** `no_verbatim=true` sounds like a saving but is destructive (the agent loses per-instance keep/cut decisions, usually forcing a re-transcription). Keep `no_verbatim=false` and run the Hebrew lexicon post-pass instead.
 
@@ -39,38 +39,40 @@ This skill is an **overlay** on top of video-use's upstream SKILL.md. Read the u
 
 On the **first turn of a new session** (not on follow-ups within the same session), state the price disclaimer AND ask which mode. Both in one message. Do NOT re-show this on subsequent turns once the user has picked.
 
-> *"לפני שמתחילים, חשוב שתדע: השימוש בסקיל הזה צורך מ-ElevenLabs (כ-$0.22 לשעת אודיו) ומ-Anthropic Claude (תלוי במסלול). העלות מצטברת אצלך, לא אצלי. שני מסלולים:*
+> *"לפני שמתחילים, חשוב שתדע: השימוש בסקיל הזה צורך מ-ElevenLabs (כ-$0.20 לשעת אודיו) ומ-Anthropic Claude (תלוי במסלול). העלות מצטברת אצלך, לא אצלי. שני מסלולים:*
 >
 > *(א) כתוביות בלבד על כל הסרטון, בלי חיתוך. כ-$1 עד $3 לכל סרטון. מתאים להרצאה, וובינר, פודקאסט.*
 >
-> *(ב) חיתוך לטיזר/קליפ קצר עם כתוביות. כ-$10 עד $300 לפי אורך המקור.*
+> *(ב) חיתוך לטיזר/קליפ קצר עם כתוביות. כ-$25 עד $300 לפי אורך המקור.*
 >
 > *מה אתה מעדיף?"*
 
-English: *"Before we start, costs: ElevenLabs (~$0.22/hr) + Claude (depends on mode). Two paths: (A) captions-only ~$1-3, or (B) full cut ~$10-300. Which one?"*
+English: *"Before we start, costs: ElevenLabs (~$0.20/hr) + Claude (depends on mode). Two paths: (A) captions-only ~$1-3, or (B) full cut ~$25-300. Which one?"*
 
-Routing: **A → Step 8** (skip 1-7). **B → Step 1**. **Unsure → recommend A** (Scribe transcript caches, so adding B later only adds ~$0.08).
+Routing: **A → Step 8** (skip 1-7). **B → Step 1**. **Unsure → recommend A** (adding B later re-transcribes with upstream's helper, about $0.20 per hour of footage in Scribe; Claude dominates B's cost).
 
 ### Step 1: Verify the environment before the first render
 
 Hard Rule 1 (subtitles applied LAST in filter chain) plus libass font resolution means a missing Hebrew font, a missing libass build, or a missing python-bidi install all produce silent failures: the SRT renders as `□□□` boxes burned into the final video, or as Hebrew with characters in the wrong positions. Verify all three before you cut.
 
 ```bash
-# 1. ffmpeg has libass + fontconfig + libharfbuzz
-ffmpeg -version 2>&1 | grep -oE 'enable-(libass|fontconfig|libharfbuzz|libfreetype)' | sort -u
-# Expect: enable-fontconfig, enable-libass, enable-libfreetype, enable-libharfbuzz
+# 1. ffmpeg has the libass subtitles filter (test the filter, not configure flags)
+ffmpeg -hide_banner -filters 2>/dev/null | grep -E ' (subtitles|ass) '
+# Expect two lines. Homebrew's default ffmpeg prints nothing.
 
 # 2. Hebrew fonts are installed (Heebo, Rubik, Assistant, Noto Sans Hebrew)
 fc-list :lang=he | head -5
 
 # 3. python-bidi is installed (needed for the macOS BiDi workaround in Step 7)
-python3 -c 'import bidi; print(bidi.__version__)'
+python3 -c 'from bidi.algorithm import get_display; print("ok")'
 ```
 
 If any check fails:
-- Missing libass in ffmpeg → read `references/macos-ffmpeg-setup.md`, install the static evermeet build or use the homebrew-ffmpeg tap.
-- Missing Hebrew fonts → `bash scripts/install-hebrew-fonts.sh` (idempotent installer for the canonical 4 fonts).
-- Missing python-bidi → `pip3 install python-bidi`.
+- No `subtitles` filter → `brew install ffmpeg-full` and pass `--ffmpeg /opt/homebrew/opt/ffmpeg-full/bin/ffmpeg` (see `references/macos-ffmpeg-setup.md`).
+- Missing Hebrew fonts → `bash scripts/install-hebrew-fonts.sh` (user-level, no root, pinned and checksummed downloads).
+- Missing python-bidi → `python3 -m pip install --user python-bidi`.
+
+**Mode B transcription: patch upstream's model first.** Upstream `helpers/transcribe.py` (checked at commit `43cfc56`) still sends `"model_id": "scribe_v1"`, the deprecated model. Before the first Mode B transcription, change that value to `scribe_v2` in your local video-use checkout. Upstream also gained `--audio-track N` (OBS puts the mic on track 1) and now refuses to upload a silent track.
 
 ### Step 2: Override `SUB_FORCE_STYLE` for Hebrew
 
@@ -89,12 +91,14 @@ SUB_FORCE_STYLE_HE = (
     "BorderStyle=1,Outline=2,Shadow=0,"
     "Alignment=2,"
     "Spacing=2,"             # default Hebrew tracking is cramped in libass
-    "MarginV=50,"            # Hebrew descenders + diacritics need more bottom clearance than Latin
+    "MarginV=50,"            # landscape only; for 9:16 use vertical-social-he (upstream: keep >= ~75)
     "Encoding=1"             # libass rule: MUST always be 1
 )
 ```
 
 **Important:** overriding `SUB_FORCE_STYLE` is necessary but NOT sufficient on macOS. video-use's render.py path produces SRT files, and SRT + libass + BiDi is unreliable on macOS regardless of style settings. You must ALSO follow Step 7 (caption burn-in recipe) to get correct visual output. The override in this step ensures the right font and spacing for when libass eventually gets there.
+
+**Chunk size.** Upstream `render.py --build-subtitles` now groups cues with `chunk_words()`, driven by module constants `CHUNK_WORDS = 2` and `CHUNK_MAX_WORDS = 3`. For the 4-6 word Hebrew chunks below, raise those two constants in your checkout; the style override alone does not change chunking.
 
 The full ready-to-use override file is at `references/sub-force-style-hebrew.md` with three variants: `bold-overlay-he` (kinetic typography, 4-6 word chunks since UPPERCASE does not exist in Hebrew), `natural-sentence-he` (documentary/tutorial), and `vertical-social-he` (1080x1920 with `MarginV=120` to clear platform UI).
 
@@ -132,14 +136,7 @@ Apply the same rule as upstream: do not strip mid-phrase. Treat detected ALWAYS-
 
 ### Step 5: Animation slots, defer to existing Hebrew skills
 
-video-use's upstream SKILL.md says: *"Do not default to Remotion just because the animation is web-adjacent."* For Hebrew animation slots, the priority is the same, and we have a dedicated skill per engine:
-
-| Slot type | Engine | Skill to load into the sub-agent prompt |
-|-----------|--------|------------------------------------------|
-| Kinetic typography, callout cards, product UI motion | HyperFrames | `hyperframes-best-practices` (covers Heebo via Google Fonts auto-fetch, `dir="rtl"`, `<bdi>` for mixed scripts) |
-| Component-state compositions, existing Remotion brand system | Remotion | `remotion-best-practices` (covers Hebrew Google Fonts, bidi text animations) |
-| Diagrams, equation derivations | Manim | (no Hebrew skill yet, Manim's Hebrew support is limited; pre-render Hebrew labels as PNG and import as `ImageMobject`) |
-| Simple counters, typewriter, single bar reveals | PIL | Use `Pillow.ImageFont.truetype("Heebo-Bold.ttf", size, layout_engine=ImageFont.Layout.RAQM)` to enable HarfBuzz-based BiDi. Without `RAQM`, Pillow draws glyphs in input order and Hebrew comes out backwards |
+Pick the engine per slot type (HyperFrames for kinetic typography, Remotion for component-state work, PIL with `layout_engine=ImageFont.Layout.RAQM` for simple counters). The full table, with the Hebrew skill to load for each engine, is in `references/animation-slots.md`.
 
 When spawning a parallel sub-agent for a Hebrew animation slot, include in the prompt: *"This is a Hebrew animation. Load `hyperframes-best-practices` (or `remotion-best-practices`) before writing any composition code. Use Heebo as the default font."* The 10-point sub-agent brief from upstream SKILL.md applies unchanged.
 
@@ -149,7 +146,7 @@ Upstream's self-eval runs `timeline_view` at every cut boundary and checks four 
 
 The mandatory protocol:
 
-**Do not hand-roll the crop.** `burn-hebrew-captions.sh` already writes verification frames into a `verify_*/` directory, cropped to where it actually placed the captions. Open those. A fixed crop like `crop=iw:200:0:ih-220` was correct only while the margin was a fixed 80px; now that geometry is a ratio of frame height, that strip holds no captions at all on a 9:16 render, so a self-eval against it certifies an empty band.
+**Do not hand-roll the crop.** `burn-hebrew-captions.sh` writes verification frames into `verify_*/`, cropped to where it placed the captions. Open those. A fixed strip like `crop=iw:200:0:ih-220` holds no captions on a 9:16 render, where the margin is 31% of the height.
 
 To sample a boundary the script missed, derive the window from the values it logged (`Font Npx, bottom margin Mpx`):
 
@@ -173,6 +170,8 @@ Then **open each PNG and verify with your own eyes**:
 
    **If the pixel LTR order matches the source byte order instead of being reversed, BiDi was not applied.** Symptoms: words look correctly shaped but appear in "English-style" left-to-right positions, with period on the right. This is the most common Hebrew failure on macOS and the recipe in Step 7 fixes it.
 
+   **On a two- or three-line cue, the TOP line must hold the start of the sentence.** If the end of the sentence sits on top, libass wrapped pre-shaped (display-order) text; see Step 7.
+
 Keep the 3-pass cap from upstream. After 3 failed renders, stop iterating and flag to the user, the problem is environmental (font install, ffmpeg build, missing python-bidi), not editorial.
 
 **Honest example:** the first validated run (May 2026) passed self-eval because the agent only checked for "no boxes", not pixel-vs-source order. Output had perfect Heebo glyphs but every Hebrew line was reversed (libass skipped BiDi). Step 7 fixes it.
@@ -192,18 +191,20 @@ bash scripts/burn-hebrew-captions.sh \
   --base   edit/base.mp4 \
   --srt    edit/master.srt \
   --out    edit/final.mp4 \
-  --ffmpeg /tmp/ffmpeg
+  --ffmpeg /opt/homebrew/opt/ffmpeg-full/bin/ffmpeg
 ```
 
 **Why (macOS):** `ffmpeg -i master.srt master.ass` alone does not fix BiDi; the python-bidi pre-shape converts logical to display order before libass sees it. Always verify rendered frames by comparing pixel order to source byte order, not just "no boxes" (a line can render with perfect glyphs yet be fully reversed).
 
 **Caption geometry auto-scales off the probed frame height.** The script rewrites `PlayResY: 288` to the real height, which changes the unit `MarginV`, `FontSize`, `Outline` and the side margins are expressed in, so the old fixed values meant something different at every resolution. Measured on 1080x1920, they put the baseline 4.6% from the bottom, inside the UI band upstream's `MarginV=90` (31.25%) exists to clear. A 9:16 source now uses upstream's ratios; landscape, 4:5 and square keep the previously shipping ones, so the lecture case is unchanged. `--font-size` and `--margin-v` still win. See `references/sub-force-style-hebrew.md`.
 
+**Long lines are wrapped BEFORE the pre-shape.** libass wraps from the left, so letting it wrap display-order text puts the END of the sentence on the top line (measured on a 1080x1920 render). The script estimates each line's width from the font size and splits it into balanced lines in reading order first, then pre-shapes each line. A hand-rolled recipe must do the same.
+
 **Validated on macOS only.** On a libass build that DOES reorder, pre-shaped text is reversed a second time and every caption comes out backwards with no error. The script warns when `uname -s` is not `Darwin`; elsewhere, check the verification frames first and confirm the FIRST source word lands at the visual RIGHT.
 
 **The pre-shape must force RTL base direction.** `get_display(line)` alone infers paragraph direction from the first strong character, so a caption starting with a Latin token ("React הוא מעולה") is treated as an LTR paragraph and renders in reversed word order. The script passes `base_dir='R'`. Do not remove it, and add it to any pre-shape you write yourself.
 
-Note: since v1.3.0 the script sanitizes into a working copy and **no longer rewrites the SRT you pass to `--srt`** (earlier versions overwrote video-use's own `master.srt`). `captions-only.sh` copies the sidecar `.he.srt` before the burn, so it keeps punctuation the burned-in captions do not.
+The script sanitizes into a working copy and never rewrites the file passed to `--srt`.
 
 ### Step 8: Long video, captions-only mode (cheap path for non-editors)
 
@@ -214,18 +215,19 @@ The bundled `scripts/captions-only.sh` collapses the full workflow into one comm
 ```bash
 bash scripts/captions-only.sh ~/Movies/my-lecture.mp4 \
   [--strip-fillers]   # drop אה/אממ from the on-screen text; audio untouched
-  [--yes]             # skip the cost-confirmation prompt (CI / batch)
-  [--output PATH] [--ffmpeg /tmp/ffmpeg]
+  [--yes]             # only after the user approved the printed estimate
+  [--audio-track N] [--max-gap-calls N] [--output PATH] [--ffmpeg PATH]
 ```
 
 What it does, end-to-end:
-1. Auto-detects `ELEVENLABS_API_KEY` from env or `~/Developer/video-use/.env`
-2. Probes the video duration and prints the estimated Scribe cost (unless `--yes` is passed)
-3. Transcribes the full video via **Scribe v2** with `language_code=heb` and `timestamps_granularity=word` (`scribe_v1` was removed on 9 July 2026 and now returns an error)
-4. **Auto-recovers Scribe gaps** (v1.2.7+): re-transcribes any 30s+ mid-file silence, or a tail ending >10s early, and merges the words back in. Scribe silently drops chunks on long Hebrew files. Each recovery is an extra billed call beyond the quoted estimate.
-5. Builds an SRT chunking 5-7 words per caption, breaking on silence ≥250ms or sentence-end punctuation
-6. (Optional) strips ALWAYS-FILLER tokens from the SRT if `--strip-fillers` is passed
-7. Invokes `burn-hebrew-captions.sh` which:
+1. Checks the burn step can run (libass filter, font, python-bidi) BEFORE anything is billed, and reads `ELEVENLABS_API_KEY` from the environment only
+2. Probes the duration and prints the estimated Scribe cost. With no terminal (an agent's shell) and no `--yes`, it stops there with exit code 3 and sends nothing: show the user the estimate, and re-run with `--yes` only once they agree
+3. Extracts one audio track as mono AAC (`--audio-track N`, default 0), refuses a silent track, and uploads that audio rather than the video file, so a multi-GB lecture is a ~29 MB/hour upload
+4. Transcribes via **Scribe v2** with `language_code=heb` and `timestamps_granularity=word`
+5. **Auto-recovers Scribe gaps**: re-transcribes any 30s+ mid-file silence, or a tail ending >10s early, and merges the words back in. Each recovery is an extra billed call; near-silent windows are skipped unbilled, and at most `--max-gap-calls` (default 10) are made. A window that still fails is reported with a WARN line and stays uncaptioned. Every run transcribes from scratch; there is no transcript cache.
+6. Builds an SRT chunking 5-7 words per caption, breaking on silence ≥250ms or sentence-end punctuation
+7. (Optional) strips ALWAYS-FILLER tokens from the SRT if `--strip-fillers` is passed
+8. Invokes `burn-hebrew-captions.sh` which:
    - **Strips sentence-end `.`/`?`/`!` from Hebrew lines by default** (BBC/Netflix caption style), because punctuation position under the pre-shape recipe is unpredictable across script mixes. To keep it, comment out the `SENTENCE_END` block in Step 0 of `burn-hebrew-captions.sh`.
    - Does the python-bidi pre-shape + libass burn with Heebo + verify frames
 
@@ -233,22 +235,13 @@ Output lands at `<input>.captioned.<ext>` (or `--output`). The merged SRT is wri
 
 **Tuning:** thresholds and punctuation-stripping are documented in `references/captions-only-tuning.md`. Both the main pass and gap recovery use `scribe_v2`; there is no v1/v2 split to tune any more.
 
-**Cost (API rate):** a 1-hour Hebrew lecture is ~$0.22 Scribe + ~$1 Claude = **~$1.20**. A 3-hour webinar: ~$0.66 + ~$2 = **~$2.70**. The $1-3 band holds because Claude tokens dominate. Full cut on the same 3-hour source: **$120-300**.
+**Cost (API rate):** a 1-hour Hebrew lecture is ~$0.20 Scribe + ~$1 Claude = **~$1.20**. A 3-hour webinar: ~$0.60 + ~$2 = **~$2.60**. The $1-3 band holds because Claude tokens dominate. Full cut on the same 3-hour source: **$120-300**.
 
 **When NOT to use this:** cutting to a teaser, picking the best of several takes, or rearranging beats all need the full Steps 1-7 workflow. Captions-only just captions the original.
 
 ### Step 9: Sample Hebrew prompts to drive the conversation phase
 
-video-use's "Converse" step (step 3 of "The process") asks questions shaped by the material. Sample Hebrew prompts users send:
-
-| Hebrew user message | What it maps to in the upstream workflow |
-|---------------------|------------------------------------------|
-| "ערוך את הקבצים האלה לסרטון השקה" | "edit these into a launch video", full inventory then strategy then execute |
-| "תנקה את השתיקות ואת המילים המיותרות" | Filler removal + dead-space cuts only |
-| "תוסיף כתוביות בעברית במרכז התחתון" | Subtitle generation with Hebrew SUB_FORCE_STYLE override AND `burn-hebrew-captions.sh` |
-| "תוסיף גרידינג חם" | `grade.py --filter` with `warm_cinematic` preset (works language-agnostic) |
-| "תפצל למקטעים של 30 שניות לאינסטה" | Vertical 1080x1920 reformat with `vertical-social-he` style |
-| "תבדוק שאין שגיאות בכתוביות בעברית" | Trigger Step 6 frame-sampling self-eval (glyph fallback + RTL pixel order) |
+Typical Hebrew requests and the upstream workflow each maps to are in `references/conversation-prompts.md`.
 
 ## Examples
 
@@ -256,7 +249,7 @@ video-use's "Converse" step (step 3 of "The process") asks questions shaped by t
 
 User says: *"תוסיף כתוביות לסרטון הזה."* (no editing requested)
 
-Step 0 mode pick: A. Then: `bash scripts/captions-only.sh ~/Movies/lecture.mp4`. Done. Output `lecture.captioned.mp4` + side `lecture.he.srt` for YouTube. ~$1-3 total.
+Step 0 mode pick: A. Then `bash scripts/captions-only.sh ~/Movies/lecture.mp4`, which prints the Scribe estimate and stops (exit 3) in an agent's shell. Relay the estimate, and after the user agrees re-run with `--yes`. Output `lecture.captioned.mp4` + side `lecture.captioned.he.srt` for YouTube. ~$1-3 total.
 
 ### Example 2: Raw footage to edited cut with captions
 
@@ -283,14 +276,14 @@ video-use is a standalone Claude Code skill and does not require any MCP server.
 | Noto Sans Hebrew | https://fonts.google.com/noto/specimen/Noto+Sans+Hebrew | Hebrew script coverage |
 | Unicode BiDi algorithm | https://www.unicode.org/reports/tr9/ | UAX #9, directional isolation rules for mixed Hebrew+Latin |
 | python-bidi | https://github.com/MeirKriheli/python-bidi | `get_display()` for the macOS BiDi workaround |
-| ElevenLabs Scribe v2 | https://elevenlabs.io/blog/introducing-scribe-v2 | Current Scribe model (v2, January 2026). Multi-language transcription, Hebrew supported. (meet-scribe was the v1 announcement.) |
+| ElevenLabs Scribe v2 | https://elevenlabs.io/blog/introducing-scribe-v2 | The Scribe v2 announcement (the model the scripts send). ElevenLabs' models page now names `scribe_v3` its successor. |
 | ElevenLabs pricing | https://elevenlabs.io/pricing | Scribe per-hour cost and free tier limits |
 
 ## Bundled Resources
 
 ### Scripts
 
-- `scripts/install-hebrew-fonts.sh`: Idempotent installer for Heebo, Rubik, Assistant, Noto Sans Hebrew. macOS (Homebrew cask) and Debian/Ubuntu (apt + manual fallback) paths. Re-runs `fc-cache` and verifies via `fc-list :lang=he`.
+- `scripts/install-hebrew-fonts.sh`: Idempotent, user-level installer for Heebo, Rubik, Assistant, Noto Sans Hebrew on macOS and Linux. No root, no package manager: downloads the TTFs from the google/fonts repo at a pinned commit, verifies each SHA-256, installs into the per-user font directory, refreshes `fc-cache`.
 - `scripts/burn-hebrew-captions.sh`: The Step 7 caption burn-in recipe in one command. Pre-shapes SRT with python-bidi, converts to ASS, patches PlayRes/Style/Spacing, burns with explicit fontsdir, samples verification frames. Pre-flight checks that ffmpeg has libass and that Hebrew fonts exist before running. Step 0 of the script also sanitizes Scribe garbage characters (Devanagari etc.) with auto-fixes.
 - `scripts/captions-only.sh`: The Step 8 cheap path for non-technical users. One command, full video in, captioned full video out. Transcribes via Scribe, builds SRT, optionally strips ALWAYS-FILLER tokens (`--strip-fillers`), then runs burn-hebrew-captions.sh. ~$1-3 total regardless of video length, vs. ~$25-300 for the full cut workflow.
 
@@ -298,7 +291,9 @@ video-use is a standalone Claude Code skill and does not require any MCP server.
 
 - `references/sub-force-style-hebrew.md`: Three ready-to-use `SUB_FORCE_STYLE` overrides for Hebrew (`bold-overlay-he`, `natural-sentence-he`, `vertical-social-he`). Documents why each value differs from the upstream Latin defaults, including PlayResX/Y and Spacing notes.
 - `references/hebrew-filler-words.md`: Annotated Hebrew filler list with editorial guidance (which are always-fillers vs. sometimes-load-bearing). Drop-in for the Step 3 post-pass.
-- `references/macos-ffmpeg-setup.md`: Fixes for the common Homebrew ffmpeg-without-libass trap and other macOS-specific gotchas (loudnorm on freeze frames, drawtext fallback to PIL, libass+SRT BiDi failure mode).
+- `references/macos-ffmpeg-setup.md`: Fixes for the common Homebrew ffmpeg-without-libass trap and other macOS-specific gotchas (drawtext fallback to PIL, libass+SRT BiDi failure mode).
+- `references/animation-slots.md`: Engine-per-slot table for Hebrew animation slots and which skill each sub-agent loads.
+- `references/conversation-prompts.md`: Sample Hebrew requests and the upstream workflow step each maps to.
 - `references/known-limitations.md`: Validated-vs-assumed boundaries, unvalidated style variants, and behaviours this skill does not cover.
 - `references/captions-only-tuning.md`: All `captions-only.sh` tunables in one place , thresholds (`MAX_WORD_DUR`, `GAP_THRESHOLD`, `TAIL_THRESHOLD`, `MAX_DISPLAY_SEC`), the punctuation-stripping default + how to disable, side-output paths, and the full flags reference. Read this before changing any caption behavior.
 - `references/quick-test.md`: 10-second synthetic Hebrew test video recipe (uses macOS `say -v Carmit` + ffmpeg). Costs ~$0.001 in Scribe and lets you validate the full pipeline end-to-end without burning your free-tier quota on real footage.
@@ -308,10 +303,9 @@ video-use is a standalone Claude Code skill and does not require any MCP server.
 - **Scribe occasionally drops non-Hebrew Unicode characters into Hebrew transcripts.** Most commonly Devanagari (`्` `स`) at the end of words where the speaker's soft `-s` or `-m` ending sounded ambiguous. Classic failure: "סקילים" transcribed as "סקיל्स". These chars render as boxes in the burn. `burn-hebrew-captions.sh` Step 0 auto-fixes the known patterns and warns on unknown ones; extend `auto_fixes` when you find more.
 - **Helvetica is the most common mistake.** The bundled `SUB_FORCE_STYLE` in `render.py` uses `FontName=Helvetica`. Helvetica's Hebrew glyphs do NOT exist in the macOS or Linux Helvetica builds (Apple's "Helvetica" font is Latin-only; Linux usually maps it to a metric-equivalent). libass silently falls back to a tofu box. Always override `FontName` to a known Hebrew font before invoking the caption-burn step.
 - **The python-bidi pre-shape is required on macOS, do NOT skip it or feed a raw SRT.** macOS libass does not reliably apply BiDi reordering to a raw SRT even when libfribidi is linked, so feeding the source SRT directly to `subtitles=` renders Hebrew reversed (characters drawn left-to-right in source byte order, period on the right). Pre-shaping with python-bidi (`get_display`) before the SRT->ASS burn is what makes the on-screen result RTL-correct. Do NOT remove the python-bidi step or feed a raw SRT, either one silently flips the layout back to reversed/broken. Any older note claiming libass handles SRT BiDi without the pre-shape is wrong for macOS.
-- **Homebrew's default ffmpeg lacks libass and fontconfig.** As of 2026-05, a fresh `brew install ffmpeg` produces a binary that cannot burn captions at all. See `references/macos-ffmpeg-setup.md` for the static-build or homebrew-tap fixes.
+- **Homebrew's default ffmpeg lacks libass.** Re-checked 2026-11 on the 9.0.2 bottle: no `subtitles` filter, so it cannot burn captions at all. Use the keg-only `ffmpeg-full` formula (`references/macos-ffmpeg-setup.md`).
 - **2-word UPPERCASE chunks do not translate to Hebrew.** Hebrew has no uppercase. Do not try to fake it with `\fnHeebo Bold`, the result looks the same as regular Heebo. The Hebrew kinetic-typography equivalent is bold weight + larger size + tighter line breaks (4-6 Hebrew words per chunk, since Hebrew words are shorter than English on average).
 - **`fontsdir=` is more reliable than fontconfig.** Even when `fc-match Heebo` resolves correctly, the `subtitles` filter sometimes ignores fontconfig and falls back to libass's built-in font, producing the wrong typeface in the burned-in output. Always pass `subtitles=foo.ass:fontsdir=$HOME/Library/Fonts` (or wherever Heebo lives per `fc-list :family=Heebo file`).
-- **`loudnorm` fails on freeze frames with silent audio.** If your edit ends with a freeze frame that has no audio (or has dead air longer than ~1.5s), `loudnorm` returns `I=-inf` and aborts. Workarounds: layer 2 seconds of room tone over the freeze before rendering, or skip loudnorm entirely with `--no-loudnorm` (audio stays at original levels, no normalization applied).
 - **`drawtext` may be missing in static ffmpeg builds** even when other filters work. If you need text overlays outside of subtitles (e.g., a CTA freeze frame caption), test with `ffmpeg -h filter=drawtext` first. If unavailable, generate the overlay via PIL (with `layout_engine=ImageFont.Layout.RAQM` for Hebrew) and composite with ffmpeg's `overlay` filter.
 - **Do not pre-translate code-switched English brands.** Users typing "תוסיף ראקט" (transliteration of "React") instead of "React" causes Scribe to transcribe phonetically wrong. Tell the user during the conversation phase: code-switched English stays English in the transcript and in the burned-in caption, Hebrew speakers expect this.
 - **`yt-dlp` Hebrew filenames.** When pulling Hebrew sources from URLs, `yt-dlp` writes filenames with Hebrew chars. Subsequent FFmpeg + libass passes work fine on macOS but can break on Linux filesystems with non-UTF-8 locales (`LC_ALL=C` is the common culprit). Set `LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8` in the install.md `.env` if you see "No such file" errors on visibly-present files.
@@ -329,7 +323,7 @@ Cause: Scribe transcribed a Hebrew word with a non-Hebrew Unicode character mixe
 Solution: scan the SRT for non-Hebrew/Latin characters and fix them. `burn-hebrew-captions.sh` does this in its Step 0 sanitization pass; if you find a new pattern that auto-fix misses, add it to the `auto_fixes` dict in the script and submit a PR. For ad-hoc one-offs: `sed -i '' 's/סקיל्स/סקילים/g' master.srt` then re-run the burn script.
 
 ### Captions render as `□□□` boxes
-Cause: libass cannot find a Hebrew font, or ffmpeg lacks libass. Fix: `ffmpeg -version | grep enable-libass` (if empty, see `references/macos-ffmpeg-setup.md`); `fc-list :lang=he` (if empty, run `install-hebrew-fonts.sh`); always pass `fontsdir=$HOME/Library/Fonts` explicitly.
+Cause: libass cannot find a Hebrew font, or ffmpeg lacks libass. Fix: `ffmpeg -hide_banner -filters | grep ' subtitles '` (if empty, see `references/macos-ffmpeg-setup.md`); `fc-list :lang=he` (if empty, run `install-hebrew-fonts.sh`); always pass `fontsdir=$HOME/Library/Fonts` explicitly.
 
 ### Captions render reversed (period on the right, words/chars in source byte order)
 This means the python-bidi pre-shape did not run. macOS libass does not reorder a raw SRT (see the Gotchas note), so the pre-shape is mandatory, do NOT feed a raw SRT to `subtitles=`. Re-run `burn-hebrew-captions.sh` (which performs the pre-shape in Step 1) and confirm python-bidi is installed. Verify by comparing rendered pixel order to source byte order, not just "no boxes".
@@ -338,10 +332,7 @@ This means the python-bidi pre-shape did not run. macOS libass does not reorder 
 Default behavior since v1.2.6: `burn-hebrew-captions.sh` Step 0 strips trailing `.`/`?`/`!` from any caption line containing Hebrew. BBC/Netflix caption style guides recommend this because line breaks and timing already signal end-of-thought. To restore punctuation, comment out the `SENTENCE_END` block in the Step 0 Python heredoc of `burn-hebrew-captions.sh`. Full rationale + alternatives in `references/captions-only-tuning.md`.
 
 ### Scribe gap-recovery itself returned an HTTP error
-Symptom: `captions-only.sh` logs `WARN: gap re-transcribe returned HTTP <code>, skipping` and that window stays uncaptioned. Cause: Scribe v2 occasionally rate-limits, times out, or rejects very short or mid-word windows. Fix: (1) re-run the script , cached bulk transcript means only the failed gap retries, no extra base cost; (2) if it fails twice, extract a slightly wider window manually (`ffmpeg -ss <start-1> -t <dur+2>`), curl Scribe yourself, drop words into the cached `scribe.json`; (3) lower `GAP_THRESHOLD` to 20s so recovery splits long failing windows.
-
-### Wrong font (not Heebo) despite Heebo installed
-Cause: libass fell back to its built-in font because fontconfig integration is unreliable. Fix: pass `fontsdir=$HOME/Library/Fonts` explicitly to `subtitles=`.
+Symptom: `captions-only.sh` logs `WARN: gap re-transcribe returned HTTP <code>, skipping` and that window stays uncaptioned. Cause: Scribe v2 occasionally rate-limits, times out, or rejects very short or mid-word windows. Fix: re-running re-bills the whole file. Cheaper: transcribe just that window yourself (`ffmpeg -ss <start-1> -t <dur+2>`), add its cues, shifted to video time, to the exported `<output>.he.srt`, and burn that with `burn-hebrew-captions.sh --srt`.
 
 ### Captions render at tiny size on HD output
 Cause: ffmpeg's SRT->ASS default is `PlayResX: 384, PlayResY: 288` and libass scales font size relative to PlayResY. Fix: set PlayResX/Y to match output. `burn-hebrew-captions.sh` does this automatically.
@@ -351,6 +342,3 @@ Cause: Scribe doesn't tag fillers in any language; you skipped the Hebrew lexico
 
 ### Local renders fine but cloud render shows boxes
 Cause: cloud container has no Hebrew fonts. Fix: add `install-hebrew-fonts.sh` to the container build step, or bundle Heebo into `<edit>/fonts/` and pass `fontsdir=<edit>/fonts`.
-
-### `loudnorm` errors with `I=-inf`
-Cause: video ends with silence (freeze frame with no audio). Fix: layer 2s of room tone over the silent portion, OR pass `--no-loudnorm` to `render.py`.

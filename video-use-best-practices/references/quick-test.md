@@ -4,6 +4,8 @@ A 10-second synthetic Hebrew test clip you can use to validate `captions-only.sh
 
 ## macOS (uses built-in `say` + Carmit Hebrew voice)
 
+If `say` reports the voice is not found, download Carmit in System Settings > Accessibility > Spoken Content > System voice > Manage Voices.
+
 ```bash
 # 1. Generate Hebrew speech audio
 say -v Carmit -o /tmp/test-he.aiff "שלום, זאת בדיקה של מערכת הכתוביות בעברית. אם אתה רואה את הטקסט הזה, הכל עובד."
@@ -13,7 +15,7 @@ ffmpeg -y -f lavfi -i color=c=#1a1a2e:s=1280x720:d=10 -i /tmp/test-he.aiff \
   -c:v libx264 -preset ultrafast -c:a aac -shortest /tmp/test-he.mp4
 
 # 3. Run the full pipeline
-bash scripts/captions-only.sh /tmp/test-he.mp4 --yes --ffmpeg /tmp/ffmpeg
+bash scripts/captions-only.sh /tmp/test-he.mp4 --yes --ffmpeg /opt/homebrew/opt/ffmpeg-full/bin/ffmpeg
 ```
 
 Expected: `/tmp/test-he.captioned.mp4` with Hebrew captions burned in over the dark background. Cost: ~$0.001 in Scribe (10 seconds of audio).
@@ -32,7 +34,7 @@ ffmpeg -y -f lavfi -i color=c=#1a1a2e:s=1280x720:d=10 -i /tmp/test-he.wav \
 ## What success looks like
 
 After running the pipeline you should see:
-1. Console: `Detected 0 gap(s). Transcript covers the full video.` (no recovery needed on a 10s clip)
+1. Console: `No gaps detected. Transcript covers the full video.` (no recovery needed on a 10s clip)
 2. Console: `Stripped sentence-end punctuation (. ? !) from N Hebrew line(s) for clean caption display.`
 3. File: `/tmp/test-he.captioned.mp4` exists and is ~1-2MB
 4. File: `/tmp/test-he.captioned.he.srt` exists with 1-3 cues of Hebrew text

@@ -1,35 +1,36 @@
 {
   "schemaVersion": "1.0",
   "skill": "video-use-best-practices",
-  "generated_at": "2026-08-26T16:58:03Z",
+  "generated_at": "2026-11-11T15:30:00Z",
   "claims": [
     {
       "claim_id": "scribe-hebrew-wer",
       "claim": "ElevenLabs' Hebrew benchmark table lists Scribe v1 at 15.2% word error rate on FLEURS and Whisper Large v3 at 32.9% (about 33%). The same page's headline now claims a 3.1% Hebrew WER for Scribe without naming a model version.",
       "source_url": "https://elevenlabs.io/speech-to-text/hebrew",
-      "raw_snippet": "delivering a word error rate of just 3.1% on the FLEURS benchmark",
-      "fetched_at": "2026-08-26T16:58:03Z",
+      "raw_snippet": "Hebrew Transcription Benchmark Model FLEURS Scribe v1 15.2% WER Deepgram Nova 2 100.0% WER Gemini Flash 2 20.3% WER Whisper Large v3 32.9% WER",
+      "fetched_at": "2026-11-11T13:00:00Z",
       "appears_in": [
         "SKILL.md",
         "references/hebrew-filler-words.md"
       ],
-      "verified_via": "cited page fetched and confirmed to contain \"15.2%\"; snippet replaced with the page's own wording around it",
-      "verified_at": "2026-08-26T16:58:03Z"
+      "verified_via": "source",
+      "verified_at": "2026-11-11T13:00:00Z"
     },
     {
       "claim_id": "scribe-v2-api-price-per-hour",
-      "claim": "ElevenLabs Scribe v2 costs $0.22 per hour of audio on the API rate card; Scribe v2 Realtime costs $0.39 per hour.",
+      "claim": "ElevenLabs Scribe v2 costs $0.20 per hour of audio on the API rate card and Scribe v2 Realtime $0.22 per hour (re-checked 2026-11-11); Scribe v3 is listed at $0.20 per hour.",
       "source_url": "https://elevenlabs.io/pricing/api",
-      "raw_snippet": "Scribe v2 Speech to Text $0.22",
-      "fetched_at": "2026-08-26T16:58:03Z",
+      "raw_snippet": "Scribe v2 Speech to Text $0.20 Price per hour",
+      "fetched_at": "2026-11-11T15:30:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
+        "references/captions-only-tuning.md",
         "references/pricing.md",
         "scripts/captions-only.sh"
       ],
       "verified_via": "source",
-      "verified_at": "2026-08-26T16:58:03Z"
+      "verified_at": "2026-11-11T15:30:00Z"
     },
     {
       "claim_id": "elevenlabs-free-tier-credits",
@@ -48,22 +49,22 @@
     },
     {
       "claim_id": "scribe-word-types-no-verbatim",
-      "claim": "Scribe word objects expose type values word/spacing/audio_event only (no filler tag in any language); no_verbatim (scribe_v2 only) is destructive; tag_audio_events tags non-speech audio. Covers these references: https://api.elevenlabs.io/v1/single-use-token/batch_scribe\" https://api.elevenlabs.io/v1/speech-to-text?token=$TOKEN\"",
-      "source_url": "https://github.com/elevenlabs/skills/blob/main/speech-to-text/references/transcription-options.md",
-      "raw_snippet": "skills/speech-to-text/references/transcription-options.md at main · elevenlabs/skills · GitHub",
-      "fetched_at": "2026-08-18",
+      "claim": "The Scribe convert API's no_verbatim flag removes filler words, false starts and non-speech sounds from the output (destructive, not a tag), and tag_audio_events tags non-speech audio such as laughter; there is no per-word filler field.",
+      "source_url": "https://elevenlabs.io/docs/api-reference/speech-to-text/convert",
+      "raw_snippet": "If true, the transcription will not have any filler words, false starts and non-speech sounds.",
+      "fetched_at": "2026-11-11T13:00:00Z",
       "appears_in": [
         "SKILL.md"
       ],
-      "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
-      "verified_at": "2026-08-18"
+      "verified_via": "source",
+      "verified_at": "2026-11-11T13:00:00Z"
     },
     {
       "claim_id": "bidi-preshape-libass",
-      "claim": "On macOS ffmpeg/libass builds, libass does not reliably apply BiDi reordering for SRT even when libfribidi is linked; the fix is to pre-shape Hebrew with python-bidi (get_display) before rendering. libass force_style and the subtitles= fontsdir= parameter are real; Helvetica has no Hebrew glyphs.",
+      "claim": "FFmpeg documents fontsdir for the subtitles filter as additive to the font provider. The python-bidi pre-shape and the pre-wrap are this skill's own measured workaround (2026-11-11, Homebrew ffmpeg-full 9.0.2 on macOS): un-pre-shaped Hebrew renders in source order, and libass wrapping pre-shaped text puts the sentence end on the top line.",
       "source_url": "https://ffmpeg.org/ffmpeg-filters.html",
-      "raw_snippet": "VideoToolbox filter depends on VideoToolbox framework, and is auto detected when building ffmpeg for an Apple platform such as macOS. Add --enable-videotoolbox to configure if autodetect is disabled. 15.1 scale_vt # TOC Scale and convert the color parameters using VTPixelTransferSession. The filter accepts the following options: w h Set the output video dimension expression. Default value is the input dimension. color_matrix Set the output colorspace matrix. color_primaries Set the output color primaries.",
-      "fetched_at": "2026-08-18",
+      "raw_snippet": "These fonts will be used in addition to whatever the font provider uses.",
+      "fetched_at": "2026-11-11T13:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -71,15 +72,15 @@
         "references/macos-ffmpeg-setup.md",
         "scripts/burn-hebrew-captions.sh"
       ],
-      "verified_via": "cited page fetched; 50 of 55 of the claim's distinctive terms occur on it, and the snippet is the page's own wording around \"macos\"",
-      "verified_at": "2026-08-18"
+      "verified_via": "source",
+      "verified_at": "2026-11-11T13:00:00Z"
     },
     {
       "claim_id": "upstream-and-tooling-urls",
-      "claim": "Upstream tool and reference URLs cited by the skill (all resolve). browser-use/video-use (the upstream tool, 12 hard rules), python-bidi (MeirKriheli), libass ASS guide, Unicode TR9 BiDi, Google Fonts Heebo + Noto Sans Hebrew, ElevenLabs Scribe v1/v2 + pricing + Hebrew benchmark, evermeet static ffmpeg build, and three academic filler-word citations. Covers these references: https://github.com/browser-use/video-use https://github.com/MeirKriheli/python-bidi https://github.com/libass/libass/wiki/ASS-File-Format-Guide https://www.unicode.org/reports/tr9/ https://fonts.google.com/specimen/Heebo https://fonts.google.com/noto/specimen/Noto+Sans+Hebrew https://elevenlabs.io/blog/introducing-scribe-v2 https://elevenlabs.io/blog/meet-scribe https://elevenlabs.io/pricing https://elevenlabs.io/speech-to-text/hebrew https://github.com/elevenlabs/skills/blob/main/speech-to-text/references/transcription-options.md https://ffmpeg.org/ffmpeg-filters.html https://evermeet.cx/ffmpeg/getrelease/zip https://benjamins.com/catalog/prag.7.2.04mas https://www.researchgate.net/publication/354527243 https://www.academia.edu/47718372",
+      "claim": "Upstream tool and reference URLs cited by the skill (all resolve). browser-use/video-use (the upstream tool, 12 hard rules), python-bidi (MeirKriheli), libass ASS guide, Unicode TR9 BiDi, Google Fonts Heebo + Noto Sans Hebrew, ElevenLabs Scribe v1/v2 + pricing + Hebrew benchmark, and three academic filler-word citations. Covers these references: https://github.com/browser-use/video-use https://github.com/MeirKriheli/python-bidi https://github.com/libass/libass/wiki/ASS-File-Format-Guide https://www.unicode.org/reports/tr9/ https://fonts.google.com/specimen/Heebo https://fonts.google.com/noto/specimen/Noto+Sans+Hebrew https://elevenlabs.io/blog/introducing-scribe-v2 https://elevenlabs.io/blog/meet-scribe https://elevenlabs.io/pricing https://elevenlabs.io/speech-to-text/hebrew https://github.com/elevenlabs/skills/blob/main/speech-to-text/references/transcription-options.md https://ffmpeg.org/ffmpeg-filters.html https://benjamins.com/catalog/prag.7.2.04mas https://www.researchgate.net/publication/354527243 https://www.academia.edu/47718372",
       "source_url": "https://github.com/browser-use/video-use",
       "raw_snippet": "GitHub - browser-use/video-use: Edit videos with coding agents · GitHub",
-      "fetched_at": "2026-08-18",
+      "fetched_at": "2026-11-11T13:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
@@ -87,39 +88,22 @@
         "references/macos-ffmpeg-setup.md"
       ],
       "verified_via": "reference-coverage entry; the links it covers moved into the claim and the snippet is a quote from its own source page",
-      "verified_at": "2026-08-18"
+      "verified_at": "2026-11-11T13:00:00Z"
     },
     {
       "claim_id": "internal-paths-and-values",
-      "claim": "Internal example paths and binary locations used only as illustrations in this skill, not as external claims: `/tmp/ffmpeg` and `/opt/homebrew/bin/ffmpeg` and `/usr/local/bin/ffmpeg` are the three ffmpeg install locations the macOS setup reference documents, and `/tmp/test-he.captioned.mp4` and `/tmp/test-he.captioned.he.srt` are the output paths of the quick-test recipe. None of these are external facts requiring a source. Also internal: the quick-test recipe notes that a 10-second synthetic clip costs about 55 credits, roughly 0.5% of the free monthly quota, which is arithmetic on the sourced credit rate rather than a published figure.",
-      "source_url": "https://github.com/browser-use/video-use",
-      "raw_snippet": "GitHub - browser-use/video-use: Edit videos with coding agents · GitHub",
-      "fetched_at": "2026-08-19",
+      "claim": "Internal example paths used only as illustrations: `/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg` and `/usr/local/opt/ffmpeg-full/bin/ffmpeg` are where Homebrew links the keg-only ffmpeg-full formula on Apple Silicon and Intel, and `/tmp/test-he.captioned.mp4` and `/tmp/test-he.captioned.he.srt` are the quick-test output paths. Also internal: a 10-second synthetic clip costs about 55 credits, roughly 0.5% of the free monthly quota, which is arithmetic on the sourced credit rate.",
+      "source_url": "https://formulae.brew.sh/formula/ffmpeg-full",
+      "raw_snippet": "Keg-only because this is an alternate version of another formula.",
+      "fetched_at": "2026-11-11T13:00:00Z",
       "appears_in": [
         "SKILL.md",
         "SKILL_HE.md",
         "references/macos-ffmpeg-setup.md",
         "references/quick-test.md"
       ],
-      "verified_via": "claim about the source itself; snippet is the cited page's own title, fetched to confirm the page exists and is what the claim says it is",
-      "verified_at": "2026-08-19"
-    },
-    {
-      "claim_id": "scribe-v1-removed",
-      "claim": "The scribe_v1 speech-to-text model was deprecated and removed on 9 July 2026; ElevenLabs directs users to migrate to scribe_v2 or scribe_v2_realtime.",
-      "source_url": "https://elevenlabs.io/docs/changelog/2026/6/8",
-      "raw_snippet": "The scribe_v1 model is deprecated and will be removed on July 9, 2026. Migrate to scribe_v2 or scribe_v2_realtime before removal.",
-      "fetched_at": "2026-08-26T16:58:03Z",
       "verified_via": "source",
-      "verified_at": "2026-08-26T16:58:03Z",
-      "appears_in": [
-        "SKILL.md",
-        "SKILL_HE.md",
-        "scripts/captions-only.sh",
-        "references/captions-only-tuning.md",
-        "references/pricing.md",
-        "references/domain-checklist.md"
-      ]
+      "verified_at": "2026-11-11T13:00:00Z"
     },
     {
       "claim_id": "upstream-sub-force-style-marginv-90",
@@ -222,6 +206,173 @@
         "references/captions-only-tuning.md",
         "references/domain-checklist.md"
       ]
+    },
+    {
+      "claim_id": "scribe-v1-deprecated",
+      "claim": "ElevenLabs deprecated scribe_v1 and announced its removal for 9 July 2026, directing users to scribe_v2 or scribe_v2_realtime.",
+      "source_url": "https://elevenlabs.io/docs/changelog/2026/6/8",
+      "raw_snippet": "The scribe_v1 model is deprecated and will be removed on July 9, 2026. Migrate to scribe_v2 or scribe_v2_realtime before removal.",
+      "fetched_at": "2026-11-11T13:00:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T13:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/captions-only.sh",
+        "references/captions-only-tuning.md",
+        "references/pricing.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "scribe-v1-listed-deprecated",
+      "claim": "The ElevenLabs models page lists scribe_v1 under Deprecated models with scribe_v2 as the replacement.",
+      "source_url": "https://elevenlabs.io/docs/models",
+      "raw_snippet": "scribe_v1 First generation speech recognition (outclassed by v2 models)",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/captions-only-tuning.md",
+        "references/pricing.md"
+      ],
+      "fetched_at": "2026-11-11T13:00:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T13:00:00Z"
+    },
+    {
+      "claim_id": "upstream-transcribe-still-scribe-v1",
+      "claim": "Upstream video-use helpers/transcribe.py at commit 43cfc56 still sends model_id scribe_v1, and has a --audio-track flag (OBS: game on track 0, mic on track 1) and refuses to upload a silent track.",
+      "source_url": "https://raw.githubusercontent.com/browser-use/video-use/43cfc566833548093455c9d4a46bd69913b7e552/helpers/transcribe.py",
+      "raw_snippet": "\"model_id\": \"scribe_v1\",",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ],
+      "fetched_at": "2026-11-11T13:00:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T13:00:00Z"
+    },
+    {
+      "claim_id": "upstream-chunk-words-constants",
+      "claim": "Upstream render.py at 43cfc56 groups caption cues with chunk_words(), driven by CHUNK_WORDS = 2 and CHUNK_MAX_WORDS = 3.",
+      "source_url": "https://raw.githubusercontent.com/browser-use/video-use/43cfc566833548093455c9d4a46bd69913b7e552/helpers/render.py",
+      "raw_snippet": "CHUNK_MAX_WORDS = 3",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ],
+      "fetched_at": "2026-11-11T13:00:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T13:00:00Z"
+    },
+    {
+      "claim_id": "upstream-grade-preset-flag",
+      "claim": "Upstream grade.py applies a named preset with --preset warm_cinematic; --filter takes a raw ffmpeg filter string.",
+      "source_url": "https://raw.githubusercontent.com/browser-use/video-use/43cfc566833548093455c9d4a46bd69913b7e552/helpers/grade.py",
+      "raw_snippet": "python helpers/grade.py <input> -o <output> --preset warm_cinematic",
+      "appears_in": [
+        "references/conversation-prompts.md"
+      ],
+      "fetched_at": "2026-11-11T13:00:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T13:00:00Z"
+    },
+    {
+      "claim_id": "scribe-file-size-limit",
+      "claim": "The Scribe convert endpoint accepts files smaller than 5.0GB.",
+      "source_url": "https://elevenlabs.io/docs/api-reference/speech-to-text/convert",
+      "raw_snippet": "The file size must be less than 5.0GB.",
+      "appears_in": [
+        "references/known-limitations.md"
+      ],
+      "fetched_at": "2026-11-11T13:00:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T13:00:00Z"
+    },
+    {
+      "claim_id": "homebrew-ffmpeg-full-libass",
+      "claim": "Homebrew's ffmpeg-full formula (9.0.2, bottled, keg-only) depends on libass; the default ffmpeg formula 9.0.2 has no subtitles filter (checked locally 2026-11-11).",
+      "source_url": "https://formulae.brew.sh/formula/ffmpeg-full",
+      "raw_snippet": "libass 0.17.5 Subtitle renderer for the ASS/SSA subtitle format",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/macos-ffmpeg-setup.md",
+        "scripts/burn-hebrew-captions.sh",
+        "scripts/captions-only.sh"
+      ],
+      "fetched_at": "2026-11-11T13:00:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T13:00:00Z"
+    },
+    {
+      "claim_id": "pinned-google-fonts-commit",
+      "claim": "install-hebrew-fonts.sh downloads Heebo, Rubik, Assistant and Noto Sans Hebrew from the google/fonts repository at commit 5bb28733cec313b63fbd415b574b5ae35c8aa8b8 and checks a SHA-256 recorded from that commit.",
+      "source_url": "https://github.com/google/fonts",
+      "raw_snippet": "Font files available from Google Fonts",
+      "appears_in": [
+        "scripts/install-hebrew-fonts.sh",
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "fetched_at": "2026-11-11T13:00:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T13:00:00Z"
+    },
+    {
+      "claim_id": "scribe-v2-realtime-price",
+      "claim": "Scribe v2 Realtime is $0.22 per hour on the API rate card.",
+      "source_url": "https://elevenlabs.io/pricing/api",
+      "raw_snippet": "Scribe v2 Realtime Speech to Text $0.22 Price per hour",
+      "appears_in": [
+        "references/pricing.md"
+      ],
+      "fetched_at": "2026-11-11T15:30:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T15:30:00Z"
+    },
+    {
+      "claim_id": "scribe-v3-price",
+      "claim": "Scribe v3 is listed at $0.20 per hour on the API rate card.",
+      "source_url": "https://elevenlabs.io/pricing/api",
+      "raw_snippet": "Scribe v3 Speech to Text New $0.20 Price per hour",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/pricing.md"
+      ],
+      "fetched_at": "2026-11-11T15:30:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T15:30:00Z"
+    },
+    {
+      "claim_id": "scribe-v3-successor",
+      "claim": "ElevenLabs' models page lists scribe_v3 as the successor to scribe_v2; this skill still sends scribe_v2 and has not tested v3.",
+      "source_url": "https://elevenlabs.io/docs/models",
+      "raw_snippet": "scribe_v3 Our most accurate speech recognition model for recorded audio, successor to scribe_v2",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/pricing.md",
+        "references/captions-only-tuning.md"
+      ],
+      "fetched_at": "2026-11-11T15:30:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T15:30:00Z"
+    },
+    {
+      "claim_id": "html-track-needs-webvtt",
+      "claim": "The HTML track element uses WebVTT (.vtt) files, so an SRT sidecar must be converted before self-hosted playback.",
+      "source_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/track",
+      "raw_snippet": "The tracks are formatted in WebVTT format ( .vtt files)",
+      "appears_in": [
+        "references/captions-only-tuning.md"
+      ],
+      "fetched_at": "2026-11-11T15:30:00Z",
+      "verified_via": "source",
+      "verified_at": "2026-11-11T15:30:00Z"
     }
   ]
 }

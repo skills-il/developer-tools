@@ -1,6 +1,27 @@
 {
   "cycles": [
     {
+      "version": "1.4.0",
+      "date": "2026-11-11",
+      "upstream_validated_against": "browser-use/video-use @ 43cfc566833548093455c9d4a46bd69913b7e552 (2026-10-08). ElevenLabs pricing/api and models pages fetched 2026-11-11.",
+      "value_add": "with=1.00 without=0.50 delta=+0.50 (4 cases) PASS",
+      "lessons": [
+        "CRITICAL script bug, live since at least 1.3.0: the gap-recovery Scribe call in captions-only.sh had no URL. Any detected gap made curl exit 2 and set -e killed the run AFTER the paid main call. Reproduced against a local mock server; no doc or judge pass had ever exercised the gap path. Lesson: run every billed code path against a mock endpoint, not just the happy path.",
+        "Third-party drift caught only by the judge: ElevenLabs repriced Scribe v2 to $0.20/hr (Realtime $0.22, not $0.39) and shipped scribe_v3 as v2's successor. verify-evidence --check-sources still PASSED the stale '$0.22' snippet (its matcher is loose), so a passing source check is not proof a price is current. Read the rate card by eye every cycle.",
+        "libass wraps display-order (pre-shaped) text from the left, so any wrapped Hebrew cue showed the END of the sentence on the top line. Every 9:16 render with 5-7 word chunks hit it. Fix: split in reading order before get_display, per-line pre-shape, WrapStyle 2. Width estimate calibrated on Heebo Bold renders (0.33 typical, 0.53 for ש runs per FontSize unit).",
+        "The documented one-liner billed Scribe before discovering that stock Homebrew ffmpeg has no subtitles filter; now a --preflight-only burn check runs before any billing. Homebrew core ffmpeg 9.0.2 still lacks libass; ffmpeg-full (keg-only) has it. Installing ffmpeg-full upgraded x265 and broke the existing core ffmpeg until `brew upgrade ffmpeg`.",
+        "Docs promised a transcript cache that did not exist. A real cache was built this cycle (output+track key, source fingerprint, .done marker) and passed expert r3, but each round surfaced a new way for it to burn the WRONG captions silently (track switch, replaced source, GNU stat -f printing '?'). By lead decision it was REMOVED: every run transcribes again and the docs now say so. A wrong caption burned silently is worse than paying twice. If a cache returns, key it on a hash of the extracted audio, not on file metadata.",
+        "--audio-track transcribed the mic track while the burn kept ffmpeg's default (most-channels) stream, so OBS output lost the voice; burn now maps all audio streams.",
+        "Resolved CARRYs: audio extraction for the main call, gap-call cap, Mode B price floors, tuning-doc flag table and constant locations, Linux libass still unmeasured (documented). Nikud CARRY resolved by test: pointed text renders with marks attached through the pre-shape; no change needed.",
+        "install-hebrew-fonts.sh rewritten user-level: no root and no package manager, google/fonts pinned commit 5bb2873 with SHA-256 per file. Linux path not run (Docker daemon down); macOS path and checksum-mismatch path tested.",
+        "DEFERRED (expert): MAX_WORD_DUR clipping runs after gap detection; non-MP4 inputs fail after billing (H.264 into WebM); sidecar .he.srt keeps Scribe garbage characters; variable-font alternates render lighter than Heebo; transcribed track not set as default disposition; loud music outros are still billed as gaps; width estimate is not per-font.",
+        "CARRY: scribe_v3 untested. Switch scribe_call() to v3 once a real key can verify the response shape on a short Hebrew clip.",
+        "HE body sits at ~4,990 words and EN at ~4,970; both at the cap. Two tables moved to references this cycle. EN/HE section count still differs (EN 3 examples vs HE 2, different troubleshooting); pre-existing, warning only.",
+        "Gap windows that fail within a run (cut error, Scribe error, cap reached) are now counted and reported with a WARN line at the end; recovery path documented as editing the exported .he.srt and re-burning.",
+        "DEFERRED (expert r4 minors): --font check is case-sensitive ('heebo' refused); -50 dB gap silence threshold is absolute, not relative to the track; Step 1 and known-limitations list Rubik/Assistant/Noto without saying burn accepts Heebo only; cap hit counts as 1 in the final WARN regardless of windows left."
+      ]
+    },
+    {
       "version": "1.3.1",
       "date": "2026-08-26",
       "upstream_validated_against": "browser-use/video-use @ 92c2b34; ElevenLabs pricing/docs 2026-08-26. Follow-up to 1.3.0 after Expert round 2.",
