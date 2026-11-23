@@ -6,11 +6,7 @@ Second-hand prices are local, volatile, and depend on exact model, condition, an
 
 1. On Yad2 Market, search the exact item (brand + model). Filter to active listings of the same condition and rough age.
 2. Collect 3 to 5 comparable asking prices. Drop obvious outliers (a broken unit, a collector edition).
-3. Anchor to the original retail price and discount for age and wear:
-   - Like-new, recent: often 60 to 80 percent of retail.
-   - Good, a few years old: often 35 to 55 percent of retail.
-   - Heavy wear / needs repair: often under 30 percent of retail.
-   These are rough anchors, not rules; the comparable cluster you found overrides them.
+3. Compare with the original retail price and adjust for age and wear. Do not apply a fixed percentage: the comparable cluster you found decides the band.
 4. Present a band: quick-sale (low) / fair (mid) / patient (high). Tell the user to start near the high end if they can wait, lower for a fast sale.
 
 If the user has no comparables, ask them to pull a few before you commit to a band.
@@ -69,9 +65,9 @@ Fill the bracketed slots. Keep it honest and short.
 - Photograph any flaw you described. Showing the flaw builds trust and filters time-wasters.
 
 ## A stale listing (weeks with no replies)
-The lever is usually not another price cut. In order of impact:
-1. Bump / renew the listing (קפיצת מודעה / חידוש מודעה) so it returns to the top of search.
-2. Refresh the title and lead photo (the first photo is most of the click decision).
+Do not jump straight to a price cut. Try these first:
+1. Use the free manual bump (קפיצת מודעה), available once every 24 hours on a basic listing. A listing past its time limit cannot be extended, so check in the app what happens at expiry.
+2. Refresh the title and lead photo.
 3. Re-check comparables; only THEN consider lowering the price.
 4. Consider Yad2's paid promotion only if the price is already right.
 

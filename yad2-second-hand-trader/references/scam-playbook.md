@@ -1,6 +1,6 @@
 # Yad2 Scam Playbook (Israel, 2026)
 
-The Israeli second-hand market on Yad2 is targeted by a small set of repeatable scams. Some attack the SELLER (the person who posted an item) and some attack the BUYER. Sources: Israeli Internet Association (block.org.il), Yad2 official safety guidance, payment-app terms.
+The Israeli second-hand market on Yad2 is targeted by a small set of repeatable scams. Some attack the SELLER (the person who posted an item) and some attack the BUYER. Sources: Israeli Internet Association (isoc.org.il), Yad2 safety guidance and terms, the Payment Services Law.
 
 ## Seller-side: the signature "pay the courier first" scam
 
@@ -8,13 +8,13 @@ Step by step:
 
 1. A "buyer" contacts the seller, eager, often willing to pay full price or extra. Contact typically moves to WhatsApp straight after the listing goes up. They often claim to be far away (Eilat, abroad) and offer to pay for shipping. Do NOT treat fluent Hebrew or a business-looking account as reassurance: "מגדירים את חשבון הוואטסאפ כעסקי, מתכתבים בעברית (לעיתים עם שגיאות, אבל לא תמיד)" is described as a deliberate credibility tactic.
 2. The buyer says they cannot come in person and will arrange a courier (usually GLS) to collect the item.
-3. The buyer sends a screenshot of a bank transfer "already done" so the seller relaxes. Dedicated apps generate fake confirmations.
+3. The buyer sends a screenshot of a bank transfer "already done" so the seller relaxes.
 4. The buyer (or a fake courier email) then tells the seller they must pay the shipping company first, via a link, to release the transfer / receive the credit.
 5. The link is a phishing page that captures the seller's credit-card details, or the payment goes to the scammer. Sometimes the demand is in Bitcoin.
 
 **Verbatim source descriptions:**
-- "שולח 'הרוכש' צילום של העברה בנקאית מזויפת. המוכר חש שהעסקה כשרה"
-- "ה'רוכש' מבקש מהמוכר לשלם ישירות לחברת השילוח (GLS, בד\"כ)"
+- 'שולח "הרוכש" צילום של העברה בנקאית מזויפת. המוכר חש שהעסקה כשרה'
+- 'ה"רוכש" מבקש מהמוכר לשלם ישירות לחברת השילוח (GLS, בד"כ)'
 - "הלינק משמש לצורך הכנסת פרטי כרטיס אשראי אליו יתקבל, לכאורה, הזיכוי"
 - "בקשת התשלום היא, לרוב, באמצעות ביטקוין"
 
@@ -24,7 +24,7 @@ Step by step:
 
 ## Buyer-side: the deposit / fake-listing scam
 
-The dominant fraud against buyers:
+The common pattern against buyers:
 
 1. A "seller" posts a fake listing for a sought-after item (PS5, concert tickets, a puppy, even an apartment) at an attractive price.
 2. They create urgency ("lots of interest, I can hold it for you").
@@ -43,15 +43,16 @@ Other buyer-side flags:
 The whole scam economy hinges on payment reversibility.
 
 - **Cash:** instant, final, safest.
-- **Bit:** a transfer cannot be cancelled once sent. "לא ניתן לבטל את ההעברה." Good to RECEIVE.
-- **PayBox:** treat a sent transfer as final. Any cancellation window is short and app-dependent, so verify it inside the app rather than promising the user one. Good to RECEIVE.
-- **Bank transfer:** a "confirmation" shown at the meeting is NOT cleared money. Wait until it appears in your own balance.
+- **Bit:** a 2022 ice guide says a transfer cannot be cancelled once approved ("לא ניתן לבטל העברה אחרי שאושרה על ידך") and that money from an approved request reaches the bank by the end of the next business day. Check the app for current terms, and confirm receipt in your own app.
+- **PayBox:** treat a sent transfer as final. Check the app for any cancellation option rather than promising the user one.
+- **Bank transfer:** a "confirmation" shown at the meeting is NOT cleared money. Wait until it appears in your own balance, which usually takes about two to three days.
+- **Cheque:** not payment until your bank confirms it cleared. Do not hand over the item or refund any difference before that.
 - **Payment request (בקשת תשלום):** approving an incoming request sends YOUR money out. It is the opposite of being paid. Scammers disguise a request as "I'm paying, just approve."
 
 
 ## Red-flag catalog (combined)
 
-| Flag | Side | Verdict weight |
+| Flag | Side | Signal weight |
 |------|------|----------------|
 | Pay-courier-first + shipping | seller | High |
 | Forged transfer screenshot | seller | High |
@@ -67,7 +68,7 @@ The whole scam economy hinges on payment reversibility.
 | Payment request sent to you | either | High |
 | Asked to forward a verification CODE sent to you by SMS | either | High (account takeover, not a purchase) |
 | WhatsApp Business account + fluent Hebrew | either | Not exculpatory, both are deliberate credibility tactics |
-| Money never arrived after a "transfer" | seller | High (this is what proves the screenshot was forged) |
+| Money has not arrived after a "transfer" | seller | Medium (a delay alone proves nothing, transfers can take days; pressure to hand over meanwhile makes it High) |
 
 ## The safe-deal checklist (give this to the user)
 
@@ -75,21 +76,21 @@ The whole scam economy hinges on payment reversibility.
 2. Inspect the item against the listing before any money moves. "לוודא שהמוצר הוא אכן כפי שפורסם באתר, ללא שריטות או חבלות."
 3. Pay/receive at handover only: cash, or Bit/PayBox you control. "מומלץ שהתשלום יתבצע במזומן, או דרך אפליקציות תשלומים מוכרות."
 4. Never transfer money in advance, and never abroad on a future promise. "מומלץ מאוד שלא להעביר כסף מראש, ובטח לא לחו\"ל."
-5. A transfer screenshot is not payment. Only your own bank balance proves money arrived.
+5. A transfer screenshot is not payment. Only your own bank balance, or your own Bit/PayBox app, proves money arrived.
 6. Never click a payment/credit link a counterparty sends, and never enter card details to "receive" money.
-7. Keep the conversation in Yad2's in-app chat (preserves evidence), and report a scammer's user/listing to Yad2 itself.
+7. Prefer Yad2's built-in chat, screenshot it (Yad2 has no access to chat content), and report a scammer's user/listing to Yad2 itself.
 
 ## If already scammed
 
-1. Stop all contact and payment immediately.
-2. Keep every screenshot and the listing URL.
-3. Report the user/listing to Yad2.
-4. If card details were entered anywhere, call your credit-card company / bank now to block the card.
+1. Stop paying and stop responding. Enter nothing more and send no further code. Keep every screenshot and the listing URL.
+2. If a WhatsApp code was sent, open WhatsApp and log back in with the new 6-digit code now, then warn family and friends by another channel.
+3. If anything else was paid or shared, call the bank, card company, or payment app now. Where a payment counts as misuse, the Payment Services Law ties liability to the time of notice, so report first either way (see SKILL.md). If you paid by card and the agreed delivery date has passed without the item, you can then write the seller a short cancellation in your own words and tell the issuer.
+4. Report the user/listing to Yad2.
 5. File an online complaint with Israel Police.
 6. Report phishing links to the National Cyber Directorate (gov.il cyber-event-report).
 
 ## Legal reality (state it plainly)
 
-A private Yad2 sale between two individuals is NOT a consumer transaction under the Consumer Protection Law. The law's cancellation/cooling-off right applies to buying from a business (עוסק): "תקנות הגנת הצרכן מאפשרות לצרכן לבטל עסקה צרכנית שנעשתה בבית העסק." So there is no statutory 14-day return on a private deal.
+A private Yad2 sale between two individuals is NOT a consumer transaction under the Consumer Protection Law, which defines a consumer as someone buying from an עוסק in the course of the seller's business. So there is no statutory 14-day return on a genuinely private deal. A seller who is really a dealer is a different question (see SKILL.md).
 
-But "no Consumer Protection Law" is not "no recourse." A seller must still disclose known defects ("כל מוכר חייב להודיע לצרכן על פגמים ידועים במוצר"), and a buyer who was deceived or sold an item with an undisclosed hidden defect (מום נסתר) can pursue remedies under general contract law and the Sales Law (חוק המכר), typically in small claims court. Inspect-before-paying is still far easier than suing.
+But "no Consumer Protection Law" is not "no recourse." A seller must still disclose known defects, and a buyer who was deceived or sold an item with an undisclosed hidden defect (מום נסתר) can pursue remedies under general contract law and the Sales Law (חוק המכר), typically in small claims court. The Sales Law requires the buyer to inspect after receipt and to notify the seller immediately on finding a defect (ss.13 to 17). Inspect-before-paying is still far easier than suing.

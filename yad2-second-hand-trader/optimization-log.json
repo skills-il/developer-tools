@@ -1,6 +1,21 @@
 {
   "cycles": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-23",
+      "lessons": [
+        "Resolved the long-carried unknown: Yad2's orange-check service is real and its terms are readable at 2.yad2.co.il/en/verified-terms-conditions. Terms can change, so re-read charge timing, the 30% fee and the 24-hour claim window each cycle.",
+        "The old claim that a card is the only rail with recovery was wrong. Payment Services Law ss.16, 17, 24, 27 now live in references/payment-law.md. Legal gate: describe the law generally and never classify the user's own incident.",
+        "Yad2's terms say it has no access to chat content, so the earlier claim that staying in chat preserves evidence for Yad2 was removed.",
+        "Bit's own FAQ blocks automated reads. Bit claims rest on a dated 2022 ice guide and are stated with the date. Next cycle: have a human confirm the current Bit wording. PayBox cancellation terms remain unverified, so the skill names no window.",
+        "Scorer lesson: broadening keywords produced false LIKELY_SCAM on gate codes and zip codes. It stays a narrow keyword helper, NO_KEYWORD_MATCH is not a clearance, and tests/score cases must include innocent logistics messages.",
+        "Expert minor deferred: the first-person courier wording with a link scores SUSPICIOUS rather than LIKELY_SCAM.",
+        "Expert minor deferred: mention that Yad2 courier windows are Sunday to Thursday in the late-item advice.",
+        "Value-add 2026-11-23: with 0.75, without 0.18, delta +0.57, gate BLOCK on the 0.8 floor. The shortfall is no-load: the phished-seller case never loaded the skill in 3 of 3 runs and the orange-defect case missed in 1 of 3. Every run that loaded scored 1.00. Next cycle: strengthen the description for 'I was already scammed, the card company refuses' requests and re-run the holdout.",
+        "Description changed by one non-trigger phrase only in Hebrew (all tricks became common tricks). No holdout was run for that wording change."
+      ]
+    },
+    {
       "version": "1.1.1",
       "date": "2026-08-18",
       "lessons": [
